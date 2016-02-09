@@ -112,8 +112,7 @@
             ViewBag.TriggerDownload = false;
 
             ReportsFilterViewModel model = new ReportsFilterViewModel();
-
-            await SetReportsFilterLists(model);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -125,7 +124,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await SetReportsFilterLists(model);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -180,8 +179,7 @@
             ViewBag.TriggerDownload = false;
 
             ProducerPublicRegisterViewModel model = new ProducerPublicRegisterViewModel();
-
-            await SetReportsFilterLists(model);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -193,7 +191,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await SetReportsFilterLists(model);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -217,10 +215,9 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
             ProducersDataViewModel model = new ProducersDataViewModel();
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
+
             return View(model);
         }
 
@@ -231,9 +228,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -257,10 +252,9 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
             ProducersDataViewModel model = new ProducersDataViewModel();
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
+
             return View(model);
         }
 
@@ -271,9 +265,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -298,11 +290,8 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
             ProducersDataViewModel model = new ProducersDataViewModel();
-
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -314,11 +303,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
-            model.ComplianceYears = new SelectList(years);
-
-            ViewBag.TriggerDownload = ModelState.IsValid;
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -343,23 +328,9 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            List<int> years;
-            try
-            {
-                years = await FetchComplianceYearsForDataReturns();
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-                return View();
-            }
-
             UkEeeDataViewModel model = new UkEeeDataViewModel();
-            model.ComplianceYears = new SelectList(years);
+            await PopulateFilters(model);
+
             return View("UkEeeData", model);
         }
 
@@ -369,23 +340,9 @@
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
-            List<int> years;
-            try
-            {
-                years = await FetchComplianceYearsForDataReturns();
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-                return View();
-            }
 
-            model.ComplianceYears = new SelectList(years);
-            ViewBag.TriggerDownload = ModelState.IsValid;
+            await PopulateFilters(model);
+
             return View(model);
         }
 
@@ -401,6 +358,38 @@
             }
         }
 
+        private async Task PopulateFilters(ReportsFilterViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForMemberRegistrations();
+            List<SchemeData> schemes = await FetchSchemes();
+            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
+
+            model.ComplianceYears = new SelectList(years);
+            model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
+            model.AppropriateAuthorities = new SelectList(authorities, "Id", "Abbreviation");
+        }
+
+        private async Task PopulateFilters(ProducerPublicRegisterViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForMemberRegistrations();
+
+            model.ComplianceYears = new SelectList(years);
+        }
+
+        private async Task PopulateFilters(UkEeeDataViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            model.ComplianceYears = new SelectList(years);
+        }
+
+        private async Task PopulateFilters(ProducersDataViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            model.ComplianceYears = new SelectList(years);
+        }
+
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
             var request = new GetDataReturnsActiveComplianceYears();
@@ -410,30 +399,30 @@
             }
         }
 
-        private async Task SetReportsFilterLists(ReportsFilterViewModel model)
+        private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()
         {
-            using (IWeeeClient client = apiClient())
+            var request = new GetMemberRegistrationsActiveComplianceYears();
+            using (var client = apiClient())
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
-
-                var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-
-                model.ComplianceYears = new SelectList(allYears);
-
-                model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
-
-                GetSchemes request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), request);
-                model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
+                return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
 
-        private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model)
+        private async Task<List<SchemeData>> FetchSchemes()
         {
-            using (IWeeeClient client = apiClient())
+            var request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+            using (var client = apiClient())
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
-                model.ComplianceYears = new SelectList(allYears);
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
+        }
+
+        private async Task<IList<UKCompetentAuthorityData>> FetchAuthorities()
+        {
+            var request = new GetUKCompetentAuthorities();
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
 
