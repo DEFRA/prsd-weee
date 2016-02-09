@@ -45,7 +45,8 @@
         public async Task GetAllComplianceYearsHandler_ReturnsYearsInDescendingOrder()
         {
             // Arrange
-            UKCompetentAuthority competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"));
+            UKCompetentAuthority competentAuthority = 
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk");
             var scheme1 = A.Fake<Scheme>();
             A.CallTo(() => scheme1.SchemeName).Returns("Test1");
             A.CallTo(() => scheme1.CompetentAuthority).Returns(competentAuthority);
