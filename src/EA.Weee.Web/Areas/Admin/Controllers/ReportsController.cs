@@ -422,12 +422,9 @@
 
                 model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
 
-                if (model.FilterByScheme)
-                {
-                    GetSchemes request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), request);
-                    model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
-                }
+                GetSchemes request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), request);
+                model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
             }
         }
 
