@@ -32,7 +32,7 @@
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 authorization,
                 A.Dummy<CsvWriterFactory>());
 
@@ -57,7 +57,7 @@
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 authorization,
                 A.Dummy<CsvWriterFactory>());
 
@@ -80,13 +80,22 @@
         [Fact]
         public async Task HandleAsync_WithSchemeSpecified_GeneratesCorrectFileName()
         {
-            // Arrange
-            //TODO: Arrange a scheme with ID "C5AD2FF9-941D-4D6F-B68B-9805DD7E1FD1" and approval number "WEE/AA1111AA/SCH".
-
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
+            IStoredProcedures storedProcedures = A.Fake<IStoredProcedures>();
+
+            SpgSchemeWeeeCsvResult storedProcedureResult = new SpgSchemeWeeeCsvResult();
+            storedProcedureResult.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
+            {
+                SchemeId = new Guid("C5AD2FF9-941D-4D6F-B68B-9805DD7E1FD1"),
+                ApprovalNumber = "WEE/AA1111AA/SCH"
+            });
+
+            A.CallTo(() => storedProcedures.SpgSchemeWeeeCsvAsync(A<int>._, A<Guid?>._, A<string>._))
+                .Returns(storedProcedureResult);
+
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                storedProcedures,
                 authorization,
                 A.Dummy<CsvWriterFactory>());
 
@@ -112,7 +121,7 @@
         {
             // Arrange
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -173,7 +182,7 @@
             };
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -213,7 +222,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -259,7 +268,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -299,7 +308,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -329,7 +338,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -369,7 +378,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -399,7 +408,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -439,7 +448,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -469,7 +478,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -510,7 +519,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -552,7 +561,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -641,7 +650,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -685,7 +694,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
