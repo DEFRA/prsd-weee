@@ -31,12 +31,6 @@
 
             string obligationType = ConvertEnumToDatabaseString(request.ObligationType);
 
-            if (request.ComplianceYear == 0)
-            {
-                string message = string.Format("Compliance year cannot be \"{0}\".", request.ComplianceYear);
-                throw new ArgumentException(message);
-            }
-
             string fileContent = await GetProducersEEEDataCSVContent(request.ComplianceYear, obligationType);
 
             var fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
