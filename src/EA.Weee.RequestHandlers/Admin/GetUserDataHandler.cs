@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Security;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
@@ -23,16 +24,18 @@
         public async Task<ManageUserData> HandleAsync(GetUserData query)
         {
             authorization.EnsureCanAccessInternalArea();
-            
+
             var manageUserData = await dataAccess.GetOrganisationUser(query.OrganisationUserId) ??
                              await dataAccess.GetCompetentAuthorityUser(query.OrganisationUserId);
 
-            if (manageUserData != null 
-                && userContext != null 
+            if (manageUserData != null
+                && userContext != null
                 && userContext.UserId.ToString() == manageUserData.UserId)
             {
                 manageUserData.CanManageRoleAndStatus = false;
             }
+
+            manageUserData.CanEditUser = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             return manageUserData;
         }

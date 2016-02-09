@@ -32,5 +32,7 @@
         public UserStatus UserStatus { get; set; }
 
         public Role Role { get; set; }
+
+        public bool CanEditUser { get; set; }
     }
 }
