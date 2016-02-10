@@ -54,6 +54,8 @@
                 .Returns(new RegisteredCompanyDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<OrganisationData>._))
                 .Returns(new ContactDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<MembersDataOverviewViewModel>(A<SchemeData>._))
+                .Returns(new MembersDataOverviewViewModel());
         }
 
         [Fact]
@@ -217,7 +219,7 @@
                    FileContent = "test,test,test"
                });
 
-            var result = await SchemeController().GetProducerCSV(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
+            var result = await SchemeController().GetProducerCsv(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                .MustHaveHappened(Repeated.Exactly.Once);
