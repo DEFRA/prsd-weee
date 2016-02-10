@@ -12,6 +12,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Infrastructure;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using TestHelpers;
@@ -81,6 +82,31 @@
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
+        }
+
+        /// <summary>
+        /// This test ensures that the Get for Edit Scheme action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs details.
+        /// </summary>
+        [Fact]
+        public async void GetEditScheme_ReturnsHttpForbiddenResult_WhenCanEditPcsIsFalse()
+        {
+            // Arrange
+            var schemeId = Guid.NewGuid();
+
+            var controller = SchemeController();
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEditPcs = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var result = await controller.EditScheme(schemeId);
+            
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
