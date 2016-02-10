@@ -57,7 +57,7 @@
 
             var invoiceRun = A.Fake<InvoiceRun>();
             A.CallTo(() => invoiceRun.CompetentAuthority)
-                .Returns(new UKCompetentAuthority(Guid.NewGuid(), "Wales", "NRW", A.Dummy<Country>()));
+                .Returns(new UKCompetentAuthority(Guid.NewGuid(), "Wales", "NRW", A.Dummy<Country>(), "test@sfwltd.co.uk"));
             A.CallTo(() => invoiceRun.IssuedDate)
                 .Returns(new DateTime(2016, 02, 25));
 

@@ -111,6 +111,7 @@
             AllowExternalAreaAccess();
             AllowOrganisationAccess();
             AllowSchemeAccess();
+            AllowAnyRole();
             return this;
         }
 
@@ -120,6 +121,7 @@
             DenyExternalAreaAccess();
             DenyOrganisationAccess();
             DenySchemeAccess();
+            DenyAnyRole();
             return this;
         }
 

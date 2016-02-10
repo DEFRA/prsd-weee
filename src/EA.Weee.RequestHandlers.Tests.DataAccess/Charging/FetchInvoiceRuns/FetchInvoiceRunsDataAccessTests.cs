@@ -33,6 +33,7 @@
                 databaseAuthority1.Name = "Test Authority 1";
                 databaseAuthority1.Abbreviation = "T1";
                 databaseAuthority1.Country = country;
+                databaseAuthority1.Email = "TestEmailAddress";
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority1);
 
                 CompetentAuthority databaseAuthority2 = new CompetentAuthority();
@@ -40,6 +41,7 @@
                 databaseAuthority2.Name = "Test Authority 2";
                 databaseAuthority2.Abbreviation = "T2";
                 databaseAuthority2.Country = country;
+                databaseAuthority2.Email = "TestEmailAddress2";
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority2);
 
                 InvoiceRun invoiceRunForAuthority1 = new InvoiceRun();
@@ -95,6 +97,7 @@
                 databaseAuthority.Name = "Test Authority 1";
                 databaseAuthority.Abbreviation = "T1";
                 databaseAuthority.Country = country;
+                databaseAuthority.Email = "TestEmailAddress";
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority);
 
                 InvoiceRun invoiceRun1 = new InvoiceRun();
@@ -160,6 +163,7 @@
                 databaseAuthority.Name = "Test Authority 1";
                 databaseAuthority.Abbreviation = "T1";
                 databaseAuthority.Country = country;
+                databaseAuthority.Email = "TestEmailAddress";
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority);
 
                 InvoiceRun invoiceRun = new InvoiceRun();
