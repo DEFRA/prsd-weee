@@ -5,7 +5,7 @@
 @section main_content {
     @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    @foreach (var yearlyDownloads in Model.DownloadsByYears.SchemeDownloads.OrderByDescending(yd => yd.Year))
+    @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
     {
         <h2 class="heading-medium">@yearlyDownloads.Year</h2>
 
