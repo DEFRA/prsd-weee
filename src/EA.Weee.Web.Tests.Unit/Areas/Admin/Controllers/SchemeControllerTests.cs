@@ -151,7 +151,7 @@
             var statuses = model.StatusSelectList.ToList();
 
             Assert.Equal(statuses.Count(), 2);
-           
+
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
         }
@@ -194,15 +194,32 @@
         [Theory]
         [InlineData(SchemeStatus.Approved)]
         [InlineData(SchemeStatus.Pending)]
-        public async void PostEditScheme_ModelWithError_AndSchemeIsNotRejected_ReturnsView(SchemeStatus status)
+        public async void PostEditScheme_ModelWithError_AndSchemeIsNotRejected_ExecuteGetSchemeByIdReturnsViewWithDesireNumberOfStatuses(SchemeStatus status)
         {
             var controller = SchemeController();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             var schemeId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .Returns(new SchemeData
+               {
+                   SchemeStatus = status
+               });
+
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
             {
                 Status = status,
             });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
+
+            var model = ((ViewResult)result).Model as SchemeViewModel;
+
+            Assert.NotNull(model);
+
+            Assert.True((status == SchemeStatus.Approved && model.StatusSelectList.Count() == 2) ||
+                (status == SchemeStatus.Pending && model.StatusSelectList.Count() == 3));
 
             Assert.IsType<ViewResult>(result);
         }
