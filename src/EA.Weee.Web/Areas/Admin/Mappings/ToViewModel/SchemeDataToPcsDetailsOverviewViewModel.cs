@@ -22,6 +22,7 @@
                 Status = source.SchemeStatus.ToString(),
                 SchemeId = source.Id,
                 SchemeName = source.SchemeName,
+                CanEditPcs = source.CanEditPcs,
                 IsRejected = source.SchemeStatus == SchemeStatus.Rejected
             };
         }
