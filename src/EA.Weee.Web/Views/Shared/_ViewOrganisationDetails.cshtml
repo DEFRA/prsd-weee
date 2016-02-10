@@ -4,7 +4,7 @@
 @{
     if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
     {
-        @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
+        @(this.WeeeGds().TableSummary("Principal place of business details", new Dictionary<string, object>
                       {
                         { "Organisation type", "Sole trader or individual" },
                         { "Business trading name", Model.OrganisationData.TradingName },
@@ -20,7 +20,7 @@
     }
     else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
     {
-        @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
+        @(this.WeeeGds().TableSummary("Principal place of business details", new Dictionary<string, object>
                       {
                         { "Organisation type", "Partnership" },
                         { "Business trading name", Model.OrganisationData.TradingName },
@@ -36,7 +36,7 @@
     }
     else
     {
-        @(this.WeeeGds().DataTable("Registered office details", new Dictionary<string, object>
+        @(this.WeeeGds().TableSummary("Registered office details", new Dictionary<string, object>
                       {
                         { "Organisation type", "Registered company" },
                         { "Company name", Model.OrganisationData.Name },
