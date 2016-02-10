@@ -13,6 +13,7 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
+    using Security;
 
     [RoutePrefix("api/UnauthenticatedUser")]
     public class UnauthenticatedUserController : ApiController

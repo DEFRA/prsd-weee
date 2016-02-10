@@ -4,13 +4,13 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Security;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 

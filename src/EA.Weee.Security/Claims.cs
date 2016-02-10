@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core
+﻿namespace EA.Weee.Security
 {
     public static class Claims
     {

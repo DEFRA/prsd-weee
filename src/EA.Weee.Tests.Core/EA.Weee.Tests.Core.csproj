@@ -266,6 +266,10 @@
       <Project>{575a5355-b008-422a-b9b6-535ca2b5cc26}</Project>
       <Name>EA.Weee.RequestHandlers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

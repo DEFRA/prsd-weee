@@ -8,6 +8,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Security;
     using ViewModels.Shared;
 
     public class HomeController : Controller
