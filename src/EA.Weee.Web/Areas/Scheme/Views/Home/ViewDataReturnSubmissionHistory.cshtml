@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
-@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Core.DataReturns
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturnSubmissionHistoryViewModel
 @{
     ViewBag.Title = "View Data Return Submission History";
@@ -17,14 +18,31 @@
 @if (Model.Results.Any())
 {
     <div class="form-group">
-        @using (var tableBuilder = this.WeeeGds().TableBuilder(Model.Results, "Data returns submission history", new { id = "submissions" }))
-        {
-            tableBuilder.AddColumn("Data and time (GMT)", d => d.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture));
-            tableBuilder.AddColumn("Compliance year", d => d.ComplianceYear);
-            tableBuilder.AddColumn("Quarter reported", d => d.Quarter);
-            tableBuilder.AddColumn("Submitted by", d => d.SubmittedBy);
-            tableBuilder.AddColumn("File name", d => d.FileName);
-        }
+        <table id="submissions">
+            <thead>
+                <tr>
+                    <th>Date and time (GMT)</th>
+                    <th>Compliance year</th>
+                    <th>Quarter reported</th>
+                    <th>Submitted by</th>
+                    <th>File name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataReturnSubmissionsHistoryResult item in Model.Results)
+                {
+                    string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                    <tr>
+                        <td>@datetimeValue</td>
+                        <td>@item.ComplianceYear</td>
+                        <td>@item.Quarter</td>
+                        <td>@item.SubmittedBy</td>
+                        <td>@item.FileName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
 else

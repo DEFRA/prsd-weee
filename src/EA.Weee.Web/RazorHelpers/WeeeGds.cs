@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
-    using System.Collections.Generic;
     using System.Web;
     using System.Web.Mvc;
     using Prsd.Core.Web.Mvc.RazorHelpers;
@@ -22,6 +21,11 @@
         public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
         {
             return new ProgressiveDisclosure<TModel>(this, linkText);
+        }
+
+        public SummaryExpansion<TModel> SummaryExpansion(string summaryText, string htmlclass, string eventCategory, string eventAction, string eventLabel = null)
+        {
+            return new SummaryExpansion<TModel>(this, summaryText, htmlclass, eventCategory, eventAction, eventLabel);
         }
 
         public string EventTrackingFunction(string eventCategory, string eventAction, string eventLabel = null)
