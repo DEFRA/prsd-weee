@@ -98,7 +98,7 @@
 
             SchemeData scheme = new SchemeData
             {
-                CanEditPcs = false
+                CanEdit = false
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
 
@@ -118,7 +118,7 @@
 
             SchemeData scheme = new SchemeData
             {
-                CanEditPcs = true
+                CanEdit = true
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);              
 
@@ -158,7 +158,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
-                    CanEditPcs = true,
+                    CanEdit = true,
                     SchemeStatus = status
                 });
 
@@ -174,7 +174,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
-                    CanEditPcs = true,
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Approved
                 });
 
@@ -195,7 +195,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
-                    CanEditPcs = true,
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Pending
                 });
 
@@ -491,6 +491,44 @@
             Assert.Equal("EditScheme", routeValues["action"]);
         }
 
+        /// <summary>
+        /// This test ensures that the Get for Manage contact details action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs contact details.
+        /// </summary>
+        [Fact]
+        public async void GetManageContactDetails_ReturnsHttpForbiddenResult_WhenCanEditIsFalse()
+        {
+            // Arrange
+            var organisationData = new OrganisationData
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
         [Fact]
         public async Task GetManageContactDetails_WithValidOrganisationId_ShouldReturnsDataAndDefaultView()
         {
@@ -507,6 +545,12 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
 
             var schemeController = SchemeController();
 

@@ -127,6 +127,7 @@
                         var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
                         contactDetailsModel.SchemeName = scheme.SchemeName;
                         contactDetailsModel.SchemeId = scheme.Id;
+                        contactDetailsModel.CanEditContactDetails = scheme.CanEdit;
                         return View("Overview/ContactDetailsOverview", contactDetailsModel);
 
                     case OverviewDisplayOption.PcsDetails:
@@ -145,7 +146,7 @@
                 {
                     var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId.Value));
 
-                    if (!scheme.CanEditPcs)
+                    if (!scheme.CanEdit)
                     {
                         return new HttpForbiddenResult();
                     }
@@ -287,6 +288,11 @@
             var model = new ManageContactDetailsViewModel();
             using (var client = apiClient())
             {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                if (!scheme.CanEdit)
+                {
+                    return new HttpForbiddenResult();
+                }
                 var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
