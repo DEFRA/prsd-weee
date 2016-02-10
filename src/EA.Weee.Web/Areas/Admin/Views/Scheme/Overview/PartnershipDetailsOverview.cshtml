@@ -7,40 +7,49 @@
 @section main_content {
     <table id="pcs-details-table">
         <thead>
-        <tr class="visuallyhidden">
-            <th colspan="2">Organisation details</th>
-        </tr>
+            <tr class="visuallyhidden">
+                <th colspan="2">Organisation details</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <th>Organisation Type</th>
-            <td>Partnership</td>
-        </tr>
-        <tr>
-            <th>Business trading name</th>
-            <td>@Model.BusinessTradingName</td>
-        </tr>
-        <tr>
-            <th>Address</th>
-            <td>
-                @Model.Address.Address.Address1<br/>
-                @Model.Address.Address.Address2<br/>
-                @Model.Address.Address.TownOrCity<br/>
-                @Model.Address.Address.CountyOrRegion<br/>
-                @Model.Address.Address.Postcode<br/>
-                @Model.Address.Address.CountryName<br/>
-            </td>
-        </tr>
-        <tr>
-            <th>Telephone</th>
-            <td>@Model.Address.Address.Telephone</td>
-        </tr>
-        <tr>
-            <th>Email address</th>
-            <td>@Model.Address.Address.Email</td>
-        </tr>
+            <tr>
+                <th>Organisation Type</th>
+                <td>Partnership</td>
+            </tr>
+            <tr>
+                <th>Business trading name</th>
+                <td>@Model.BusinessTradingName</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>
+                    @Model.Address.Address.Address1<br />
+                    @Model.Address.Address.Address2<br />
+                    @Model.Address.Address.TownOrCity<br />
+                    @Model.Address.Address.CountyOrRegion<br />
+                    @Model.Address.Address.Postcode<br />
+                    @Model.Address.Address.CountryName<br />
+                </td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>@Model.Address.Address.Telephone</td>
+            </tr>
+            <tr>
+                <th>Email address</th>
+                <td>@Model.Address.Address.Email</td>
+            </tr>
         </tbody>
     </table>
+    
+    @if (Model.CanEditOrganisation)
+    {
+        <br />
+        <p>
+            <a href="@(Url.UrlFor<SchemeController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
+        </p>
+    }
 
     @Html.Partial("Overview/_OverviewAvailableActions")
 }
+

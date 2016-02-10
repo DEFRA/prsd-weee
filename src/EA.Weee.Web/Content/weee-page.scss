@@ -755,6 +755,10 @@ input[type="file"].form-control {
     margin-left: 10px;
 }
 
+.marginRight {
+    margin-right: 40px;
+}
+
 .section-tabs {
 		@extend %contain-floats;
 	    border-bottom: 1px solid $border-colour;
