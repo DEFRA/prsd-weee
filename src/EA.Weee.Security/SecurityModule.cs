@@ -6,7 +6,7 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<RoleRequestHandler>().As<IRoleRequestHandler>()
+            builder.RegisterType<RoleRequestHandler>().As<IRoleBasedResponseHandler>()
                 .InstancePerRequest();
         }
     }

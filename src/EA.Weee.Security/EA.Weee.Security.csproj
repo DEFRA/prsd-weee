@@ -60,12 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Claims.cs" />
-    <Compile Include="IRoleRequestHandler.cs" />
+    <Compile Include="IRoleBasedResponseHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleBasedResponse.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Roles.cs" />
-    <Compile Include="RoleRequestHandler.cs" />
+    <Compile Include="RoleBasedResponseHandler.cs" />
     <Compile Include="SecurityModule.cs" />
   </ItemGroup>
   <ItemGroup>
