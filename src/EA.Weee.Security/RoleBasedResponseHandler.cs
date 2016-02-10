@@ -6,7 +6,7 @@
     using DataAccess;
     using Prsd.Core.Domain;
 
-    public class RoleRequestHandler : IRoleRequestHandler
+    public class RoleRequestHandler : IRoleBasedResponseHandler
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;

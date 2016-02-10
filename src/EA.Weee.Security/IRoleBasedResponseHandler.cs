@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public interface IRoleRequestHandler
+    public interface IRoleBasedResponseHandler
     {
         Task<object> HandleAsync(object response);
     }
