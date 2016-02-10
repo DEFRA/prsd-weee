@@ -96,7 +96,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Email\WeeeEmailServiceTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
