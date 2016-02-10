@@ -19,9 +19,9 @@
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;
-        private readonly IRoleRequestHandler roleRequestHandler;
+        private readonly IRoleBasedResponseHandler roleRequestHandler;
 
-        public MediatorController(IMediator mediator, IRoleRequestHandler roleRequestHandler)
+        public MediatorController(IMediator mediator, IRoleBasedResponseHandler roleRequestHandler)
         {
             this.mediator = mediator;
             this.roleRequestHandler = roleRequestHandler;
