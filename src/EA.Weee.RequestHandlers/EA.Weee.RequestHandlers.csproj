@@ -182,8 +182,8 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
-    <Compile Include="Mappings\SchemeDownloadsByYearMap.cs" />
-    <Compile Include="Mappings\SchemeDownloadsByYearsMap.cs" />
+    <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
+    <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
