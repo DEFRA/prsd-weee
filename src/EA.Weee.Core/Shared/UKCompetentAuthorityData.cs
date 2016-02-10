@@ -11,5 +11,7 @@
         public string Abbreviation { get; set; }
 
         public Guid CountryId { get; set; }
+
+        public string Email { get; set; }
     }
 }
