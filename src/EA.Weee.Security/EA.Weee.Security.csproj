@@ -60,17 +60,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Claims.cs" />
-    <Compile Include="ISecurityHandler.cs" />
+    <Compile Include="IRoleRequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoleBasedRequest.cs" />
     <Compile Include="RoleBasedResponse.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Roles.cs" />
-    <Compile Include="SecurityHandler.cs" />
+    <Compile Include="RoleRequestHandler.cs" />
     <Compile Include="SecurityModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
