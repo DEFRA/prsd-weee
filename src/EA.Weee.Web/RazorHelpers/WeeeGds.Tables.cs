@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.RazorHelpers
+namespace EA.Weee.Web.RazorHelpers
 {
     using System;
     using System.Collections.Generic;

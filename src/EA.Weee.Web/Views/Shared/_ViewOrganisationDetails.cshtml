@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.ViewModels.Shared.Scheme.ViewOrganisationDetailsViewModel
-@{ 
+@{
     if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
     {
         @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
