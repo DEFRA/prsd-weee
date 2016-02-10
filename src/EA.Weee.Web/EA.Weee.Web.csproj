@@ -543,7 +543,6 @@
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
-    <Compile Include="RazorHelpers\TableHeaderOrientation.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
@@ -793,7 +792,7 @@
     <Compile Include="RazorHelpers\WeeeGds.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
     <Compile Include="RazorHelpers\WeeeGds.RadioButtons.cs" />
-    <Compile Include="RazorHelpers\WeeeGds.DataView.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.TableSummary.cs" />
     <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
     <Compile Include="Requests\Base\IRequestCreator.cs" />
     <Compile Include="Requests\Base\RequestCreator.cs" />
