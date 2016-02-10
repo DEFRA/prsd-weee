@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Core.Security;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
@@ -23,6 +24,7 @@
         public async Task<Guid> HandleAsync(UpdateCompetentAuthorityUserRoleAndStatus query)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var competentAuthorityUser = await dataAccess.GetCompetentAuthorityUser(query.Id);
 
