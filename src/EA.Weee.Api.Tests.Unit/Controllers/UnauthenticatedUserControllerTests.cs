@@ -13,6 +13,7 @@
     using EA.Weee.Email;
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
+    using Security;
     using Xunit;
 
     public class UnauthenticatedUserControllerTests

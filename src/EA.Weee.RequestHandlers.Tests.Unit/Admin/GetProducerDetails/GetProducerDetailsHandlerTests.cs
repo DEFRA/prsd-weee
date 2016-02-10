@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
@@ -16,6 +15,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Prsd.Core.Mapper;
+    using Weee.Security;
     using Xunit;
     using GetProducerDetails = Requests.Admin.GetProducerDetails;
 
