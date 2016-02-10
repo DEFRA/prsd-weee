@@ -3,16 +3,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class SchemeDownloadsByYears
+    public class SchemeDataAvailability
     {
-        public IList<SchemeDownloadsByYear> DownloadsByYears { get; private set; }
+        public IList<SchemeAnnualDataAvailability> DownloadsByYears { get; private set; }
 
-        private SchemeDownloadsByYears(IList<SchemeDownloadsByYear> downloadsByYear)
+        private SchemeDataAvailability(IList<SchemeAnnualDataAvailability> downloadsByYear)
         {
             DownloadsByYears = downloadsByYear;
         }
 
-        public static SchemeDownloadsByYears Create(IList<int> complianceYearsWithSubmittedMemberUploads,
+        public static SchemeDataAvailability Create(IList<int> complianceYearsWithSubmittedMemberUploads,
             IList<int> complianceYearsWithSubmittedDataReturns)
         {
             if (complianceYearsWithSubmittedMemberUploads == null)
@@ -25,7 +25,7 @@
                 complianceYearsWithSubmittedDataReturns = new List<int>();
             }
 
-            var downloadsByYear = new List<SchemeDownloadsByYear>();
+            var downloadsByYear = new List<SchemeAnnualDataAvailability>();
 
             var years = complianceYearsWithSubmittedMemberUploads
                 .Union(complianceYearsWithSubmittedDataReturns)
@@ -33,12 +33,12 @@
 
             foreach (var year in years)
             {
-                downloadsByYear.Add(new SchemeDownloadsByYear(year,
+                downloadsByYear.Add(new SchemeAnnualDataAvailability(year,
                     complianceYearsWithSubmittedMemberUploads.Contains(year),
                     complianceYearsWithSubmittedDataReturns.Contains(year)));
             }
 
-            return new SchemeDownloadsByYears(downloadsByYear);
+            return new SchemeDataAvailability(downloadsByYear);
         }
     }
 }
