@@ -49,10 +49,13 @@
             </tr>
         </tbody>
     </table>
-    <br />
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.EditRegisteredCompanyOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
-    </p>
+    @if (Model.CanEditOrganisation)
+    {
+        <br />
+        <p>
+            <a href="@(Url.UrlFor<SchemeController>(a => a.EditRegisteredCompanyOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
+        </p>
+    }
 
     @Html.Partial("Overview/_OverviewAvailableActions")
 }
