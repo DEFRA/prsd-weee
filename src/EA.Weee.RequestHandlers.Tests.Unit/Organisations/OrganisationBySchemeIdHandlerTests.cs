@@ -2,12 +2,16 @@
 {
     using System;
     using System.Security;
+    using System.Threading.Tasks;
+    using Core.Security;
     using DataAccess.DataAccess;
     using FakeItEasy;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class OrganisationBySchemeIdHandlerTests
@@ -35,6 +39,46 @@
 
             A.CallTo(() => organisationDataAccess.GetBySchemeId(A<Guid>._))
                 .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task OrganisationBySchemeIdHandler_ReturnsTrueForCanEditOrganisation_WhenCurrentUserIsInternalAdmin()
+        {
+            // Arrange
+            var weeeAuthorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .AllowRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new OrganisationBySchemeIdHandler(weeeAuthorization, organisationDataAccess, mapper);
+
+            var message = new OrganisationBySchemeId(Guid.NewGuid());
+            
+            // Act
+            var result = await handler.HandleAsync(message);
+
+            // Assert
+            Assert.True(result.CanEditOrganisation);
+        }
+
+        [Fact]
+        public async Task OrganisationBySchemeIdHandler_ReturnsFalseForCanEditOrganisation_WhenCurrentUserIsNotInternalAdmin()
+        {
+            // Arrange
+            var weeeAuthorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new OrganisationBySchemeIdHandler(weeeAuthorization, organisationDataAccess, mapper);
+
+            var message = new OrganisationBySchemeId(Guid.NewGuid());
+
+            // Act
+            var result = await handler.HandleAsync(message);
+
+            // Assert
+            Assert.False(result.CanEditOrganisation);
         }
 
         private OrganisationBySchemeIdHandler Handler()

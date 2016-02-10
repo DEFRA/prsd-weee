@@ -3,12 +3,9 @@
     using System;
     using System.Diagnostics;
     using Core.Shared;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.Reports;
-    using Security;
-    using Weee.DataAccess;
+    using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -21,33 +18,26 @@
         [InlineData(2016, ObligationType.B2C)]
         public async void GivenVariousDifferingParameters_RunningTimeIsUnderTenSeconds(int complianceYear, ObligationType obligationType)
         {
-            long processingTime;
-
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var stopWatch = Stopwatch.StartNew();
-                    await
-                        Handler(databaseWrapper.WeeeContext)
-                            .HandleAsync(new GetSchemeWeeeCsv(complianceYear, obligationType));
+                // Arrange
+                Stopwatch stopWatch = new Stopwatch();
+
+                GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
+                    databaseWrapper.WeeeContext.StoredProcedures,
+                    AuthorizationBuilder.CreateUserWithAllRights(),
+                    new CsvWriterFactory(new NoFormulaeExcelSanitizer()));
+
+                // Act
+                GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, null, obligationType);
+
+                stopWatch.Start();
+                await handler.HandleAsync(request);
                 stopWatch.Stop();
-                processingTime = stopWatch.ElapsedMilliseconds;
+
+                // Assert
+                Assert.InRange(stopWatch.ElapsedMilliseconds, 0, 10000);
             }
-
-            Assert.InRange(processingTime, 0, 10000);
-        }
-
-        private GetSchemeWeeeCsvHandler Handler(WeeeContext context)
-        {
-            var userId = context.GetCurrentUser();
-
-            var userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.UserId)
-                .Returns(Guid.Parse(userId));
-
-            var authorization = A.Fake<IWeeeAuthorization>();
-
-            return new GetSchemeWeeeCsvHandler(context, authorization,
-                new CsvWriterFactory(new NoFormulaeExcelSanitizer()));
         }
     }
 }
