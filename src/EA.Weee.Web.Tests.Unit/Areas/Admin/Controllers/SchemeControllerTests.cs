@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,6 +12,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Infrastructure;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using TestHelpers;
@@ -86,12 +86,43 @@
             Assert.IsType<ViewResult>(result);
         }
 
+        /// <summary>
+        /// This test ensures that the Get for Edit Scheme action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs details.
+        /// </summary>
+        [Fact]
+        public async void GetEditScheme_ReturnsHttpForbiddenResult_WhenCanEditPcsIsFalse()
+        {
+            // Arrange
+            var schemeId = Guid.NewGuid();
+
+            var controller = SchemeController();
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var result = await controller.EditScheme(schemeId);
+            
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
         [Fact]
         public async void GetEditScheme_ReturnsView_WithManageSchemeModel()
         {
             var schemeId = Guid.NewGuid();
 
             var controller = SchemeController();
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);              
 
             var result = await controller.EditScheme(schemeId);
 
@@ -129,6 +160,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = status
                 });
 
@@ -144,6 +176,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Approved
                 });
 
@@ -164,6 +197,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Pending
                 });
 
@@ -459,6 +493,44 @@
             Assert.Equal("EditScheme", routeValues["action"]);
         }
 
+        /// <summary>
+        /// This test ensures that the Get for Manage contact details action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs contact details.
+        /// </summary>
+        [Fact]
+        public async void GetManageContactDetails_ReturnsHttpForbiddenResult_WhenCanEditIsFalse()
+        {
+            // Arrange
+            var organisationData = new OrganisationData
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
         [Fact]
         public async Task GetManageContactDetails_WithValidOrganisationId_ShouldReturnsDataAndDefaultView()
         {
@@ -475,6 +547,12 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
 
             var schemeController = SchemeController();
 
