@@ -145,10 +145,10 @@
                 {
                     var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId.Value));
 
-                    //if (!scheme.CanEditPcs)
-                    //{
-                    //    return new HttpForbiddenResult();
-                    //}
+                    if (!scheme.CanEditPcs)
+                    {
+                        return new HttpForbiddenResult();
+                    }
 
                     List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(scheme.OrganisationId));
 
