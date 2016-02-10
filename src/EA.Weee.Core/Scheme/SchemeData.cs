@@ -16,6 +16,6 @@
         public Guid? CompetentAuthorityId { get; set; }
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
 
-        public SchemeDownloadsByYears SchemeDownloadsByYears { get; set; }
+        public SchemeDataAvailability SchemeDataAvailability { get; set; }
     }
 }
