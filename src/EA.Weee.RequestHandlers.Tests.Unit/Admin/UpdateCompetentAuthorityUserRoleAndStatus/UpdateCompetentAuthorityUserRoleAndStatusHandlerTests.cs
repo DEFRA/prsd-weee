@@ -3,8 +3,8 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Security;
     using Domain.Admin;
-    using Domain.Security;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
@@ -12,15 +12,30 @@
     using Requests.Admin;
     using Weee.Tests.Core;
     using Xunit;
+    using Role = Domain.Security.Role;
     using UserStatus = Core.Shared.UserStatus;
 
     public class UpdateCompetentAuthorityUserRoleAndStatusHandlerTests
     {
         [Fact]
-        public async Task HandleAsync_WithNonInternalUser_ThrowSecurityException()
+        public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException()
         {
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .DenyInternalAreaAccess()
+                .Build();
+
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), A.Dummy<IUpdateCompetentAuthorityUserRoleAndStatusDataAccess>(),
+                authorization);
+
+            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A.Dummy<UpdateCompetentAuthorityUserRoleAndStatus>()));
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
+        {
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
                 .Build();
 
             var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), A.Dummy<IUpdateCompetentAuthorityUserRoleAndStatusDataAccess>(),

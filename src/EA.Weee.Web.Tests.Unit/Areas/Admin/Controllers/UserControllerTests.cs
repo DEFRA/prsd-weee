@@ -38,7 +38,7 @@
 
             // Act
             Guid selectedUserId = Guid.NewGuid();
-            
+
             ActionResult result = await controller.Index(new ManageUsersViewModel { SelectedUserId = selectedUserId });
 
             // Assert
@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async Task GetEdit_Always_ReturnsEditView()
+        public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -66,7 +66,8 @@
                     LastName = "Lastname",
                     Email = "test@ea.com",
                     IsCompetentAuthorityUser = true,
-                    OrganisationName = "test ltd."
+                    OrganisationName = "test ltd.",
+                    CanEditUser = true
                 });
 
             var result = await controller.Edit(Guid.NewGuid());
@@ -81,6 +82,23 @@
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
             Assert.IsType<EditUserViewModel>(model);
+        }
+
+        [Fact]
+        public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
+        {
+            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
+                .Returns(new ManageUserData
+                {
+                    CanEditUser = false
+                });
+
+            var result = await controller.Edit(Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
