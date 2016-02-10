@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess.StoredProcedure;
     using Domain.DataReturns;
     using Domain.Scheme;
 
@@ -18,12 +19,11 @@
         Task<Scheme> FetchSchemeAsync(Guid organisationId);
 
         /// <summary>
-        /// Returns the data return for the specified organisation, compliance year and quarter if it exists.
+        /// Fetches the aggregated data from the database.
         /// </summary>
-        /// <param name="organisationId"></param>
+        /// <param name="schemeId"></param>
         /// <param name="complianceYear"></param>
-        /// <param name="quarterType"></param>
         /// <returns></returns>
-        Task<DataReturn> FetchDataReturnOrDefaultAsync(Guid organisationId, int complianceYear, QuarterType quarterType);
+        Task<List<DataReturnSummaryCsvData>> FetchResultsAsync(Guid schemeId, int complianceYear);
     }
 }

@@ -191,11 +191,14 @@
     <Content Include="scripts\Update\Sprint21\20160112-1207-SetInitialIbisFileId.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1608-Rename1B1STransactionNumberSequenceTable.sql" />
     <None Include="scripts\Update\Sprint23\20160204-1630-SetOperatorFacilityNamesAsOptional.sql" />
+    <Content Include="scripts\Update\Sprint23\20160209-1425-UpdateSpgforProducerEeeDataHistory.sql" />
+    <Content Include="scripts\Update\Sprint23\20160205-1629-CreateSpgDataReturnSummaryCsv.sql" />
     <None Include="scripts\Update\Sprint22\20160129-1600-AddRoleTable.sql" />
     <Content Include="scripts\Update\Sprint22\20160125-1200-AddCreateDateToDataReturnVersion.sql" />
     <Content Include="scripts\Update\Sprint22\20160126-1400-AddConstraintToAatfDeliveryLocation.sql" />
     <Content Include="scripts\Update\Sprint22\20160126-1400-AddConstraintToAeDeliveryLocation.sql" />
     <Content Include="scripts\Update\Sprint22\20160128-1428-CreateSpgforProducerEeeDataHistory.sql" />
+    <Content Include="scripts\Update\Sprint23\20160204-1513-UpdateSpgforProducerEeeDataHistory.sql" />
     <None Include="scripts\Update\Sprint21\20160119-1306-RemoveSpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />
     <None Include="scripts\Update\Sprint22\20160121-1440-CreateSpgUKEEEDataByComplianceYear.sql" />
   </ItemGroup>
