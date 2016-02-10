@@ -13,6 +13,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Infrastructure;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using TestHelpers;
@@ -570,23 +571,42 @@
         }
 
         [Fact]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_ReturnsView()
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {   
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
                 {
                     OrganisationType = OrganisationType.SoleTraderOrIndividual,
                     TradingName = "TradingName",
-                    BusinessAddress = new AddressData()
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = true
                 });
 
-            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(A<Guid>._, A<Guid>._);
+            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "EditSoleTraderOrIndividualOrganisationDetails");
+        }
+
+        [Fact]
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = false
+                });
+
+            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
@@ -657,25 +677,46 @@
         }
 
         [Fact]
-        public async void GetEditRegisteredCompanyOrganisationDetails_ReturnsView()
+        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
                 {
                     OrganisationType = OrganisationType.SoleTraderOrIndividual,
                     TradingName = "TradingName",
                     Name = "CompanyName",
                     CompanyRegistrationNumber = "123456789",
-                    BusinessAddress = new AddressData()
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = true
                 });
 
-            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(A<Guid>._, A<Guid>._);
+            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "EditRegisteredCompanyOrganisationDetails");
+        }
+
+        [Fact]
+        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    Name = "CompanyName",
+                    CompanyRegistrationNumber = "123456789",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = false
+                });
+
+            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]

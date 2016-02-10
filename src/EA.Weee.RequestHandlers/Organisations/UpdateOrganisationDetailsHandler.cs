@@ -2,22 +2,29 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Core.Security;
     using Domain;
     using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using Security;
 
     public class UpdateOrganisationDetailsHandler : IRequestHandler<UpdateOrganisationDetails, bool>
     {
+        private readonly IWeeeAuthorization authorization;
         private IOrganisationDetailsDataAccess dataAccess;
 
-        public UpdateOrganisationDetailsHandler(IOrganisationDetailsDataAccess dataAccess)
+        public UpdateOrganisationDetailsHandler(IOrganisationDetailsDataAccess dataAccess, IWeeeAuthorization authorization)
         {
             this.dataAccess = dataAccess;
+            this.authorization = authorization;
         }
 
         public async Task<bool> HandleAsync(UpdateOrganisationDetails message)
         {
+            authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
+
             Organisation organisation = await dataAccess.FetchOrganisationAsync(message.OrganisationData.Id);
 
             switch (message.OrganisationData.OrganisationType)
@@ -48,25 +55,6 @@
             await dataAccess.SaveAsync();
 
             return true;
-        }
-
-        public OrganisationType GetOrganisationType(Core.Organisations.OrganisationType orgType)
-        {
-            switch (orgType)
-            {
-                case Core.Organisations.OrganisationType.RegisteredCompany:
-                    return OrganisationType.RegisteredCompany;
-
-                case Core.Organisations.OrganisationType.Partnership:
-                    return OrganisationType.Partnership;
-
-                case Core.Organisations.OrganisationType.SoleTraderOrIndividual:
-                    return OrganisationType.SoleTraderOrIndividual;
-
-                default:
-                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", orgType),
-                        "orgType");
-            }
         }
     }
 }

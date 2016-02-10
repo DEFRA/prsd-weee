@@ -6,11 +6,11 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
 
-    public class UpdateOrganisationContactDetailsDataAccess : IOrganisationDetailsDataAccess
+    public class OrganisationDetailsDataAccess : IOrganisationDetailsDataAccess
     {
         private readonly WeeeContext context;
         
-        public UpdateOrganisationContactDetailsDataAccess(WeeeContext context)
+        public OrganisationDetailsDataAccess(WeeeContext context)
         {
             this.context = context;
         }

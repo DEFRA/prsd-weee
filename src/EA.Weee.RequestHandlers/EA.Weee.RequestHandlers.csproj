@@ -255,7 +255,7 @@
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\OrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
