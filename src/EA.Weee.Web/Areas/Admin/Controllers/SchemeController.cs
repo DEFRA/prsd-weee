@@ -98,16 +98,19 @@
                     case OverviewDisplayOption.OrganisationDetails:
 
                         var orgDetails = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                       
                         switch (orgDetails.OrganisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
                                 var soleTraderModel = mapper.Map<SoleTraderDetailsOverviewViewModel>(orgDetails);
+                                soleTraderModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 soleTraderModel.SchemeId = schemeId;
                                 soleTraderModel.SchemeName = scheme.SchemeName;
                                 return View("Overview/SoleTraderDetailsOverview", soleTraderModel);
 
                             case OrganisationType.Partnership:
                                 var partnershipModel = mapper.Map<PartnershipDetailsOverviewViewModel>(orgDetails);
+                                partnershipModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 partnershipModel.SchemeId = schemeId;
                                 partnershipModel.SchemeName = scheme.SchemeName;
                                 return View("Overview/PartnershipDetailsOverview", partnershipModel);
@@ -115,6 +118,7 @@
                             case OrganisationType.RegisteredCompany:
                             default:
                                 var registeredCompanyModel = mapper.Map<RegisteredCompanyDetailsOverviewViewModel>(orgDetails);
+                                registeredCompanyModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 registeredCompanyModel.SchemeId = schemeId;
                                 registeredCompanyModel.SchemeName = scheme.SchemeName;
                                 return View("Overview/RegisteredCompanyDetailsOverview", registeredCompanyModel);
@@ -350,7 +354,11 @@
 
             using (var client = apiClient())
             {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                if (!organisationData.CanEditOrganisation)
+                {
+                    return new HttpForbiddenResult();
+                }
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 var model = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
@@ -375,7 +383,11 @@
 
             using (var client = apiClient())
             {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                if (!organisationData.CanEditOrganisation)
+                {
+                    return new HttpForbiddenResult();
+                }
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 var model = new EditRegisteredCompanyOrganisationDetailsViewModel
