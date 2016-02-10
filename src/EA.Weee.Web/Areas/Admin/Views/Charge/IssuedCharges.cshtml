@@ -1,5 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Charge.IssuedChargesViewModel
 @{
     ViewBag.Title = "Issued Charges";
@@ -60,7 +62,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<ChargeController>(a => a.ChooseActivity(authority)))">Back</a>
     </p>
 }
 
