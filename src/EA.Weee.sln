@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Ibis", "EA.Weee.Ibi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Ibis.Tests.Unit", "EA.Weee.Ibis.Tests.Unit\EA.Weee.Ibis.Tests.Unit.csproj", "{98E4454F-EE98-49C5-8298-353B23EE5437}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Email.Tests.Unit", "EA.Weee.Email.Tests.Unit\EA.Weee.Email.Tests.Unit.csproj", "{1DB88549-74A2-4589-B265-7CCF7F27687E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{98E4454F-EE98-49C5-8298-353B23EE5437}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98E4454F-EE98-49C5-8298-353B23EE5437}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98E4454F-EE98-49C5-8298-353B23EE5437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB88549-74A2-4589-B265-7CCF7F27687E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB88549-74A2-4589-B265-7CCF7F27687E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB88549-74A2-4589-B265-7CCF7F27687E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB88549-74A2-4589-B265-7CCF7F27687E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -222,5 +228,6 @@ Global
 		{A91F265E-68E5-408B-A077-EF47FB2DC54D} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{C3C69BF6-3716-4123-83EE-4C64B19C5377} = {731A0B88-5E29-4223-82DF-DBAA113AFEF3}
 		{98E4454F-EE98-49C5-8298-353B23EE5437} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
+		{1DB88549-74A2-4589-B265-7CCF7F27687E} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 	EndGlobalSection
 EndGlobal

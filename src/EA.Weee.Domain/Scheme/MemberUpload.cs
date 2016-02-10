@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using Audit;
     using Charges;
+    using Events;
     using Organisation;
     using Producer;
     using Prsd.Core;
     using User;
+    using System.Linq;
 
     public class MemberUpload : AuditableEntity
     {
@@ -96,6 +98,8 @@
             {
                 producerSubmission.RegisteredProducer.SetCurrentSubmission(producerSubmission);
             }
+
+            RaiseEvent(new SchemeMemberSubmissionEvent(this));
         }
 
         public void DeductFromTotalCharges(decimal amount)
@@ -148,6 +152,13 @@
                     producer.SetAsInvoiced();
                 }
             }
+        }
+
+        public virtual int GetNumberOfWarnings()
+        {
+            return Errors == null ?
+                0 :
+                Errors.Count(w => w.ErrorLevel == Error.ErrorLevel.Warning);
         }
     }
 }

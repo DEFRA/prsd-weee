@@ -53,6 +53,7 @@
     <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
+    <Compile Include="Events\SchemeMemberSubmissionEvent.cs" />
     <Compile Include="Lookup\QuarterWindowTemplate.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
