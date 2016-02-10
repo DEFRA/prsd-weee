@@ -39,7 +39,7 @@
                 throw new ArgumentException(message);
             }
             SchemeData schemeData = schemeMap.Map(scheme);
-            schemeData.CanEditPcs = authorization.CheckUserInRole(Roles.InternalAdmin);
+            schemeData.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
             return schemeData;
         }
     }
