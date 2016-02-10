@@ -2,11 +2,11 @@
 {
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Security;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     internal class GetUserDataHandler : IRequestHandler<GetUserData, ManageUserData>
     {

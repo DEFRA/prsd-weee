@@ -3,13 +3,13 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using Domain.Admin;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
     using Role = Domain.Security.Role;

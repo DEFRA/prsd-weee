@@ -10,6 +10,7 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
+    using Security;
     using Thinktecture.IdentityModel.Client;
 
     public class WeeeAuthorization : IWeeeAuthorization

@@ -5,7 +5,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Security;
     using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
@@ -19,6 +18,7 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 

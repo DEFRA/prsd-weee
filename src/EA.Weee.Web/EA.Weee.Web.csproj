@@ -544,7 +544,8 @@
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
@@ -882,6 +883,10 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

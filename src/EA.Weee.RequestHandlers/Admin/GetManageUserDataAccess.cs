@@ -7,6 +7,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using Weee.Security;
     using OrganisationStatus = Domain.Organisation.OrganisationStatus;
 
     public class GetManageUserDataAccess : IGetManageUserDataAccess
@@ -37,7 +38,7 @@
                      OrganisationName = ca.Abbreviation,
                      UserStatus = (UserStatus)caUser.UserStatus.Value,
                      OrganisationId = caUser.CompetentAuthorityId,
-                     Role = new Core.Security.Role
+                     Role = new Role
                      {
                          Name = caUser.Role.Name,
                          Description = caUser.Role.Description,
