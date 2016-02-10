@@ -217,7 +217,7 @@
 
             if (!isInRole)
             {
-                string message = "The user is not associated with the specified role.";
+                string message = string.Format("The user is not associated with the {0} role.", role);
                 throw new SecurityException(message);
             }
         }

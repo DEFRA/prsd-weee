@@ -54,6 +54,8 @@
 
         public IEnumerable<SelectListItem> UserRoleSelectList { get; set; }
 
+        public bool CanEditUser { get; set; }
+
         public EditUserViewModel(ManageUserData manageUser)
         {
             Id = manageUser.Id;
@@ -68,6 +70,7 @@
             UserStatusSelectList = new SelectList(EnumHelper.GetValues(typeof(UserStatus)), "Key", "Value");
             CanManageStatus = manageUser.CanManageRoleAndStatus;
             Role = manageUser.Role;
+            CanEditUser = manageUser.CanEditUser;
         }
     }
 }

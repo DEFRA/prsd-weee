@@ -4,6 +4,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Security;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -34,7 +35,7 @@
         [InlineData(AuthorizationBuilder.UserType.External)]
         public async void GetUserDataHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
-            // Arrage
+            // Arrange
             IGetManageUserDataAccess dataAccess = A.Fake<IGetManageUserDataAccess>();
             A.CallTo(() => dataAccess.GetCompetentAuthorityUser(Guid.NewGuid())).Returns(new ManageUserData());
             A.CallTo(() => dataAccess.GetOrganisationUser(Guid.NewGuid())).Returns(new ManageUserData());
@@ -55,7 +56,7 @@
         [Fact]
         public async void GetUserDataHandler_RequestingUserData_ReturnsCorrectUser()
         {
-            // Arrage
+            // Arrange
             IGetManageUserDataAccess dataAccess = CreateFakeDataAccess();
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
@@ -115,6 +116,48 @@
             var result = await GetUserDataHandler().HandleAsync(new GetUserData(organisationUserId));
 
             Assert.False(result.CanManageRoleAndStatus);
+        }
+
+        [Fact]
+        public async Task GetUserDataHandler_ReturnsTrueForCanEditUser_WhenCurrentUserIsInternalAdmin()
+        {
+            // Arrange
+            var dataAccess = A.Dummy<IGetManageUserDataAccess>();
+            var userContext = A.Dummy<IUserContext>();
+
+            var authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .AllowRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new GetUserDataHandler(userContext, authorization, dataAccess);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetUserData>());
+
+            // Assert
+            Assert.True(result.CanEditUser);
+        }
+
+        [Fact]
+        public async Task GetUserDataHandler_ReturnsFalseForCanEditUser_WhenCurrentUserIsNotInternalAdmin()
+        {
+            // Arrange
+            var dataAccess = A.Dummy<IGetManageUserDataAccess>();
+            var userContext = A.Dummy<IUserContext>();
+
+            var authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new GetUserDataHandler(userContext, authorization, dataAccess);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetUserData>());
+
+            // Assert
+            Assert.False(result.CanEditUser);
         }
 
         private GetUserDataHandler GetUserDataHandler()

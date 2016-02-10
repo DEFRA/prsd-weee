@@ -47,9 +47,12 @@
         </table>
     </div>
 
-    <p>
-        @Html.ActionLink("Edit user details", "Edit", new { id = Model.Id })
-    </p>
+    @if (Model.CanEditUser)
+    {
+        <p>
+            @Html.ActionLink("Edit user details", "Edit", new { id = Model.Id })
+        </p>
+    }
     <p>
         @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
     </p>
