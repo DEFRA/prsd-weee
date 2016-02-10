@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -91,6 +90,12 @@
 
             var controller = SchemeController();
 
+            SchemeData scheme = new SchemeData
+            {
+                CanEditPcs = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);              
+
             var result = await controller.EditScheme(schemeId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
@@ -127,6 +132,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEditPcs = true,
                     SchemeStatus = status
                 });
 
@@ -142,6 +148,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEditPcs = true,
                     SchemeStatus = SchemeStatus.Approved
                 });
 
@@ -162,6 +169,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEditPcs = true,
                     SchemeStatus = SchemeStatus.Pending
                 });
 
