@@ -50,157 +50,163 @@
         }
     </header>
 
-    @if (hasErrors)
+    @using (Html.BeginForm())
     {
-        <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        if (hasErrors)
+        {
+            <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
             <p>
                 Errors are problems with the XML file structure and content, which prevent our system from validating your file.
                 All errors must be rectified before we can continue our validation process. You may see several error messages
                 before you can submit your file.
             </p>
-    }
-    else
-    {
-        <p>
-            Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.
-        </p>
-    }
+        }
+        else
+        {
+            <p>
+                Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.
+            </p>
+        }
 
-    @if (hasWarnings)
-    {
-        <p>
-            @if (!hasErrors)
-            {
-                <span>Your XML file contains @warningCount @warningText.</span>
-            }
-            <span>
-                Warnings are displayed when your file contains an unexpected value. You must review all warnings.
-                Make any necessary corrections to your file before trying to submit again, or if you are happy with
-                its content, you can submit your file with warnings.
-            </span>
-        </p>
-    }
-
-    @if (hasErrors)
-    {
-        <details>
-            @{
-                string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
-                this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
-            }
-            <div class="error-list-container">
-                <ul>
-                    @foreach (DataReturnError error in Model.DataReturn.Errors)
-                    {
-                        <li class="error-list-item font-xsmall">
-                            @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
-                        </li>
-                    }
-                </ul>
-            </div>
-        </details>
-                }
-
-    @if (hasWarnings)
-    {
-        <details>
-            <summary class="warning-details-summary bold-small">View @warningCount @warningText</summary>
-            <div class="warning-list-container">
-                <ul>
-                    @foreach (DataReturnWarning warning in Model.DataReturn.Warnings)
-                    {
-                        <li class="error-list-item font-xsmall">@warning.Description</li>
-                    }
-                </ul>
-            </div>
-        </details>
-    }
-
-    @if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
-    {
-        <p>
-            <div class="highlight-section">
-                <div class="highlight-section-text">
-                    The XML file you are submitting is for:
-                </div>
-                <div class="highlight-section-amount">
-                    @{
-                        var quarterText = string.Empty;
-                        if (Model.DataReturn.Quarter.Value == QuarterType.Q1)
-                        {
-                            quarterText = "Quarter 1";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q2)
-                        {
-                            quarterText = "Quarter 2";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q3)
-                        {
-                            quarterText = "Quarter 3";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q4)
-                        {
-                            quarterText = "Quarter 4";
-                        }
-                    }
-                    @Model.DataReturn.Year.Value @quarterText
-                </div>
-
-                @if (Model.DataReturn.IsResubmission)
+        if (hasWarnings)
+        {
+            <p>
+                @if (!hasErrors)
                 {
-
-                    <div class="highlight-section-text negative-margin">
-                        <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;">
-                        Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
-                    </div>
+                    <span>Your XML file contains @warningCount @warningText.</span>
                 }
+                <span>
+                    Warnings are displayed when your file contains an unexpected value. You must review all warnings.
+                    Make any necessary corrections to your file before trying to submit again, or if you are happy with
+                    its content, you can submit your file with warnings.
+                </span>
+            </p>
+        }
 
+        if (hasErrors)
+        {
+            <details>
+                @{
+                    string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
+                    this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
+                }
+                <div class="error-list-container">
+                    <ul>
+                        @foreach (DataReturnError error in Model.DataReturn.Errors)
+                        {
+                            <li class="error-list-item font-xsmall">
+                                @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </details>
+        }
+
+        if (hasWarnings)
+        {
+            <details>
+                <summary class="warning-details-summary bold-small">View @warningCount @warningText</summary>
+                <div class="warning-list-container">
+                    <ul>
+                        @foreach (DataReturnWarning warning in Model.DataReturn.Warnings)
+                        {
+                            <li class="error-list-item font-xsmall">@warning.Description</li>
+                        }
+                    </ul>
+                </div>
+            </details>
+        }
+
+        if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
+        {
+            <p>
+                <div class="highlight-section">
+                    <div class="highlight-section-text">
+                        The XML file you are submitting is for:
+                    </div>
+                    <div class="highlight-section-amount">
+                        @{
+                            var quarterText = string.Empty;
+                            if (Model.DataReturn.Quarter.Value == QuarterType.Q1)
+                            {
+                                quarterText = "Quarter 1";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q2)
+                            {
+                                quarterText = "Quarter 2";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q3)
+                            {
+                                quarterText = "Quarter 3";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q4)
+                            {
+                                quarterText = "Quarter 4";
+                            }
+                        }
+                        @Model.DataReturn.Year.Value @quarterText
+                    </div>
+
+                    @if (Model.DataReturn.IsResubmission)
+                    {
+
+                        <div class="highlight-section-text negative-margin">
+                            <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" style="vertical-align: middle; margin-right: 20px;">
+                            Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
+                        </div>
+                    }
+
+                </div>
+            </p>
+        }
+
+        if (hasErrors)
+        {
+            <p>
+                To see your XML file’s full list,
+                @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
+                      Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
+                      "DataReturns",
+                      "Data return downloads",
+                      "Data return errors and warnings")).
+            </p>
+            <p>
+                @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
+                      Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                      "Data return loop",
+                      "Upload a new data return file",
+                      "Data return validation failed",
+                      new Dictionary<string, object> { { "class", "button" } }))
+            </p>
+
+            <div>
+                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
             </div>
-        </p>
-    }
+        }
+        else
+        {
+            <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
 
-    @if (hasErrors)
-    {
-        <p>
-            To see your XML file’s full list,
-            @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
-                            Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
-                            "DataReturns",
-                            "Data return downloads",
-                            "Data return errors and warnings")).
-        </p>
-        <p>
-            @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
-                            Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                            "Data return loop",
-                            "Upload a new data return file",
-                            "Data return validation failed",
-                            new Dictionary<string, object> { { "class", "button" } }))
-        </p>
+            <p>
+                @this.WeeeGds().SubmitWithEventTracking(
+                    "Submit",
+                    "Data return uploads",
+                    "Data return XML submission",
+                    htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
+                    )
+            </p>
 
-        <div>
-            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-        </div>
-    }
-    else
-    {
-        <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
-
-        <p>
-            @this.WeeeGds().SubmitWithEventTracking(
-                                            "Submit",
-                                            "Data return uploads",
-                                            "Data return XML submission",
-                                            htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
-                                            )
-        </p>
-
-        <p>
-            Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
-                            Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                            "Data return loop",
-                            "Upload a new data return file",
-                            "Data return validation successful")).
-        </p>
+            <p>
+                Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
+                                       Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                                       "Data return loop",
+                                       "Upload a new data return file",
+                                       "Data return validation successful")).
+            </p>
+        }
     }
 }
