@@ -113,6 +113,7 @@
     <Compile Include="Producer\RegisteredProducerTests.cs" />
     <Compile Include="Producer\SICCodeTests.cs" />
     <Compile Include="Scheme\MemberUploadTests.cs" />
+    <Compile Include="Scheme\SchemeDataAvailabilityTests.cs" />
     <Compile Include="Scheme\SchemeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,6 +12,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Infrastructure;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using TestHelpers;
@@ -54,6 +54,8 @@
                 .Returns(new RegisteredCompanyDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<OrganisationData>._))
                 .Returns(new ContactDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<MembersDataOverviewViewModel>(A<SchemeData>._))
+                .Returns(new MembersDataOverviewViewModel());
         }
 
         [Fact]
@@ -84,12 +86,43 @@
             Assert.IsType<ViewResult>(result);
         }
 
+        /// <summary>
+        /// This test ensures that the Get for Edit Scheme action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs details.
+        /// </summary>
+        [Fact]
+        public async void GetEditScheme_ReturnsHttpForbiddenResult_WhenCanEditPcsIsFalse()
+        {
+            // Arrange
+            var schemeId = Guid.NewGuid();
+
+            var controller = SchemeController();
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var result = await controller.EditScheme(schemeId);
+            
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
         [Fact]
         public async void GetEditScheme_ReturnsView_WithManageSchemeModel()
         {
             var schemeId = Guid.NewGuid();
 
             var controller = SchemeController();
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);              
 
             var result = await controller.EditScheme(schemeId);
 
@@ -127,6 +160,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = status
                 });
 
@@ -142,6 +176,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Approved
                 });
 
@@ -162,6 +197,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
                 {
+                    CanEdit = true,
                     SchemeStatus = SchemeStatus.Pending
                 });
 
@@ -183,7 +219,7 @@
                    FileContent = "test,test,test"
                });
 
-            var result = await SchemeController().GetProducerCSV(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
+            var result = await SchemeController().GetProducerCsv(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                .MustHaveHappened(Repeated.Exactly.Once);
@@ -457,6 +493,44 @@
             Assert.Equal("EditScheme", routeValues["action"]);
         }
 
+        /// <summary>
+        /// This test ensures that the Get for Manage contact details action returns the HTTP Forbidden code
+        /// when the current user is not allowed to edit pcs contact details.
+        /// </summary>
+        [Fact]
+        public async void GetManageContactDetails_ReturnsHttpForbiddenResult_WhenCanEditIsFalse()
+        {
+            // Arrange
+            var organisationData = new OrganisationData
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = false
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            //Act
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
         [Fact]
         public async Task GetManageContactDetails_WithValidOrganisationId_ShouldReturnsDataAndDefaultView()
         {
@@ -473,6 +547,12 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
+
+            SchemeData scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
 
             var schemeController = SchemeController();
 
@@ -567,6 +647,226 @@
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
+        }
+
+        [Fact]
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(new List<CountryData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = true
+                });
+
+            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "EditSoleTraderOrIndividualOrganisationDetails");
+        }
+
+        [Fact]
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = false
+                });
+
+            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
+        [Fact]
+        public async void PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        {
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(String.Empty, viewResult.ViewName);
+            Assert.Equal(viewModel, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        {
+            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .Returns(true);
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
+            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
+        }
+
+        [Fact]
+        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(new List<CountryData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    Name = "CompanyName",
+                    CompanyRegistrationNumber = "123456789",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = true
+                });
+
+            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "EditRegisteredCompanyOrganisationDetails");
+        }
+
+        [Fact]
+        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    Name = "CompanyName",
+                    CompanyRegistrationNumber = "123456789",
+                    BusinessAddress = new AddressData(),
+                    CanEditOrganisation = false
+                });
+
+            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
+        [Fact]
+        public async void PostEditRegisteredCompanyOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        {
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                CompanyName = "CompanyName",
+                CompaniesRegistrationNumber = "123456789",
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(String.Empty, viewResult.ViewName);
+            Assert.Equal(viewModel, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task PostEditRegisteredCompanyOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        {
+            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                CompanyName = "CompanyName",
+                CompaniesRegistrationNumber = "123456789",
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .Returns(true);
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
+            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
         }
 
         [Fact]
