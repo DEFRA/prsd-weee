@@ -2,6 +2,8 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Shared
 @using EA.Weee.Core.Charges
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
 @model System.Collections.Generic.IList<PendingCharge>
 
 @{
@@ -94,7 +96,7 @@
         }
 
         <p>
-            <a href="javascript:history.back();">Back</a>
+            <a href="@(Url.UrlFor<ChargeController>(a => a.ChooseActivity(authority)))">Back</a>
         </p>
     </div>
 

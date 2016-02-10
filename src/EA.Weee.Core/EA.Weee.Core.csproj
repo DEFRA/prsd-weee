@@ -110,7 +110,9 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
+    <Compile Include="Scheme\SchemeDataAvailability.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationResult.cs" />
+    <Compile Include="Scheme\SchemeAnnualDataAvailability.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
       <SubType>Code</SubType>

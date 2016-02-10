@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Scheme;
 
     public class MembersDataOverviewViewModel : OverviewViewModel
     {
@@ -9,11 +10,10 @@
 
         public string ApprovalNumber { get; set; }
 
-        public IList<YearlyDownloads> DownloadsByYear { get; set; }
+        public SchemeDataAvailability SchemeDataAvailability { get; set; }
 
         public MembersDataOverviewViewModel() : base(OverviewDisplayOption.MembersData)
         {
-            DownloadsByYear = new List<YearlyDownloads>();
         }
     }
 }
