@@ -39,7 +39,7 @@
 
             UpdateOrganisationContactDetails request = new UpdateOrganisationContactDetails(organisationData);
 
-            IUpdateOrganisationContactDetailsDataAccess dataAccess = A.Fake<IUpdateOrganisationContactDetailsDataAccess>();
+            IOrganisationDetailsDataAccess dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
             Organisation organisation = A.Dummy<Organisation>();
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))

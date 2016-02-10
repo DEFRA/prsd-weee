@@ -70,6 +70,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
+    <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Admin\GetAdminUserStatus.cs" />
-    <Compile Include="Admin\GetAllApprovedSchemes.cs" />
+    <Compile Include="Admin\GetSchemes.cs" />
     <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus.cs" />
