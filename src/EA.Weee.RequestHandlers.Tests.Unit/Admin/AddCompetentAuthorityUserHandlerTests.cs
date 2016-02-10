@@ -113,7 +113,8 @@
 
         private UKCompetentAuthority FakeCompetentAuthorityData()
         {
-            UKCompetentAuthority competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"));
+            UKCompetentAuthority competentAuthority = 
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk");
             return competentAuthority;
         }
     }

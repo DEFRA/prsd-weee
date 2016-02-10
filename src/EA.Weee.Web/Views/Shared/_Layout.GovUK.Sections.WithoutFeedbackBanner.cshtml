@@ -67,7 +67,7 @@
         }
        
         <li>
-            @(this.WeeeGds().ActionLinkToNewTab(Url.UrlFor<NewUserController>(c => c.Cookies())))
+            @(this.WeeeGds().ActionLinkToNewTab("Cookies", Url.UrlFor<NewUserController>(c => c.Cookies())))
         </li>
     </ul>
 }
