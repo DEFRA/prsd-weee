@@ -5,14 +5,14 @@
 @section main_content {
     @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    @foreach (var yearlyDownloads in Model.DownloadsByYear.OrderByDescending(yd => yd.Year))
+    @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
     {
         <h2 class="heading-medium">@yearlyDownloads.Year</h2>
 
         if (yearlyDownloads.IsMembersDownloadAvailable)
         {
             <p>
-                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCSV(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">Members overview.csv</a>
+                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCsv(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">Members overview.csv</a>
                 <span style="color: #6f777b"> (less than 500KB).</span>
             </p>
         }
@@ -20,7 +20,7 @@
         if (yearlyDownloads.IsDataReturnsDownloadAvailable)
         {
             <p>
-                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCSV(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">EEE/WEEE data overview.csv</a>
+                <a href="@(Url.UrlFor<SchemeController>(a => a.GetEeeWeeeCsv(Model.OrganisationId, yearlyDownloads.Year)))">EEE/WEEE data overview.csv</a>
                 <span style="color: #6f777b"> (less than 500KB).</span>
             </p>
         }
