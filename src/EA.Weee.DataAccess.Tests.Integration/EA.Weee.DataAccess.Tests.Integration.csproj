@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auditing\AuditingTests.cs" />
+    <Compile Include="DataAccess\SchemeDataAccessTests.cs" />
     <Compile Include="MigratedProducersIntegration.cs" />
     <Compile Include="OrganisationIntegration.cs" />
     <Compile Include="PrnGenerationIntegration.cs" />

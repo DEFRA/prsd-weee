@@ -23,6 +23,7 @@
     using ViewModels.Scheme.Overview.OrganisationDetails;
     using ViewModels.Scheme.Overview.PcsDetails;
     using Web.ViewModels.Shared.Scheme;
+    using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
@@ -89,10 +90,7 @@
                 {
                     case OverviewDisplayOption.MembersData:
 
-                        // TODO: Extend GetSchemeById request (above) to include WEEE/EEE as well as members download information, and create a mapping
-                        var membersDataModel = new MembersDataOverviewViewModel();
-                        membersDataModel.SchemeId = schemeId;
-                        membersDataModel.SchemeName = scheme.SchemeName;
+                        var membersDataModel = mapper.Map<MembersDataOverviewViewModel>(scheme);
                         return View("Overview/MembersDataOverview", membersDataModel);
 
                     case OverviewDisplayOption.OrganisationDetails:
@@ -261,7 +259,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid orgId, int complianceYear, string approvalNumber)
+        public async Task<ActionResult> GetProducerCsv(Guid orgId, int complianceYear, string approvalNumber)
         {
             using (var client = apiClient())
             {
@@ -273,6 +271,19 @@
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetEeeWeeeCsv(Guid organisationId, int complianceYear)
+        {
+            FileInfo file;
+            using (IWeeeClient client = apiClient())
+            {
+                var fetchSummaryCsv = new FetchSummaryCsv(organisationId, complianceYear);
+                file = await client.SendAsync(User.GetAccessToken(), fetchSummaryCsv);
+            }
+
+            return File(file.Data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
         }
 
         [HttpGet]
