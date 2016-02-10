@@ -82,7 +82,7 @@
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Error\UploadErrorType.cs" />
-    <Compile Include="Scheme\SchemeDownloadsByYears.cs" />
+    <Compile Include="Scheme\SchemeDataAvailability.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
@@ -104,7 +104,7 @@
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
-    <Compile Include="Scheme\SchemeDownloadsByYear.cs" />
+    <Compile Include="Scheme\SchemeAnnualDataAvailability.cs" />
     <Compile Include="Security\Role.cs" />
     <Compile Include="User\UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />

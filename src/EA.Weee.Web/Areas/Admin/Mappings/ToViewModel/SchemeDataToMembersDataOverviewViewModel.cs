@@ -13,7 +13,7 @@
                 SchemeId = source.Id,
                 SchemeName = source.SchemeName,
                 ApprovalNumber = source.ApprovalName,
-                DownloadsByYears = source.SchemeDownloadsByYears,
+                SchemeDataAvailability = source.SchemeDataAvailability,
                 OrganisationId = source.OrganisationId
             };
         }

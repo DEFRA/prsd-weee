@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.RazorHelpers
+namespace EA.Weee.Web.RazorHelpers
 {
     using System.Collections.Generic;
     using System.Web.Mvc;

@@ -10,7 +10,7 @@
 
         public string ApprovalNumber { get; set; }
 
-        public SchemeDownloadsByYears DownloadsByYears { get; set; }
+        public SchemeDataAvailability SchemeDataAvailability { get; set; }
 
         public MembersDataOverviewViewModel() : base(OverviewDisplayOption.MembersData)
         {

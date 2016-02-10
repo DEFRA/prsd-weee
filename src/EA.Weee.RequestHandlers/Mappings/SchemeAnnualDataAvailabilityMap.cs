@@ -3,11 +3,11 @@
     using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    public class SchemeDownloadsByYearMap : IMap<SchemeDownloadsByYear, Core.Scheme.SchemeDownloadsByYear>
+    public class SchemeAnnualDataAvailabilityMap : IMap<SchemeAnnualDataAvailability, Core.Scheme.SchemeAnnualDataAvailability>
     {
-        public Core.Scheme.SchemeDownloadsByYear Map(SchemeDownloadsByYear source)
+        public Core.Scheme.SchemeAnnualDataAvailability Map(SchemeAnnualDataAvailability source)
         {
-            return new Core.Scheme.SchemeDownloadsByYear
+            return new Core.Scheme.SchemeAnnualDataAvailability
             {
                 IsDataReturnsDownloadAvailable = source.IsDataReturnsDownloadAvailable,
                 IsMembersDownloadAvailable = source.IsMembersDownloadAvailable,

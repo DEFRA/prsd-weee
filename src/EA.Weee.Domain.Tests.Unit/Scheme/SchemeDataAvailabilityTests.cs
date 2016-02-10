@@ -5,12 +5,12 @@
     using Domain.Scheme;
     using Xunit;
 
-    public class SchemeDownloadsByYearsTests
+    public class SchemeDataAvailabilityTests
     {
         [Fact]
         public void Create_WithNullListsOfYears_ReturnsEmptyListOfDownloads()
         {
-            var result = SchemeDownloadsByYears.Create(null, null);
+            var result = SchemeDataAvailability.Create(null, null);
 
             Assert.Empty(result.DownloadsByYears);
         }
@@ -18,7 +18,7 @@
         [Fact]
         public void Create_WithEmptyListsOfYears_ReturnsEmptyListOfDownloads()
         {
-            var result = SchemeDownloadsByYears.Create(new List<int>(), new List<int>());
+            var result = SchemeDataAvailability.Create(new List<int>(), new List<int>());
 
             Assert.Empty(result.DownloadsByYears);
         }
@@ -28,7 +28,7 @@
         {
             const int complianceYear = 2016;
 
-            var result = SchemeDownloadsByYears.Create(new List<int> { complianceYear }, null);
+            var result = SchemeDataAvailability.Create(new List<int> { complianceYear }, null);
 
             Assert.Single(result.DownloadsByYears);
 
@@ -44,7 +44,7 @@
         {
             const int complianceYear = 2016;
 
-            var result = SchemeDownloadsByYears.Create(new List<int> { complianceYear }, new List<int> { complianceYear });
+            var result = SchemeDataAvailability.Create(new List<int> { complianceYear }, new List<int> { complianceYear });
 
             Assert.Single(result.DownloadsByYears);
 
@@ -63,7 +63,7 @@
             const int memberUploadComplianceYear = 2016;
             const int dataReturnComplianceYear = 2017;
 
-            var result = SchemeDownloadsByYears.Create(new List<int> { memberUploadComplianceYear }, new List<int> { dataReturnComplianceYear });
+            var result = SchemeDataAvailability.Create(new List<int> { memberUploadComplianceYear }, new List<int> { dataReturnComplianceYear });
 
             Assert.Equal(2, result.DownloadsByYears.Count);
 

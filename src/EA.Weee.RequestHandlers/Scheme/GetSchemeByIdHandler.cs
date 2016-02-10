@@ -45,12 +45,12 @@
             var complianceYearsWithSubmittedDataReturns =
                 await dataAccess.GetComplianceYearsWithSubmittedDataReturns(request.SchemeId);
 
-            var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDownloadsByYears>(
-                Domain.Scheme.SchemeDownloadsByYears.Create(
+            var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDataAvailability>(
+                Domain.Scheme.SchemeDataAvailability.Create(
                     complianceYearsWithSubmittedMemberUploads,
                     complianceYearsWithSubmittedDataReturns));
 
-            schemeData.SchemeDownloadsByYears = schemeDownloadsByYears;
+            schemeData.SchemeDataAvailability = schemeDownloadsByYears;
 
             return schemeData;
         }
