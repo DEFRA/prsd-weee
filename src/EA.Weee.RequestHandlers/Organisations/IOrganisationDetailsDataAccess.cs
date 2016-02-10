@@ -5,7 +5,7 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
 
-    public interface IUpdateOrganisationContactDetailsDataAccess
+    public interface IOrganisationDetailsDataAccess
     {
         Task<Organisation> FetchOrganisationAsync(Guid organisationId);
         

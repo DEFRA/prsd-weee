@@ -9,6 +9,8 @@
 
         public AddressViewModel Address { get; set; }
 
+        public bool CanEditOrganisation { get; set; }
+
         protected OrganisationDetailsOverviewViewModel()
             : base(OverviewDisplayOption.OrganisationDetails)
         {
