@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Core.Scheme;
+    using DataAccess.DataAccess;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
@@ -11,18 +12,16 @@
 
     internal class GetSchemeByIdHandler : IRequestHandler<GetSchemeById, SchemeData>
     {
-        private readonly IGetSchemeByIdDataAccess dataAccess;
+        private readonly ISchemeDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
+        private readonly IMapper mapper;
 
-        private readonly IMap<Scheme, SchemeData> schemeMap;
-
-        public GetSchemeByIdHandler(
-            IGetSchemeByIdDataAccess dataAccess,
-            IMap<Scheme, SchemeData> schemeMap,
+        public GetSchemeByIdHandler(ISchemeDataAccess dataAccess,
+            IMapper mapper,
             IWeeeAuthorization authorization)
         {
             this.dataAccess = dataAccess;
-            this.schemeMap = schemeMap;
+            this.mapper = mapper;
             this.authorization = authorization;
         }
 
@@ -38,7 +37,22 @@
                 throw new ArgumentException(message);
             }
 
-            return schemeMap.Map(scheme);
+            var schemeData = mapper.Map<Scheme, SchemeData>(scheme);
+
+            var complianceYearsWithSubmittedMemberUploads =
+                await dataAccess.GetComplianceYearsWithSubmittedMemberUploads(request.SchemeId);
+
+            var complianceYearsWithSubmittedDataReturns =
+                await dataAccess.GetComplianceYearsWithSubmittedDataReturns(request.SchemeId);
+
+            var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDataAvailability>(
+                Domain.Scheme.SchemeDataAvailability.Create(
+                    complianceYearsWithSubmittedMemberUploads,
+                    complianceYearsWithSubmittedDataReturns));
+
+            schemeData.SchemeDataAvailability = schemeDownloadsByYears;
+
+            return schemeData;
         }
     }
 }

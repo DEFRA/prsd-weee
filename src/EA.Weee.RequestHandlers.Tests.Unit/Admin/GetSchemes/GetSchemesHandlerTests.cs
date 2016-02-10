@@ -54,7 +54,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(new UKCompetentAuthorityMap());
+            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
             Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
@@ -113,7 +113,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(new UKCompetentAuthorityMap());
+            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
             Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
@@ -172,7 +172,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(new UKCompetentAuthorityMap());
+            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
             Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
