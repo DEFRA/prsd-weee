@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
-    public class SchemeDownloadsByYear
+    public class SchemeAnnualDataAvailability
     {
         public int Year { get; set; }
 
@@ -8,7 +8,7 @@
 
         public bool IsDataReturnsDownloadAvailable { get; set; }
 
-        public SchemeDownloadsByYear()
+        public SchemeAnnualDataAvailability()
         {
             IsMembersDownloadAvailable = false;
             IsDataReturnsDownloadAvailable = false;
