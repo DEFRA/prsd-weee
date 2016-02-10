@@ -23,6 +23,7 @@
     using ViewModels.Scheme.Overview.OrganisationDetails;
     using ViewModels.Scheme.Overview.PcsDetails;
     using Web.ViewModels.Shared.Scheme;
+    using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
@@ -89,10 +90,7 @@
                 {
                     case OverviewDisplayOption.MembersData:
 
-                        // TODO: Extend GetSchemeById request (above) to include WEEE/EEE as well as members download information, and create a mapping
-                        var membersDataModel = new MembersDataOverviewViewModel();
-                        membersDataModel.SchemeId = schemeId;
-                        membersDataModel.SchemeName = scheme.SchemeName;
+                        var membersDataModel = mapper.Map<MembersDataOverviewViewModel>(scheme);
                         return View("Overview/MembersDataOverview", membersDataModel);
 
                     case OverviewDisplayOption.OrganisationDetails:
@@ -131,11 +129,11 @@
                         var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
                         contactDetailsModel.SchemeName = scheme.SchemeName;
                         contactDetailsModel.SchemeId = scheme.Id;
+                        contactDetailsModel.CanEditContactDetails = scheme.CanEdit;
                         return View("Overview/ContactDetailsOverview", contactDetailsModel);
 
                     case OverviewDisplayOption.PcsDetails:
                     default:
-
                         return View("Overview/PcsDetailsOverview", mapper.Map<PcsDetailsOverviewViewModel>(scheme));
                 }
             }
@@ -149,6 +147,11 @@
                 using (var client = apiClient())
                 {
                     var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId.Value));
+
+                    if (!scheme.CanEdit)
+                    {
+                        return new HttpForbiddenResult();
+                    }
 
                     List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(scheme.OrganisationId));
 
@@ -265,7 +268,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid orgId, int complianceYear, string approvalNumber)
+        public async Task<ActionResult> GetProducerCsv(Guid orgId, int complianceYear, string approvalNumber)
         {
             using (var client = apiClient())
             {
@@ -280,6 +283,19 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetEeeWeeeCsv(Guid organisationId, int complianceYear)
+        {
+            FileInfo file;
+            using (IWeeeClient client = apiClient())
+            {
+                var fetchSummaryCsv = new FetchSummaryCsv(organisationId, complianceYear);
+                file = await client.SendAsync(User.GetAccessToken(), fetchSummaryCsv);
+            }
+
+            return File(file.Data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid schemeId, Guid orgId)
         {
             await SetBreadcrumb(schemeId);
@@ -287,6 +303,11 @@
             var model = new ManageContactDetailsViewModel();
             using (var client = apiClient())
             {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                if (!scheme.CanEdit)
+                {
+                    return new HttpForbiddenResult();
+                }
                 var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
