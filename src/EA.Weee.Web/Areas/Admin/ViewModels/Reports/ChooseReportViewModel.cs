@@ -9,11 +9,11 @@
             : base(new List<string>
             {
                 Reports.ProducerDetails,
-            Reports.ProducerPublicRegister,
-            Reports.UkEeeData,
+                Reports.ProducerEeeData,
+                Reports.SchemeWeeeData,
+                Reports.UkEeeData,
                 Reports.UkWeeeData,
-            Reports.ProducerEeeData,
-                Reports.SchemeWeeeData
+                Reports.ProducerPublicRegister
             })
         {
         }
