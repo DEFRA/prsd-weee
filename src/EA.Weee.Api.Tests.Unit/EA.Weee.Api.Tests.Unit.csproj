@@ -147,6 +147,10 @@
       <Project>{22dd3186-14ce-41e6-916d-643d4dee8b48}</Project>
       <Name>EA.Weee.Email</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
