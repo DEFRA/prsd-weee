@@ -8,18 +8,20 @@
     using Prsd.Email;
     using Xunit;
 
-    public class NotificationSenderTests
+    public class WeeeSenderTests
     {
-        [Fact]
-        public async Task SendAsync_SendsSpecifiedMailMessage()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SendAsync_SendsSpecifiedMailMessage(bool continueOnException)
         {
             // Arrange
-            var builder = new NotificationSenderBuilder();
-            var notificationSender = builder.Build();
+            var builder = new WeeeSenderBuilder();
+            var weeeSender = builder.Build();
             var mailMessage = new MailMessage();
 
             // Act
-            await notificationSender.SendAsync(mailMessage);
+            await weeeSender.SendAsync(mailMessage, continueOnException);
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage))
@@ -27,18 +29,37 @@
         }
 
         [Fact]
-        public async Task SendAsync_SenderThrowsException_ExceptionIsLogged()
+        public async Task SendAsync_SenderThrowsException_FalseForContinueOnException_ExceptionIsNotThrown()
         {
             // Arrange
-            var builder = new NotificationSenderBuilder();
+            var builder = new WeeeSenderBuilder();
+
+            var senderException = new Exception();
+            A.CallTo(() => builder.Sender.SendAsync(A<MailMessage>._))
+                 .Throws(senderException);
+
+            var weeeSender = builder.Build();
+
+            // Act, Assert
+            var thrownException = await Record.ExceptionAsync(() => weeeSender.SendAsync(A.Dummy<MailMessage>(), false));
+
+            Assert.NotNull(thrownException);
+            Assert.Same(senderException, thrownException);
+        }
+
+        [Fact]
+        public async Task SendAsync_SenderThrowsException_TrueForContinueOnException_ExceptionIsLogged()
+        {
+            // Arrange
+            var builder = new WeeeSenderBuilder();
 
             A.CallTo(() => builder.Sender.SendAsync(A<MailMessage>._))
                  .Throws(new Exception());
 
-            var notificationSender = builder.Build();
+            var weeeSender = builder.Build();
 
             // Act
-            await notificationSender.SendAsync(A.Dummy<MailMessage>());
+            var result = await weeeSender.SendAsync(A.Dummy<MailMessage>(), true);
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(A<MailMessage>._))
@@ -46,13 +67,15 @@
 
             A.CallTo(() => builder.Logger.Log(A<Exception>._))
                 .MustHaveHappened();
+
+            Assert.True(result);
         }
 
         [Fact]
-        public async Task SendAsync_SenderThrowsException_LogContainsExceptionThrownAndMessageSubject()
+        public async Task SendAsync_SenderThrowsException_TrueForContinueOnException_LogContainsExceptionThrownAndMessageSubject()
         {
             // Arrange
-            var builder = new NotificationSenderBuilder();
+            var builder = new WeeeSenderBuilder();
 
             var senderException = new Exception();
             var message = new MailMessage
@@ -68,31 +91,32 @@
             A.CallTo(() => builder.Logger.Log(A<Exception>._))
                 .Invokes((Exception x) => generatedException = x);
 
-            var notificationSender = builder.Build();
+            var weeeSender = builder.Build();
 
             // Act
-            await notificationSender.SendAsync(message);
+            var result = await weeeSender.SendAsync(message, true);
 
             // Assert
             Assert.NotNull(generatedException);
             Assert.Contains("'TestEmail'", generatedException.Message);
             Assert.Same(senderException, generatedException.InnerException);
+            Assert.True(result);
         }
 
-        private class NotificationSenderBuilder
+        private class WeeeSenderBuilder
         {
             public readonly ISender Sender;
             public readonly ILogger Logger;
 
-            public NotificationSenderBuilder()
+            public WeeeSenderBuilder()
             {
                 Sender = A.Fake<ISender>();
                 Logger = A.Fake<ILogger>();
             }
 
-            public NotificationSender Build()
+            public WeeeSender Build()
             {
-                return new NotificationSender(Sender, Logger);
+                return new WeeeSender(Sender, Logger);
             }
         }
     }

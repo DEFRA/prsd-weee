@@ -31,7 +31,7 @@
 
             var schemeSubmissionEvent = new SchemeMemberSubmissionEvent(memberUpload);
 
-            var emailService = A.Fake<IWeeeNotificationEmailService>();
+            var emailService = A.Fake<IWeeeEmailService>();
             var handler = new SchemeMemberSubmissionEventHandler(emailService);
 
             // Act
@@ -62,7 +62,7 @@
 
             var schemeSubmissionEvent = new SchemeMemberSubmissionEvent(memberUpload);
 
-            var emailService = A.Fake<IWeeeNotificationEmailService>();
+            var emailService = A.Fake<IWeeeEmailService>();
             var handler = new SchemeMemberSubmissionEventHandler(emailService);
 
             // Act
@@ -91,7 +91,7 @@
 
             var schemeSubmissionEvent = new SchemeMemberSubmissionEvent(memberUpload);
 
-            var emailService = A.Fake<IWeeeNotificationEmailService>();
+            var emailService = A.Fake<IWeeeEmailService>();
             var handler = new SchemeMemberSubmissionEventHandler(emailService);
 
             // Act
@@ -122,7 +122,7 @@
 
             var schemeSubmissionEvent = new SchemeMemberSubmissionEvent(memberUpload);
 
-            var emailService = A.Fake<IWeeeNotificationEmailService>();
+            var emailService = A.Fake<IWeeeEmailService>();
             var handler = new SchemeMemberSubmissionEventHandler(emailService);
 
             // Act
