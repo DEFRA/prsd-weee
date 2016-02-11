@@ -6,9 +6,9 @@
     using System.Web.Mvc;
     using Core.Admin;
     using Core.DataStandards;
-    using Core.Security;
     using Core.Shared;
     using Prsd.Core.Helpers;
+    using Security;
 
     public class EditUserViewModel
     {

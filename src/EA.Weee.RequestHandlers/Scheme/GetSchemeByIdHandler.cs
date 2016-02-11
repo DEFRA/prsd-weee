@@ -3,13 +3,13 @@
     using System;
     using System.Threading.Tasks;
     using Core.Scheme;
-    using Core.Security;
     using DataAccess.DataAccess;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
+    using Weee.Security;
 
     internal class GetSchemeByIdHandler : IRequestHandler<GetSchemeById, SchemeData>
         {
