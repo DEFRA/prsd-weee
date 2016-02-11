@@ -1,7 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Charge
+@using MvcNavigationHelpers
 @model ChooseActivityViewModel
 
 @{
@@ -42,7 +44,7 @@
     }
 
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<ChargeController>(a => a.SelectAuthority()))">Back</a>
     </p>
 }
 

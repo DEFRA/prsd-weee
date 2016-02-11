@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Core.Scheme;
+    using Core.Security;
     using DataAccess.DataAccess;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
@@ -11,48 +12,48 @@
     using Requests.Scheme;
 
     internal class GetSchemeByIdHandler : IRequestHandler<GetSchemeById, SchemeData>
-    {
-        private readonly ISchemeDataAccess dataAccess;
-        private readonly IWeeeAuthorization authorization;
-        private readonly IMapper mapper;
-
-        public GetSchemeByIdHandler(ISchemeDataAccess dataAccess,
-            IMapper mapper,
-            IWeeeAuthorization authorization)
         {
-            this.dataAccess = dataAccess;
-            this.mapper = mapper;
-            this.authorization = authorization;
-        }
+            private readonly ISchemeDataAccess dataAccess;
+            private readonly IWeeeAuthorization authorization;
+            private readonly IMapper mapper;
 
-        public async Task<SchemeData> HandleAsync(GetSchemeById request)
-        {
-            authorization.EnsureCanAccessInternalArea();
-
-            var scheme = await dataAccess.GetSchemeOrDefault(request.SchemeId);
-
-            if (scheme == null)
+            public GetSchemeByIdHandler(ISchemeDataAccess dataAccess,
+                IMapper mapper,
+                IWeeeAuthorization authorization)
             {
-                string message = string.Format("No scheme was found with id \"{0}\".", request.SchemeId);
-                throw new ArgumentException(message);
+                this.dataAccess = dataAccess;
+                this.mapper = mapper;
+                this.authorization = authorization;
             }
 
-            var schemeData = mapper.Map<Scheme, SchemeData>(scheme);
+            public async Task<SchemeData> HandleAsync(GetSchemeById request)
+            {
+                authorization.EnsureCanAccessInternalArea();
 
-            var complianceYearsWithSubmittedMemberUploads =
-                await dataAccess.GetComplianceYearsWithSubmittedMemberUploads(request.SchemeId);
+                var scheme = await dataAccess.GetSchemeOrDefault(request.SchemeId);
 
-            var complianceYearsWithSubmittedDataReturns =
-                await dataAccess.GetComplianceYearsWithSubmittedDataReturns(request.SchemeId);
+                if (scheme == null)
+                {
+                    string message = string.Format("No scheme was found with id \"{0}\".", request.SchemeId);
+                    throw new ArgumentException(message);
+                }
 
-            var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDataAvailability>(
-                Domain.Scheme.SchemeDataAvailability.Create(
-                    complianceYearsWithSubmittedMemberUploads,
-                    complianceYearsWithSubmittedDataReturns));
+                var schemeData = mapper.Map<Scheme, SchemeData>(scheme);
 
-            schemeData.SchemeDataAvailability = schemeDownloadsByYears;
+                var complianceYearsWithSubmittedMemberUploads =
+                    await dataAccess.GetComplianceYearsWithSubmittedMemberUploads(request.SchemeId);
 
-            return schemeData;
-        }
-    }
+                var complianceYearsWithSubmittedDataReturns =
+                    await dataAccess.GetComplianceYearsWithSubmittedDataReturns(request.SchemeId);
+
+                var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDataAvailability>(
+                    Domain.Scheme.SchemeDataAvailability.Create(
+                        complianceYearsWithSubmittedMemberUploads,
+                        complianceYearsWithSubmittedDataReturns));
+
+                schemeData.SchemeDataAvailability = schemeDownloadsByYears;
+                schemeData.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
+                return schemeData;
+            }
+        }      
 }

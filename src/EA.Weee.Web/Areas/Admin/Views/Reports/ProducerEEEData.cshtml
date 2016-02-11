@@ -42,6 +42,7 @@
             window.location = "@Html.Raw(@Url.Action("DownloadProducerEeeDataCSV", new
                           {
                               complianceYear = Model.SelectedYear,
+                              schemeId = Model.SelectedSchemeId,
                               obligationType = Model.SelectedObligationType
                           }))";
         </script>
