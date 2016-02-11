@@ -2,12 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Core.Security;
     using Domain;
     using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using Weee.Security;
 
     public class UpdateOrganisationDetailsHandler : IRequestHandler<UpdateOrganisationDetails, bool>
     {

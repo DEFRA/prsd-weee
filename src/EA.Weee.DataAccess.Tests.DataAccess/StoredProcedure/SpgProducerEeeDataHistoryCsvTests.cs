@@ -706,5 +706,68 @@
                 Assert.Equal(0, results.ProducerReturnsHistoryData.Count);                
             }
         }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_ReturnsOneRowForChangedDataEvenIfOneCategoryChanged()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE3334ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2000;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN897");
+                producer1.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
+
+                EeeOutputAmount eeeOutputAmount = helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 1, 100);
+                EeeOutputAmount eeeOutputAmount1 = helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 2, 200);
+                
+                //Second upload with only category 1 changed, category 2 remains unchanges
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
+
+                EeeOutputAmount eeeOutputAmount3 = helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, "B2B", 1, 300);
+
+                dataReturnVersion2.EeeOutputReturnVersion.EeeOutputReturnVersionAmounts.Add(new EeeOutputReturnVersionAmount
+                {
+                    EeeOuputAmountId = eeeOutputAmount1.Id,
+                    EeeOutputAmount = eeeOutputAmount1,
+                    EeeOutputReturnVersionId = dataReturnVersion2.EeeOutputReturnVersion.Id,
+                    EeeOutputReturnVersion = dataReturnVersion2.EeeOutputReturnVersion
+                });
+               
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+
+                //Assert
+                Assert.NotNull(results);
+                //Only shows entries for tonnage value changes and ignores the ones with no change.
+                Assert.Equal(2, results.ProducerReturnsHistoryData.Count);
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 2), r2.SubmittedDate));
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                  (r1) => Assert.Equal("No", r1.LatestData),
+                  (r2) => Assert.Equal("Yes", r2.LatestData));
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                  (r1) => Assert.Equal(100, r1.Cat1B2B),
+                  (r2) => Assert.Equal(300, r2.Cat1B2B));
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                  (r1) => Assert.Equal(200, r1.Cat2B2B),
+                  (r2) => Assert.Equal(200, r2.Cat2B2B));
+            }
+        }
     }
 }

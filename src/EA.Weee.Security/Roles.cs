@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Security
+﻿namespace EA.Weee.Security
 {
     public enum Roles
     {

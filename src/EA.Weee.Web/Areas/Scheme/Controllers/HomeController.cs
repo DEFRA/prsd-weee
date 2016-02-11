@@ -175,8 +175,8 @@
                 {
                     PossibleValues = new List<string>
                     {
-                        SubmissionType.EeeOrWeeeDataReturns,
-                        SubmissionType.MemberRegistrations
+                        SubmissionType.MemberRegistrations,
+                        SubmissionType.EeeOrWeeeDataReturns
                     },
                     OrganisationId = pcsId
                 };
@@ -206,8 +206,8 @@
             await SetBreadcrumbAndPcsBanner(viewModel.OrganisationId, "View submission history");
             viewModel.PossibleValues = new List<string>
             {
-                SubmissionType.EeeOrWeeeDataReturns,
-                SubmissionType.MemberRegistrations
+                SubmissionType.MemberRegistrations,
+                SubmissionType.EeeOrWeeeDataReturns
             };
 
             return View(viewModel);
