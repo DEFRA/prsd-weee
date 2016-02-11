@@ -1,17 +1,14 @@
 namespace EA.Weee.Web.RazorHelpers
 {
-    using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Prsd.Core;
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString DataTable(string caption, Dictionary<string, object> data)
+        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data)
         {
-            if (string.IsNullOrEmpty(caption))
-            {
-                throw new InvalidOperationException("A caption should always be provided for a table");
-            }
+            Guard.ArgumentNotNullOrEmpty(() => caption, caption);
 
             var html = string.Format("<div class=\"form-group\"><table><caption><span class=\"hidden-for-screen-reader\">{0}</span></caption><thead><tr><th colspan=\"2\"></th></tr></thead><tbody>", caption);
 
