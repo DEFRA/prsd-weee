@@ -3,7 +3,6 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using DataAccess.DataAccess;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -11,6 +10,7 @@
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 

@@ -170,20 +170,7 @@
                         ComplianceYears = years
                     };
 
-                    if (scheme.SchemeStatus == SchemeStatus.Pending)
-                    {
-                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
-                        statuses.Remove((int)SchemeStatus.Withdrawn);
-                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
-                    }
-
-                    if (scheme.SchemeStatus == SchemeStatus.Approved)
-                    {
-                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
-                        statuses.Remove((int)SchemeStatus.Pending);
-                        statuses.Remove((int)SchemeStatus.Rejected);
-                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
-                    }
+                    model.StatusSelectList = new SelectList(GetStatuses(scheme.SchemeStatus), "Key", "Value");
 
                     await SetBreadcrumb(schemeId);
                     return View(model);
@@ -193,6 +180,22 @@
             {
                 return RedirectToAction("ManageSchemes");
             }
+        }
+
+        private Dictionary<int, string> GetStatuses(SchemeStatus currentSchemeStatus)
+        {
+            var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
+            if (currentSchemeStatus == SchemeStatus.Pending)
+            {
+                statuses.Remove((int)SchemeStatus.Withdrawn);
+            }
+
+            if (currentSchemeStatus == SchemeStatus.Approved)
+            {
+                statuses.Remove((int)SchemeStatus.Pending);
+                statuses.Remove((int)SchemeStatus.Rejected);
+            }
+            return statuses;
         }
 
         [HttpPost]
@@ -213,6 +216,12 @@
 
             if (!ModelState.IsValid)
             {
+                using (var client = apiClient())
+                {
+                    var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                    model.StatusSelectList = new SelectList(GetStatuses(scheme.SchemeStatus), "Key", "Value");
+                }
+
                 await SetBreadcrumb(schemeId);
                 model.CompetentAuthorities = await GetCompetentAuthorities();
                 return View(model);

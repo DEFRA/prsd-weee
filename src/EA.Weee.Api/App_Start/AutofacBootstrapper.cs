@@ -12,6 +12,7 @@
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Autofac;
     using RequestHandlers;
+    using Security;
     using XmlValidation;
 
     public class AutofacBootstrapper
@@ -38,6 +39,7 @@
             builder.RegisterModule(new XmlValidationModule());
             builder.RegisterModule(new EventDispatcherModule());
             builder.RegisterModule(new XmlModule());
+            builder.RegisterModule(new SecurityModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5
             builder.RegisterType<WeeeIdentityContext>().AsSelf().InstancePerRequest();
