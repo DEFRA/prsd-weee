@@ -149,14 +149,14 @@
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
-                title => Assert.Equal("DCF", title),
-                title => Assert.Equal("Distributors", title),
-                title => Assert.Equal("Final holders", title),
-                title => Assert.Equal("Total AATF/AE", title),
-                title => Assert.Equal("AATF1", title),
-                title => Assert.Equal("AATF2", title),
-                title => Assert.Equal("AE1", title),
-                title => Assert.Equal("AE2", title));
+                title => Assert.Equal("DCF (t)", title),
+                title => Assert.Equal("Distributors (t)", title),
+                title => Assert.Equal("Final holders (t)", title),
+                title => Assert.Equal("Total AATF/AE (t)", title),
+                title => Assert.Equal("AATF1 (t)", title),
+                title => Assert.Equal("AATF2 (t)", title),
+                title => Assert.Equal("AE1 (t)", title),
+                title => Assert.Equal("AE2 (t)", title));
         }
 
         /// <summary>
@@ -198,12 +198,12 @@
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
-                title => Assert.Equal("DCF", title),
-                title => Assert.Equal("Total AATF/AE", title),
-                title => Assert.Equal("AATF1", title),
-                title => Assert.Equal("AATF2", title),
-                title => Assert.Equal("AE1", title),
-                title => Assert.Equal("AE2", title));
+                title => Assert.Equal("DCF (t)", title),
+                title => Assert.Equal("Total AATF/AE (t)", title),
+                title => Assert.Equal("AATF1 (t)", title),
+                title => Assert.Equal("AATF2 (t)", title),
+                title => Assert.Equal("AE1 (t)", title),
+                title => Assert.Equal("AE2 (t)", title));
         }
 
         /// <summary>
