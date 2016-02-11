@@ -82,7 +82,7 @@ SELECT EeeData.EeeReturnVersionId,
 				   eee.Quarter, eee.ObligationType, eee.SubmittedDate, eee.Tonnage, eee.WeeeCategory 
 				from #EEETable eee
 				INNER JOIN (
-								--select DISTINCT EeeReturnVersionId, SubmittedDate 
+								--select DISTINCT changed submission based on Id and submitted date
 								select DISTINCT EeeReturnVersionId, SubmittedDate 
 									from (
 											select EeeReturnVersionId, SubmittedDate from #EEETable where RowNumber = 1
