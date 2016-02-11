@@ -2,12 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Core.Security;
     using EA.Weee.DataAccess.Identity;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     internal class UpdateUserHandler : IRequestHandler<UpdateUser, Guid>
     {

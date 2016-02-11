@@ -319,6 +319,10 @@
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
       <Name>EA.Weee.XmlValidation</Name>

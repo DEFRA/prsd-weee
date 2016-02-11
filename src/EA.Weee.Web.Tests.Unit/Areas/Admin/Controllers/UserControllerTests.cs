@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Security;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -10,6 +11,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Security;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;
@@ -116,7 +118,7 @@
                 Email = "test@ea.com",
                 IsCompetentAuthorityUser = true,
                 OrganisationName = "test ltd.",
-                Role = new Core.Security.Role { Name = "InternalAdmin", Description = "Administrator" }
+                Role = new Role { Name = "InternalAdmin", Description = "Administrator" }
             };
 
             Guid id = Guid.NewGuid();

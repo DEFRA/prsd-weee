@@ -51,8 +51,8 @@
                 {
                     PossibleValues = new List<string>
                     {
-                        SubmissionType.EeeOrWeeeDataReturns,
-                        SubmissionType.MemberRegistrations
+                        SubmissionType.MemberRegistrations,
+                        SubmissionType.EeeOrWeeeDataReturns
                     }
                 };
 
@@ -81,8 +81,8 @@
             await SetBreadcrumb();
             viewModel.PossibleValues = new List<string>
             {
-                SubmissionType.EeeOrWeeeDataReturns,
-                SubmissionType.MemberRegistrations
+                SubmissionType.MemberRegistrations,
+                SubmissionType.EeeOrWeeeDataReturns
             };
 
             return View(viewModel);
@@ -105,7 +105,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
 
-                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.Approved);
+                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     SubmissionsHistoryViewModel model = new SubmissionsHistoryViewModel
@@ -199,7 +199,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
 
-                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.Approved);
+                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
