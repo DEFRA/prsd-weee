@@ -3,7 +3,6 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using DataAccess.Identity;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
@@ -15,6 +14,7 @@
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
     using OrganisationType = Core.Organisations.OrganisationType;
