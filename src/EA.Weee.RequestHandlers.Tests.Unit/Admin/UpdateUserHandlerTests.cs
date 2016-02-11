@@ -3,13 +3,13 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using EA.Weee.DataAccess.Identity;
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 
