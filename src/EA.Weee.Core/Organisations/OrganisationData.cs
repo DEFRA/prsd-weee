@@ -38,5 +38,7 @@
         /// otherwise this is the trading name.
         /// </summary>
         public string OrganisationName { get; set; }
+
+        public bool CanEditOrganisation { get; set; }
     }
 }

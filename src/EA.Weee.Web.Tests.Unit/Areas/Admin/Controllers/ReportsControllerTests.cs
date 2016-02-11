@@ -211,7 +211,7 @@
                 SchemeName = "Test Scheme"
             };
             List<SchemeData> schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._)).Returns(schemes);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -311,7 +311,7 @@
                 SchemeName = "Test Scheme"
             };
             List<SchemeData> schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._)).Returns(schemes);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -718,10 +718,15 @@
         public async Task GetSchemeWeeeData_Always_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
             // Arrange
-            List<int> years = new List<int>() { 2001, 2002 };
-
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            List<int> years = new List<int>() { 2001, 2002 };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            List<SchemeData> schemes = new List<SchemeData>();
+            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
+            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -737,9 +742,14 @@
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
+
             Assert.Collection(model.ComplianceYears,
                 y1 => Assert.Equal("2001", y1.Text),
                 y2 => Assert.Equal("2002", y2.Text));
+
+            Assert.Collection(model.Schemes,
+                s1 => Assert.Equal("Scheme 1", s1.Text),
+                s2 => Assert.Equal("Scheme 2", s2.Text));
         }
 
         /// <summary>
@@ -796,10 +806,15 @@
         public async Task PostSchemeWeeeData_WithInvalidViewModel_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
             // Arrange
-            List<int> years = new List<int>() { 2001, 2002 };
-
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            List<int> years = new List<int>() { 2001, 2002 };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            List<SchemeData> schemes = new List<SchemeData>();
+            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
+            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -818,9 +833,14 @@
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
+
             Assert.Collection(model.ComplianceYears,
                 y1 => Assert.Equal("2001", y1.Text),
                 y2 => Assert.Equal("2002", y2.Text));
+
+            Assert.Collection(model.Schemes,
+                s1 => Assert.Equal("Scheme 1", s1.Text),
+                s2 => Assert.Equal("Scheme 2", s2.Text));
         }
 
         /// <summary>
@@ -909,6 +929,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeWeeeCsv>._))
                 .WhenArgumentsMatch(a =>
                     a.Get<GetSchemeWeeeCsv>("request").ComplianceYear == 2015 &&
+                    a.Get<GetSchemeWeeeCsv>("request").SchemeId == new Guid("B6826CC7-5043-47D2-96C9-7B559BB7DEA1") &&
                     a.Get<GetSchemeWeeeCsv>("request").ObligationType == ObligationType.B2C)
                 .Returns(file);
 
@@ -919,7 +940,10 @@
             ProducersDataViewModel viewModel = new ProducersDataViewModel();
 
             // Act
-            ActionResult result = await controller.DownloadSchemeWeeeDataCsv(2015, ObligationType.B2C);
+            ActionResult result = await controller.DownloadSchemeWeeeDataCsv(
+                2015,
+                new Guid("B6826CC7-5043-47D2-96C9-7B559BB7DEA1"),
+                ObligationType.B2C);
 
             // Assert
             FileResult fileResult = result as FileResult;
@@ -930,27 +954,24 @@
 
         /// <summary>
         /// This test ensures that the GET "DownloadSchemeWeeeDataCsv" action will
-        /// call the API to generate a CSV file which is returned with a content
-        /// type of "text/csv"
+        /// returned with a file with a content type of "text/csv".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetDownloadSchemeWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextCsv()
+        public async Task GetDownloadSchemeWeeeDataCsv_Always_ReturnsFileResultWithContentTypeOfTextCsv()
         {
             // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<GetSchemeWeeeCsv>._))
-                .WhenArgumentsMatch(a => a.Get<int>("complianceYear") == 2015 && a.Get<ObligationType>("obligationType") == ObligationType.B2C)
-                .Returns(A.Dummy<FileInfo>());
-
             ReportsController controller = new ReportsController(
-                () => weeeClient,
+                () => A.Fake<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
             ProducersDataViewModel viewModel = new ProducersDataViewModel();
 
             // Act
-            ActionResult result = await controller.DownloadSchemeWeeeDataCsv(2015, ObligationType.B2C);
+            ActionResult result = await controller.DownloadSchemeWeeeDataCsv(
+                A.Dummy<int>(),
+                A.Dummy<Guid>(),
+                A.Dummy<ObligationType>());
 
             // Assert
             FileResult fileResult = result as FileResult;
