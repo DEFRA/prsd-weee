@@ -185,6 +185,10 @@
     {
         <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
 
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
             <p>
                 @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",
@@ -193,13 +197,14 @@
                     htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
                     )
             </p>
+        }
 
-            <p>
-                Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
-                                       Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                                       "Data return loop",
-                                       "Upload a new data return file",
-                                       "Data return validation successful")).
-            </p>
+        <p>
+            Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
+                                    Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                                    "Data return loop",
+                                    "Upload a new data return file",
+                                    "Data return validation successful")).
+        </p>
     }
 }
