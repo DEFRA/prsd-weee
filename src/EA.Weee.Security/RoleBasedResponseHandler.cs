@@ -19,24 +19,21 @@
 
         public async Task<object> HandleAsync(object response)
         {
-            if (!response.GetType().IsSubclassOf(typeof(RoleBasedResponse)))
+            var roleBasedResponse = response as RoleBasedResponse;
+            if (roleBasedResponse != null)
             {
-                await Task.Yield();
-                return response;
-            }
+                var claimsIdentity = userContext.Principal.Identity as ClaimsIdentity;
 
-            var roleBasedResponse = (RoleBasedResponse)response;
-            var claimsIdentity = userContext.Principal.Identity as ClaimsIdentity;
-
-            if (claimsIdentity != null && claimsIdentity.HasClaim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea))
-            {
-                var internalUser = await context.CompetentAuthorityUsers
-                    .Include(cau => cau.Role)
-                    .SingleOrDefaultAsync(cau => cau.UserId == userContext.UserId.ToString());
-
-                if (internalUser != null && internalUser.Role != null)
+                if (claimsIdentity != null && claimsIdentity.HasClaim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea))
                 {
-                    roleBasedResponse.AddUserRole(new Role { Description = internalUser.Role.Description, Name = internalUser.Role.Name });
+                    var internalUser = await context.CompetentAuthorityUsers
+                        .Include(cau => cau.Role)
+                        .SingleOrDefaultAsync(cau => cau.UserId == userContext.UserId.ToString());
+
+                    if (internalUser != null)
+                    {
+                        roleBasedResponse.AddUserRole(new Role { Description = internalUser.Role.Description, Name = internalUser.Role.Name });
+                    }
                 }
             }
 
