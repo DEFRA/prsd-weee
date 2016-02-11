@@ -4,11 +4,11 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Security;
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     public class GetRolesHandler : IRequestHandler<GetRoles, List<Role>>
     {

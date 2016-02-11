@@ -4,13 +4,12 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using Core.Configuration;
-    using Core.Security;
     using DataAccess;
     using Domain.Admin;
-    using Domain.Security;
     using Domain.User;
     using Prsd.Core.Mediator;
     using Requests.Admin;
+    using Weee.Security;
 
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {

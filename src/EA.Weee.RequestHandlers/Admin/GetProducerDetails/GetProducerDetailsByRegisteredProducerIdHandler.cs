@@ -5,11 +5,11 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Security;
     using Domain.DataReturns;
     using Domain.Producer;
     using Prsd.Core.Mediator;
     using Security;
+    using Weee.Security;
 
     public class GetProducerDetailsByRegisteredProducerIdHandler : IRequestHandler<Requests.Admin.GetProducerDetailsByRegisteredProducerId, ProducerDetailsScheme>
     {

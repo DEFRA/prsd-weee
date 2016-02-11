@@ -271,6 +271,13 @@
                         return View(model);
                     }
 
+                case UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
+                    ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference.");
+
+                    await SetBreadcrumb(schemeId);
+                    model.CompetentAuthorities = await GetCompetentAuthorities();
+                    return View(model);
+
                 default:
                     throw new NotSupportedException();
             }

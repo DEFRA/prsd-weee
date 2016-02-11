@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Security.Claims;
-    using Core;
-    using Core.Security;
     using DataAccess;
     using Domain.Admin;
     using Domain.Organisation;
@@ -13,6 +11,7 @@
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
     using Role = Domain.Security.Role;
