@@ -77,15 +77,13 @@
     <Compile Include="EventHandlers\OrganisationUserRequestCompletedEventHandler.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequestEventHandlerDataAccess.cs" />
     <Compile Include="EventHandlers\SchemeMemberSubmissionEventHandler.cs" />
-    <Compile Include="INotificationSender.cs" />
+    <Compile Include="IWeeeSender.cs" />
     <Compile Include="IWeeeEmailConfiguration.cs" />
     <Compile Include="IWeeeEmailService.cs" />
-    <Compile Include="IWeeeNotificationEmailService.cs" />
-    <Compile Include="NotificationSender.cs" />
+    <Compile Include="WeeeSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeeeConfigReader.cs" />
     <Compile Include="WeeeEmailService.cs" />
-    <Compile Include="WeeeNotificationEmailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\ActivateUserAccount.cshtml" />
