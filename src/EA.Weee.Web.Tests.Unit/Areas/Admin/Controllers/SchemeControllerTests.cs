@@ -106,7 +106,7 @@
 
             //Act
             var result = await controller.EditScheme(schemeId);
-            
+
             // Assert
             Assert.IsType<HttpForbiddenResult>(result);
         }
@@ -122,7 +122,7 @@
             {
                 CanEdit = true
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);              
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
 
             var result = await controller.EditScheme(schemeId);
 
@@ -186,7 +186,7 @@
             var statuses = model.StatusSelectList.ToList();
 
             Assert.Equal(statuses.Count(), 2);
-           
+
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
         }
@@ -227,18 +227,69 @@
             Assert.IsType<FileContentResult>(result);
         }
 
-        [Theory]
-        [InlineData(SchemeStatus.Approved)]
-        [InlineData(SchemeStatus.Pending)]
-        public async void PostEditScheme_ModelWithError_AndSchemeIsNotRejected_ReturnsView(SchemeStatus status)
+        [Fact]
+        public async void PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsPending_ExecuteGetSchemeByIdReturnsViewWithApprovedRejectedAndPendingStatuses()
         {
+            var status = SchemeStatus.Pending;
             var controller = SchemeController();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             var schemeId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .Returns(new SchemeData
+               {
+                   SchemeStatus = status
+               });
+
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
             {
                 Status = status,
             });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
+
+            var model = ((ViewResult)result).Model as SchemeViewModel;
+
+            Assert.NotNull(model);
+
+            Assert.True(model.StatusSelectList.Count() == 3);
+            Assert.Contains(model.StatusSelectList, item => (item.Text == SchemeStatus.Approved.ToString()
+            || item.Text == SchemeStatus.Rejected.ToString()
+            || item.Text == SchemeStatus.Pending.ToString()));
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsApproved_ExecuteGetSchemeByIdReturnsViewWithApprovedAndWithdrawnStatuses()
+        {
+            var status = SchemeStatus.Approved;
+            var controller = SchemeController();
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+            var schemeId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .Returns(new SchemeData
+               {
+                   SchemeStatus = status
+               });
+
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = status,
+            });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
+
+            var model = ((ViewResult)result).Model as SchemeViewModel;
+
+            Assert.NotNull(model);
+
+            Assert.True(model.StatusSelectList.Count() == 2);
+            Assert.Contains(model.StatusSelectList, item => (item.Text == SchemeStatus.Approved.ToString()
+            || item.Text == SchemeStatus.Withdrawn.ToString()));
 
             Assert.IsType<ViewResult>(result);
         }
@@ -651,7 +702,7 @@
 
         [Fact]
         public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
-        {   
+        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
 
@@ -672,7 +723,7 @@
 
         [Fact]
         public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
-        {   
+        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
                 {
@@ -780,7 +831,7 @@
 
         [Fact]
         public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
-        {   
+        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
                 {
