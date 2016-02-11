@@ -118,12 +118,12 @@
                         var key = new WeeeAmountKey(category, quarterType, scheme.SchemeId);
 
                         collectedAmountsDictionary.Add(key, results.CollectedAmounts
-                            .Where(ca => ca.QuarterType == key.QuarterType 
+                            .Where(ca => ca.QuarterType == key.QuarterType
                             && ca.WeeeCategory == key.Category
                             && ca.SchemeId == key.SchemeId));
 
                         deliveredAmountsDictionary.Add(key, results.DeliveredAmounts
-                            .Where(ca => ca.QuarterType == key.QuarterType 
+                            .Where(ca => ca.QuarterType == key.QuarterType
                             && ca.WeeeCategory == key.Category
                             && ca.SchemeId == key.SchemeId));
                     }
@@ -203,24 +203,26 @@
             writer.DefineColumn("Scheme approval No", x => x.SchemeApprovalNumber);
             writer.DefineColumn("Quarter", x => string.Format("Q{0}", x.QuarterType));
             writer.DefineColumn("Category", x => categoryDisplayNames[x.Category]);
-            writer.DefineColumn("DCF", x => x.Dcf);
+            writer.DefineColumn("DCF (t)", x => x.Dcf);
 
             if (obligationType == ObligationType.B2C)
             {
-                writer.DefineColumn("Distributors", x => x.Distributors);
-                writer.DefineColumn("Final holders", x => x.FinalHolders);
+                writer.DefineColumn("Distributors (t)", x => x.Distributors);
+                writer.DefineColumn("Final holders (t)", x => x.FinalHolders);
             }
 
-            writer.DefineColumn("Total AATF/AE", x => x.TotalDelivered);
+            writer.DefineColumn("Total AATF/AE (t)", x => x.TotalDelivered);
 
             foreach (string aatfLocation in aatfLocations)
             {
-                writer.DefineColumn(aatfLocation, x => x.AatfTonnage[aatfLocation]);
+                var columnTitle = string.Format("{0} (t)", aatfLocation);
+                writer.DefineColumn(columnTitle, x => x.AatfTonnage[aatfLocation]);
             }
 
             foreach (string aaeLocation in aaeLocations)
             {
-                writer.DefineColumn(aaeLocation, x => x.AeTonnage[aaeLocation]);
+                var columnTitle = string.Format("{0} (t)", aaeLocation);
+                writer.DefineColumn(columnTitle, x => x.AeTonnage[aaeLocation]);
             }
 
             return writer;

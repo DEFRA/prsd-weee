@@ -80,14 +80,14 @@
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer country", i => i.ProducerCountry);
            
-            string totalEEEtitle = string.Format("Total EEE ({0})", obligationType);
+            string totalEEEtitle = string.Format("Total EEE {0} (t)", obligationType);
             csvWriter.DefineColumn(totalEEEtitle, i => i.TotalTonnage);
             
             foreach (int category in Enumerable.Range(1, 14))
             {
                 foreach (int quarterType in Enumerable.Range(1, 4))
                 {
-                    string title = string.Format("Cat{0} {1} (Q{2})", category, obligationType, quarterType);
+                    string title = string.Format("Cat{0} {1} Q{2} (t)", category, obligationType, quarterType);
                     string columnName = string.Format("Cat{0}Q{1}", category, quarterType);
                     csvWriter.DefineColumn(title, i => i.GetType().GetProperty(columnName).GetValue(i));
                 }

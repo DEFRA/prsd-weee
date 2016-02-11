@@ -51,8 +51,8 @@
                 {
                     PossibleValues = new List<string>
                     {
-                        SubmissionType.EeeOrWeeeDataReturns,
-                        SubmissionType.MemberRegistrations
+                        SubmissionType.MemberRegistrations,
+                        SubmissionType.EeeOrWeeeDataReturns
                     }
                 };
 
@@ -81,8 +81,8 @@
             await SetBreadcrumb();
             viewModel.PossibleValues = new List<string>
             {
-                SubmissionType.EeeOrWeeeDataReturns,
-                SubmissionType.MemberRegistrations
+                SubmissionType.MemberRegistrations,
+                SubmissionType.EeeOrWeeeDataReturns
             };
 
             return View(viewModel);
