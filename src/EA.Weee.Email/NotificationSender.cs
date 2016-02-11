@@ -6,6 +6,10 @@
     using Core.Logging;
     using Prsd.Email;
 
+    /// <summary>
+    /// Uses an instance of <see cref="ISender"/> to send emails but catches and logs any exceptions
+    /// that may occur.
+    /// </summary>
     public class NotificationSender : INotificationSender
     {
         private readonly ISender sender;
