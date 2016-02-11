@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Core.Organisations;
+    using Core.Security;
     using DataAccess.DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
@@ -27,8 +28,11 @@
             authorization.CheckInternalOrSchemeAccess(message.SchemeId);
 
             var organisation = await organisationDataAccess.GetBySchemeId(message.SchemeId);
+            var organisationData = mapper.Map<Organisation, OrganisationData>(organisation);
 
-            return mapper.Map<Organisation, OrganisationData>(organisation);
+            organisationData.CanEditOrganisation = authorization.CheckUserInRole(Roles.InternalAdmin);
+
+            return organisationData;
         }
     }
 }
