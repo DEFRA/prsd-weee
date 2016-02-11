@@ -42,7 +42,7 @@
         </tbody>
     </table>
     <br />
-    @if (!Model.IsRejected)
+    @if (!Model.IsRejected && Model.CanEditPcs)
     {
         <p>
             <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>

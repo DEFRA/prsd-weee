@@ -190,6 +190,8 @@
     <Content Include="scripts\Update\Sprint21\20160111-1800-AlterSystemDataFixedDateColumns.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1207-SetInitialIbisFileId.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1608-Rename1B1STransactionNumberSequenceTable.sql" />
+    <Content Include="scripts\Update\Sprint23\20160209-2113-UpdateSpgSchemeWeeeCsvToIncludeSchemeId.sql" />
+    <Content Include="scripts\Update\Sprint23\20160209-2239-UpdateSpgProducerEeeCsvData.sql" />
     <None Include="scripts\Update\Sprint23\20160204-1630-SetOperatorFacilityNamesAsOptional.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1425-UpdateSpgforProducerEeeDataHistory.sql" />
     <Content Include="scripts\Update\Sprint23\20160205-1629-CreateSpgDataReturnSummaryCsv.sql" />

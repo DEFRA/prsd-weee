@@ -43,9 +43,12 @@
     </table>
 
     <br />
+@if (Model.CanEditContactDetails)
+{
     <p>
         <a href="@(Url.UrlFor<SchemeController>(a => a.ManageContactDetails(Model.SchemeId, Model.Contact.OrganisationId)))">Edit contact details</a>
     </p>
+}
 
     @Html.Partial("Overview/_OverviewAvailableActions")
 }

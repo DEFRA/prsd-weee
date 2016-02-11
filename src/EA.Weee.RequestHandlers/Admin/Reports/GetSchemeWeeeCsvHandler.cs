@@ -17,7 +17,7 @@
 
     public class GetSchemeWeeeCsvHandler : IRequestHandler<GetSchemeWeeeCsv, FileInfo>
     {
-        private readonly WeeeContext context;
+        private readonly IStoredProcedures storedProcedures;
         private readonly IWeeeAuthorization authorization;
         private readonly CsvWriterFactory csvWriterFactory;
 
@@ -40,11 +40,11 @@
         };
 
         public GetSchemeWeeeCsvHandler(
-            WeeeContext context,
+            IStoredProcedures storedProcedures,
             IWeeeAuthorization authorization,
             CsvWriterFactory csvWriterFactory)
         {
-            this.context = context;
+            this.storedProcedures = storedProcedures;
             this.authorization = authorization;
             this.csvWriterFactory = csvWriterFactory;
         }
@@ -55,7 +55,7 @@
 
             string obligationType = ConvertEnumToDatabaseString(message.ObligationType);
 
-            var results = await context.StoredProcedures.SpgSchemeWeeeCsvAsync(message.ComplianceYear, obligationType);
+            var results = await storedProcedures.SpgSchemeWeeeCsvAsync(message.ComplianceYear, message.SchemeId, obligationType);
 
             IEnumerable<string> aatfLocations = results.DeliveredAmounts
                 .Where(da => da.LocationType == 0)
@@ -77,11 +77,27 @@
 
             byte[] data = Encoding.UTF8.GetBytes(contents);
 
-            string fileName = string.Format(
-                "{0}_{1}_schemeWEEE_{2:ddMMyyyy_HHmm}.csv",
-                message.ComplianceYear,
-                message.ObligationType,
-                SystemTime.UtcNow);
+            string fileName;
+
+            if (message.SchemeId != null)
+            {
+                SpgSchemeWeeeCsvResult.SchemeResult scheme = results.Schemes.Single();
+
+                fileName = string.Format(
+                    "{0}_{1}_{2}_schemeWEEE_{3:ddMMyyyy_HHmm}.csv",
+                    message.ComplianceYear,
+                    scheme.ApprovalNumber.Replace("/", string.Empty),
+                    message.ObligationType,
+                    SystemTime.UtcNow);
+            }
+            else
+            {
+                fileName = string.Format(
+                    "{0}_{1}_schemeWEEE_{2:ddMMyyyy_HHmm}.csv",
+                    message.ComplianceYear,
+                    message.ObligationType,
+                    SystemTime.UtcNow);
+            }
 
             return new FileInfo(fileName, data);
         }
