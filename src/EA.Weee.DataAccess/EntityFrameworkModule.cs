@@ -3,6 +3,7 @@
     using Autofac;
     using DataAccess;
     using EA.Prsd.Core.Domain;
+    using StoredProcedure;
 
     public class EntityFrameworkModule : Module
     {
@@ -28,6 +29,9 @@
                 .InstancePerRequest();
 
             builder.RegisterType<SchemeDataAccess>().As<ISchemeDataAccess>()
+                .InstancePerRequest();
+
+            builder.RegisterType<StoredProcedures>().As<IStoredProcedures>()
                 .InstancePerRequest();
         }
     }
