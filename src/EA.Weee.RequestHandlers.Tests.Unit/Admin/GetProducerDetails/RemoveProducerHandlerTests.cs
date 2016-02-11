@@ -3,8 +3,6 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
-    using Domain;
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Scheme;
@@ -13,6 +11,7 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 

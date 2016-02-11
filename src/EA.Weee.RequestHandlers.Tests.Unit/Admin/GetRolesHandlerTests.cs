@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Security;
     using DataAccess;
     using FakeItEasy;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
     using Role = Domain.Security.Role;

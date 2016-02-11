@@ -2,8 +2,6 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Security;
-    using Domain.Security;
     using Domain.User;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
     using Weee.Tests.Core;

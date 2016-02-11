@@ -4,12 +4,11 @@
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
-    using Core.Security;
     using DataAccess;
     using Domain.User;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Weee.Core;
+    using Weee.Security;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.

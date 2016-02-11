@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Security
 {
     using System;
-    using Core.Security;
+    using Weee.Security;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
