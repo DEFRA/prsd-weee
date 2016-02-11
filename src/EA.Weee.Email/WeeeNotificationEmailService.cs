@@ -8,6 +8,10 @@
     using System.Threading.Tasks;
     using EA.Prsd.Email;
 
+    /// <summary>
+    /// Uses a <see cref="NotificationSender"/> to send emails. This ensures that exceptions
+    /// are not thrown when errors occur while sending emails.
+    /// </summary>
     public class WeeeNotificationEmailService : IWeeeNotificationEmailService
     {
         private readonly ITemplateExecutor templateExecutor;
