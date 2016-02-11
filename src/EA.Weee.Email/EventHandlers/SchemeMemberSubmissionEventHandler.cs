@@ -6,18 +6,18 @@
 
     public class SchemeMemberSubmissionEventHandler : IEventHandler<SchemeMemberSubmissionEvent>
     {
-        private readonly IWeeeNotificationEmailService notificationEmailService;
+        private readonly IWeeeEmailService weeeEmailService;
 
-        public SchemeMemberSubmissionEventHandler(IWeeeNotificationEmailService notificationEmailService)
+        public SchemeMemberSubmissionEventHandler(IWeeeEmailService weeeEmailService)
         {
-            this.notificationEmailService = notificationEmailService;
+            this.weeeEmailService = weeeEmailService;
         }
 
         public Task HandleAsync(SchemeMemberSubmissionEvent @event)
         {
             var memberUpload = @event.MemberUpload;
 
-            return notificationEmailService.SendSchemeMemberSubmitted(
+            return weeeEmailService.SendSchemeMemberSubmitted(
                 memberUpload.Scheme.CompetentAuthority.Email,
                 memberUpload.Scheme.SchemeName,
                 memberUpload.ComplianceYear.Value,

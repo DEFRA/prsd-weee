@@ -12,5 +12,7 @@
         Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName);
 
         Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
+
+        Task<bool> SendSchemeMemberSubmitted(string emailAddress, string schemeName, int complianceYear, int numberOfWarnings);
     }
 }

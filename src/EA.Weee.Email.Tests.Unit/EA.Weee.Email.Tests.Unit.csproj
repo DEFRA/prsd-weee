@@ -89,10 +89,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EventHandlers\SchemeMemberSubmissionEventHandlerTests.cs" />
-    <Compile Include="NotificationSenderTests.cs" />
+    <Compile Include="WeeeSenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeeeEmailServiceTests.cs" />
-    <Compile Include="WeeeNotificationEmailServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
