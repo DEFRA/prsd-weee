@@ -3,7 +3,7 @@
     using System.Diagnostics;
     using Thinktecture.IdentityServer.Core.Logging;
 
-    internal class DebugLogger : ILogProvider
+    internal class DebugLogProvider : ILogProvider
     {
         public ILog GetLogger(string name)
         {
