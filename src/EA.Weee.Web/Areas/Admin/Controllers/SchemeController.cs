@@ -198,6 +198,18 @@
             return statuses;
         }
 
+        private async Task<SchemeViewModel> SetSchemeStatusAndCompetentAuthorities(Guid schemeId, SchemeViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                model.StatusSelectList = new SelectList(GetStatuses(scheme.SchemeStatus), "Key", "Value");
+                model.CompetentAuthorities = await GetCompetentAuthorities();
+            }
+
+            return model;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModel model)
@@ -215,15 +227,9 @@
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
-                    model.StatusSelectList = new SelectList(GetStatuses(scheme.SchemeStatus), "Key", "Value");
-                }
-
+            {   
+                model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                 await SetBreadcrumb(schemeId);
-                model.CompetentAuthorities = await GetCompetentAuthorities();
                 return View(model);
             }
 
@@ -250,9 +256,9 @@
                 case UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
-
+                        
                         await SetBreadcrumb(schemeId);
-                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                         return View(model);
                     }
 
@@ -267,7 +273,7 @@
                         ModelState.AddModelError("IbisCustomerReference", errorMessage);
 
                         await SetBreadcrumb(schemeId);
-                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                         return View(model);
                     }
 
@@ -275,7 +281,7 @@
                     ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference.");
 
                     await SetBreadcrumb(schemeId);
-                    model.CompetentAuthorities = await GetCompetentAuthorities();
+                    model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                     return View(model);
 
                 default:
