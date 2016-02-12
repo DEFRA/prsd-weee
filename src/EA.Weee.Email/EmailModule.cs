@@ -24,6 +24,7 @@
             builder.RegisterType<Sender>().As<ISender>();
             builder.RegisterType<SmtpClientProxy>().As<ISmtpClient>();
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
+            builder.RegisterType<WeeeSender>().As<IWeeeSender>();
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 

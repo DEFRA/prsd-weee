@@ -250,14 +250,15 @@
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />
     <Compile Include="Identity\SecurityEventService.cs" />
+    <Compile Include="IdSrv\ElmahLogger.cs" />
     <Compile Include="Infrastructure\HttpStatusCodeResult.cs" />
     <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Controllers\UnauthenticatedUserController.cs" />
     <Compile Include="Identity\UserContext.cs" />
     <Compile Include="IdSrv\Clients.cs" />
-    <Compile Include="IdSrv\DebugLogger.cs" />
-    <Compile Include="IdSrv\ElmahLogger.cs" />
+    <Compile Include="IdSrv\DebugLogProvider.cs" />
+    <Compile Include="IdSrv\ElmahLogProvider.cs" />
     <Compile Include="IdSrv\Factory.cs" />
     <Compile Include="IdSrv\Scopes.cs" />
     <Compile Include="IdSrv\UserService.cs" />

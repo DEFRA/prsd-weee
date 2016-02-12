@@ -9,13 +9,13 @@
     {
         private readonly ITemplateExecutor templateExecutor;
         private readonly IMessageCreator messageCreator;
-        private readonly ISender sender;
+        private readonly IWeeeSender sender;
         private readonly IWeeeEmailConfiguration configuration;
 
         public WeeeEmailService(
             ITemplateExecutor templateExecutor,
             IMessageCreator messageCreator,
-            ISender sender,
+            IWeeeSender sender,
             IWeeeEmailConfiguration configuration)
         {
             this.templateExecutor = templateExecutor;
@@ -109,6 +109,28 @@
                 content);
 
             return await sender.SendAsync(message);
+        }
+
+        public async Task<bool> SendSchemeMemberSubmitted(string emailAddress, string schemeName, int complianceYear, int numberOfWarnings)
+        {
+            var model = new
+            {
+                SchemeName = schemeName,
+                ComplianceYear = complianceYear,
+                NumberOfWarnings = numberOfWarnings
+            };
+
+            EmailContent content = new EmailContent
+            {
+                HtmlText = templateExecutor.Execute("SchemeMemberSubmitted.cshtml", model),
+                PlainText = templateExecutor.Execute("SchemeMemberSubmitted.txt", model)
+            };
+
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                string.Format("New member registration submission for {0}", schemeName), content))
+            {
+                return await sender.SendAsync(message, true);
+            }
         }
     }
 }
