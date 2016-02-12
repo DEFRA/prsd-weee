@@ -402,10 +402,10 @@
                 {
                     OrganisationType = organisationData.OrganisationType,
                     BusinessTradingName = organisationData.TradingName,
-                    BusinesAddress = organisationData.BusinessAddress
+                    BusinessAddress = organisationData.BusinessAddress
                 };
 
-                model.BusinesAddress.Countries = countries;
+                model.BusinessAddress.Countries = countries;
                 model.SchemeId = schemeId;
                 model.OrgId = orgId;
 
@@ -433,10 +433,10 @@
                     CompanyName = organisationData.OrganisationName,
                     BusinessTradingName = organisationData.TradingName,
                     CompaniesRegistrationNumber = organisationData.CompanyRegistrationNumber,
-                    BusinesAddress = organisationData.BusinessAddress
+                    BusinessAddress = organisationData.BusinessAddress
                 };
 
-                model.BusinesAddress.Countries = countries;
+                model.BusinessAddress.Countries = countries;
                 model.SchemeId = schemeId;
                 model.OrgId = orgId;
 
@@ -454,7 +454,7 @@
             {
                 using (var client = apiClient())
                 {
-                    model.BusinesAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    model.BusinessAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 }
                 return View(model);
             }
@@ -468,7 +468,7 @@
                     CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
                     TradingName = model.BusinessTradingName,
                     Name = model.CompanyName,
-                    BusinessAddress = model.BusinesAddress,
+                    BusinessAddress = model.BusinessAddress,
                 };
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
             }
@@ -486,7 +486,7 @@
             {
                 using (var client = apiClient())
                 {
-                    model.BusinesAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    model.BusinessAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 }
                 return View(model);
             }
@@ -498,7 +498,7 @@
                     Id = model.OrgId,
                     OrganisationType = model.OrganisationType,
                     TradingName = model.BusinessTradingName,
-                    BusinessAddress = model.BusinesAddress,
+                    BusinessAddress = model.BusinessAddress,
                 };
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
             }
