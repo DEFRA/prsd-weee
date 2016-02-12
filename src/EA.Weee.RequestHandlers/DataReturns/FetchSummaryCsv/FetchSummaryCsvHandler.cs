@@ -80,8 +80,8 @@
             { new Tuple<int, int?>(0, 0), "WEEE collected from DCFs" },
             { new Tuple<int, int?>(0, 1), "WEEE from distributors" },
             { new Tuple<int, int?>(0, 2), "WEEE from final holders" },
-            { new Tuple<int, int?>(1, 0), "WEEE sent to AATFs" },
-            { new Tuple<int, int?>(1, 1), "WEEE sent to AEs" },
+            { new Tuple<int, int?>(1, 0), "WEEE delivered to AATFs" },
+            { new Tuple<int, int?>(1, 1), "WEEE delivered to AEs" },
             { new Tuple<int, int?>(2, null), "EEE placed on market" }
         };
     }
