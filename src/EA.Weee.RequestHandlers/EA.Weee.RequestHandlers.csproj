@@ -36,13 +36,6 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="AutoMapper.Net4">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
-    </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>

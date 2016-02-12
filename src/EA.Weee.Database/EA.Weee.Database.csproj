@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Readme.txt" />
+    <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Update\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
     <Content Include="scripts\Everytime\0007-InsertQuarterWindowTemplates.sql" />
@@ -70,7 +72,6 @@
     <Content Include="scripts\Update\Sprint18\20151125-1937-DropProducerTable.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
-    <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\0001-Permissions-AppRole.sql" />
     <Content Include="scripts\Everytime\0002-Permissions-Grants.sql" />
@@ -214,7 +215,6 @@
     <None Include="scripts\Update\Sprint21\20160118-171258-UpdateCRNLength.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Readme.txt" />
     <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />
