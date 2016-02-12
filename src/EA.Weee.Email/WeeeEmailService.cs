@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Email
 {
+    using System;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using Domain.User;
@@ -37,12 +38,11 @@
                 PlainText = templateExecutor.Execute("ActivateUserAccount.txt", model)
             };
 
-            MailMessage message = messageCreator.Create(
-                emailAddress,
-                "Activate your WEEE user account",
-                content);
-
-            return await sender.SendAsync(message);
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                 "Activate your WEEE user account", content))
+            {
+                return await sender.SendAsync(message);
+            }
         }
 
         public async Task<bool> SendPasswordResetRequest(string emailAddress, string passwordResetUrl)
@@ -58,12 +58,11 @@
                 PlainText = templateExecutor.Execute("PasswordResetRequest.txt", model)
             };
 
-            MailMessage message = messageCreator.Create(
-                emailAddress,
-                "Reset your WEEE password",
-                content);
-
-            return await sender.SendAsync(message);
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                 "Reset your WEEE password", content))
+            {
+                return await sender.SendAsync(message);
+            }
         }
 
         public async Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName)
@@ -80,12 +79,11 @@
                 PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
             };
 
-            MailMessage message = messageCreator.Create(
-                emailAddress,
-                "New request to access your organisation",
-                content);
-
-            return await sender.SendAsync(message);
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                 "New request to access your organisation", content))
+            {
+                return await sender.SendAsync(message);
+            }
         }
 
         public async Task<bool> SendOrganisationUserRequestCompleted(Domain.Organisation.OrganisationUser organisationUser)
@@ -103,12 +101,11 @@
                 PlainText = templateExecutor.Execute("OrganisationUserRequestCompleted.txt", model)
             };
 
-            MailMessage message = messageCreator.Create(
-                organisationUser.User.Email,
-                "Your request to access a WEEE organisation",
-                content);
-
-            return await sender.SendAsync(message);
+            using (MailMessage message = messageCreator.Create(organisationUser.User.Email,
+                "Your request to access a WEEE organisation", content))
+            {
+                return await sender.SendAsync(message);
+            }
         }
 
         public async Task<bool> SendSchemeMemberSubmitted(string emailAddress, string schemeName, int complianceYear, int numberOfWarnings)
@@ -128,6 +125,29 @@
 
             using (MailMessage message = messageCreator.Create(emailAddress,
                 string.Format("New member registration submission for {0}", schemeName), content))
+            {
+                return await sender.SendAsync(message, true);
+            }
+        }
+
+        public async Task<bool> SendSchemeDataReturnSubmitted(string emailAddress, string schemeName, int complianceYear, int quarter, bool isResubmission)
+        {
+            var model = new
+            {
+                SchemeName = schemeName,
+                ComplianceYear = complianceYear,
+                Quarter = quarter,
+                IsResubmission = isResubmission
+            };
+
+            EmailContent content = new EmailContent
+            {
+                HtmlText = templateExecutor.Execute("SchemeDataReturnSubmitted.cshtml", model),
+                PlainText = templateExecutor.Execute("SchemeDataReturnSubmitted.txt", model)
+            };
+
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                string.Format("New data return submission for {0}", schemeName), content))
             {
                 return await sender.SendAsync(message, true);
             }
