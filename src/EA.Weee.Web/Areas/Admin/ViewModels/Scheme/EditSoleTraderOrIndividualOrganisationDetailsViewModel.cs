@@ -20,6 +20,6 @@
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string BusinessTradingName { get; set; }
 
-        public AddressData BusinesAddress { get; set; }
+        public AddressData BusinessAddress { get; set; }
     }
 }
