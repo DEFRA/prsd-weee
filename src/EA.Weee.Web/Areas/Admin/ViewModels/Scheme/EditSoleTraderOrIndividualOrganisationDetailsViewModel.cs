@@ -12,14 +12,14 @@
         public Guid SchemeId { get; set; }
 
         public Guid OrgId { get; set; }
-
-        public AddressData BusinesAddress { get; set; }
-
+        
         public OrganisationType OrganisationType { get; set; }
 
         [Required]
         [DisplayName("Business trading name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string BusinessTradingName { get; set; }
+
+        public AddressData BusinesAddress { get; set; }
     }
 }
