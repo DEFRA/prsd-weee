@@ -73,9 +73,12 @@
   <ItemGroup>
     <Compile Include="EmailModule.cs" />
     <Compile Include="EventHandlers\IOrganisationUserRequestEventHandlerDataAccess.cs" />
+    <Compile Include="EventHandlers\SchemeDataReturnSubmission\ISchemeDataReturnSubmissionEventHandlerDataAccess.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequestEventHandler.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequestCompletedEventHandler.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequestEventHandlerDataAccess.cs" />
+    <Compile Include="EventHandlers\SchemeDataReturnSubmission\SchemeDataReturnSubmissionEventHandler.cs" />
+    <Compile Include="EventHandlers\SchemeDataReturnSubmission\SchemeDataReturnSubmissionEventHandlerDataAccess.cs" />
     <Compile Include="EventHandlers\SchemeMemberSubmissionEventHandler.cs" />
     <Compile Include="IWeeeSender.cs" />
     <Compile Include="IWeeeEmailConfiguration.cs" />
@@ -114,6 +117,7 @@
     <EmbeddedResource Include="Templates\OrganisationUserRequest.cshtml" />
     <EmbeddedResource Include="Templates\PasswordResetRequest.cshtml" />
     <EmbeddedResource Include="Templates\SchemeMemberSubmitted.cshtml" />
+    <EmbeddedResource Include="Templates\SchemeDataReturnSubmitted.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\OrganisationUserRequestCompleted.txt" />
@@ -126,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\SchemeMemberSubmitted.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\SchemeDataReturnSubmitted.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" />
