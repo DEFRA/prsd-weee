@@ -14,5 +14,7 @@
         Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
 
         Task<bool> SendSchemeMemberSubmitted(string emailAddress, string schemeName, int complianceYear, int numberOfWarnings);
+
+        Task<bool> SendSchemeDataReturnSubmitted(string emailAddress, string schemeName, int complianceYear, int quarter, bool isResubmission);
     }
 }
