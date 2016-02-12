@@ -33,10 +33,11 @@
             
         <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        @Html.EditorFor(m => m.BusinesAddress)
+        @Html.EditorFor(m => m.BusinessAddress)
 
         <div class="form-group">
             <button class="button">Save and Continue</button>
