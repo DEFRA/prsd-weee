@@ -107,6 +107,7 @@
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
+    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />
