@@ -756,7 +756,7 @@
             var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinesAddress = new AddressData(),
+                BusinessAddress = new AddressData(),
                 BusinessTradingName = "TradingName",
                 OrgId = Guid.NewGuid(),
                 SchemeId = Guid.NewGuid()
@@ -766,7 +766,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+            Assert.Equal(countries, viewModel.BusinessAddress.Countries);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
@@ -783,7 +783,7 @@
             var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinesAddress = new AddressData(),
+                BusinessAddress = new AddressData(),
                 BusinessTradingName = "TradingName",
                 OrgId = Guid.NewGuid(),
                 SchemeId = Guid.NewGuid()
@@ -866,7 +866,7 @@
             var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinesAddress = new AddressData(),
+                BusinessAddress = new AddressData(),
                 CompanyName = "CompanyName",
                 CompaniesRegistrationNumber = "123456789",
                 BusinessTradingName = "TradingName",
@@ -878,7 +878,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+            Assert.Equal(countries, viewModel.BusinessAddress.Countries);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
@@ -895,7 +895,7 @@
             var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinesAddress = new AddressData(),
+                BusinessAddress = new AddressData(),
                 CompanyName = "CompanyName",
                 CompaniesRegistrationNumber = "123456789",
                 BusinessTradingName = "TradingName",
