@@ -1,28 +1,26 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
     using System;
+    using Core.Logging;
     using Elmah;
     using Thinktecture.IdentityServer.Core.Logging;
 
-    internal class ElmahLogger : ILogProvider
+    public class ElmahLogger : ILog, ILogger
     {
-        public ILog GetLogger(string name)
+        public void Log(Exception exception)
         {
-            return new ElmahLog();
+            ErrorSignal.FromCurrentContext().Raise(exception);
         }
 
-        public class ElmahLog : ILog
+        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
         {
-            public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
+            if (exception != null)
             {
-                if (exception != null)
-                {
-                    ErrorSignal.FromCurrentContext().Raise(exception);
-                    return true;
-                }
-
-                return false;
+                Log(exception);
+                return true;
             }
+
+            return false;
         }
     }
 }
