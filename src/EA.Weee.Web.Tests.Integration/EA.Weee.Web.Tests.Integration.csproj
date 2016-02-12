@@ -175,7 +175,6 @@
     <Compile Include="RazorHelpers\MvcTemplateBase.cs" />
     <Compile Include="TestStartup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\ViewTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
