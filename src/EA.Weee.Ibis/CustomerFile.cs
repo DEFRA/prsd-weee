@@ -9,6 +9,7 @@
     public sealed class CustomerFile : IbisFile
     {
         private List<Customer> mCustomers = new List<Customer>();
+        
         /// <summary>
         /// The collection of customers associated with the customer file.
         /// </summary>
