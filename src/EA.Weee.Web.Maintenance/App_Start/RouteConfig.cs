@@ -1,8 +1,8 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
-
-namespace EA.Weee.Web.Maintenance
+﻿namespace EA.Weee.Web.Maintenance
 {
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
@@ -12,8 +12,7 @@ namespace EA.Weee.Web.Maintenance
             routes.MapRoute(
                 name: "Default",
                 url: "{*url}",
-                defaults: new { controller = "Maintenance", action = "Maintenance", id = UrlParameter.Optional }
-            );
+                defaults: new { controller = "Maintenance", action = "Maintenance", id = UrlParameter.Optional });
         }
     }
 }

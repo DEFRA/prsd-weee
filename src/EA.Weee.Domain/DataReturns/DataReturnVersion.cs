@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
+    using Events;
     using Prsd.Core;
 
     /// <summary>
@@ -72,6 +68,8 @@
             SubmittedDate = SystemTime.UtcNow;
             SubmittingUserId = userId;
             DataReturn.SetCurrentVersion(this);
+
+            RaiseEvent(new SchemeDataReturnSubmissionEvent(this));
         }
     }
 }

@@ -6,6 +6,7 @@
     using EA.Prsd.Email;
     using EA.Prsd.Email.Rules;
     using EA.Weee.Email.EventHandlers;
+    using EventHandlers.SchemeDataReturnSubmission;
 
     public class EmailModule : Module
     {
@@ -30,6 +31,9 @@
 
             builder.RegisterType<OrganisationUserRequestEventHandlerDataAccess>()
                 .As<IOrganisationUserRequestEventHandlerDataAccess>();
+
+            builder.RegisterType<SchemeDataReturnSubmissionEventHandlerDataAccess>()
+                .As<ISchemeDataReturnSubmissionEventHandlerDataAccess>();
         }
     }
 }
