@@ -14,6 +14,7 @@
     using RequestHandlers.Charges.IssuePendingCharges;
     using RequestHandlers.Security;
     using RequestHandlers.Shared.DomainUser;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -29,6 +30,28 @@
         {
             // Arrange
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
+
+            IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
+                authorization,
+                A.Dummy<IIssuePendingChargesDataAccess>(),
+                A.Dummy<IIbisFileDataGenerator>(),
+                A.Dummy<IDomainUserContext>());
+
+            // Act
+            Func<Task<IssuePendingChargesResult>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.IssuePendingCharges>());
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(testCode);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
 
             IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
                 authorization,

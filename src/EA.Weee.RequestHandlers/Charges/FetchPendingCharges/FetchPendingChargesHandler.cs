@@ -8,8 +8,9 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Scheme;
     using Security;
+    using Weee.Security;
 
-    public class FetchPendingChargesHandler : IRequestHandler<Requests.Charges.FetchPendingCharges, IList<PendingCharge>>
+    public class FetchPendingChargesHandler : IRequestHandler<Requests.Charges.FetchPendingCharges, ManagePendingCharges>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ICommonDataAccess dataAccess;
@@ -22,7 +23,7 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<IList<PendingCharge>> HandleAsync(Requests.Charges.FetchPendingCharges message)
+        public async Task<ManagePendingCharges> HandleAsync(Requests.Charges.FetchPendingCharges message)
         {
             authorization.EnsureCanAccessInternalArea(true);
 
@@ -46,7 +47,13 @@
                 pendingCharges.Add(pendingCharge);
             }
 
-            return pendingCharges;
+            var managePendingCharges = new ManagePendingCharges
+            {
+                PendingCharges = pendingCharges,
+                CanUserIssueCharges = authorization.CheckUserInRole(Roles.InternalAdmin)
+            };
+
+            return managePendingCharges;
         }
     }
 }
