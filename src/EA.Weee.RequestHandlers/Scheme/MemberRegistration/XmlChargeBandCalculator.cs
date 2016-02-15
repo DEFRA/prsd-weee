@@ -24,7 +24,7 @@
 
         public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
         {
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
+            var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
