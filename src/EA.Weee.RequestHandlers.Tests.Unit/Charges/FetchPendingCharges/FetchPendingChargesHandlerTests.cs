@@ -11,7 +11,10 @@
     using FakeItEasy;
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
+    using RequestHandlers.Organisations;
     using RequestHandlers.Security;
+    using Requests.Organisations;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -33,10 +36,50 @@
                 A.Dummy<ICommonDataAccess>());
 
             // Act
-            Func<Task<IList<PendingCharge>>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
+            Func<Task<ManagePendingCharges>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsTrueForCanUserIssueCharges_WhenCurrentUserIsInternalAdmin()
+        {
+            // Arrange
+            var weeeAuthorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .AllowRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new FetchPendingChargesHandler(
+                weeeAuthorization,
+                A.Dummy<ICommonDataAccess>());
+            
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
+
+            // Assert
+            Assert.True(result.CanUserIssueCharges);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsFalseForCanUserIssueCharges_WhenCurrentUserIsNotInternalAdmin()
+        {
+            // Arrange
+            var weeeAuthorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new FetchPendingChargesHandler(
+                 weeeAuthorization,
+                 A.Dummy<ICommonDataAccess>());
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
+
+            // Assert
+            Assert.False(result.CanUserIssueCharges);
         }
 
         /// <summary>
@@ -113,13 +156,13 @@
                dataAccess);
 
             // Act
-            IList<PendingCharge> results = await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
+            var results = await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
 
             // Assert
             Assert.NotNull(results);
-            Assert.Equal(3, results.Count);
+            Assert.Equal(3, results.PendingCharges.Count);
 
-            Assert.Collection(results,
+            Assert.Collection(results.PendingCharges,
                 r1 =>
                 {
                     Assert.Equal("AAAA", r1.SchemeName);
