@@ -1,7 +1,7 @@
-﻿using System.Web.Optimization;
-
-namespace EA.Weee.Web.Maintenance
+﻿namespace EA.Weee.Web.Maintenance
 {
+    using System.Web.Optimization;
+
     public class BundleConfig
     {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
