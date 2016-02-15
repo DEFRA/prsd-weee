@@ -9,7 +9,7 @@
     /// A request to fetch all pending charges for the specified appropriate authority.
     /// Charges are ordered by scheme name and then compliance year descending.
     /// </summary>
-    public class FetchPendingCharges : IRequest<IList<PendingCharge>>
+    public class FetchPendingCharges : IRequest<ManagePendingCharges>
     {
         public CompetentAuthority Authority { get; private set; }
 

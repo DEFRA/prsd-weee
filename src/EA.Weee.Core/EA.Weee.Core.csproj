@@ -90,6 +90,7 @@
     <Compile Include="Admin\ProducerEeeDetails.cs" />
     <Compile Include="Charges\InvoiceRunInfo.cs" />
     <Compile Include="Charges\IssuePendingChargesResult.cs" />
+    <Compile Include="Charges\ManagePendingCharges.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsHistoryResult.cs" />
     <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
