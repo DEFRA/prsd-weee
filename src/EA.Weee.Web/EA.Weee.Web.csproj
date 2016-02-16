@@ -473,6 +473,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_breadcrumbs.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
@@ -571,7 +572,6 @@
     <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionType.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
@@ -586,7 +586,6 @@
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
