@@ -11,11 +11,13 @@
 
         public Guid CompetentAuthorityId { get; private set; }
 
-        public UserStatus UserStatus { get; private set; }
+        public virtual UserStatus UserStatus { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
         public virtual Role Role { get; private set; }
+
+        public virtual User User { get; private set; }
 
         protected CompetentAuthorityUser()
         {
