@@ -9930,4 +9930,8 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CF5762ZY', 'Actemium UK Ltd', '65493', '528a4f80-d564-4449-8a60-894ac85adb71')
 
 -- Latest updates 15/02/2016
-INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KG5744YZ', 'Proporta.com Ltd', '3309803', '3fb682de-6ba1-46ac-a1fe-22d17bf638c')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KG5744YZ', 'Proporta.com Ltd', '3309803', 'fbba72ee-fb66-454a-9628-977fffa64429')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JJ5740XW', 'BPC Energy Ltd', '08823160', 'a7b820dd-1b16-4637-a4d2-8e0971e1b203')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KA5741XW', 'Swann Communications (Europe) Ltd', '06659777', '43c28801-3dee-453a-a9a8-457079d9b4e7')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KB5741XW', 'Gallaher Ltd', '01501573', '975ac9df-99d6-44c2-b01f-4e5777e152e5')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KC5741XW', 'Socomec U.K. Ltd', '02016638', '5a0f2190-2ea1-4c46-a0dd-38c89d4ab3d1')
