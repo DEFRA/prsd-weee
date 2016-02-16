@@ -17,16 +17,25 @@
         <h2 class="heading-medium">Files available for download</h2>
     </div>
     <div class="form-group">
-        @foreach (int complianceYear in Model.Years)
+        @if (Model.Years.Any())
         {
-            var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
-
-            @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
-                Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, complianceYear)),
-                 "Downloads", 
-                 "Overview of current members", 
-                 "Compliance year: " + complianceYear))
-            <br />
+            <ul>
+                @foreach (int complianceYear in Model.Years)
+                {
+                    var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
+                    <li>
+                        @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
+                            Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, complianceYear)),
+                                "Downloads",
+                                "Overview of current members",
+                                "Compliance year: " + complianceYear))
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>You have not yet registered any members.</p>
         }
     </div>
 
