@@ -82,18 +82,14 @@
         [HttpGet]
         public async Task<ActionResult> Summary(Guid pcsId)
         {
+            List<int> years;
             using (var client = apiClient())
             {
-                List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(pcsId));
-
-                if (years.Count > 0)
-                {
-                    await SetBreadcrumb(pcsId, ManageMembersActivity);
-                    return View(new SummaryViewModel { PcsId = pcsId, Years = years});
-                }
+                years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(pcsId));
             }
 
-            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
+            await SetBreadcrumb(pcsId, ManageMembersActivity);
+            return View(new SummaryViewModel { PcsId = pcsId, Years = years});
         }
 
         [HttpGet]
