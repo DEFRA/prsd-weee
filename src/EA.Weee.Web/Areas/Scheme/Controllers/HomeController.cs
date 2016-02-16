@@ -14,7 +14,6 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
-    using Prsd.Core;
     using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
@@ -181,7 +180,7 @@
                     OrganisationId = pcsId
                 };
 
-                await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+                await SetBreadcrumb(pcsId, "View submission history");
 
                 return View(model);
             }
@@ -203,7 +202,7 @@
                 }
             }
 
-            await SetBreadcrumbAndPcsBanner(viewModel.OrganisationId, "View submission history");
+            await SetBreadcrumb(viewModel.OrganisationId, "View submission history");
             viewModel.PossibleValues = new List<string>
             {
                 SubmissionType.MemberRegistrations,
@@ -433,7 +432,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
 
@@ -474,7 +473,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, "View submission history");
 
             var model = new DataReturnSubmissionHistoryViewModel();
 
@@ -533,12 +532,7 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
-        }
-
-        private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
-        {
-            await SetBreadcrumb(organisationId, activity);
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-        }
+        }     
     }
 }

@@ -9928,3 +9928,6 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BG5755ZR', 'Panono GmbH', NULL, 'fd36a357-c039-4770-9be1-6d3e3fe4163e')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CA5758ZU', 'Cavey Laboratory Engineering Co Ltd', '9520969', 'f3cbadc1-2e3d-4d6d-b28a-689a145627f3')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CF5762ZY', 'Actemium UK Ltd', '65493', '528a4f80-d564-4449-8a60-894ac85adb71')
+
+-- Latest updates 15/02/2016
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KG5744YZ', 'Proporta.com Ltd', '3309803', '3fb682de-6ba1-46ac-a1fe-22d17bf638c')
