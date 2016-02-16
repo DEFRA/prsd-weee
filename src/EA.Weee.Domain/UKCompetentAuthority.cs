@@ -8,10 +8,10 @@
         public string Name { get; private set; }
 
         public string Abbreviation { get; private set; }
- 
-        public virtual Country Country { get; protected set; }
 
-        public string Email { get; protected set; }
+        public virtual Country Country { get; private set; }
+
+        public string Email { get; private set; }
 
         protected UKCompetentAuthority()
         {
