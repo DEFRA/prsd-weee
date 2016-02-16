@@ -164,7 +164,7 @@
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
 
                     return View("ViewErrorsAndWarnings",
-                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges, MemberUploadId = memberUploadId, PcsId = pcsId });
+                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges, ComplianceYear = memberUpload.ComplianceYear, MemberUploadId = memberUploadId, PcsId = pcsId });
                 }
 
                 return RedirectToAction("XmlHasNoErrors", new { pcsId, memberUploadId });
@@ -189,6 +189,7 @@
                      {
                          ErrorData = errors,
                          TotalCharges = memberUpload.TotalCharges,
+                         ComplianceYear = memberUpload.ComplianceYear,
                          MemberUploadId = memberUploadId,
                          PcsId = pcsId
                      });
