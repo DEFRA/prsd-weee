@@ -17,5 +17,7 @@
 
         [MustBeTrue(ErrorMessage = "Please confirm that you have read the privacy policy")]
         public bool PrivacyPolicy { get; set; }
+
+        public int? ComplianceYear { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿<html>
+
+<body style="font-family: Helvetica, Arial, sans-serif; font-size: 16px; margin: 0; color: #0b0c0c">
+    <table width="100%" cellpadding="15" cellspacing="0" border="0">
+        <tr>
+            <td width="100%" height="55px" bgcolor="#0b0c0c">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
+                    <tr>
+                        <td width="100%" bgcolor="#0b0c0c" valign="middle">
+                            <img src="cid:logo" alt="GOV.UK">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <p>Hello,</p>
+    <p><b>New internal user request</b></p>
+    <p>@Model.FullName has requested a new internal user account with the following details:</p>
+    Name: @Model.FullName<br>
+    Email address: @Model.EmailAddress
+    <p>
+        If you are an administrator, you can authorise this user on the WEEE online service
+        by editing their status from <a href="@Model.ViewUserLink">users details</a>.
+    </p>
+    <p>This is an automated email. Do not reply.</p>
+</body>
+</html>
