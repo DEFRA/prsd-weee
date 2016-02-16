@@ -1,0 +1,12 @@
+﻿Hello,
+
+New internal user request
+
+@Model.FullName has requested a new internal user account with the following details:
+
+Name: @Model.FullName
+Email address: @Model.EmailAddress
+
+If you are an administrator, you can authorise this user on the WEEE online service by editing their status from @Model.ViewUserLink.
+
+This is an automated email. Do not reply.
