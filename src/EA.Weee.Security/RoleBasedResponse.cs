@@ -12,7 +12,7 @@
             roles = new List<Role>();
         }
 
-        public void AddUserRole(Role role)
+        internal void AddUserRole(Role role)
         {
             roles.Add(role);
         }
