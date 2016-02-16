@@ -13,6 +13,7 @@
     using Api.Client.Actions;
     using Api.Client.Entities;
     using Authorization;
+    using Core.Routing;
     using Core.Shared;
     using FakeItEasy;
     using Microsoft.Owin.Security;
@@ -201,7 +202,7 @@
 
             ClaimsIdentity identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(OAuth2Constants.AccessToken, "accessToken"));
-            
+
             A.CallTo(() => authenticationManager.User).Returns(new ClaimsPrincipal(identity));
             A.CallTo(() => externalRouteService.ActivateInternalUserAccountUrl).Returns("activationBaseUrl");
 
@@ -240,12 +241,55 @@
         }
 
         [Fact]
-        public async void AdminAccount_ActiveUserAccount_ActivatesTheAccount()
+        public async Task AdminAccount_ActiveUserAccount_ActivatesTheAccount()
         {
-            await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
+            // Arrange
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .Returns(true);
 
+            // Act
+            var result = await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
+
+            // Assert
             A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal("AccountActivated", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async Task ActivateUserAccount_InvokesApiWithCorrectParameters()
+        {
+            // Arrange
+            var controller = AccountController();
+
+            var userId = Guid.NewGuid();
+            string code = "Code";
+
+            var viewUserRoute = A.Fake<ViewCompetentAuthorityUserRoute>();
+            A.CallTo(() => externalRouteService.ViewCompetentAuthorityUserRoute)
+                 .Returns(viewUserRoute);
+
+            ActivatedUserAccountData activatedUserAccountData = null;
+
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .Invokes((ActivatedUserAccountData a) => activatedUserAccountData = a)
+                .Returns(true);
+
+            // Act
+            await controller.ActivateUserAccount(userId, code);
+
+            // Assert
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(activatedUserAccountData);
+            Assert.Equal(userId, activatedUserAccountData.Id);
+            Assert.Equal(code, activatedUserAccountData.Code);
+            Assert.Same(viewUserRoute, activatedUserAccountData.ViewUserRoute);
         }
 
         [Fact]
@@ -439,10 +483,10 @@
         {
             return new InternalUserCreationViewModel
             {
-                ConfirmPassword = "Password*99", 
-                Password = "Password*99", 
-                Email = "test@environment-agency.gov.uk", 
-                Name = "test", 
+                ConfirmPassword = "Password*99",
+                Password = "Password*99",
+                Email = "test@environment-agency.gov.uk",
+                Name = "test",
                 Surname = "name"
             };
         }
