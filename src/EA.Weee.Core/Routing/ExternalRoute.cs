@@ -35,7 +35,7 @@
         /// actual values.
         /// </summary>
         /// <returns></returns>
-        public string GenerateUrl()
+        public virtual string GenerateUrl()
         {
             return ReplacePlaceholders();
         }

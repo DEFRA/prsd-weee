@@ -107,10 +107,10 @@
         {
             // Arrange
             var builder = new WeeeEmailServiceBuilder();
-            var notificationService = builder.Build();
+            var emailService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("SchemeDataReturnSubmitted.cshtml", A<object>._))
@@ -124,10 +124,10 @@
         {
             // Arrange
             var builder = new WeeeEmailServiceBuilder();
-            var notificationService = builder.Build();
+            var emailService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeDataReturnSubmitted("a@b.com", A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted("a@b.com", A<string>._, A<int>._, A<int>._, A<bool>._);
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -159,10 +159,77 @@
             A.CallTo(() => builder.MessageCreator.Create(A<string>._, A<string>._, A<EmailContent>._))
                 .Returns(mailMessage);
 
-            var notificationService = builder.Build();
+            var emailService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
+
+            // Assert
+            A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendInternalUserAccountActivated_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("InternalUserAccountActivated.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("InternalUserAccountActivated.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendInternalUserAccountActivated_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendInternalUserAccountActivated("a@b.com", A<string>._, A<string>._, A<string>._);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendInternalUserAccountActivated_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "New internal user request", A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendInternalUserAccountActivated_SendsCreatedMailMessageWithContinueOnException()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var mailMessage = new MailMessage();
+
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, A<string>._, A<EmailContent>._))
+                .Returns(mailMessage);
+
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
