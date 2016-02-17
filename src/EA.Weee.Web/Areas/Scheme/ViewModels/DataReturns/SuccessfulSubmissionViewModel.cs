@@ -9,6 +9,6 @@
 
         public int ComplianceYear { get; set; }
 
-        public string QuarterText { get; set; }
+        public QuarterType Quarter { get; set; }
     }
 }
