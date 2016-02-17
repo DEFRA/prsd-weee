@@ -2,7 +2,7 @@
 
 @Model.SchemeName has submitted the following:
 
-New data return file
+Data return file
 
 Compliance year: @Model.ComplianceYear
 Quarter: @Model.Quarter

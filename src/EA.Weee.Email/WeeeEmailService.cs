@@ -124,7 +124,7 @@
             };
 
             using (MailMessage message = messageCreator.Create(emailAddress,
-                string.Format("New member registration submission for {0}", schemeName), content))
+                string.Format("Member registration submission for {0}", schemeName), content))
             {
                 return await sender.SendAsync(message, true);
             }
@@ -147,7 +147,7 @@
             };
 
             using (MailMessage message = messageCreator.Create(emailAddress,
-                string.Format("New data return submission for {0}", schemeName), content))
+                string.Format("Data return submission for {0}", schemeName), content))
             {
                 return await sender.SendAsync(message, true);
             }
