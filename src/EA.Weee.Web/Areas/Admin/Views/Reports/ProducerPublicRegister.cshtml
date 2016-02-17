@@ -25,7 +25,7 @@
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
         <p>
-            If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
+            If there are a large number of producers for your selected criteria, it may take a while to download your results.
         </p>
         @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
     }
