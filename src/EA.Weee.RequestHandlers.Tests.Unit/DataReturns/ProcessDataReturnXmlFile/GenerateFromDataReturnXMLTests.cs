@@ -23,7 +23,7 @@
             A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
-            A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
+            A.CallTo(() => builder.XmlConverter.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
             var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
@@ -56,7 +56,7 @@
             A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
-            A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
+            A.CallTo(() => builder.XmlConverter.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Returns(null);
 
             A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._))
@@ -77,7 +77,7 @@
             A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
-            A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
+            A.CallTo(() => builder.XmlConverter.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Returns(schemeReturn);
 
             var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
@@ -89,21 +89,19 @@
         private class GenerateFromXmlBuilder
         {
             public IXmlConverter XmlConverter;
-            public IDeserializer XmlDeserializer;
             public ISchemaValidator SchemaValidator;
             public IXmlErrorTranslator XmlErrorTranslator;
 
             public GenerateFromXmlBuilder()
             {
                 XmlConverter = A.Fake<IXmlConverter>();
-                XmlDeserializer = A.Fake<IDeserializer>();
                 SchemaValidator = A.Fake<ISchemaValidator>();
                 XmlErrorTranslator = A.Fake<IXmlErrorTranslator>();
             }
 
             public GenerateFromDataReturnXml Build()
             {
-                return new GenerateFromDataReturnXml(SchemaValidator, XmlConverter, XmlErrorTranslator, XmlDeserializer);
+                return new GenerateFromDataReturnXml(SchemaValidator, XmlConverter, XmlErrorTranslator);
             }
         }
     }

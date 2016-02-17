@@ -9,6 +9,6 @@
 
         string XmlToUtf8String(byte[] data);
 
-        schemeType Deserialize(XDocument xdoc);
+        T Deserialize<T>(XDocument xdoc);
     }
 }
