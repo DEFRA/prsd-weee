@@ -71,11 +71,17 @@
                 {
                     @Html.AntiForgeryToken()
                     @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+                    <p>
+                        @Html.ActionLink("Perform another activity", "Index", "Home")
+                    </p>
                 }
             }
-            <p>
-                @Html.ActionLink("Perform another activity", "Index", "Home")
-            </p>
+            else
+            {
+                <p>
+                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                </p>
+            }
 
             <noscript>
                 <p class="bold-small">
