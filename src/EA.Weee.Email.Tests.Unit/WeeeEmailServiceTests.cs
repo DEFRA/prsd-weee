@@ -78,7 +78,7 @@
             await emailService.SendSchemeMemberSubmitted(A<string>._, "TestSchemeName", A<int>._, A<int>._);
 
             // Assert
-            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "New member registration submission for TestSchemeName", A<EmailContent>._))
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Member registration submission for TestSchemeName", A<EmailContent>._))
                 .MustHaveHappened();
         }
 
@@ -145,7 +145,7 @@
             await emailService.SendSchemeDataReturnSubmitted(A<string>._, "TestSchemeName", A<int>._, A<int>._, A<bool>._);
 
             // Assert
-            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "New data return submission for TestSchemeName", A<EmailContent>._))
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Data return submission for TestSchemeName", A<EmailContent>._))
                 .MustHaveHappened();
         }
 

@@ -8,5 +8,7 @@
         Task<bool> HasMultipleManageableOrganisationUsers(Guid organisationId);
 
         Task<bool> HasMemberSubmissions(Guid organisationId);
+
+        Task<bool> HasDataReturnSubmissions(Guid organisationId);
     }
 }

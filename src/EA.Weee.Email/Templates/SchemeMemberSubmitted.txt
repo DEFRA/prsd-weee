@@ -2,7 +2,7 @@
 
 @Model.SchemeName has submitted the following:
 
-New member registration file
+Member registration file
 
 Compliance year: @Model.ComplianceYear
 Warnings: @Model.NumberOfWarnings
