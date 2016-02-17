@@ -46,9 +46,8 @@
         public async Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear, Guid schemeId)
         {
             var eeeOutputAmountsByQuarter = (await context.DataReturns
-                .Where(dr => dr.CurrentVersion.SubmittedDate.HasValue)
-                .Where(dr => dr.Quarter.Year == complianceYear)
                 .Where(dr => dr.CurrentVersion != null)
+                .Where(dr => dr.Quarter.Year == complianceYear)
                 .Select(
                     dr =>
                         new
