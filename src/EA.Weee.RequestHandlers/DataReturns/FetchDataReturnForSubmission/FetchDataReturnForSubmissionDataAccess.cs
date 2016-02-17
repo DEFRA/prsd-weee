@@ -36,11 +36,6 @@
             return result;
         }
 
-        public async Task<DataReturnUpload> FetchDataReturnUploadByIdAsync(Guid dataReturnUploadId)
-        {
-            return await context.DataReturnsUploads.Where(dru => dru.Id == dataReturnUploadId).SingleOrDefaultAsync();
-        }
-
         public async Task<bool> CheckForExistingSubmissionAsync(Guid schemeId, int complianceYear, int quarterType)
         {
             return await context.DataReturns
