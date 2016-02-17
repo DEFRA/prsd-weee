@@ -12,7 +12,7 @@
             return new PcsDetailsOverviewViewModel
             {
                 AppropriateAuthority = source.CompetentAuthority != null 
-                    ? source.CompetentAuthority.Name 
+                    ? source.CompetentAuthority.Abbreviation 
                     : string.Empty,
                 ApprovalNumber = source.ApprovalName,
                 BillingReference = source.IbisCustomerReference,
