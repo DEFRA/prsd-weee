@@ -39,7 +39,7 @@
             csvWriter.DefineColumn(@"Submission date and time (GMT)", i => i.SubmissionDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
-            csvWriter.DefineColumn(@"Charge value (£)", i => i.ChargeValue);
+            csvWriter.DefineColumn(@"Charge value (GBP)", i => i.ChargeValue);
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
 
             string fileContent = csvWriter.Write(items);
