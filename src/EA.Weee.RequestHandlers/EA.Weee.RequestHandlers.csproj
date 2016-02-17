@@ -141,6 +141,8 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\IFetchSummaryCsvDataAccess.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\ISubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
