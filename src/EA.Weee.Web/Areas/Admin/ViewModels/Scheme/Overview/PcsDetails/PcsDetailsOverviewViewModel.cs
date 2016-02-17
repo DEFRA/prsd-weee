@@ -16,6 +16,8 @@
 
         public bool IsRejected { get; set; }
 
+        public bool CanEditPcs { get; set; }
+
         public PcsDetailsOverviewViewModel() 
             : base(OverviewDisplayOption.PcsDetails)
         {

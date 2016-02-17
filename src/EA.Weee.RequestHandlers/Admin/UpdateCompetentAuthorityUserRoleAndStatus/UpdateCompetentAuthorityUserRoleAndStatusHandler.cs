@@ -6,6 +6,7 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     internal class UpdateCompetentAuthorityUserRoleAndStatusHandler : IRequestHandler<UpdateCompetentAuthorityUserRoleAndStatus, Guid>
     {
@@ -23,6 +24,7 @@
         public async Task<Guid> HandleAsync(UpdateCompetentAuthorityUserRoleAndStatus query)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var competentAuthorityUser = await dataAccess.GetCompetentAuthorityUser(query.Id);
 

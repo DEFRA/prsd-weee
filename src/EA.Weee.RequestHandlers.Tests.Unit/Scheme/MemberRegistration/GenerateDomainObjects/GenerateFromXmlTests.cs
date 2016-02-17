@@ -37,7 +37,7 @@
         public void GenerateMemberUpload_NoSchemaErrors_ComplianceYearObtained()
         {
             var builder = new GenerateFromXmlBuilder();
-            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._))
+            A.CallTo(() => builder.XmlConverter.Deserialize<schemeType>(A<XDocument>._))
                 .Returns(new schemeType { complianceYear = "2015" });
 
             var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
@@ -53,7 +53,7 @@
         public void GenerateMemberUpload_NullSchemaErrors_ComplianceYearObtained()
         {
             var builder = new GenerateFromXmlBuilder();
-            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._))
+            A.CallTo(() => builder.XmlConverter.Deserialize<schemeType>(A<XDocument>._))
                 .Returns(new schemeType { complianceYear = "2015" });
 
             var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
@@ -86,7 +86,7 @@
             A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._)).Returns(xml);
 
             schemeType xmlScheme = new schemeType() { complianceYear = "2015" };
-            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._)).Returns(xmlScheme);
+            A.CallTo(() => builder.XmlConverter.Deserialize<schemeType>(A<XDocument>._)).Returns(xmlScheme);
 
             var result = builder.Build().GenerateMemberUpload(message, errors, 1000, scheme);
 

@@ -262,27 +262,8 @@
         }
 
         [Fact]
-        public async void GetSummary_HasNoUploads_RedirectsToAddOrAmendMembersPage()
+        public async void GetSummary_Always_ReturnsViewWithSummaryModel()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
-                .Returns(new List<int>());
-
-            var result = await MemberRegistrationController().Summary(A<Guid>._);
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("AddOrAmendMembers", routeValues["action"]);
-            Assert.Equal("MemberRegistration", routeValues["controller"]);
-        }
-
-        [Fact]
-        public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
-                .Returns(new List<int>() { 2015, 2016 });
-
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);

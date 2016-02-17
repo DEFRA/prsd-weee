@@ -163,8 +163,9 @@
         {
             using (var client = apiClient())
             {
-                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
+                var viewUserRoute = externalRouteService.ViewCompetentAuthorityUserRoute;
 
+                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code, ViewUserRoute = viewUserRoute });
                 if (!result)
                 {
                     return View("AccountActivationFailed");

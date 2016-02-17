@@ -4,12 +4,11 @@
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
-    using Core.Security;
     using DataAccess;
     using Domain.User;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Weee.Core;
+    using Weee.Security;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
@@ -217,7 +216,7 @@
 
             if (!isInRole)
             {
-                string message = "The user is not associated with the specified role.";
+                string message = string.Format("The user is not associated with the {0} role.", role);
                 throw new SecurityException(message);
             }
         }

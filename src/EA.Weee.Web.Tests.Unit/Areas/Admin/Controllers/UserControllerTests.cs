@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Security;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -10,6 +11,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Security;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;
@@ -38,7 +40,7 @@
 
             // Act
             Guid selectedUserId = Guid.NewGuid();
-            
+
             ActionResult result = await controller.Index(new ManageUsersViewModel { SelectedUserId = selectedUserId });
 
             // Assert
@@ -51,7 +53,7 @@
         }
 
         [Fact]
-        public async Task GetEdit_Always_ReturnsEditView()
+        public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -66,7 +68,8 @@
                     LastName = "Lastname",
                     Email = "test@ea.com",
                     IsCompetentAuthorityUser = true,
-                    OrganisationName = "test ltd."
+                    OrganisationName = "test ltd.",
+                    CanEditUser = true
                 });
 
             var result = await controller.Edit(Guid.NewGuid());
@@ -84,6 +87,23 @@
         }
 
         [Fact]
+        public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
+        {
+            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
+                .Returns(new ManageUserData
+                {
+                    CanEditUser = false
+                });
+
+            var result = await controller.Edit(Guid.NewGuid());
+
+            Assert.NotNull(result);
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
+        [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModel_UpdatesUserAndCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
@@ -98,7 +118,7 @@
                 Email = "test@ea.com",
                 IsCompetentAuthorityUser = true,
                 OrganisationName = "test ltd.",
-                Role = new Core.Security.Role { Name = "InternalAdmin", Description = "Administrator" }
+                Role = new Role { Name = "InternalAdmin", Description = "Administrator" }
             };
 
             Guid id = Guid.NewGuid();

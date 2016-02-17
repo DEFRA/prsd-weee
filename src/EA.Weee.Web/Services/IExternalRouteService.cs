@@ -26,5 +26,10 @@
         /// The route to the password reset page for an external user.
         /// </summary>
         ResetPasswordRoute ExternalUserResetPasswordRoute { get; }
+
+        /// <summary>
+        /// The route to the view user page for an internal user.
+        /// </summary>
+        ViewCompetentAuthorityUserRoute ViewCompetentAuthorityUserRoute { get; }
     }
 }

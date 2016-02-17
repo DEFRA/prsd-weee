@@ -1,4 +1,6 @@
-﻿@model EA.Weee.Web.ViewModels.Shared.TitleViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.Shared.TitleViewModel
 @{
     bool showBreadcrumb =
            (Model.Breadcrumb.ExternalOrganisation != null)
@@ -55,14 +57,26 @@
                 @if (Model.Breadcrumb.ExternalActivity != null)
                 {
                     <li>
-                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @Model.Breadcrumb.ExternalActivity
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
+                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.SchemeInfo.OrganisationId)),
+                            "Navigation",
+                            "External activity",
+                            null,
+                           null)):
+                        @Model.Breadcrumb.ExternalActivity
                     </li>
                 }
                 
                 @if (Model.Breadcrumb.InternalActivity != null)
                 {
                     <li>
-                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "admin" })">Activity</a>: @Model.Breadcrumb.InternalActivity
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
+                        Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                        "Navigation",
+                        "Internal activity",
+                        null,
+                       null)):
+                        @Model.Breadcrumb.InternalActivity               
                     </li>
                 }
 
@@ -75,8 +89,8 @@
 
                 @if (Model.Breadcrumb.InternalUser != null)
                 {
-                    <li>
-                        <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
+                    <li>                       
+                            <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
                     </li>
                 }
 

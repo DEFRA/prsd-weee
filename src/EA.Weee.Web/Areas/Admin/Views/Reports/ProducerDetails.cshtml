@@ -14,7 +14,6 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.FilterByScheme)
 
         <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
         
@@ -26,7 +25,7 @@
             If your selection criteria is broad, it may take a while to download your results.
         </p>
 
-        @(this.WeeeGds().Submit("Download", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
     }
 
     <p>

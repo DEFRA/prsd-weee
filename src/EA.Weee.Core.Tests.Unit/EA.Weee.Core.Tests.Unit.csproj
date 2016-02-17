@@ -42,12 +42,12 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.16027-develop2\lib\net451\EA.Prsd.Email.dll</HintPath>
+    <Reference Include="EA.Prsd.Email, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Email.1.0.16036.1\lib\net451\EA.Prsd.Email.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FakeItEasy">
@@ -61,7 +61,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.XML" />
@@ -96,7 +96,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Email\WeeeEmailServiceTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
@@ -104,6 +103,7 @@
     <Compile Include="Helpers\SimpleObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\ExternalRouteTests.cs" />
+    <Compile Include="Routing\ViewCompetentAuthorityUserRouteTests.cs" />
     <Compile Include="Routing\ResetPasswordRouteTests.cs" />
     <Compile Include="Search\Simple\SimpleSearcherTests.cs">
       <SubType>Code</SubType>

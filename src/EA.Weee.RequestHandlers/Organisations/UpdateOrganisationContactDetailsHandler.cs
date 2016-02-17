@@ -8,9 +8,9 @@
 
     public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, bool>
     {
-        private IUpdateOrganisationContactDetailsDataAccess dataAccess;
+        private IOrganisationDetailsDataAccess dataAccess;
 
-        public UpdateOrganisationContactDetailsHandler(IUpdateOrganisationContactDetailsDataAccess dataAccess)
+        public UpdateOrganisationContactDetailsHandler(IOrganisationDetailsDataAccess dataAccess)
         {
             this.dataAccess = dataAccess;
         }

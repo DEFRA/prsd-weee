@@ -19,12 +19,14 @@
 
         Task<List<PCSChargesCSVData>> SpgInvoiceRunChargeBreakdown(Guid invoiceRunId);
 
-        Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, string obligationType);
+        Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, Guid? schemeId, string obligationType);
 
-        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvDataByComplianceYearAndObligationType(int complianceYear, string obligationtype);
+        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationtype);
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
-        Task<List<ProducerEeeHistoryCsvData>> SpgProducerEeeHistoryCsvData(string prn);
+        Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
+
+        Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear);
     }
 }

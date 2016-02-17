@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -53,6 +53,8 @@
     <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
+    <Compile Include="Events\SchemeDataReturnSubmissionEvent.cs" />
+    <Compile Include="Events\SchemeMemberSubmissionEvent.cs" />
     <Compile Include="Lookup\QuarterWindowTemplate.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Error\UploadErrorType.cs" />
+    <Compile Include="Scheme\SchemeDataAvailability.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
@@ -103,6 +106,7 @@
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
+    <Compile Include="Scheme\SchemeAnnualDataAvailability.cs" />
     <Compile Include="Security\Role.cs" />
     <Compile Include="User\UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />

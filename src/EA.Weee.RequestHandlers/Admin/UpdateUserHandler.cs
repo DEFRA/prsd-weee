@@ -7,6 +7,7 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     internal class UpdateUserHandler : IRequestHandler<UpdateUser, Guid>
     {
@@ -22,6 +23,7 @@
         public async Task<Guid> HandleAsync(UpdateUser query)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var user = await userManager.FindByIdAsync(query.UserId);
 

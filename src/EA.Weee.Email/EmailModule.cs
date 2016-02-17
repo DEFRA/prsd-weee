@@ -6,6 +6,7 @@
     using EA.Prsd.Email;
     using EA.Prsd.Email.Rules;
     using EA.Weee.Email.EventHandlers;
+    using EventHandlers.SchemeDataReturnSubmission;
 
     public class EmailModule : Module
     {
@@ -24,11 +25,15 @@
             builder.RegisterType<Sender>().As<ISender>();
             builder.RegisterType<SmtpClientProxy>().As<ISmtpClient>();
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
+            builder.RegisterType<WeeeSender>().As<IWeeeSender>();
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
             builder.RegisterType<OrganisationUserRequestEventHandlerDataAccess>()
                 .As<IOrganisationUserRequestEventHandlerDataAccess>();
+
+            builder.RegisterType<SchemeDataReturnSubmissionEventHandlerDataAccess>()
+                .As<ISchemeDataReturnSubmissionEventHandlerDataAccess>();
         }
     }
 }
