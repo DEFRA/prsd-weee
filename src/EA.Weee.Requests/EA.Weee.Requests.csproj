@@ -68,6 +68,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
+    <Compile Include="DataReturns\GetQuarterInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />

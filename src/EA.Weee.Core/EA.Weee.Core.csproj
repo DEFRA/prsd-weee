@@ -99,6 +99,7 @@
     <Compile Include="DataReturns\DataReturnForSubmission.cs" />
     <Compile Include="DataReturns\DataReturnWarning.cs" />
     <Compile Include="DataReturns\Eee.cs" />
+    <Compile Include="DataReturns\QuarterInfo.cs" />
     <Compile Include="DataReturns\QuarterSelection.cs" />
     <Compile Include="DataReturns\WeeeCategory.cs" />
     <Compile Include="DataReturns\IErrorOrWarning.cs" />
