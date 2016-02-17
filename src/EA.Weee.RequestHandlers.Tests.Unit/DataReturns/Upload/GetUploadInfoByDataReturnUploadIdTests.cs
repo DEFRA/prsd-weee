@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.FetchDataReturnForSubmission
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.Upload
 {
     using System;
     using System.Collections.Generic;
