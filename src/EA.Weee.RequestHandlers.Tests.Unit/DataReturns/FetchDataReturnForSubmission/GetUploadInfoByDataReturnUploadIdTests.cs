@@ -6,11 +6,10 @@
     using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers.DataReturns.FetchDataReturnForSubmission;
     using RequestHandlers.DataReturns.Upload;
     using Xunit;
 
-    public class GetQuarterInfoByDataReturnUploadIdTests
+    public class GetUploadInfoByDataReturnUploadIdTests
     {
         [Fact]
         public async Task HandleAsync_Happypath_ReturnsQuarterInfo()
