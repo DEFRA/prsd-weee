@@ -814,6 +814,28 @@
             Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
         }
 
+        [Fact]
+        public async void GetSuccessfulSubmission_HappyPath_ReturnsSuccessfulSubmissionView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUploadInfoByDataReturnUploadId>._))
+                .Returns(new DataReturnUploadInfo
+                {
+                    Year = 2016,
+                    Quarter = QuarterType.Q1
+                });
+
+            DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
+
+            ActionResult result = await controller.SuccessfulSubmission(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SuccessfulSubmission");
+
+            Assert.IsAssignableFrom<EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SuccessfulSubmissionViewModel>(viewResult.Model);
+        }
+
         /// <summary>
         /// This test ensures that the GET Submit action returns the "Submit" view with a populated
         /// view model when a data return is sucessfully requested.
