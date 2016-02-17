@@ -9,5 +9,7 @@
         Task<DataReturnUpload> FetchDataReturnUploadAsync(Guid dataReturnsUploadId);
 
         Task<bool> CheckForExistingSubmissionAsync(Guid schemeId, int complianceYear, int quarterType);
+
+        Task<DataReturnUpload> FetchDataReturnUploadByIdAsync(Guid dataReturnUploadId);
     }
 }

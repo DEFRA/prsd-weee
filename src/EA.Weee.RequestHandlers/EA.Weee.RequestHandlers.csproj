@@ -141,6 +141,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\GetQuarterInfoByDataReturnUploadIdHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\IFetchSummaryCsvDataAccess.cs" />
