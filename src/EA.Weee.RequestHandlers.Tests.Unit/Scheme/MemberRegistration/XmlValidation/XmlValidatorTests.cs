@@ -70,7 +70,7 @@
             A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
-            A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
+            A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
             var result = XmlValidator().Validate(new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._));

@@ -7,12 +7,14 @@
     using System.Web.Http;
     using Client.Entities;
     using DataAccess.Identity;
-    using EA.Weee.Core;
+    using Domain.User;
     using EA.Weee.Email;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
+    using RequestHandlers.Admin;
+    using Security;
 
     [RoutePrefix("api/UnauthenticatedUser")]
     public class UnauthenticatedUserController : ApiController
@@ -20,15 +22,18 @@
         private readonly ApplicationUserManager userManager;
         private readonly IUserContext userContext;
         private readonly IWeeeEmailService emailService;
+        private readonly IGetAdminUserDataAccess getAdminUserDataAccess;
 
         public UnauthenticatedUserController(
             ApplicationUserManager userManager,
             IUserContext userContext,
-            IWeeeEmailService emailService)
+            IWeeeEmailService emailService,
+            IGetAdminUserDataAccess getAdminUserDataAccess)
         {
             this.userManager = userManager;
             this.userContext = userContext;
             this.emailService = emailService;
+            this.getAdminUserDataAccess = getAdminUserDataAccess;
         }
 
         [AllowAnonymous]
@@ -43,16 +48,16 @@
 
             var user = new ApplicationUser
             {
-                UserName = model.Email, 
-                Email = model.Email, 
-                FirstName = model.FirstName, 
-                Surname = model.Surname, 
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                Surname = model.Surname,
             };
 
             user.Claims.Add(new IdentityUserClaim
             {
-                ClaimType = ClaimTypes.AuthenticationMethod, 
-                ClaimValue = Claims.CanAccessInternalArea, 
+                ClaimType = ClaimTypes.AuthenticationMethod,
+                ClaimValue = Claims.CanAccessInternalArea,
                 UserId = user.Id
             });
 
@@ -112,6 +117,24 @@
         {
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 
+            if (result.Succeeded)
+            {
+                var competentAuthorityUser = await getAdminUserDataAccess.GetAdminUserOrDefault(model.Id);
+                if (competentAuthorityUser != null &&
+                    competentAuthorityUser.UserStatus == UserStatus.Pending)
+                {
+                    var viewUserRoute = model.ViewUserRoute;
+                    viewUserRoute.CompetentAuthorityUserID = competentAuthorityUser.Id.ToString();
+                    var viewUserUrl = viewUserRoute.GenerateUrl();
+
+                    await emailService.SendInternalUserAccountActivated(
+                               competentAuthorityUser.CompetentAuthority.Email,
+                               competentAuthorityUser.User.FullName,
+                               competentAuthorityUser.User.Email,
+                               viewUserUrl);
+                }
+            }
+
             return Ok(result.Succeeded);
         }
 
@@ -129,11 +152,11 @@
         public async Task<IHttpActionResult> ResendActivationEmail(ResendActivationEmailRequest model)
         {
             string userId = userContext.UserId.ToString();
-            
+
             string emailAddress = await userManager.GetEmailAsync(userId);
 
             bool emailSent = await SendActivationEmail(userId, emailAddress, model.ActivationBaseUrl);
-            
+
             return Ok(emailSent);
         }
 
@@ -182,7 +205,7 @@
             try
             {
                 result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
-                
+
                 if (!result.Succeeded)
                 {
                     return GetErrorResult(result);
@@ -230,7 +253,7 @@
             string userId = model.UserId.ToString();
 
             bool result = await userManager.VerifyUserTokenAsync(userId, "ResetPassword", model.Token);
-            
+
             return Ok(result);
         }
 

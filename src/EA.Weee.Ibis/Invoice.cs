@@ -17,6 +17,7 @@
         public IReadOnlyList<InvoiceLineItem> LineItems { get; private set; }
 
         private string mCustomerReference;
+        
         /// <summary>
         /// The customer number of the invoicee. This should be prefixed with the region code and
         /// suffixed with an identifier for the income stream or feeder system (as agreed with
@@ -55,6 +56,7 @@
         public TransactionType TransactionType { get; private set; }
 
         private string mTransactionReference;
+        
         /// <summary>
         /// The invoice number. This must be unique in 1B1S, preferably in the form
         /// "AnnnnnnnnR", where A is a code for the feeder system or income stream
@@ -83,6 +85,7 @@
         }
 
         private string mRelatedTransactionReference;
+        
         /// <summary>
         /// Blank if transaction is an invoice, optional if the transaction is a credit note.
         /// This will be the transaction reference of the invoice to which the credit note relates.
@@ -110,6 +113,7 @@
         public CurrencyCode CurrencyCode { get; set; }
 
         private string mTransactionHeaderNarrative;
+        
         /// <summary>
         /// The transaction header narrative is mapped individually for each feeder system or income stream variant
         /// For example, it could be the combination of Line Income Stream Code and Line Context Code.

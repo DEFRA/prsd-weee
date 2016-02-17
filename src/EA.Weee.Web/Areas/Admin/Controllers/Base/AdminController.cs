@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers.Base
 {
     using System.Web.Mvc;
-    using Core;
     using Filters;
+    using Security;
 
     [AuthorizeClaims(Claims.CanAccessInternalArea)]
     public abstract class AdminController : Controller

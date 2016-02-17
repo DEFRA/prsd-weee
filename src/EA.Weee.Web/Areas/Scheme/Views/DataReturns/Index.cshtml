@@ -23,11 +23,11 @@
                 <ul>
                     @foreach (int complianceYear in Model.ComplianceYears)
                     {
-                        var csvFileName = "Overview of current EEE and WEEE data for " + complianceYear + " (CSV)";
+                        var csvFileName = "Overview of current EEE and WEEE data for " + complianceYear + " (CSV, less than 25KB)";
                         <li>
                             @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
                                 Url.UrlFor<DataReturnsController>(c => c.DownloadEeeWeeeData(Model.OrganisationId, complianceYear)),
-                                 "Downloads",
+                                 "Data return downloads",
                                  "Overview of EEE and WEEE data",
                                  "Compliance year: " + complianceYear))
                         </li>

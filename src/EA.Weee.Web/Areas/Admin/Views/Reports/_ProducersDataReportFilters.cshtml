@@ -5,6 +5,15 @@
     @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
     @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
 </div>
+
+@if (Model.Schemes != null)
+{
+    <div class="form-group  @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
+        @Html.Gds().LabelFor(m => m.SelectedSchemeId)
+        @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" })
+    </div>
+}
+
 <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationType)">
     @Html.Gds().LabelFor(m => m.SelectedObligationType)
     @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)

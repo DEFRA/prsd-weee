@@ -9,11 +9,12 @@
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 
     public class UpdateUserHandlerTests
-    {   
+    {
         private readonly DbContextHelper helper;
         private readonly UserHelper userHelper;
 
@@ -27,18 +28,38 @@
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void HandleAsync_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
-            // Arrage
+            // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
             UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
-            
+
             var handler = new UpdateUserHandler(authorization, userManager);
-            
+
             var request = new UpdateUser(Guid.NewGuid().ToString(), "TestFirstName", "TestLastName");
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
+
+            var handler = new UpdateUserHandler(authorization, userManager);
+
+            // Act
+            Func<Task> action = async () => await handler.HandleAsync(A<UpdateUser>._);
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(action);

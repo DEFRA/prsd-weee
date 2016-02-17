@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Obligation;
     using Organisation;
-    using Producer;
     using Prsd.Core;
     using Prsd.Core.Domain;
 

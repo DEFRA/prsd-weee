@@ -3,7 +3,6 @@
     using System;
     using Core.Scheme;
     using Core.Shared;
-    using Domain;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
@@ -12,11 +11,11 @@
 
     public class SchemeMap : IMap<Scheme, SchemeData>
     {
-        private readonly IMap<UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap;
+        private readonly IMapper mapper;
 
-        public SchemeMap(IMap<UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap)
+        public SchemeMap(IMapper mapper)
         {
-            this.competentAuthorityMap = competentAuthorityMap;
+            this.mapper = mapper;
         }
 
         public SchemeData Map(Scheme source)
@@ -37,8 +36,8 @@
                 ObligationType = source.ObligationType != null ? (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()) : (ObligationType?)null,
                 CompetentAuthorityId = source.CompetentAuthorityId,
                 CompetentAuthority = source.CompetentAuthority != null
-                    ? competentAuthorityMap.Map(source.CompetentAuthority)
-                    : null,
+                    ? mapper.Map<Domain.UKCompetentAuthority, UKCompetentAuthorityData>(source.CompetentAuthority)
+                    : null
             };
         }
     }

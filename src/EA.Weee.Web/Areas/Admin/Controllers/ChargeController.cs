@@ -100,16 +100,20 @@
         [HttpGet]
         public async Task<ActionResult> ManagePendingCharges(CompetentAuthority authority)
         {
-            IList<PendingCharge> pendingCharges;
             using (IWeeeClient client = weeeClient())
             {
-                FetchPendingCharges request = new FetchPendingCharges(authority);
-                pendingCharges = await client.SendAsync(User.GetAccessToken(), request);
+                var request = new FetchPendingCharges(authority);
+                var managePendingCharges = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = new ManagePendingChargesViewModel
+                {
+                    PendingCharges = managePendingCharges.PendingCharges,
+                    CanUserIssueCharges = managePendingCharges.CanUserIssueCharges
+                };
+                ViewBag.Authority = authority;
+
+                return View(model);
             }
-
-            ViewBag.Authority = authority;
-
-            return View(pendingCharges);
         }
 
         [HttpPost]

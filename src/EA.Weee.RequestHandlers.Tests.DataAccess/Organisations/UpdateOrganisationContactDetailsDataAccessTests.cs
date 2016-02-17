@@ -30,7 +30,7 @@
 
                 database.Model.SaveChanges();
 
-                UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(database.WeeeContext);
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
                 // Act
                 Domain.Organisation.Organisation result = await dataAccess.FetchOrganisationAsync(organisationId);
@@ -53,7 +53,7 @@
             {
                 // Arranage
                 Guid organisationId = new Guid("5EC74E27-8D5C-4D4D-8A49-20BBD5E9611E");
-                UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(database.WeeeContext);
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
                 // Act
                 Func<Task<Domain.Organisation.Organisation>> action = async () => await dataAccess.FetchOrganisationAsync(organisationId);
@@ -76,7 +76,7 @@
                 // Arrange
                 Guid countryId = new Guid("184E1785-26B4-4AE4-80D3-AE319B103ACB"); // ID for UK - England
 
-                UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(database.WeeeContext);
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
                 // Act
                 Domain.Country result = await dataAccess.FetchCountryAsync(countryId);
@@ -100,7 +100,7 @@
             {
                 // Arranage
                 Guid countryId = new Guid("5840BF0B-0CAF-4AF9-9881-F22DB7720F98");
-                UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(database.WeeeContext);
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
                 // Act
                 Func<Task<Domain.Country>> action = async () => await dataAccess.FetchCountryAsync(countryId);
@@ -121,7 +121,7 @@
             // Arrange
             WeeeContext context = A.Fake<WeeeContext>();
 
-            UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(context);
+            OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(context);
 
             // Act
             await dataAccess.SaveAsync();

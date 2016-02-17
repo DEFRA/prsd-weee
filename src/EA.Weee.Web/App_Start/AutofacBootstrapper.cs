@@ -13,6 +13,7 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
+    using Security;
 
     public class AutofacBootstrapper
     {
@@ -47,6 +48,9 @@
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .AsClosedTypesOf(typeof(IMap<,>));
+
+            // Register security module
+            builder.RegisterModule(new SecurityModule());
 
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();

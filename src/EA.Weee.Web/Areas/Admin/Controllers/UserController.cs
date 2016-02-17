@@ -7,13 +7,13 @@
     using System.Web.Mvc;
     using Api.Client;
     using Base;
-    using Core.Security;
     using Core.Shared;
     using Core.Shared.Paging;
     using EA.Weee.Core.Admin;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using Security;
     using ViewModels.User;
     using Weee.Requests.Admin;
     using Weee.Requests.Users;
@@ -122,6 +122,12 @@
             using (var client = apiClient())
             {
                 editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(id));
+
+                if (!editUserData.CanEditUser)
+                {
+                    return new HttpForbiddenResult();
+                }
+
                 roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
             }
 

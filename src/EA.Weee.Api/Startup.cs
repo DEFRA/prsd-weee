@@ -25,10 +25,10 @@ namespace EA.Weee.Api
             var config = new HttpConfiguration();
             var configurationService = new ConfigurationService();
 #if DEBUG
-            LogProvider.SetCurrentLogProvider(new DebugLogger());
+            LogProvider.SetCurrentLogProvider(new DebugLogProvider());
             config.Services.Add(typeof(IExceptionLogger), new DebugExceptionLogger());
 #else
-            LogProvider.SetCurrentLogProvider(new ElmahLogger());
+            LogProvider.SetCurrentLogProvider(new ElmahLogProvider());
 #endif
             // Autofac
             var builder = new ContainerBuilder();
