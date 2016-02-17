@@ -246,7 +246,7 @@
                 var quarterInfo =
                     await
                         client.SendAsync(User.GetAccessToken(),
-                            new GetQuarterInfoByDataReturnUploadId(dataReturnUploadId));
+                            new GetUploadInfoByDataReturnUploadId(dataReturnUploadId));
 
                 var quarterText = string.Empty;
 

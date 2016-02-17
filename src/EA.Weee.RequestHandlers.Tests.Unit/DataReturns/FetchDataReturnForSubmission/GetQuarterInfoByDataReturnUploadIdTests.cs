@@ -7,6 +7,7 @@
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.DataReturns.FetchDataReturnForSubmission;
+    using RequestHandlers.DataReturns.Upload;
     using Xunit;
 
     public class GetQuarterInfoByDataReturnUploadIdTests
@@ -22,12 +23,12 @@
                2016,
                1);
 
-            IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
+            IFetchDataReturnUploadDataAccess dataAccess = A.Fake<IFetchDataReturnUploadDataAccess>();
             A.CallTo(() => dataAccess.FetchDataReturnUploadByIdAsync(A<Guid>._)).Returns(dataReturnsUpload);
 
-            GetQuarterInfoByDataReturnUploadIdHandler handler = new GetQuarterInfoByDataReturnUploadIdHandler(dataAccess);
+            GetUploadInfoByDataReturnUploadIdHandler handler = new GetUploadInfoByDataReturnUploadIdHandler(dataAccess);
 
-            Requests.DataReturns.GetQuarterInfoByDataReturnUploadId request = new Requests.DataReturns.GetQuarterInfoByDataReturnUploadId(
+            Requests.DataReturns.GetUploadInfoByDataReturnUploadId request = new Requests.DataReturns.GetUploadInfoByDataReturnUploadId(
                 A.Dummy<Guid>());
 
             var result = await handler.HandleAsync(request);
