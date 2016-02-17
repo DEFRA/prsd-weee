@@ -10,6 +10,7 @@
     using Base;
     using Core.Admin;
     using Core.DataReturns;
+    using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
@@ -19,11 +20,11 @@
     using Services.Caching;
     using ViewModels.Submissions;
     using Web.ViewModels.Shared.Submission;
-    using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
+    using GetSchemes = Weee.Requests.Admin.GetSchemes;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
@@ -50,8 +51,8 @@
                 {
                     PossibleValues = new List<string>
                     {
-                        SubmissionType.EeeOrWeeeDataReturns,
-                        SubmissionType.MemberRegistrations
+                        SubmissionType.MemberRegistrations,
+                        SubmissionType.EeeOrWeeeDataReturns
                     }
                 };
 
@@ -80,8 +81,8 @@
             await SetBreadcrumb();
             viewModel.PossibleValues = new List<string>
             {
-                SubmissionType.EeeOrWeeeDataReturns,
-                SubmissionType.MemberRegistrations
+                SubmissionType.MemberRegistrations,
+                SubmissionType.EeeOrWeeeDataReturns
             };
 
             return View(viewModel);
@@ -103,13 +104,16 @@
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
-                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+
+                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+
                     SubmissionsHistoryViewModel model = new SubmissionsHistoryViewModel
                     {
                         ComplianceYears = new SelectList(allYears),
-                        SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
+                        SchemeNames = new SelectList(schemes, "Id", "SchemeName"),
                         SelectedYear = allYears.FirstOrDefault(),
-                        SelectedScheme = allSchemes.Count > 0 ? allSchemes.First().Id : Guid.Empty
+                        SelectedScheme = schemes.Count > 0 ? schemes.First().Id : Guid.Empty
                     };
                     return View(model);
                 }
@@ -194,13 +198,16 @@
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
-                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+
+                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
                     {
                         ComplianceYears = new SelectList(allYears),
-                        SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
+                        SchemeNames = new SelectList(schemes, "Id", "SchemeName"),
                         SelectedYear = allYears.FirstOrDefault(),
-                        SelectedScheme = allSchemes.Count > 0 ? allSchemes.First().Id : Guid.Empty
+                        SelectedScheme = schemes.Count > 0 ? schemes.First().Id : Guid.Empty
                     };
                     return View(model);
                 }

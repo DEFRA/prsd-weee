@@ -24,7 +24,7 @@
                         <th>Date and time (GMT)</th>
                         <th>Compliance year</th>
                         <th>Warnings</th>
-                        <th>Charge amount</th>
+                        <th class="numeric">Charge amount</th>
                         <th>Submitted by</th>
                         <th>File name</th>
                     </tr>
@@ -44,7 +44,7 @@
                                     <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                                 }
                             </td>
-                            <td>£@item.TotalCharges</td>
+                            <td class="numeric">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
                             <td>@item.SubmittedBy</td>
                             <td>@item.FileName</td>
                         </tr>
@@ -61,5 +61,5 @@ else
 }
 
 <div class="form-group">
-    @Html.ActionLink("Continue", "ChooseActivity", "Home", new { @class = "button" })
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @class = "button" })
 </div>

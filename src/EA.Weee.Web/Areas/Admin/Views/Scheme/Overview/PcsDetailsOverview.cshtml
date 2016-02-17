@@ -23,7 +23,7 @@
                 <td>@Model.ApprovalNumber</td>
             </tr>
             <tr>
-                <th>Billing reference (optional)</th>
+                <th>Billing reference</th>
                 <td>@Model.BillingReference</td>
             </tr>
             <tr>
@@ -42,7 +42,7 @@
         </tbody>
     </table>
     <br />
-    @if (!Model.IsRejected)
+    @if (!Model.IsRejected && Model.CanEditPcs)
     {
         <p>
             <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>

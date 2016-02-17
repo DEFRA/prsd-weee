@@ -2,10 +2,10 @@
 {
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     public class RemoveProducerHandler : IRequestHandler<RemoveProducer, RemoveProducerResult>
     {

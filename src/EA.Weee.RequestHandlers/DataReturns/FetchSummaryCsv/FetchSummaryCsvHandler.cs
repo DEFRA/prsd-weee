@@ -5,11 +5,9 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using Domain.Lookup;
+    using DataAccess.StoredProcedure;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.DataReturns;
     using Prsd.Core;
     using Security;
 
@@ -19,8 +17,6 @@
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IFetchSummaryCsvDataAccess dataAccess;
 
-        private List<CsvRow> csvRows = new List<CsvRow>();
-
         public FetchSummaryCsvHandler(
             IWeeeAuthorization authorization,
             CsvWriterFactory csvWriterFactory,
@@ -29,94 +25,6 @@
             this.authorization = authorization;
             this.csvWriterFactory = csvWriterFactory;
             this.dataAccess = dataAccess;
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE collected from DCFs",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Dcf)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE collected from DCFs",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Dcf)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2B)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE from distributors",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Distributor)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE from final holders",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE sent to AATFs",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
-                    .Where(wda => wda.IsAatfDeliveredAmount)
-                    .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE sent to AATFs",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
-                    .Where(wda => wda.IsAatfDeliveredAmount)
-                    .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2B)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE sent to AEs",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
-                    .Where(wda => wda.IsAeDeliveredAmount)
-                    .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE sent to AEs",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
-                    .Where(wda => wda.IsAeDeliveredAmount)
-                    .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2B)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "EEE placed on market",
-                ObligationType = ObligationType.B2C,
-                Selector = drv => (drv.EeeOutputReturnVersion ?? new EeeOutputReturnVersion()).EeeOutputAmounts
-                    .Where(eoa => eoa.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "EEE placed on market",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => (drv.EeeOutputReturnVersion ?? new EeeOutputReturnVersion()).EeeOutputAmounts
-                    .Where(eoa => eoa.ObligationType == Domain.Obligation.ObligationType.B2B)
-            });
         }
 
         public async Task<FileInfo> HandleAsync(Requests.DataReturns.FetchSummaryCsv message)
@@ -125,40 +33,13 @@
 
             Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.OrganisationId);
 
-            CsvWriter<CsvResult> csvWriter = CreateWriter();
+            List<DataReturnSummaryCsvData> results = await dataAccess.FetchResultsAsync(
+                scheme.Id,
+                message.ComplianceYear);
 
-            DataReturn dataReturnQ1 = await dataAccess.FetchDataReturnOrDefaultAsync(message.OrganisationId, message.ComplianceYear, QuarterType.Q1);
-            DataReturn dataReturnQ2 = await dataAccess.FetchDataReturnOrDefaultAsync(message.OrganisationId, message.ComplianceYear, QuarterType.Q2);
-            DataReturn dataReturnQ3 = await dataAccess.FetchDataReturnOrDefaultAsync(message.OrganisationId, message.ComplianceYear, QuarterType.Q3);
-            DataReturn dataReturnQ4 = await dataAccess.FetchDataReturnOrDefaultAsync(message.OrganisationId, message.ComplianceYear, QuarterType.Q4);
+            CsvWriter<DataReturnSummaryCsvData> csvWriter = CreateWriter();
 
-            List<CsvResult> csvResults = new List<CsvResult>();
-
-            if (dataReturnQ1 != null)
-            {
-                IEnumerable<CsvResult> results = CreateResults(dataReturnQ1);
-                csvResults.AddRange(results);
-            }
-
-            if (dataReturnQ2 != null)
-            {
-                IEnumerable<CsvResult> results = CreateResults(dataReturnQ2);
-                csvResults.AddRange(results);
-            }
-
-            if (dataReturnQ3 != null)
-            {
-                IEnumerable<CsvResult> results = CreateResults(dataReturnQ3);
-                csvResults.AddRange(results);
-            }
-
-            if (dataReturnQ4 != null)
-            {
-                IEnumerable<CsvResult> results = CreateResults(dataReturnQ4);
-                csvResults.AddRange(results);
-            }
-
-            string content = csvWriter.Write(csvResults);
+            string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
 
             string fileName = string.Format("{0}_EEE_WEEE_data_{1}_{2:ddMMyyyy_HHmm}.csv",
@@ -168,91 +49,40 @@
 
             return new FileInfo(fileName, data);
         }
-
-        private class CsvRow
+        
+        public CsvWriter<DataReturnSummaryCsvData> CreateWriter()
         {
-            public string Description { get; set; }
+            CsvWriter<DataReturnSummaryCsvData> writer = csvWriterFactory.Create<DataReturnSummaryCsvData>();
 
-            public ObligationType ObligationType { get; set; }
-
-            public Func<DataReturnVersion, IEnumerable<ReturnItem>> Selector { get; set; }
-        }
-
-        public IEnumerable<CsvResult> CreateResults(DataReturn dataReturn)
-        {
-            if (dataReturn.CurrentVersion == null)
-            {
-                yield break;
-            }
-
-            foreach (CsvRow csvRow in csvRows)
-            {
-                IEnumerable<ReturnItem> returnItems = csvRow.Selector(dataReturn.CurrentVersion);
-
-                if (returnItems.Any())
-                {
-                    CsvResult result = new CsvResult();
-
-                    result.Quarter = dataReturn.Quarter.Q;
-                    result.Description = csvRow.Description;
-                    result.ObligationType = csvRow.ObligationType;
-
-                    foreach (WeeeCategory category in Enum.GetValues(typeof(WeeeCategory)))
-                    {
-                        decimal? total = null;
-
-                        List<ReturnItem> returnItemsInCategory = returnItems
-                            .Where(wca => wca.WeeeCategory == category)
-                            .ToList();
-
-                        if (returnItemsInCategory.Any())
-                        {
-                            total = returnItemsInCategory.Sum(wca => wca.Tonnage);
-                        }
-
-                        result.Amounts[category] = total;
-                    }
-
-                    yield return result;
-                }
-            }
-        }
-
-        public CsvWriter<CsvResult> CreateWriter()
-        {
-            CsvWriter<CsvResult> writer = csvWriterFactory.Create<CsvResult>();
-
-            writer.DefineColumn("Quarter", r => r.Quarter);
-            writer.DefineColumn("EEE or WEEE in tonnes (t)", r => r.Description);
+            writer.DefineColumn("Quarter", r => string.Format("Q{0}", r.Quarter));
+            writer.DefineColumn("EEE or WEEE in tonnes (t)", r => descriptions[new Tuple<int, int?>(r.Type, r.Source)]);
             writer.DefineColumn("Obligation type", r => r.ObligationType);
-
-            for (int i = 1; i <= 14; ++i)
-            {
-                // Create a copy of i that can be boxed and used by the lambda expression.
-                int j = i;
-
-                writer.DefineColumn(
-                    string.Format("Cat {0} (t)", j),
-                    r => r.Amounts[(WeeeCategory)j]);
-            }
+            writer.DefineColumn("Cat 1 (t)", r => string.Format("{0:F3}", r.Category1));
+            writer.DefineColumn("Cat 2 (t)", r => string.Format("{0:F3}", r.Category2));
+            writer.DefineColumn("Cat 3 (t)", r => string.Format("{0:F3}", r.Category3));
+            writer.DefineColumn("Cat 4 (t)", r => string.Format("{0:F3}", r.Category4));
+            writer.DefineColumn("Cat 5 (t)", r => string.Format("{0:F3}", r.Category5));
+            writer.DefineColumn("Cat 6 (t)", r => string.Format("{0:F3}", r.Category6));
+            writer.DefineColumn("Cat 7 (t)", r => string.Format("{0:F3}", r.Category7));
+            writer.DefineColumn("Cat 8 (t)", r => string.Format("{0:F3}", r.Category8));
+            writer.DefineColumn("Cat 9 (t)", r => string.Format("{0:F3}", r.Category9));
+            writer.DefineColumn("Cat 10 (t)", r => string.Format("{0:F3}", r.Category10));
+            writer.DefineColumn("Cat 11 (t)", r => string.Format("{0:F3}", r.Category11));
+            writer.DefineColumn("Cat 12 (t)", r => string.Format("{0:F3}", r.Category12));
+            writer.DefineColumn("Cat 13 (t)", r => string.Format("{0:F3}", r.Category13));
+            writer.DefineColumn("Cat 14 (t)", r => string.Format("{0:F3}", r.Category14));
 
             return writer;
         }
 
-        public class CsvResult
+        private static readonly Dictionary<Tuple<int, int?>, string> descriptions = new Dictionary<Tuple<int, int?>, string>()
         {
-            public QuarterType Quarter { get; set; }
-
-            public string Description { get; set; }
-
-            public ObligationType ObligationType { get; set; }
-
-            public Dictionary<WeeeCategory, decimal?> Amounts { get; set; }
-
-            public CsvResult()
-            {
-                Amounts = new Dictionary<WeeeCategory, decimal?>();
-            }
-        }
+            { new Tuple<int, int?>(0, 0), "WEEE collected from DCFs" },
+            { new Tuple<int, int?>(0, 1), "WEEE from distributors" },
+            { new Tuple<int, int?>(0, 2), "WEEE from final holders" },
+            { new Tuple<int, int?>(1, 0), "WEEE delivered to AATFs" },
+            { new Tuple<int, int?>(1, 1), "WEEE delivered to AEs" },
+            { new Tuple<int, int?>(2, null), "EEE placed on market" }
+        };
     }
 }

@@ -234,13 +234,14 @@
                 await client.SendAsync(User.GetAccessToken(), new SubmitDataReturnUpload(dataReturnUploadId));
             }
 
-            return RedirectToAction("SuccessfulSubmission", new { pcsId });
+            return RedirectToAction("SuccessfulSubmission", new { pcsId, dataReturnUploadId });
         }
 
         [HttpGet]
         public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
         {
             await SetBreadcrumb(pcsId);
+
             return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
             {
                 PcsId = pcsId

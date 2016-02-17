@@ -67,7 +67,7 @@
                 var whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
 
                 var xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
-                var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
+                var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
                 var producerCharges = new Dictionary<string, ProducerCharge>();
                 var anyAmount = 30;

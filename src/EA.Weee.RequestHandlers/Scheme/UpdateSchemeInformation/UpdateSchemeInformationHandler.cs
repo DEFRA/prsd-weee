@@ -48,47 +48,47 @@
                 }
             }
 
-            /*
-             * Check the uniqueness of the 1B1S customer reference if
-             * - the value is being changed,
-             * - a new value has been provided, 
-             * - the scheme is in (or being moved to) the Environment Agency.
-             */
-            if (message.IbisCustomerReference != scheme.IbisCustomerReference)
+            UKCompetentAuthority environmentAgency = await dataAccess.FetchEnvironmentAgencyAsync();
+            if (environmentAgency.Id == message.CompetentAuthorityId)
             {
-                if (!string.IsNullOrEmpty(message.IbisCustomerReference))
+                // The 1B1S customer reference is mandatory for schemes in the Environmetn Agency.
+                if (string.IsNullOrEmpty(message.IbisCustomerReference))
                 {
-                    UKCompetentAuthority environmentAgency = await dataAccess.FetchEnvironmentAgencyAsync();
-
-                    if (environmentAgency.Id == message.CompetentAuthorityId)
+                    return new UpdateSchemeInformationResult()
                     {
-                        /*
-                         * Try and find another non-rejected scheme for the Environment Agency with the same
-                         * 1B1S customer reference. In production, this should at most only ever return one result.
-                         * 
-                         * As the check for uniqueness has not always existed, it is possible that other
-                         * environments may contain multiple schemes with the same 1B1S customer reference
-                         * so we are using FirstOrDefault rather than SingleOrDefault.
-                         */
-                        List<Scheme> nonRejectedEnvironmentAgencySchemes = await dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync();
-                        Scheme otherScheme = nonRejectedEnvironmentAgencySchemes
-                            .Where(s => s.Id != scheme.Id)
-                            .Where(s => s.IbisCustomerReference == message.IbisCustomerReference)
-                            .FirstOrDefault();
+                        Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
+                    };
+                }
+                else
+                { 
+                    /*
+                     * The 1B1S customer refernece must be unique across schemes within the Environment Agency.
+                     *
+                     * Try and find another non-rejected scheme for the Environment Agency with the same
+                     * 1B1S customer reference. In production, this should at most only ever return one result.
+                     * 
+                     * As the check for uniqueness has not always existed, it is possible that other
+                     * environments may contain multiple schemes with the same 1B1S customer reference
+                     * so we are using FirstOrDefault rather than SingleOrDefault.
+                     */
+                    List<Scheme> nonRejectedEnvironmentAgencySchemes = await dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync();
+                    Scheme otherScheme = nonRejectedEnvironmentAgencySchemes
+                        .Where(s => s.Id != scheme.Id)
+                        .Where(s => s.IbisCustomerReference == message.IbisCustomerReference)
+                        .FirstOrDefault();
 
-                        if (otherScheme != null)
+                    if (otherScheme != null)
+                    {
+                        return new UpdateSchemeInformationResult()
                         {
-                            return new UpdateSchemeInformationResult()
+                            Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
+                            IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
                             {
-                                Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
-                                IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
-                                {
-                                    IbisCustomerReference = message.IbisCustomerReference,
-                                    OtherSchemeApprovalNumber = otherScheme.ApprovalNumber,
-                                    OtherSchemeName = otherScheme.SchemeName
-                                }
-                            };
-                        }
+                                IbisCustomerReference = message.IbisCustomerReference,
+                                OtherSchemeApprovalNumber = otherScheme.ApprovalNumber,
+                                OtherSchemeName = otherScheme.SchemeName
+                            }
+                        };
                     }
                 }
             }

@@ -8,6 +8,7 @@
     public class InvoiceLineItem
     {
         private decimal mAmountExcludingVAT;
+        
         /// <summary>
         /// The amount of the line item in GBP, excluding VAT.
         /// </summary>
@@ -51,6 +52,7 @@
         }
 
         private string mAreaCode;
+        
         /// <summary>
         /// The area code within the region. A list of codes used within the feeder system should be provided
         /// to EFAS income section so they can be mapped to the appropriate General Ledger Accounting Key segment values.
@@ -73,6 +75,7 @@
         }
 
         private string mDescription;
+        
         /// <summary>
         /// Description.
         /// </summary>
@@ -99,6 +102,7 @@
         }
 
         private string mIncomeStreamCode;
+        
         /// <summary>
         /// Income stream.
         /// </summary>
@@ -125,6 +129,7 @@
         }
 
         private string mContextCode;
+        
         /// <summary>
         /// Context code.
         /// </summary>
@@ -151,6 +156,7 @@
         }
 
         private UInt64 mQuantity;
+        
         /// <summary>
         /// The quantity.
         /// </summary>

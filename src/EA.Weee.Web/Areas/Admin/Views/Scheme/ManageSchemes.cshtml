@@ -41,12 +41,7 @@
             {
                 <tr>
                     <td width="100%">@scheme.Name.HardTrim(80)</td>
-                    <td>
-                        @if (scheme.SchemeStatus == SchemeStatus.Approved)
-                        {
-                            @scheme.SchemeName
-                        }
-                    </td>
+                    <td>@scheme.SchemeName</td>
                     <td>@scheme.SchemeStatus</td>
                     <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                 </tr>

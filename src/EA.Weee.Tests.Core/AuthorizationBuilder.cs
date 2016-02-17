@@ -4,7 +4,7 @@
     using System.Security;
     using FakeItEasy;
     using RequestHandlers.Security;
-    using Weee.Core.Security;
+    using Security;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization
@@ -111,6 +111,7 @@
             AllowExternalAreaAccess();
             AllowOrganisationAccess();
             AllowSchemeAccess();
+            AllowAnyRole();
             return this;
         }
 
@@ -120,6 +121,7 @@
             DenyExternalAreaAccess();
             DenyOrganisationAccess();
             DenySchemeAccess();
+            DenyAnyRole();
             return this;
         }
 

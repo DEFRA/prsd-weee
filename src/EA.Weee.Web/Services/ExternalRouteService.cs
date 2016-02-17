@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using System;
     using System.Web;
     using System.Web.Mvc;
     using EA.Weee.Core.Routing;
@@ -70,6 +71,24 @@
                 string url = UrlHelper.Action("ResetPassword", "Account", routeValues, protocol);
 
                 return new ResetPasswordRoute(url);
+            }
+        }
+
+        public ViewCompetentAuthorityUserRoute ViewCompetentAuthorityUserRoute
+        {
+            get
+            {
+                string protocol = UrlHelper.RequestContext.HttpContext.Request.Url.Scheme;
+
+                var routeValues = new
+                {
+                    area = "admin",
+                    id = ViewCompetentAuthorityUserRoute.PlaceholderUserId
+                };
+
+                string url = UrlHelper.Action("View", "User", routeValues, protocol);
+
+                return new ViewCompetentAuthorityUserRoute(url);
             }
         }
     }

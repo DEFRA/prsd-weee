@@ -369,11 +369,16 @@
         [Fact]
         public async Task GetManagePendingCharges_Always_ReturnsManagePendingChargesViewWithViewModelAndAddsAuthorityToViewBag()
         {
-            IList<PendingCharge> pendingCharges = A.Dummy<IList<PendingCharge>>();
+            var managePendingCharges = new ManagePendingCharges
+            {
+                PendingCharges = A.Dummy<IList<PendingCharge>>(),
+                CanUserIssueCharges = A.Dummy<bool>()
+            };
+            //IList<PendingCharge> pendingCharges = A.Dummy<IList<PendingCharge>>();
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchPendingCharges>._))
-                .Returns(pendingCharges);
+                .Returns(managePendingCharges);
 
             // Arrange
             ChargeController controller = new ChargeController(
@@ -390,8 +395,9 @@
 
             Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "ManagePendingCharges");
 
-            IList<PendingCharge> viewModel = viewResult.Model as IList<PendingCharge>;
-            Assert.Equal(pendingCharges, viewModel);
+            ManagePendingChargesViewModel viewModel = viewResult.Model as ManagePendingChargesViewModel;
+            Assert.Equal(managePendingCharges.PendingCharges, viewModel.PendingCharges);
+            Assert.Equal(managePendingCharges.CanUserIssueCharges, viewModel.CanUserIssueCharges);
 
             Assert.Equal(CompetentAuthority.NorthernIreland, (object)viewResult.ViewBag.Authority);
         }
