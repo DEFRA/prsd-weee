@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Core.Shared
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.PcsDetails.PcsDetailsOverviewViewModel
 
@@ -42,7 +43,8 @@
         </tbody>
     </table>
     <br />
-    @if (!Model.IsRejected && Model.CanEditPcs)
+    @if (!(Model.Status == SchemeStatus.Rejected.ToString() || Model.Status == SchemeStatus.Withdrawn.ToString()) 
+            && Model.CanEditPcs)
     {
         <p>
             <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
