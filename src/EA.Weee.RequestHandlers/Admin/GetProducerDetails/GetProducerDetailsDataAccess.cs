@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.DataReturns;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Producer;
 
@@ -44,18 +45,32 @@
 
         public async Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear, Guid schemeId)
         {
-            return await
-                context.DataReturns
-                    .Where(dr => dr.Quarter.Year == complianceYear)
-                    .Where(dr => dr.CurrentVersion != null)
-                    .Select(dr => new ProducerEeeByQuarter
-                    {
-                        Quarter = dr.Quarter,
-                        Eee = dr.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts
-                            .Where(eee => eee.RegisteredProducer.ProducerRegistrationNumber == registrationNumber 
-                            && eee.RegisteredProducer.Scheme.Id == schemeId)
-                    })
-                    .ToListAsync();
+            var eeeOutputAmountsByQuarter = (await context.DataReturns
+                .Where(dr => dr.CurrentVersion != null)
+                .Where(dr => dr.Quarter.Year == complianceYear)
+                .Select(
+                    dr =>
+                        new
+                        {
+                            dr.Quarter,
+                            EeeOutputAmountIds =
+                                dr.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts.Select(eee => eee.Id)
+                        })
+                .ToListAsync());
+
+            var eeeOutputReturnVersionsForProducerAndScheme = (await context.EeeOutputAmounts
+                .Where(eee => eee.RegisteredProducer.ProducerRegistrationNumber == registrationNumber)
+                .Where(eee => eee.RegisteredProducer.Scheme.Id == schemeId)
+                .ToListAsync());
+
+            return eeeOutputAmountsByQuarter
+                .Select(dr => new ProducerEeeByQuarter
+                {
+                    Quarter = dr.Quarter,
+                    Eee = dr.EeeOutputAmountIds
+                        .Join(eeeOutputReturnVersionsForProducerAndScheme, eoa => eoa, eorv => eorv.Id,
+                            (id, amount) => amount)
+                });
         }
     }
 }
