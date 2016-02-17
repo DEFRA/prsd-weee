@@ -4,11 +4,11 @@
     using Core.DataReturns;
     using Prsd.Core.Mediator;
 
-    public class GetQuarterInfoByDataReturnUploadId : IRequest<QuarterInfo>
+    public class GetUploadInfoByDataReturnUploadId : IRequest<DataReturnUploadInfo>
     {
         public Guid DataReturnUploadId { get; private set; }
 
-        public GetQuarterInfoByDataReturnUploadId(Guid dataReturnUploadId)
+        public GetUploadInfoByDataReturnUploadId(Guid dataReturnUploadId)
         {
             DataReturnUploadId = dataReturnUploadId;
         }

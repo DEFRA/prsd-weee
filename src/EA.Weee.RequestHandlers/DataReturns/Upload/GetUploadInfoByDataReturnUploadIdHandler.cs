@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
+﻿namespace EA.Weee.RequestHandlers.DataReturns.Upload
 {
     using System.Threading.Tasks;
     using Core.DataReturns;
@@ -7,20 +7,20 @@
     using Requests.DataReturns;
     using QuarterType = Core.DataReturns.QuarterType;
 
-    public class GetQuarterInfoByDataReturnUploadIdHandler : IRequestHandler<GetQuarterInfoByDataReturnUploadId, QuarterInfo>
+    public class GetUploadInfoByDataReturnUploadIdHandler : IRequestHandler<GetUploadInfoByDataReturnUploadId, DataReturnUploadInfo>
     {
-        private readonly IFetchDataReturnForSubmissionDataAccess dataAccess;
+        private readonly IFetchDataReturnUploadDataAccess dataAccess;
 
-        public GetQuarterInfoByDataReturnUploadIdHandler(IFetchDataReturnForSubmissionDataAccess dataAccess)
+        public GetUploadInfoByDataReturnUploadIdHandler(IFetchDataReturnUploadDataAccess dataAccess)
         {   
             this.dataAccess = dataAccess;
         }
 
-        public async Task<QuarterInfo> HandleAsync(GetQuarterInfoByDataReturnUploadId message)
+        public async Task<DataReturnUploadInfo> HandleAsync(GetUploadInfoByDataReturnUploadId message)
         {   
             DataReturnUpload dataReturnUpload = await dataAccess.FetchDataReturnUploadByIdAsync(message.DataReturnUploadId);
 
-            var quarter = new QuarterInfo
+            var quarter = new DataReturnUploadInfo
             {
                 Quarter = (QuarterType?)dataReturnUpload.Quarter,
                 Year = dataReturnUpload.ComplianceYear

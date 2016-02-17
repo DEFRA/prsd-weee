@@ -817,8 +817,8 @@
         [Fact]
         public async void GetSuccessfulSubmission_HappyPath_ReturnsSuccessfulSubmissionView()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetQuarterInfoByDataReturnUploadId>._))
-                .Returns(new QuarterInfo
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUploadInfoByDataReturnUploadId>._))
+                .Returns(new DataReturnUploadInfo
                 {
                     Year = 2016,
                     Quarter = QuarterType.Q1

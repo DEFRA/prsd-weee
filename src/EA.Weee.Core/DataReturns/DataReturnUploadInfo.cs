@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.DataReturns
 {
-    public class QuarterInfo
+    public class DataReturnUploadInfo
     {
         public int? Year { get; set; }
 
