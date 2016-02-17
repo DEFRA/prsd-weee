@@ -124,6 +124,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\GetQuarterInfoByDataReturnUploadIdTests.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvTests.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpenHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />

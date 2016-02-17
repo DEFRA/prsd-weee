@@ -238,14 +238,42 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
+        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId, Guid dataReturnUploadId)
         {
             await SetBreadcrumb(pcsId);
-
-            return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+            using (var client = apiClient())
             {
-                PcsId = pcsId
-            });
+                var quarterInfo =
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new GetQuarterInfoByDataReturnUploadId(dataReturnUploadId));
+
+                var quarterText = string.Empty;
+
+                if (quarterInfo.Quarter.Value == QuarterType.Q1)
+                {
+                    quarterText = "Quarter 1";
+                }
+                else if (quarterInfo.Quarter.Value == QuarterType.Q2)
+                {
+                    quarterText = "Quarter 2";
+                }
+                else if (quarterInfo.Quarter.Value == QuarterType.Q3)
+                {
+                    quarterText = "Quarter 3";
+                }
+                else if (quarterInfo.Quarter.Value == QuarterType.Q4)
+                {
+                    quarterText = "Quarter 4";
+                }
+
+                return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+                {
+                    PcsId = pcsId,
+                    ComplianceYear = quarterInfo.Year.Value,
+                    QuarterText = quarterText
+                });
+            }
         }
 
         [HttpGet]
