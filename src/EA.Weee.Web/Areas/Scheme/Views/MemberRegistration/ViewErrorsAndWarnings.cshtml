@@ -16,19 +16,18 @@
                 int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
                 string errorText = (numOfErrors > 1 ? "errors" : "error");
                 string warningText = (numWarnings > 1 ? "warnings" : "warning");
-		        string complianceYearText = @Model.ComplianceYear == null ? string.Empty : @Model.ComplianceYear.ToString();
 			}
 
 			@if (numWarnings > 0)
 			{
 				<h1 class="heading-large">
-					Your @complianceYearText member registration file contains @numOfErrors @errorText and @numWarnings @warningText
+					Your XML file contains @numOfErrors @errorText and @numWarnings @warningText
 				</h1>
 			}
 			else
 			{
 				<h1 class="heading-large">
-					Your @complianceYearText member registration file contains @numOfErrors @errorText
+					Your XML file file contains @numOfErrors @errorText
 				</h1>
 			}
 		</div>
