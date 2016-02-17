@@ -52,7 +52,7 @@
             try
             {
                 // Validate deserialized XML against business rules
-                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
+                deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
             }
             catch (XmlDeserializationFailureException e)
             {

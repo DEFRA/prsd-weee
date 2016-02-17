@@ -32,7 +32,7 @@
 
         public async Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXmlFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
-            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
+            var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(messageXmlFile.Data));
             var producers = await GenerateProducerData(deserializedXml, memberUpload, producerCharges);
             return producers;
         }
@@ -46,7 +46,7 @@
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
-                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
+                var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(messageXmlFile.Data));
                 return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
             }
         }

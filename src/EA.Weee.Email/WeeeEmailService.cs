@@ -152,5 +152,26 @@
                 return await sender.SendAsync(message, true);
             }
         }
+
+        public async Task<bool> SendInternalUserAccountActivated(string emailAddress, string userFullName, string userEmailAddress, string viewUserLink)
+        {
+            var model = new
+            {
+                EmailAddress = userEmailAddress,
+                FullName = userFullName,
+                ViewUserLink = viewUserLink
+            };
+
+            EmailContent content = new EmailContent
+            {
+                HtmlText = templateExecutor.Execute("InternalUserAccountActivated.cshtml", model),
+                PlainText = templateExecutor.Execute("InternalUserAccountActivated.txt", model)
+            };
+
+            using (MailMessage message = messageCreator.Create(emailAddress, "New internal user request", content))
+            {
+                return await sender.SendAsync(message, true);
+            }
+        }
     }
 }
