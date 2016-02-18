@@ -1,8 +1,11 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using System.Globalization
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Shared
 @using EA.Weee.Core.Charges
-@model System.Collections.Generic.IList<PendingCharge>
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Charge.ManagePendingChargesViewModel
 
 @{
     ViewBag.Title = "Manage Pending Charges";
@@ -32,7 +35,7 @@
             @authorityDisplayNames[authority]
         </p>
 
-        @if (Model.Count > 0)
+        @if (Model.PendingCharges.Count > 0)
         {
             <table width="100%" class="">
                 <thead>
@@ -44,34 +47,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (PendingCharge pendingCharge in Model)
+                    @foreach (PendingCharge pendingCharge in Model.PendingCharges)
                     {
                         <tr>
                             <td>@pendingCharge.SchemeName</td>
                             <td>@pendingCharge.SchemeApprovalNumber</td>
                             <td>@pendingCharge.ComplianceYear</td>
-                            <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
+                            <td class="numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
                         </tr>
                     }
                 </tbody>
             </table>
             <br />
-
-            using (Html.BeginForm("ManagePendingCharges", "Charge", FormMethod.Post,
-                new
-                {
-                    id = "form1",
-                    onsubmit = "return ajaxSubmit();",
-                    autocomplete = "off"
-                }))
+            if (Model.CanUserIssueCharges)
             {
-                @Html.AntiForgeryToken()
-                @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+                using (Html.BeginForm("ManagePendingCharges", "Charge", FormMethod.Post,
+                    new
+                    {
+                        id = "form1",
+                        onsubmit = "return ajaxSubmit();",
+                        autocomplete = "off"
+                    }))
+                {
+                    @Html.AntiForgeryToken()
+                    @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+                    <p>
+                        @Html.ActionLink("Perform another activity", "Index", "Home")
+                    </p>
+                }
             }
-
-            <p>
-                @Html.ActionLink("Perform another activity", "Index", "Home")
-            </p>
+            else
+            {
+                <p>
+                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                </p>
+            }
 
             <noscript>
                 <p class="bold-small">
@@ -94,7 +104,7 @@
         }
 
         <p>
-            <a href="javascript:history.back();">Back</a>
+            <a href="@(Url.UrlFor<ChargeController>(a => a.ChooseActivity(authority)))">Back</a>
         </p>
     </div>
 
@@ -114,7 +124,7 @@
                 @* Rows added here by JavaScript *@
             </tbody>
         </table>
-        <br/>
+        <br />
         <p>
             @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" })
         </p>
@@ -124,71 +134,71 @@
 @section scripts
 {
     <script type="text/javascript">
-    {
-        @*
+        {
+            @*
         Prevent FireFox from using it's bfcache for this page
         by adding an empty event handler to the "beforeunload"
         window event.
         *@
-        if (window.addEventListener) {
-            window.addEventListener("beforeunload", function () { });
-        }
-
-        function ajaxSubmit() {
-
-            if (!$("#form1").valid()) {
-                return false;
+            if (window.addEventListener) {
+                window.addEventListener("beforeunload", function () { });
             }
 
-            $("#preSubmissionContent")
-                .hide();
+            function ajaxSubmit() {
 
-            $("#anotherActivitylink")
-                .hide();
+                if (!$("#form1").valid()) {
+                    return false;
+                }
 
-            $("#submitButton")
-                .prop('disabled', true)
-                .prop('value', 'Issuing Charges...');
+                $("#preSubmissionContent")
+                    .hide();
 
-            setTimeout(function () {
-                $("#processingTimeMessage")
-                    .fadeIn("slow");
-            }, 5000);
+                $("#anotherActivitylink")
+                    .hide();
 
-            $("#spinner")
-                .show();
+                $("#submitButton")
+                    .prop('disabled', true)
+                    .prop('value', 'Issuing Charges...');
 
-            $.ajax({
-                url: "@Url.Action("ManagePendingCharges", "Charge", new { authority })",
-                data: $("#form1").serialize(),
-                type: "POST",
-                success: function (response) {
-                    if (response.Success) {
-                        var placeHolderLocation = "@Url.Action("ChargesSuccessfullyIssued", "Charge", new { authority, id = Guid.Empty })";
-                        window.location = placeHolderLocation.replace("@Guid.Empty", response.InvoiceRunId);
-                    } else {
-                        @* Populate the table in the ajaxErrorView *@
-                        for (i = 0; i < response.Errors.length; ++i) {
-                            var tr = $("<tr/>");
-                            var td = $("<td/>");
-                            td.text(response.Errors[i]);
-                            tr.append(td);
-                            $("#ajaxErrorView table tbody").append(tr);
+                setTimeout(function () {
+                    $("#processingTimeMessage")
+                        .fadeIn("slow");
+                }, 5000);
+
+                $("#spinner")
+                    .show();
+
+                $.ajax({
+                    url: "@Url.Action("ManagePendingCharges", "Charge", new { authority })",
+                    data: $("#form1").serialize(),
+                    type: "POST",
+                    success: function (response) {
+                        if (response.Success) {
+                            var placeHolderLocation = "@Url.Action("ChargesSuccessfullyIssued", "Charge", new { authority, id = Guid.Empty })";
+                            window.location = placeHolderLocation.replace("@Guid.Empty", response.InvoiceRunId);
+                        } else {
+                            @* Populate the table in the ajaxErrorView *@
+                            for (i = 0; i < response.Errors.length; ++i) {
+                                var tr = $("<tr/>");
+                                var td = $("<td/>");
+                                td.text(response.Errors[i]);
+                                tr.append(td);
+                                $("#ajaxErrorView table tbody").append(tr);
+                            }
+
+                            $("#pendingChargesView").hide();
+                            $("#ajaxErrorView").show();
+                        };
+                    },
+                    statusCode: {
+                        500: function (response) {
+                            window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
                         }
+                    },
+                });
 
-                        $("#pendingChargesView").hide();
-                        $("#ajaxErrorView").show();
-                    };
-                },
-                statusCode: {
-                    500: function (response) {
-                        window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
-                    }
-                },
-            });
-
-            return false;
+                return false;
+            }
         }
-    }
     </script>
 }

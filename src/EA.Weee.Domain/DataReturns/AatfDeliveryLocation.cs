@@ -20,7 +20,6 @@
         public AatfDeliveryLocation(string approvalNumber, string facilityName)
         {
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
-            Guard.ArgumentNotNullOrEmpty(() => facilityName, facilityName);
 
             ApprovalNumber = approvalNumber;
             FacilityName = facilityName;
@@ -44,7 +43,14 @@
 
         public override int GetHashCode()
         {
-            return ApprovalNumber.GetHashCode() ^ FacilityName.GetHashCode();
+            int hashCode = ApprovalNumber.GetHashCode();
+
+            if (!string.IsNullOrEmpty(FacilityName))
+            {
+                hashCode ^= FacilityName.GetHashCode();
+            }
+
+            return hashCode;
         }
     }
 }

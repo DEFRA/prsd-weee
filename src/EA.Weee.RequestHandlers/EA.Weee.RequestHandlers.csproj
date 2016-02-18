@@ -36,19 +36,12 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper.Net4">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -59,11 +52,8 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidation">
-      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.7.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.9.7\lib\net20\Ionic.Zip.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -102,7 +92,9 @@
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
-    <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsv\GetProducerEeeDataCsvDataAccess.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsv\GetProducerEeeDataCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsv\IGetProducerEeeDataCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvDataAccess.cs" />
@@ -149,6 +141,8 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\IFetchSummaryCsvDataAccess.cs" />
@@ -180,11 +174,16 @@
     <Compile Include="DataReturns\SubmitReturnVersion\ISubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
+    <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
+    <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
+    <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Organisations\OrganisationBySchemeIdHandler.cs" />
+    <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
@@ -198,6 +197,9 @@
     <Compile Include="Factories\QuarterWindowFactory.cs" />
     <Compile Include="Factories\DateFactory.cs" />
     <Compile Include="Factories\IDateFactory.cs" />
+    <Compile Include="Admin\GetRolesHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\IUpdateSchemeInformationDataAccess.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationDataAccess.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -209,12 +211,12 @@
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
-    <Compile Include="Admin\GetAllApprovedSchemesDataAccess.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesDataAccess.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
-    <Compile Include="Admin\GetAllApprovedSchemesHandler.cs" />
-    <Compile Include="Admin\IGetAllApprovedSchemesDataAccess.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesHandler.cs" />
+    <Compile Include="Admin\GetSchemes\IGetSchemesDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
     <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
@@ -222,9 +224,9 @@
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\IUpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
@@ -246,15 +248,14 @@
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
-    <Compile Include="Organisations\IUpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\IOrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\OrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
-    <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoHandler.cs" />
@@ -266,7 +267,6 @@
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
-    <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
     <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
@@ -303,7 +303,7 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
-    <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationHandler.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Security\IWeeeAuthorization.cs" />
@@ -342,6 +342,10 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>

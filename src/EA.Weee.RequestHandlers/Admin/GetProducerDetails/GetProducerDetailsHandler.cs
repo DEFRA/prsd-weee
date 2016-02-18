@@ -10,6 +10,7 @@
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
+    using Weee.Security;
 
     public class GetProducerDetailsHandler : IRequestHandler<Requests.Admin.GetProducerDetails, ProducerDetails>
     {
@@ -44,6 +45,7 @@
             ProducerDetails producerDetails = new ProducerDetails();
             producerDetails.RegistrationNumber = request.RegistrationNumber;
             producerDetails.ComplianceYear = complianceYear;
+            producerDetails.CanRemoveProducer = authorization.CheckUserInRole(Roles.InternalAdmin);
             producerDetails.Schemes = new List<ProducerDetailsScheme>();
 
             var schemeGroups = producers

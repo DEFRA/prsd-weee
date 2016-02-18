@@ -9,8 +9,8 @@
 
     public class GetOrganisationOverviewHandler : IRequestHandler<GetOrganisationOverview, OrganisationOverview>
     {
-        private IGetOrganisationOverviewDataAccess dataAccess;
-        private IWeeeAuthorization authorization;
+        private readonly IGetOrganisationOverviewDataAccess dataAccess;
+        private readonly IWeeeAuthorization authorization;
 
         public GetOrganisationOverviewHandler(IWeeeAuthorization authorization, IGetOrganisationOverviewDataAccess dataAccess)
         {
@@ -25,6 +25,7 @@
             var organisationOverview = new OrganisationOverview();
             organisationOverview.HasMemberSubmissions = await dataAccess.HasMemberSubmissions(message.OrganisationId);
             organisationOverview.HasMultipleOrganisationUsers = await dataAccess.HasMultipleManageableOrganisationUsers(message.OrganisationId);
+            organisationOverview.HasDataReturnSubmissions = await dataAccess.HasDataReturnSubmissions(message.OrganisationId);
 
             return organisationOverview;
         }

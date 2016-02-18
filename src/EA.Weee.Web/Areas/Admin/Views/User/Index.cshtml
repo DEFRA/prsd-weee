@@ -1,0 +1,162 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.User.ManageUsersViewModel
+@{
+    ViewBag.Title = "Choose Users";
+}
+
+@section scripts{
+    <script>
+        $('#idManageUsersTable tr').click(function() {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+<header class="hgroup">
+    <h1 class="heading-large">
+        Choose a user
+    </h1>
+</header>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    <div class="table-hr"></div>
+    <table id="idManageUsersTable" class="prsd-table hover-effect">
+        <thead>
+            <tr>
+                @switch (@Model.OrderBy)
+                {
+                    case FindMatchingUsers.OrderBy.FullNameAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameDescending })">Name</a>
+                            <span class="visuallyhidden">Sorted alphabetically from A to Z.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.FullNameDescending:
+                    <th class="sorted-descending">
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                        <span class="visuallyhidden">Sorted alphabetically from Z to A.</span>
+                    </th>
+                        break;
+
+                    default:
+                    <th>
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                    </th>
+                        break;
+                }
+                <th>
+                    Email
+                </th>
+                @switch (@Model.OrderBy)
+                {
+                    case FindMatchingUsers.OrderBy.OrganisationAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationDescending })">Organisation</a>
+                            <span class="visuallyhidden">Sorted alphabetically from A to Z.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.OrganisationDescending:
+                    <th class="sorted-descending">
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                        <span class="visuallyhidden">Sorted alphabetically from Z to A.</span>
+                    </th>
+                        break;
+
+                    default:
+                    <th>
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                    </th>
+                        break;
+                }
+                @switch (@Model.OrderBy)
+                {
+                    case FindMatchingUsers.OrderBy.RoleAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the lowest rank role first.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.RoleDescending:
+                        <th class="sorted-descending">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the highest rank role first.</span>
+                        </th>
+                        break;
+
+                    default:
+                        <th>
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                        </th>
+                        break;
+                }
+                @switch (@Model.OrderBy)
+                {
+                    case FindMatchingUsers.OrderBy.StatusAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending })">Status</a>
+                            <span class="visuallyhidden">Sorted alphabetically from A to Z.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.StatusDescending:
+                    <th class="sorted-descending">
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                        <span class="visuallyhidden">Sorted alphabetically from Z to A.</span>
+                    </th>
+                        break;
+
+                    default:
+                    <th>
+                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                    </th>
+                        break;
+                }
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UserSearchData user in Model.Users)
+            {
+                <tr>
+                    <td width="100%">@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.OrganisationName</td>
+                    <td>@user.Role</td>
+                    <td>@user.Status</td>
+                    <td>
+                        @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br/>
+
+    if (@Model.Users.PageCount > 1)
+    {
+        <div class="pager">
+            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o =>
+                o.AddRouteValue("orderby", @Model.OrderBy))
+        </div>
+
+        <p>Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
+    }
+
+    @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+
+    <p>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+    </p>
+}
+

@@ -56,28 +56,20 @@
       <HintPath>..\packages\Autofac.WebApi2.Owin.3.3.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.16036.1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.16015-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
+    <Reference Include="EA.Prsd.Email, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Email.1.0.16036.1\lib\net451\EA.Prsd.Email.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Elmah">
@@ -136,16 +128,16 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.7.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.7.3\lib\net45\RazorEngine.dll</HintPath>
+    <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IdentityModel" />
@@ -198,7 +190,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -221,8 +213,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Thinktecture.IdentityServer3, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Thinktecture.IdentityServer3.1.6.2\lib\net45\Thinktecture.IdentityServer3.dll</HintPath>
+      <HintPath>..\packages\Thinktecture.IdentityServer3.1.6.3\lib\net45\Thinktecture.IdentityServer3.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Thinktecture.IdentityServer3.AccessTokenValidation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Thinktecture.IdentityServer3.AccessTokenValidation.1.2.2\lib\net45\Thinktecture.IdentityServer3.AccessTokenValidation.dll</HintPath>
@@ -238,6 +230,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IMPORTANT.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -250,14 +243,15 @@
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />
     <Compile Include="Identity\SecurityEventService.cs" />
+    <Compile Include="IdSrv\ElmahLogger.cs" />
     <Compile Include="Infrastructure\HttpStatusCodeResult.cs" />
     <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Controllers\UnauthenticatedUserController.cs" />
     <Compile Include="Identity\UserContext.cs" />
     <Compile Include="IdSrv\Clients.cs" />
-    <Compile Include="IdSrv\DebugLogger.cs" />
-    <Compile Include="IdSrv\ElmahLogger.cs" />
+    <Compile Include="IdSrv\DebugLogProvider.cs" />
+    <Compile Include="IdSrv\ElmahLogProvider.cs" />
     <Compile Include="IdSrv\Factory.cs" />
     <Compile Include="IdSrv\Scopes.cs" />
     <Compile Include="IdSrv\UserService.cs" />
@@ -317,6 +311,10 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>

@@ -639,11 +639,9 @@ input[type="file"].form-control {
     font-weight: 700;
 }
 
-.highlight-section-warning {
-    width: 80%; 
-    text-align: center; 
-    padding-left: 10%; 
-    padding-right: 10%
+.important-image {
+    vertical-align: middle;
+    margin-right: 20px;
 }
 
 .username-title-display {
@@ -755,6 +753,10 @@ input[type="file"].form-control {
 
 .text-margin{
     margin-left: 10px;
+}
+
+.marginRight {
+    margin-right: 40px;
 }
 
 .section-tabs {

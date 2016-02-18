@@ -9,6 +9,7 @@
     using Domain.User;
     using Prsd.Core.Mediator;
     using Requests.Admin;
+    using Weee.Security;
 
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {
@@ -24,7 +25,7 @@
         public async Task<Guid> HandleAsync(AddCompetentAuthorityUser message)
         {
             var userId = message.UserId;
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 throw new ArgumentException(string.Format("Could not find a user with id {0}", userId));
@@ -41,9 +42,15 @@
                 throw new InvalidOperationException(string.Format("Could not find the competent authority with name: {0}", authorityName));
             }
 
-            CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, UserStatus.Pending);
+            var standardRole = await context.Roles.SingleOrDefaultAsync(r => r.Name == Roles.InternalUser.ToString());
+            if (standardRole == null)
+            {
+                throw new InvalidOperationException(string.Format("Could not find the role name with: {0}", Roles.InternalUser));
+            }
+
+            CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, UserStatus.Pending, standardRole);
             context.CompetentAuthorityUsers.Add(competentAuthorityUser);
-            
+
             await context.SaveChangesAsync();
             return competentAuthorityUser.Id;
         }

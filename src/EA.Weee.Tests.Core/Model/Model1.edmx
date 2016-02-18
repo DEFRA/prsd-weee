@@ -14,6 +14,7 @@
           <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="IbisFileData">
           <Key>
@@ -73,6 +74,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="1023" Nullable="false" />
           <Property Name="Abbreviation" Type="nvarchar" MaxLength="65" Nullable="false" />
           <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -151,7 +153,7 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="FacilityName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="FacilityName" Type="nvarchar" MaxLength="250" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="AeDeliveryLocation">
@@ -160,7 +162,7 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="OperatorName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="OperatorName" Type="nvarchar" MaxLength="250" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="DataReturn">
@@ -485,6 +487,14 @@
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Address_Country">
           <End Role="Country" Type="Self.Country" Multiplicity="1" />
           <End Role="Address" Type="Self.Address" Multiplicity="*" />
@@ -614,6 +624,18 @@
             </Principal>
             <Dependent Role="CompetentAuthorityUser">
               <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetentAuthorityUser_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1212,6 +1234,7 @@
           <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="Security" store:Type="Tables" />
           <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
             <End Role="Country" EntitySet="Country" />
             <End Role="Address" EntitySet="Address" />
@@ -1254,6 +1277,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_CompetentAuthorityUser_CompetentAuthority" Association="Self.FK_CompetentAuthorityUser_CompetentAuthority">
             <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthorityUser_Role" Association="Self.FK_CompetentAuthorityUser_Role">
+            <End Role="Role" EntitySet="Role" />
             <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
           </AssociationSet>
           <AssociationSet Name="FK_Contact_Address" Association="Self.FK_Contact_Address">
@@ -1456,6 +1483,8 @@
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="CompetentAuthority" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthorityUser" ToRole="CompetentAuthority" />
           <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="CompetentAuthorityUser" ToRole="AspNetUser" />
+          <Property Name="RoleId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_Role" FromRole="CompetentAuthorityUser" ToRole="Role" />
         </EntityType>
         <EntityType Name="CompetentAuthority">
           <Key>
@@ -1468,6 +1497,7 @@
           <NavigationProperty Name="CompetentAuthorityUsers" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthority" ToRole="CompetentAuthorityUser" />
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
           <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -2255,6 +2285,11 @@
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
           </AssociationSet>
+          <EntitySet Name="Roles" EntityType="EA.Weee.TestModel.Role" />
+          <AssociationSet Name="FK_CompetentAuthorityUser_Role" Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUsers" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2856,7 +2891,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FacilityName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FacilityName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" FromRole="AatfDeliveryLocation" ToRole="WeeeDeliveredAmount" />
         </EntityType>
@@ -2866,7 +2901,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="OperatorName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OperatorName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" FromRole="AeDeliveryLocation" ToRole="WeeeDeliveredAmount" />
         </EntityType>
@@ -2995,6 +3030,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CompetentAuthorityUsers" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_Role" FromRole="Role" ToRole="CompetentAuthorityUser" />
+        </EntityType>
+        <Association Name="FK_CompetentAuthorityUser_Role">
+          <End Type="EA.Weee.TestModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.CompetentAuthorityUser" Role="CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3004,6 +3060,7 @@
           <EntitySetMapping Name="CompetentAuthorityUsers">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthorityUser">
               <MappingFragment StoreEntitySet="CompetentAuthorityUser">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
@@ -3015,6 +3072,7 @@
           <EntitySetMapping Name="CompetentAuthorities">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthority">
               <MappingFragment StoreEntitySet="CompetentAuthority">
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
@@ -3516,6 +3574,15 @@
                 <ScalarProperty Name="StartMonth" ColumnName="StartMonth" />
                 <ScalarProperty Name="AddStartYears" ColumnName="AddStartYears" />
                 <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

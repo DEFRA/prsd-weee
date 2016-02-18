@@ -4,6 +4,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Scheme;
+    using DataAccess.DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Mapper;
@@ -25,7 +26,7 @@
             // Arrage
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
 
-            IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
+            ISchemeDataAccess dataAccess = A.Fake<ISchemeDataAccess>();
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
 
@@ -33,11 +34,12 @@
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
+            var mapper = A.Fake<IMapper>();
             SchemeData schemeData = A.Fake<SchemeData>();
-            A.CallTo(() => schemeMap.Map(scheme)).Returns(schemeData);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme))
+                .Returns(schemeData);
 
-            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, schemeMap, authorization);
+            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, mapper, authorization);
 
             GetSchemeById request = new GetSchemeById(schemeId);
 
@@ -60,17 +62,18 @@
             // Arrage
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
 
-            IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
+            ISchemeDataAccess dataAccess = A.Fake<ISchemeDataAccess>();
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
             
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
-            
-            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
-            SchemeData schemeData = A.Fake<SchemeData>();
-            A.CallTo(() => schemeMap.Map(scheme)).Returns(schemeData);
 
-            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, schemeMap, authorization);
+            var mapper = A.Fake<IMapper>();
+            SchemeData schemeData = A.Fake<SchemeData>();
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme))
+                .Returns(schemeData);
+
+            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, mapper, authorization);
 
             GetSchemeById request = new GetSchemeById(schemeId);
 
@@ -91,16 +94,16 @@
             // Arrage
             Guid badSchemeId = new Guid("88C60FAC-1172-43F2-9AA5-7E79A8877F92");
 
-            IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
+            ISchemeDataAccess dataAccess = A.Fake<ISchemeDataAccess>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(badSchemeId)).Returns((Scheme)null);
 
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
+            var mapper = A.Fake<IMapper>();
 
-            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, schemeMap, authorization);
+            GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, mapper, authorization);
 
             GetSchemeById request = new GetSchemeById(badSchemeId);
 

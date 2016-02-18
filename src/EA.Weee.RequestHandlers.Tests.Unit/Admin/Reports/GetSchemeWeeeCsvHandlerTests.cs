@@ -15,6 +15,7 @@
     using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using Prsd.Core.Domain;
     using Xunit;
 
     public class GetSchemeWeeeCsvHandlerTests
@@ -31,11 +32,11 @@
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 authorization,
                 A.Dummy<CsvWriterFactory>());
 
-            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(A.Dummy<int>(), A.Dummy<ObligationType>());
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(A.Dummy<int>(), A.Dummy<Guid?>(), A.Dummy<ObligationType>());
 
             // Act
             Func<Task<FileInfo>> testCode = async () => await handler.HandleAsync(request);
@@ -46,21 +47,21 @@
 
         /// <summary>
         /// This test ensures that the handler generates a file with a name in the following
-        /// format: "2016_B2C_schemeWEEE_31122016_2359.csv".
+        /// format: "2016_B2C_schemeWEEE_31122016_2359.csv" when no scheme is specified.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task HandleAsync_Always_GeneratesCorrectFileName()
+        public async Task HandleAsync_WithNoSchemeSpecified_GeneratesCorrectFileName()
         {
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 authorization,
                 A.Dummy<CsvWriterFactory>());
 
-            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(2016, ObligationType.B2C);
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(2016, null, ObligationType.B2C);
 
             // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 0));
@@ -69,6 +70,44 @@
 
             // Assert
             Assert.Equal("2016_B2C_schemeWEEE_31122016_2359.csv", result.FileName);
+        }
+
+        /// <summary>
+        /// This test ensures that the handler generates a file with a name in the following
+        /// format: "2016_WEEAA1111AASCH_B2C_schemeWEEE_31122016_2359.csv" when a scheme is specified.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task HandleAsync_WithSchemeSpecified_GeneratesCorrectFileName()
+        {
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            IStoredProcedures storedProcedures = A.Fake<IStoredProcedures>();
+
+            SpgSchemeWeeeCsvResult storedProcedureResult = new SpgSchemeWeeeCsvResult();
+            storedProcedureResult.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
+            {
+                SchemeId = new Guid("C5AD2FF9-941D-4D6F-B68B-9805DD7E1FD1"),
+                ApprovalNumber = "WEE/AA1111AA/SCH"
+            });
+
+            A.CallTo(() => storedProcedures.SpgSchemeWeeeCsvAsync(A<int>._, A<Guid?>._, A<string>._))
+                .Returns(storedProcedureResult);
+
+            GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
+                storedProcedures,
+                authorization,
+                A.Dummy<CsvWriterFactory>());
+
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(2016, new Guid("C5AD2FF9-941D-4D6F-B68B-9805DD7E1FD1"), ObligationType.B2C);
+
+            // Act
+            SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 0));
+            FileInfo result = await handler.HandleAsync(request);
+            SystemTime.Unfreeze();
+
+            // Assert
+            Assert.Equal("2016_WEEAA1111AASCH_B2C_schemeWEEE_31122016_2359.csv", result.FileName);
         }
 
         /// <summary>
@@ -82,7 +121,7 @@
         {
             // Arrange
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -110,14 +149,14 @@
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
-                title => Assert.Equal("DCF", title),
-                title => Assert.Equal("Distributors", title),
-                title => Assert.Equal("Final holders", title),
-                title => Assert.Equal("Total AATF/AE", title),
-                title => Assert.Equal("AATF1", title),
-                title => Assert.Equal("AATF2", title),
-                title => Assert.Equal("AE1", title),
-                title => Assert.Equal("AE2", title));
+                title => Assert.Equal("DCF (t)", title),
+                title => Assert.Equal("Distributors (t)", title),
+                title => Assert.Equal("Final holders (t)", title),
+                title => Assert.Equal("Total AATF/AE (t)", title),
+                title => Assert.Equal("AATF1 (t)", title),
+                title => Assert.Equal("AATF2 (t)", title),
+                title => Assert.Equal("AE1 (t)", title),
+                title => Assert.Equal("AE2 (t)", title));
         }
 
         /// <summary>
@@ -143,7 +182,7 @@
             };
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -159,12 +198,12 @@
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
-                title => Assert.Equal("DCF", title),
-                title => Assert.Equal("Total AATF/AE", title),
-                title => Assert.Equal("AATF1", title),
-                title => Assert.Equal("AATF2", title),
-                title => Assert.Equal("AE1", title),
-                title => Assert.Equal("AE2", title));
+                title => Assert.Equal("DCF (t)", title),
+                title => Assert.Equal("Total AATF/AE (t)", title),
+                title => Assert.Equal("AATF1 (t)", title),
+                title => Assert.Equal("AATF2 (t)", title),
+                title => Assert.Equal("AE1 (t)", title),
+                title => Assert.Equal("AE2 (t)", title));
         }
 
         /// <summary>
@@ -177,10 +216,13 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -220,10 +262,13 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -263,7 +308,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -287,10 +332,13 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -330,7 +378,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -354,10 +402,13 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -397,7 +448,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -421,10 +472,13 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -465,7 +519,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -507,7 +561,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -596,7 +650,7 @@
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 
@@ -623,21 +677,24 @@
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme B"
+                SchemeName = "Scheme B",
+                SchemeId = Guid.NewGuid()
             });
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme A"
+                SchemeName = "Scheme A",
+                SchemeId = Guid.NewGuid()
             });
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme C"
+                SchemeName = "Scheme C",
+                SchemeId = Guid.NewGuid()
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
+                A.Dummy<IStoredProcedures>(),
                 A.Dummy<IWeeeAuthorization>(),
                 A.Dummy<CsvWriterFactory>());
 

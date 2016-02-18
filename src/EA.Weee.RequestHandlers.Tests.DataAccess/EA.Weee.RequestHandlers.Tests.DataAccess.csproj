@@ -18,7 +18,8 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>0bd3989b</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,8 +39,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -86,14 +87,19 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccessTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccessTests.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests.cs" />
     <Compile Include="Charging\CommonDataAccessTests.cs" />
     <Compile Include="Charging\FetchInvoiceRuns\FetchInvoiceRunsDataAccessTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationActiveComplianceYearsDataAccessTests.cs" />
     <Compile Include="Charging\FetchIssuedChargesCsv\FetchIssuedChargesCsvDataAccessTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccessTests.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccessTests.cs" />
@@ -133,6 +139,10 @@
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-A123-4823-BC63-E9AFC9C0A25C}</Project>
+      <Name>EA.Weee.Security</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
       <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
       <Name>EA.Weee.Tests.Core</Name>
@@ -171,16 +181,16 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets'))" />
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
     <Error Condition="!Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

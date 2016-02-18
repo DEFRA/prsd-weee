@@ -7,6 +7,7 @@
     using DataAccess;
     using Domain;
     using Domain.Admin;
+    using Domain.Security;
     using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Admin;
@@ -15,99 +16,106 @@
     using Xunit;
 
     public class AddCompetentAuthorityUserHandlerTests
+    {
+        private readonly DbContextHelper helper = new DbContextHelper();
+
+        public DbSet<User> UsersDbSet { get; set; }
+        public DbSet<UKCompetentAuthority> UKCompetentAuthoritiesDbSet { get; set; }
+        public DbSet<CompetentAuthorityUser> CompetentAuthorityUsersDbSet { get; set; }
+
+        public static Guid InternalUserId = Guid.NewGuid();
+        public static Guid FakeUserId = Guid.NewGuid();
+        private readonly WeeeContext context;
+        private readonly AddCompetentAuthorityUserHandler handler;
+        private readonly IConfigurationManagerWrapper configurationManagerWrapper;
+        private readonly ITestUserEmailDomains testInternalUserEmailDomains;
+
+        public AddCompetentAuthorityUserHandlerTests()
         {
-            private readonly DbContextHelper helper = new DbContextHelper();
+            UsersDbSet = A.Fake<DbSet<User>>();
 
-            public DbSet<User> UsersDbSet { get; set; }
-            public DbSet<UKCompetentAuthority> UKCompetentAuthoritiesDbSet { get; set; }
-            public DbSet<CompetentAuthorityUser> CompetentAuthorityUsersDbSet { get; set; }
-
-            public static Guid InternalUserId = Guid.NewGuid();
-            public static Guid FakeUserId = Guid.NewGuid();
-            private readonly WeeeContext context;
-            private readonly AddCompetentAuthorityUserHandler handler;
-            private readonly IConfigurationManagerWrapper configurationManagerWrapper;
-            private readonly ITestUserEmailDomains testInternalUserEmailDomains;
-
-            public AddCompetentAuthorityUserHandlerTests()
+            var users = new[]
             {
-                UsersDbSet = A.Fake<DbSet<User>>();
-   
-                var users = new[]
-               {
-                   FakeUserData(),
-                   FakeInternalUserData()
-                };
+                FakeUserData(),
+                FakeInternalUserData()
+            };
 
-                UsersDbSet = helper.GetAsyncEnabledDbSet(users);
+            UsersDbSet = helper.GetAsyncEnabledDbSet(users);
 
-                UKCompetentAuthoritiesDbSet = A.Fake<DbSet<UKCompetentAuthority>>();
-               
-                var competentAuthorites = new[]
-                {
-                    FakeCompetentAuthorityData()
-                };
+            UKCompetentAuthoritiesDbSet = A.Fake<DbSet<UKCompetentAuthority>>();
 
-                UKCompetentAuthoritiesDbSet = helper.GetAsyncEnabledDbSet(competentAuthorites);
-
-                configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
-
-                context = A.Fake<WeeeContext>();
-
-                A.CallTo(() => context.Users).Returns(UsersDbSet);
-                A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
-
-                testInternalUserEmailDomains = A.Fake<ITestUserEmailDomains>();
-
-                handler = new AddCompetentAuthorityUserHandler(context, testInternalUserEmailDomains);
-            }
-
-            [Fact]
-            public async void AddCompetentAuthorityUserHandler_ReturnsCompetentAuthorityId()
+            var competentAuthorites = new[]
             {
-                AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(InternalUserId.ToString());
-                var id = await handler.HandleAsync(message);
-                A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
-                Assert.NotNull(id);
-            }
+                FakeCompetentAuthorityData()
+            };
 
-           [Fact]
-            public async void AddCompetentAuthorityUserHandler_FakeUser_ThrowsException()
+            UKCompetentAuthoritiesDbSet = helper.GetAsyncEnabledDbSet(competentAuthorites);
+
+            var roles = new[]
             {
-               AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
-               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
-               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("false");
-               await Assert.ThrowsAsync<InvalidOperationException>(async () => await handler.HandleAsync(message));
-            }
+                new Role("InternalUser", "Standard user")
+            };
 
-           [Fact]
-           public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSucess()
-           {
-               A.CallTo(() => testInternalUserEmailDomains.UserTestModeEnabled).Returns(true);
-               A.CallTo(() => testInternalUserEmailDomains.Domains).Returns(new List<string>() { "co.uk" });
+            configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
 
-               AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
-               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
-               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("true");
-               Guid id = await handler.HandleAsync(message);
-               A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
-               Assert.NotNull(id);
-           }
+            context = A.Fake<WeeeContext>();
 
-            private static User FakeUserData()
-            {
-                return new User(FakeUserId.ToString(), "FirstName", "Surname", "test@co.uk");
-            }
+            A.CallTo(() => context.Users).Returns(UsersDbSet);
+            A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
+            A.CallTo(() => context.Roles).Returns(helper.GetAsyncEnabledDbSet(roles));
 
-            private static User FakeInternalUserData()
-            {
-                return new User(InternalUserId.ToString(), "FirstName", "Surname", "test@environment-agency.gov.uk");
-            }
+            testInternalUserEmailDomains = A.Fake<ITestUserEmailDomains>();
 
-            private UKCompetentAuthority FakeCompetentAuthorityData()
-            {
-                UKCompetentAuthority competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"));
-                return competentAuthority;
-            }
+            handler = new AddCompetentAuthorityUserHandler(context, testInternalUserEmailDomains);
+        }
+
+        [Fact]
+        public async void AddCompetentAuthorityUserHandler_ReturnsCompetentAuthorityId()
+        {
+            AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(InternalUserId.ToString());
+            var id = await handler.HandleAsync(message);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
+            Assert.NotNull(id);
+        }
+
+        [Fact]
+        public async void AddCompetentAuthorityUserHandler_FakeUser_ThrowsException()
+        {
+            AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
+            A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
+            A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("false");
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await handler.HandleAsync(message));
+        }
+
+        [Fact]
+        public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSucess()
+        {
+            A.CallTo(() => testInternalUserEmailDomains.UserTestModeEnabled).Returns(true);
+            A.CallTo(() => testInternalUserEmailDomains.Domains).Returns(new List<string>() { "co.uk" });
+
+            AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
+            A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
+            A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("true");
+            Guid id = await handler.HandleAsync(message);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
+            Assert.NotNull(id);
+        }
+
+        private static User FakeUserData()
+        {
+            return new User(FakeUserId.ToString(), "FirstName", "Surname", "test@co.uk");
+        }
+
+        private static User FakeInternalUserData()
+        {
+            return new User(InternalUserId.ToString(), "FirstName", "Surname", "test@environment-agency.gov.uk");
+        }
+
+        private UKCompetentAuthority FakeCompetentAuthorityData()
+        {
+            UKCompetentAuthority competentAuthority = 
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk");
+            return competentAuthority;
         }
     }
+}

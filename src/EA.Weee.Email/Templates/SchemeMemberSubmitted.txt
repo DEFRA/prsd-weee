@@ -1,0 +1,10 @@
+﻿Hello,
+
+@Model.SchemeName has submitted the following:
+
+Member registration file
+
+Compliance year: @Model.ComplianceYear
+Warnings: @Model.NumberOfWarnings
+
+This is an automated email. Do not reply.

@@ -1,0 +1,9 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+<br />
+<p>
+    <a class="button" href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Perform another activity</a>
+</p>
+<p>
+    <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
+</p>

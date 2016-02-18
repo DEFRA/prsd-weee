@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Organisations.GetOrganisationOverview.DataAccess
 {
+    using System.Threading.Tasks;
     using EA.Weee.Tests.Core.Model;
     using RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
     using Xunit;
@@ -190,6 +191,74 @@
 
                 // Act
                 var result = await dataAccess.HasMultipleManageableOrganisationUsers(organisation.Id);
+
+                // Assert
+                Assert.False(result);
+            }
+        }
+
+        [Fact]
+        public async Task HasDataReturnSubmissions_ForOganisationWithNoAssociatedScheme_ReturnsFalse()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                var organisation = helper.CreateOrganisation();
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new GetOrganisationOverviewDataAccess(database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.HasDataReturnSubmissions(organisation.Id);
+
+                // Assert
+                Assert.False(result);
+            }
+        }
+
+        [Fact]
+        public async Task HasDataReturnSubmissions_ForOganisationWithAssociatedScheme_AndSubmittedDataReturnVersion_ReturnsTrue()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                var scheme = helper.CreateScheme();
+                helper.CreateDataReturnVersion(scheme, 2016, 1, true);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new GetOrganisationOverviewDataAccess(database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.HasDataReturnSubmissions(scheme.OrganisationId);
+
+                // Assert
+                Assert.True(result);
+            }
+        }
+
+        [Fact]
+        public async Task HasMemberSubmissions_ForOganisationWithAssociatedScheme_AndNoSubmittedDataReturnVersion_ReturnsFalse()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                var scheme = helper.CreateScheme();
+                helper.CreateDataReturnVersion(scheme, 2016, 1, false);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new GetOrganisationOverviewDataAccess(database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.HasDataReturnSubmissions(scheme.OrganisationId);
 
                 // Assert
                 Assert.False(result);

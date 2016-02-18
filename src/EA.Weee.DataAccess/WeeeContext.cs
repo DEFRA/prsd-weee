@@ -13,6 +13,7 @@
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
+    using Domain.Security;
     using Domain.User;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
@@ -113,9 +114,13 @@
 
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
 
+        public virtual DbSet<EeeOutputAmount> EeeOutputAmounts { get; set; }
+
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
         public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
+
+        public virtual DbSet<Role> Roles { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
