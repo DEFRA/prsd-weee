@@ -38,16 +38,16 @@
 
             CsvWriter<UkEeeCsvData> csvWriter = csvWriterFactory.Create<UkEeeCsvData>();
             csvWriter.DefineColumn(@"Category", i => i.Category);
-            csvWriter.DefineColumn(@"Total B2B EEE", i => i.TotalB2BEEE);
-            csvWriter.DefineColumn(@"Q1 B2B EEE", i => i.Q1B2BEEE);
-            csvWriter.DefineColumn(@"Q2 B2B EEE", i => i.Q2B2BEEE);
-            csvWriter.DefineColumn(@"Q3 B2B EEE", i => i.Q3B2BEEE);
-            csvWriter.DefineColumn(@"Q4 B2B EEE", i => i.Q4B2BEEE);
-            csvWriter.DefineColumn(@"Total B2C EEE", i => i.TotalB2CEEE);
-            csvWriter.DefineColumn(@"Q1 B2C EEE", i => i.Q1B2CEEE);
-            csvWriter.DefineColumn(@"Q2 B2C EEE", i => i.Q2B2CEEE);
-            csvWriter.DefineColumn(@"Q3 B2C EEE", i => i.Q3B2CEEE);
-            csvWriter.DefineColumn(@"Q4 B2C EEE", i => i.Q4B2CEEE);
+            csvWriter.DefineColumn(@"Total B2B EEE (t)", i => i.TotalB2BEEE);
+            csvWriter.DefineColumn(@"Q1 B2B EEE (t)", i => i.Q1B2BEEE);
+            csvWriter.DefineColumn(@"Q2 B2B EEE (t)", i => i.Q2B2BEEE);
+            csvWriter.DefineColumn(@"Q3 B2B EEE (t)", i => i.Q3B2BEEE);
+            csvWriter.DefineColumn(@"Q4 B2B EEE (t)", i => i.Q4B2BEEE);
+            csvWriter.DefineColumn(@"Total B2C EEE (t)", i => i.TotalB2CEEE);
+            csvWriter.DefineColumn(@"Q1 B2C EEE (t)", i => i.Q1B2CEEE);
+            csvWriter.DefineColumn(@"Q2 B2C EEE (t)", i => i.Q2B2CEEE);
+            csvWriter.DefineColumn(@"Q3 B2C EEE (t)", i => i.Q3B2CEEE);
+            csvWriter.DefineColumn(@"Q4 B2C EEE (t)", i => i.Q4B2CEEE);
             var fileContent = csvWriter.Write(items);
             
             var fileName = string.Format("{0}_UK_EEE_{1:ddMMyyyy_HHmm}.csv",

@@ -21,6 +21,8 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,13 +42,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MvcNavigationHelpers, Version=0.0.0.5, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvcNavigationHelpers.0.0.0.5\lib\net45\MvcNavigationHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -102,13 +108,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="WebGrease">
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +272,7 @@
     <Content Include="Content\govuk_toolkit\images\external-links\external-link-black-12x12.png" />
     <Content Include="Content\govuk_toolkit\images\external-links\external-link-black-24x24.png" />
     <Content Include="Content\govuk_toolkit\images\external-links\external-link.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-arrow-left.png" />
     <Content Include="Content\govuk_toolkit\images\icon-calendar-2x.png" />
     <Content Include="Content\govuk_toolkit\images\icon-calendar.png" />
     <Content Include="Content\govuk_toolkit\images\icon-file-download-2x.png" />
@@ -320,10 +323,46 @@
     <Content Include="Content\govuk_toolkit\images\player-icon-play.png" />
     <Content Include="Content\govuk_toolkit\images\player-icon-rewind.png" />
     <Content Include="Content\govuk_toolkit\images\player-icon-volume.png" />
+    <Content Include="Content\govuk_toolkit\images\separator-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\separator.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
     <Content Include="Content\weee\images\sorted-descending.png" />
     <Content Include="Content\weee\images\spinner.gif" />
     <Content Include="Global.asax" />
+    <Content Include="Content\govuk_elements\_tables.scss" />
+    <Content Include="Content\govuk_elements\_reset.scss" />
+    <Content Include="Content\govuk_elements\_phase-banner.scss" />
+    <Content Include="Content\govuk_elements\_panels.scss" />
+    <Content Include="Content\govuk_elements\_lists.scss" />
+    <Content Include="Content\govuk_elements\_layout.scss" />
+    <Content Include="Content\govuk_elements\_icons.scss" />
+    <Content Include="Content\govuk_elements\_helpers.scss" />
+    <Content Include="Content\govuk_elements\_forms.scss" />
+    <Content Include="Content\govuk_elements\_elements-typography.scss" />
+    <Content Include="Content\govuk_elements\_details.scss" />
+    <Content Include="Content\govuk_elements\_components.scss" />
+    <Content Include="Content\govuk_elements\_buttons.scss" />
+    <Content Include="Content\govuk_elements\_breadcrumbs.scss" />
+    <Content Include="Content\govuk_elements\_base.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_breadcrumbs.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
@@ -331,6 +370,7 @@
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\mailto-link-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\modules.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\modules\auto-track-event.js" />
@@ -343,6 +383,8 @@
     <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
+    <Content Include="Scripts\jquery-2.2.0.js" />
+    <Content Include="Scripts\jquery-2.2.0.min.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -373,46 +415,13 @@
     <Content Include="Content\weee-page-ie8.scss" />
     <Content Include="Content\weee-page.scss" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Content\govuk_elements\_tables.scss" />
-    <Content Include="Content\govuk_elements\_reset.scss" />
-    <Content Include="Content\govuk_elements\_phase-banner.scss" />
-    <Content Include="Content\govuk_elements\_panels.scss" />
-    <Content Include="Content\govuk_elements\_lists.scss" />
-    <Content Include="Content\govuk_elements\_layout.scss" />
-    <Content Include="Content\govuk_elements\_icons.scss" />
-    <Content Include="Content\govuk_elements\_helpers.scss" />
-    <Content Include="Content\govuk_elements\_forms.scss" />
-    <Content Include="Content\govuk_elements\_elements-typography.scss" />
-    <Content Include="Content\govuk_elements\_details.scss" />
-    <Content Include="Content\govuk_elements\_components.scss" />
-    <Content Include="Content\govuk_elements\_buttons.scss" />
-    <Content Include="Content\govuk_elements\_breadcrumb.scss" />
-    <Content Include="Content\govuk_elements\_base.scss" />
-    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
-    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
-    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_helpers.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\custom-validation.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Scripts\jquery-2.2.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -429,8 +438,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\vendor\details.polyfill.js" />
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
@@ -444,7 +451,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\_FeedbackBanner.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
@@ -530,5 +536,12 @@
     <CreateItem Include="Content\weee-page-ie8.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
+  </Target>
+  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets'))" />
   </Target>
 </Project>

@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
-    using DataAccess;
     using FakeItEasy;
-    using RequestHandlers.Admin.Reports;
+    using RequestHandlers.Admin.Reports.GetProducerEeeDataCsv;
+    using RequestHandlers.Security;
     using Requests.Admin.Reports;
     using Weee.Tests.Core;
     using Xunit;
@@ -18,14 +18,16 @@
         public async Task GetProducerEeeDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
-            var complianceYear = 2016;
+            int complianceYear = 2016;
 
-            var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
+            GetProducerEeeDataCsvHandler handler = new GetProducerEeeDataCsvHandler(
+                authorization,
+                A.Dummy<IGetProducerEeeDataCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            GetProducerEeeDataCsv request = new GetProducerEeeDataCsv(complianceYear, null, ObligationType.B2B);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -35,37 +37,19 @@
         }
 
         [Fact]
-        public async Task GetProducerEeeDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
-        {
-            // Arrange
-            var complianceYear = 0;
-
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
-
-            // Act
-            Func<Task> action = async () => await handler.HandleAsync(request);
-
-            // Assert
-            await Assert.ThrowsAsync<ArgumentException>(action);
-        }
-
-        [Fact]
         public async Task GetProducerEeeDataCsvHandler_ComplianceYear_B2B_ReturnsFileContent()
         {
             // Arrange
-            var complianceYear = 2016;
+            int complianceYear = 2016;
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
+            GetProducerEeeDataCsvHandler handler = new GetProducerEeeDataCsvHandler(
+                authorization,
+                A.Dummy<IGetProducerEeeDataCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            GetProducerEeeDataCsv request = new GetProducerEeeDataCsv(complianceYear, null, ObligationType.B2B);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
@@ -78,14 +62,16 @@
         public async Task GetProducerEeeDataCsvHandler_ComplianceYear_B2C_ReturnsFileContent()
         {
             // Arrange
-            var complianceYear = 2006;
+            int complianceYear = 2016;
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2C);
+            GetProducerEeeDataCsvHandler handler = new GetProducerEeeDataCsvHandler(
+                authorization,
+                A.Dummy<IGetProducerEeeDataCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            GetProducerEeeDataCsv request = new GetProducerEeeDataCsv(complianceYear, null, ObligationType.B2C);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);

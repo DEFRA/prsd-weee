@@ -1,17 +1,20 @@
 ﻿@using EA.Weee.Core.DataReturns
+@using EA.Weee.Core.Search
 @using EA.Weee.Core.Shared
-@using EA.Weee.Web.Areas.Admin.ViewModels.Producers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using EA.Weee.Web.Extensions
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
 @{
     string schemePlural = Model.Details.Schemes.Count != 1 ? "PCSs" : "PCS";
-    ViewBag.Title = "Details";
+    ViewBag.Title = @InternalUserActivity.ProducerDetails;
 }
 
 @section main_content {
 
     <header class="hgroup">
-        <h1 class="heading-large">Producer details</h1>
+        <h1 class="heading-large">@InternalUserActivity.ProducerDetails</h1>
     </header>
 
     <p>
@@ -69,7 +72,13 @@
             <tbody>
                 <tr>
                     <th>Registered PCS</th>
-                    <td>@scheme.SchemeName<br />@Html.ActionLink("Remove producer", "ConfirmRemoval", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)</td>
+                    <td>
+                        @scheme.SchemeName
+                        @if (Model.Details.CanRemoveProducer)
+                        {
+                            <br />@Html.ActionLink("Remove producer", "ConfirmRemoval", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <th>Producer name</th>
@@ -114,341 +123,341 @@
 
         <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden">
             <thead>
-            <tr class="visuallyhidden">
-                <th colspan="3">Total EEE</th>
-            </tr>
-            <tr>
-                <th>Category</th>
-                <th>B2C (Tonnes)</th>
-                <th>B2B (Tonnes)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-            </tr>
-            <tr>
-                <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-            </tr>
-            </tbody>
-        </table>
-
-            <table id="@(scheme.ObligationType)-q1-details-table" class="visually-hidden">
-                <thead>
-                    <tr class="visuallyhidden">
-                        <th colspan="3">Q1 EEE</th>
-                    </tr>
-                    <tr>
-                        <th>Category</th>
-                        <th>B2C (Tonnes)</th>
-                        <th>B2B (Tonnes)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table id="@(scheme.ObligationType)-q2-details-table" class="visually-hidden">
-                <thead>
-                    <tr class="visuallyhidden">
-                        <th colspan="3">Q2 EEE</th>
-                    </tr>
-                    <tr>
-                        <th>Category</th>
-                        <th>B2C (Tonnes)</th>
-                        <th>B2B (Tonnes)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                    </tr>
-                    <tr>
-                        <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                    </tr>
-                </tbody>
-            </table>
-        
-            <table id="@(scheme.ObligationType)-q3-details-table" class="visually-hidden">
-                <thead>
                 <tr class="visuallyhidden">
-                    <th colspan="3">Q3 EEE</th>
+                    <th colspan="3">Total EEE</th>
                 </tr>
                 <tr>
                     <th>Category</th>
                     <th>B2C (Tonnes)</th>
                     <th>B2B (Tonnes)</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 <tr>
                     <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
                 </tr>
                 <tr>
                     <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
                 </tr>
+            </tbody>
+        </table>
+
+        <table id="@(scheme.ObligationType)-q1-details-table" class="visually-hidden">
+            <thead>
+                <tr class="visuallyhidden">
+                    <th colspan="3">Q1 EEE</th>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <th>B2C (Tonnes)</th>
+                    <th>B2B (Tonnes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="@(scheme.ObligationType)-q2-details-table" class="visually-hidden">
+            <thead>
+                <tr class="visuallyhidden">
+                    <th colspan="3">Q2 EEE</th>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <th>B2C (Tonnes)</th>
+                    <th>B2B (Tonnes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                </tr>
+                <tr>
+                    <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                    <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                </tr>
+            </tbody>
+        </table>
+
+            <table id="@(scheme.ObligationType)-q3-details-table" class="visually-hidden">
+                <thead>
+                    <tr class="visuallyhidden">
+                        <th colspan="3">Q3 EEE</th>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <th>B2C (Tonnes)</th>
+                        <th>B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr>
+                        <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -466,73 +475,73 @@
                 <tbody>
                     <tr>
                         <td>@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
                     </tr>
                     <tr>
                         <td>@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                        <td>@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
                     </tr>
                 </tbody>
             </table>
@@ -547,6 +556,9 @@
     </p>
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
     </p>
 }
 

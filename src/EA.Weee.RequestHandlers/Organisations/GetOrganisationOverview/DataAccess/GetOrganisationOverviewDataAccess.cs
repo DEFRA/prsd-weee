@@ -2,22 +2,30 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.User;
     using Weee.DataAccess;
 
     public class GetOrganisationOverviewDataAccess : IGetOrganisationOverviewDataAccess
     {
-        private WeeeContext context;
+        private readonly WeeeContext context;
 
         public GetOrganisationOverviewDataAccess(WeeeContext context)
         {
             this.context = context;
         }
 
-        public async Task<bool> HasMemberSubmissions(Guid organisationId)
+        public Task<bool> HasDataReturnSubmissions(Guid organisationId)
         {
-            return await context.MemberUploads.AnyAsync(
+            return context.DataReturnVersions
+                .Where(d => d.DataReturn.Scheme.OrganisationId == organisationId)
+                .AnyAsync(d => d.SubmittedDate.HasValue);
+        }
+
+        public Task<bool> HasMemberSubmissions(Guid organisationId)
+        {
+            return context.MemberUploads.AnyAsync(
                             m => m.IsSubmitted &&
                             m.Organisation.Id == organisationId);
         }

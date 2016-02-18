@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Security;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -10,6 +11,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Security;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;
@@ -28,24 +30,31 @@
         }
 
         [Fact]
-        public async Task ManageUsersPost_ReturnsEditUserRedirect()
+        public async Task PostIndex_WithValidModel_RedirectsToViewAction()
         {
-            var selectedGuid = Guid.NewGuid();
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            // Arrange
+            UserController controller = new UserController(
+                apiClient,
+                A.Fake<IWeeeCache>(),
+                A.Fake<BreadcrumbService>());
 
-            var result = await controller.ManageUsers(new ManageUsersViewModel { SelectedUserId = selectedGuid });
+            // Act
+            Guid selectedUserId = Guid.NewGuid();
 
+            ActionResult result = await controller.Index(new ManageUsersViewModel { SelectedUserId = selectedUserId });
+
+            // Assert
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("EditUser", redirectValues["action"]);
-            Assert.Equal(selectedGuid, redirectValues["orgUserId"]);
+            Assert.Equal("View", redirectValues["action"]);
+            Assert.Equal(selectedUserId, redirectValues["id"]);
         }
 
         [Fact]
-        public async Task EditUserGet_ReturnsView()
-        {   
+        public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
+        {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
@@ -59,14 +68,17 @@
                     LastName = "Lastname",
                     Email = "test@ea.com",
                     IsCompetentAuthorityUser = true,
-                    OrganisationName = "test ltd." 
+                    OrganisationName = "test ltd.",
+                    CanEditUser = true
                 });
 
-            var result = await controller.EditUser(Guid.NewGuid());
+            var result = await controller.Edit(Guid.NewGuid());
 
             var model = ((ViewResult)result).Model;
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetRoles>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
@@ -75,21 +87,24 @@
         }
 
         [Fact]
-        public async Task EditUserGet_NullOrgUserId_RedirectsToManageUsers()
+        public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
         {
-            var controller = new UserController(A.Dummy<WeeeClient>, A.Dummy<IWeeeCache>(), A.Dummy<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
-            var result = await controller.EditUser((Guid?)null);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
+                .Returns(new ManageUserData
+                {
+                    CanEditUser = false
+                });
+
+            var result = await controller.Edit(Guid.NewGuid());
 
             Assert.NotNull(result);
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("ManageUsers", redirectValues["action"]);
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
-        public async Task EditUserPost_CompetentAuthorityUser_UpdateUserAndCompetentAuthorityUserStatusAndRedirectToManageUser()
+        public async Task PostEdit_WithCompetentAuthorityUserAndValidModel_UpdatesUserAndCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -97,32 +112,34 @@
             {
                 UserStatus = UserStatus.Active,
                 OrganisationId = Guid.NewGuid(),
-                Id = Guid.NewGuid(),
                 UserId = Guid.NewGuid().ToString(),
                 FirstName = "Firstname",
                 LastName = "Lastname",
                 Email = "test@ea.com",
                 IsCompetentAuthorityUser = true,
-                OrganisationName = "test ltd."
+                OrganisationName = "test ltd.",
+                Role = new Role { Name = "InternalAdmin", Description = "Administrator" }
             };
 
-            var result = await controller.EditUser(model);
+            Guid id = Guid.NewGuid();
+            var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserStatus>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("ManageUsers", redirectValues["action"]);
+            Assert.Equal("View", redirectValues["action"]);
+            Assert.Equal(id, redirectValues["id"]);
         }
 
         [Fact]
-        public async Task EditUserPost_OrganisationUser_UpdateUserAndOrganisationUserStatusAndRedirectToManageUser()
+        public async Task PostEdit_WithOrganisationUserAndValidModel_UpdatesUserAndOrganisationUserStatusAndRedirectsToViewAction()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -130,7 +147,6 @@
             {
                 UserStatus = UserStatus.Active,
                 OrganisationId = Guid.NewGuid(),
-                Id = Guid.NewGuid(),
                 UserId = Guid.NewGuid().ToString(),
                 FirstName = "Firstname",
                 LastName = "Lastname",
@@ -139,7 +155,8 @@
                 OrganisationName = "test ltd."
             };
 
-            var result = await controller.EditUser(model);
+            Guid id = Guid.NewGuid();
+            var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -151,11 +168,12 @@
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("ManageUsers", redirectValues["action"]);
+            Assert.Equal("View", redirectValues["action"]);
+            Assert.Equal(id, redirectValues["id"]);
         }
 
         [Fact]
-        public async Task EditUserPost_OrganisationUser_UpdateUserAndDoesNotUpdateCompetentAuthorityUserStatusIfCurrentUser_AndRedirectToManageUser()
+        public async Task PostEdit_WithCompetentAuthorityUserAndValidModelAndUserBeingUpdatedIsCurrentUser_UpdatesUserAndDoesNotUpdateCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -163,7 +181,6 @@
             {
                 UserStatus = UserStatus.Active,
                 OrganisationId = Guid.NewGuid(),
-                Id = Guid.NewGuid(),
                 UserId = controller.User.GetUserId(),
                 FirstName = "Firstname",
                 LastName = "Lastname",
@@ -172,19 +189,21 @@
                 OrganisationName = "test ltd."
             };
 
-            var result = await controller.EditUser(model);
+            Guid id = Guid.NewGuid();
+            var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserStatus>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
                 .MustNotHaveHappened();
 
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("ManageUsers", redirectValues["action"]);
+            Assert.Equal("View", redirectValues["action"]);
+            Assert.Equal(id, redirectValues["id"]);
         }
     }
 }

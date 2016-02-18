@@ -24,8 +24,10 @@
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
-
-        @(this.WeeeGds().Submit("Download", new { @class = "button" }))
+        <p>
+            If there are a large number of producers for your selected criteria, it may take a while to download your results.
+        </p>
+        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
     }
 
     <p>

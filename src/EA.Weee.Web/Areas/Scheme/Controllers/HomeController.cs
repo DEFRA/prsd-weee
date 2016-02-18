@@ -14,7 +14,6 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
-    using Prsd.Core;
     using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
@@ -70,34 +69,47 @@
             }
         }
 
-        private async Task<List<string>> GetActivities(Guid pcsId)
+        internal async Task<List<string>> GetActivities(Guid pcsId)
         {
+            string organisationDetailsActivityName;
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                //get the organisation type based on organisation id
-                string organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                //Get the organisation type based on organisation id
+                organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+            }
+            var organisationOverview = await GetOrganisationOverview(pcsId);
 
-                var organisationOverview = await client.SendAsync(User.GetAccessToken(), new GetOrganisationOverview(pcsId));
+            List<string> activities = new List<string>();
+            activities.Add(PcsAction.ManagePcsMembers);
 
-                List<string> activities = new List<string>();
-                activities.Add(PcsAction.ManagePcsMembers);
-                if (configurationService.CurrentConfiguration.EnableDataReturns)
-                {
-                    activities.Add(PcsAction.ManageEeeWeeeData);
-                }
-                if (organisationOverview.HasMemberSubmissions)
-                {
-                    activities.Add(PcsAction.ViewSubmissionHistory);
-                }
-                activities.Add(organisationDetailsActivityName);
-                activities.Add(PcsAction.ManageContactDetails);
-                if (organisationOverview.HasMultipleOrganisationUsers)
-                {
-                    activities.Add(PcsAction.ManageOrganisationUsers);
-                }
+            if (configurationService.CurrentConfiguration.EnableDataReturns)
+            {
+                activities.Add(PcsAction.ManageEeeWeeeData);
+            }
 
-                return activities;
+            bool canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+            if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
+            {
+                activities.Add(PcsAction.ViewSubmissionHistory);
+            }
+
+            activities.Add(organisationDetailsActivityName);
+            activities.Add(PcsAction.ManageContactDetails);
+
+            if (organisationOverview.HasMultipleOrganisationUsers)
+            {
+                activities.Add(PcsAction.ManageOrganisationUsers);
+            }
+
+            return activities;
+        }
+
+        private async Task<OrganisationOverview> GetOrganisationOverview(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetOrganisationOverview(organisationId));
             }
         }
 
@@ -137,13 +149,20 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
-                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    var organisationOverview = await GetOrganisationOverview(viewModel.OrganisationId);
+
+                    bool canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                    if (organisationOverview.HasMemberSubmissions && canViewDataReturnsSubmission)
                     {
                         return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
                     }
-                    else
+                    else if (organisationOverview.HasMemberSubmissions)
                     {
                         return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                    }
+                    else if (canViewDataReturnsSubmission)
+                    {
+                        return RedirectToAction("ViewDataReturnSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                     }
                 }
                 if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
@@ -175,13 +194,13 @@
                 {
                     PossibleValues = new List<string>
                     {
-                        SubmissionType.EeeOrWeeeDataReturns,
-                        SubmissionType.MemberRegistrations
+                        SubmissionType.MemberRegistrations,
+                        SubmissionType.EeeOrWeeeDataReturns
                     },
                     OrganisationId = pcsId
                 };
 
-                await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+                await SetBreadcrumb(pcsId, "View submission history");
 
                 return View(model);
             }
@@ -203,11 +222,11 @@
                 }
             }
 
-            await SetBreadcrumbAndPcsBanner(viewModel.OrganisationId, "View submission history");
+            await SetBreadcrumb(viewModel.OrganisationId, "View submission history");
             viewModel.PossibleValues = new List<string>
             {
-                SubmissionType.EeeOrWeeeDataReturns,
-                SubmissionType.MemberRegistrations
+                SubmissionType.MemberRegistrations,
+                SubmissionType.EeeOrWeeeDataReturns
             };
 
             return View(viewModel);
@@ -433,7 +452,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
 
@@ -474,7 +493,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, "View submission history");
 
             var model = new DataReturnSubmissionHistoryViewModel();
 
@@ -533,11 +552,6 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
-        }
-
-        private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
-        {
-            await SetBreadcrumb(organisationId, activity);
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }

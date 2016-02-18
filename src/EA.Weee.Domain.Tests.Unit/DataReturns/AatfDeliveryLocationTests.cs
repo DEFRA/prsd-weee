@@ -22,18 +22,6 @@
         }
 
         [Fact]
-        public void ConstructsAatfDeliveryLocation_WithNullFacilityName_ThrowsArgumentNullException()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AatfDeliveryLocation("Test", null));
-        }
-
-        [Fact]
-        public void ConstructsAatfDeliveryLocation_WithEmptyFacilityName_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(() => new AatfDeliveryLocation("Test", string.Empty));
-        }
-
-        [Fact]
         public void AatfDeliveryLocation_EqualsNullParameter_ReturnsFalse()
         {
             var aatfDeliveryLocation = AatfDeliveryLocationBuilder.NewAatfDeliveryLocation;

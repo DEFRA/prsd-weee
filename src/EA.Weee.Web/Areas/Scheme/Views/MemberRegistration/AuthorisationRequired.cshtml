@@ -33,6 +33,19 @@
             <hr />
         </div>
             break;
+
+        case SchemeStatus.Withdrawn:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Your organisation's approval has been withdrawn</h1>
+                    </div>
+                </header>
+                <p>You can no longer perform activities, contact us if you need more information.</p>
+                @Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "Who should I contact?" } })
+                <hr />
+            </div>
+            break;
     }
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })

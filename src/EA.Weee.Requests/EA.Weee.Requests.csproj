@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,7 +68,10 @@
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
+    <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
+    <Compile Include="Organisations\OrganisationBySchemeId.cs" />
+    <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
@@ -81,10 +84,10 @@
     <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Admin\GetAdminUserStatus.cs" />
-    <Compile Include="Admin\GetAllApprovedSchemes.cs" />
+    <Compile Include="Admin\GetSchemes.cs" />
     <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus.cs" />
     <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
+    <Compile Include="Admin\GetRoles.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
@@ -144,6 +148,10 @@
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
       <Name>EA.Weee.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
+      <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
