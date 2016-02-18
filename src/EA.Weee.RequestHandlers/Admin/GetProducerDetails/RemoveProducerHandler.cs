@@ -5,6 +5,7 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using Weee.Security;
 
     public class RemoveProducerHandler : IRequestHandler<RemoveProducer, RemoveProducerResult>
     {
@@ -20,6 +21,7 @@
         public async Task<RemoveProducerResult> HandleAsync(RemoveProducer request)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var producerSubmissions =
                 await removeProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId);

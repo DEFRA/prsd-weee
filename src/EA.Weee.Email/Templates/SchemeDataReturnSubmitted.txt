@@ -1,0 +1,11 @@
+﻿Hello,
+
+@Model.SchemeName has submitted the following:
+
+Data return file
+
+Compliance year: @Model.ComplianceYear
+Quarter: @Model.Quarter
+Resubmission: @(Model.IsResubmission? "Yes" : "No")
+
+This is an automated email. Do not reply.

@@ -9,6 +9,7 @@
     using Domain.Producer;
     using Prsd.Core.Mediator;
     using Security;
+    using Weee.Security;
 
     public class GetProducerDetailsByRegisteredProducerIdHandler : IRequestHandler<Requests.Admin.GetProducerDetailsByRegisteredProducerId, ProducerDetailsScheme>
     {
@@ -51,13 +52,16 @@
                 }
             }
 
+            var canRemoveProducer = authorization.CheckUserInRole(Roles.InternalAdmin);
+
             return new ProducerDetailsScheme
             {
                 SchemeName = registeredProducer.Scheme.SchemeName,
                 ComplianceYear = registeredProducer.ComplianceYear,
                 ProducerName = registeredProducer.CurrentSubmission.OrganisationName,
                 RegistrationNumber = registeredProducer.ProducerRegistrationNumber,
-                HasSubmittedEEE = hasSubmittedEee
+                HasSubmittedEEE = hasSubmittedEee,
+                CanRemoveProducer = canRemoveProducer
             };
         }
     }

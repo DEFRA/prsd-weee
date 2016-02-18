@@ -18,6 +18,7 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -365,6 +366,50 @@
 
             // Assert
             Assert.Equal(false, result.HasSubmittedEEE);
+        }
+
+        [Fact]
+        public async Task HandleAync_ReturnsTrueForCanRemoveProducer_WhenCurrentUserIsInternalAdmin()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .AllowRole(Roles.InternalAdmin)
+                .Build();
+
+            var dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<Guid>._))
+                .Returns(A.Dummy<RegisteredProducer>());
+
+            var handler = new GetProducerDetailsByRegisteredProducerIdHandler(dataAccess, authorization);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetailsByRegisteredProducerId>());
+
+            // Assert
+            Assert.True(result.CanRemoveProducer);
+        }
+
+        [Fact]
+        public async Task HandleAync_ReturnsFalseForCanRemoveProducer_WhenCurrentUserIsNotInternalAdmin()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<Guid>._))
+                .Returns(A.Dummy<RegisteredProducer>());
+
+            var handler = new GetProducerDetailsByRegisteredProducerIdHandler(dataAccess, authorization);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetailsByRegisteredProducerId>());
+
+            // Assert
+            Assert.False(result.CanRemoveProducer);
         }
     }
 }

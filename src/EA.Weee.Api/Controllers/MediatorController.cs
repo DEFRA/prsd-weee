@@ -13,15 +13,18 @@
     using Elmah;
     using Infrastructure;
     using Newtonsoft.Json;
+    using Security;
 
     [RoutePrefix("api")]
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;
+        private readonly IRoleBasedResponseHandler roleRequestHandler;
 
-        public MediatorController(IMediator mediator)
+        public MediatorController(IMediator mediator, IRoleBasedResponseHandler roleRequestHandler)
         {
             this.mediator = mediator;
+            this.roleRequestHandler = roleRequestHandler;
         }
 
         /// <summary>
@@ -54,6 +57,7 @@
             try
             {
                 var response = await mediator.SendAsync(result, typeInformation.ResponseType);
+                response = await roleRequestHandler.HandleAsync(response);
                 return Ok(response);
             }
             catch (AuthenticationException ex)

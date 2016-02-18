@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Producer.Classfication;
     using Domain.Scheme;
     using Domain.User;
+    using Events;
     using FakeItEasy;
     using Lookup;
     using Obligation;
@@ -54,6 +56,28 @@
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
+        }
+
+        [Fact]
+        public void Submit_AddSubmissionEventToEventsList()
+        {
+            // Arrange
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            // Act
+            memberUpload.Submit(A.Dummy<User>());
+
+            // Assert
+            Assert.Equal(1, memberUpload.Events.Count());
+            Assert.IsType<SchemeMemberSubmissionEvent>(memberUpload.Events.Single());
+            Assert.Same(memberUpload, ((SchemeMemberSubmissionEvent)memberUpload.Events.Single()).MemberUpload);
         }
 
         [Fact]
@@ -179,6 +203,53 @@
             memberUpload.AssignToInvoiceRun(A.Dummy<InvoiceRun>());
 
             Assert.False(producer.Invoiced);
+        }
+
+        [Fact]
+        public void GetNumberOfWarnings_WithNullErrorsCollection_ReturnsZero()
+        {
+            // Arrange
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                null,
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            // Act
+            var result = memberUpload.GetNumberOfWarnings();
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void GetNumberOfWarnings_CountsWarningsOnlyFromErrorsCollection()
+        {
+            // Arrange
+            var errorsAndWarnings = new List<MemberUploadError>
+            {
+                new MemberUploadError(Error.ErrorLevel.Warning, A.Dummy<Error.UploadErrorType>(), "Description1"),
+                new MemberUploadError(Error.ErrorLevel.Error, A.Dummy<Error.UploadErrorType>(), "Description2"),
+                new MemberUploadError(Error.ErrorLevel.Warning, A.Dummy<Error.UploadErrorType>(), "Description3"),
+            };
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                errorsAndWarnings,
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            // Act
+            var result = memberUpload.GetNumberOfWarnings();
+
+            // Assert
+            Assert.Equal(2, result);
         }
     }
 }

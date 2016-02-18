@@ -71,73 +71,107 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoesNotHaveMultipleOrganisationUsers_ReturnsViewWithOnlyFourOption()
+        public async Task GetActivities_DoesNotHaveMultipleOrganisationUsers_DoesNotReturnManageOrganisationUsersOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-               .Returns(true);
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
-               .Returns(new OrganisationOverview()
+               .Returns(new OrganisationOverview
                {
-                   HasMemberSubmissions = true,
                    HasMultipleOrganisationUsers = false
                });
 
-            var result = await HomeController().ChooseActivity(A<Guid>._);
+            var result = await HomeController().GetActivities(A<Guid>._);
 
-            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
-
-            Assert.Equal(model.PossibleValues.Count, 4);
-
-            Assert.False(model.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
-
-            Assert.IsType<ViewResult>(result);
+            Assert.DoesNotContain(PcsAction.ManageOrganisationUsers, result);
         }
 
         [Fact]
-        public async void GetChooseActivity_DoesNotHaveMemberSubmissions_ReturnsViewWithOnlyFourOption()
+        public async Task GetActivities_HasMultipleOrganisationUsers_ReturnsManageOrganisationUsersOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-               .Returns(true);
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
-               .Returns(new OrganisationOverview()
+               .Returns(new OrganisationOverview
+               {
+                   HasMultipleOrganisationUsers = true
+               });
+
+            var result = await HomeController().GetActivities(A<Guid>._);
+
+            Assert.Contains(PcsAction.ManageOrganisationUsers, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableDataReturnsConfigurationSetToFalse_DoesNotReturnManageEeeWeeeDataOption()
+        {
+            var result = await HomeController(false).GetActivities(A<Guid>._);
+
+            Assert.DoesNotContain(PcsAction.ManageEeeWeeeData, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrue_ReturnsManageEeeWeeeDataOption()
+        {
+            var result = await HomeController(true).GetActivities(A<Guid>._);
+
+            Assert.Contains(PcsAction.ManageEeeWeeeData, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_DoesNotHaveMemberSubmissions_AndDoesNotHaveDataReturnSubmissions_DoesNotReturnViewSubmissionHistoryOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview
                {
                    HasMemberSubmissions = false,
-                   HasMultipleOrganisationUsers = true
+                   HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().ChooseActivity(A<Guid>._);
+            var result = await HomeController().GetActivities(A<Guid>._);
 
-            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
-
-            Assert.Equal(model.PossibleValues.Count, 4);
-
-            Assert.False(model.PossibleValues.Contains(PcsAction.ViewSubmissionHistory));
-
-            Assert.IsType<ViewResult>(result);
+            Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_AndMemberSubmissions_ReturnsViewWithFiveOption()
+        public async Task GetActivities_HasMemberSubmissions_ReturnsViewSubmissionHistoryOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-               .Returns(true);
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
-               .Returns(new OrganisationOverview()
+               .Returns(new OrganisationOverview
                {
                    HasMemberSubmissions = true,
-                   HasMultipleOrganisationUsers = true
+                   HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().ChooseActivity(A<Guid>._);
+            var result = await HomeController().GetActivities(A<Guid>._);
 
-            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
+            Assert.Contains(PcsAction.ViewSubmissionHistory, result);
+        }
 
-            Assert.Equal(model.PossibleValues.Count, 5);
+        [Fact]
+        public async Task GetActivities_HasDataReturnSubmissions_AndEnableDataReturnsConfigurationSetToTrue_ReturnsViewSubmissionHistoryOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview
+               {
+                   HasMemberSubmissions = false,
+                   HasDataReturnSubmissions = true
+               });
 
-            Assert.IsType<ViewResult>(result);
+            var result = await HomeController(true).GetActivities(A<Guid>._);
+
+            Assert.Contains(PcsAction.ViewSubmissionHistory, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_HasDataReturnSubmissions_AndEnableDataReturnsConfigurationSetToFalse_ReturnsViewSubmissionHistoryOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview
+               {
+                   HasMemberSubmissions = false,
+                   HasDataReturnSubmissions = true
+               });
+
+            var result = await HomeController(false).GetActivities(A<Guid>._);
+
+            Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
 
         [Fact]
@@ -176,10 +210,12 @@
             Assert.Equal("MemberRegistration", routeValues["controller"]);
         }
 
-        [Fact]
-        public async void PostChooseActivity_ManagePcsMembersRejectedStatus_RedirectsToAuthorisationRequired()
+        [Theory]
+        [InlineData(SchemeStatus.Rejected)]
+        [InlineData(SchemeStatus.Withdrawn)]
+        public async void PostChooseActivity_ManagePcsMembersRejectedOrWithdrawnStatus_RedirectsToAuthorisationRequired(SchemeStatus status)
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(status);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -265,7 +301,7 @@
 
         [Fact]
         public async void PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
-        {   
+        {
             var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {
                 SelectedValue = SubmissionType.MemberRegistrations
@@ -283,7 +319,7 @@
         {
             var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {
-                SelectedValue = SubmissionType.EeeOrWeeeDataReturns 
+                SelectedValue = SubmissionType.EeeOrWeeeDataReturns
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -453,8 +489,81 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_SelectViewSubmissionHistoryWithEnabledDataReturn_RedirectsToViewChooseSubmissionType()
+        public async Task PostChooseActivity_SelectViewSubmissionHistory_WithEnableDataReturnsConfigurationSetToFalse_RedirectsToViewSubmissionHistory()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview
+                {
+                    HasMemberSubmissions = true,
+                    HasDataReturnSubmissions = true
+                });
+
+            var result = await HomeController(false).ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task PostChooseActivity_SelectViewSubmissionHistory_WithNoSubmittedDataReturn_RedirectsToViewSubmissionHistory()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview
+                {
+                    HasMemberSubmissions = true,
+                    HasDataReturnSubmissions = false
+                });
+
+            var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task PostChooseActivity_SelectViewSubmissionHistory_WithNoSubmittedMemberUpload_RedirectsToViewDataReturnSubmissionHistory()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview
+                {
+                    HasMemberSubmissions = false,
+                    HasDataReturnSubmissions = true
+                });
+
+            var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewDataReturnSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task PostChooseActivity_SelectViewSubmissionHistory_WithSubmittedMemberUpload_AndSubmittedDataReturn_AndEnableDataReturnsConfigurationSetToTrue_RedirectsToChooseSubmissionType()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview
+                {
+                    HasMemberSubmissions = true,
+                    HasDataReturnSubmissions = true
+                });
+
             var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
             {
                 SelectedValue = PcsAction.ViewSubmissionHistory
@@ -465,21 +574,6 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ChooseSubmissionType", routeValues["action"]);
-        }
-
-        [Fact]
-        public async void PostChooseActivity_SelectViewSubmissionHistoryWithoutEnabledDataReturn_RedirectsToViewSubmissionHistory()
-        {
-            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
-            {
-                SelectedValue = PcsAction.ViewSubmissionHistory
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
         }
 
         [Fact]

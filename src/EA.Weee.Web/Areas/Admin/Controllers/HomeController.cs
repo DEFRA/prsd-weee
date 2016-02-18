@@ -69,7 +69,7 @@
             switch (viewModel.SelectedValue)
             {
                 case InternalUserActivity.ManageUsers:
-                    return RedirectToAction("ManageUsers", "User");
+                    return RedirectToAction("Index", "User");
 
                 case InternalUserActivity.ManageScheme:
                     return RedirectToAction("ManageSchemes", "Scheme");

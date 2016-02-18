@@ -385,6 +385,21 @@
         }
 
         [Fact]
+        public async void GetAuthorizationRequired_SchemeIsWithdrawn_ReturnsViewWithWithdrawnStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Withdrawn);
+
+            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Withdrawn, view.Status);
+        }
+
+        [Fact]
         public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
@@ -797,6 +812,28 @@
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
             Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
+        }
+
+        [Fact]
+        public async void GetSuccessfulSubmission_HappyPath_ReturnsSuccessfulSubmissionView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUploadInfoByDataReturnUploadId>._))
+                .Returns(new DataReturnUploadInfo
+                {
+                    Year = 2016,
+                    Quarter = QuarterType.Q1
+                });
+
+            DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
+
+            ActionResult result = await controller.SuccessfulSubmission(Guid.NewGuid(), Guid.NewGuid());
+
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SuccessfulSubmission");
+
+            Assert.IsAssignableFrom<EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SuccessfulSubmissionViewModel>(viewResult.Model);
         }
 
         /// <summary>

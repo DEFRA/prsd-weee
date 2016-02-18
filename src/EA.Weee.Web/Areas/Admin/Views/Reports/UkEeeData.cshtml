@@ -15,14 +15,17 @@
         @Html.Gds().ValidationSummary()
 
         <p>Filter the report to download entries that match your criteria.</p>
+        <p>All data is reported in tonnes (t) to three decimal places.</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
-        
-        @(this.WeeeGds().Submit("Download", new { @class = "button" }))
+        <p>
+            If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
+        </p>
+        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
     }
 
     <p>

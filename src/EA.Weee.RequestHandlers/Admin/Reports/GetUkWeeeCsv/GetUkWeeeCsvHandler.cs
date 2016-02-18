@@ -74,26 +74,26 @@
 
             csvWriter.DefineColumn("Category", x => categoryDisplayNames[x.Category]);
             csvWriter.DefineColumn("Obligation type", x => x.ObligationType);
-            csvWriter.DefineColumn("Total WEEE from DCF", x => x.DcfTotal);
-            csvWriter.DefineColumn("Q1 WEEE from DCF", x => x.DcfQ1);
-            csvWriter.DefineColumn("Q2 WEEE from DCF", x => x.DcfQ2);
-            csvWriter.DefineColumn("Q3 WEEE from DCF", x => x.DcfQ3);
-            csvWriter.DefineColumn("Q4 WEEE from DCF", x => x.DcfQ4);
-            csvWriter.DefineColumn("Total WEEE from distributors", x => x.DistributorTotal);
-            csvWriter.DefineColumn("Q1 WEEE from distributors", x => x.DistributorQ1);
-            csvWriter.DefineColumn("Q2 WEEE from distributors", x => x.DistributorQ2);
-            csvWriter.DefineColumn("Q3 WEEE from distributors", x => x.DistributorQ3);
-            csvWriter.DefineColumn("Q4 WEEE from distributors", x => x.DistributorQ4);
-            csvWriter.DefineColumn("Total WEEE from final holders", x => x.FinalHolderTotal);
-            csvWriter.DefineColumn("Q1 WEEE from final holders", x => x.FinalHolderQ1);
-            csvWriter.DefineColumn("Q2 WEEE from final holders", x => x.FinalHolderQ2);
-            csvWriter.DefineColumn("Q3 WEEE from final holders", x => x.FinalHolderQ3);
-            csvWriter.DefineColumn("Q4 WEEE from final holders", x => x.FinalHolderQ4);
-            csvWriter.DefineColumn("Total WEEE delivered", x => x.DeliveredTotal);
-            csvWriter.DefineColumn("Q1 WEEE delivered", x => x.DeliveredQ1);
-            csvWriter.DefineColumn("Q2 WEEE delivered", x => x.DeliveredQ2);
-            csvWriter.DefineColumn("Q3 WEEE delivered", x => x.DeliveredQ3);
-            csvWriter.DefineColumn("Q4 WEEE delivered", x => x.DeliveredQ4);
+            csvWriter.DefineColumn("Total WEEE from DCF (t)", x => x.DcfTotal);
+            csvWriter.DefineColumn("Q1 WEEE from DCF (t)", x => x.DcfQ1);
+            csvWriter.DefineColumn("Q2 WEEE from DCF (t)", x => x.DcfQ2);
+            csvWriter.DefineColumn("Q3 WEEE from DCF (t)", x => x.DcfQ3);
+            csvWriter.DefineColumn("Q4 WEEE from DCF (t)", x => x.DcfQ4);
+            csvWriter.DefineColumn("Total WEEE from distributors (t)", x => x.DistributorTotal);
+            csvWriter.DefineColumn("Q1 WEEE from distributors (t)", x => x.DistributorQ1);
+            csvWriter.DefineColumn("Q2 WEEE from distributors (t)", x => x.DistributorQ2);
+            csvWriter.DefineColumn("Q3 WEEE from distributors (t)", x => x.DistributorQ3);
+            csvWriter.DefineColumn("Q4 WEEE from distributors (t)", x => x.DistributorQ4);
+            csvWriter.DefineColumn("Total WEEE from final holders (t)", x => x.FinalHolderTotal);
+            csvWriter.DefineColumn("Q1 WEEE from final holders (t)", x => x.FinalHolderQ1);
+            csvWriter.DefineColumn("Q2 WEEE from final holders (t)", x => x.FinalHolderQ2);
+            csvWriter.DefineColumn("Q3 WEEE from final holders (t)", x => x.FinalHolderQ3);
+            csvWriter.DefineColumn("Q4 WEEE from final holders (t)", x => x.FinalHolderQ4);
+            csvWriter.DefineColumn("Total WEEE delivered (t)", x => x.DeliveredTotal);
+            csvWriter.DefineColumn("Q1 WEEE delivered (t)", x => x.DeliveredQ1);
+            csvWriter.DefineColumn("Q2 WEEE delivered (t)", x => x.DeliveredQ2);
+            csvWriter.DefineColumn("Q3 WEEE delivered (t)", x => x.DeliveredQ3);
+            csvWriter.DefineColumn("Q4 WEEE delivered (t)", x => x.DeliveredQ4);
 
             return csvWriter;
         }

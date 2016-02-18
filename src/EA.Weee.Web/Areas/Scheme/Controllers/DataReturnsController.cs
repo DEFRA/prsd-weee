@@ -234,17 +234,27 @@
                 await client.SendAsync(User.GetAccessToken(), new SubmitDataReturnUpload(dataReturnUploadId));
             }
 
-            return RedirectToAction("SuccessfulSubmission", new { pcsId });
+            return RedirectToAction("SuccessfulSubmission", new { pcsId, dataReturnUploadId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
+        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId, Guid dataReturnUploadId)
         {
             await SetBreadcrumb(pcsId);
-            return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+            using (var client = apiClient())
             {
-                PcsId = pcsId
-            });
+                var quarterInfo =
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new GetUploadInfoByDataReturnUploadId(dataReturnUploadId));
+
+                return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+                {
+                    PcsId = pcsId,
+                    ComplianceYear = quarterInfo.Year.Value,
+                    Quarter = quarterInfo.Quarter.Value
+                });
+            }
         }
 
         [HttpGet]

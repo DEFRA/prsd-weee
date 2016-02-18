@@ -10,6 +10,7 @@
     using EA.Prsd.Core.Mediator;
     using Security;
     using Shared.DomainUser;
+    using Weee.Security;
 
     public class IssuePendingChargesHandler : IRequestHandler<Requests.Charges.IssuePendingCharges, IssuePendingChargesResult>
     {
@@ -33,6 +34,7 @@
         public async Task<IssuePendingChargesResult> HandleAsync(Requests.Charges.IssuePendingCharges message)
         {
             authorization.EnsureCanAccessInternalArea(true);
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthority(message.Authority);
 

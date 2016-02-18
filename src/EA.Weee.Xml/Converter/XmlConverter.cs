@@ -29,13 +29,13 @@
             return Encoding.UTF8.GetString(data);
         }
 
-        public schemeType Deserialize(XDocument xdoc)
+        public T Deserialize<T>(XDocument xdoc)
         {
-            var scheme = deserializer.Deserialize<schemeType>(xdoc);
-            whiteSpaceCollapser.Collapse(scheme);
-            scheme.MakeEmptyStringsNull();
+            var deserializationResult = deserializer.Deserialize<T>(xdoc);
+            whiteSpaceCollapser.Collapse(deserializationResult);
+            deserializationResult.MakeEmptyStringsNull();
 
-            return scheme;
+            return deserializationResult;
         }
 
         private byte[] RemoveUtf8Bom(byte[] data)
