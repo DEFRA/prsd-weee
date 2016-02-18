@@ -19,7 +19,7 @@
     <div class="form-group">
         @using (var tableBuilder = this.WeeeGds().TableBuilder(Model.Results, "Data returns submission history", new { id = "submissions" }))
         {
-            tableBuilder.AddColumn("Data and time (GMT)", d => d.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture));
+            tableBuilder.AddColumn("Date and time (GMT)", d => d.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture));
             tableBuilder.AddColumn("Compliance year", d => d.ComplianceYear);
             tableBuilder.AddColumn("Quarter reported", d => d.Quarter);
             tableBuilder.AddColumn("Submitted by", d => d.SubmittedBy);
