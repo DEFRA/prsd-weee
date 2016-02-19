@@ -4,10 +4,12 @@
     using System.Data.Entity;
     using System.Linq;
     using Domain;
-    using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using Xunit;
+    using Address = Domain.Organisation.Address;
+    using Country = Domain.Country;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class AuditingTests
     {
@@ -23,21 +25,24 @@
         [Fact]
         public void AddressAddedToExistingOrganisation_OrganisationUpdateIsAudited_AddressCreateIsAudited()
         {
-            // Arrange
-            var organisation = Organisation.CreateSoleTrader("test name");
-
             var context = WeeeContext();
-            organisation = context.Organisations.Add(organisation);
-            context.SaveChanges(); // This will reset the change tracker
+            using (var dbContextTransaction = context.Database.BeginTransaction())
+            {
+                var organisation = Organisation.CreateSoleTrader("test name");
 
-            // Act
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, ValidAddress());
+                organisation = context.Organisations.Add(organisation);
+                context.SaveChanges(); // This will reset the change tracker
+                
+                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, ValidAddress());
 
-            var organisationChanges = context.ChangeTracker.Entries<Organisation>();
-            var addressChanges = context.ChangeTracker.Entries<Address>();
+                var organisationChanges = context.ChangeTracker.Entries<Organisation>();
+                var addressChanges = context.ChangeTracker.Entries<Address>();
 
-            Assert.Equal(EntityState.Added, addressChanges.Single().State);
-            Assert.Equal(EntityState.Modified, organisationChanges.Single().State);
+                Assert.Equal(EntityState.Added, addressChanges.Single().State);
+                Assert.Equal(EntityState.Modified, organisationChanges.Single().State);
+
+                dbContextTransaction.Rollback();
+            }
         }
 
         private WeeeContext WeeeContext()
