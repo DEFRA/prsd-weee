@@ -10,11 +10,9 @@
     using Prsd.Core.Domain;
     using Xunit;
 
-    public class OrganisationIntegration : IDisposable
+    public class OrganisationIntegration
     {
         private readonly WeeeContext context;
-
-        private Organisation testOrganisationToCleanUp;
 
         public OrganisationIntegration()
         {
@@ -30,84 +28,86 @@
         [Fact]
         public async Task CanCreateRegisteredCompany()
         {
-            var contact = MakeContact();
-
-            string name = "Test Name" + Guid.NewGuid();
-            string tradingName = "Test Trading Name" + Guid.NewGuid();
-            string crn = "ABC12345";
-            var status = OrganisationStatus.Incomplete;
-            var type = OrganisationType.RegisteredCompany;
-
-            var organisationAddress = await MakeInternationalAddress("O");
-            var businessAddress = await MakeUKAddress("B");
-            var notificationAddress = await MakeInternationalAddress("N");
-
-            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-            organisation.AddOrUpdateMainContactPerson(contact);
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
-
-            this.testOrganisationToCleanUp = organisation;
-
-            context.Organisations.Add(organisation);
-            await context.SaveChangesAsync();
-
-            var thisTestOrganisationArray =
-                context.Organisations.Where(o => o.Name == name).ToArray();
-
-            Assert.NotNull(thisTestOrganisationArray);
-            Assert.NotEmpty(thisTestOrganisationArray);
-
-            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
-
-            VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
-            if (thisTestOrganisation != null)
+            using (var dbContextTransaction = context.Database.BeginTransaction())
             {
-                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
-            }
+                var contact = MakeContact();
 
-            await context.SaveChangesAsync();
+                string name = "Test Name" + Guid.NewGuid();
+                string tradingName = "Test Trading Name" + Guid.NewGuid();
+                string crn = "ABC12345";
+                var status = OrganisationStatus.Incomplete;
+                var type = OrganisationType.RegisteredCompany;
+
+                var organisationAddress = await MakeInternationalAddress("O");
+                var businessAddress = await MakeUKAddress("B");
+                var notificationAddress = await MakeInternationalAddress("N");
+
+                var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
+                organisation.AddOrUpdateMainContactPerson(contact);
+                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+                organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+
+                context.Organisations.Add(organisation);
+                await context.SaveChangesAsync();
+
+                var thisTestOrganisationArray =
+                    context.Organisations.Where(o => o.Name == name).ToArray();
+
+                Assert.NotNull(thisTestOrganisationArray);
+                Assert.NotEmpty(thisTestOrganisationArray);
+
+                var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+                VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
+                if (thisTestOrganisation != null)
+                {
+                    VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                }
+
+                dbContextTransaction.Rollback();
+            }
         }
 
         [Fact]
         public async Task CanCreateSoleTrader()
         {
-            var contact = MakeContact();
+            using (var dbContextTransaction = context.Database.BeginTransaction())
+            {
+                var contact = MakeContact();
 
-            string tradingName = "Test Trading Name" + Guid.NewGuid();
-            var status = OrganisationStatus.Incomplete;
-            var type = OrganisationType.SoleTraderOrIndividual;
+                string tradingName = "Test Trading Name" + Guid.NewGuid();
+                var status = OrganisationStatus.Incomplete;
+                var type = OrganisationType.SoleTraderOrIndividual;
 
-            var organisationAddress = await MakeInternationalAddress("O");
-            var businessAddress = await MakeUKAddress("B");
-            var notificationAddress = await MakeInternationalAddress("N");
+                var organisationAddress = await MakeInternationalAddress("O");
+                var businessAddress = await MakeUKAddress("B");
+                var notificationAddress = await MakeInternationalAddress("N");
 
-            var organisation = Organisation.CreateSoleTrader(tradingName);
+                var organisation = Organisation.CreateSoleTrader(tradingName);
 
-            organisation.AddOrUpdateMainContactPerson(contact);
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+                organisation.AddOrUpdateMainContactPerson(contact);
+                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+                organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+                
+                context.Organisations.Add(organisation);
 
-            this.testOrganisationToCleanUp = organisation;
+                await context.SaveChangesAsync();
 
-            context.Organisations.Add(organisation);
+                var thisTestOrganisationArray =
+                    context.Organisations.Where(o => o.TradingName == tradingName).ToArray();
 
-            await context.SaveChangesAsync();
+                Assert.NotNull(thisTestOrganisationArray);
+                Assert.NotEmpty(thisTestOrganisationArray);
 
-            var thisTestOrganisationArray =
-                context.Organisations.Where(o => o.TradingName == tradingName).ToArray();
+                var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
-            Assert.NotNull(thisTestOrganisationArray);
-            Assert.NotEmpty(thisTestOrganisationArray);
+                VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
+                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
 
-            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
-
-            VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
-            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
-
-            await context.SaveChangesAsync();
+                dbContextTransaction.Rollback();
+            }
         }
 
         private void VerifyOrganisation(string expectedName, string expectedTradingName, string expectedCrn, OrganisationStatus expectedStatus, OrganisationType expectedType, Organisation fromDatabase)
@@ -146,12 +146,6 @@
             Assert.Equal(expected.Email, fromDatabase.Email);
         }
 
-        public void Dispose()
-        {
-            context.Organisations.Remove(testOrganisationToCleanUp);
-            context.SaveChangesAsync();
-        }
-
         private async Task<Address> MakeInternationalAddress(string identifier)
         {
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
@@ -179,7 +173,7 @@
                 "Phone" + identifier,
                 "Email" + identifier);
         }
-      
+
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");
