@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using FakeItEasy;
     using Prsd.Core.Domain;
-    using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using RegisteredProducer = Domain.Producer.RegisteredProducer;
@@ -23,22 +22,30 @@
         }
 
         [Fact]
-        public void CreateRegisteredProducer_ProducerIsNotRemoved()
+        public async Task CreateRegisteredProducer_ProducerIsNotRemoved()
         {
-            using (DatabaseWrapper database = new DatabaseWrapper())
+            var context = WeeeContext();
+            using (var dbContextTransaction = context.Database.BeginTransaction())
             {
-                ModelHelper helper = new ModelHelper(database.Model);
+                var organisation = Organisation.CreateSoleTrader("My trading name");
+                context.Organisations.Add(organisation);
+                await context.SaveChangesAsync();
 
-                var organisation1 = helper.CreateOrganisation();
-                var scheme1 = helper.CreateScheme(organisation1);
-                var producer = helper.GetOrCreateRegisteredProducer(scheme1, 2017, "ABC12345");
+                var scheme = new Scheme(organisation.Id);
+                context.Schemes.Add(scheme);
+                await context.SaveChangesAsync();
 
-                database.Model.SaveChanges();
+                var producer = new RegisteredProducer("ABC12345", 2017, scheme);
+                context.AllRegisteredProducers.Add(producer);
+                await context.SaveChangesAsync();
 
-                producer = database.Model.RegisteredProducers.SingleOrDefault(p => p.Id == producer.Id);
+                producer = context.RegisteredProducers
+                    .SingleOrDefault(p => p.Id == producer.Id);
 
                 Assert.NotNull(producer);
                 Assert.False(producer.Removed);
+
+                dbContextTransaction.Rollback();
             }
         }
 
