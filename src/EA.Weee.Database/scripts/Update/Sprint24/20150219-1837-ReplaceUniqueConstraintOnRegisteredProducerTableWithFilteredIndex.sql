@@ -17,7 +17,7 @@ ALTER TABLE [Producer].[RegisteredProducer]
 DROP CONSTRAINT [CN_RegisteredProducer_Unique_SchemeId_ProducerRegistrationNumber_ComplianceYear_Removed]
 GO
 
-CREATE NONCLUSTERED INDEX [IX_RegisteredProducer_Unique_SchemeId_ProducerRegistrationNumber_ComplianceYear_WhereNotRemoved] ON [Producer].[RegisteredProducer] 
+CREATE UNIQUE NONCLUSTERED INDEX [IX_RegisteredProducer_Unique_SchemeId_ProducerRegistrationNumber_ComplianceYear_WhereNotRemoved] ON [Producer].[RegisteredProducer] 
 (
 	[SchemeId] ASC,
 	[ProducerRegistrationNumber] ASC,
