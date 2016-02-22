@@ -6,6 +6,7 @@
     using Domain;
     using FakeItEasy;
     using Prsd.Core.Domain;
+    using Weee.Tests.Core.Model;
     using Xunit;
     using Address = Domain.Organisation.Address;
     using Country = Domain.Country;
@@ -24,10 +25,10 @@
 
         [Fact]
         public void AddressAddedToExistingOrganisation_OrganisationUpdateIsAudited_AddressCreateIsAudited()
-        {
-            var context = WeeeContext();
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+        {   
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
                 var organisation = Organisation.CreateSoleTrader("test name");
 
                 organisation = context.Organisations.Add(organisation);
@@ -40,8 +41,6 @@
 
                 Assert.Equal(EntityState.Added, addressChanges.Single().State);
                 Assert.Equal(EntityState.Modified, organisationChanges.Single().State);
-
-                dbContextTransaction.Rollback();
             }
         }
 

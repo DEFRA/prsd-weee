@@ -6,30 +6,20 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
+    using Weee.Tests.Core.Model;
     using Xunit;
+    using Address = Domain.Organisation.Address;
+    using Contact = Domain.Organisation.Contact;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationIntegration
-    {
-        private readonly WeeeContext context;
-
-        public OrganisationIntegration()
-        {
-            var userContext = A.Fake<IUserContext>();
-
-            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
-
-            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
-
-            context = new WeeeContext(userContext, eventDispatcher);
-        }
-
+    {   
         [Fact]
         public async Task CanCreateRegisteredCompany()
         {
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
                 var contact = MakeContact();
 
                 string name = "Test Name" + Guid.NewGuid();
@@ -38,9 +28,9 @@
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.RegisteredCompany;
 
-                var organisationAddress = await MakeInternationalAddress("O");
-                var businessAddress = await MakeUKAddress("B");
-                var notificationAddress = await MakeInternationalAddress("N");
+                var organisationAddress = await MakeInternationalAddress(context, "O");
+                var businessAddress = await MakeUKAddress(context, "B");
+                var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
                 organisation.AddOrUpdateMainContactPerson(contact);
@@ -64,25 +54,24 @@
                 {
                     VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
                 }
-
-                dbContextTransaction.Rollback();
             }
         }
 
         [Fact]
         public async Task CanCreateSoleTrader()
         {
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
                 var contact = MakeContact();
 
                 string tradingName = "Test Trading Name" + Guid.NewGuid();
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.SoleTraderOrIndividual;
 
-                var organisationAddress = await MakeInternationalAddress("O");
-                var businessAddress = await MakeUKAddress("B");
-                var notificationAddress = await MakeInternationalAddress("N");
+                var organisationAddress = await MakeInternationalAddress(context, "O");
+                var businessAddress = await MakeUKAddress(context, "B");
+                var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateSoleTrader(tradingName);
 
@@ -90,7 +79,7 @@
                 organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
-                
+
                 context.Organisations.Add(organisation);
 
                 await context.SaveChangesAsync();
@@ -105,8 +94,6 @@
 
                 VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
                 VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
-
-                dbContextTransaction.Rollback();
             }
         }
 
@@ -146,7 +133,7 @@
             Assert.Equal(expected.Email, fromDatabase.Email);
         }
 
-        private async Task<Address> MakeInternationalAddress(string identifier)
+        private async Task<Address> MakeInternationalAddress(WeeeContext context, string identifier)
         {
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             return new Address(
@@ -160,7 +147,7 @@
                 "Email" + identifier);
         }
 
-        private async Task<Address> MakeUKAddress(string identifier)
+        private async Task<Address> MakeUKAddress(WeeeContext context, string identifier)
         {
             var country = await context.Countries.SingleAsync(c => c.Name == "UK - England");
             return new Address(
