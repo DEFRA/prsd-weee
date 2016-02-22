@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using FakeItEasy;
     using Prsd.Core.Domain;
+    using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using RegisteredProducer = Domain.Producer.RegisteredProducer;
@@ -24,9 +25,10 @@
         [Fact]
         public async Task CreateRegisteredProducer_ProducerIsNotRemoved()
         {
-            var context = WeeeContext();
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
+
                 var organisation = Organisation.CreateSoleTrader("My trading name");
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
@@ -44,8 +46,6 @@
 
                 Assert.NotNull(producer);
                 Assert.False(producer.Removed);
-
-                dbContextTransaction.Rollback();
             }
         }
 
@@ -60,10 +60,10 @@
 
         [Fact]
         public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemove_ProducerEntityNotInDbSet()
-        {
-            var context = WeeeContext();
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+        {   
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
                 var organisation = Organisation.CreateSoleTrader("My trading name");
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
@@ -84,17 +84,15 @@
                     .SingleOrDefault(p => p.Id == producer.Id);
 
                 Assert.Null(producer);
-
-                dbContextTransaction.Rollback();
             }
         }
 
         [Fact]
         public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemoved_ThenReRegister_ReturnsNotRemovedProducer()
-        {
-            var context = WeeeContext();
-            using (var dbContextTransaction = context.Database.BeginTransaction())
+        {   
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                var context = database.WeeeContext;
                 var organisation = Organisation.CreateSoleTrader("My trading name");
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
@@ -119,15 +117,7 @@
 
                 Assert.NotNull(producer);
                 Assert.False(producer.Removed);
-                dbContextTransaction.Rollback();
             }
-        }
-
-        private WeeeContext WeeeContext()
-        {
-            var eventDispatcher = A.Fake<IEventDispatcher>();
-
-            return new WeeeContext(userContext, eventDispatcher);
         }
     }
 }
