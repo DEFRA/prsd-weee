@@ -64,7 +64,7 @@
             }
             else
             {
-                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
+                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
             }
 
             <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
@@ -75,8 +75,8 @@
         }
         else
         {
-            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
-            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { hidden = "true" })
+            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
         }
 
         <div class="form-group">
