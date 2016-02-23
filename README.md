@@ -35,15 +35,16 @@ To initialise git flow for the project, you need to run:
 
 #### Local system dependencies
 
-1. Visual Studio 2013 Update 4.
-2. SQL Server Express 2014 Advanced.
+1. Visual Studio 2013+.
+2. SQL Server Express 2014.
+3. .NET 4.5.2 SDK.
 
 <!-- End of list -->
 
 #### Build the application
 
 1. Open the WEEE solution file (EA.Weee.sln).
-2. Visual Studio, configure the NuGet Package Manager ('Tools' -> 'NuGet Package Manager' -> 'Package Manager Settings') to:
+2. In Visual Studio, configure the NuGet Package Manager ('Tools' -> 'NuGet Package Manager' -> 'Package Manager Settings') to:
    * Allow NuGet to download missing packages.
    * Automatically check for missing packages during build in Visual Studio.
 3. Build the project. NuGet will download the missing packages.
@@ -53,6 +54,7 @@ To initialise git flow for the project, you need to run:
 #### Setup the Database
 
 The WEEE project uses [AliaSQL](https://github.com/ClearMeasure/AliaSQL) to manage the creation of and updates to the database.
+
 1. Within the solution, find the EA.Weee.Database project.
 2. Open the App.config of this project. In the appSettings, set the value for 'DatabaseServer' as the database server to be used. The local SQL server express database (.\SQLEXPRESS) will be used if this value is not set.
 3. You can alter the value of 'DatabaseName' if you wish the database to be created with a different name.
@@ -63,6 +65,7 @@ The WEEE project uses [AliaSQL](https://github.com/ClearMeasure/AliaSQL) to mana
 #### Setup the API certificate
 
 The EA.Weee.Api project runs over SSL on post 44502 and requires a certificate to be setup.
+
 1. Run mmc.exe and navigate to 'File' -> 'Add/Remove Snap-in'
 2. Add the Certificates snap-in and select 'Computer Account' then 'Local computer' and 'Finish'.
 3. Under Certificates (Local Computer) / Personal / Certificates, find the certificate that is issued to localhost with the Friendly Name "IIS Express Development Certificate".
@@ -79,13 +82,15 @@ The EA.Weee.Api project runs over SSL on post 44502 and requires a certificate t
 
 #### Configure the API
 The website uses the API to access the database and to generate emails.
+
 1. Within the solution, find the EA.Weee.Api project.
 2. Open the Web.config of this project. In connectionStrings, set the value of Weee.DefaultConnection to match your database server and database name. Also set the credentials for connecting to your database.
 3. In the mailSettings configuration, set the SMTP server host and port to match your SMTP server details. If you do not have an SMTP server, you can configure the API to place the generated emails in a folder instead by setting the deliveryMethod configuration to 'SpecifiedPickupDirectory' and specifying the location of the pickup directory. Further details on how to do this can be found [here](https://msdn.microsoft.com/en-us/library/ms164241.aspx).
 
 <!-- End of list -->
 
-Run the project
+#### Run the project
+
 1. On the Visual Studio toolbar click 'Debug' -> 'Options and Settings'.  In the options window select 'Projects and Solutions' -> 'Web Projects' and make sure the 'Use the 64 bit version of IIS Express...' is ticked.
 2. Set the EA.Weee.Web project as the start-up project. Build and run the solution.
 3. The website will now be available at https://localhost:44300/
