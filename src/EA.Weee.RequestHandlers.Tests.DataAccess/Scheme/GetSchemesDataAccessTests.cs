@@ -1,93 +1,54 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Organisation;
-    using Domain.Scheme;
-    using EA.Weee.DataAccess;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
     using RequestHandlers.Scheme;
     using Xunit;
+    using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
+    using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
 
     public class GetSchemesDataAccessTests
     {
         [Fact]
-        public async void GetSchemesDataAccess_GetCompleteSchemes_ReturnsOnlySchemesWithCompleteOrganisations()
+        public async Task GetSchemesDataAccess_GetCompleteSchemes_ReturnsOnlySchemesWithCompleteOrganisations()
         {
-            var userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
-
-            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
-
-            var realWeeeContext = new WeeeContext(userContext, eventDispatcher);
-
-            var testSchemes = await AddTestOrganisationsAndSchemes(realWeeeContext);
-            var completeOrganisation = testSchemes[OrganisationStatus.Complete].Organisation;
-            var incompleteOrganisation = testSchemes[OrganisationStatus.Incomplete].Organisation;
-            
-            var dataAccess = new GetSchemesDataAccess(realWeeeContext);
-            var result = await dataAccess.GetCompleteSchemes();
-
-            Assert.All(result, s => Assert.Equal(s.Organisation.OrganisationStatus.Value, OrganisationStatus.Complete.Value));
-            Assert.True(result.Any(s => s.Organisation.TradingName == completeOrganisation.TradingName));
-            Assert.False(result.Any(s => s.Organisation.TradingName == incompleteOrganisation.TradingName));
-
-            Cleanup(realWeeeContext, testSchemes.Values.ToList());
-        }
-
-        private void Cleanup(WeeeContext context, List<Scheme> schemesToRemove)
-        {
-            context.Organisations.RemoveRange(schemesToRemove.Select(s => s.Organisation));
-            context.Schemes.RemoveRange(schemesToRemove);
-        }
-
-        private async Task<Dictionary<OrganisationStatus, Scheme>> AddTestOrganisationsAndSchemes(WeeeContext context)
-        {
-            var completeOrganisation = CreateTestOrganisation(context, "GetSchemesDataAccessTests - Complete organisation");
-            completeOrganisation.CompleteRegistration();
-            var incompleteOrganisation = CreateTestOrganisation(context, "GetSchemesDataAccessTests - Incomplete organisation");
-
-            context.Organisations.Add(completeOrganisation);
-            context.Organisations.Add(incompleteOrganisation);
-            await context.SaveChangesAsync();
-
-            var completeScheme = new Scheme(completeOrganisation.Id);
-            var incompleteScheme = new Scheme(incompleteOrganisation.Id);
-
-            context.Schemes.Add(completeScheme);
-            context.Schemes.Add(incompleteScheme);
-            await context.SaveChangesAsync();
-
-            return new Dictionary<OrganisationStatus, Scheme>
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                {OrganisationStatus.Complete, completeScheme},
-                {OrganisationStatus.Incomplete, incompleteScheme},
-            };
-        }
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
 
-        private Organisation CreateTestOrganisation(WeeeContext context, string tradingName)
-        {
-            var organisation = Organisation.CreateSoleTrader(tradingName);
+                var organisation1 = helper.CreateOrganisation();
+                organisation1.OrganisationType = 3;
+                organisation1.OrganisationStatus = 2; // Complete organisation
+                var scheme1 = helper.CreateScheme(organisation1);
 
-            organisation.AddOrUpdateAddress(
-                AddressType.OrganisationAddress,
-                new Address(
-                    "Address 1",
-                    "Address 2",
-                    "Town",
-                    "County",
-                    "TEST123",
-                    context.Countries.First(),
-                    "01234 567890",
-                    "test@test.test"));
+                var organisation2 = helper.CreateOrganisation();
+                organisation2.OrganisationType = 1;
+                organisation2.OrganisationStatus = 2; // Complete organisation
+                var scheme2 = helper.CreateScheme(organisation2);
 
-            organisation.AddOrUpdateMainContactPerson(new Contact("Test first name", "Test last name", "Test position"));
+                var organisation3 = helper.CreateOrganisation();
+                organisation3.OrganisationType = 1;
+                organisation3.OrganisationStatus = 1; // Incomplete organisation
+                var scheme3 = helper.CreateScheme(organisation3);
 
-            return organisation;
+                var organisation4 = helper.CreateOrganisation();
+                organisation4.OrganisationType = 2;
+                organisation4.OrganisationStatus = 1; // Incomplete organisation
+                var scheme4 = helper.CreateScheme(organisation4);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new GetSchemesDataAccess(database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetCompleteSchemes();
+
+                // Assert
+                Assert.Contains(result, r => r.Id == scheme1.Id);
+                Assert.Contains(result, r => r.Id == scheme2.Id);
+                Assert.DoesNotContain(result, r => r.Id == scheme3.Id);
+                Assert.DoesNotContain(result, r => r.Id == scheme4.Id);
+            }
         }
     }
 }
