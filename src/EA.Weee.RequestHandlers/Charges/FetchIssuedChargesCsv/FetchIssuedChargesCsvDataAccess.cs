@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// Returns all producer submissions which have been been invoiced with a non-zero charge, filtered by authority and compliance year
+        /// Returns all producer submissions which have been invoiced with a non-zero charge, filtered by authority and compliance year
         /// and optionally by scheme name.
         /// 
         /// Results are ordered by scheme name ascending, then member upload submitted date ascending and then by PRN ascending.
@@ -31,7 +31,7 @@
         /// <returns></returns>
         public async Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, string schemeName)
         {
-            return await Context.ProducerSubmissions
+            return await Context.AllProducerSubmissions
                 .Include(ps => ps.MemberUpload)
                 .Include(ps => ps.MemberUpload.InvoiceRun)
                 .Include(ps => ps.ProducerBusiness)
@@ -59,7 +59,7 @@
             {
                 return scheme;
             }
-            throw new InvalidOperationException(string.Format("Scheme with name '{0}' does not exist", schemeName));      
+            throw new InvalidOperationException(string.Format("Scheme with name '{0}' does not exist", schemeName));
         }
     }
 }

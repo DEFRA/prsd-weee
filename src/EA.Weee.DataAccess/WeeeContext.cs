@@ -66,7 +66,7 @@
             }
         }
 
-        internal virtual DbSet<ProducerSubmission> AllProducerSubmissions { get; set; }
+        public virtual DbSet<ProducerSubmission> AllProducerSubmissions { get; set; }
 
         public virtual IQueryable<ProducerSubmission> ProducerSubmissions
         {

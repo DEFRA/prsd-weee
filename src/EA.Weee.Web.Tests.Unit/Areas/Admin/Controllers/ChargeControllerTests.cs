@@ -1080,11 +1080,11 @@
 
         /// <summary>
         /// This test ensures that the GET "DownloadIssuedChargesCsv" action will always
-        /// return a file with a content type of "text/plain".
+        /// return a file with a content type of "text/csv".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetDownloadIssuedChargesCsv_Always_ReturnsFileResultWithContentTypeOfTextPlain()
+        public async Task GetDownloadIssuedChargesCsv_Always_ReturnsFileResultWithContentTypeOfTextCsv()
         {
             // Arrange
             ChargeController controller = new ChargeController(
@@ -1102,7 +1102,7 @@
             FileResult fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
-            Assert.Equal("text/plain", fileResult.ContentType);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
     }
 }
