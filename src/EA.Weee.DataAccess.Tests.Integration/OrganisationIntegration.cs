@@ -6,108 +6,95 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
+    using Weee.Tests.Core.Model;
     using Xunit;
+    using Address = Domain.Organisation.Address;
+    using Contact = Domain.Organisation.Contact;
+    using Organisation = Domain.Organisation.Organisation;
 
-    public class OrganisationIntegration : IDisposable
-    {
-        private readonly WeeeContext context;
-
-        private Organisation testOrganisationToCleanUp;
-
-        public OrganisationIntegration()
-        {
-            var userContext = A.Fake<IUserContext>();
-
-            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
-
-            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
-
-            context = new WeeeContext(userContext, eventDispatcher);
-        }
-
+    public class OrganisationIntegration
+    {   
         [Fact]
         public async Task CanCreateRegisteredCompany()
         {
-            var contact = MakeContact();
-
-            string name = "Test Name" + Guid.NewGuid();
-            string tradingName = "Test Trading Name" + Guid.NewGuid();
-            string crn = "ABC12345";
-            var status = OrganisationStatus.Incomplete;
-            var type = OrganisationType.RegisteredCompany;
-
-            var organisationAddress = await MakeInternationalAddress("O");
-            var businessAddress = await MakeUKAddress("B");
-            var notificationAddress = await MakeInternationalAddress("N");
-
-            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-            organisation.AddOrUpdateMainContactPerson(contact);
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
-
-            this.testOrganisationToCleanUp = organisation;
-
-            context.Organisations.Add(organisation);
-            await context.SaveChangesAsync();
-
-            var thisTestOrganisationArray =
-                context.Organisations.Where(o => o.Name == name).ToArray();
-
-            Assert.NotNull(thisTestOrganisationArray);
-            Assert.NotEmpty(thisTestOrganisationArray);
-
-            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
-
-            VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
-            if (thisTestOrganisation != null)
+            using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
-            }
+                var context = database.WeeeContext;
+                var contact = MakeContact();
 
-            await context.SaveChangesAsync();
+                string name = "Test Name" + Guid.NewGuid();
+                string tradingName = "Test Trading Name" + Guid.NewGuid();
+                string crn = "ABC12345";
+                var status = OrganisationStatus.Incomplete;
+                var type = OrganisationType.RegisteredCompany;
+
+                var organisationAddress = await MakeInternationalAddress(context, "O");
+                var businessAddress = await MakeUKAddress(context, "B");
+                var notificationAddress = await MakeInternationalAddress(context, "N");
+
+                var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
+                organisation.AddOrUpdateMainContactPerson(contact);
+                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+                organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+
+                context.Organisations.Add(organisation);
+                await context.SaveChangesAsync();
+
+                var thisTestOrganisationArray =
+                    context.Organisations.Where(o => o.Name == name).ToArray();
+
+                Assert.NotNull(thisTestOrganisationArray);
+                Assert.NotEmpty(thisTestOrganisationArray);
+
+                var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+                VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
+                if (thisTestOrganisation != null)
+                {
+                    VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                }
+            }
         }
 
         [Fact]
         public async Task CanCreateSoleTrader()
         {
-            var contact = MakeContact();
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var contact = MakeContact();
 
-            string tradingName = "Test Trading Name" + Guid.NewGuid();
-            var status = OrganisationStatus.Incomplete;
-            var type = OrganisationType.SoleTraderOrIndividual;
+                string tradingName = "Test Trading Name" + Guid.NewGuid();
+                var status = OrganisationStatus.Incomplete;
+                var type = OrganisationType.SoleTraderOrIndividual;
 
-            var organisationAddress = await MakeInternationalAddress("O");
-            var businessAddress = await MakeUKAddress("B");
-            var notificationAddress = await MakeInternationalAddress("N");
+                var organisationAddress = await MakeInternationalAddress(context, "O");
+                var businessAddress = await MakeUKAddress(context, "B");
+                var notificationAddress = await MakeInternationalAddress(context, "N");
 
-            var organisation = Organisation.CreateSoleTrader(tradingName);
+                var organisation = Organisation.CreateSoleTrader(tradingName);
 
-            organisation.AddOrUpdateMainContactPerson(contact);
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+                organisation.AddOrUpdateMainContactPerson(contact);
+                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+                organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
-            this.testOrganisationToCleanUp = organisation;
+                context.Organisations.Add(organisation);
 
-            context.Organisations.Add(organisation);
+                await context.SaveChangesAsync();
 
-            await context.SaveChangesAsync();
+                var thisTestOrganisationArray =
+                    context.Organisations.Where(o => o.TradingName == tradingName).ToArray();
 
-            var thisTestOrganisationArray =
-                context.Organisations.Where(o => o.TradingName == tradingName).ToArray();
+                Assert.NotNull(thisTestOrganisationArray);
+                Assert.NotEmpty(thisTestOrganisationArray);
 
-            Assert.NotNull(thisTestOrganisationArray);
-            Assert.NotEmpty(thisTestOrganisationArray);
+                var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
-            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
-
-            VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
-            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
-
-            await context.SaveChangesAsync();
+                VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
+                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+            }
         }
 
         private void VerifyOrganisation(string expectedName, string expectedTradingName, string expectedCrn, OrganisationStatus expectedStatus, OrganisationType expectedType, Organisation fromDatabase)
@@ -146,13 +133,7 @@
             Assert.Equal(expected.Email, fromDatabase.Email);
         }
 
-        public void Dispose()
-        {
-            context.Organisations.Remove(testOrganisationToCleanUp);
-            context.SaveChangesAsync();
-        }
-
-        private async Task<Address> MakeInternationalAddress(string identifier)
+        private async Task<Address> MakeInternationalAddress(WeeeContext context, string identifier)
         {
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             return new Address(
@@ -166,7 +147,7 @@
                 "Email" + identifier);
         }
 
-        private async Task<Address> MakeUKAddress(string identifier)
+        private async Task<Address> MakeUKAddress(WeeeContext context, string identifier)
         {
             var country = await context.Countries.SingleAsync(c => c.Name == "UK - England");
             return new Address(
@@ -179,7 +160,7 @@
                 "Phone" + identifier,
                 "Email" + identifier);
         }
-      
+
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");

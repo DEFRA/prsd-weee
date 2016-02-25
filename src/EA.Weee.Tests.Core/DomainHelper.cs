@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain;
     using Domain.Admin;
     using Domain.DataReturns;
     using Domain.Security;
@@ -38,6 +39,11 @@
         public CompetentAuthorityUser GetCompetentAuthorityUser(Guid competentAuthorityUserId)
         {
             return context.CompetentAuthorityUsers.Single(c => c.Id == competentAuthorityUserId);
+        }
+
+        public UKCompetentAuthority GetCompetentAuthority(Guid competentAuthorityId)
+        {
+            return context.UKCompetentAuthorities.Single(c => c.Id == competentAuthorityId);
         }
 
         public Role GetRole(string roleName)
