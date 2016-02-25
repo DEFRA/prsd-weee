@@ -189,11 +189,6 @@
             }
         }
 
-        private Domain.Producer.ProducerSubmission FindProducerSubmission(DatabaseWrapper wrapper, Guid producerSubmissionId)
-        {
-            return wrapper.WeeeContext.ProducerSubmissions.First(p => p.Id == producerSubmissionId);
-        }
-
         private Domain.Producer.RegisteredProducer FindRegisteredProducer(DatabaseWrapper wrapper, Guid registeredProducerId)
         {
             return wrapper.WeeeContext.RegisteredProducers.First(p => p.Id == registeredProducerId);

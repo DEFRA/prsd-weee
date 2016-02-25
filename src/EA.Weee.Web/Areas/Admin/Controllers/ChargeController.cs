@@ -241,7 +241,7 @@
                 file = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            return File(file.Data, "text/plain", file.FileName);
+            return File(file.Data, "text/csv", file.FileName);
         }
 
         private async Task<IEnumerable<int>> GetComplianceYearsWithInvoices(CompetentAuthority authority)
