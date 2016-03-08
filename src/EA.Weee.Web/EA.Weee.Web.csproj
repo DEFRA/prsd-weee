@@ -584,6 +584,7 @@
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
+    <Compile Include="Logging\ElmahFilter.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
