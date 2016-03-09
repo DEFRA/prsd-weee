@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Logging
 {
     using Elmah;
-    using System.Collections;
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
     using System.Web;
 
@@ -24,7 +23,7 @@
                 HttpContext context = (HttpContext)args.Context;
                 if (context.Request != null &&
                     context.Request.Form != null &&
-                    context.Request.Form.AllKeys.Intersect(sensitiveFieldNames).Any())
+                    context.Request.Form.AllKeys.Intersect(sensitiveFieldNames, StringComparer.InvariantCultureIgnoreCase).Any())
                     {
                         ReplaceSensitiveFormFields(args, context);
                     }
@@ -37,7 +36,7 @@
 
             foreach (var formField in context.Request.Form.AllKeys)
             {
-                if (sensitiveFieldNames.Contains(formField))
+                if (sensitiveFieldNames.Contains(formField, StringComparer.InvariantCultureIgnoreCase))
                 {
                     replacementError.Form.Set(formField, "****");
                 }
