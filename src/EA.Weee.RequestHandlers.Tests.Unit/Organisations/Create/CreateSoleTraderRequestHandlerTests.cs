@@ -15,9 +15,9 @@
         [Fact]
         public async Task CreateSoleTraderRequestHandler_NotExternalUser_ThrowsSecurityException()
         {
-            var handler = new CreateSoleTraderRequestHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
+            var handler = new CreateSoleTraderRequestHandler(denyingAuthorization, A.Dummy<WeeeContext>(), A.Dummy<IUserContext>());
 
-            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A<CreateSoleTraderRequest>._));
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A.Dummy<CreateSoleTraderRequest>()));
         }
 
         [Fact]

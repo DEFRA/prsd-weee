@@ -59,7 +59,7 @@
             var handler = new UpdateUserHandler(authorization, userManager);
 
             // Act
-            Func<Task> action = async () => await handler.HandleAsync(A<UpdateUser>._);
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateUser>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(action);

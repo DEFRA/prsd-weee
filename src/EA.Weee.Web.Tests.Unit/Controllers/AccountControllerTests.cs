@@ -71,7 +71,7 @@
             var controller = AccountController();
             controller.ModelState.AddModelError("Some model property", "Some error occurred");
 
-            var result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            var result = await controller.ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(passwordResetModel, ((ViewResult)result).Model);
@@ -86,12 +86,12 @@
                 .Returns(true);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjkal", A<ActionResult>._));
+                .Returns(LoginResult.Success("dshjkal", A.Dummy<ActionResult>()));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
 
-            await AccountController().ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -126,7 +126,7 @@
 
             var controller = AccountController();
 
-            var result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            var result = await controller.ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(passwordResetModel, ((ViewResult)result).Model);
@@ -146,7 +146,7 @@
                 .Returns(unauthenticatedUserClient);
 
             // Act
-            var result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
+            var result = await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), new ResetPasswordModel());
 
             // Assert
             ViewResult viewResult = result as ViewResult;

@@ -13,7 +13,8 @@
         [Fact]
         public void ConstructsEeeOutputAmount_WithNullRegisteredProducer_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, null));
+            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(ObligationType.B2B, A.Dummy<WeeeCategory>(),
+                A.Dummy<decimal>(), null));
         }
 
         [Fact]

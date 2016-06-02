@@ -41,7 +41,7 @@
             DataReturnUploadError dataReturnsUploadError = new DataReturnUploadError(
                 ErrorLevel.Error,
                 UploadErrorType.Business,
-                A<string>._);
+                A.Dummy<string>());
 
             IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturnWithError(dataReturnsUploadError);
 
@@ -71,7 +71,7 @@
             DataReturnUploadError dataReturnsUploadWarning = new DataReturnUploadError(
                 ErrorLevel.Warning,
                 UploadErrorType.Business,
-                A<string>._);
+                A.Dummy<string>());
 
             IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturnWithWarning(dataReturnsUploadWarning);
 

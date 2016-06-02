@@ -21,7 +21,8 @@
             A.CallTo(() => registeredProducer.Equals(A<RegisteredProducer>._))
                 .Returns(true);
 
-            var eeeOutputAmount = new EeeOutputAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, registeredProducer);
+            var eeeOutputAmount = new EeeOutputAmount(ObligationType.B2B, A.Dummy<WeeeCategory>(),
+                A.Dummy<decimal>(), registeredProducer);
 
             // Act
             eeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
