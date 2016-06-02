@@ -15,9 +15,9 @@
         [Fact]
         public async Task CreatePartnershipRequestHandler_NotExternalUser_ThrowsSecurityException()
         {
-            var handler = new CreatePartnershipRequestHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
+            var handler = new CreatePartnershipRequestHandler(denyingAuthorization, A.Dummy<WeeeContext>(), A.Dummy<IUserContext>());
 
-            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A<CreatePartnershipRequest>._));
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A.Dummy<CreatePartnershipRequest>()));
         }
 
         [Fact]

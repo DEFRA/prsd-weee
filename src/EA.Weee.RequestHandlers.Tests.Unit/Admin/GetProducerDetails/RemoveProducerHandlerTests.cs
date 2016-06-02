@@ -26,7 +26,7 @@
 
             var handler = new RemoveProducerHandler(authorization, A.Dummy<IRemoveProducerDataAccess>());
 
-            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A<RemoveProducer>._));
+            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A.Dummy<RemoveProducer>()));
         }
 
         [Fact]
@@ -39,7 +39,7 @@
 
             var handler = new RemoveProducerHandler(authorization, A.Dummy<IRemoveProducerDataAccess>());
 
-            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A<RemoveProducer>._));
+            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A.Dummy<RemoveProducer>()));
         }
 
         [Fact]
