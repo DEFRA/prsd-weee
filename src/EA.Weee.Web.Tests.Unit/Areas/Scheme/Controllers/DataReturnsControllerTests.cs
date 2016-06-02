@@ -348,7 +348,7 @@
         [Fact]
         public async void GetAuthorisationRequired_ChecksStatusOfScheme()
         {
-            await DataReturnsController().AuthorisationRequired(A<Guid>._);
+            await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -360,7 +360,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
 
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+            var result = await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
 
@@ -375,7 +375,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
 
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+            var result = await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
 
@@ -390,7 +390,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Withdrawn);
 
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+            var result = await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
 
@@ -405,7 +405,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
 
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+            var result = await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -490,7 +490,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
                 .Returns(false);
 
-            var result = await DataReturnsController().Upload(A<Guid>._);
+            var result = await DataReturnsController().Upload(A.Dummy<Guid>());
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -505,7 +505,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
             .Returns(true);
 
-            var result = await DataReturnsController().Upload(A<Guid>._);
+            var result = await DataReturnsController().Upload(A.Dummy<Guid>());
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
@@ -564,7 +564,7 @@
 
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
-            var result = await controller.Upload(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.Upload(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             Assert.IsType<HttpStatusCodeResult>(result);
         }
@@ -625,7 +625,7 @@
 
             var controller = GetRealDataReturnsControllerWithAjaxRequest();
 
-            var result = await controller.Upload(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.Upload(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             Assert.IsType<JsonResult>(result);
         }

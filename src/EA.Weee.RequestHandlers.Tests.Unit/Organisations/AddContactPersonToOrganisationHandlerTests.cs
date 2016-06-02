@@ -28,7 +28,7 @@
         public async Task AddContactPersonToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new AddContactPersonToOrganisationHandler(A.Fake<WeeeContext>(), denyingAuthorization);
-            var message = new AddContactPersonToOrganisation(A<Guid>._, A<ContactData>._);
+            var message = new AddContactPersonToOrganisation(A.Dummy<Guid>(), A.Dummy<ContactData>());
 
             await
                 Assert.ThrowsAsync<SecurityException>(

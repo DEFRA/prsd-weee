@@ -37,7 +37,7 @@
         {
             var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._, A.Dummy<IDomainUserContext>());
+            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A.Dummy<WeeeContext>(), A.Dummy<IDomainUserContext>());
             var message = new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));

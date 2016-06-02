@@ -28,7 +28,7 @@
                 {
                     new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 },
-                A<decimal>._, A.Fake<Scheme>());
+                A.Dummy<decimal>(), A.Fake<Scheme>());
 
             Assert.Null(result.ComplianceYear);
         }

@@ -116,7 +116,7 @@
                        producer
                     }
             };
-            var result = Rule().Evaluate(scheme, producer, A<Guid>._);
+            var result = Rule().Evaluate(scheme, producer, A.Dummy<Guid>());
 
             Assert.True(result.IsValid);
         }
@@ -160,7 +160,7 @@
                        producer
                     }
             };
-            var result = Rule().Evaluate(scheme, producer, A<Guid>._);
+            var result = Rule().Evaluate(scheme, producer, A.Dummy<Guid>());
             Assert.True(result.IsValid);
         }
 
@@ -199,7 +199,7 @@
                        producer
                     }
             };
-            var result = Rule().Evaluate(scheme, producer, A<Guid>._);
+            var result = Rule().Evaluate(scheme, producer, A.Dummy<Guid>());
 
             Assert.True(result.IsValid);
         }
@@ -238,7 +238,7 @@
                        producer
                     }
             };
-            var result = Rule().Evaluate(scheme, producer, A<Guid>._);
+            var result = Rule().Evaluate(scheme, producer, A.Dummy<Guid>());
 
             Assert.True(result.IsValid);
         }

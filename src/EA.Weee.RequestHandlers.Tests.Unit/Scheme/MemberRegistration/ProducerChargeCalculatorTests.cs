@@ -38,7 +38,7 @@
             producer.registrationNo = "WEE/AB1234CD";
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A.Dummy<string>(), producer, 2016);
 
             // Assert
             Assert.Equal(24, result.Amount);
@@ -72,7 +72,7 @@
             producer.registrationNo = "WEE/AB1234CD";
             
             // Act
-            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A.Dummy<string>(), producer, 2016);
 
             // Assert
             Assert.Equal(0, result.Amount);
@@ -107,7 +107,7 @@
             producer.registrationNo = "WEE/AB1234CD";
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A.Dummy<string>(), producer, 2016);
 
             // Assert
             Assert.Equal(25, result.Amount);
@@ -139,7 +139,7 @@
             producer.status = statusType.I;
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A.Dummy<string>(), producer, 2016);
 
             // Assert
             Assert.Equal(25, result.Amount);
