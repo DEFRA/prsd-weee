@@ -27,7 +27,7 @@
 
             await
                 Assert.ThrowsAsync<SecurityException>(
-                    () => Handler().HandleAsync(A<GetDataReturnsActiveComplianceYears>._));
+                    () => Handler().HandleAsync(A.Dummy<GetDataReturnsActiveComplianceYears>()));
 
             A.CallTo(() => dataAccess.Get())
                 .MustNotHaveHappened();

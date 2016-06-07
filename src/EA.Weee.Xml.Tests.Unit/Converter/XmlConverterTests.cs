@@ -58,7 +58,7 @@
             A.CallTo(() => whiteSpaceCollapser.Collapse(A<schemeType>._))
                 .Invokes(st => tradingName = ((schemeType)st.Arguments[0]).tradingName);
 
-            var result = XmlConverter().Deserialize<schemeType>(A<XDocument>._);
+            var result = XmlConverter().Deserialize<schemeType>(A.Dummy<XDocument>());
 
             Assert.NotEqual(tradingName, result.tradingName);
         }

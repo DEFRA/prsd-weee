@@ -34,7 +34,7 @@
             var handler = new UpdateOrganisationDetailsHandler(dataAccess, authorization);
             
             // Act
-            Func<Task> action = async () => await handler.HandleAsync(A<UpdateOrganisationDetails>._);
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateOrganisationDetails>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(action);
@@ -54,7 +54,7 @@
             var handler = new UpdateOrganisationDetailsHandler(dataAccess, authorization);
 
             // Act
-            Func<Task> action = async () => await handler.HandleAsync(A<UpdateOrganisationDetails>._);
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateOrganisationDetails>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(action);

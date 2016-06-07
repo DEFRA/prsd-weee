@@ -40,7 +40,7 @@
         {
             try
             {
-                await HomeController().ChooseActivity(A<Guid>._);
+                await HomeController().ChooseActivity(A.Dummy<Guid>());
             }
             catch (Exception)
             {
@@ -56,7 +56,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseActivity(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseActivity(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -65,7 +65,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await HomeController().ChooseActivity(A<Guid>._);
+            var result = await HomeController().ChooseActivity(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
         }
@@ -79,7 +79,7 @@
                    HasMultipleOrganisationUsers = false
                });
 
-            var result = await HomeController().GetActivities(A<Guid>._);
+            var result = await HomeController().GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ManageOrganisationUsers, result);
         }
@@ -93,7 +93,7 @@
                    HasMultipleOrganisationUsers = true
                });
 
-            var result = await HomeController().GetActivities(A<Guid>._);
+            var result = await HomeController().GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ManageOrganisationUsers, result);
         }
@@ -101,7 +101,7 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToFalse_DoesNotReturnManageEeeWeeeDataOption()
         {
-            var result = await HomeController(false).GetActivities(A<Guid>._);
+            var result = await HomeController(false).GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ManageEeeWeeeData, result);
         }
@@ -109,7 +109,7 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrue_ReturnsManageEeeWeeeDataOption()
         {
-            var result = await HomeController(true).GetActivities(A<Guid>._);
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ManageEeeWeeeData, result);
         }
@@ -124,7 +124,7 @@
                    HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().GetActivities(A<Guid>._);
+            var result = await HomeController().GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
@@ -139,7 +139,7 @@
                    HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().GetActivities(A<Guid>._);
+            var result = await HomeController().GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ViewSubmissionHistory, result);
         }
@@ -154,7 +154,7 @@
                    HasDataReturnSubmissions = true
                });
 
-            var result = await HomeController(true).GetActivities(A<Guid>._);
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ViewSubmissionHistory, result);
         }
@@ -169,7 +169,7 @@
                    HasDataReturnSubmissions = true
                });
 
-            var result = await HomeController(false).GetActivities(A<Guid>._);
+            var result = await HomeController(false).GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
@@ -268,7 +268,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -277,7 +277,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await HomeController().ChooseSubmissionType(A<Guid>._);
+            var result = await HomeController().ChooseSubmissionType(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
         }
@@ -335,7 +335,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -350,7 +350,7 @@
                     new OrganisationUserData(),
                 });
 
-            var result = await HomeController().ManageOrganisationUsers(A<Guid>._);
+            var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUsers");
@@ -373,7 +373,7 @@
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
-            var result = await HomeController().ManageOrganisationUsers(A<Guid>._, model);
+            var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>(), model);
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
@@ -388,7 +388,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -405,7 +405,7 @@
                     User = new UserData()
                 });
 
-            var result = await HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._);
+            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUser");
@@ -582,7 +582,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -594,7 +594,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await HomeController().ViewOrganisationDetails(A<Guid>._);
+            var result = await HomeController().ViewOrganisationDetails(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
@@ -603,7 +603,7 @@
         [Fact]
         public void PostViewOrganisationDetails_RedirectToChooseActivityView()
         {
-            var result = HomeController().ViewOrganisationDetails(A<Guid>._, new ViewOrganisationDetailsViewModel());
+            var result = HomeController().ViewOrganisationDetails(A.Dummy<Guid>(), new ViewOrganisationDetailsViewModel());
 
             Assert.IsType<RedirectToRouteResult>(result);
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
@@ -782,7 +782,7 @@
         {
             var controller = HomeController();
 
-            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -800,7 +800,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
 
-            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
                 .MustNotHaveHappened();
@@ -813,7 +813,7 @@
         {
             var controller = HomeController();
 
-            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._, A<DateTime>._);
+            var result = await controller.DownloadCsv(A.Dummy<Guid>(), A.Dummy<int>(), A.Dummy<Guid>(), A.Dummy<DateTime>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -826,7 +826,7 @@
         {
             var controller = HomeController();
 
-            var result = await controller.ViewDataReturnSubmissionHistory(A<Guid>._);
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -844,7 +844,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
 
-            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
                 .MustNotHaveHappened();

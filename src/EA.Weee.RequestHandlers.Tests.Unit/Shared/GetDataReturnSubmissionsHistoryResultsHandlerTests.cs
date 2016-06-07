@@ -19,7 +19,7 @@
             IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
             GetDataReturnSubmissionsHistoryResultsHandler handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
-            GetDataReturnSubmissionsHistoryResults request = new GetDataReturnSubmissionsHistoryResults(A<Guid>._, A<Guid>._, A<int>._);
+            GetDataReturnSubmissionsHistoryResults request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
 
             // Act
             List<DataReturnSubmissionsHistoryResult> results = await handler.HandleAsync(request);

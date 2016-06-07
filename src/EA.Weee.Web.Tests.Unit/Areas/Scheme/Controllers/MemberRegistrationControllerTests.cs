@@ -89,7 +89,7 @@
         [Fact]
         public async void GetAuthorisationRequired_ChecksStatusOfScheme()
         {
-            await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
+            await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -101,7 +101,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
 
-            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
 
@@ -116,7 +116,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
 
-            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
 
@@ -131,7 +131,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
 
-            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -146,7 +146,7 @@
         {
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._);
+                await MemberRegistrationController().AddOrAmendMembers(A.Dummy<Guid>());
             }
             catch (Exception)
             {
@@ -162,7 +162,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => MemberRegistrationController().AddOrAmendMembers(A<Guid>._));
+            await Assert.ThrowsAnyAsync<Exception>(() => MemberRegistrationController().AddOrAmendMembers(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -171,7 +171,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._);
+            var result = await MemberRegistrationController().AddOrAmendMembers(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
         }
@@ -183,7 +183,7 @@
 
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.AddOrAmendMembers(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             Assert.IsType<ViewResult>(result);
         }
@@ -195,7 +195,7 @@
 
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.AddOrAmendMembers(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             Assert.IsType<HttpStatusCodeResult>(result);
         }
@@ -203,7 +203,7 @@
         [Fact]
         public async void PostAddOrAmendMembers_FileIsMappedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
-            var request = new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._);
+            var request = new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>());
 
             A.CallTo(() => mapper.Map<PCSFileUploadViewModel, ProcessXmlFile>(A<PCSFileUploadViewModel>._))
                 .Returns(request);
@@ -229,7 +229,7 @@
 
             var controller = GetRealMemberRegistrationControllerWithFakeContext();
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.AddOrAmendMembers(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             var redirect = (RedirectToRouteResult)result;
 
@@ -247,7 +247,7 @@
 
             var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
+            var result = await controller.AddOrAmendMembers(A.Dummy<Guid>(), new PCSFileUploadViewModel());
 
             Assert.IsType<JsonResult>(result);
         }
@@ -255,7 +255,7 @@
         [Fact]
         public async void GetSummary_GetsSummaryOfLatestMemberUpload()
         {
-            await MemberRegistrationController().Summary(A<Guid>._);
+            await MemberRegistrationController().Summary(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -264,7 +264,7 @@
         [Fact]
         public async void GetSummary_Always_ReturnsViewWithSummaryModel()
         {
-            var result = await MemberRegistrationController().Summary(A<Guid>._);
+            var result = await MemberRegistrationController().Summary(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.IsType<SummaryViewModel>(((ViewResult)result).Model);
@@ -276,7 +276,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
             .Returns(new List<ErrorData> { });
 
-            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
             var redirect = (RedirectToRouteResult)result;
 
             Assert.Equal("XmlHasNoErrors", redirect.RouteValues["action"]);
@@ -288,7 +288,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
             .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
-            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
             
             Assert.IsType<ViewResult>(result);
             
@@ -303,7 +303,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
            .Returns(new List<ErrorData> { new ErrorData("An warning", ErrorLevel.Warning) });
 
-            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             var redirect = (RedirectToRouteResult)result;
 
@@ -318,7 +318,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
              .Returns(errors);
 
-            var result = await MemberRegistrationController().XmlHasNoErrors(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().XmlHasNoErrors(A.Dummy<Guid>(), A.Dummy<Guid>());
             var providedErrors = ((MemberUploadResultViewModel)((ViewResult)result).Model).ErrorData;
             Assert.Equal(errors, providedErrors);
         }
@@ -344,7 +344,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                 .Returns(testCSVData);
 
-            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._, A<int>._);
+            var result = await MemberRegistrationController().GetProducerCSV(A.Dummy<Guid>(), A.Dummy<int>());
 
             Assert.IsType<FileContentResult>(result);
         }
@@ -357,7 +357,7 @@
                 .Returns(memberUploadId);
 
             var result = await MemberRegistrationController().XmlHasNoErrors(
-                A<Guid>._,
+                A.Dummy<Guid>(),
                 memberUploadId,
                 new MemberUploadResultViewModel { ErrorData = new List<ErrorData>() });
 
@@ -382,7 +382,7 @@
                .Returns(new List<ErrorData>());
 
             var result = await MemberRegistrationController(memberUploadResult).XmlHasNoErrors(
-                A<Guid>._,
+                A.Dummy<Guid>(),
                 memberUploadId,
                 memberUploadResult) as ViewResult;
 
@@ -469,7 +469,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
               .Returns(memberUploadErrorDatas);
 
-            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
      
             return ((MemberUploadResultViewModel)((ViewResult)result).Model).ErrorData;
         }

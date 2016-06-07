@@ -34,7 +34,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A<Guid>._);
+            Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAnyAsync<Exception>(action);
@@ -161,7 +161,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.OrganisationAddress(A<Guid>._);
+            ActionResult result = await controller.OrganisationAddress(A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;
@@ -208,7 +208,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A<Guid>._);
+            Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
@@ -301,7 +301,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.Type(A<string>._, A<Guid>._);
+            Func<Task<ActionResult>> action = async () => await controller.Type(A.Dummy<string>(), A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
@@ -324,7 +324,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.Type(A<string>._, A<Guid>._);
+            ActionResult result = await controller.Type(A.Dummy<string>(), A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;
@@ -432,7 +432,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.SoleTraderDetails(A<Guid>._);
+            Func<Task<ActionResult>> action = async () => await controller.SoleTraderDetails(A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
@@ -487,7 +487,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.RegisteredCompanyDetails(A<Guid>._);
+            Func<Task<ActionResult>> action = async () => await controller.RegisteredCompanyDetails(A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
@@ -623,7 +623,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.JoinOrganisation(A<Guid>._);
+            ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;

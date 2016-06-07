@@ -27,7 +27,7 @@
         [Fact]
         public async Task CompleteRegistrationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new CompleteRegistrationHandler(denyingAuthorization, A<WeeeContext>._);
+            var handler = new CompleteRegistrationHandler(denyingAuthorization, A.Dummy<WeeeContext>());
             var message = new CompleteRegistration(Guid.NewGuid());
 
             await

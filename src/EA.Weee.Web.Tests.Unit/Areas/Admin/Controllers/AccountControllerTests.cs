@@ -69,12 +69,12 @@
             var userCreationData = new InternalUserCreationData();
             A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .Invokes((InternalUserCreationData u) => userCreationData = u)
-                .Returns(Task.FromResult(A<string>._));
+                .Returns(Task.FromResult(A.Dummy<string>()));
 
             A.CallTo(() => apiClient.User).Returns(newUser);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshadjk", A<ActionResult>._));
+                .Returns(LoginResult.Success("dshadjk", A.Dummy<ActionResult>()));
 
             await AccountController().Create(model);
 
@@ -93,7 +93,7 @@
             A.CallTo(() => apiClient.User).Returns(newUser);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshadjk", A<ActionResult>._));
+                .Returns(LoginResult.Success("dshadjk", A.Dummy<ActionResult>()));
 
             await AccountController().Create(model);
 
@@ -134,7 +134,7 @@
             A.CallTo(() => apiClient.User).Returns(newUser);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjk", A<ActionResult>._));
+                .Returns(LoginResult.Success("dshjk", A.Dummy<ActionResult>()));
 
             var result = await AccountController().Create(ValidModel());
 
@@ -248,7 +248,7 @@
                 .Returns(true);
 
             // Act
-            var result = await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
+            var result = await AccountController().ActivateUserAccount(A.Dummy<Guid>(), A.Dummy<string>());
 
             // Assert
             A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
@@ -302,7 +302,7 @@
                 RememberMe = false
             };
 
-            var defaultLoginAction = A<ActionResult>._;
+            var defaultLoginAction = A.Dummy<ActionResult>();
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
 
@@ -350,7 +350,7 @@
             var passwordResetModel = new ResetPasswordModel();
 
             // Act
-            ActionResult result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            ActionResult result = await controller.ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             // Assert
             Assert.IsType<ViewResult>(result);
@@ -366,7 +366,7 @@
                 .Returns(true);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjkal", A<ActionResult>._));
+                .Returns(LoginResult.Success("dshjkal", A.Dummy<ActionResult>()));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
@@ -374,7 +374,7 @@
             var passwordResetModel = new ResetPasswordModel();
 
             // Act
-            ActionResult result = await AccountController().ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            ActionResult result = await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             // Assert
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
@@ -412,7 +412,7 @@
             ResetPasswordModel passwordResetModel = new ResetPasswordModel();
 
             // Act
-            ActionResult result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+            ActionResult result = await controller.ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             // Assert
             Assert.IsType<ViewResult>(result);
@@ -434,7 +434,7 @@
                 .Returns(unauthenticatedUserClient);
 
             // Act
-            ActionResult result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
+            ActionResult result = await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), new ResetPasswordModel());
 
             // Assert
             ViewResult viewResult = result as ViewResult;

@@ -22,7 +22,7 @@
             IGetSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
             GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
-            GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A<Guid>._, A<Guid>._, A<int>._);
+            GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
 
             // Act
             List<SubmissionsHistorySearchResult> results = await handler.HandleAsync(request);
