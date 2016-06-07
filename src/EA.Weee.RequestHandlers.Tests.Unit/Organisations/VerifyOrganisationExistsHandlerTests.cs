@@ -27,7 +27,7 @@
         {
             var deniedAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new VerifyOrganisationExistsHandler(deniedAuthorization, A<WeeeContext>._);
+            var handler = new VerifyOrganisationExistsHandler(deniedAuthorization, A.Dummy<WeeeContext>());
             var message = new VerifyOrganisationExists(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));

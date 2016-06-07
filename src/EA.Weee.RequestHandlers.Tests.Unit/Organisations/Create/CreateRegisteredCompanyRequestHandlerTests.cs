@@ -15,9 +15,9 @@
         [Fact]
         public async Task CreateRegisteredCompanyRequestHandler_NotExternalUser_ThrowsSecurityException()
         {
-            var handler = new CreateRegisteredCompanyRequestHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
+            var handler = new CreateRegisteredCompanyRequestHandler(denyingAuthorization, A.Dummy<WeeeContext>(), A.Dummy<IUserContext>());
 
-            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A<CreateRegisteredCompanyRequest>._));
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A.Dummy<CreateRegisteredCompanyRequest>()));
         }
 
         [Fact]

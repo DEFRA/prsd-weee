@@ -23,7 +23,7 @@
         public async Task Build_ReturnsDataReturnVersionWhenNoErrors()
         {
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(new List<ErrorData>());
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -36,7 +36,7 @@
             var warnings = new List<ErrorData> { new ErrorData("A warning", ErrorLevel.Warning) };
 
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(warnings);
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -49,7 +49,7 @@
         {
             var errors = new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) };
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(errors);
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -70,7 +70,7 @@
                 .Returns((DataReturn)null);
 
             var builder = helper.Create();
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -93,7 +93,7 @@
                 .Returns(dataReturn);
 
             var builder = helper.Create();
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -539,7 +539,7 @@
                 .Returns(aatfDeliveryLocation);
 
             var builder = helper.Create();
-            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -562,7 +562,7 @@
                 .Returns(aeDeliveryLocation);
 
             var builder = helper.Create();
-            await builder.AddAeDeliveredAmount("Approval Number", "Operator name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddAeDeliveredAmount("Approval Number", "Operator name", A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -582,7 +582,7 @@
                .Returns((DataReturn)null);
 
             var builder = helper.Create();
-            await builder.AddWeeeCollectedAmount(type, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddWeeeCollectedAmount(type, A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -606,7 +606,7 @@
                 .Returns(new RegisteredProducer("Registration Number", 2016, A.Dummy<Scheme>()));
 
             var builder = helper.Create();
-            await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount("Registration Number", A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -629,7 +629,7 @@
                 .Returns(new RegisteredProducer("Registration Number", 2016, A.Dummy<Scheme>()));
 
             var builder = helper.Create();
-            await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount("Registration Number", A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -647,7 +647,7 @@
                 .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
             var builder = helper.Create();
-            await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount("Registration Number", A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             await builder.Build();
 
@@ -666,7 +666,7 @@
                 .Returns(errorsAndWarnings);
 
             var builder = helper.Create();
-            await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount("Registration Number", A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             var result = await builder.Build();
 
@@ -708,11 +708,11 @@
 
             // Add five records, all contain the same error and warning
             var builder = helper.Create();
-            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
-            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
-            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
-            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
-            await builder.AddEeeOutputAmount(reg2Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount(reg1Prn, A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
+            await builder.AddEeeOutputAmount(reg1Prn, A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2B, A.Dummy<decimal>());
+            await builder.AddEeeOutputAmount(reg1Prn, A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2B, A.Dummy<decimal>());
+            await builder.AddEeeOutputAmount(reg1Prn, A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2B, A.Dummy<decimal>());
+            await builder.AddEeeOutputAmount(reg2Prn, A.Dummy<string>(), A.Dummy<WeeeCategory>(), ObligationType.B2C, A.Dummy<decimal>());
 
             // Act
             var result = await builder.Build();

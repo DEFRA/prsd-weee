@@ -694,7 +694,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await SchemeController().ViewOrganisationDetails(A<Guid>._, A<Guid>._);
+            var result = await SchemeController().ViewOrganisationDetails(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");

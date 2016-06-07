@@ -397,7 +397,7 @@
                 });
 
             // Act
-            var result = await controller.ConfirmRemoval(A<Guid>._);
+            var result = await controller.ConfirmRemoval(A.Dummy<Guid>());
 
             // Assert
             Assert.IsType<HttpForbiddenResult>(result);
