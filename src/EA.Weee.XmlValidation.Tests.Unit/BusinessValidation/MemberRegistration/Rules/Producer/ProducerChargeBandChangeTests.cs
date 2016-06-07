@@ -130,7 +130,7 @@
                 A.CallTo(() => ProducerChargeBandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
                     .Returns(producerChargeBand);
 
-                return producerChargeBandChange.Evaluate(scheme, producer, A<Guid>._);
+                return producerChargeBandChange.Evaluate(scheme, producer, A.Dummy<Guid>());
             }
         }
     }

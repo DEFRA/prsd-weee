@@ -273,7 +273,7 @@
                 DateTime date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
                 string latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
                 //B2C categories
-                decimal? cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
+                decimal? cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
                 decimal? cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
                 decimal? cat3b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
                 decimal? cat4b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2C"));

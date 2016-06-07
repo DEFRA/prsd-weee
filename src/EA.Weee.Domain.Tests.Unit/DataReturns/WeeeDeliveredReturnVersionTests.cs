@@ -22,7 +22,8 @@
         {
             // Arrange
             var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
-            var deliveredAmount = new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AatfDeliveryLocation>());
+            var deliveredAmount = new WeeeDeliveredAmount(
+                ObligationType.B2B, A.Dummy<WeeeCategory>(), A.Dummy<decimal>(), A.Fake<AatfDeliveryLocation>());
 
             // Act
             weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredAmount);
@@ -36,7 +37,8 @@
         {
             // Arrange
             var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
-            var deliveredAmount = new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AeDeliveryLocation>());
+            var deliveredAmount = new WeeeDeliveredAmount(
+                ObligationType.B2B, A.Dummy<WeeeCategory>(), A.Dummy<decimal>(), A.Fake<AeDeliveryLocation>());
 
             // Act
             weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredAmount);

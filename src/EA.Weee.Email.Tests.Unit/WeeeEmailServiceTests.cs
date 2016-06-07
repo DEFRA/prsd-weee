@@ -43,7 +43,7 @@
             var notificationService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeMemberSubmitted(A<string>._, A<string>._, A<int>._, A<int>._);
+            await notificationService.SendSchemeMemberSubmitted(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>());
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("SchemeMemberSubmitted.cshtml", A<object>._))
@@ -60,7 +60,7 @@
             var notificationService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeMemberSubmitted("a@b.com", A<string>._, A<int>._, A<int>._);
+            await notificationService.SendSchemeMemberSubmitted("a@b.com", A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -75,7 +75,7 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendSchemeMemberSubmitted(A<string>._, "TestSchemeName", A<int>._, A<int>._);
+            await emailService.SendSchemeMemberSubmitted(A.Dummy<string>(), "TestSchemeName", A.Dummy<int>(), A.Dummy<int>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Member registration submission for TestSchemeName", A<EmailContent>._))
@@ -95,7 +95,7 @@
             var notificationService = builder.Build();
 
             // Act
-            await notificationService.SendSchemeMemberSubmitted(A<string>._, A<string>._, A<int>._, A<int>._);
+            await notificationService.SendSchemeMemberSubmitted(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>());
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
@@ -110,7 +110,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>(), A.Dummy<bool>());
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("SchemeDataReturnSubmitted.cshtml", A<object>._))
@@ -127,7 +128,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendSchemeDataReturnSubmitted("a@b.com", A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(
+                "a@b.com", A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>(), A.Dummy<bool>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -142,7 +144,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendSchemeDataReturnSubmitted(A<string>._, "TestSchemeName", A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(
+                A.Dummy<string>(), "TestSchemeName", A.Dummy<int>(), A.Dummy<int>(), A.Dummy<bool>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Data return submission for TestSchemeName", A<EmailContent>._))
@@ -162,7 +165,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendSchemeDataReturnSubmitted(A<string>._, A<string>._, A<int>._, A<int>._, A<bool>._);
+            await emailService.SendSchemeDataReturnSubmitted(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<int>(), A.Dummy<int>(), A.Dummy<bool>());
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
@@ -177,7 +181,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
+            await emailService.SendInternalUserAccountActivated(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("InternalUserAccountActivated.cshtml", A<object>._))
@@ -194,7 +199,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendInternalUserAccountActivated("a@b.com", A<string>._, A<string>._, A<string>._);
+            await emailService.SendInternalUserAccountActivated(
+                "a@b.com", A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -209,7 +215,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
+            await emailService.SendInternalUserAccountActivated(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create(A<string>._, "New internal user request", A<EmailContent>._))
@@ -229,7 +236,8 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendInternalUserAccountActivated(A<string>._, A<string>._, A<string>._, A<string>._);
+            await emailService.SendInternalUserAccountActivated(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))

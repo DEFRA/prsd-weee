@@ -36,7 +36,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new GetMemberUploadByIdHandler(authorization, A<WeeeContext>._, A<MemberUploadMap>._);
+            var handler = new GetMemberUploadByIdHandler(authorization, A.Dummy<WeeeContext>(), A.Dummy<MemberUploadMap>());
             var message = new GetMemberUploadById(Guid.NewGuid(), Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));

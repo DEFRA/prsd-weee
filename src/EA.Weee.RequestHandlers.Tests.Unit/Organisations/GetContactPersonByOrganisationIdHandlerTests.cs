@@ -24,7 +24,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new GetContactPersonByOrganisationIdHandler(authorization, A<WeeeContext>._, new ContactMap());
+            var handler = new GetContactPersonByOrganisationIdHandler(authorization, A.Dummy<WeeeContext>(), new ContactMap());
             var message = new GetContactPersonByOrganisationId(Guid.NewGuid());
 
             await
