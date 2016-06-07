@@ -14,7 +14,8 @@
         {
             // Arrange
             var collectedReturnVersion = new WeeeCollectedReturnVersion();
-            var amount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._);
+            var amount = new WeeeCollectedAmount(
+                A.Dummy<WeeeCollectedAmountSourceType>(), ObligationType.B2B, A.Dummy<WeeeCategory>(), A.Dummy<decimal>());
 
             // Act
             collectedReturnVersion.AddWeeeCollectedAmount(amount);

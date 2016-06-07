@@ -14,13 +14,15 @@
         [Fact]
         public void ConstructsWeeeDeliveredAmount_WithNullAatfDeliveryLocation_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, (AatfDeliveryLocation)null));
+            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(
+                ObligationType.B2B, A.Dummy<WeeeCategory>(), A.Dummy<decimal>(), (AatfDeliveryLocation)null));
         }
 
         [Fact]
         public void ConstructsWeeeDeliveredAmount_WithNullAeDeliveryLocation_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, (AeDeliveryLocation)null));
+            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(
+                ObligationType.B2B, A.Dummy<WeeeCategory>(), A.Dummy<decimal>(), (AeDeliveryLocation)null));
         }
 
         [Fact]

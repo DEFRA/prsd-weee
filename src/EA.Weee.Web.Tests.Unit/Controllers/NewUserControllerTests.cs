@@ -103,7 +103,7 @@
             var userCreationData = new InternalUserCreationData();
             A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .Invokes((InternalUserCreationData u) => userCreationData = u)
-                .Returns(Task.FromResult(A<string>._));
+                .Returns(Task.FromResult(A.Dummy<string>()));
 
             A.CallTo(() => weeeClient.User).Returns(newUser);
 

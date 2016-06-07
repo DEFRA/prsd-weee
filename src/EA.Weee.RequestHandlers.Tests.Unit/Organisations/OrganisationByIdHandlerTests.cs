@@ -24,7 +24,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new OrganisationByIdHandler(authorization, A<WeeeContext>._, A<OrganisationMap>._);
+            var handler = new OrganisationByIdHandler(authorization, A.Dummy<WeeeContext>(), A.Dummy<OrganisationMap>());
             var message = new GetOrganisationInfo(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -39,7 +39,7 @@
             var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new OrganisationByIdHandler(authorization, context, A<OrganisationMap>._);
+            var handler = new OrganisationByIdHandler(authorization, context, A.Dummy<OrganisationMap>());
             var message = new GetOrganisationInfo(organisationId);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));

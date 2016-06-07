@@ -29,7 +29,7 @@
         [Fact]
         public async Task CopyOrganisationAddressIntoRegisteredOfficeHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new CopyOrganisationAddressIntoRegisteredOfficeHandler(denyingAuthorization, A<WeeeContext>._);
+            var handler = new CopyOrganisationAddressIntoRegisteredOfficeHandler(denyingAuthorization, A.Dummy<WeeeContext>());
             var message = new CopyOrganisationAddressIntoRegisteredOffice(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));

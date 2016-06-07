@@ -49,7 +49,7 @@
                         partnershipName = "New Producer Name"
                     }
                 }
-            }, A<Guid>._);
+            }, A.Dummy<Guid>());
 
             Assert.True(result.IsValid);
         }
@@ -70,7 +70,7 @@
                         partnershipName = "New Producer Name"
                     }
                 }
-            }, A<Guid>._);
+            }, A.Dummy<Guid>());
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
@@ -92,7 +92,7 @@
                         partnershipName = "New Producer Name"
                     }
                 }
-            }, A<Guid>._);
+            }, A.Dummy<Guid>());
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
@@ -121,7 +121,7 @@
                         partnershipName = newProducerName
                     }
                 }
-            }, A<Guid>._);
+            }, A.Dummy<Guid>());
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
