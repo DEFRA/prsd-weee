@@ -25,7 +25,7 @@
             var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new GetPublicOrganisationInfoHandler(context, A<PublicOrganisationMap>._);
+            var handler = new GetPublicOrganisationInfoHandler(context, A.Dummy<PublicOrganisationMap>());
             var message = new GetPublicOrganisationInfo(organisationId);
 
             await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));

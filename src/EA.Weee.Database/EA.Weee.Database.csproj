@@ -12,7 +12,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>99cd73ef</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
+    <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\placeholder.txt" />
+    <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
     <Content Include="scripts\Everytime\0007-InsertQuarterWindowTemplates.sql" />
@@ -72,15 +77,11 @@
     <Content Include="scripts\Update\Sprint18\20151125-1937-DropProducerTable.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
-    <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\0001-Permissions-AppRole.sql" />
     <Content Include="scripts\Everytime\0002-Permissions-Grants.sql" />
     <Content Include="scripts\Everytime\0004-InsertCompetentAuthorityData.sql" />
-    <Content Include="scripts\Everytime\placeholder.txt" />
-    <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Sprint16\20151110-154900-UpdateStoredProcedureForMemberDetails.sql" />
     <Content Include="scripts\Update\Sprint16\20151110-183300-UpdateStoredProcedureForMemberDetails.sql" />
-    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Everytime\0005-ChargeBandAmountData.sql" />
     <Content Include="scripts\Everytime\0003-InsertCountryData.sql" />
     <Content Include="scripts\Update\Sprint07\20150619-1023-UpdateCATable-AddCountryId.sql" />
@@ -211,7 +212,9 @@
     <None Include="scripts\Update\Sprint22\20160121-1440-CreateSpgUKEEEDataByComplianceYear.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
     <None Include="scripts\Update\Sprint17\20151120-165509-AddLineNumberToMemberUploadError.sql" />
@@ -237,15 +240,15 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets'))" />
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

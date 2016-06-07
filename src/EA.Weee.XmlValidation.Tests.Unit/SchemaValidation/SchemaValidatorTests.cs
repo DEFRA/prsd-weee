@@ -38,7 +38,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(new byte[1], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A<string>._);
+            var errors = SchemaValidator().Validate(new byte[1], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A.Dummy<string>());
 
             Assert.Empty(errors);
         }
@@ -47,7 +47,7 @@
         public void SchemaValidation_EmptyFile_AddsError_WithIncorrectlyFormattedXmlMessage()
         {
             var errors = SchemaValidator()
-                .Validate(new byte[0], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A<string>._);
+                .Validate(new byte[0], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A.Dummy<string>());
 
             Assert.Single(errors);
             Assert.Contains(XmlErrorTranslator.IncorrectlyFormattedXmlMessage, errors.Single().Message);
@@ -68,7 +68,7 @@
             A.CallTo(() => namespaceValidator.Validate(A<XNamespace>._, A<XNamespace>._))
                 .Returns(new List<XmlValidationError> { error });
 
-            var result = SchemaValidator().Validate(new byte[1], string.Empty, string.Empty, A<string>._);
+            var result = SchemaValidator().Validate(new byte[1], string.Empty, string.Empty, A.Dummy<string>());
 
             A.CallTo(() => namespaceValidator.Validate(A<XNamespace>._, A<XNamespace>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -86,7 +86,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(invalidXml));
 
-            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A<string>._);
+            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A.Dummy<string>());
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -97,7 +97,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Throws<XmlException>();
 
-            var errors = SchemaValidator().Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._);
+            var errors = SchemaValidator().Validate(A.Dummy<byte[]>(), string.Empty, string.Empty, A.Dummy<string>());
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -107,7 +107,7 @@
         {
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._)).MustNotHaveHappened();
 
-            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A<string>._);
+            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A.Dummy<string>());
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

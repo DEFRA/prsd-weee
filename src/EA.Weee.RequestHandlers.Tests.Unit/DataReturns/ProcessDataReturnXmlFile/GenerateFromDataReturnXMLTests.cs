@@ -26,7 +26,7 @@
             A.CallTo(() => builder.XmlConverter.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
-            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result.SchemaErrors);
             Assert.Equal(1, result.SchemaErrors.Count);
@@ -43,7 +43,7 @@
                     new XmlValidationError(Core.Shared.ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
-            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result.SchemaErrors);
         }
@@ -62,7 +62,7 @@
             A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._))
                 .Returns("Xml string");
 
-            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.Equal("Xml string", result.XmlString);
         }
@@ -80,7 +80,7 @@
             A.CallTo(() => builder.XmlConverter.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Returns(schemeReturn);
 
-            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.IsType<SchemeReturn>(result.DeserialisedType);
             Assert.Equal(schemeReturn, result.DeserialisedType);

@@ -12,7 +12,7 @@
         [Fact]
         public void ConstructsReturnItem_WithTonnageLessThanZero_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ReturnItem(ObligationType.B2B, A<WeeeCategory>._, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ReturnItem(ObligationType.B2B, A.Dummy<WeeeCategory>(), -1));
         }
 
         [Theory]
@@ -20,7 +20,7 @@
         [InlineData(ObligationType.Both)]
         public void ConstructsReturnItem_WithObligationTypeNotB2BOrB2C_ThrowsInvalidOperationException(ObligationType obligationType)
         {
-            Assert.Throws<InvalidOperationException>(() => new ReturnItem(obligationType, A<WeeeCategory>._, A<decimal>._));
+            Assert.Throws<InvalidOperationException>(() => new ReturnItem(obligationType, A.Dummy<WeeeCategory>(), A.Dummy<decimal>()));
         }
 
         [Fact]
