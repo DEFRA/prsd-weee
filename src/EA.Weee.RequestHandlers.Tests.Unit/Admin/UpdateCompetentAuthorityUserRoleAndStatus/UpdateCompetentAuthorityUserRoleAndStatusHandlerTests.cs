@@ -74,7 +74,7 @@
             var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(userContext, dataAccess, A.Dummy<IWeeeAuthorization>());
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(
-                new UpdateCompetentAuthorityUserRoleAndStatus(competentAuthorityUserId, A.Dummy<UserStatus>(), A<string>._)));
+                new UpdateCompetentAuthorityUserRoleAndStatus(competentAuthorityUserId, A.Dummy<UserStatus>(), A.Dummy<string>())));
         }
 
         [Fact]

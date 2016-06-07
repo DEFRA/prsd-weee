@@ -83,21 +83,15 @@
             A.CallTo(() => dataAccess.GetOrganisationUser(organisationUserId))
                 .Returns(organisationUser);
 
-            using (var scope = Fake.CreateScope())
-            {
-                await
-                    UpdateOrganisationUserStatusHandler()
-                        .HandleAsync(new UpdateOrganisationUserStatus(organisationUserId, userStatus));
+            await
+                UpdateOrganisationUserStatusHandler()
+                    .HandleAsync(new UpdateOrganisationUserStatus(organisationUserId, userStatus));
 
-                using (scope.OrderedAssertions())
-                {
-                    A.CallTo(() => weeeAuthorization.EnsureInternalOrOrganisationAccess(A<Guid>._))
-                        .MustHaveHappened(Repeated.Exactly.Once);
-
+            A.CallTo(() => weeeAuthorization.EnsureInternalOrOrganisationAccess(A<Guid>._))
+                .MustHaveHappened(Repeated.Exactly.Once)
+                .Then(
                     A.CallTo(() => dataAccess.ChangeOrganisationUserStatus(organisationUser, userStatus))
-                        .MustHaveHappened(Repeated.Exactly.Once);
-                }
-            }
+                        .MustHaveHappened(Repeated.Exactly.Once));
         }
 
         private UpdateOrganisationUserStatusHandler UpdateOrganisationUserStatusHandler()
