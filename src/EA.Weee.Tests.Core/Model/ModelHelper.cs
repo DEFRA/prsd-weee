@@ -629,7 +629,16 @@
             return dataReturnVersion;
         }
 
-        public EeeOutputAmount CreateEeeOutputAmount(DataReturnVersion dataReturnVersion, RegisteredProducer registeredProducer, string obligationType, int weeeCategory, decimal tonnage)
+        public EeeOutputReturnVersion CreateEeeOutputReturnVersion()
+        {
+            var eeeOutputReturnVersion = new EeeOutputReturnVersion();
+            eeeOutputReturnVersion.Id = IntegerToGuid(GetNextId());
+            eeeOutputReturnVersion.EeeOutputReturnVersionAmounts = new List<EeeOutputReturnVersionAmount>();
+
+            return eeeOutputReturnVersion;
+        }
+
+        public EeeOutputAmount CreateEeeOutputAmount(RegisteredProducer registeredProducer, string obligationType, int weeeCategory, decimal tonnage)
         {
             var eeeOutputAmount = new EeeOutputAmount();
             eeeOutputAmount.Id = IntegerToGuid(GetNextId());
@@ -638,27 +647,43 @@
             eeeOutputAmount.Tonnage = tonnage;
             eeeOutputAmount.RegisteredProducer = registeredProducer;
 
+            return eeeOutputAmount;
+        }
+
+        public EeeOutputAmount CreateEeeOutputAmount(DataReturnVersion dataReturnVersion, RegisteredProducer registeredProducer, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var eeeOutputAmount = CreateEeeOutputAmount(registeredProducer, obligationType, weeeCategory, tonnage);
+            AddEeeOutputAmount(dataReturnVersion, eeeOutputAmount);
+
+            return eeeOutputAmount;
+        }
+
+        public void AddEeeOutputAmount(DataReturnVersion dataReturnVersion, EeeOutputAmount eeeOutputAmount)
+        {
             if (dataReturnVersion.EeeOutputReturnVersion == null)
             {
-                var eeeOutputReturnVersion = new EeeOutputReturnVersion();
-                eeeOutputReturnVersion.Id = IntegerToGuid(GetNextId());
-                eeeOutputReturnVersion.EeeOutputReturnVersionAmounts = new List<EeeOutputReturnVersionAmount>();
-
-                dataReturnVersion.EeeOutputReturnVersion = eeeOutputReturnVersion;
+                dataReturnVersion.EeeOutputReturnVersion = CreateEeeOutputReturnVersion();
             }
 
-            dataReturnVersion
-                .EeeOutputReturnVersion
+            AddEeeOutputAmount(dataReturnVersion.EeeOutputReturnVersion, eeeOutputAmount);
+        }
+
+        public void AddEeeOutputAmount(EeeOutputReturnVersion eeeOutputReturnVersion, EeeOutputAmount eeeOutputAmount)
+        {
+            if (eeeOutputReturnVersion.EeeOutputReturnVersionAmounts == null)
+            {
+                eeeOutputReturnVersion.EeeOutputReturnVersionAmounts = new List<EeeOutputReturnVersionAmount>();
+            }
+
+            eeeOutputReturnVersion
                 .EeeOutputReturnVersionAmounts
                 .Add(new EeeOutputReturnVersionAmount
                 {
                     EeeOuputAmountId = eeeOutputAmount.Id,
                     EeeOutputAmount = eeeOutputAmount,
-                    EeeOutputReturnVersionId = dataReturnVersion.EeeOutputReturnVersion.Id,
-                    EeeOutputReturnVersion = dataReturnVersion.EeeOutputReturnVersion
+                    EeeOutputReturnVersionId = eeeOutputReturnVersion.Id,
+                    EeeOutputReturnVersion = eeeOutputReturnVersion
                 });
-
-            return eeeOutputAmount;
         }
 
         public InvoiceRun CreateInvoiceRun()
