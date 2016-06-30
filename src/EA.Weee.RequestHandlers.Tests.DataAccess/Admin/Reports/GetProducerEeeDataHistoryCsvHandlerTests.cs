@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
     using Core.Shared;
-    using Domain.DataReturns;
     using FakeItEasy;
-    using RequestHandlers.Admin; 
+    using RequestHandlers.Admin;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -111,78 +110,6 @@
                     Assert.Equal(result.Cat12B2B, (decimal)2.12);
                     Assert.Equal(result.Cat13B2B, (decimal)2.13);
                     Assert.Equal(result.Cat14B2B, (decimal)2.14);
-                }
-            }
-        }
-
-        [Fact]
-        public async void CreateResults_ProducerHasExistingEEEAndThenOneCategoryRemoved_ReturnsRowsWithAndWithoutRemovedCategory()
-        {
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            const int complianceYear = 2995;
-            const string prn = "WEE/AW0101AW";
-
-            using (var database = new DatabaseWrapper())
-            {
-                // Arrange
-                var helper = new ModelHelper(database.Model);
-
-                //create first upload with two categories
-                var organisation = helper.CreateOrganisation();
-                var scheme = helper.CreateScheme(organisation);
-                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload.ComplianceYear = complianceYear;
-
-                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn);
-
-                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
-
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 1, (decimal)1.01);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 2, (decimal)1.02);
-
-                database.Model.SaveChanges();
-
-                //create second upload with one of the original categories removed
-                var memberUpload2 = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload2.ComplianceYear = complianceYear;
-
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
-
-                helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, "B2C", 1, (decimal)1.01);
-
-                database.Model.SaveChanges();
-
-                // Act
-                var dataAccess = new GetProducerEeeDataHistoryCsvHandler(authorization, database.WeeeContext, csvWriterFactory);
-                var items = await database.WeeeContext.StoredProcedures.SpgProducerEeeHistoryCsvData(prn);
-                IEnumerable<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult> results = dataAccess.CreateResults(items);
-
-                // Assert
-                using (IEnumerator<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult> iterator = results.GetEnumerator())
-                {
-                    // check first row
-                    iterator.MoveNext();
-                    GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult result = iterator.Current;
-
-                    Assert.Equal(result.PRN, prn);
-                    Assert.Equal(result.Quarter, 1);
-                    Assert.Equal(result.ComplianceYear, complianceYear);
-
-                    Assert.Equal(result.Cat1B2C, (decimal)1.01);
-                    Assert.Equal(result.Cat2B2C, null);
-
-                    // check second row
-                    iterator.MoveNext();
-                    GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult result2 = iterator.Current;
-
-                    Assert.Equal(result2.PRN, prn);
-                    Assert.Equal(result2.Quarter, 1);
-                    Assert.Equal(result2.ComplianceYear, complianceYear);
-
-                    Assert.Equal(result2.Cat1B2C, (decimal)1.01);
-                    Assert.Equal(result2.Cat2B2C, (decimal)1.02);
                 }
             }
         }
