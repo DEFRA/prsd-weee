@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
     using Core.Shared;
-    using Domain.DataReturns;
     using FakeItEasy;
-    using RequestHandlers.Admin; 
+    using RequestHandlers.Admin;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
