@@ -395,7 +395,6 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
-    <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
     <Content Include="Content\weee\_details.scss" />
@@ -453,7 +452,6 @@
     <Content Include="Views\Shared\_FeedbackBanner.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
-    <Content Include="Views\Shared\_WeeeBreadcrumb.cshtml" />
     <Content Include="Views\Shared\_WeeeHead.cshtml" />
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
