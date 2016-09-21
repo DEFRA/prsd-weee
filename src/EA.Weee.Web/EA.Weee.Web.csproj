@@ -517,7 +517,6 @@
     <Content Include="Content\weee\_lists.scss" />
     <Content Include="Content\weee\_tables.scss" />
     <Content Include="Content\_main.scss" />
-    <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
     <Content Include="Areas\Scheme\Views\web.config" />
@@ -652,7 +651,6 @@
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_FeedbackBanner.cshtml" />
-    <Content Include="Views\Shared\_WeeeBreadcrumb.cshtml" />
     <Content Include="Views\Shared\_WeeeHead.cshtml" />
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
