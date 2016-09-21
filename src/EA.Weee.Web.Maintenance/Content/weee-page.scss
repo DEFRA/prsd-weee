@@ -19,14 +19,6 @@
 // ==========================================================================
 
 @import "service-design-manual/helpers/page-header";
-@import "service-design-manual/helpers/breadcrumbs";
-
-// Remove margins set by Service Design Manual header
-#global-breadcrumb,
-.page-header {
-    margin-left: 0;
-    margin-right: 0;
-}
 
 // ==========================================================================
 // Elements page styles
