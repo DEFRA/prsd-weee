@@ -29,7 +29,7 @@ if($xunit -is [system.array])
     $testConsole = $xunit[0]
 }
 
-$iexTest = "& '$testConsole' '$testDllString' -parallel none -xml '$testOutDir'"
+$iexTest = "& '$testConsole' '$testDllString' -parallel none -nunit '$testOutDir'"
 write-host $iexTest
 
 &iex $iexTest
