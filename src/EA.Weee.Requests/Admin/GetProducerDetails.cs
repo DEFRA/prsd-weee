@@ -6,5 +6,7 @@
     public class GetProducerDetails : IRequest<ProducerDetails>
     {
         public string RegistrationNumber { get; set; }
+
+        public int ComplianceYear { get; set; }
     }
 }
