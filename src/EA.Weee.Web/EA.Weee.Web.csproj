@@ -495,6 +495,7 @@
     <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
+    <Content Include="Areas\Admin\Views\Producers\_detailsResults.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />

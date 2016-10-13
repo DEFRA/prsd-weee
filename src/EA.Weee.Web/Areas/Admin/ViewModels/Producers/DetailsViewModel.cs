@@ -1,14 +1,28 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Producers
 {
     using EA.Weee.Core.Admin;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
-    /// <summary>
-    /// Note: For now this class is a wrapper for the model returned by the API.
-    /// It is here in case the details page becomes interactive in the future,
-    /// for example, if it allows a compliance year to be selected.
-    /// </summary>
     public class DetailsViewModel
     {
+        [Required]
+        [DisplayName("Compliance year")]
+        public int SelectedYear { get; set; }
+
+        [Required]
+        [DisplayName("Producer registration number (PRN)")]
+        public string RegistrationNumber { get; set; }
+
         public ProducerDetails Details { get; set; }
+
+        public IEnumerable<SelectListItem> ComplianceYears { get; set; }
+
+        public DetailsViewModel()
+        {
+            Details = new ProducerDetails();
+        }
     }
 }
