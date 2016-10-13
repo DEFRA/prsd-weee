@@ -3,15 +3,11 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides deatils about a producer (identified by their registration number)
+    /// Provides details about a producer (identified by their registration number)
     /// for a specific compliance year.
     /// </summary>
     public class ProducerDetails
     {
-        public string RegistrationNumber { get; set; }
-
-        public int ComplianceYear { get; set; }
-
         public bool CanRemoveProducer { get; set; }
 
         public List<ProducerDetailsScheme> Schemes { get; set; }
