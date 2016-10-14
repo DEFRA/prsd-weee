@@ -82,9 +82,12 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerComplianceYearDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IRemoveProducerDataAccess.cs" />
