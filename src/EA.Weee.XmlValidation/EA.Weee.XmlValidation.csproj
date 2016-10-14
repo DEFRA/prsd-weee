@@ -71,7 +71,9 @@
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\Producer\IExistingProducerNames.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\Producer\IExistingProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\Query.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyRegistrationNumberChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUK.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ICompanyRegistrationNumberChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IEnsureAnOverseasProducerIsNotBasedInTheUK.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ICompanyAlreadyRegistered.cs" />

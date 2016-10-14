@@ -90,6 +90,7 @@
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\ProducerQuerySetTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyRegistrationNumberChangeTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerChargeBandChangeTests.cs" />
