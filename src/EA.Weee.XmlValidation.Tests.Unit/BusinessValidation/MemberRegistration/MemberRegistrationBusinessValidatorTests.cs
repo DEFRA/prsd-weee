@@ -28,6 +28,7 @@
         private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
         private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
+        private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
 
         public MemberRegistrationBusinessValidatorTests()
         {
@@ -45,6 +46,7 @@
             ensureAnOverseasProducerIsNotBasedInTheUK = A.Fake<IEnsureAnOverseasProducerIsNotBasedInTheUK>();
             producerChargeBandChangeWarning = A.Fake<IProducerChargeBandChange>();
             companyAlreadyRegistered = A.Fake<ICompanyAlreadyRegistered>();
+            companyRegistrationNumberChange = A.Fake<ICompanyRegistrationNumberChange>();
         }
 
         [Fact]
@@ -239,6 +241,21 @@
         }
 
         [Fact]
+        public void CompanyRegistrationNumberChange_ShouldReturnRuleResult()
+        {
+            var scheme = SchemeWithXProducers(1);
+            var schemeId = Guid.NewGuid();
+            var error = RuleResult.Fail("oops", ErrorLevel.Warning);
+
+            A.CallTo(() => companyRegistrationNumberChange.Evaluate(scheme.producerList.Single())).Returns(error);
+
+            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+
+            Assert.Single(result);
+            Assert.Equal(error, result.Single());
+        }
+
+        [Fact]
         public void WhereAllRulesPass_NoRuleResultsShouldBeReturned()
         {
             A.CallTo(() => producerNameWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
@@ -255,6 +272,7 @@
             A.CallTo(() => ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerChargeBandChangeWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
             A.CallTo(() => companyAlreadyRegistered.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
+            A.CallTo(() => companyRegistrationNumberChange.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
 
             var scheme = new schemeType
             {
@@ -287,7 +305,8 @@
                 producerRegistrationNumberValidity,
                 ensureAnOverseasProducerIsNotBasedInTheUK,
                 producerChargeBandChangeWarning,
-                companyAlreadyRegistered);
+                companyAlreadyRegistered,
+                companyRegistrationNumberChange);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)
