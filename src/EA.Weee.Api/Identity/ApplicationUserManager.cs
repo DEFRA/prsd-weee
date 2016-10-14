@@ -20,6 +20,11 @@
         private readonly ConfigurationService configurationService;
         private readonly WeeeContext context;
 
+        protected ApplicationUserManager()
+            : base(null, null)
+        {
+        }
+
         public ApplicationUserManager(
             IUserStore<ApplicationUser> store,
             ISecurityEventAuditor auditSecurityEventService,
