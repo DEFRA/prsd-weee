@@ -2,11 +2,6 @@
 {
     using Core.Helpers;
     using QuerySets;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xml.MemberRegistration;
 
     public class CompanyRegistrationNumberChange : ICompanyRegistrationNumberChange
@@ -18,18 +13,40 @@
             this.producerQuerySet = producerQuerySet;
         }
 
-        public RuleResult Evaluate(producerType element)
+        public RuleResult Evaluate(producerType newProducer)
         {
             var result = RuleResult.Pass();
 
-            if (element.status == statusType.A &&
-                element.producerBusiness != null)
+            if (newProducer.status == statusType.A &&
+                newProducer.producerBusiness != null)
             {
-                var company = element.producerBusiness.Item as companyType;
-                if (company != null)
+                var newCompany = newProducer.producerBusiness.Item as companyType;
+                if (newCompany != null)
                 {
-                    var companyNumber = CompanyRegistrationNumberFormatter
-                        .FormatCompanyRegistrationNumber(company.companyNumber);
+                    var existingProducer = producerQuerySet
+                        .GetLatestProducerFromPreviousComplianceYears(newProducer.registrationNo);
+
+                    if (existingProducer != null &&
+                        existingProducer.ProducerBusiness.CompanyDetails != null)
+                    {
+                        var existingCompanyNumberFormatted = CompanyRegistrationNumberFormatter
+                            .FormatCompanyRegistrationNumber(existingProducer.ProducerBusiness.CompanyDetails.CompanyNumber);
+
+                        if (!string.IsNullOrEmpty(existingCompanyNumberFormatted))
+                        {
+                            var newCompanyNumberFormatted = CompanyRegistrationNumberFormatter
+                                .FormatCompanyRegistrationNumber(newCompany.companyNumber);
+
+                            if (existingCompanyNumberFormatted != newCompanyNumberFormatted)
+                            {
+                                result = RuleResult.Fail(
+                                    string.Format("The company registration number of {0} {1} will change from {2} to {3}.",
+                                    existingProducer.OrganisationName, existingProducer.RegisteredProducer.ProducerRegistrationNumber,
+                                    existingProducer.ProducerBusiness.CompanyDetails.CompanyNumber, newCompany.companyNumber),
+                                    Core.Shared.ErrorLevel.Warning);
+                            }
+                        }
+                    }
                 }
             }
 

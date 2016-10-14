@@ -92,6 +92,10 @@
                 .As<ICompanyAlreadyRegistered>()
                 .InstancePerRequest();
 
+            builder.RegisterType<CompanyRegistrationNumberChange>()
+                .As<ICompanyRegistrationNumberChange>()
+                .InstancePerRequest();
+
             builder.RegisterType<ExistingProducerNames>().As<IExistingProducerNames>().InstancePerRequest();
             builder.RegisterType<CurrentCompanyProducers>().As<ICurrentCompanyProducers>().InstancePerRequest();
             builder.RegisterType<ExistingProducerRegistrationNumbers>().As<IExistingProducerRegistrationNumbers>().InstancePerRequest();
