@@ -80,7 +80,7 @@
                 case OAuth2Constants.Errors.AccessDenied:
                     return "Access denied";
                 case OAuth2Constants.Errors.InvalidGrant:
-                    return "Invalid credentials";
+                    return "Incorrect email address or password";
                 case OAuth2Constants.Errors.Error:
                 case OAuth2Constants.Errors.InvalidClient:
                 case OAuth2Constants.Errors.InvalidRequest:
