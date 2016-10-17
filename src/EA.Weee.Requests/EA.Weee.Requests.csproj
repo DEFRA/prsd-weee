@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />

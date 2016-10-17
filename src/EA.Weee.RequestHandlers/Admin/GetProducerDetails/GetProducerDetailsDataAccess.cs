@@ -20,7 +20,7 @@
 
         /// <summary>
         /// Fetches all submitted producer registrations with the specified
-        /// registration number. The results will not be deterministically
+        /// registration number and compliance year. The results will not be deterministically
         /// ordered.
         /// 
         /// All producer entities will be returned with member uploads,
@@ -29,12 +29,14 @@
         /// The returned entities will not be tracked for changes.
         /// </summary>
         /// <param name="registrationNumber"></param>
+        /// <param name="complianceYear"></param>
         /// <returns></returns>
-        public async Task<List<ProducerSubmission>> Fetch(string registrationNumber)
+        public async Task<List<ProducerSubmission>> Fetch(string registrationNumber, int complianceYear)
         {
             return await context.ProducerSubmissions
                 .Where(p => p.MemberUpload.IsSubmitted)
                 .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == registrationNumber)
+                .Where(p => p.RegisteredProducer.ComplianceYear == complianceYear)
                 .Include(p => p.MemberUpload)
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)

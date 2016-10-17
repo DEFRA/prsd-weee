@@ -1,7 +1,7 @@
-@import '_font_stack.scss';
-@import '_conditionals.scss';
-@import '_device-pixels.scss';
-@import '_url-helpers.scss';
+@import 'font_stack';
+@import 'conditionals';
+@import 'device-pixels';
+@import 'url-helpers';
 
 //  GOV.UK typography palettes
 
@@ -15,29 +15,44 @@
 
 // CORE FONTS - NEW TRANSPORT
 
+// Allow uppercase letters in font stack variable names
+// scss-lint:disable NameFormat
+
 $is-print: false !default;
 
 @mixin _core-font-generator($font-size: 19px, $font-size-640: 16px, $font-size-print: 14pt, $line-height: (25 / 19), $line-height-640: (20 / 16), $tabular-numbers: false, $font-weight: 400) {
   @if $tabular-numbers == true {
-    font-family: $NTA-Light-Tabular;
+    font-family: $toolkit-font-stack-tabular;
   } @else if $is-print {
     font-family: $Print-reset;
   } @else {
-    font-family: $NTA-Light;
+    font-family: $toolkit-font-stack;
+    @if $toolkit-font-stack == "$NTA-Light" {
+      @if $font-weight > 400 {
+        font-size-adjust: 0.525;
+      } @else {
+        font-size-adjust: 0.5;
+      }
+    }
   }
-  font-size: $font-size-640;
-  line-height: $line-height-640;
   font-weight: $font-weight;
   text-transform: none;
-  @include media(tablet) {
-    font-size: $font-size;
-    line-height: $line-height;
-  }
+
   @if $is-print {
     font-size: $font-size-print;
+    line-height: $line-height;
+
+  } @else {
+    font-size: $font-size-640;
+    line-height: $line-height-640;
+
+    @include media(tablet) {
+      font-size: $font-size;
+      line-height: $line-height;
+    }
   }
 }
-
+// scss-lint:enable NameFormat
 
 @mixin core-80($line-height: (80 / 80), $line-height-640: (55 / 53), $tabular-numbers: false, $font-weight: 400) {
   $font-size: 80px;
@@ -130,10 +145,12 @@ $is-print: false !default;
 @mixin heading-80($tabular-numbers: false) {
   @include core-80($tabular-numbers: $tabular-numbers);
 
+  display: block;
+
   padding-top: 8px;
   padding-bottom: 7px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 6px;
     padding-bottom: 14px;
   }
@@ -142,10 +159,12 @@ $is-print: false !default;
 @mixin heading-48($tabular-numbers: false) {
   @include core-48($tabular-numbers: $tabular-numbers);
 
+  display: block;
+
   padding-top: 10px;
   padding-bottom: 10px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 7px;
     padding-bottom: 13px;
   }
@@ -154,10 +173,12 @@ $is-print: false !default;
 @mixin heading-36($tabular-numbers: false) {
   @include core-36($tabular-numbers: $tabular-numbers);
 
+  display: block;
+
   padding-top: 8px;
   padding-bottom: 7px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 6px;
     padding-bottom: 9px;
   }
@@ -166,10 +187,12 @@ $is-print: false !default;
 @mixin heading-27($tabular-numbers: false) {
   @include core-27($tabular-numbers: $tabular-numbers);
 
+  display: block;
+
   padding-top: 8px;
   padding-bottom: 7px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 4px;
     padding-bottom: 6px;
   }
@@ -178,10 +201,12 @@ $is-print: false !default;
 @mixin heading-24($tabular-numbers: false) {
   @include core-24($tabular-numbers: $tabular-numbers);
 
+  display: block;
+
   padding-top: 9px;
   padding-bottom: 6px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 6px;
     padding-bottom: 4px;
   }
@@ -193,7 +218,7 @@ $is-print: false !default;
   padding-top: 2px;
   padding-bottom: 8px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 0;
     padding-bottom: 5px;
   }
@@ -205,7 +230,7 @@ $is-print: false !default;
   padding-top: 8px;
   padding-bottom: 7px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 5px;
     padding-bottom: 5px;
   }
@@ -217,7 +242,7 @@ $is-print: false !default;
   padding-top: 8px;
   padding-bottom: 7px;
 
-  @include media(tablet){
+  @include media(tablet) {
     padding-top: 5px;
     padding-bottom: 5px;
   }
@@ -243,11 +268,11 @@ $is-print: false !default;
 }
 
 @mixin external-link-12-no-hover {
-  @include external-link-size($content: "\A0\A0\A0\A0\A0\A0\A0\A0", $top: 0px);
+  @include external-link-size($content: "\A0\A0\A0\A0\A0\A0\A0\A0", $top: 0);
 }
 
 @mixin external-link-12 {
-  @include external-link-size($content: "\A0\A0\A0\A0\A0\A0\A0\A0", $top: 0px, $top-hover: -388px);
+  @include external-link-size($content: "\A0\A0\A0\A0\A0\A0\A0\A0", $top: 0, $top-hover: -388px);
 }
 
 @mixin external-link-13-no-hover {
