@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using Core.Shared.Paging;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Shared;
@@ -34,6 +35,7 @@
         private readonly CsvWriterFactory csvWriterFactory;
         private const string DoNotChange = "Do not change at this time";
         private readonly ConfigurationService configurationService;
+        private const int DefaultPageSize = 15;
 
         public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory, ConfigurationService configService)
         {
@@ -450,11 +452,18 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
+        public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId,
+            SubmissionsHistoryOrderBy orderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending, int page = 1)
         {
             await SetBreadcrumb(pcsId, "View submission history");
 
+            if (page < 1)
+            {
+                page = 1;
+            }
+
             var model = new SubmissionHistoryViewModel();
+            model.OrderBy = orderBy;
 
             using (var client = apiClient())
             {
@@ -462,7 +471,15 @@
 
                 if (scheme != null)
                 {
-                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId));
+                    var getSubmissionsHistoryResults =
+                        new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId);
+                    getSubmissionsHistoryResults.Ordering = orderBy;
+
+                    var results = await client.SendAsync(User.GetAccessToken(), getSubmissionsHistoryResults);
+                    if (results.Data != null)
+                    {
+                        model.Results = results.Data.ToPagedList(page - 1, DefaultPageSize, results.ResultCount);
+                    }
                 }
             }
 
@@ -491,11 +508,18 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId)
+        public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId,
+            DataReturnSubmissionsHistoryOrderBy orderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending, int page = 1)
         {
             await SetBreadcrumb(pcsId, "View submission history");
 
+            if (page < 1)
+            {
+                page = 1;
+            }
+
             var model = new DataReturnSubmissionHistoryViewModel();
+            model.OrderBy = orderBy;
 
             using (var client = apiClient())
             {
@@ -503,12 +527,21 @@
 
                 if (scheme != null)
                 {
-                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId));
+                    var getDataReturnSubmissionsHistoryResults =
+                        new GetDataReturnSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId);
+                    getDataReturnSubmissionsHistoryResults.Ordering = orderBy;
+
+                    var results = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
+                    if (results.Data != null)
+                    {
+                        model.Results = results.Data.ToPagedList(page - 1, DefaultPageSize, results.ResultCount);
+                    }
                 }
             }
 
             return View(model);
         }
+
         private IList<string> GetUserPossibleStatusToBeChanged(UserStatus userStatus)
         {
             var userStatuses = new RadioButtonGenericStringCollectionViewModel<UserStatus>();

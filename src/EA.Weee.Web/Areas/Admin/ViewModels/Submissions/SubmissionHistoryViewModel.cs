@@ -17,7 +17,7 @@
         [DisplayName("PCS")]
         public Guid SelectedScheme { get; set; }
     
-        public IList<SubmissionsHistorySearchResult> Results { get; set; }
+        public SubmissionsHistorySearchResult Results { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
@@ -25,7 +25,7 @@
 
         public SubmissionsHistoryViewModel()
         {
-            Results = new List<SubmissionsHistorySearchResult>();
+            Results = new SubmissionsHistorySearchResult();
         }
     }
 }
