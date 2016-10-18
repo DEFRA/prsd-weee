@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using Core.DataReturns;
+    using Requests.Shared;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.DataReturns;
+
     public interface IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
-        Task<List<DataReturnSubmissionsHistoryResult>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear);
+        Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear,
+            DataReturnSubmissionsHistoryOrderBy? ordering);
     }
 }
