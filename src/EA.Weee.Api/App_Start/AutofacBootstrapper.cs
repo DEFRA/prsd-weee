@@ -28,7 +28,6 @@
             builder.RegisterWebApiFilterProvider(config);
 
             // Register model binders
-            builder.RegisterWebApiModelBinders(typeof(Startup).Assembly);
             builder.RegisterWebApiModelBinderProvider();
 
             // Register all Autofac specific IModule implementations
