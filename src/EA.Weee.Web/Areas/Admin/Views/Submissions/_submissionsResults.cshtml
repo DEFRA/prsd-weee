@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using EA.Weee.Core.Admin
-@model IEnumerable<SubmissionsHistorySearchResult>
+@model IEnumerable<SubmissionsHistorySearchData>
 
 @if (Model.Any())
 {
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (SubmissionsHistorySearchResult item in Model)
+        @foreach (var item in Model)
         {
             string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
             <tr>
