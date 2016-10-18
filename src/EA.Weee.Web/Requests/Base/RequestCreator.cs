@@ -12,7 +12,12 @@
         /// <returns>The resulting request created from this view model</returns>
         public virtual TRequest ViewModelToRequest(TViewModel viewModel)
         {
-            return Mapper.DynamicMap<TViewModel, TRequest>(viewModel);
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<TViewModel, TRequest>();
+            });
+
+            return Mapper.Map<TViewModel, TRequest>(viewModel);
         }
     }
 }

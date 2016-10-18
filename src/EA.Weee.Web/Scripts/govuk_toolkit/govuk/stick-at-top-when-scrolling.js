@@ -1,14 +1,30 @@
-(function () {
+(function (global) {
   "use strict";
-  var root = this,
-      $ = root.jQuery;
-  if(typeof root.GOVUK === 'undefined') { root.GOVUK = {}; }
+
+  var $ = global.jQuery;
+  var GOVUK = global.GOVUK || {};
 
   // Stick elements to top of screen when you scroll past, documentation is in the README.md
   var sticky = {
     _hasScrolled: false,
     _scrollTimeout: false,
+    _hasResized: false,
+    _resizeTimeout: false,
 
+    getWindowDimensions: function() {
+      return {
+        height: $(global).height(),
+        width: $(global).width()
+      };
+    },
+    getWindowPositions: function() {
+      return {
+        scrollTop: $(global).scrollTop()
+      };
+    },
+    getElementOffset: function($el) {
+      return $el.offset()
+    },
     init: function(){
       var $els = $('.js-stick-at-top-when-scrolling');
 
@@ -16,22 +32,26 @@
         sticky.$els = $els;
 
         if(sticky._scrollTimeout === false) {
-          $(root).scroll(sticky.onScroll);
-          sticky._scrollTimeout = root.setInterval(sticky.checkScroll, 50);
+          $(global).scroll(sticky.onScroll);
+          sticky._scrollTimeout = global.setInterval(sticky.checkScroll, 50);
         }
-        $(root).resize(sticky.onResize);
+
+        if(sticky._resizeTimeout === false) {
+          $(global).resize(sticky.onResize);
+          sticky._resizeTimeout = global.setInterval(sticky.checkResize, 50);
+        }
       }
-      if(root.GOVUK.stopScrollingAtFooter){
+      if(GOVUK.stopScrollingAtFooter){
         $els.each(function(i,el){
           var $img = $(el).find('img');
           if($img.length > 0){
             var image = new Image();
             image.onload = function(){
-              root.GOVUK.stopScrollingAtFooter.addEl($(el), $(el).outerHeight());
+              GOVUK.stopScrollingAtFooter.addEl($(el), $(el).outerHeight());
             };
             image.src = $img.attr('src');
           } else {
-            root.GOVUK.stopScrollingAtFooter.addEl($(el), $(el).outerHeight());
+            GOVUK.stopScrollingAtFooter.addEl($(el), $(el).outerHeight());
           }
         });
       }
@@ -39,26 +59,47 @@
     onScroll: function(){
       sticky._hasScrolled = true;
     },
+    onResize: function(){
+      sticky._hasResized = true;
+    },
     checkScroll: function(){
       if(sticky._hasScrolled === true){
         sticky._hasScrolled = false;
 
-        var windowVerticalPosition = $(root).scrollTop();
+        var windowVerticalPosition = sticky.getWindowPositions().scrollTop;
+
+        var windowDimensions = sticky.getWindowDimensions();
+
         sticky.$els.each(function(i, el){
           var $el = $(el),
               scrolledFrom = $el.data('scrolled-from');
 
           if (scrolledFrom && windowVerticalPosition < scrolledFrom){
             sticky.release($el);
-          } else if($(root).width() > 768 && windowVerticalPosition >= $el.offset().top) {
+          } else if(windowDimensions.width > 768 && windowVerticalPosition >= sticky.getElementOffset($el).top) {
             sticky.stick($el);
+          }
+        });
+      }
+    },
+    checkResize: function() {
+      if(sticky._hasResized === true){
+        sticky._hasResized = false;
+
+        var windowDimensions = sticky.getWindowDimensions();
+
+        sticky.$els.each(function(i, el){
+          var $el = $(el);
+
+          if(windowDimensions.width <= 768) {
+            sticky.release($el);
           }
         });
       }
     },
     stick: function($el){
       if (!$el.hasClass('content-fixed')) {
-        $el.data('scrolled-from', $el.offset().top);
+        $el.data('scrolled-from', sticky.getElementOffset($el).top);
         var height = Math.max($el.height(), 1);
         $el.before('<div class="shim" style="width: '+ $el.width() + 'px; height: ' + height + 'px">&nbsp;</div>');
         $el.css('width', $el.width() + "px").addClass('content-fixed');
@@ -72,5 +113,6 @@
       }
     }
   };
-  root.GOVUK.stickAtTopWhenScrolling = sticky;
-}).call(this);
+  GOVUK.stickAtTopWhenScrolling = sticky;
+  global.GOVUK = GOVUK;
+})(window);
