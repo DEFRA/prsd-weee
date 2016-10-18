@@ -809,6 +809,44 @@
         }
 
         [Fact]
+        public async void GetViewSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetSubmissionsHistoryResults>(1).Ordering == SubmissionsHistoryOrderBy.ComplianceYearDescending)
+                .MustHaveHappened();
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as SubmissionHistoryViewModel;
+
+            Assert.Equal(SubmissionsHistoryOrderBy.ComplianceYearDescending, model.OrderBy);
+        }
+
+        [Theory]
+        [InlineData(SubmissionsHistoryOrderBy.ComplianceYearAscending)]
+        [InlineData(SubmissionsHistoryOrderBy.ComplianceYearDescending)]
+        [InlineData(SubmissionsHistoryOrderBy.SubmissionDateAscending)]
+        [InlineData(SubmissionsHistoryOrderBy.SubmissionDateDescending)]
+        public async void GetViewSubmissionHistory_SortsBySpecifiedValue(SubmissionsHistoryOrderBy orderBy)
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>(), orderBy);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetSubmissionsHistoryResults>(1).Ordering == orderBy)
+                .MustHaveHappened();
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as SubmissionHistoryViewModel;
+
+            Assert.Equal(orderBy, model.OrderBy);
+        }
+
+        [Fact]
         public async void GetDownloadCsv_ShouldExecuteGetMemberUploadDataAndReturnsCsvFile()
         {
             var controller = HomeController();
@@ -850,6 +888,46 @@
                 .MustNotHaveHappened();
 
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetViewDataReturnSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetDataReturnSubmissionsHistoryResults>(1).Ordering == DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending)
+                .MustHaveHappened();
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as DataReturnSubmissionHistoryViewModel;
+
+            Assert.Equal(DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending, model.OrderBy);
+        }
+
+        [Theory]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending)]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending)]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.QuarterAscending)]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.QuarterDescending)]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending)]
+        [InlineData(DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending)]
+        public async void GetViewDataReturnSubmissionHistory_SortsBySpecifiedValue(DataReturnSubmissionsHistoryOrderBy orderBy)
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>(), orderBy);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetDataReturnSubmissionsHistoryResults>(1).Ordering == orderBy)
+                .MustHaveHappened();
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as DataReturnSubmissionHistoryViewModel;
+
+            Assert.Equal(orderBy, model.OrderBy);
         }
 
         [Fact]

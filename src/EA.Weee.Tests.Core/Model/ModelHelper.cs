@@ -553,6 +553,7 @@
                 if (dataReturnVersion.DataReturn != null)
                 {
                     dataReturnUpload.ComplianceYear = dataReturnVersion.DataReturn.ComplianceYear;
+                    dataReturnUpload.Quarter = dataReturnVersion.DataReturn.Quarter;
                 }
             }
 
