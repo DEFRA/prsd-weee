@@ -7,7 +7,7 @@
     using Requests.Shared;
     using Security;
 
-    public class GetSubmissionsHistoryResultsHandler : IRequestHandler<GetSubmissionsHistoryResults, List<SubmissionsHistorySearchResult>>
+    public class GetSubmissionsHistoryResultsHandler : IRequestHandler<GetSubmissionsHistoryResults, SubmissionsHistorySearchResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetSubmissionsHistoryResultsDataAccess dataAccess;
@@ -18,11 +18,11 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<List<SubmissionsHistorySearchResult>> HandleAsync(GetSubmissionsHistoryResults request)
+        public async Task<SubmissionsHistorySearchResult> HandleAsync(GetSubmissionsHistoryResults request)
         {
             authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
-            return await dataAccess.GetSubmissionsHistory(request.SchemeId, request.ComplianceYear);
+            return await dataAccess.GetSubmissionsHistory(request.SchemeId, request.ComplianceYear, request.Ordering);
         }
     }
 }

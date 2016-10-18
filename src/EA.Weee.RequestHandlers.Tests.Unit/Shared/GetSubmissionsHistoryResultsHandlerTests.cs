@@ -23,26 +23,52 @@
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
             GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
             GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = SubmissionsHistoryOrderBy.ComplianceYearAscending;
 
             // Act
-            List<SubmissionsHistorySearchResult> results = await handler.HandleAsync(request);
+            SubmissionsHistorySearchResult results = await handler.HandleAsync(request);
 
             // Assert
             A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
-            Assert.Equal(results.Count, 2);
+            Assert.Equal(2, results.Data.Count);
+            Assert.Equal(2, results.ResultCount);
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesDataWithSpecifiedSort()
+        {
+            // Arrange
+            var dataAccess = A.Fake<IGetSubmissionsHistoryResultsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            var request = new GetSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = SubmissionsHistoryOrderBy.SubmissionDateAscending;
+
+            // Act
+            var results = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, SubmissionsHistoryOrderBy.SubmissionDateAscending))
+                .MustHaveHappened();
         }
 
         private IGetSubmissionsHistoryResultsDataAccess CreateFakeDataAccess()
         {
             IGetSubmissionsHistoryResultsDataAccess dataAccess = A.Fake<IGetSubmissionsHistoryResultsDataAccess>();
 
-            var results = new List<SubmissionsHistorySearchResult>()
-            { 
-                new SubmissionsHistorySearchResult(),
-                new SubmissionsHistorySearchResult()
+            var results = new SubmissionsHistorySearchResult()
+            {
+                Data = new List<SubmissionsHistorySearchData>()
+                {
+                    new SubmissionsHistorySearchData(),
+                    new SubmissionsHistorySearchData()
+                },
+                ResultCount = 2
             };
 
-            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._)).Returns(results);
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, A<SubmissionsHistoryOrderBy>._))
+                .Returns(results);
 
             return dataAccess;
         }

@@ -1,25 +1,15 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using System;
+    using System.Collections.Generic;
 
     public class SubmissionsHistorySearchResult
     {
-        public Guid SchemeId { get; set; }
+        public IList<SubmissionsHistorySearchData> Data { get; set; }
 
-        public Guid OrganisationId { get; set; }
+        public int ResultCount { get; set; }
 
-        public Guid MemberUploadId { get; set; }
-
-        public int Year { get; set; }
-
-        public DateTime DateTime { get; set; }
-
-        public int NoOfWarnings { get; set; }
-
-        public string SubmittedBy { get; set; }
-
-        public decimal TotalCharges { get; set; }
-
-        public string FileName { get; set; }
+        public SubmissionsHistorySearchResult()
+        {
+        }
     }
 }
