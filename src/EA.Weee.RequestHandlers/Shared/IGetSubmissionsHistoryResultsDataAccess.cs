@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Admin;
+    using Requests.Shared;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IGetSubmissionsHistoryResultsDataAccess
     {
-        Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHistory(Guid schemeId, int? complianceYear);
+        Task<SubmissionsHistorySearchResult> GetSubmissionsHistory(Guid schemeId, int? complianceYear,
+            SubmissionsHistoryOrderBy? ordering);
     }
 }
