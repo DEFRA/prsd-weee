@@ -24,6 +24,7 @@
         private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
+        private readonly Func<string, int, IProducerObligationTypeChange> producerObligationTypeChangeDelegate;
 
         public MemberRegistrationBusinessValidator(IProducerNameChange producerNameWarning, 
             IAnnualTurnoverMismatch annualTurnoverMismatch, 
@@ -39,7 +40,8 @@
             IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK,
             IProducerChargeBandChange producerChargeBandChangeWarning,
             ICompanyAlreadyRegistered companyAlreadyRegistered,
-            ICompanyRegistrationNumberChange companyRegistrationNumberChange)
+            ICompanyRegistrationNumberChange companyRegistrationNumberChange,
+            Func<string, int, IProducerObligationTypeChange> producerObligationTypeChangeDelegate)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -56,6 +58,7 @@
             this.producerChargeBandChangeWarning = producerChargeBandChangeWarning;
             this.companyAlreadyRegistered = companyAlreadyRegistered;
             this.companyRegistrationNumberChange = companyRegistrationNumberChange;
+            this.producerObligationTypeChangeDelegate = producerObligationTypeChangeDelegate;
         }
 
         public IEnumerable<RuleResult> Validate(schemeType scheme, Guid organisationId)
@@ -68,6 +71,10 @@
 
             // Now comparing against existing data...
             result.Add(correctSchemeApprovalNumber.Evaluate(scheme, organisationId));
+
+            var schemeApprovalNumber = scheme.approvalNo;
+            var complianceYear = int.Parse(scheme.complianceYear);
+            var producerObligationTypeChange = producerObligationTypeChangeDelegate(schemeApprovalNumber, complianceYear);
 
             // Validate producers
             foreach (var producer in scheme.producerList)
@@ -87,6 +94,7 @@
                 result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(companyAlreadyRegistered.Evaluate(producer));
                 result.Add(companyRegistrationNumberChange.Evaluate(producer));
+                result.Add(producerObligationTypeChange.Evaluate(producer));
             }
 
             return result.Where(r => r != null && !r.IsValid);

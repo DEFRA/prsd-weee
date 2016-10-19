@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="QuerySets\MigratedProducerQuerySetTests.cs" />
     <Compile Include="QuerySets\ProducerQuerySetTests.cs" />
+    <Compile Include="QuerySets\SchemeEeeDataQuerySetTests.cs" />
     <Compile Include="QuerySets\SchemeQuerySetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
