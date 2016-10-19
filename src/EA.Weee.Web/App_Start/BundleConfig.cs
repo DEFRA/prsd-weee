@@ -27,7 +27,9 @@
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
                       "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_toolkit/govuk/selection-buttons.js"));
+                      "~/Scripts/govuk_toolkit/govuk/selection-buttons.js",
+                      "~/Scripts/govuk_toolkit/govuk/show-hide-content.js",
+                      "~/Scripts/govuk_toolkit/govuk/shim-links-with-button-role.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
                       "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
