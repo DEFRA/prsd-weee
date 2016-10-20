@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using Core.Shared;
     using FakeItEasy;
@@ -33,7 +34,7 @@
         }
 
         [Fact]
-        public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
+        public async Task SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
             A.CallTo(() => schemaValidator.Validate(A<byte[]>._, A<string>._, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>
@@ -41,14 +42,14 @@
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
-            XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
+            await XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .MustNotHaveHappened();
         }
 
         [Fact]
-        public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
+        public async Task SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
             A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
@@ -59,13 +60,13 @@
                                 RuleResult.Fail("An error occurred")
                             });
 
-            var result = XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
+            var result = await XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result);
         }
 
         [Fact]
-        public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
+        public async Task SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
         {
             A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
@@ -73,7 +74,7 @@
             A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
-            var result = XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
+            var result = await XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result);
             Assert.Equal(1, result.Count());

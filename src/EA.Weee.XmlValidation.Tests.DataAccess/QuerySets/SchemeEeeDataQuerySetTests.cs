@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.QuerySets
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Domain.Obligation;
     using Weee.Tests.Core.Model;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using Xunit;
@@ -13,17 +10,15 @@
     public class SchemeEeeDataQuerySetTests
     {
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsTrue_WhenDataAvailableForSpecifiedProducer()
+        public async Task GetLatestProducerEeeData_ReturnsData_WhenDataAvailableForSpecifiedProducer()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
-                var schemeApprovalNumber = "WEE/AA0001YZ/SCH";
-
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = schemeApprovalNumber;
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -36,26 +31,25 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet(schemeApprovalNumber, 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.True(result);
+                Assert.NotNull(result);
+                Assert.Single(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsFalse_WhenDataNotAvailableForSpecifiedProducer()
+        public async Task GetLatestProducerEeeData_ReturnsNull_WhenDataNotAvailableForSpecifiedProducer()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
-                var schemeApprovalNumber = "WEE/AA0001YZ/SCH";
-
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = schemeApprovalNumber;
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -68,24 +62,24 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet(schemeApprovalNumber, 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001BB", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001BB");
 
                 // Assert
-                Assert.False(result);
+                Assert.Null(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsTrue_WhenDataAvailableForSpecifiedScheme()
+        public async Task GetLatestProducerEeeData_ReturnsData_WhenDataAvailableForSpecifiedScheme()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -97,24 +91,25 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001YZ/SCH", 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.True(result);
+                Assert.NotNull(result);
+                Assert.Single(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsFalse_WhenDataNotAvailableForSpecifiedScheme()
+        public async Task GetLatestProducerEeeData_ReturnsNull_WhenDataNotAvailableForSpecifiedScheme()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -126,24 +121,24 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001AA/SCH", 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(Guid.NewGuid(), "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.False(result);
+                Assert.Null(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsTrue_WhenDataAvailableForSpecifiedComplianceYear()
+        public async Task GetLatestProducerEeeData_ReturnsData_WhenDataAvailableForSpecifiedComplianceYear()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -155,24 +150,25 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001YZ/SCH", 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.True(result);
+                Assert.NotNull(result);
+                Assert.Single(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsFalse_WhenDataNotAvailableForSpecifiedComplianceYear()
+        public async Task GetLatestProducerEeeData_ReturnsNull_WhenDataNotAvailableForSpecifiedComplianceYear()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
@@ -184,69 +180,111 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001YZ/SCH", 2017, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2017", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.False(result);
+                Assert.Null(result);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsTrue_WhenDataAvailableForSpecifiedObligationType()
+        public async Task GetLatestProducerEeeData_ReturnsLatestDataOnly()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
 
                 var producer = helper.CreateProducerAsCompany(memberUpload, "WEE/MM0001AA");
-                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: true);
-                var producerEee = helper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2C", 1, 1000);
+
+                var dataReturn = helper.CreateDataReturn(scheme, 2016, 1);
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: true, dataReturn: dataReturn);
+                var producerEee1 = helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, "B2C", 1, 1000);
+
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: true, dataReturn: dataReturn);
+                var producerEee2 = helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, "B2C", 1, 2000);
 
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001YZ/SCH", 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2C);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.True(result);
+                Assert.NotNull(result);
+                Assert.Single(result);
+                Assert.Equal(2000, result.Single().Tonnage);
             }
         }
 
         [Fact]
-        public async Task HasProducerEeeDataForObligationType_ReturnsFalse_WhenDataNotAvailableForSpecifiedObligationType()
+        public async Task GetLatestProducerEeeData_ReturnsSubmittedDataOnly()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 var helper = new ModelHelper(database.Model);
 
-                var scheme = helper.CreateScheme();
-                scheme.ApprovalNumber = "WEE/AA0001YZ/SCH";
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
 
                 var producer = helper.CreateProducerAsCompany(memberUpload, "WEE/MM0001AA");
-                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: true);
+
+                var dataReturn = helper.CreateDataReturn(scheme, 2016, 1);
+
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: false, dataReturn: dataReturn);
                 var producerEee = helper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2C", 1, 1000);
 
                 database.Model.SaveChanges();
 
                 // Act
-                var querySet = new SchemeEeeDataQuerySet("WEE/AA0001YZ/SCH", 2016, database.WeeeContext);
-                var result = await querySet.HasProducerEeeDataForObligationType("WEE/MM0001AA", ObligationType.B2B);
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
 
                 // Assert
-                Assert.False(result);
+                Assert.Null(result);
+            }
+        }
+
+        [Fact]
+        public async Task GetLatestProducerEeeData_ReturnsSubmittedDataWithEeeValuesOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                var helper = new ModelHelper(database.Model);
+
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
+
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+
+                var producer = helper.CreateProducerAsCompany(memberUpload, "WEE/MM0001AA");
+
+                var dataReturn = helper.CreateDataReturn(scheme, 2016, 1);
+
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, isSubmitted: true, dataReturn: dataReturn);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var querySet = new SchemeEeeDataQuerySet(organisation.Id, "2016", database.WeeeContext);
+                var result = await querySet.GetLatestProducerEeeData("WEE/MM0001AA");
+
+                // Assert
+                Assert.Null(result);
             }
         }
     }
