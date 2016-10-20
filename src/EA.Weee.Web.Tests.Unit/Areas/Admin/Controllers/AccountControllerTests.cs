@@ -16,13 +16,13 @@
     using Core.Routing;
     using Core.Shared;
     using FakeItEasy;
+    using IdentityModel;
     using Microsoft.Owin.Security;
     using Prsd.Core.Mediator;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
-    using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;
     using Weee.Requests.Admin;
@@ -201,7 +201,7 @@
             A.CallTo(() => apiClient.User).Returns(user);
 
             ClaimsIdentity identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(OAuth2Constants.AccessToken, "accessToken"));
+            identity.AddClaim(new Claim(OidcConstants.TokenTypes.AccessToken, "accessToken"));
 
             A.CallTo(() => authenticationManager.User).Returns(new ClaimsPrincipal(identity));
             A.CallTo(() => externalRouteService.ActivateInternalUserAccountUrl).Returns("activationBaseUrl");
