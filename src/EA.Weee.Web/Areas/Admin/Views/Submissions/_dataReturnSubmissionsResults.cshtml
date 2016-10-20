@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using EA.Weee.Core.DataReturns
-@model IEnumerable<DataReturnSubmissionsHistoryResult>
+@model IEnumerable<DataReturnSubmissionsHistoryData>
 
 @if (Model.Any())
 {
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (DataReturnSubmissionsHistoryResult item in Model)
+        @foreach (var item in Model)
         {
             string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 

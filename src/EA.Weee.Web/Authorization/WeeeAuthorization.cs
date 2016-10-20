@@ -79,7 +79,7 @@
                 case OidcConstants.AuthorizeErrors.AccessDenied:
                     return "Access denied";
                 case OidcConstants.TokenErrors.InvalidGrant:
-                    return "Invalid credentials";
+                    return "Incorrect email address or password";
                 case OidcConstants.AuthorizeResponse.Error:
                 case OidcConstants.TokenErrors.UnsupportedGrantType:
                 case OidcConstants.TokenErrors.InvalidClient:

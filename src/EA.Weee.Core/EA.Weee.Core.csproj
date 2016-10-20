@@ -90,9 +90,11 @@
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
+    <Compile Include="Admin\SubmissionsHistorySearchData.cs" />
     <Compile Include="Charges\InvoiceRunInfo.cs" />
     <Compile Include="Charges\IssuePendingChargesResult.cs" />
     <Compile Include="Charges\ManagePendingCharges.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsHistoryData.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsHistoryResult.cs" />
     <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
