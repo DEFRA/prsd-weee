@@ -4,12 +4,12 @@
     using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess;
     using Identity;
+    using IdentityServer3.Core.Configuration;
+    using IdentityServer3.Core.Services;
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin.Security.DataProtection;
     using Owin;
     using Services;
-    using Thinktecture.IdentityServer.Core.Configuration;
-    using Thinktecture.IdentityServer.Core.Services;
 
     public static class UserServiceExtensions
     {
