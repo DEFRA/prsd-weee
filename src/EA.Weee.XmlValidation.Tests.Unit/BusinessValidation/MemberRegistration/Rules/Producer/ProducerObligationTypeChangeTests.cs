@@ -45,32 +45,7 @@
         }
 
         [Fact]
-        public async Task Evaluate_ProducerObligationChangedToBoth_DoesNotCheckForExistingProducerDetails_DoesNotRetrieveProducerEeeData_AndReturnsPass()
-        {
-            // Arrange
-            var builder = new ProducerObligationTypeChangeBuilder();
-
-            var newProducerDetails = new producerType
-            {
-                status = statusType.A,
-                obligationType = obligationTypeType.Both
-            };
-
-            // Act
-            var result = await builder.Build().Evaluate(newProducerDetails);
-
-            // Assert
-            A.CallTo(() => builder.ProducerQuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
-                .MustNotHaveHappened();
-
-            A.CallTo(() => builder.SchemeEeeDataQuerySet.GetLatestProducerEeeData(A<string>._))
-                .MustNotHaveHappened();
-
-            Assert.True(result.IsValid);
-        }
-
-        [Fact]
-        public async Task Evaluate_NotExistingProducerDetails_DoesNotRetrieveProducerEeeData_AndReturnsPass()
+        public async Task Evaluate_NoExistingProducerDetails_DoesNotRetrieveProducerEeeData_AndReturnsPass()
         {
             // Arrange
             var builder = new ProducerObligationTypeChangeBuilder();
@@ -130,7 +105,7 @@
         }
 
         [Fact]
-        public async Task Evaluate_NoExistingEeeDataForProducer_ReturnsPass()
+        public async Task Evaluate_ProducerObligationTypeChange_NoExistingEeeDataForProducer_ReturnsWarning()
         {
             // Arrange
             var builder = new ProducerObligationTypeChangeBuilder();
@@ -161,7 +136,8 @@
             A.CallTo(() => builder.SchemeEeeDataQuerySet.GetLatestProducerEeeData(A<string>._))
                 .MustHaveHappened();
 
-            Assert.True(result.IsValid);
+            Assert.False(result.IsValid);
+            Assert.Equal(ErrorLevel.Warning, result.ErrorLevel);
         }
 
         [Theory]
@@ -211,8 +187,10 @@
 
         [Theory]
         [InlineData(ObligationType.B2B, ObligationType.Both, ObligationType.B2B)]
+        [InlineData(ObligationType.B2B, ObligationType.B2B, ObligationType.Both)]
         [InlineData(ObligationType.B2C, ObligationType.Both, ObligationType.B2C)]
-        public async Task Evaluate_ProducerObligationTypeChange_NoConflictWithExistingEeeData_ReturnsPass
+        [InlineData(ObligationType.B2C, ObligationType.B2C, ObligationType.Both)]
+        public async Task Evaluate_ProducerObligationTypeChange_NoConflictWithExistingEeeData_ReturnsWarning
             (ObligationType existingProducerEeeDataObligationType, ObligationType existingProducerObligationType, ObligationType newProducerObligationType)
         {
             // Arrange
@@ -248,7 +226,8 @@
             A.CallTo(() => builder.SchemeEeeDataQuerySet.GetLatestProducerEeeData(A<string>._))
                 .MustHaveHappened();
 
-            Assert.True(result.IsValid);
+            Assert.False(result.IsValid);
+            Assert.Equal(ErrorLevel.Warning, result.ErrorLevel);
         }
 
         [Fact]
@@ -386,6 +365,52 @@
             Assert.False(result.IsValid);
             Assert.Equal(ErrorLevel.Error, result.ErrorLevel);
             Assert.Contains("because both B2B and B2C EEE data have already been submitted", result.Message);
+        }
+
+        [Fact]
+        public async Task Evaluate_ProducerObligationTypeChange_NoConflictWithExistingData_ReturnsDetailsInWarningMessage()
+        {
+            // Arrange
+            var builder = new ProducerObligationTypeChangeBuilder();
+
+            var existingProducerDetails = A.Fake<ProducerSubmission>();
+            A.CallTo(() => existingProducerDetails.ObligationType)
+                .Returns(ObligationType.B2B);
+
+            A.CallTo(() => builder.ProducerQuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+                .Returns(existingProducerDetails);
+
+            var eeeOutputAmount = A.Fake<EeeOutputAmount>();
+            A.CallTo(() => eeeOutputAmount.ObligationType)
+                .Returns(ObligationType.B2B);
+
+            A.CallTo(() => builder.SchemeEeeDataQuerySet.GetLatestProducerEeeData(A<string>._))
+                .Returns(new List<EeeOutputAmount> { eeeOutputAmount });
+
+            var newProducerDetails = new producerType
+            {
+                status = statusType.A,
+                obligationType = obligationTypeType.Both,
+                tradingName = "TestProducer",
+                registrationNo = "WEE/MM0001AA"
+            };
+
+            // Act
+            var result = await builder.Build().Evaluate(newProducerDetails);
+
+            // Assert
+            A.CallTo(() => builder.ProducerQuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+                .MustHaveHappened();
+
+            A.CallTo(() => builder.SchemeEeeDataQuerySet.GetLatestProducerEeeData(A<string>._))
+                .MustHaveHappened();
+
+            Assert.False(result.IsValid);
+            Assert.Equal(ErrorLevel.Warning, result.ErrorLevel);
+            Assert.Contains("TestProducer", result.Message);
+            Assert.Contains("WEE/MM0001AA", result.Message);
+            Assert.Contains("from B2B", result.Message);
+            Assert.Contains("to Both", result.Message);
         }
 
         private class ProducerObligationTypeChangeBuilder

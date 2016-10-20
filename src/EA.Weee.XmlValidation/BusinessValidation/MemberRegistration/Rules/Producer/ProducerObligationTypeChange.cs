@@ -34,8 +34,7 @@
         {
             var result = RuleResult.Pass();
 
-            if (producer.status == statusType.A &&
-                producer.obligationType != obligationTypeType.Both)
+            if (producer.status == statusType.A)
             {
                 var existingProducerDetails =
                     producerQuerySet.GetLatestProducerForComplianceYearAndScheme(producer.registrationNo, complianceYear, organisationId);
@@ -55,7 +54,7 @@
                                 .Select(e => e.ObligationType)
                                 .Distinct();
 
-                            string obligationTypeMessage = eeeDataObligationTypes.Count() == 1 ?
+                            string eeeDataObligationTypeMessage = eeeDataObligationTypes.Count() == 1 ?
                                 string.Format("{0} EEE data has", eeeDataObligationTypes.Single())
                                 : "both B2B and B2C EEE data have";
 
@@ -65,9 +64,20 @@
                                 producer.registrationNo,
                                 existingProducerDetails.ObligationType,
                                 newObligationType,
-                                obligationTypeMessage);
+                                eeeDataObligationTypeMessage);
 
                             result = RuleResult.Fail(errorMessage, ErrorLevel.Error);
+                        }
+                        else
+                        {
+                            var warningMessage =
+                                string.Format("You are changing the obligation type for {0} {1} from {2} to {3}.",
+                                producer.GetProducerName(),
+                                producer.registrationNo,
+                                existingProducerDetails.ObligationType,
+                                newObligationType);
+
+                            result = RuleResult.Fail(warningMessage, ErrorLevel.Warning);
                         }
                     }
                 }
