@@ -5,14 +5,13 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core;
+    using IdentityModel;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Security;
-    using Thinktecture.IdentityModel.Client;
-
+    
     public class WeeeAuthorization : IWeeeAuthorization
     {
         private readonly Func<IOAuthClient> oauthClient;
@@ -77,17 +76,17 @@
         {
             switch (error)
             {
-                case OAuth2Constants.Errors.AccessDenied:
+                case OidcConstants.AuthorizeErrors.AccessDenied:
                     return "Access denied";
-                case OAuth2Constants.Errors.InvalidGrant:
+                case OidcConstants.TokenErrors.InvalidGrant:
                     return "Invalid credentials";
-                case OAuth2Constants.Errors.Error:
-                case OAuth2Constants.Errors.InvalidClient:
-                case OAuth2Constants.Errors.InvalidRequest:
-                case OAuth2Constants.Errors.InvalidScope:
-                case OAuth2Constants.Errors.UnauthorizedClient:
-                case OAuth2Constants.Errors.UnsupportedGrantType:
-                case OAuth2Constants.Errors.UnsupportedResponseType:
+                case OidcConstants.AuthorizeResponse.Error:
+                case OidcConstants.TokenErrors.UnsupportedGrantType:
+                case OidcConstants.TokenErrors.InvalidClient:
+                case OidcConstants.AuthorizeErrors.InvalidRequest:
+                case OidcConstants.AuthorizeErrors.InvalidScope:
+                case OidcConstants.AuthorizeErrors.UnauthorizedClient:
+                case OidcConstants.AuthorizeErrors.UnsupportedResponseType:
                 default:
                     return "Internal error";
             }
