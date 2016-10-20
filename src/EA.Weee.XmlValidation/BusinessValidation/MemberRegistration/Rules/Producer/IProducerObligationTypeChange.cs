@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
+    using System.Threading.Tasks;
     using Xml.MemberRegistration;
 
     public interface IProducerObligationTypeChange
     {
-        RuleResult Evaluate(producerType producer);
+        Task<RuleResult> Evaluate(producerType producer);
     }
 }

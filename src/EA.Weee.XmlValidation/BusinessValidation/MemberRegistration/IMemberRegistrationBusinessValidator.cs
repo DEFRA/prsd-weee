@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xml.MemberRegistration;
 
     public interface IMemberRegistrationBusinessValidator
     {
-        IEnumerable<RuleResult> Validate(schemeType scheme, Guid organisationId);
+        Task<IEnumerable<RuleResult>> Validate(schemeType scheme, Guid organisationId);
     }
 }

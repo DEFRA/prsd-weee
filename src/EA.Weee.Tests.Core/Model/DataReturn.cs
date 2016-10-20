@@ -26,7 +26,7 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.Guid> CurrentDataReturnVersionId { get; set; }
         public int Quarter { get; set; }
     
-        public virtual DataReturnVersion DataReturnVersion { get; set; }
+        public virtual DataReturnVersion CurrentDataReturnVersion { get; set; }
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; set; }
     }

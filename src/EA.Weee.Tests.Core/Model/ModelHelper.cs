@@ -617,6 +617,7 @@
                 dataReturnVersion.SubmittedDate = DateTime.UtcNow;
                 dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
                 dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
+                dataReturn.CurrentDataReturnVersion = dataReturnVersion;
             }
 
             if (weeeCollectedReturnVersion != null)
