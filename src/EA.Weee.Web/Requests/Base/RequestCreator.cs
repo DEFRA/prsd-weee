@@ -12,12 +12,13 @@
         /// <returns>The resulting request created from this view model</returns>
         public virtual TRequest ViewModelToRequest(TViewModel viewModel)
         {
-            Mapper.Initialize(cfg =>
+            var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TViewModel, TRequest>();
             });
+            var mapper = config.CreateMapper();
 
-            return Mapper.Map<TViewModel, TRequest>(viewModel);
+            return mapper.Map<TViewModel, TRequest>(viewModel);
         }
     }
 }

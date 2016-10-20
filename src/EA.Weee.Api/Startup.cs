@@ -10,13 +10,13 @@ namespace EA.Weee.Api
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
+    using IdentityServer3.AccessTokenValidation;
+    using IdentityServer3.Core.Configuration;
+    using IdentityServer3.Core.Logging;
     using IdSrv;
     using Microsoft.Owin.Security.DataProtection;
     using Owin;
     using Services;
-    using Thinktecture.IdentityServer.AccessTokenValidation;
-    using Thinktecture.IdentityServer.Core.Configuration;
-    using Thinktecture.IdentityServer.Core.Logging;
 
     public class Startup
     {
@@ -45,7 +45,7 @@ namespace EA.Weee.Api
             config.Filters.Add(new ElmahHandleErrorApiAttribute());
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
-            app.UseIdentityServer(GetIdentityServerOptions(app));
+            app.UseIdentityServer(GetIdentityServerOptions(app, configurationService.CurrentConfiguration));
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
@@ -58,9 +58,9 @@ namespace EA.Weee.Api
             app.UseWebApi(config);
         }
 
-        private static IdentityServerOptions GetIdentityServerOptions(IAppBuilder app)
+        private static IdentityServerOptions GetIdentityServerOptions(IAppBuilder app, AppConfiguration config)
         {
-            var factory = Factory.Configure();
+            var factory = Factory.Configure(config);
             factory.ConfigureUserService(app);
 
             return new IdentityServerOptions

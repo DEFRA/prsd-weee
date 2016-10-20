@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using Thinktecture.IdentityServer.Core.Events;
-    using Thinktecture.IdentityServer.Core.Services;
+    using System;
+    using System.Threading.Tasks;
+    using IdentityServer3.Core.Events;
+    using IdentityServer3.Core.Services;
 
     /// <summary>
     /// An implmentation of Identity Servers's IEventService interface which routes
@@ -16,13 +18,18 @@
             this.auditSecurityEventService = auditSecurityEventService;
         }
 
-        public void Raise<T>(Thinktecture.IdentityServer.Core.Events.Event<T> evt)
+        public void Raise<T>(IdentityServer3.Core.Events.Event<T> evt)
         {
             Event<LocalLoginDetails> localLoginDetailsEvent = evt as Event<LocalLoginDetails>;
             if (localLoginDetailsEvent != null)
             {
                 AuditLogin(localLoginDetailsEvent);
             }
+        }
+
+        public Task RaiseAsync<T>(Event<T> evt)
+        {
+            throw new NotImplementedException();
         }
 
         private void AuditLogin(Event<LocalLoginDetails> localLoginDetailsEvent)

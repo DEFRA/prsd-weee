@@ -1,7 +1,8 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
+    using System;
     using System.Diagnostics;
-    using Thinktecture.IdentityServer.Core.Logging;
+    using IdentityServer3.Core.Logging;
 
     internal class DebugLogProvider : ILogProvider
     {
@@ -24,6 +25,26 @@
                 }
                 return true;
             }
+
+            public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
+            {
+                return Log(logLevel, messageFunc, exception);
+            }
+        }
+
+        public IDisposable OpenMappedContext(string key, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable OpenNestedContext(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        Logger ILogProvider.GetLogger(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }
