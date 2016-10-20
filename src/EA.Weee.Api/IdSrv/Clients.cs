@@ -2,11 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Configuration;
-    using Thinktecture.IdentityServer.Core.Models;
-
+    using IdentityServer3.Core.Models;
+    using Services;
+    using Client = IdentityServer3.Core.Models.Client;
     internal static class Clients
     {
-        public static List<Client> Get()
+        public static List<Client> Get(AppConfiguration config)
         {
             string clientId = ConfigurationManager.AppSettings["Weee.ApiClientID"];
             string clientSecret = ConfigurationManager.AppSettings["Weee.ApiSecret"];
@@ -18,16 +19,16 @@
 
             return new List<Client>
             {
-                new Client
+                new IdentityServer3.Core.Models.Client
                 {
                     ClientName = "WEEE Web",
                     ClientId = clientId,
                     Enabled = true,
                     AccessTokenType = AccessTokenType.Reference,
                     Flow = Flows.ResourceOwner,
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
-                        new ClientSecret(clientSecret.Sha256())
+                        new Secret(config.ApiSecret.Sha256())
                     },
                     AccessTokenLifetime = 3600 // 1 hour
                 }

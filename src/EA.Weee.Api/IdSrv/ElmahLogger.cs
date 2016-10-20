@@ -3,7 +3,7 @@
     using System;
     using Core.Logging;
     using Elmah;
-    using Thinktecture.IdentityServer.Core.Logging;
+    using IdentityServer3.Core.Logging;
 
     public class ElmahLogger : ILog, ILogger
     {
@@ -21,6 +21,11 @@
             }
 
             return false;
+        }
+
+        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
+        {
+            return Log(logLevel, messageFunc, exception);
         }
     }
 }
