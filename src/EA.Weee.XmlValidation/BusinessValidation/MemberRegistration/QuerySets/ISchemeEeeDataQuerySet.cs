@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Obligation;
+    using Domain.DataReturns;
 
     public interface ISchemeEeeDataQuerySet
     {
-        Task<bool> HasProducerEeeDataForObligationType(string registrationNumber, ObligationType obligationType);
+        Task<List<EeeOutputAmount>> GetLatestProducerEeeData(string registrationNumber);
     }
 }

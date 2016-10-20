@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Core.Shared;
     using FakeItEasy;
     using Xml.MemberRegistration;
@@ -52,7 +53,7 @@
         }
 
         [Fact]
-        public void DuplicateRegistrationNumbers_ShouldReturnRuleResult()
+        public async Task DuplicateRegistrationNumbers_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -60,12 +61,12 @@
 
             A.CallTo(() => duplicateProducerRegistrationNumbers.Evaluate(scheme)).Returns(errors);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
             Assert.Equal(errors, result);
         }
 
         [Fact]
-        public void DuplicateProducerNames_ShouldReturnRuleResult()
+        public async Task DuplicateProducerNames_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -73,12 +74,12 @@
 
             A.CallTo(() => duplicateProducerNames.Evaluate(scheme)).Returns(errors);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
             Assert.Equal(errors, result);
         }
 
         [Fact]
-        public void SchemeApprovalNumberIsInvalid_ShouldReturnRuleResult()
+        public async Task SchemeApprovalNumberIsInvalid_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -86,14 +87,14 @@
 
             A.CallTo(() => correctSchemeApprovalNumber.Evaluate(scheme, schemeId)).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerAmendmentHasNoRegistrationNumber_ShouldReturnRuleResult()
+        public async Task ProducerAmendmentHasNoRegistrationNumber_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -101,14 +102,14 @@
 
             A.CallTo(() => amendmentHasNoProducerRegistrationNumber.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerInsertHasRegistrationNumber_ShouldReturnRuleResult()
+        public async Task ProducerInsertHasRegistrationNumber_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -116,14 +117,14 @@
 
             A.CallTo(() => insertHasProducerRegistrationNumber.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerHasNoUkBasedAuthorisedRepresentative_ShouldReturnRuleResult()
+        public async Task ProducerHasNoUkBasedAuthorisedRepresentative_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -131,14 +132,14 @@
 
             A.CallTo(() => ukBasedAuthorisedRepresentative.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerNameIsChanging_ShouldReturnRuleResult()
+        public async Task ProducerNameIsChanging_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -146,14 +147,14 @@
 
             A.CallTo(() => producerNameWarning.Evaluate(scheme, scheme.producerList.Single(), schemeId)).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void AnnualTurnoverHasMismatch_ShouldReturnRuleResult()
+        public async Task AnnualTurnoverHasMismatch_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -161,14 +162,14 @@
 
             A.CallTo(() => annualTurnoverMismatch.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerRegistrationNumberIsInvalid_ShouldReturnRuleResult()
+        public async Task ProducerRegistrationNumberIsInvalid_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -176,14 +177,14 @@
 
             A.CallTo(() => producerRegistrationNumberValidity.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerAlreadyRegistered_ShouldReturnRuleResult()
+        public async Task ProducerAlreadyRegistered_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -191,14 +192,14 @@
 
             A.CallTo(() => producerAlreadyRegistered.Evaluate(scheme, scheme.producerList.Single(), schemeId)).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerNameAlreadyRegistered_ShouldReturnRuleResult()
+        public async Task ProducerNameAlreadyRegistered_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -206,14 +207,14 @@
 
             A.CallTo(() => producerNameAlreadyRegistered.Evaluate()).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerChargeBandChanged_ShouldReturnRuleResult()
+        public async Task ProducerChargeBandChanged_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -221,14 +222,14 @@
 
             A.CallTo(() => producerChargeBandChangeWarning.Evaluate(scheme, scheme.producerList.Single(), schemeId)).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void CompanyAlreadyRegistered_ShouldReturnRuleResult()
+        public async Task CompanyAlreadyRegistered_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -236,14 +237,14 @@
 
             A.CallTo(() => companyAlreadyRegistered.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void CompanyRegistrationNumberChange_ShouldReturnRuleResult()
+        public async Task CompanyRegistrationNumberChange_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -251,14 +252,14 @@
 
             A.CallTo(() => companyRegistrationNumberChange.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void ProducerObligationTypeChange_ShouldReturnRuleResult()
+        public async Task ProducerObligationTypeChange_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
             var schemeId = Guid.NewGuid();
@@ -266,14 +267,14 @@
 
             A.CallTo(() => producerObligationTypeChange.Evaluate(scheme.producerList.Single())).Returns(error);
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Single(result);
             Assert.Equal(error, result.Single());
         }
 
         [Fact]
-        public void WhereAllRulesPass_NoRuleResultsShouldBeReturned()
+        public async Task WhereAllRulesPass_NoRuleResultsShouldBeReturned()
         {
             A.CallTo(() => producerNameWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
             A.CallTo(() => annualTurnoverMismatch.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
@@ -304,7 +305,7 @@
 
             var schemeId = Guid.NewGuid();
 
-            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
             Assert.Empty(result);
         }

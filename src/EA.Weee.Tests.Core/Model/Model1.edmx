@@ -2514,7 +2514,7 @@
           <Property Name="SchemeId" Type="Guid" Nullable="false" />
           <Property Name="CurrentDataReturnVersionId" Type="Guid" />
           <Property Name="Quarter" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DataReturnVersion" Relationship="EA.Weee.TestModel.FK_DataReturn_DataReturnVersion" FromRole="DataReturn" ToRole="DataReturnVersion" />
+          <NavigationProperty Name="CurrentDataReturnVersion" Relationship="EA.Weee.TestModel.FK_DataReturn_DataReturnVersion" FromRole="DataReturn" ToRole="DataReturnVersion" />
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_DataReturn_Scheme" FromRole="DataReturn" ToRole="Scheme" />
           <NavigationProperty Name="DataReturnVersions" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_DataReturn" FromRole="DataReturn" ToRole="DataReturnVersion" />
         </EntityType>
