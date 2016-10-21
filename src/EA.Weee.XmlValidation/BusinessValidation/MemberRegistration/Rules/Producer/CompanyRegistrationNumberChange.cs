@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
     using Core.Helpers;
+    using Core.Shared;
     using QuerySets;
     using Xml.MemberRegistration;
 
@@ -39,11 +40,25 @@
 
                             if (existingCompanyNumberFormatted != newCompanyNumberFormatted)
                             {
-                                result = RuleResult.Fail(
-                                    string.Format("The company registration number of {0} {1} will change from {2} to {3}.",
-                                    existingProducer.OrganisationName, existingProducer.RegisteredProducer.ProducerRegistrationNumber,
-                                    existingProducer.ProducerBusiness.CompanyDetails.CompanyNumber, newCompany.companyNumber),
-                                    Core.Shared.ErrorLevel.Warning);
+                                if (string.IsNullOrEmpty(newCompanyNumberFormatted))
+                                {
+                                    result = RuleResult.Fail(
+                                        string.Format("The company registration number of {0} {1} which is currently {2} will be removed.",
+                                        existingProducer.OrganisationName,
+                                        existingProducer.RegisteredProducer.ProducerRegistrationNumber,
+                                        existingProducer.ProducerBusiness.CompanyDetails.CompanyNumber),
+                                        ErrorLevel.Warning);
+                                }
+                                else
+                                {
+                                    result = RuleResult.Fail(
+                                        string.Format("The company registration number of {0} {1} will change from {2} to {3}.",
+                                        existingProducer.OrganisationName,
+                                        existingProducer.RegisteredProducer.ProducerRegistrationNumber,
+                                        existingProducer.ProducerBusiness.CompanyDetails.CompanyNumber,
+                                        newCompany.companyNumber),
+                                        ErrorLevel.Warning);
+                                }
                             }
                         }
                     }
