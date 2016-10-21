@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Scheme;
     using Domain.Error;
@@ -34,7 +35,7 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ProcessXmlFile message)
+        public async Task<IEnumerable<MemberUploadError>> Validate(ProcessXmlFile message)
         {
             string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema
@@ -64,7 +65,7 @@
                 return errors;
             }
 
-            errors = businessValidator.Validate(deserializedXml, message.OrganisationId)
+            errors = (await businessValidator.Validate(deserializedXml, message.OrganisationId))
                 .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), UploadErrorType.Business, err.Message))
                 .ToList();
 

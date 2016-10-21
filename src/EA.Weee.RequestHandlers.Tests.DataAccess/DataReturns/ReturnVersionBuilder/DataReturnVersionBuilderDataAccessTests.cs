@@ -35,7 +35,7 @@
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(dataReturn.Id, result.Id);
-                Assert.Null(dataReturn.DataReturnVersion);
+                Assert.Null(dataReturn.CurrentDataReturnVersion);
             }
         }
 
