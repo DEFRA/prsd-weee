@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Rules.Producer;
     using Rules.Scheme;
     using Xml.MemberRegistration;
@@ -24,6 +25,7 @@
         private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
+        private readonly Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate;
 
         public MemberRegistrationBusinessValidator(IProducerNameChange producerNameWarning, 
             IAnnualTurnoverMismatch annualTurnoverMismatch, 
@@ -39,7 +41,8 @@
             IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK,
             IProducerChargeBandChange producerChargeBandChangeWarning,
             ICompanyAlreadyRegistered companyAlreadyRegistered,
-            ICompanyRegistrationNumberChange companyRegistrationNumberChange)
+            ICompanyRegistrationNumberChange companyRegistrationNumberChange,
+            Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -56,9 +59,10 @@
             this.producerChargeBandChangeWarning = producerChargeBandChangeWarning;
             this.companyAlreadyRegistered = companyAlreadyRegistered;
             this.companyRegistrationNumberChange = companyRegistrationNumberChange;
+            this.producerObligationTypeChangeDelegate = producerObligationTypeChangeDelegate;
         }
 
-        public IEnumerable<RuleResult> Validate(schemeType scheme, Guid organisationId)
+        public async Task<IEnumerable<RuleResult>> Validate(schemeType scheme, Guid organisationId)
         {
             var result = new List<RuleResult>();
 
@@ -68,6 +72,8 @@
 
             // Now comparing against existing data...
             result.Add(correctSchemeApprovalNumber.Evaluate(scheme, organisationId));
+
+            var producerObligationTypeChange = producerObligationTypeChangeDelegate(organisationId, scheme.complianceYear);
 
             // Validate producers
             foreach (var producer in scheme.producerList)
@@ -87,6 +93,7 @@
                 result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(companyAlreadyRegistered.Evaluate(producer));
                 result.Add(companyRegistrationNumberChange.Evaluate(producer));
+                result.Add(await producerObligationTypeChange.Evaluate(producer));
             }
 
             return result.Where(r => r != null && !r.IsValid);
