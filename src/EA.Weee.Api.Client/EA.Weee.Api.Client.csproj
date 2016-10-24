@@ -77,6 +77,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ISmokeTest.cs" />
+    <Compile Include="Actions\SmokeTest.cs" />
     <Compile Include="Actions\UnauthenticatedUser.cs" />
     <Compile Include="Actions\IUnauthenticatedUser.cs" />
     <Compile Include="Entities\ExternalUserCreationData.cs" />
