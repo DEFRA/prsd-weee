@@ -240,6 +240,7 @@
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\Modules\SecurityModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
+    <Compile Include="Controllers\SmokeTestController.cs" />
     <Compile Include="Controllers\WarmUpController.cs" />
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />

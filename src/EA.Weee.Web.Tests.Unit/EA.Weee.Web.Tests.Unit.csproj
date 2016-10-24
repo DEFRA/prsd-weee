@@ -179,6 +179,7 @@
     <Compile Include="Areas\Admin\Controllers\ProducersControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\TestEmailControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
