@@ -3,6 +3,7 @@
     using Autofac;
     using Charges.IssuePendingCharges;
     using Charges.IssuePendingCharges.Errors;
+    using Email;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -63,6 +64,9 @@
 
             // Register the DomainUserContext which may be used by all request handlers to get the current domain user.
             builder.RegisterType<DomainUserContext>().As<IDomainUserContext>();
+
+            // Register email service
+            builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
         }
     }
 }

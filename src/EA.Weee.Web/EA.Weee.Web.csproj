@@ -225,7 +225,9 @@
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToContactDetailsOverview.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToPartnershipDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewDisplayOption.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\PcsDetails\PcsDetailsOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\TestEmail\TestEmailViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
@@ -485,6 +488,8 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\colours\_palette.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\colours\_organisation.scss" />
+    <Content Include="Areas\Admin\Views\TestEmail\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\TestEmail\Success.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\govuk\details.polyfill.js" />
@@ -910,7 +915,9 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\SmokeTest\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
