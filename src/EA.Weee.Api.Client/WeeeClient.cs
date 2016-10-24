@@ -13,6 +13,7 @@
     {
         private readonly HttpClient httpClient;
         private IUnauthenticatedUser user;
+        private ISmokeTest smokeTest;
 
         public WeeeClient(string baseUrl, TimeSpan timeout)
         {
@@ -28,6 +29,11 @@
         public IUnauthenticatedUser User
         {
             get { return user ?? (user = new UnauthenticatedUser(httpClient)); }
+        }
+
+        public ISmokeTest SmokeTest
+        {
+            get { return smokeTest ?? (smokeTest = new SmokeTest(httpClient)); }
         }
 
         public async Task<TResult> SendAsync<TResult>(IRequest<TResult> request)
