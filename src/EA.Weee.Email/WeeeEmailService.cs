@@ -173,5 +173,19 @@
                 return await sender.SendAsync(message, true);
             }
         }
+
+        public async Task<bool> SendTestEmail(string emailAddress)
+        {
+            EmailContent content = new EmailContent
+            {
+                HtmlText = templateExecutor.Execute("Test.cshtml", null),
+                PlainText = templateExecutor.Execute("Test.txt", null)
+            };
+
+            using (MailMessage message = messageCreator.Create(emailAddress, "Test email from WEEE", content))
+            {
+                return await sender.SendAsync(message, false);
+            }
+        }
     }
 }
