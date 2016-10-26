@@ -11,15 +11,10 @@
     /// All values will be encoded where required to ensure the output is valid.
     /// </summary>
     /// <typeparam name="T">The type of data items that will be written.</typeparam>
-    public class CsvWriter<T>
+    public class CsvWriter<T> : ICsvWriter<T>
     {
         private readonly IExcelSanitizer excelSanitizer;
         private List<CsvColumn> columns = new List<CsvColumn>();
-
-        public CsvWriter()
-        {
-            this.excelSanitizer = null;
-        }
 
         /// <summary>
         /// Create a CSV writer where values are sanitized to ensure they are
@@ -37,7 +32,7 @@
         /// <param name="title">The title that will appear on the first row of the output.</param>
         /// <param name="func">A Func that defines how the data value will be extracted from each item.</param>
         /// <param name="formatAsText">Forces the value to be output as a string value. This should be used for
-        /// text columns which are likely to be misinterpreted by Excel as numberic, e.g. phone numbers.</param>
+        /// text columns which are likely to be misinterpreted by Excel as numeric, e.g. phone numbers.</param>
         public void DefineColumn(string title, Func<T, object> func, bool formatAsText = false)
         {
             columns.Add(new CsvColumn(title, func, formatAsText, excelSanitizer));
@@ -51,11 +46,14 @@
             string titleString = string.Join(",", titles);
             sb.AppendLine(titleString);
 
-            foreach (T item in items)
+            if (items != null)
             {
-                string[] values = columns.Select(c => Encode(c.GetData(item))).ToArray();
-                string valuesString = string.Join(",", values);
-                sb.AppendLine(valuesString);
+                foreach (T item in items)
+                {
+                    string[] values = columns.Select(c => Encode(c.GetData(item))).ToArray();
+                    string valuesString = string.Join(",", values);
+                    sb.AppendLine(valuesString);
+                }
             }
 
             return sb.ToString();
@@ -115,10 +113,10 @@
                     result = data.ToString();
                 }
 
-                if (excelSanitizer != null && excelSanitizer.IsThreat(result))
+                if (excelSanitizer.IsThreat(result))
                 {
                     string message = string.Format(
-                        "A potentially dangerous string was identified and santised when writing CSV data. The value was \"{0}\".",
+                        "A potentially dangerous string was identified and sanitised when writing CSV data. The value was \"{0}\".",
                         result);
                     Trace.TraceWarning(message);
                     result = excelSanitizer.Sanitize(result);

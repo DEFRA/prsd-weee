@@ -21,6 +21,15 @@
 
         @Html.Partial("_ReportSearchFilters")
 
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
+            <fieldset>
+                <label class="block-label" for="IncludeBrandNames">
+                    @Html.CheckBoxFor(m => m.IncludeBrandNames, new { @id = "IncludeBrandNames" })
+                    Include brand names?
+                </label>
+            </fieldset>
+        </div>
+
         <p class="small">
             If your selection criteria is broad, it may take a while to download your results.
         </p>
@@ -46,7 +55,8 @@
                               complianceYear = Model.SelectedYear,
                               schemeId = Model.SelectedScheme,
                               authorityId = Model.SelectedAA,
-                              includeRemovedProducers = Model.IncludeRemovedProducer
+                              includeRemovedProducers = Model.IncludeRemovedProducer,
+                              includeBrandNames = Model.IncludeBrandNames
                           }))";
         </script>
     }
