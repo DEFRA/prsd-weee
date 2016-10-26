@@ -435,6 +435,21 @@
             return producerSubmission;
         }
 
+        public BrandName_ CreateBrandName(ProducerSubmission producerSubmission, string brandName)
+        {
+            var result = new BrandName_
+            {
+                Id = IntegerToGuid(GetNextId()),
+                Name = brandName,
+                ProducerSubmissionId = producerSubmission.Id,
+                ProducerSubmission = producerSubmission
+            };
+
+            model.BrandName_Set.Add(result);
+
+            return result;
+        }
+
         private Company CreateCompany()
         {
             Contact1 contact = CreateContact();
