@@ -17,6 +17,10 @@
 
             builder.RegisterType<CsvWriterFactory>().SingleInstance();
 
+            builder.RegisterGeneric(typeof(CsvWriter<>))
+                .As(typeof(ICsvWriter<>))
+                .InstancePerDependency();
+
             builder.RegisterType<ConfigurationManagerWrapper>().As<IConfigurationManagerWrapper>();
 
             builder.Register(c => c.Resolve<IConfigurationManagerWrapper>().TestInternalUserEmailDomains)
