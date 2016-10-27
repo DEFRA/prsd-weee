@@ -244,6 +244,73 @@
                 .MustHaveHappened();
         }
 
+        [Fact]
+        public async Task SendTestEmail_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendTestEmail(A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("Test.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("Test.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendTestEmail_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendTestEmail("a@b.com");
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendTestEmail_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendTestEmail(A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Test email from WEEE", A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendTestEmail_SendsCreatedMailMessageWithTrowOnException()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var mailMessage = new MailMessage();
+
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, A<string>._, A<EmailContent>._))
+                .Returns(mailMessage);
+
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendTestEmail(A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.Sender.SendAsync(mailMessage, false))
+                .MustHaveHappened();
+        }
+
         private class WeeeEmailServiceBuilder
         {
             public readonly ITemplateExecutor TemplateExecutor;

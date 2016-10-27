@@ -286,9 +286,10 @@
         }
 
         [Fact]
-        public void Evaluate_Amend_NonMatchingCompanyRegistrationNumber_WarningMessage_ContainsProducerNameAndCompanyRegistrationNumber()
+        public void Evaluate_Amend_NonMatchingCompanyRegistrationNumber_WarningMessage_ContainsProducerNameAndNewCompanyRegistrationNumber()
         {
             // Arrange
+            string registrationNumber = "prn";
             string existingCompanyName = "Existing company name";
             string existingCompanyNumber = "1234";
             string newCompanyNumber = "6789";
@@ -296,17 +297,17 @@
             var newProducer = new producerType()
             {
                 status = statusType.A,
-                registrationNo = "prn",
+                registrationNo = registrationNumber,
                 producerBusiness = new producerBusinessType()
                 {
-                    Item = new companyType() { companyName = "new company name", companyNumber = existingCompanyNumber }
+                    Item = new companyType() { companyName = "new company name", companyNumber = newCompanyNumber }
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
-                producerBusiness: new ProducerBusiness(new Company(existingCompanyName, newCompanyNumber, null)));
+            var existingProducer = FakeProducer.Create(ObligationType.Both, registrationNumber,
+                producerBusiness: new ProducerBusiness(new Company(existingCompanyName, existingCompanyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestProducerFromPreviousComplianceYears("prn"))
+            A.CallTo(() => producerQuerySet.GetLatestProducerFromPreviousComplianceYears(registrationNumber))
                 .Returns(existingProducer);
 
             // Act
@@ -317,9 +318,47 @@
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
             Assert.Contains(existingCompanyName, result.Message);
-            Assert.Contains("prn", result.Message);
+            Assert.Contains(registrationNumber, result.Message);
             Assert.Contains(existingCompanyNumber, result.Message);
             Assert.Contains(newCompanyNumber, result.Message);
+        }
+
+        [Fact]
+        public void Evaluate_Amend_NonMatchingEmptyCompanyRegistrationNumber_WarningMessage_ContainsProducerNameAndOldCompanyRegistrationNumberOnly()
+        {
+            // Arrange
+            string registrationNumber = "prn";
+            string existingCompanyName = "Existing company name";
+            string existingCompanyNumber = "1234";
+            string newCompanyNumber = "000";
+
+            var newProducer = new producerType()
+            {
+                status = statusType.A,
+                registrationNo = registrationNumber,
+                producerBusiness = new producerBusinessType()
+                {
+                    Item = new companyType() { companyName = "new company name", companyNumber = newCompanyNumber }
+                }
+            };
+
+            var existingProducer = FakeProducer.Create(ObligationType.Both, registrationNumber,
+                producerBusiness: new ProducerBusiness(new Company(existingCompanyName, existingCompanyNumber, null)));
+
+            A.CallTo(() => producerQuerySet.GetLatestProducerFromPreviousComplianceYears(registrationNumber))
+                .Returns(existingProducer);
+
+            // Act
+            var result = new CompanyRegistrationNumberChange(producerQuerySet)
+                .Evaluate(newProducer);
+
+            // Assert
+            Assert.False(result.IsValid);
+            Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
+            Assert.Contains(existingCompanyName, result.Message);
+            Assert.Contains(registrationNumber, result.Message);
+            Assert.Contains(existingCompanyNumber, result.Message);
+            Assert.DoesNotContain(newCompanyNumber, result.Message);
         }
     }
 }
