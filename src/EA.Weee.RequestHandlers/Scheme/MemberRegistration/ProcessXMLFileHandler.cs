@@ -48,7 +48,7 @@
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var errors = xmlValidator.Validate(message);
+            var errors = await xmlValidator.Validate(message);
 
             List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
             bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == UploadErrorType.Schema);

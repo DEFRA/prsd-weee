@@ -142,7 +142,7 @@
 
         //Overseas contact details
         public string OverseasProducerName { get; set; }
-   
+
         public string OverseasContactTitle { get; set; }
 
         public string OverseasContactForename { get; set; }
@@ -174,5 +174,7 @@
         public string OverseasContactCountry { get; set; }
 
         public string RemovedFromScheme { get; set; }
+
+        public string BrandNames { get; set; }
     }
 }
