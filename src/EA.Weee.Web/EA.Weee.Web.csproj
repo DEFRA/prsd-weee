@@ -70,7 +70,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
