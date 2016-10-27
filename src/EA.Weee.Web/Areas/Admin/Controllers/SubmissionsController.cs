@@ -233,7 +233,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
         {
-            if (!Request.IsAjaxRequest())
+            if (Request != null &&
+                !Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -247,8 +248,10 @@
                 try
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                    var getDataReturnSubmissionsHistoryResults = new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year);
+                    getDataReturnSubmissionsHistoryResults.IncludeSummaryData = true;
 
-                    DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
                     return PartialView("_dataReturnSubmissionsResults", searchResults.Data);
                 }
                 catch (ApiBadRequestException ex)

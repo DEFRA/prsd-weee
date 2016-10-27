@@ -18,6 +18,8 @@
         /// </summary>
         public DataReturnSubmissionsHistoryOrderBy? Ordering { get; set; }
 
+        public bool IncludeSummaryData { get; set; }
+
         public GetDataReturnSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null)
         {
             SchemeId = schemeId;
