@@ -130,7 +130,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId, bool includeRemovedProducers)
+        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId,
+            bool includeRemovedProducers, bool includeBrandNames)
         {
             StringBuilder fileName = new StringBuilder();
 
@@ -163,7 +164,8 @@
             CSVFileData membersDetailsCsvData;
             using (IWeeeClient client = apiClient())
             {
-                GetMemberDetailsCsv request = new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId);
+                GetMemberDetailsCsv request = 
+                    new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId, includeBrandNames);
                 membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
             }
 

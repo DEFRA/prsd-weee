@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -15,13 +16,15 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-        private readonly CsvWriterFactory csvWriterFactory;
+        private readonly ICsvWriter<MembersDetailsCsvData> csvWriter;
 
-        public GetMembersDetailsCsvHandler(IWeeeAuthorization authorization, WeeeContext context, CsvWriterFactory csvWriterFactory)
+        public const short MaxBrandNamesLength = short.MaxValue;
+
+        public GetMembersDetailsCsvHandler(IWeeeAuthorization authorization, WeeeContext context, ICsvWriter<MembersDetailsCsvData> csvWriter)
         {
             this.authorization = authorization;
             this.context = context;
-            this.csvWriterFactory = csvWriterFactory;
+            this.csvWriter = csvWriter;
         }
 
         public async Task<CSVFileData> HandleAsync(GetMemberDetailsCsv request)
@@ -33,10 +36,9 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.IncludeRemovedProducer, request.SchemeId, request.CompetentAuthorityId);
+            var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, request.SchemeId, request.CompetentAuthorityId);
 
-            CsvWriter<MembersDetailsCsvData> csvWriter = csvWriterFactory.Create<MembersDetailsCsvData>();
             csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
@@ -124,7 +126,22 @@
                 csvWriter.DefineColumn(@"Removed from scheme", i => i.RemovedFromScheme);
             }
 
-            string fileContent = csvWriter.Write(items);
+            if (request.IncludeBrandNames)
+            {
+                var outOfRangeProducerBrandNames = result
+                    .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
+                    .Select(r => r.ProducerName);
+
+                if (outOfRangeProducerBrandNames.Any())
+                {
+                    throw new Exception(
+                       string.Format("The following producers have brand names exceeding the maximum allowed length: {0}.", string.Join(", ", outOfRangeProducerBrandNames)));
+                }
+
+                csvWriter.DefineColumn("Brand names", i => i.BrandNames);
+            }
+
+            string fileContent = csvWriter.Write(result);
 
             var fileName = string.Format("{0} - producerdetails_{1:ddMMyyyy_HHmm}.csv",
                 request.ComplianceYear,
