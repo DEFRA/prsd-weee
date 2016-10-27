@@ -431,7 +431,7 @@
 
             // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
-            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, null, null, false);
+            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, null, null, false, false);
             SystemTime.Unfreeze();
 
             // Assert
@@ -469,7 +469,7 @@
 
             // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
-            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, new Guid("88DF333E-6B2B-4D72-B411-7D7024EAA5F5"), null, false);
+            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, new Guid("88DF333E-6B2B-4D72-B411-7D7024EAA5F5"), null, false, false);
             SystemTime.Unfreeze();
 
             // Assert
@@ -516,6 +516,7 @@
                 2015,
                 new Guid("88DF333E-6B2B-4D72-B411-7D7024EAA5F5"),
                 new Guid("703839B3-A081-4491-92B7-FCF969067EA3"),
+                false,
                 false);
             SystemTime.Unfreeze();
 
@@ -557,6 +558,7 @@
                 2015,
                 null,
                 new Guid("703839B3-A081-4491-92B7-FCF969067EA3"),
+                false,
                 false);
             SystemTime.Unfreeze();
 
@@ -587,7 +589,7 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, null, null, false);
+            ActionResult result = await controller.DownloadProducerDetailsCsv(2015, null, null, false, false);
 
             // Assert
             FileResult fileResult = result as FileResult;

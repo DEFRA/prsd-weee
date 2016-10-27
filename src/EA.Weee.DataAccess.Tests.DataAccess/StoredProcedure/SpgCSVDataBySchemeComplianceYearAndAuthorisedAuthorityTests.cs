@@ -34,7 +34,7 @@
                 // Act
                 List<MembersDetailsCsvData> results =
                     await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false,
-                        scheme1.Id, scheme1.CompetentAuthorityId);
+                        false, scheme1.Id, scheme1.CompetentAuthorityId);
 
                 // Assert
                 Assert.NotNull(results);
@@ -70,7 +70,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -103,7 +103,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -140,7 +140,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -177,7 +177,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -221,7 +221,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
@@ -265,7 +265,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -305,7 +305,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -350,7 +350,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -397,7 +397,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -405,6 +405,112 @@
                 Assert.Equal(1, results.Count);
                 Assert.Collection(results,
                    (r1) => Assert.Equal("WEE/33CCCC33", r1.PRN));
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithoutProducerBrandNames_ReturnsBrandNamesAsNull()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme = helper.CreateScheme();
+
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
+                memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
+
+                ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                producer.Business.Partnership.Name = "ABCH";
+                producer.RegisteredProducer.Removed = false;
+
+                helper.CreateBrandName(producer, "Brand1");
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme.Id, null);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Single(results);
+
+                Assert.Null(results[0].BrandNames);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithProducerBrandNames_ReturnsBrandNames()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme = helper.CreateScheme();
+
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
+                memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
+
+                ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                producer.Business.Partnership.Name = "ABCH";
+                producer.RegisteredProducer.Removed = false;
+
+                helper.CreateBrandName(producer, "Brand1");
+                helper.CreateBrandName(producer, "Brand2");
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, true, scheme.Id, null);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Single(results);
+
+                Assert.NotNull(results[0].BrandNames);
+                Assert.Equal("Brand1; Brand2", results[0].BrandNames);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithProducerBrandNames_ReturnsBrandNamesForRemovedProducer()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme = helper.CreateScheme();
+
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
+                memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
+
+                ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                producer.Business.Partnership.Name = "ABCH";
+                producer.RegisteredProducer.Removed = true;
+
+                helper.CreateBrandName(producer, "Brand1");
+                helper.CreateBrandName(producer, "Brand2");
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, true, scheme.Id, null);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Single(results);
+
+                Assert.NotNull(results[0].BrandNames);
+                Assert.Equal("Brand1; Brand2", results[0].BrandNames);
             }
         }
     }
