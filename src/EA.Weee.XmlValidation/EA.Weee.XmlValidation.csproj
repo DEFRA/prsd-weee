@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="BusinessValidation\MemberRegistration\Helpers\ISearchMatcher.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Helpers\SearchMatcher.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\QuerySets\SchemeEeeDataQuerySet.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\QuerySets\ISchemeEeeDataQuerySet.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\IQuery.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\Producer\CurrentCompanyProducers.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\QuerySets\Queries\Producer\CurrentProducersByRegistrationNumber.cs" />
@@ -77,8 +79,10 @@
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IEnsureAnOverseasProducerIsNotBasedInTheUK.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ICompanyAlreadyRegistered.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerObligationTypeChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyAlreadyRegistered.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerObligationTypeChange.cs" />
     <Compile Include="Errors\XmlErrorType.cs" />
     <Compile Include="Errors\XmlValidationError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

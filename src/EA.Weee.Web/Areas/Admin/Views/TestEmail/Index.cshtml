@@ -1,0 +1,21 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.TestEmail.TestEmailViewModel
+@{
+    ViewBag.Title = "Send test email";
+}
+<h1 class="heading-large">Send test email</h1>
+@using (Html.BeginForm())
+{
+    @Html.Gds().ValidationSummary()
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.EmailTo)">
+        @Html.Gds().LabelFor(m => m.EmailTo)
+        @Html.Gds().ValidationMessageFor(m => m.EmailTo)
+        @Html.Gds().TextBoxFor(m => m.EmailTo)
+    </div>
+
+    <div class="form-group">
+        <button class="button" type="submit">Send email</button>
+    </div>
+}
