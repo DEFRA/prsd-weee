@@ -19,9 +19,9 @@
         }
 
         public async Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null,
-            DataReturnSubmissionsHistoryOrderBy? ordering = null)
+            DataReturnSubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
-            var results = 
+            var results =
                 from dru in context.DataReturnsUploads
                 join user in context.Users on dru.DataReturnVersion.SubmittingUserId equals user.Id
                 where dru.Scheme.Id == schemeId &&
@@ -36,7 +36,7 @@
                     ComplianceYear = dru.ComplianceYear.Value,
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
-                    Quarter = (QuarterType)dru.Quarter
+                    Quarter = (QuarterType)dru.Quarter,
                 };
 
             IOrderedQueryable<DataReturnSubmissionsHistoryData> sortedResults;
