@@ -18,18 +18,15 @@
             this.auditSecurityEventService = auditSecurityEventService;
         }
 
-        public void Raise<T>(IdentityServer3.Core.Events.Event<T> evt)
+        public Task RaiseAsync<T>(Event<T> evt)
         {
             Event<LocalLoginDetails> localLoginDetailsEvent = evt as Event<LocalLoginDetails>;
             if (localLoginDetailsEvent != null)
             {
                 AuditLogin(localLoginDetailsEvent);
             }
-        }
 
-        public Task RaiseAsync<T>(Event<T> evt)
-        {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         private void AuditLogin(Event<LocalLoginDetails> localLoginDetailsEvent)

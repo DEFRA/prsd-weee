@@ -10,7 +10,6 @@
     using EA.Weee.Email;
     using EA.Weee.Xml;
     using Identity;
-    using IdSrv;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Autofac;
     using RequestHandlers;
@@ -47,7 +46,6 @@
             builder.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
             builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();
             builder.RegisterType<ApplicationUserManager>().As<UserManager<ApplicationUser>>().InstancePerRequest();
-            builder.RegisterType<ElmahLogger>().As<ILogger>();
 
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ConnectionString;
 
