@@ -98,6 +98,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />

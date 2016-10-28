@@ -154,8 +154,8 @@
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
-                    IList<SubmissionsHistorySearchResult> searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
-                    return PartialView("_submissionsResults", searchResults);
+                    SubmissionsHistorySearchResult searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    return PartialView("_submissionsResults", searchResults.Data);
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -248,8 +248,8 @@
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
-                    IList<DataReturnSubmissionsHistoryResult> searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
-                    return PartialView("_dataReturnSubmissionsResults", searchResults);
+                    DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    return PartialView("_dataReturnSubmissionsResults", searchResults.Data);
                 }
                 catch (ApiBadRequestException ex)
                 {

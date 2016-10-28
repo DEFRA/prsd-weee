@@ -9,6 +9,8 @@
     {
         IUnauthenticatedUser User { get; }
 
+        ISmokeTest SmokeTest { get; }
+
         Task<TResult> SendAsync<TResult>(IRequest<TResult> request);
         Task<TResult> SendAsync<TResult>(string accessToken, IRequest<TResult> request);
     }

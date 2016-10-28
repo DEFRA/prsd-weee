@@ -28,7 +28,8 @@
                     ClientSecrets = new List<ClientSecret>
                     {
                         new ClientSecret(clientSecret.Sha256())
-                    }
+                    },
+                    AccessTokenLifetime = 3600 // 1 hour
                 }
             };
         }
