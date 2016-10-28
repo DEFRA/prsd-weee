@@ -19,7 +19,7 @@
 
         public Task<bool> HandleAsync(SendTestEmail message)
         {
-            authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureCanAccessInternalArea(false);
 
             return weeeEmailService.SendTestEmail(message.EmailTo);
         }
