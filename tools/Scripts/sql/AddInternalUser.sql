@@ -45,7 +45,7 @@ BEGIN
 	NEWID()
 	, @UserId
 	, (SELECT TOP 1 Id FROM [Lookup].[CompetentAuthority])
-	, 2
+	, @Status
 	, (SELECT Id FROM [Security].[Role] WHERE Name = 'InternalAdmin')
 	)
 
