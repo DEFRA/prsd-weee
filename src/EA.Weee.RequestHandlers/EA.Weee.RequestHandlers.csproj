@@ -82,9 +82,12 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerComplianceYearDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IRemoveProducerDataAccess.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
+    <Compile Include="Admin\SendTestEmailHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
@@ -335,6 +339,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Email\EA.Weee.Email.csproj">
+      <Project>{22DD3186-14CE-41E6-916D-643D4DEE8B48}</Project>
+      <Name>EA.Weee.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
       <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>

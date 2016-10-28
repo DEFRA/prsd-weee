@@ -553,6 +553,7 @@
                 if (dataReturnVersion.DataReturn != null)
                 {
                     dataReturnUpload.ComplianceYear = dataReturnVersion.DataReturn.ComplianceYear;
+                    dataReturnUpload.Quarter = dataReturnVersion.DataReturn.Quarter;
                 }
             }
 
@@ -617,6 +618,7 @@
                 dataReturnVersion.SubmittedDate = DateTime.UtcNow;
                 dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
                 dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
+                dataReturn.CurrentDataReturnVersion = dataReturnVersion;
             }
 
             if (weeeCollectedReturnVersion != null)

@@ -18,8 +18,9 @@
         /// The returned entities will not be tracked for changes.
         /// </summary>
         /// <param name="registrationNumber"></param>
+        /// <param name="complianceYear"></param>
         /// <returns></returns>
-        Task<List<ProducerSubmission>> Fetch(string registrationNumber);
+        Task<List<ProducerSubmission>> Fetch(string registrationNumber, int complianceYear);
 
         Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear,
             Guid schemeId);

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
+    <Compile Include="Admin\SendTestEmail.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\SubmissionsHistoryOrderBy.cs" />
     <Compile Include="Test\GetPcsSubmissionWindowSettings.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\GetOrganisationUser.cs" />
