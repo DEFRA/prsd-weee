@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Search;
@@ -14,6 +9,12 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Home;
 
     public class ProducersController : AdminController
@@ -137,26 +138,65 @@
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// This method is used by both JS and non-JS users.
+        /// </summary>
+        /// <param name="registrationNumber"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult> Details(string registrationNumber)
         {
-            await SetBreadcrumb();
-
-            ProducerDetails producerDetails;
             using (IWeeeClient client = apiClient())
             {
-                GetProducerDetails request = new GetProducerDetails()
-                {
-                    RegistrationNumber = registrationNumber
-                };
+                await SetBreadcrumb();
 
-                producerDetails = await client.SendAsync(User.GetAccessToken(), request);
+                var allYears = await client.SendAsync(User.GetAccessToken(), new GetProducerComplianceYear { RegistrationNumber = registrationNumber });
+                var latestYear = allYears.First();
+
+                DetailsViewModel viewModel = new DetailsViewModel();
+                viewModel.RegistrationNumber = registrationNumber;
+                viewModel.ComplianceYears = new SelectList(allYears);
+                viewModel.SelectedYear = latestYear;
+
+                return View(viewModel);
+            }
+        }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="registrationNumber"></param>
+        /// <param name="complianceYear"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FetchDetails(string registrationNumber, int complianceYear)
+        {
+            if (Request != null &&
+                !Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
             }
 
-            DetailsViewModel viewModel = new DetailsViewModel();
-            viewModel.Details = producerDetails;
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
 
-            return View(viewModel);
+            using (IWeeeClient client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                GetProducerDetails request = new GetProducerDetails()
+                {
+                    RegistrationNumber = registrationNumber,
+                    ComplianceYear = complianceYear
+                };
+
+                ProducerDetails producerDetails = await client.SendAsync(User.GetAccessToken(), request);
+
+                return PartialView("_detailsResults", producerDetails);
+            }
         }
 
         [HttpGet]

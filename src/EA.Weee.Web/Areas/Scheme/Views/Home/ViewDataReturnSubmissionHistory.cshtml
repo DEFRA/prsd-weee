@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
-@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Requests.Shared
+@using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturnSubmissionHistoryViewModel
 @{
     ViewBag.Title = "View Data Return Submission History";
@@ -17,13 +18,104 @@
 @if (Model.Results.Any())
 {
     <div class="form-group">
-        @using (var tableBuilder = this.WeeeGds().TableBuilder(Model.Results, "Data returns submission history", new { id = "submissions" }))
+        <table id="submissions">
+            <caption><span class="visuallyhidden">Data returns submission history</span></caption>
+            <thead>
+                <tr>
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending:
+                            <th class="sorted-ascending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
+                                <span class="visuallyhidden">Sorted by earliest compliance year.</span>
+                            </th>
+                            break;
+
+                        case DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending:
+                            <th class="sorted-descending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
+                                <span class="visuallyhidden">Sorted by most recent compliance year.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th>
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
+                            </th>
+                            break;
+                    }
+
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
+                            <th class="sorted-ascending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterDescending })">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by earliest quarter.</span>
+                            </th>
+                            break;
+
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
+                            <th class="sorted-descending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterAscending })">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by most recent quarter.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th>
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterAscending })">Quarter reported</a>
+                            </th>
+                            break;
+                    }
+
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
+                            <th class="sorted-ascending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                            </th>
+                            break;
+
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
+                            <th class="sorted-descending">
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th>
+                                <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
+                            </th>
+                            break;
+                    }
+
+                    <th>Submitted by</th>
+                    <th>File name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    <tr>
+                        <td>@item.ComplianceYear</td>
+                        <td>@item.Quarter</td>
+                        <td>@item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture)</td>
+                        <td>@item.SubmittedBy</td>
+                        <td>@item.FileName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+
+        @if (@Model.Results.PageCount > 1)
         {
-            tableBuilder.AddColumn("Date and time (GMT)", d => d.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture));
-            tableBuilder.AddColumn("Compliance year", d => d.ComplianceYear);
-            tableBuilder.AddColumn("Quarter reported", d => d.Quarter);
-            tableBuilder.AddColumn("Submitted by", d => d.SubmittedBy);
-            tableBuilder.AddColumn("File name", d => d.FileName);
+            <div class="pager">
+                @Html.Pager(Model.Results.PageSize, Model.Results.PageNumber, Model.Results.TotalItemCount).Options(o => o.AddRouteValue("orderby", @Model.OrderBy))
+            </div>
+            <p>Showing @Model.Results.ItemStart - @Model.Results.ItemEnd of @Model.Results.TotalItemCount</p>
         }
     </div>
 }

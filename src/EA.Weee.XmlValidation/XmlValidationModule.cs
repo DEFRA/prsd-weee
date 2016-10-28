@@ -32,6 +32,10 @@
                 .As<ISchemeQuerySet>()
                 .InstancePerRequest();
 
+            builder.RegisterType<SchemeEeeDataQuerySet>()
+                .As<ISchemeEeeDataQuerySet>()
+                .InstancePerRequest();
+
             builder.RegisterType<AmendmentHasNoProducerRegistrationNumber>()
                 .As<IAmendmentHasNoProducerRegistrationNumber>()
                 .InstancePerRequest();
@@ -90,6 +94,14 @@
 
             builder.RegisterType<CompanyAlreadyRegistered>()
                 .As<ICompanyAlreadyRegistered>()
+                .InstancePerRequest();
+
+            builder.RegisterType<CompanyRegistrationNumberChange>()
+                .As<ICompanyRegistrationNumberChange>()
+                .InstancePerRequest();
+
+            builder.RegisterType<ProducerObligationTypeChange>()
+                .As<IProducerObligationTypeChange>()
                 .InstancePerRequest();
 
             builder.RegisterType<ExistingProducerNames>().As<IExistingProducerNames>().InstancePerRequest();

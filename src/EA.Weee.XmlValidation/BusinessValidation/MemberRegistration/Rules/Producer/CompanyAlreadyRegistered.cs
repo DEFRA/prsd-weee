@@ -1,7 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System.Linq;
+    using Core.Helpers;
     using QuerySets;
+    using System.Linq;
     using Xml.MemberRegistration;
 
     public class CompanyAlreadyRegistered : ICompanyAlreadyRegistered
@@ -25,12 +26,14 @@
                 var company = element.producerBusiness.Item as companyType;
                 if (company != null)
                 {
-                    var companyNumber = FormatCompanyRegistrationNumber(company.companyNumber);
+                    var companyNumber = CompanyRegistrationNumberFormatter
+                        .FormatCompanyRegistrationNumber(company.companyNumber);
 
                     if (!string.IsNullOrEmpty(companyNumber) &&
                         (producerQuerySet.GetLatestCompanyProducers().Any(p =>
                             {
-                                var existingCompanyRegistrationNumber = FormatCompanyRegistrationNumber(p.ProducerBusiness.CompanyDetails.CompanyNumber);
+                                var existingCompanyRegistrationNumber = CompanyRegistrationNumberFormatter
+                                .FormatCompanyRegistrationNumber(p.ProducerBusiness.CompanyDetails.CompanyNumber);
 
                                 return !string.IsNullOrEmpty(existingCompanyRegistrationNumber) &&
                                     existingCompanyRegistrationNumber == companyNumber;
@@ -38,7 +41,8 @@
                          ||
                          migratedProducerQuerySet.GetAllMigratedProducers().Any(m =>
                              {
-                                 var migratedProducerCompanyNumber = FormatCompanyRegistrationNumber(m.CompanyNumber);
+                                 var migratedProducerCompanyNumber = CompanyRegistrationNumberFormatter
+                                 .FormatCompanyRegistrationNumber(m.CompanyNumber);
 
                                  return !string.IsNullOrEmpty(migratedProducerCompanyNumber) &&
                                      migratedProducerCompanyNumber == companyNumber;
@@ -50,20 +54,6 @@
                             Core.Shared.ErrorLevel.Error);
                     }
                 }
-            }
-
-            return result;
-        }
-
-        public static string FormatCompanyRegistrationNumber(string companyRegistrationNumber)
-        {
-            string result = null;
-
-            if (companyRegistrationNumber != null)
-            {
-                result = companyRegistrationNumber
-                    .Replace(" ", string.Empty)
-                    .TrimStart('0');
             }
 
             return result;

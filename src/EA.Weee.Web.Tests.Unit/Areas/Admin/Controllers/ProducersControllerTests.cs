@@ -233,18 +233,16 @@
         }
 
         [Fact]
-        public async Task GetDetails_FetchesDetailsFromApiAndReturnsDetailsView()
+        public async Task GetDetails_FetchesComplianceYearsFromApiAndReturnsViewWithYearValues()
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
 
-            ProducerDetails producerDetails = A.Dummy<ProducerDetails>();
-
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
-                .Returns(producerDetails);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerComplianceYear>._))
+                .WhenArgumentsMatch(a => ((GetProducerComplianceYear)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(new List<int> { 2018, 2017, 2016 });
 
             Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
             A.CallTo(() => weeeClientFunc())
@@ -256,8 +254,8 @@
             ActionResult result = await controller.Details("WEE/AA1111AA");
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerComplianceYear>._))
+                .WhenArgumentsMatch(a => ((GetProducerComplianceYear)a[1]).RegistrationNumber == "WEE/AA1111AA")
                 .MustHaveHappened();
 
             ViewResult viewResult = result as ViewResult;
@@ -268,7 +266,90 @@
             DetailsViewModel resultsViewModel = viewResult.Model as DetailsViewModel;
             Assert.NotNull(resultsViewModel);
 
-            Assert.Equal(producerDetails, resultsViewModel.Details);
+            Assert.Equal(2018, resultsViewModel.SelectedYear);
+            Assert.Collection(resultsViewModel.ComplianceYears,
+                r1 => Assert.Equal("2018", r1.Text),
+                r2 => Assert.Equal("2017", r2.Text),
+                r3 => Assert.Equal("2016", r3.Text));
+        }
+
+        [Fact]
+        public async Task GetDetails_ReturnsDetailsView()
+        {
+            // Arrange
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerComplianceYear>._))
+                .WhenArgumentsMatch(a => ((GetProducerComplianceYear)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(new List<int> { 2018, 2017, 2016 });
+
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache);
+
+            // Act
+            ActionResult result = await controller.Details("WEE/AA1111AA");
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerComplianceYear>._))
+                .WhenArgumentsMatch(a => ((GetProducerComplianceYear)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .MustHaveHappened();
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "details");
+
+            DetailsViewModel resultsViewModel = viewResult.Model as DetailsViewModel;
+            Assert.NotNull(resultsViewModel);
+
+            Assert.Equal("WEE/AA1111AA", resultsViewModel.RegistrationNumber);
+        }
+
+        [Fact]
+        public async Task FetchDetails_FetchesDetailsFromApiAndReturnsDetailsView()
+        {
+            // Arrange
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerComplianceYear>._))
+                .WhenArgumentsMatch(a => ((GetProducerComplianceYear)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(new List<int> { 2018, 2017, 2016 });
+
+            ProducerDetails producerDetails = A.Dummy<ProducerDetails>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(producerDetails);
+
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache);
+
+            // Act
+            ActionResult result = await controller.FetchDetails("WEE/AA1111AA", 2015);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .MustHaveHappened();
+
+            PartialViewResult viewResult = result as PartialViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "_detailsresults");
+
+            Assert.Equal(producerDetails, viewResult.Model);
         }
 
         [Fact]

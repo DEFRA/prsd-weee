@@ -29,27 +29,22 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<ProducerSubmission> producers = await dataAccess.Fetch(request.RegistrationNumber);
+            List<ProducerSubmission> producers = await dataAccess.Fetch(request.RegistrationNumber, request.ComplianceYear);
 
             if (producers.Count == 0)
             {
                 string message = string.Format(
-                    "No producer has been registered with the registration number \"{0}\".",
-                    request.RegistrationNumber);
+                    "No producer has been registered with the registration number \"{0}\" in the {1} compliance year.",
+                    request.RegistrationNumber, request.ComplianceYear);
 
-                throw new Exception(message);
+                throw new ArgumentException(message);
             }
 
-            int complianceYear = producers.Max(p => p.MemberUpload.ComplianceYear.Value);
-
             ProducerDetails producerDetails = new ProducerDetails();
-            producerDetails.RegistrationNumber = request.RegistrationNumber;
-            producerDetails.ComplianceYear = complianceYear;
             producerDetails.CanRemoveProducer = authorization.CheckUserInRole(Roles.InternalAdmin);
             producerDetails.Schemes = new List<ProducerDetailsScheme>();
 
             var schemeGroups = producers
-                .Where(p => p.MemberUpload.ComplianceYear.Value == complianceYear)
                 .GroupBy(p => new { p.MemberUpload.Scheme.Id, p.MemberUpload.Scheme.SchemeName })
                 .OrderBy(p => p.Key.SchemeName);
 
@@ -95,7 +90,7 @@
                     ProducerEeeDetails =
                         mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
                             (await
-                                dataAccess.EeeOutputBySchemeAndComplianceYear(request.RegistrationNumber, complianceYear,
+                                dataAccess.EeeOutputBySchemeAndComplianceYear(request.RegistrationNumber, request.ComplianceYear,
                                     schemeGroup.Key.Id)))
                 };
 

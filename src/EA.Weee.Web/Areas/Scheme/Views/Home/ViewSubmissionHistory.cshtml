@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
-@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Shared;
+@using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Scheme.ViewModels.SubmissionHistoryViewModel
 @{
     ViewBag.Title = "View submission history";
@@ -19,38 +20,90 @@
     <div class="form-group">
         <table id="submissions">
             <caption><span class="visuallyhidden">Submissions</span></caption>
-                <thead>
-                    <tr>
-                        <th>Date and time (GMT)</th>
-                        <th>Compliance year</th>
-                        <th>Warnings</th>
-                        <th class="numeric">Charge amount</th>
-                        <th>Submitted by</th>
-                        <th>File name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (SubmissionsHistorySearchResult item in Model.Results)
+            <thead>
+                <tr>
+                    @switch (Model.OrderBy)
                     {
-                        string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+                        case SubmissionsHistoryOrderBy.ComplianceYearAscending:
+                            <th class="sorted-ascending">
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
+                                <span class="visuallyhidden">Sorted by earliest compliance year.</span>
+                            </th>
+                            break;
 
-                        <tr>
-                            <td>@datetimeValue</td>
-                            <td>@item.Year</td>
-                            <td>
-                                @if (item.NoOfWarnings > 0)
-                                {
-                                    string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
-                                    <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
-                                }
-                            </td>
-                            <td class="numeric">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
-                            <td>@item.SubmittedBy</td>
-                            <td>@item.FileName</td>
-                        </tr>
+                        case SubmissionsHistoryOrderBy.ComplianceYearDescending:
+                            <th class="sorted-descending">
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
+                                <span class="visuallyhidden">Sorted by most recent compliance year.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th>
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
+                            </th>
+                            break;
                     }
-                </tbody>
-</table>
+
+                    @switch (Model.OrderBy)
+                    {
+                        case SubmissionsHistoryOrderBy.SubmissionDateAscending:
+                            <th class="sorted-ascending">
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                            </th>
+                            break;
+
+                        case SubmissionsHistoryOrderBy.SubmissionDateDescending:
+                            <th class="sorted-descending">
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th>
+                                <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
+                            </th>
+                            break;
+                    }
+                    <th>Warnings</th>
+                    <th class="numeric">Charge amount</th>
+                    <th>Submitted by</th>
+                    <th>File name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                    <tr>
+                        <td>@item.Year</td>
+                        <td>@datetimeValue</td>
+                        <td>
+                            @if (item.NoOfWarnings > 0)
+                            {
+                                string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
+                                <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                            }
+                        </td>
+                        <td class="numeric">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                        <td>@item.SubmittedBy</td>
+                        <td>@item.FileName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+
+        @if (@Model.Results.PageCount > 1)
+        {
+           <div class="pager">
+               @Html.Pager(Model.Results.PageSize, Model.Results.PageNumber, Model.Results.TotalItemCount).Options(o => o.AddRouteValue("orderby", @Model.OrderBy))
+           </div>
+           <p>Showing @Model.Results.ItemStart - @Model.Results.ItemEnd of @Model.Results.TotalItemCount</p>
+        }
     </div>
 }
 else

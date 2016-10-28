@@ -61,10 +61,10 @@
                 var results = await dataAccess.GetSubmissionsHistory(scheme1.Id, 2006);
 
                 // Assert
-                Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.NotNull(results.Data);
+                Assert.Equal(1, results.Data.Count);
 
-                var result1 = results.SingleOrDefault(r => r.Year == 2006);
+                var result1 = results.Data.SingleOrDefault(r => r.Year == 2006);
                 Assert.NotNull(result1);
                 Assert.Equal("08/10/2015 12:25:35", result1.DateTime.ToString(CultureInfo.InvariantCulture));
                 Assert.Equal("Test LastName", result1.SubmittedBy);
@@ -73,7 +73,7 @@
 
         [Fact]
         public async Task FetchSumissions_ForYearandScheme_ReturnsSubmittedSubmissionsWithCorrectnumberOfWarnings()
-            {
+        {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 ModelHelper helper = new ModelHelper(database.Model);
@@ -90,7 +90,7 @@
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 09, 23, 10, 45, 45);
                 memberUpload1.SubmittedByUserId = user1.Id;
-                
+
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
                 memberUpload2.ComplianceYear = 2006;
                 memberUpload2.IsSubmitted = true;
@@ -117,11 +117,11 @@
                 // Act
                 GetSubmissionsHistoryResultsDataAccess dataAccess = new GetSubmissionsHistoryResultsDataAccess(database.WeeeContext);
                 var results = await dataAccess.GetSubmissionsHistory(scheme1.Id, 2006);
-                
+
                 // Assert
-                Assert.NotNull(results);
-                Assert.Equal(2, results.Count);
-                Assert.Collection(results,
+                Assert.NotNull(results.Data);
+                Assert.Equal(2, results.Data.Count);
+                Assert.Collection(results.Data,
                     r1 => Assert.Equal(0, r1.NoOfWarnings),
                     r2 => Assert.Equal(2, r2.NoOfWarnings));
             }

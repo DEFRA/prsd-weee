@@ -87,6 +87,7 @@
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandlerTests.cs" />
+    <Compile Include="Admin\SendTestEmailHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
@@ -209,6 +211,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Email\EA.Weee.Email.csproj">
+      <Project>{22DD3186-14CE-41E6-916D-643D4DEE8B48}</Project>
+      <Name>EA.Weee.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
       <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
