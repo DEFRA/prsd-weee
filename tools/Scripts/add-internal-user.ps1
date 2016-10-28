@@ -28,8 +28,6 @@ param
 	[string]$Status = 2
 )
 
-Write-Host $Status
-
 . "$PSScriptRoot\sql\RunQuery.ps1"
 
 Run-Query -ConnectionString $ConnectionString -QueryFile $PSScriptRoot\sql\ClaimsIdInsertOn.sql
