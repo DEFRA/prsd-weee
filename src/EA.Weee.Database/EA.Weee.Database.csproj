@@ -195,6 +195,7 @@
     <Content Include="scripts\Update\Sprint23\20160215-2011-AddDatalengthColumnsToIndexes.sql" />
     <Content Include="scripts\Update\Sprint24\20150219-1837-ReplaceUniqueConstraintOnRegisteredProducerTableWithFilteredIndex.sql" />
     <Content Include="scripts\Update\Sprint24\20160629-1700-UpdateSpgforProducerEeeDataHistory.sql" />
+    <Content Include="scripts\Update\Sprint25\20161031-1245-AddMissingIndexes.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
