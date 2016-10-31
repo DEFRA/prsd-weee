@@ -34,6 +34,7 @@
                     .Where(d => d.CurrentVersion.EeeOutputReturnVersion != null)
                     .SelectMany(d => d.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts)
                     .GroupBy(e => e.RegisteredProducer.ProducerRegistrationNumber)
+                    .AsNoTracking()
                     .ToDictionaryAsync(k => k.Key, e => e.ToList());
             }
 
