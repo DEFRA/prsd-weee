@@ -19,11 +19,13 @@
         /// </summary>
         public SubmissionsHistoryOrderBy? Ordering { get; set; }
 
-        public GetSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null)
+        public GetSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null,
+            SubmissionsHistoryOrderBy? ordering = null)
         {
             SchemeId = schemeId;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
+            Ordering = ordering;
         }
     }
 }
