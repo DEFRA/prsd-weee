@@ -472,8 +472,8 @@
                 if (scheme != null)
                 {
                     var getSubmissionsHistoryResults =
-                        new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId);
-                    getSubmissionsHistoryResults.Ordering = orderBy;
+                        new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId,
+                        ordering: orderBy);
 
                     var results = await client.SendAsync(User.GetAccessToken(), getSubmissionsHistoryResults);
                     if (results.Data != null)
@@ -528,8 +528,8 @@
                 if (scheme != null)
                 {
                     var getDataReturnSubmissionsHistoryResults =
-                        new GetDataReturnSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId);
-                    getDataReturnSubmissionsHistoryResults.Ordering = orderBy;
+                        new GetDataReturnSubmissionsHistoryResults(scheme.SchemeId,
+                        scheme.OrganisationId, ordering: orderBy);
 
                     var results = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
                     if (results.Data != null)
