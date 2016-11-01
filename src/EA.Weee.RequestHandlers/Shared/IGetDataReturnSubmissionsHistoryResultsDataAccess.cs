@@ -9,6 +9,6 @@
     public interface IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
         Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear,
-            DataReturnSubmissionsHistoryOrderBy? ordering);
+            DataReturnSubmissionsHistoryOrderBy? ordering, bool includeSummaryData);
     }
 }

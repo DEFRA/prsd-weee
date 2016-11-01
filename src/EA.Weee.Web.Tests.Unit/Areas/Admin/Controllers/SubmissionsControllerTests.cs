@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -12,6 +13,7 @@
     using ViewModels.Shared.Submission;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Scheme.ViewModels;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class SubmissionsControllerTests
@@ -76,6 +78,16 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("DataReturnSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task FetchSubmissionResults_RequestsForSummaryData()
+        {
+            await SubmissionsController().FetchDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetDataReturnSubmissionsHistoryResults)a[1]).IncludeSummaryData == true)
+                .MustHaveHappened();
         }
 
         private SubmissionsController SubmissionsController()
