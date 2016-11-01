@@ -642,5 +642,355 @@
                 Assert.NotNull(data.WeeeDeliveredB2c);
             }
         }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsNullEeeOutputData_WhenNoEeeDataIncludedInSubmission()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2B", 1, 10);
+
+                var location = modelHelper.CreateAatfDeliveryLocation("ABC", "ABC");
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.Null(data.EeeOutputB2b);
+                Assert.Null(data.EeeOutputB2c);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsEeeOutputB2bData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var producer = modelHelper.CreateProducerAsCompany(memberUpload, "abc");
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2B", 1, 10);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2C", 1, 5);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.EeeOutputB2b);
+                Assert.Equal(20, data.EeeOutputB2b);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsEeeOutputB2cData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var producer = modelHelper.CreateProducerAsCompany(memberUpload, "abc");
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2C", 1, 10);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2B", 1, 5);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2C", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.EeeOutputB2c);
+                Assert.Equal(20, data.EeeOutputB2c);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsNullWeeeCollectedData_WhenNoWeeeCollectedDataIncludedInSubmission()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var producer = modelHelper.CreateProducerAsCompany(memberUpload, "abc");
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2B", 1, 10);
+
+                var location = modelHelper.CreateAatfDeliveryLocation("ABC", "ABC");
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.Null(data.WeeeCollectedB2b);
+                Assert.Null(data.WeeeCollectedB2c);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsWeeeCollectedB2bData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2B", 1, 10);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2C", 1, 5);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.WeeeCollectedB2b);
+                Assert.Equal(20, data.WeeeCollectedB2b);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsWeeeCollectedB2cData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2C", 1, 10);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2B", 1, 5);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2C", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.WeeeCollectedB2c);
+                Assert.Equal(20, data.WeeeCollectedB2c);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsNullWeeeDeliveredData_WhenNoWeeeDeliveredDataIncludedInSubmission()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var producer = modelHelper.CreateProducerAsCompany(memberUpload, "abc");
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+                modelHelper.CreateEeeOutputAmount(dataReturnVersion, producer.RegisteredProducer, "B2B", 1, 10);
+                modelHelper.CreateWeeeCollectedAmount(dataReturnVersion, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.Null(data.WeeeDeliveredB2b);
+                Assert.Null(data.WeeeDeliveredB2c);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsWeeeDeliveredB2bData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+
+                var location = modelHelper.CreateAatfDeliveryLocation("ABC", "ABC");
+
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2B", 1, 10);
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2C", 1, 5);
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2B", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.WeeeDeliveredB2b);
+                Assert.Equal(20, data.WeeeDeliveredB2b);
+            }
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionHistory_ReturnsWeeeDeliveredB2cData()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
+
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2015;
+
+                var dataReturnVersion = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
+
+                var location = modelHelper.CreateAatfDeliveryLocation("ABC", "ABC");
+
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2C", 1, 10);
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2B", 1, 5);
+                modelHelper.CreateWeeeDeliveredAmount(dataReturnVersion, location, "B2C", 1, 10);
+
+                var dataReturnUpload = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion);
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
+
+                // Assert
+                Assert.Single(result.Data);
+
+                var data = result.Data.Single();
+
+                Assert.NotNull(data.WeeeDeliveredB2c);
+                Assert.Equal(20, data.WeeeDeliveredB2c);
+            }
+        }
     }
 }
