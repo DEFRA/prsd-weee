@@ -20,11 +20,14 @@
 
         public bool IncludeSummaryData { get; set; }
 
-        public GetDataReturnSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null)
+        public GetDataReturnSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null,
+            DataReturnSubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
             SchemeId = schemeId;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
+            Ordering = ordering;
+            IncludeSummaryData = includeSummaryData;
         }
     }
 }
