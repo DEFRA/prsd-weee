@@ -258,20 +258,20 @@
             Assert.Equal(error, result.Single());
         }
 
-        //[Fact]
-        //public async Task ProducerObligationTypeChange_ShouldReturnRuleResult()
-        //{
-        //    var scheme = SchemeWithXProducers(1);
-        //    var schemeId = Guid.NewGuid();
-        //    var error = RuleResult.Fail("oops", ErrorLevel.Error);
+        [Fact]
+        public async Task ProducerObligationTypeChange_ShouldReturnRuleResult()
+        {
+            var scheme = SchemeWithXProducers(1);
+            var schemeId = Guid.NewGuid();
+            var error = RuleResult.Fail("oops", ErrorLevel.Error);
 
-        //    A.CallTo(() => producerObligationTypeChange.Evaluate(scheme.producerList.Single())).Returns(error);
+            A.CallTo(() => producerObligationTypeChange.Evaluate(scheme.producerList.Single())).Returns(error);
 
-        //    var result = await XmlBusinessValidator().Validate(scheme, schemeId);
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
 
-        //    Assert.Single(result);
-        //    Assert.Equal(error, result.Single());
-        //}
+            Assert.Single(result);
+            Assert.Equal(error, result.Single());
+        }
 
         [Fact]
         public async Task WhereAllRulesPass_NoRuleResultsShouldBeReturned()
