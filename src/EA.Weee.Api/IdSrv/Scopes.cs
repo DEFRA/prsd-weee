@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Security.Claims;
     using EA.Weee.Core;
-    using Thinktecture.IdentityServer.Core.Models;
+    using IdentityServer3.Core.Models;
 
     internal static class Scopes
     {

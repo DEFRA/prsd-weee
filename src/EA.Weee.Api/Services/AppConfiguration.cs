@@ -13,5 +13,7 @@
         public string SiteRoot { get; set; }
 
         public string VerificationEmailBypassDomains { get; set; }
+
+        public string ApiSecret { get; set; }
     }
 }

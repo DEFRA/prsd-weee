@@ -3,11 +3,12 @@
     using System;
     using System.Net.Mail;
     using System.Threading.Tasks;
-    using Core.Logging;
     using FakeItEasy;
     using Prsd.Email;
+    using Serilog;
+    using Serilog.Events;
     using Xunit;
-
+    
     public class WeeeSenderTests
     {
         [Theory]
@@ -65,7 +66,7 @@
             A.CallTo(() => builder.Sender.SendAsync(A<MailMessage>._))
                 .MustHaveHappened();
 
-            A.CallTo(() => builder.Logger.Log(A<Exception>._))
+            A.CallTo(() => builder.Logger.Write(LogEventLevel.Error, A<Exception>._, A<string>._))
                 .MustHaveHappened();
 
             Assert.True(result);
@@ -88,8 +89,8 @@
 
             Exception generatedException = null;
 
-            A.CallTo(() => builder.Logger.Log(A<Exception>._))
-                .Invokes((Exception x) => generatedException = x);
+            A.CallTo(() => builder.Logger.Write(LogEventLevel.Error, A<Exception>._, A<string>._))
+                .Invokes((LogEventLevel l, Exception x, String m) => generatedException = x);
 
             var weeeSender = builder.Build();
 

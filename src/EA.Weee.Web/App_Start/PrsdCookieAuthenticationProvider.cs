@@ -5,21 +5,21 @@
     using System.Globalization;
     using System.Linq;
     using System.Security.Claims;
-    using System.Threading.Tasks;    
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core;   
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Web.OAuth;
     using EA.Prsd.Core.Web.OpenId;
+    using IdentityModel;
+    using IdentityModel.Client;
     using Microsoft.Owin.Security.Cookies;
     using Prsd.Core.Web.Extensions;
-    using Thinktecture.IdentityModel.Client;
     using ClaimTypes = Prsd.Core.Web.ClaimTypes;
 
     /// <summary>
     /// This class is taken from the PRSD project's class "PrsdCookieAuthenticationOptions".
     /// The code contained therein defines the behaviour of the provider rather than
     /// specifying any options.
-    
     /// As WEEE needs to extend the common PRSD behaviours, I have duplicated these into
     /// a class which from which the WEEE provider can be derived.
     /// 
@@ -62,7 +62,7 @@
                 if (expiryDate < SystemTime.UtcNow)
                 {
                     // If the access token has expired, try and get a new one.
-                    var refreshTokenClaim = context.Identity.FindFirst(OAuth2Constants.RefreshToken);
+                    var refreshTokenClaim = context.Identity.FindFirst(OidcConstants.AuthorizeResponse.RefreshToken);
                     if (refreshTokenClaim != null)
                     {
                         var oauthClient = DependencyResolver.Current.GetService<IOAuthClient>();
@@ -93,7 +93,7 @@
                 return;
             }
 
-            var accessTokenClaim = context.Identity.FindFirst(OAuth2Constants.AccessToken);
+            var accessTokenClaim = context.Identity.FindFirst(OidcConstants.AuthorizeResponse.AccessToken);
 
             if (accessTokenClaim == null)
             {
@@ -115,7 +115,7 @@
             userInfo.Claims.ToList().ForEach(ui => claims.Add(new Claim(ui.Item1, ui.Item2)));
 
             claims.Add(accessTokenClaim);
-            claims.Add(context.Identity.FindFirst(OAuth2Constants.RefreshToken));
+            claims.Add(context.Identity.FindFirst(OidcConstants.AuthorizeResponse.RefreshToken));
             claims.Add(context.Identity.FindFirst(ClaimTypes.ExpiresAt));
 
             var nameId = context.Identity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
