@@ -4,29 +4,99 @@
 
 @if (Model.Any())
 {
-    <div class="table-hr"></div>
-    <table id="submissions" class="prsd-table">
-        <caption class="hidden-for-screen-reader">This table shows the data return submissions for the selected year and scheme.</caption>
+    <div class="section-tabs">
+        <ul>
+            <li class="active">
+                <a href="#" id="collectedDelivered-data-tab">WEEE data</a>
+            </li>
+            <li>
+                <a href="#" id="output-data-tab">EEE data</a>
+            </li>
+        </ul>
+    </div>
+
+    <table id="collectedDelivered-data-table">
+        <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
         <thead>
             <tr>
                 <th>Date and time (GMT)</th>
                 <th>Quarter reported</th>
                 <th>Submitted by</th>
+                <th>B2C collected (tonnes)</th>
+                <th>B2C delivered (tonnes)</th>
+                <th>B2B collected (tonnes)</th>
+                <th>B2B delivered (tonnes)</th>
             </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
-            string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+            @foreach (var item in Model)
+            {
+                string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-            <tr>
-                <td>@datetimeValue</td>
-                <td>@item.Quarter</td>
-                <td style="text-align:left">@item.SubmittedBy</td>
-            </tr>
-        }
+                <tr>
+                    <td><div style="width:100px;">@datetimeValue</div></td>
+                    <td>@item.Quarter</td>
+                    <td style="text-align:left">@item.SubmittedBy</td>
+                    <td>@item.WeeeCollectedB2c</td>
+                    <td>@item.WeeeDeliveredB2c</td>
+                    <td>@item.WeeeCollectedB2b</td>
+                    <td>@item.WeeeDeliveredB2b</td>
+                </tr>
+            }
         </tbody>
     </table>
+
+    <table id="output-data-table" class="visually-hidden">
+        <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
+        <thead>
+            <tr>
+                <th>Date and time (GMT)</th>
+                <th>Quarter reported</th>
+                <th>Submitted by</th>
+                <th>B2C (tonnes)</th>
+                <th>B2B (tonnes)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                <tr>
+                    <td><div style="width:100px;">@datetimeValue</div></td>
+                    <td>@item.Quarter</td>
+                    <td style="text-align:left">@item.SubmittedBy</td>
+                    <td>@item.EeeOutputB2c</td>
+                    <td>@item.EeeOutputB2b</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        $("a[id$='data-tab']").click(function (event) {
+            event.preventDefault();
+
+            // Inactivate tabs
+            $("a[id$='data-tab']").each(function () {
+                $(this).parent().removeClass();
+            });
+
+            // Except this tab
+            $(this).parent().addClass("active");
+
+            // Hide all data tables
+            $("table[id$='data-table']").each(function () {
+                $(this).addClass('visually-hidden');
+            });
+
+            var tabIdentifier = $(this).attr('id')
+                .replace('-data-tab', '');
+
+            // Except for the table corresponding to this tab
+            $("table[id$='" + tabIdentifier + "-data-table']").removeClass('visually-hidden');
+        })
+    </script>
 }
 else
 {

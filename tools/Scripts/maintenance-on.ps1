@@ -23,11 +23,10 @@ $exitCode = 0;
 
 Try
 {
-   $PSSessionOption = New-PSSessionOption -SkipCNCheck -SkipCACheck;
    $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force;
    $creds = New-Object System.Management.Automation.PSCredential($Username, $securePassword);
 
-   Invoke-Command -ComputerName $Server -Credential $creds -UseSSL -SessionOption $PSSessionOption -ErrorAction Stop -ScriptBlock { 
+   Invoke-Command -ComputerName $Server -Credential $creds -ErrorAction Stop -ScriptBlock { 
       \windows\system32\inetsrv\appcmd stop site $Using:MainWebsite
       \windows\system32\inetsrv\appcmd start site $Using:MaintenanceWebsite
       \windows\system32\inetsrv\appcmd set site $Using:MaintenanceWebsite /serverAutoStart:true };
