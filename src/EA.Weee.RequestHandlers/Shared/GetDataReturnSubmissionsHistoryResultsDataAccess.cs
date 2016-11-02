@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using Core.DataReturns;
-    using DataAccess;
-    using Requests.Shared;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.DataReturns;
+    using DataAccess;
+    using Domain.DataReturns;
     using Domain.Obligation;
+    using Requests.Shared;
 
     public class GetDataReturnSubmissionsHistoryResultsDataAccess : IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
@@ -37,7 +38,7 @@
                     ComplianceYear = dru.ComplianceYear.Value,
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
-                    Quarter = (QuarterType)dru.Quarter,
+                    Quarter = (Core.DataReturns.QuarterType)dru.Quarter,
                     DataReturnVersion = dru.DataReturnVersion
                 };
 
@@ -99,46 +100,40 @@
                     FileName = x.FileName,
                     Quarter = x.Quarter,
                     EeeOutputB2b = x.DataReturnVersion.EeeOutputReturnVersion != null ?
-                                      (decimal?)x.DataReturnVersion
+                                      CalculateTonnage(x.DataReturnVersion
                                          .EeeOutputReturnVersion
-                                         .EeeOutputAmounts
-                                         .Where(e => e.ObligationType == ObligationType.B2B)
-                                         .Sum(e => e.Tonnage)
+                                         .EeeOutputAmounts,
+                                         ObligationType.B2B)
                                       : null,
                     EeeOutputB2c = x.DataReturnVersion.EeeOutputReturnVersion != null ?
-                                       (decimal?)x.DataReturnVersion
+                                       CalculateTonnage(x.DataReturnVersion
                                           .EeeOutputReturnVersion
-                                          .EeeOutputAmounts
-                                          .Where(e => e.ObligationType == ObligationType.B2C)
-                                          .Sum(e => e.Tonnage)
+                                          .EeeOutputAmounts,
+                                          ObligationType.B2C)
                                        : null,
                     WeeeCollectedB2b = x.DataReturnVersion.WeeeCollectedReturnVersion != null ?
-                                          (decimal?)x.DataReturnVersion
+                                          CalculateTonnage(x.DataReturnVersion
                                              .WeeeCollectedReturnVersion
-                                             .WeeeCollectedAmounts
-                                             .Where(c => c.ObligationType == ObligationType.B2B)
-                                             .Sum(c => c.Tonnage)
+                                             .WeeeCollectedAmounts,
+                                             ObligationType.B2B)
                                           : null,
                     WeeeCollectedB2c = x.DataReturnVersion.WeeeCollectedReturnVersion != null ?
-                                          (decimal?)x.DataReturnVersion
+                                          CalculateTonnage(x.DataReturnVersion
                                              .WeeeCollectedReturnVersion
-                                             .WeeeCollectedAmounts
-                                             .Where(c => c.ObligationType == ObligationType.B2C)
-                                             .Sum(c => c.Tonnage)
+                                             .WeeeCollectedAmounts,
+                                             ObligationType.B2C)
                                           : null,
                     WeeeDeliveredB2b = x.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
-                                          (decimal?)x.DataReturnVersion
+                                          CalculateTonnage(x.DataReturnVersion
                                              .WeeeDeliveredReturnVersion
-                                             .WeeeDeliveredAmounts
-                                             .Where(d => d.ObligationType == ObligationType.B2B)
-                                             .Sum(d => d.Tonnage)
+                                             .WeeeDeliveredAmounts,
+                                             ObligationType.B2B)
                                           : null,
                     WeeeDeliveredB2c = x.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
-                                          (decimal?)x.DataReturnVersion
+                                          CalculateTonnage(x.DataReturnVersion
                                              .WeeeDeliveredReturnVersion
-                                             .WeeeDeliveredAmounts
-                                             .Where(d => d.ObligationType == ObligationType.B2C)
-                                             .Sum(d => d.Tonnage)
+                                             .WeeeDeliveredAmounts,
+                                             ObligationType.B2C)
                                           : null
                 })
                 .ToList();
@@ -165,6 +160,16 @@
             dataReturnSubmissionsHistoryResult.ResultCount = results.Count;
 
             return dataReturnSubmissionsHistoryResult;
+        }
+
+        private decimal? CalculateTonnage(IEnumerable<ReturnItem> returnItems, ObligationType obligationType)
+        {
+            var filteredReturnItems =
+                returnItems.Where(r => r.ObligationType == obligationType);
+
+            return filteredReturnItems.Any() ?
+                (decimal?)filteredReturnItems.Sum(r => r.Tonnage)
+                : null;
         }
     }
 }
