@@ -1,2 +1,1 @@
 EXEC('BACKUP DATABASE ' + @DatabaseName + ' TO  DISK = N''' + @Location + @FileName + ''' WITH  COPY_ONLY, NOFORMAT, NOINIT,  NAME = N''Weee-Full Database Backup'', SKIP, NOREWIND, NOUNLOAD,  STATS = 10');
-GO

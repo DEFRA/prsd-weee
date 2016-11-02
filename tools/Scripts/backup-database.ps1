@@ -17,6 +17,20 @@ param
 
 . "$PSScriptRoot\sql\RunQuery.ps1"
 
+$exitCode = 0;
+
+Try {
+
 $FileName = $DatabaseName + " " + (Get-Date).ToString("yyyy-MM-dd HH-mm") + ".bak"
 
-Run-Query -ConnectionString $ConnectionString -QueryFile $PSScriptRoot\sql\BackupDatabase.sql -Parameters "@DatabaseName=$DatabaseName", "@Location=$Location", "@FileName=$FileName"
+Run-Query -ConnectionString $ConnectionString `
+          -QueryFile $PSScriptRoot\sql\BackupDatabase.sql `
+          -Parameters "@DatabaseName=$DatabaseName", "@Location=$Location", "@FileName=$FileName";
+}
+Catch
+{
+   Write-Error -ErrorRecord $_;
+   $exitCode = -1;
+}
+
+exit $exitCode;

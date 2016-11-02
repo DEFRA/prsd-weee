@@ -46,7 +46,27 @@
             var results = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.QuarterDescending))
+            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.QuarterDescending, A<bool>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesSummaryDataWhenSpecified()
+        {
+            // Arrange
+            var dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending;
+            request.IncludeSummaryData = true;
+
+            // Act
+            var results = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending, true))
                 .MustHaveHappened();
         }
 
@@ -64,7 +84,7 @@
                 ResultCount = 2
             };
 
-            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._))
+            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._, A<bool>._))
                 .Returns(results);
 
             return dataAccess;
