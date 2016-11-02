@@ -114,7 +114,6 @@
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatter.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />

@@ -20,7 +20,6 @@ namespace EA.Weee.Api
     using Newtonsoft.Json.Serialization;
     using Owin;
     using Serilog;
-    using Serilog.Formatting.Display;
     using Services;
     
     public class Startup
