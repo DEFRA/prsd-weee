@@ -4,7 +4,6 @@
     using Autofac;
     using Autofac.Integration.WebApi;
     using Core;
-    using Core.Logging;
     using DataAccess;
     using DataAccess.Identity;
     using EA.Weee.Email;
