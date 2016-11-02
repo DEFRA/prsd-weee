@@ -17,11 +17,13 @@
 
         public void Emit(LogEvent logEvent)
         {
-            var sr = new StringWriter();
-            formatter.Format(logEvent, sr);
-            var text = sr.ToString().Trim();
+            using (var sr = new StringWriter())
+            {
+                formatter.Format(logEvent, sr);
+                var text = sr.ToString().Trim();
 
-            Debug.WriteLine(text);
+                Debug.WriteLine(text);
+            }
         }
     }
 }
