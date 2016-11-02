@@ -93,7 +93,7 @@
                 result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(companyAlreadyRegistered.Evaluate(producer));
                 result.Add(companyRegistrationNumberChange.Evaluate(producer));
-                //result.Add(await producerObligationTypeChange.Evaluate(producer));
+                result.Add(await producerObligationTypeChange.Evaluate(producer));
             }
 
             return result.Where(r => r != null && !r.IsValid);
