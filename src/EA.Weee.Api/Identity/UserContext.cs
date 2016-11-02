@@ -26,6 +26,8 @@
                                 return Guid.Parse(idClaim.Value);
                             }
                         }
+
+                        return GetUserId(identity, ClaimTypes.NameIdentifier);
                     }
                 }
 
@@ -36,6 +38,18 @@
         public ClaimsPrincipal Principal
         {
             get { return HttpContext.Current.User as ClaimsPrincipal; }
+        }
+
+        private static Guid GetUserId(ClaimsIdentity identity, string claimType)
+        {
+            var idClaim = identity.FindFirst(claimType);
+
+            if (idClaim != null)
+            {
+                return Guid.Parse(idClaim.Value);
+            }
+
+            return Guid.Empty;
         }
     }
 }

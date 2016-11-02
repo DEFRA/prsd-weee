@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
+    using Admin;
     using Autofac;
     using Charges.IssuePendingCharges;
     using Charges.IssuePendingCharges.Errors;
@@ -67,6 +68,8 @@
 
             // Register email service
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
+
+            builder.RegisterType<GetAdminUserDataAccess>().As<IGetAdminUserDataAccess>();
         }
     }
 }
