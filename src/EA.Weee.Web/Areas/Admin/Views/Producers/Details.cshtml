@@ -27,7 +27,7 @@
 
     <br />
     <p>
-        @Html.ActionLink("Download registration amendment history (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
+        @Html.ActionLink("Download registration details and changes (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
     </p>
     <p>
         @Html.ActionLink("Download EEE data history (CSV)", "DownloadProducerEeeDataHistoryCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
