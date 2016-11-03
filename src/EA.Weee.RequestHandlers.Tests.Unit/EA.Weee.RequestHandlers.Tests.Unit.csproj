@@ -125,6 +125,7 @@
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatchTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosedTests.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionComparerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdTests.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Shared\GetApiDateHandlerTests.cs" />
-    <Compile Include="Shared\DataReturnSubmissionsDataAccessTests.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
