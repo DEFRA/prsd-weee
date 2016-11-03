@@ -99,6 +99,7 @@
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerEeeCsvData.cs" />
     <Compile Include="StoredProcedure\ProducerEeeHistoryCsvData.cs" />
+    <Compile Include="StoredProcedure\SchemeObligationCsvData.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvResult.cs" />
     <Compile Include="Extensions\ProducerSubmissionExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

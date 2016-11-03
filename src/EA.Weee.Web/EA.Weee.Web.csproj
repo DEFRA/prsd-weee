@@ -260,7 +260,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ComplianceYearReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
@@ -527,6 +527,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\colours\_organisation.scss" />
     <Content Include="Areas\Admin\Views\TestEmail\Index.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Success.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\SchemeObligationData.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\govuk\details.polyfill.js" />
