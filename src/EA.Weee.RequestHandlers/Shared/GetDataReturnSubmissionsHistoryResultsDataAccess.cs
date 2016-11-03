@@ -38,8 +38,7 @@
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
                     Quarter = (Core.DataReturns.QuarterType)dru.Quarter,
-                    DataReturnVersion = dru.DataReturnVersion,
-                    DataReturnVersionId = dru.DataReturnVersion.Id
+                    DataReturnVersion = dru.DataReturnVersion
                 };
 
             switch (ordering)
