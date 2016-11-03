@@ -5,7 +5,6 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.DataReturns;
     using DataAccess;
     using Domain.DataReturns;
     using Domain.Obligation;
@@ -20,7 +19,7 @@
             this.context = context;
         }
 
-        public async Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null,
+        public async Task<List<DataReturnSubmissionsData>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null,
             DataReturnSubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
             var query =
@@ -29,7 +28,7 @@
                 where dru.Scheme.Id == schemeId &&
                 dru.DataReturnVersion != null &&
                 (!complianceYear.HasValue || dru.ComplianceYear == complianceYear)
-                select new
+                select new DataReturnSubmissionsData
                 {
                     SchemeId = dru.Scheme.Id,
                     OrganisationId = dru.Scheme.OrganisationId,
@@ -39,7 +38,8 @@
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
                     Quarter = (Core.DataReturns.QuarterType)dru.Quarter,
-                    DataReturnVersion = dru.DataReturnVersion
+                    DataReturnVersion = dru.DataReturnVersion,
+                    DataReturnVersionId = dru.DataReturnVersion.Id
                 };
 
             switch (ordering)
@@ -84,82 +84,51 @@
 
             var results = await query.ToListAsync();
 
-            List<DataReturnSubmissionsHistoryData> historyData;
-
             if (includeSummaryData)
             {
-                historyData = results.Select(x =>
-                new DataReturnSubmissionsHistoryData
+                foreach (var result in results)
                 {
-                    SchemeId = x.SchemeId,
-                    OrganisationId = x.OrganisationId,
-                    DataReturnUploadId = x.DataReturnUploadId,
-                    SubmittedBy = x.SubmittedBy,
-                    ComplianceYear = x.ComplianceYear,
-                    SubmissionDateTime = x.SubmissionDateTime,
-                    FileName = x.FileName,
-                    Quarter = x.Quarter,
-                    EeeOutputB2b = x.DataReturnVersion.EeeOutputReturnVersion != null ?
-                                      CalculateTonnage(x.DataReturnVersion
-                                         .EeeOutputReturnVersion
-                                         .EeeOutputAmounts,
-                                         ObligationType.B2B)
-                                      : null,
-                    EeeOutputB2c = x.DataReturnVersion.EeeOutputReturnVersion != null ?
-                                       CalculateTonnage(x.DataReturnVersion
-                                          .EeeOutputReturnVersion
-                                          .EeeOutputAmounts,
-                                          ObligationType.B2C)
-                                       : null,
-                    WeeeCollectedB2b = x.DataReturnVersion.WeeeCollectedReturnVersion != null ?
-                                          CalculateTonnage(x.DataReturnVersion
-                                             .WeeeCollectedReturnVersion
-                                             .WeeeCollectedAmounts,
-                                             ObligationType.B2B)
-                                          : null,
-                    WeeeCollectedB2c = x.DataReturnVersion.WeeeCollectedReturnVersion != null ?
-                                          CalculateTonnage(x.DataReturnVersion
-                                             .WeeeCollectedReturnVersion
-                                             .WeeeCollectedAmounts,
-                                             ObligationType.B2C)
-                                          : null,
-                    WeeeDeliveredB2b = x.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
-                                          CalculateTonnage(x.DataReturnVersion
-                                             .WeeeDeliveredReturnVersion
-                                             .WeeeDeliveredAmounts,
-                                             ObligationType.B2B)
-                                          : null,
-                    WeeeDeliveredB2c = x.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
-                                          CalculateTonnage(x.DataReturnVersion
-                                             .WeeeDeliveredReturnVersion
-                                             .WeeeDeliveredAmounts,
-                                             ObligationType.B2C)
-                                          : null
-                })
-                .ToList();
-            }
-            else
-            {
-                historyData = results.Select(x =>
-                new DataReturnSubmissionsHistoryData
-                {
-                    SchemeId = x.SchemeId,
-                    OrganisationId = x.OrganisationId,
-                    DataReturnUploadId = x.DataReturnUploadId,
-                    SubmittedBy = x.SubmittedBy,
-                    ComplianceYear = x.ComplianceYear,
-                    SubmissionDateTime = x.SubmissionDateTime,
-                    FileName = x.FileName,
-                    Quarter = x.Quarter
-                })
-                .ToList();
+                    var returnVersion = result.DataReturnVersion;
+
+                    result.EeeOutputB2b =
+                        returnVersion.EeeOutputReturnVersion != null ?
+                        CalculateTonnage(returnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
+                           ObligationType.B2B)
+                        : null;
+
+                    result.EeeOutputB2c =
+                        returnVersion.EeeOutputReturnVersion != null ?
+                        CalculateTonnage(returnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
+                        ObligationType.B2C)
+                        : null;
+
+                    result.WeeeCollectedB2b =
+                        returnVersion.WeeeCollectedReturnVersion != null ?
+                        CalculateTonnage(returnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
+                        ObligationType.B2B)
+                        : null;
+
+                    result.WeeeCollectedB2c =
+                        returnVersion.WeeeCollectedReturnVersion != null ?
+                        CalculateTonnage(returnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
+                        ObligationType.B2C)
+                        : null;
+
+                    result.WeeeDeliveredB2b =
+                        returnVersion.WeeeDeliveredReturnVersion != null ?
+                        CalculateTonnage(returnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
+                        ObligationType.B2B)
+                        : null;
+
+                    result.WeeeDeliveredB2c =
+                        returnVersion.WeeeDeliveredReturnVersion != null ?
+                        CalculateTonnage(returnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
+                        ObligationType.B2C)
+                        : null;
+                }
             }
 
-            var dataReturnSubmissionsHistoryResult = new DataReturnSubmissionsHistoryResult();
-            dataReturnSubmissionsHistoryResult.Data = historyData;
-            dataReturnSubmissionsHistoryResult.ResultCount = results.Count;
-
-            return dataReturnSubmissionsHistoryResult;
+            return results;
         }
 
         private decimal? CalculateTonnage(IEnumerable<ReturnItem> returnItems, ObligationType obligationType)

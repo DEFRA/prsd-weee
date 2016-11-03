@@ -10,6 +10,10 @@
 
         public Guid DataReturnUploadId { get; set; }
 
+        public Guid DataReturnVersionId { get; set; }
+
+        public Guid? PreviousSubmissionDataReturnVersionId { get; set; }
+
         public int ComplianceYear { get; set; }
 
         public QuarterType Quarter { get; set; }
@@ -31,5 +35,7 @@
         public decimal? EeeOutputB2c { get; set; }
 
         public decimal? EeeOutputB2b { get; set; }
+
+        public bool EeeDataChanged { get; set; }
     }
 }

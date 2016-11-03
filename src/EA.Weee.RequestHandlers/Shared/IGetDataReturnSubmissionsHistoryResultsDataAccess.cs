@@ -8,7 +8,7 @@
 
     public interface IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
-        Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear,
+        Task<List<DataReturnSubmissionsData>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear,
             DataReturnSubmissionsHistoryOrderBy? ordering, bool includeSummaryData);
     }
 }
