@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using Core.DataReturns;
-    using Requests.Shared;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Requests.Shared;
 
     public interface IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
