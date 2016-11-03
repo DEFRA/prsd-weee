@@ -28,7 +28,6 @@
             // Assert
             A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
             Assert.Equal(2, results.Data.Count);
-            Assert.Equal(2, results.ResultCount);
         }
 
         [Fact]
@@ -70,18 +69,32 @@
                 .MustHaveHappened();
         }
 
+        [Fact]
+        public async void GetDataReturnSubmissionsHistoryResultHandler_ReturnsSubmissionDataCount()
+        {
+            // Arrange
+            IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            GetDataReturnSubmissionsHistoryResultsHandler handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+            GetDataReturnSubmissionsHistoryResults request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
+
+            // Act
+            DataReturnSubmissionsHistoryResult results = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
+            Assert.Equal(2, results.ResultCount);
+        }
+
         private IGetDataReturnSubmissionsHistoryResultsDataAccess CreateFakeDataAccess()
         {
             IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
 
-            var results = new DataReturnSubmissionsHistoryResult
+            var results = new List<DataReturnSubmissionsData>
             {
-                Data = new List<DataReturnSubmissionsHistoryData>
-                {
-                    new DataReturnSubmissionsHistoryData(),
-                    new DataReturnSubmissionsHistoryData()
-                },
-                ResultCount = 2
+                new DataReturnSubmissionsData(),
+                new DataReturnSubmissionsData()
             };
 
             A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._, A<bool>._))

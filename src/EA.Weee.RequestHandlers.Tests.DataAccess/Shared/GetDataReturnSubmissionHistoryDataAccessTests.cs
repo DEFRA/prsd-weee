@@ -9,7 +9,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class GetDataReturnSubmissionHistoryDataAcessTests
+    public class GetDataReturnSubmissionHistoryDataAccessTests
     {
         [Fact]
         public async void GetDataReturnSubmissionHistory_ReturnsAllSubmittedSubmissionHistoryData()
@@ -56,8 +56,8 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme1.Id);
 
                 // Assert
-                Assert.NotNull(result.Data);
-                Assert.Equal(2, result.Data.Count);
+                Assert.NotNull(result);
+                Assert.Equal(2, result.Count);
             }
         }
 
@@ -111,8 +111,8 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme1.Id);
 
                 // Assert
-                Assert.NotNull(result.Data);
-                Assert.Equal(2, result.Data.Count);
+                Assert.NotNull(result);
+                Assert.Equal(2, result.Count);
             }
         }
 
@@ -165,11 +165,11 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme1.Id);
 
                 // Assert
-                Assert.NotNull(result.Data);
-                Assert.Equal(3, result.Data.Count);
-                Assert.Equal("DataReturnUpload3.xml", result.Data[0].FileName);
-                Assert.Equal("DataReturnUpload2.xml", result.Data[1].FileName);
-                Assert.Equal("DataReturnUpload1.xml", result.Data[2].FileName);
+                Assert.NotNull(result);
+                Assert.Equal(3, result.Count);
+                Assert.Equal("DataReturnUpload3.xml", result[0].FileName);
+                Assert.Equal("DataReturnUpload2.xml", result[1].FileName);
+                Assert.Equal("DataReturnUpload1.xml", result[2].FileName);
             }
         }
 
@@ -223,9 +223,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme1.Id, 2015);
 
                 // Assert
-                Assert.NotNull(result.Data);
-                Assert.Equal(1, result.Data.Count);
-                Assert.Equal("DataReturnUpload1.xml", result.Data[0].FileName);
+                Assert.NotNull(result);
+                Assert.Equal(1, result.Count);
+                Assert.Equal("DataReturnUpload1.xml", result[0].FileName);
             }
         }
 
@@ -259,7 +259,7 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 5), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 1), r3.SubmissionDateTime));
@@ -296,7 +296,7 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 5), r3.SubmissionDateTime));
@@ -333,12 +333,12 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 3), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 5), r3.SubmissionDateTime));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(2015, r1.ComplianceYear),
                     r2 => Assert.Equal(2015, r2.ComplianceYear),
                     r3 => Assert.Equal(2014, r3.ComplianceYear));
@@ -375,12 +375,12 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 5), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 1), r3.SubmissionDateTime));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(2014, r1.ComplianceYear),
                     r2 => Assert.Equal(2015, r2.ComplianceYear),
                     r3 => Assert.Equal(2015, r3.ComplianceYear));
@@ -425,21 +425,21 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.QuarterDescending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 7), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 6), r3.SubmissionDateTime),
                     r4 => Assert.Equal(new DateTime(2015, 1, 3), r4.SubmissionDateTime),
                     r5 => Assert.Equal(new DateTime(2015, 1, 5), r5.SubmissionDateTime));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(2015, r1.ComplianceYear),
                     r2 => Assert.Equal(2015, r2.ComplianceYear),
                     r3 => Assert.Equal(2015, r3.ComplianceYear),
                     r4 => Assert.Equal(2015, r4.ComplianceYear),
                     r5 => Assert.Equal(2014, r5.ComplianceYear));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(QuarterType.Q2, r1.Quarter),
                     r2 => Assert.Equal(QuarterType.Q2, r2.Quarter),
                     r3 => Assert.Equal(QuarterType.Q1, r3.Quarter),
@@ -486,60 +486,26 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, ordering: DataReturnSubmissionsHistoryOrderBy.QuarterAscending);
 
                 // Assert
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(new DateTime(2015, 1, 6), r1.SubmissionDateTime),
                     r2 => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmissionDateTime),
                     r3 => Assert.Equal(new DateTime(2015, 1, 7), r3.SubmissionDateTime),
                     r4 => Assert.Equal(new DateTime(2015, 1, 1), r4.SubmissionDateTime),
                     r5 => Assert.Equal(new DateTime(2015, 1, 5), r5.SubmissionDateTime));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(2015, r1.ComplianceYear),
                     r2 => Assert.Equal(2015, r2.ComplianceYear),
                     r3 => Assert.Equal(2015, r3.ComplianceYear),
                     r4 => Assert.Equal(2015, r4.ComplianceYear),
                     r5 => Assert.Equal(2014, r5.ComplianceYear));
 
-                Assert.Collection(result.Data,
+                Assert.Collection(result,
                     r1 => Assert.Equal(QuarterType.Q1, r1.Quarter),
                     r2 => Assert.Equal(QuarterType.Q1, r2.Quarter),
                     r3 => Assert.Equal(QuarterType.Q2, r3.Quarter),
                     r4 => Assert.Equal(QuarterType.Q2, r4.Quarter),
                     r5 => Assert.Equal(QuarterType.Q2, r5.Quarter));
-            }
-        }
-
-        [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionDataCount()
-        {
-            using (var database = new DatabaseWrapper())
-            {
-                // Arrange
-                GetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = new GetDataReturnSubmissionsHistoryResultsDataAccess(database.WeeeContext);
-
-                ModelHelper modelHelper = new ModelHelper(database.Model);
-
-                var scheme = modelHelper.CreateScheme();
-
-                var dataReturnVersion1 = modelHelper.CreateDataReturnVersion(scheme, 2015, 1, true);
-                var dataReturnUpload1 = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion1);
-                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 5);
-
-                var dataReturnVersion2 = modelHelper.CreateDataReturnVersion(scheme, 2015, 2, true);
-                var dataReturnUpload2 = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion2);
-                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 3);
-
-                var dataReturnVersion3 = modelHelper.CreateDataReturnVersion(scheme, 2016, 2, true);
-                var dataReturnUpload3 = modelHelper.CreateDataReturnUpload(scheme, dataReturnVersion3);
-                dataReturnVersion3.SubmittedDate = new DateTime(2015, 1, 1);
-
-                database.Model.SaveChanges();
-
-                // Act
-                var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id);
-
-                // Assert
-                Assert.Equal(3, result.ResultCount);
             }
         }
 
@@ -580,9 +546,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: false);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.EeeOutputB2b);
                 Assert.Null(data.EeeOutputB2c);
@@ -630,9 +596,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.EeeOutputB2b);
                 Assert.NotNull(data.EeeOutputB2c);
@@ -672,9 +638,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.EeeOutputB2b);
                 Assert.Null(data.EeeOutputB2c);
@@ -712,9 +678,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.EeeOutputB2b);
                 Assert.Equal(20, data.EeeOutputB2b);
@@ -750,9 +716,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.EeeOutputB2b);
             }
@@ -789,9 +755,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.EeeOutputB2c);
                 Assert.Equal(20, data.EeeOutputB2c);
@@ -827,9 +793,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.EeeOutputB2c);
             }
@@ -866,9 +832,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeCollectedB2b);
                 Assert.Null(data.WeeeCollectedB2c);
@@ -903,9 +869,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.WeeeCollectedB2b);
                 Assert.Equal(20, data.WeeeCollectedB2b);
@@ -938,9 +904,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeCollectedB2b);
             }
@@ -974,9 +940,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.WeeeCollectedB2c);
                 Assert.Equal(20, data.WeeeCollectedB2c);
@@ -1009,9 +975,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeCollectedB2c);
             }
@@ -1046,9 +1012,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeDeliveredB2b);
                 Assert.Null(data.WeeeDeliveredB2c);
@@ -1086,9 +1052,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.WeeeDeliveredB2b);
                 Assert.Equal(20, data.WeeeDeliveredB2b);
@@ -1124,9 +1090,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeDeliveredB2b);
             }
@@ -1163,9 +1129,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.NotNull(data.WeeeDeliveredB2c);
                 Assert.Equal(20, data.WeeeDeliveredB2c);
@@ -1201,9 +1167,9 @@
                 var result = await dataAccess.GetDataReturnSubmissionsHistory(scheme.Id, includeSummaryData: true);
 
                 // Assert
-                Assert.Single(result.Data);
+                Assert.Single(result);
 
-                var data = result.Data.Single();
+                var data = result.Single();
 
                 Assert.Null(data.WeeeDeliveredB2c);
             }

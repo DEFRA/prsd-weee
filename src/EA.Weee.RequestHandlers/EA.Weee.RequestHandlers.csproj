@@ -205,6 +205,7 @@
     <Compile Include="Admin\GetRolesHandler.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation\IUpdateSchemeInformationDataAccess.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationDataAccess.cs" />
+    <Compile Include="Shared\DataReturnSubmissionsData.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -268,12 +269,14 @@
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetApiDateHandler.cs" />
+    <Compile Include="Shared\DataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
+    <Compile Include="Shared\IDataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />

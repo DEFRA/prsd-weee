@@ -22,8 +22,14 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
-            return await dataAccess.GetDataReturnSubmissionsHistory(request.SchemeId, request.ComplianceYear,
+            var data = await dataAccess.GetDataReturnSubmissionsHistory(request.SchemeId, request.ComplianceYear,
                 request.Ordering, request.IncludeSummaryData);
+
+            return new DataReturnSubmissionsHistoryResult()
+            {
+                Data = data.ConvertAll(x => (DataReturnSubmissionsHistoryData)x),
+                ResultCount = data.Count
+            };
         }
     }
 }
