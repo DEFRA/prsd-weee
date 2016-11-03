@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns
 {
     using System;
     using System.Threading.Tasks;
-    using RequestHandlers.Shared;
+    using RequestHandlers.DataReturns;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

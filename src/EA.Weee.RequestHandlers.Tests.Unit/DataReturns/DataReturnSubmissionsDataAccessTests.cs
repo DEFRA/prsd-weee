@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Shared
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using DataAccess;
     using Domain.DataReturns;
     using FakeItEasy;
-    using RequestHandlers.Shared;
+    using RequestHandlers.DataReturns;
     using Weee.Tests.Core;
     using Xunit;
 

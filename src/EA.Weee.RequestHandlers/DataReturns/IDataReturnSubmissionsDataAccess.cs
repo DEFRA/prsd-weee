@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Shared
+﻿namespace EA.Weee.RequestHandlers.DataReturns
 {
     using System.Threading.Tasks;
     using Domain.DataReturns;

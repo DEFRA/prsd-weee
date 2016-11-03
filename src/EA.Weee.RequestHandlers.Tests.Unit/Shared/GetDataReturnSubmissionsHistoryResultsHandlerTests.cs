@@ -6,6 +6,7 @@
     using Core.DataReturns;
     using Domain.DataReturns;
     using FakeItEasy;
+    using RequestHandlers.DataReturns;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
     using Requests.Shared;
@@ -18,9 +19,15 @@
         public async Task GetDataReturnSubmissionsHistoryResultHandler_RequestByExternalUser_ReturnDataReturnSubmissionsHistoryData()
         {
             // Arrange
-            IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
+            IGetDataReturnSubmissionsHistoryResultsDataAccess resultsDataAccess = CreateFakeResultsDataAccess();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
-            GetDataReturnSubmissionsHistoryResultsHandler handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            GetDataReturnSubmissionsHistoryResultsHandler handler = 
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
+                submissionsDataAccess, dataReturnVersionComparer);
+
             GetDataReturnSubmissionsHistoryResults request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
             request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
 
@@ -36,9 +43,14 @@
         public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesDataWithSpecifiedSort()
         {
             // Arrange
-            var dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             var authorization = A.Fake<IWeeeAuthorization>();
-            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            var handler = 
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+                submissionsDataAccess, dataReturnVersionComparer);
 
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
             request.Ordering = DataReturnSubmissionsHistoryOrderBy.QuarterDescending;
@@ -47,7 +59,7 @@
             var results = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.QuarterDescending, A<bool>._))
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.QuarterDescending, A<bool>._))
                 .MustHaveHappened();
         }
 
@@ -55,9 +67,14 @@
         public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesSummaryDataWhenSpecified()
         {
             // Arrange
-            var dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             var authorization = A.Fake<IWeeeAuthorization>();
-            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            var handler = 
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
+                submissionsDataAccess, dataReturnVersionComparer);
 
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
             request.Ordering = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending;
@@ -67,7 +84,7 @@
             var results = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending, true))
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending, true))
                 .MustHaveHappened();
         }
 
@@ -75,9 +92,15 @@
         public async void GetDataReturnSubmissionsHistoryResultHandler_ReturnsSubmissionDataCount()
         {
             // Arrange
-            IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
+            IGetDataReturnSubmissionsHistoryResultsDataAccess resultsDataAccess = CreateFakeResultsDataAccess();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
-            GetDataReturnSubmissionsHistoryResultsHandler handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
+
+            GetDataReturnSubmissionsHistoryResultsHandler handler = 
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
+                submissionsDataAccess, dataReturnVersionComparer);
+
             GetDataReturnSubmissionsHistoryResults request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
             request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
 
@@ -85,7 +108,6 @@
             DataReturnSubmissionsHistoryResult results = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
             Assert.Equal(2, results.ResultCount);
         }
         
@@ -93,9 +115,14 @@
         public async void GetDataReturnSubmissionsHistoryResultHandler_MapsPropertiesToDataReturnSubmissionsHistoryResultObject()
         {
             // Arrange
-            var dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
             var authorization = A.Fake<IWeeeAuthorization>();
-            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, dataAccess);
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
+
+            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+                submissionsDataAccess, dataReturnVersionComparer);
+
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
             request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
 
@@ -141,7 +168,7 @@
                 WeeeDeliveredB2c = weeeDeliveredB2c
             };
 
-            A.CallTo(() => dataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._, A<bool>._))
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._, A<bool>._))
                 .Returns(new List<DataReturnSubmissionsData> { data });
 
             // Act
@@ -168,7 +195,115 @@
             Assert.Equal(weeeDeliveredB2c, result.WeeeDeliveredB2c);
         }
 
-        private IGetDataReturnSubmissionsHistoryResultsDataAccess CreateFakeDataAccess()
+        [Fact]
+        public async void GetDataReturnSubmissionsHistoryResultHandler_DoesNotRetrievePreviousSubmissions_WhenEeeDataComparisonNotRequired()
+        {
+            // Arrange
+            var resultsDataAccess = CreateFakeResultsDataAccess();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
+
+            var handler =
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+                submissionsDataAccess, dataReturnVersionComparer);
+
+            var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
+            request.CompareEeeOutputData = false;
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending, false))
+                .MustHaveHappened();
+
+            A.CallTo(() => submissionsDataAccess.GetPreviousSubmission(A<DataReturnVersion>._))
+                .MustNotHaveHappened();
+
+            A.CallTo(() => dataReturnVersionComparer.EeeDataChanged(A<DataReturnVersion>._, A<DataReturnVersion>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void GetDataReturnSubmissionsHistoryResultHandler_RetrievesPreviousSubmissionsAndComparesEeeData_WhenEeeDataComparisonRequired()
+        {
+            // Arrange
+            var resultsDataAccess = CreateFakeResultsDataAccess();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
+
+            var handler =
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
+                submissionsDataAccess, dataReturnVersionComparer);
+
+            var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
+            request.CompareEeeOutputData = true;
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending, false))
+                .MustHaveHappened();
+
+            A.CallTo(() => submissionsDataAccess.GetPreviousSubmission(A<DataReturnVersion>._))
+                .MustHaveHappened();
+
+            A.CallTo(() => dataReturnVersionComparer.EeeDataChanged(A<DataReturnVersion>._, A<DataReturnVersion>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async void GetDataReturnSubmissionsHistoryResultHandler_ReturnsPreviousSubmissionDataReturnVersionId_WhenEeeDataChanged()
+        {
+            // Arrange
+            var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
+            var submissionsDataAccess = A.Fake<IDataReturnSubmissionsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
+
+            var data = new List<DataReturnSubmissionsData>
+            {
+                new DataReturnSubmissionsData() { DataReturnVersion = A.Dummy<DataReturnVersion>() }
+            };
+
+            A.CallTo(() => resultsDataAccess.GetDataReturnSubmissionsHistory(A<Guid>._, A<int>._, A<DataReturnSubmissionsHistoryOrderBy>._, A<bool>._))
+                .Returns(data);
+
+            var previousDataReturnVersionId = Guid.NewGuid();
+            var previousDataReturnVersion = A.Fake<DataReturnVersion>();
+            A.CallTo(() => previousDataReturnVersion.Id)
+                .Returns(previousDataReturnVersionId);
+
+            A.CallTo(() => submissionsDataAccess.GetPreviousSubmission(A<DataReturnVersion>._))
+                .Returns(previousDataReturnVersion);
+
+            A.CallTo(() => dataReturnVersionComparer.EeeDataChanged(A<DataReturnVersion>._, previousDataReturnVersion))
+                .Returns(true);
+
+            var handler =
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
+                submissionsDataAccess, dataReturnVersionComparer);
+
+            var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending;
+            request.CompareEeeOutputData = true;
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Single(result.Data);
+            Assert.True(result.Data[0].EeeDataChanged);
+            Assert.NotNull(result.Data[0].PreviousSubmissionDataReturnVersionId);
+            Assert.Equal(previousDataReturnVersionId, result.Data[0].PreviousSubmissionDataReturnVersionId);
+        }
+
+        private IGetDataReturnSubmissionsHistoryResultsDataAccess CreateFakeResultsDataAccess()
         {
             IGetDataReturnSubmissionsHistoryResultsDataAccess dataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
 

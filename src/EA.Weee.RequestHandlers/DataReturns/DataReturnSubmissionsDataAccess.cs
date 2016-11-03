@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Shared
+﻿namespace EA.Weee.RequestHandlers.DataReturns
 {
     using System;
     using System.Collections.Generic;
@@ -53,7 +53,7 @@
                 dataReturnVersions.Add(key, schemeYearQuarterSubmissions);
             }
 
-            var index = schemeYearQuarterSubmissions.BinarySearch(dataReturnVersion, new DataReturnVersionComparer());
+            var index = schemeYearQuarterSubmissions.FindIndex(x => x.Id == dataReturnVersion.Id);
             if (index < 0)
             {
                 throw new InvalidOperationException("The data return version is not currently stored in the database.");
@@ -85,14 +85,6 @@
             public override int GetHashCode()
             {
                 return SchemeId.GetHashCode() ^ Year.GetHashCode() ^ Quarter.GetHashCode();
-            }
-        }
-
-        private class DataReturnVersionComparer : IComparer<DataReturnVersion>
-        {
-            public int Compare(DataReturnVersion x, DataReturnVersion y)
-            {
-                return x.Id.CompareTo(y.Id);
             }
         }
     }

@@ -112,7 +112,7 @@
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionHistoryDataAccessTests.cs" />
-    <Compile Include="Shared\DataReturnSubmissionsDataAccessTests.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
     <Compile Include="Shared\GetSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
