@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
 
-    public class UkEeeDataViewModel
+    public class ComplianceYearReportViewModel
     {
         [Required]
         [DisplayName("Compliance year")]
