@@ -34,7 +34,7 @@
                 string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                 <tr>
-                    <td><div style="width:100px;">@datetimeValue</div></td>
+                    <td><div style="width:120px;">@datetimeValue</div></td>
                     <td>@item.Quarter</td>
                     <td style="text-align:left">@item.SubmittedBy</td>
                     <td>@item.WeeeCollectedB2c</td>
@@ -55,6 +55,7 @@
                 <th>Submitted by</th>
                 <th>B2C (tonnes)</th>
                 <th>B2B (tonnes)</th>
+                <th>Producer EEE changes</th>
             </tr>
         </thead>
         <tbody>
@@ -63,11 +64,20 @@
                 string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                 <tr>
-                    <td><div style="width:100px;">@datetimeValue</div></td>
+                    <td><div style="width:120px;">@datetimeValue</div></td>
                     <td>@item.Quarter</td>
                     <td style="text-align:left">@item.SubmittedBy</td>
                     <td>@item.EeeOutputB2c</td>
                     <td>@item.EeeOutputB2b</td>
+                    <td>
+                        @if (item.EeeDataChanged)
+                        {
+                            <div style="width:180px;">
+                                @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
+                                   new { currentSubmission = item.DataReturnVersionId, PreviousSubmission = item.PreviousSubmissionDataReturnVersionId })
+                            </div>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

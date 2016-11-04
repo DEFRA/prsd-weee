@@ -115,8 +115,9 @@
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccessTests.cs" />
-    <Compile Include="Shared\GetDataReturnSubmissionHistoryDataAcessTests.cs" />
-    <Compile Include="Shared\GetSubmissionHistoryDataAcessTests.cs" />
+    <Compile Include="Shared\GetDataReturnSubmissionHistoryDataAccessTests.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
+    <Compile Include="Shared\GetSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccessTests.cs" />

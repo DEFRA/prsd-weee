@@ -249,7 +249,7 @@
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
                     var getDataReturnSubmissionsHistoryResults = new GetDataReturnSubmissionsHistoryResults(
-                        schemeId, schemeData.OrganisationId, year, includeSummaryData: true);
+                        schemeId, schemeData.OrganisationId, year, includeSummaryData: true, compareEeeOutputData: true);
 
                     DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
                     return PartialView("_dataReturnSubmissionsResults", searchResults.Data);
@@ -260,6 +260,12 @@
                     throw;
                 }
             }
+        }
+
+        [HttpGet]
+        public Task<ActionResult> DownloadDataReturnSubmissionEeeChanges(Guid currentSubmission, Guid previousSubmission)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task SetBreadcrumb()
