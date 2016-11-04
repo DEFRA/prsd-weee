@@ -6,7 +6,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class GetSubmissionHistoryDataAcessTests
+    public class GetSubmissionHistoryDataAccessTests
     {
         [Fact]
         public async void GetSubmissionHistory_WitValidSchemeId_ReturnsAllYearsSubmissionHistoryData()

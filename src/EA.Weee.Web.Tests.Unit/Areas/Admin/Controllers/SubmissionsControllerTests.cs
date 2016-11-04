@@ -90,6 +90,16 @@
                 .MustHaveHappened();
         }
 
+        [Fact]
+        public async Task FetchSubmissionResults_RequestsForEeeOutputDataComparison()
+        {
+            await SubmissionsController().FetchDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetDataReturnSubmissionsHistoryResults)a[1]).CompareEeeOutputData == true)
+                .MustHaveHappened();
+        }
+
         private SubmissionsController SubmissionsController()
         {
             ConfigurationService configService = A.Fake<ConfigurationService>();

@@ -1,18 +1,18 @@
-﻿namespace EA.Weee.Core.DataReturns
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
+    using Domain.DataReturns;
+    using QuarterType = Core.DataReturns.QuarterType;
 
-    public class DataReturnSubmissionsHistoryData
+    public class DataReturnSubmissionsData
     {
+        public DataReturnVersion DataReturnVersion { get; set; }
+
         public Guid SchemeId { get; set; }
 
         public Guid OrganisationId { get; set; }
 
         public Guid DataReturnUploadId { get; set; }
-
-        public Guid DataReturnVersionId { get; set; }
-
-        public Guid? PreviousSubmissionDataReturnVersionId { get; set; }
 
         public int ComplianceYear { get; set; }
 
@@ -35,7 +35,5 @@
         public decimal? EeeOutputB2c { get; set; }
 
         public decimal? EeeOutputB2b { get; set; }
-
-        public bool EeeDataChanged { get; set; }
     }
 }
