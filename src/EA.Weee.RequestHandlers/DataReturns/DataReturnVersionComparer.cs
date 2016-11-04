@@ -13,15 +13,13 @@
 
             if (previousSubmission != null)
             {
-                if (currentSubmission.EeeOutputReturnVersion != null &&
-                    previousSubmission.EeeOutputReturnVersion != null)
+                if (currentSubmission.EeeOutputReturnVersion != null)
                 {
-                    result = currentSubmission.EeeOutputReturnVersion.Id != previousSubmission.EeeOutputReturnVersion.Id;
+                    result =
+                        previousSubmission.EeeOutputReturnVersion == null ||
+                        currentSubmission.EeeOutputReturnVersion.Id != previousSubmission.EeeOutputReturnVersion.Id;
                 }
-                else if ((currentSubmission.EeeOutputReturnVersion == null 
-                          && previousSubmission.EeeOutputReturnVersion != null) ||
-                         (currentSubmission.EeeOutputReturnVersion != null &&
-                          previousSubmission.EeeOutputReturnVersion == null))
+                else if (previousSubmission.EeeOutputReturnVersion != null)
                 {
                     result = true;
                 }
