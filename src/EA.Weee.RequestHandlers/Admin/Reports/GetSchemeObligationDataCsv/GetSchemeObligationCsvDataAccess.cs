@@ -17,9 +17,7 @@
 
         public async Task<List<SchemeObligationCsvData>> FetchObligationsForComplianceYearAsync(int complianceYear)
         {
-            //TODO: Implement stored procedure
-            //return await context.StoredProcedures.SpgSchemeObligationDataCsv(complianceYear);
-            return new List<SchemeObligationCsvData>();
+            return await context.StoredProcedures.SpgSchemeObligationDataCsv(complianceYear);
         }
     }
 }
