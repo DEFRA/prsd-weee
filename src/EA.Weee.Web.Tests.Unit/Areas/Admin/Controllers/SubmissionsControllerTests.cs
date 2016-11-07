@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Search;
+    using Core.Admin;
     using Core.Shared;
     using FakeItEasy;
     using Services;
@@ -13,6 +13,7 @@
     using ViewModels.Shared.Submission;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Scheme.ViewModels;
+    using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -98,6 +99,29 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
                 .WhenArgumentsMatch(a => ((GetDataReturnSubmissionsHistoryResults)a[1]).CompareEeeOutputData == true)
                 .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task DownloadDataReturnSubmissionEeeChanges_CallsApiAndReturnsFileResult()
+        {
+            // Arrange
+            var csvFileData = new CSVFileData { FileName = "Test file.csv", FileContent = "CSV content" };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionEeeChangesCsv>._))
+               .Returns(csvFileData);
+
+            // Act
+            var result = await SubmissionsController().DownloadDataReturnSubmissionEeeChanges(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionEeeChangesCsv>._))
+                .MustHaveHappened();
+
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.csv", fileResult.FileDownloadName);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         private SubmissionsController SubmissionsController()

@@ -21,6 +21,7 @@
     using ViewModels.Submissions;
     using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin.GetActiveComplianceYears;
+    using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
@@ -263,9 +264,17 @@
         }
 
         [HttpGet]
-        public Task<ActionResult> DownloadDataReturnSubmissionEeeChanges(Guid currentSubmission, Guid previousSubmission)
+        public async Task<ActionResult> DownloadDataReturnSubmissionEeeChanges(Guid currentSubmission, Guid previousSubmission)
         {
-            throw new NotImplementedException();
+            CSVFileData csvFileData;
+            using (IWeeeClient client = apiClient())
+            {
+                var request = new GetDataReturnSubmissionEeeChangesCsv(currentSubmission, previousSubmission);
+                csvFileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
         }
 
         private async Task SetBreadcrumb()
