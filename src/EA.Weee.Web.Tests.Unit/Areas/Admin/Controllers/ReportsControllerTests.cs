@@ -144,6 +144,7 @@
         [InlineData(Reports.ProducerEeeData, "ProducerEeeData")]
         [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData")]
         [InlineData(Reports.UkEeeData, "UkEeeData")]
+        [InlineData(Reports.SchemeObligationData, "SchemeObligationData")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
         {
             // Arrange
@@ -641,7 +642,7 @@
                 A.Dummy<BreadcrumbService>());
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.UkEeeData(new UkEeeDataViewModel());
+            var result = await controller.UkEeeData(new ComplianceYearReportViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
@@ -655,7 +656,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
+            ComplianceYearReportViewModel viewModel = new ComplianceYearReportViewModel();
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
@@ -675,7 +676,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
+            ComplianceYearReportViewModel viewModel = new ComplianceYearReportViewModel();
 
             // Act
             ActionResult result = await controller.UkEeeData(viewModel);
@@ -1229,6 +1230,186 @@
             Assert.NotNull(fileResult);
 
             Assert.Equal("text/csv", fileResult.ContentType);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "SchemeObligationData" action calls the API to retrieve
+        /// the list of compliance years and returns the "SchemeObligationData" view with 
+        /// a ComplianceYearReportViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetSchemeObligationData_Always_ReturnsComplianceYearReportViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.SchemeObligationData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
+
+            ComplianceYearReportViewModel model = viewResult.Model as ComplianceYearReportViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "SchemeObligationData" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetSchemeObligationData_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.SchemeObligationData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "SchemeObligationData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.SchemeObligationData();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "SchemeObligationData" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "SchemeObligationData"
+        /// view with a ComplianceYearReportViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostSchemeObligationData_WithInvalidViewModel_ReturnsUkWeeeDataProducerDataViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
+
+            ComplianceYearReportViewModel model = viewResult.Model as ComplianceYearReportViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "SchemeObligationData" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostSchemeObligationData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "SchemeObligationData" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostSchemeObligationData_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "SchemeObligationData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.SchemeObligationData(A.Dummy<ComplianceYearReportViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
     }
 }
