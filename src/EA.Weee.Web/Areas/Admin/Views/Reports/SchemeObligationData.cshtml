@@ -1,14 +1,15 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ComplianceYearReportViewModel
 @{
-    ViewBag.Title = "UK EEE Data";
+    ViewBag.Title = "Download PCS Obligation Data";
 }
 
-@section main_content {
-
+@section main_content
+{
     <header class="hgroup">
-        <h1 class="heading-large">Download UK EEE data</h1>
+        <h1 class="heading-large">Download PCS obligation data</h1>
     </header>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -22,16 +23,17 @@
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
+
         <p>
             If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
         </p>
+
         @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
     }
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
-
     <p>
         @Html.ActionLink("Back", "ChooseReport")
     </p>
@@ -42,7 +44,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadUkEeeDataCsv", new { complianceYear = Model.SelectedYear }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadSchemeObligationDataCsv", new { complianceYear = Model.SelectedYear }))";
         </script>
     }
 }

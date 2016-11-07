@@ -367,5 +367,16 @@
                     complianceYearParameter)
                 .ToListAsync();
         }
+
+        public async Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<SchemeObligationCsvData>(
+                    "[Producer].[spgSchemeObligationCsvData] @ComplianceYear",
+                    complianceYearParameter)
+                .ToListAsync();
+        }
     }
 }
