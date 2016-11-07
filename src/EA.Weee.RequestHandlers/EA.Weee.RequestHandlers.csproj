@@ -76,12 +76,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChangesCsvData.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsvDataAccess.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsvHandler.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\IGetDataReturnSubmissionEeeChangesCsvDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandler.cs" />
