@@ -28,5 +28,7 @@
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
         Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear);
+
+        Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear);
     }
 }

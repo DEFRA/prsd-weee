@@ -13,7 +13,8 @@
                 Reports.SchemeWeeeData,
                 Reports.UkEeeData,
                 Reports.UkWeeeData,
-                Reports.ProducerPublicRegister
+                Reports.ProducerPublicRegister,
+                Reports.SchemeObligationData
             })
         {
         }
