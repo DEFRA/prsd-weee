@@ -69,7 +69,7 @@
             var fileContent = csvWriter.Write(changes.CsvData);
 
             var fileName =
-                string.Format("{0}_{1}_{2}_EEEDataChanges_{3:ddMMyyyy}.csv",
+                string.Format("{0}_Q{1}_{2}_EEEDataChanges_{3:ddMMyyyy_HHmm}.csv",
                 changes.ComplianceYear, changes.Quarter, changes.SchemeApprovalNumber,
                 changes.CurrentSubmissionDate);
 

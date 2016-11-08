@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain.DataReturns;
     using Domain.Obligation;
     using Requests.Shared;
 
@@ -23,8 +22,8 @@
             DataReturnSubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
             var query =
-                from dru in context.DataReturnsUploads
-                join user in context.Users on dru.DataReturnVersion.SubmittingUserId equals user.Id
+                from dru in context.DataReturnsUploads.AsNoTracking()
+                join user in context.Users.AsNoTracking() on dru.DataReturnVersion.SubmittingUserId equals user.Id
                 where dru.Scheme.Id == schemeId &&
                 dru.DataReturnVersion != null &&
                 (!complianceYear.HasValue || dru.ComplianceYear == complianceYear)
@@ -38,7 +37,49 @@
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
                     Quarter = (Core.DataReturns.QuarterType)dru.Quarter,
-                    DataReturnVersion = dru.DataReturnVersion
+                    DataReturnVersion = dru.DataReturnVersion,
+
+                    EeeOutputB2b = includeSummaryData && dru.DataReturnVersion.EeeOutputReturnVersion != null ?
+                            dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    EeeOutputB2c = includeSummaryData && dru.DataReturnVersion.EeeOutputReturnVersion != null ?
+                            dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeCollectedB2b = includeSummaryData && dru.DataReturnVersion.WeeeCollectedReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeCollectedB2c = includeSummaryData && dru.DataReturnVersion.WeeeCollectedReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeDeliveredB2b = includeSummaryData && dru.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeDeliveredB2c = includeSummaryData && dru.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
                 };
 
             switch (ordering)
@@ -81,63 +122,7 @@
                     break;
             }
 
-            var results = await query.ToListAsync();
-
-            if (includeSummaryData)
-            {
-                foreach (var result in results)
-                {
-                    var returnVersion = result.DataReturnVersion;
-
-                    result.EeeOutputB2b =
-                        returnVersion.EeeOutputReturnVersion != null ?
-                        CalculateTonnage(returnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
-                           ObligationType.B2B)
-                        : null;
-
-                    result.EeeOutputB2c =
-                        returnVersion.EeeOutputReturnVersion != null ?
-                        CalculateTonnage(returnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
-                        ObligationType.B2C)
-                        : null;
-
-                    result.WeeeCollectedB2b =
-                        returnVersion.WeeeCollectedReturnVersion != null ?
-                        CalculateTonnage(returnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
-                        ObligationType.B2B)
-                        : null;
-
-                    result.WeeeCollectedB2c =
-                        returnVersion.WeeeCollectedReturnVersion != null ?
-                        CalculateTonnage(returnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
-                        ObligationType.B2C)
-                        : null;
-
-                    result.WeeeDeliveredB2b =
-                        returnVersion.WeeeDeliveredReturnVersion != null ?
-                        CalculateTonnage(returnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
-                        ObligationType.B2B)
-                        : null;
-
-                    result.WeeeDeliveredB2c =
-                        returnVersion.WeeeDeliveredReturnVersion != null ?
-                        CalculateTonnage(returnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
-                        ObligationType.B2C)
-                        : null;
-                }
-            }
-
-            return results;
-        }
-
-        private decimal? CalculateTonnage(IEnumerable<ReturnItem> returnItems, ObligationType obligationType)
-        {
-            var filteredReturnItems =
-                returnItems.Where(r => r.ObligationType == obligationType);
-
-            return filteredReturnItems.Any() ?
-                (decimal?)filteredReturnItems.Sum(r => r.Tonnage)
-                : null;
+            return await query.ToListAsync();
         }
     }
 }
