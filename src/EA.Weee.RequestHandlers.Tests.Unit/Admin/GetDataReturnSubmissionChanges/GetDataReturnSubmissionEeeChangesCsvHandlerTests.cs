@@ -82,14 +82,14 @@
                     SchemeApprovalNumber = "ABC",
                     ComplianceYear = 2016,
                     Quarter = 3,
-                    CurrentSubmissionDate = new DateTime(2016, 2, 1)
+                    CurrentSubmissionDate = new DateTime(2016, 2, 1, 4, 5, 0)
                 });
 
             // Act
             var result = await handler.HandleAsync(A.Dummy<GetDataReturnSubmissionEeeChangesCsv>());
 
             // Assert
-            Assert.Equal("2016_3_ABC_EEEDataChanges_01022016.csv", result.FileName);
+            Assert.Equal("2016_Q3_ABC_EEEDataChanges_01022016_0405.csv", result.FileName);
         }
     }
 }
