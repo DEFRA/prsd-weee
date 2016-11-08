@@ -101,6 +101,7 @@
     <Compile Include="StoredProcedure\SpgProducerEeeDataHistoryCsvTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerEeeCsvDataTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerPublicRegisterCSVDataByComplianceYearTests.cs" />
+    <Compile Include="StoredProcedure\SpgSchemeObligationCsvDataTests.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvAsyncTests.cs" />
     <Compile Include="StoredProcedure\SpgUKEEEDataByComplianceYearTests.cs" />
   </ItemGroup>
