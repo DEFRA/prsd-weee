@@ -79,6 +79,7 @@
     <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Lookup\WeeeCategory.cs" />
     <Compile Include="Obligation\ObligationType.cs" />
+    <Compile Include="Obligation\ObligationTypeString.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
     <Compile Include="Producer\ProducerEeeByQuarter.cs" />
