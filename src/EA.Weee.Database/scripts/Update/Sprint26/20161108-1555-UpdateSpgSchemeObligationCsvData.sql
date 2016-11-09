@@ -1,6 +1,4 @@
-﻿USE [EA.Weee]
-GO
-/****** Object:  StoredProcedure [Producer].[spgSchemeObligationCsvData]    Script Date: 08/11/2016 15:55:49 ******/
+﻿/****** Object:  StoredProcedure [Producer].[spgSchemeObligationCsvData]    Script Date: 08/11/2016 15:55:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
