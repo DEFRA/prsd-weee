@@ -62,6 +62,12 @@
             }
         }
 
+        /// <summary>
+        /// Adds data for multiple producers, over multiple years, quarters, obligation types and categories.
+        /// This checks that the data is returned correctly, using only B2C obligation values for the previous year,
+        /// split by category and producer and totalled across all quarters for that year.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task Execute_ReturnsCorrectTotalsForCategories_OfB2COnlyForPreviousYearOfCorrectProducer()
         {
@@ -79,11 +85,11 @@
                 var prod2_2000 = helper.CreateProducerAsCompany(memberUpload2000, "PRN456", "B2C");
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, 2000, 1);
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, 2000, 2);
-                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2C", 1, 100);
-                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2C", 2, 500);
-                helper.CreateEeeOutputAmount(dataReturnVersion2, prod1_2000.RegisteredProducer, "B2C", 2, 1000);
-                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2B", 2, 50);
-                helper.CreateEeeOutputAmount(dataReturnVersion1, prod2_2000.RegisteredProducer, "B2C", 2, 400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2C", 1, 100); // Prod1 Cat1 B2C Q1
+                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2C", 2, 500); // Prod1 Cat2 B2C Q1
+                helper.CreateEeeOutputAmount(dataReturnVersion2, prod1_2000.RegisteredProducer, "B2C", 2, 1000); // Prod1 Cat2 B2C Q2
+                helper.CreateEeeOutputAmount(dataReturnVersion1, prod1_2000.RegisteredProducer, "B2B", 2, 50); // Prod1 Cat2 B2B Q1
+                helper.CreateEeeOutputAmount(dataReturnVersion1, prod2_2000.RegisteredProducer, "B2C", 2, 400); // Prod2 Cat2 B2C Q1
 
                 //Current Year Data
                 var memberUpload2001 = helper.CreateSubmittedMemberUpload(scheme);
