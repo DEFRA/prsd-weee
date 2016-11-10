@@ -249,6 +249,8 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewDisplayOption.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\PcsDetails\PcsDetailsOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionsResultsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionsResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\TestEmail\TestEmailViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
