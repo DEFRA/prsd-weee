@@ -138,9 +138,28 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> FetchSubmissionResults(int year, Guid schemeId)
+        public Task<ActionResult> FetchSubmissionResults(int year, Guid schemeId)
         {
-            if (!Request.IsAjaxRequest())
+            return RetrieveSubmissionResults(year, schemeId, SubmissionsHistoryOrderBy.SubmissionDateDescending);
+        }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public Task<ActionResult> GetSubmissionResults(int year, Guid schemeId, SubmissionsHistoryOrderBy orderBy)
+        {
+            return RetrieveSubmissionResults(year, schemeId, orderBy);
+        }
+
+        private async Task<ActionResult> RetrieveSubmissionResults(int year, Guid schemeId, SubmissionsHistoryOrderBy orderBy)
+        {
+            if (Request != null &&
+                !Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -155,8 +174,20 @@
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
-                    SubmissionsHistorySearchResult searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
-                    return PartialView("_submissionsResults", searchResults.Data);
+                    var request = new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId,
+                        year, orderBy);
+
+                    var searchResults = await client.SendAsync(User.GetAccessToken(), request);
+
+                    var model = new SubmissionsResultsViewModel
+                    {
+                        Year = year,
+                        Scheme = schemeId,
+                        Results = searchResults.Data,
+                        OrderBy = orderBy
+                    };
+
+                    return PartialView("_submissionsResults", model);
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -232,7 +263,25 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
+        public Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
+        {
+            return RetrieveDataReturnsSubmissionResults(year, schemeId, DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending);
+        }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public Task<ActionResult> GetDataReturnSubmissionResults(int year, Guid schemeId, DataReturnSubmissionsHistoryOrderBy orderBy)
+        {
+            return RetrieveDataReturnsSubmissionResults(year, schemeId, orderBy);
+        }
+
+        private async Task<ActionResult> RetrieveDataReturnsSubmissionResults(int year, Guid schemeId, DataReturnSubmissionsHistoryOrderBy orderBy)
         {
             if (Request != null &&
                 !Request.IsAjaxRequest())
@@ -249,11 +298,21 @@
                 try
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
                     var getDataReturnSubmissionsHistoryResults = new GetDataReturnSubmissionsHistoryResults(
-                        schemeId, schemeData.OrganisationId, year, includeSummaryData: true, compareEeeOutputData: true);
+                        schemeId, schemeData.OrganisationId, year, ordering: orderBy, includeSummaryData: true, compareEeeOutputData: true);
 
                     DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
-                    return PartialView("_dataReturnSubmissionsResults", searchResults.Data);
+
+                    var model = new DataReturnSubmissionsResultsViewModel
+                    {
+                        Year = year,
+                        Scheme = schemeId,
+                        Results = searchResults.Data,
+                        OrderBy = orderBy
+                    };
+
+                    return PartialView("_dataReturnSubmissionsResults", model);
                 }
                 catch (ApiBadRequestException ex)
                 {
