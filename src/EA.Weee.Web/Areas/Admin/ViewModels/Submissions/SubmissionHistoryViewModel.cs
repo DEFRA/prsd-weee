@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Admin;
 
     public class SubmissionsHistoryViewModel
     {
@@ -16,8 +15,6 @@
         [Required(ErrorMessage = "Enter PCS")]
         [DisplayName("PCS")]
         public Guid SelectedScheme { get; set; }
-    
-        public SubmissionsHistorySearchResult Results { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
@@ -25,7 +22,6 @@
 
         public SubmissionsHistoryViewModel()
         {
-            Results = new SubmissionsHistorySearchResult();
         }
     }
 }
