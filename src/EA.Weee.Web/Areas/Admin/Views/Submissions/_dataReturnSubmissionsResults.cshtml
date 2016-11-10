@@ -1,114 +1,237 @@
 ﻿@using System.Globalization
-@using EA.Weee.Core.DataReturns
-@model IEnumerable<DataReturnSubmissionsHistoryData>
+@using EA.Weee.Requests.Shared
+@using EA.Weee.Web.Areas.Admin.ViewModels.Submissions
+@model DataReturnSubmissionsResultsViewModel
 
-@if (Model.Any())
-{
-    <div class="section-tabs">
-        <ul>
-            <li class="active">
-                <a href="#" id="collectedDelivered-data-tab">WEEE data</a>
-            </li>
-            <li>
-                <a href="#" id="output-data-tab">EEE data</a>
-            </li>
-        </ul>
-    </div>
+<div id="submissionsGrid">
+    @if (Model.Results.Any())
+    {
+        @Html.HiddenFor(m => m.Year, new { id = "ComplianceYear" })
+        @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
 
-    <table id="collectedDelivered-data-table">
-        <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
-        <thead>
-            <tr>
-                <th>Date and time (GMT)</th>
-                <th>Quarter reported</th>
-                <th>Submitted by</th>
-                <th>B2C collected (tonnes)</th>
-                <th>B2C delivered (tonnes)</th>
-                <th>B2B collected (tonnes)</th>
-                <th>B2B delivered (tonnes)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+        <div class="section-tabs">
+            <ul>
+                <li id="collectedDelivered-list-item" class="active">
+                    <a href="#" id="collectedDelivered-data-tab">WEEE data</a>
+                </li>
+                <li id="output-list-item">
+                    <a href="#" id="output-data-tab">EEE data</a>
+                </li>
+            </ul>
+        </div>
 
+        <table id="collectedDelivered-data-table">
+            <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
+            <thead>
                 <tr>
-                    <td><div style="width:120px;">@datetimeValue</div></td>
-                    <td>@item.Quarter</td>
-                    <td style="text-align:left">@item.SubmittedBy</td>
-                    <td>@item.WeeeCollectedB2c</td>
-                    <td>@item.WeeeDeliveredB2c</td>
-                    <td>@item.WeeeCollectedB2b</td>
-                    <td>@item.WeeeDeliveredB2b</td>
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
+                            <th class="sorted-ascending">
+                                <a href="#" id="collected-date-ascending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                            </th>
+                            break;
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
+                            <th class="sorted-descending">
+                                <a href="#" id="collected-date-descending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                            </th>
+                            break;
+                        default:
+                            <th>
+                                <a href="#" id="collected-date">Date and time (GMT)</a>
+                            </th>
+                            break;
+                    }
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
+                            <th class="sorted-ascending">
+                                <a href="#" id="collected-quarter-ascending">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by earliest quarter.</span>
+                            </th>
+                            break;
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
+                            <th class="sorted-descending">
+                                <a href="#" id="collected-quarter-descending">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by most recent quarter.</span>
+                            </th>
+                            break;
+                        default:
+                            <th>
+                                <a href="#" id="collected-quarter">Quarter reported</a>
+                            </th>
+                            break;
+                    }
+                    <th>Submitted by</th>
+                    <th>B2C collected (tonnes)</th>
+                    <th>B2C delivered (tonnes)</th>
+                    <th>B2B collected (tonnes)</th>
+                    <th>B2B delivered (tonnes)</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-    <table id="output-data-table" class="visually-hidden">
-        <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
-        <thead>
-            <tr>
-                <th>Date and time (GMT)</th>
-                <th>Quarter reported</th>
-                <th>Submitted by</th>
-                <th>B2C (tonnes)</th>
-                <th>B2B (tonnes)</th>
-                <th>Producer EEE changes</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+                    <tr>
+                        <td><div style="width:120px;">@datetimeValue</div></td>
+                        <td>@item.Quarter</td>
+                        <td style="text-align:left">@item.SubmittedBy</td>
+                        <td>@item.WeeeCollectedB2c</td>
+                        <td>@item.WeeeDeliveredB2c</td>
+                        <td>@item.WeeeCollectedB2b</td>
+                        <td>@item.WeeeDeliveredB2b</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
+        <table id="output-data-table" class="visually-hidden">
+            <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
+            <thead>
                 <tr>
-                    <td><div style="width:120px;">@datetimeValue</div></td>
-                    <td>@item.Quarter</td>
-                    <td style="text-align:left">@item.SubmittedBy</td>
-                    <td>@item.EeeOutputB2c</td>
-                    <td>@item.EeeOutputB2b</td>
-                    <td>
-                        @if (item.EeeDataChanged)
-                        {
-                            <div style="width:180px;">
-                                @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
+                            <th class="sorted-ascending">
+                                <a href="#" id="output-date-ascending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                            </th>
+                            break;
+                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
+                            <th class="sorted-descending">
+                                <a href="#" id="output-date-descending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                            </th>
+                            break;
+                        default:
+                            <th>
+                                <a href="#" id="output-date">Date and time (GMT)</a>
+                            </th>
+                            break;
+                    }
+                    @switch (Model.OrderBy)
+                    {
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
+                            <th class="sorted-ascending">
+                                <a href="#" id="output-quarter-ascending">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by earliest quarter.</span>
+                            </th>
+                            break;
+                        case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
+                            <th class="sorted-descending">
+                                <a href="#" id="output-quarter-descending">Quarter reported</a>
+                                <span class="visuallyhidden">Sorted by most recent quarter.</span>
+                            </th>
+                            break;
+                        default:
+                            <th>
+                                <a href="#" id="output-quarter">Quarter reported</a>
+                            </th>
+                            break;
+                    }
+                    <th>Submitted by</th>
+                    <th>B2C (tonnes)</th>
+                    <th>B2B (tonnes)</th>
+                    <th>Producer EEE changes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                    <tr>
+                        <td><div style="width:120px;">@datetimeValue</div></td>
+                        <td>@item.Quarter</td>
+                        <td style="text-align:left">@item.SubmittedBy</td>
+                        <td>@item.EeeOutputB2c</td>
+                        <td>@item.EeeOutputB2b</td>
+                        <td>
+                            @if (item.EeeDataChanged)
+                            {
+                                <div style="width:180px;">
+                                    @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
                                    new { currentSubmission = item.DataReturnVersionId, PreviousSubmission = item.PreviousSubmissionDataReturnVersionId })
-                            </div>
-                        }
-                    </td>
-                </tr>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $("a[id$='data-tab']").click(function (event) {
+                event.preventDefault();
+
+                // Inactivate tabs
+                $("a[id$='data-tab']").each(function () {
+                    $(this).parent().removeClass();
+                });
+
+                // Except this tab
+                $(this).parent().addClass("active");
+
+                // Hide all data tables
+                $("table[id$='data-table']").each(function () {
+                    $(this).addClass('visually-hidden');
+                });
+
+                var tabIdentifier = $(this).attr('id')
+                    .replace('-data-tab', '');
+
+                // Except for the table corresponding to this tab
+                $("table[id$='" + tabIdentifier + "-data-table']").removeClass('visually-hidden');
+            })
+
+            $("#collected-date-descending, #collected-date, #output-date-descending, #output-date").click(function (event) {
+                event.preventDefault();
+                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending');
+            })
+
+            $("#collected-date-ascending, #output-date-ascending").click(function (event) {
+                event.preventDefault();
+                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending');
+            })
+
+            $("#collected-quarter-descending, #collected-quarter, #output-quarter-descending, #output-quarter").click(function (event) {
+                event.preventDefault();
+                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterAscending');
+            })
+
+            $("#collected-quarter-ascending, #output-quarter-ascending").click(function (event) {
+                event.preventDefault();
+                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterDescending');
+            })
+
+            function SortDataReturnSubmissionResults(orderBy) {
+                var selectedYear = $("#ComplianceYear").val()
+                var selectedScheme = $("#SchemeId").val()
+
+                $.ajax({
+                    url: '@Url.Action("GetDataReturnSubmissionResults")',
+                    type: 'GET',
+                    cache: false,
+                    data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
+                    success: function (data) {
+                        // Remember the ID of the active tab
+                        var activeTab = $('.active').attr('id');
+ 
+                        $('#submissionsGrid').replaceWith(data);
+
+                        // Invoke the click method to make the tab active
+                        $('#' + activeTab + ' > a').click();
+                    }
+                });
             }
-        </tbody>
-    </table>
-
-    <script type="text/javascript">
-        $("a[id$='data-tab']").click(function (event) {
-            event.preventDefault();
-
-            // Inactivate tabs
-            $("a[id$='data-tab']").each(function () {
-                $(this).parent().removeClass();
-            });
-
-            // Except this tab
-            $(this).parent().addClass("active");
-
-            // Hide all data tables
-            $("table[id$='data-table']").each(function () {
-                $(this).addClass('visually-hidden');
-            });
-
-            var tabIdentifier = $(this).attr('id')
-                .replace('-data-tab', '');
-
-            // Except for the table corresponding to this tab
-            $("table[id$='" + tabIdentifier + "-data-table']").removeClass('visually-hidden');
-        })
-    </script>
-}
-else
-{
-    <span>No submissions have been made for the chosen compliance year and PCS.</span>
-}
+        </script>
+    }
+    else
+    {
+        <span>No submissions have been made for the chosen compliance year and PCS.</span>
+    }
+</div>
