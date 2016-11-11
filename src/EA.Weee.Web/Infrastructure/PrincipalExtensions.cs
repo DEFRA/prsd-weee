@@ -2,7 +2,7 @@
 {
     using System.Security.Claims;
     using System.Security.Principal;
-    using Thinktecture.IdentityModel.Client;
+    using IdentityModel;
 
     public static class PrincipalExtensions
     {
@@ -44,7 +44,7 @@
             var claimsPrincipal = principal as ClaimsPrincipal;
             if (claimsPrincipal != null)
             {
-                return GetClaimValue(claimsPrincipal, OAuth2Constants.AccessToken);
+                return GetClaimValue(claimsPrincipal, OidcConstants.AuthorizeResponse.AccessToken);
             }
 
             return null;

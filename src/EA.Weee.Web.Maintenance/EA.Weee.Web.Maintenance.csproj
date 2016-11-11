@@ -123,9 +123,6 @@
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
@@ -140,9 +137,6 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Facebook">
-      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
@@ -371,7 +365,6 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\colours\_palette.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\colours\_organisation.scss" />
-    <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\govuk\details.polyfill.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
@@ -394,8 +387,10 @@
     <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
-    <Content Include="Scripts\jquery-2.2.3.js" />
-    <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <None Include="Scripts\jquery-2.2.4.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.4.js" />
+    <Content Include="Scripts\jquery-2.2.4.min.js" />
+    <Content Include="Scripts\jquery-2.2.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -468,7 +463,6 @@
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Maintenance\Maintenance.cshtml" />
-    <Content Include="Scripts\jquery-2.2.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

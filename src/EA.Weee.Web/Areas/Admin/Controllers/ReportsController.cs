@@ -100,6 +100,9 @@
                 case Reports.UkEeeData:
                     return RedirectToAction("UkEeeData");
 
+                case Reports.SchemeObligationData:
+                    return RedirectToAction("SchemeObligationData");
+
                 default:
                     throw new NotSupportedException();
             }
@@ -130,7 +133,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId, bool includeRemovedProducers)
+        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId,
+            bool includeRemovedProducers, bool includeBrandNames)
         {
             StringBuilder fileName = new StringBuilder();
 
@@ -163,7 +167,8 @@
             CSVFileData membersDetailsCsvData;
             using (IWeeeClient client = apiClient())
             {
-                GetMemberDetailsCsv request = new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId);
+                GetMemberDetailsCsv request = 
+                    new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId, includeBrandNames);
                 membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
@@ -330,7 +335,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            UkEeeDataViewModel model = new UkEeeDataViewModel();
+            ComplianceYearReportViewModel model = new ComplianceYearReportViewModel();
             await PopulateFilters(model);
 
             return View("UkEeeData", model);
@@ -338,7 +343,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
+        public async Task<ActionResult> UkEeeData(ComplianceYearReportViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -360,6 +365,42 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> SchemeObligationData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            ComplianceYearReportViewModel model = new ComplianceYearReportViewModel();
+            await PopulateFilters(model);
+
+            return View("SchemeObligationData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SchemeObligationData(ComplianceYearReportViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadSchemeObligationDataCsv(int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var schemeObligationCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetSchemeObligationDataCsv(complianceYear));
+                byte[] data = new UTF8Encoding().GetBytes(schemeObligationCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(schemeObligationCsvData.FileName));
+            }
+        }
+
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
@@ -378,7 +419,7 @@
             model.ComplianceYears = new SelectList(years);
         }
 
-        private async Task PopulateFilters(UkEeeDataViewModel model)
+        private async Task PopulateFilters(ComplianceYearReportViewModel model)
         {
             List<int> years = await FetchComplianceYearsForDataReturns();
 

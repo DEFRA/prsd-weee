@@ -2,7 +2,6 @@
 {
     using DataAccess.Identity;
     using Identity;
-    using Thinktecture.IdentityServer.AspNetIdentity;
 
     public class UserService : AspNetIdentityUserService<ApplicationUser, string>
     {

@@ -4,9 +4,8 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Mvc;
-    using EA.Weee.Core;
+    using IdentityModel;
     using Security;
-    using Thinktecture.IdentityModel.Client;
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     public class UserAccountActivationAttribute : AuthorizeAttribute

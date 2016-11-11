@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Net;
     using System.Web;
     using System.Web.Routing;
     using Microsoft.Owin.Security.Cookies;
+    using Prsd.Core;
+    using Prsd.Core.Web;
     using Prsd.Core.Web.Mvc.Owin;
 
     /// <summary>
@@ -45,7 +48,11 @@
             AdminAreaName = "admin";
             AdminLoginPath = "/admin/account/sign-in";
 
-            OnValidateIdentity = context => IdentityValidationHelper.OnValidateIdentity(context);
+            OnValidateIdentity = async context =>
+            {
+                CheckAccessToken(context);
+                await IdentityValidationHelper.TransformClaims(context);
+            };
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
@@ -135,6 +142,35 @@
                 uriBuilder.Query = queryStringParameters.ToString();
                 context.RedirectUri = uriBuilder.Uri.ToString();
             }
+        }
+
+        private static void CheckAccessToken(CookieValidateIdentityContext context)
+        {
+            var expiresAt = context.Identity.FindFirst(ClaimTypes.ExpiresAt);
+            if (expiresAt != null)
+            {
+                DateTime expiryDate;
+
+                if (!DateTime.TryParseExact(expiresAt.Value, "u", CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal, out expiryDate))
+                {
+                    // If the expiry date can't be parsed then sign the user out.
+                    RejectIdentity(context);
+                    return;
+                }
+
+                if (expiryDate < SystemTime.UtcNow)
+                {
+                    RejectIdentity(context);
+                    return;
+                }
+            }
+        }
+
+        private static void RejectIdentity(CookieValidateIdentityContext context)
+        {
+            context.RejectIdentity();
+            context.OwinContext.Authentication.SignOut(context.Options.AuthenticationType);
         }
     }
 }

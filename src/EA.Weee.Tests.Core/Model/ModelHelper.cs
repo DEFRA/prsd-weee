@@ -315,7 +315,18 @@
         /// <returns></returns>
         public ProducerSubmission CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber)
         {
-            ProducerSubmission producerSubsmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            return CreateProducerAsCompany(memberUpload, registrationNumber, "B2B");
+        }
+
+        /// <summary>
+        /// Creates a producer associated with the specified member upload.
+        /// The producer's business will be populated with the details of a company.
+        /// </summary>
+        /// <param name="memberUpload"></param>
+        /// <returns></returns>
+        public ProducerSubmission CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber, string obligationType)
+        {
+            ProducerSubmission producerSubsmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber, obligationType);
             Company company = CreateCompany();
 
             producerSubsmission.Business.Company = company;
@@ -332,7 +343,18 @@
         /// <returns></returns>
         public ProducerSubmission CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber)
         {
-            ProducerSubmission producerSubmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            return CreateProducerAsPartnership(memberUpload, registrationNumber, "B2B");
+        }
+
+        /// <summary>
+        /// Creates a producer associated with the specified member upload.
+        /// The producer's business will be populated with the details of a partnership.
+        /// </summary>
+        /// <param name="memberUpload"></param>
+        /// <returns></returns>
+        public ProducerSubmission CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber, string obligationType)
+        {
+            ProducerSubmission producerSubmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber, obligationType);
             Partnership partnership = CreatePartnership();
 
             producerSubmission.Business.Partnership = partnership;
@@ -349,7 +371,18 @@
         /// <returns></returns>
         public ProducerSubmission CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber)
         {
-            return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            return CreateProducerAsSoleTrader(memberUpload, registrationNumber, "B2B");
+        }
+
+        /// <summary>
+        /// Creates a producer associated with the specified member upload.
+        /// The producer's business will not be populated. I.e. The producer is a sole trader.
+        /// </summary>
+        /// <param name="memberUpload"></param>
+        /// <returns></returns>
+        public ProducerSubmission CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber, string obligationType)
+        {
+            return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber, "B2B");
         }
 
         public ProducerSubmission CreateInvoicedProducer(MemberUpload memberUpload, string registrationNumber)
@@ -393,7 +426,7 @@
 
             return producerSubmission;
         }
-        private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
+        private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber, string obligationType)
         {
             int businessId = GetNextId();
             Business business = new Business
@@ -421,7 +454,7 @@
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
                 ChargeThisUpdate = 0,
-                ObligationType = "B2B",
+                ObligationType = obligationType,
                 Invoiced = false
             };
             model.ProducerSubmissions.Add(producerSubmission);
@@ -433,6 +466,21 @@
             }
 
             return producerSubmission;
+        }
+
+        public BrandName_ CreateBrandName(ProducerSubmission producerSubmission, string brandName)
+        {
+            var result = new BrandName_
+            {
+                Id = IntegerToGuid(GetNextId()),
+                Name = brandName,
+                ProducerSubmissionId = producerSubmission.Id,
+                ProducerSubmission = producerSubmission
+            };
+
+            model.BrandName_Set.Add(result);
+
+            return result;
         }
 
         private Company CreateCompany()
@@ -749,6 +797,49 @@
             return aeDeliveryLocation;
         }
 
+        public WeeeCollectedAmount CreateWeeeCollectedAmount(DataReturnVersion dataReturnVersion, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var weeeCollectedAmount = new WeeeCollectedAmount
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ObligationType = obligationType,
+                Tonnage = tonnage,
+                WeeeCategory = weeeCategory
+            };
+
+            AddWeeeCollectedAmount(dataReturnVersion, weeeCollectedAmount);
+
+            return weeeCollectedAmount;
+        }
+
+        public void AddWeeeCollectedAmount(DataReturnVersion dataReturnVersion, WeeeCollectedAmount weeeCollectedAmount)
+        {
+            if (dataReturnVersion.WeeeCollectedReturnVersion == null)
+            {
+                dataReturnVersion.WeeeCollectedReturnVersion = CreateWeeeCollectedReturnVersion();
+            }
+
+            AddWeeeCollectedAmount(dataReturnVersion.WeeeCollectedReturnVersion, weeeCollectedAmount);
+        }
+
+        public void AddWeeeCollectedAmount(WeeeCollectedReturnVersion weeeCollectedReturnVersion, WeeeCollectedAmount weeeCollectedAmount)
+        {
+            if (weeeCollectedReturnVersion.WeeeCollectedReturnVersionAmounts == null)
+            {
+                weeeCollectedReturnVersion.WeeeCollectedReturnVersionAmounts = new List<WeeeCollectedReturnVersionAmount>();
+            }
+
+            weeeCollectedReturnVersion
+                .WeeeCollectedReturnVersionAmounts
+                .Add(new WeeeCollectedReturnVersionAmount
+                {
+                    WeeeCollectedAmountId = weeeCollectedAmount.Id,
+                    WeeeCollectedAmount = weeeCollectedAmount,
+                    WeeeCollectedReturnVersionId = weeeCollectedReturnVersion.Id,
+                    WeeeCollectedReturnVersion = weeeCollectedReturnVersion
+                });
+        }
+
         public WeeeCollectedAmount CreateWeeeCollectedAmount(ObligationType obligationType, decimal tonnage, WeeeCategory category)
         {
             var weeeCollectedAmount = new WeeeCollectedAmount
@@ -787,6 +878,80 @@
             model.WeeeCollectedReturnVersions.Add(weeeCollectedReturnVersion);
 
             return weeeCollectedReturnVersion;
+        }
+
+        public WeeeDeliveredReturnVersion CreateWeeeDeliveredReturnVersion()
+        {
+            var weeeDeliveredReturnVersions = new WeeeDeliveredReturnVersion
+            {
+                Id = IntegerToGuid(GetNextId())
+            };
+
+            model.WeeeDeliveredReturnVersions.Add(weeeDeliveredReturnVersions);
+
+            return weeeDeliveredReturnVersions;
+        }
+
+        public void AddWeeeDeliveredAmount(WeeeDeliveredReturnVersion weeeDeliveredReturnVersion, WeeeDeliveredAmount weeeDeliveredAmount)
+        {
+            if (weeeDeliveredReturnVersion.WeeeDeliveredReturnVersionAmounts == null)
+            {
+                weeeDeliveredReturnVersion.WeeeDeliveredReturnVersionAmounts = new List<WeeeDeliveredReturnVersionAmount>();
+            }
+
+            weeeDeliveredReturnVersion
+                .WeeeDeliveredReturnVersionAmounts
+                .Add(new WeeeDeliveredReturnVersionAmount
+                {
+                    WeeeDeliveredAmountId = weeeDeliveredAmount.Id,
+                    WeeeDeliveredAmount = weeeDeliveredAmount,
+                    WeeeDeliveredReturnVersionId = weeeDeliveredReturnVersion.Id,
+                    WeeeDeliveredReturnVersion = weeeDeliveredReturnVersion
+                });
+        }
+
+        public void AddWeeeDeliveredAmount(DataReturnVersion dataReturnVersion, WeeeDeliveredAmount weeeDeliveredAmount)
+        {
+            if (dataReturnVersion.WeeeDeliveredReturnVersion == null)
+            {
+                dataReturnVersion.WeeeDeliveredReturnVersion = CreateWeeeDeliveredReturnVersion();
+            }
+
+            AddWeeeDeliveredAmount(dataReturnVersion.WeeeDeliveredReturnVersion, weeeDeliveredAmount);
+        }
+
+        public WeeeDeliveredAmount CreateWeeeDeliveredAmount(DataReturnVersion dataReturnVersion, AatfDeliveryLocation location, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var weeeDeliveredAmount = new WeeeDeliveredAmount
+            {
+                Id = IntegerToGuid(GetNextId()),
+                AatfDeliveryLocationId = location.Id,
+                AatfDeliveryLocation = location,
+                ObligationType = obligationType,
+                Tonnage = tonnage,
+                WeeeCategory = weeeCategory
+            };
+
+            AddWeeeDeliveredAmount(dataReturnVersion, weeeDeliveredAmount);
+
+            return weeeDeliveredAmount;
+        }
+
+        public WeeeDeliveredAmount CreateWeeeDeliveredAmount(DataReturnVersion dataReturnVersion, AeDeliveryLocation location, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var weeeDeliveredAmount = new WeeeDeliveredAmount
+            {
+                Id = IntegerToGuid(GetNextId()),
+                AeDeliveryLocationId = location.Id,
+                AeDeliveryLocation = location,
+                ObligationType = obligationType,
+                Tonnage = tonnage,
+                WeeeCategory = weeeCategory
+            };
+
+            AddWeeeDeliveredAmount(dataReturnVersion, weeeDeliveredAmount);
+
+            return weeeDeliveredAmount;
         }
     }
 }
