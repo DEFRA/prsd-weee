@@ -99,6 +99,7 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccessTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataHistoryCsvHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetSchemeObligationDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests.cs" />
