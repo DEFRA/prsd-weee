@@ -71,5 +71,10 @@
         {
             get { return !Address.IsUkAddress(); }
         }
+
+        public string ContactName
+        {
+            get { return string.Format("{0} {1} {2}", Title, ForeName, SurName); }
+        }
     }
 }

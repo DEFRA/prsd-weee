@@ -75,6 +75,35 @@
                     isAuthorisedRepresentative = "Yes";
                 }
 
+                ProducerContact producerContact = null;
+                bool isCompany = false;
+                if (latestDetails.ProducerBusiness.CompanyDetails != null)
+                {
+                    producerContact = latestDetails.ProducerBusiness.CompanyDetails.RegisteredOfficeContact;
+                    isCompany = true;
+                }
+                else if (latestDetails.ProducerBusiness.Partnership != null)
+                {
+                    producerContact = latestDetails.ProducerBusiness.Partnership.PrincipalPlaceOfBusiness;
+                }
+
+                var address = producerContact != null ? producerContact.Address.ToString() : null;
+
+                ProducerContactDetails correspondentForNotices = null;
+                if (latestDetails.ProducerBusiness.CorrespondentForNoticesContact != null)
+                {
+                    var correspondentDetails = latestDetails.ProducerBusiness.CorrespondentForNoticesContact;
+
+                    correspondentForNotices = new ProducerContactDetails
+                    {
+                        ContactName = correspondentDetails.ContactName,
+                        Email = correspondentDetails.Email,
+                        Mobile = correspondentDetails.Mobile,
+                        Telephone = correspondentDetails.Telephone,
+                        Address = correspondentDetails.Address.ToString()
+                    };
+                }
+
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
                     RegisteredProducerId = latestDetails.RegisteredProducer.Id,
@@ -87,6 +116,9 @@
                     ChargeBandType = (ChargeBandType)latestDetails.ChargeBandAmount.ChargeBand,
                     CeasedToExist = latestDetails.CeaseToExist,
                     IsAuthorisedRepresentative = isAuthorisedRepresentative,
+                    Address = address,
+                    IsCompany = isCompany,
+                    CorrespondentForNotices = correspondentForNotices,
                     ProducerEeeDetails =
                         mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
                             (await
