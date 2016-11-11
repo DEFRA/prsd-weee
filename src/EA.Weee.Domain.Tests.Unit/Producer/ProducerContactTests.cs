@@ -110,6 +110,14 @@
             Assert.NotEqual(producerContact, producerContact2);
         }
 
+        [Fact]
+        public void ProducerContact_ContactName_ReturnsTitleForenameSurname()
+        {
+            var producerContact = ProducerContactBuilder.NewProducerContact;
+
+            Assert.Equal("Mr TestForename TestSurname", producerContact.ContactName);
+        }
+
         private class AlwaysEqualProducerAddress : ProducerAddress
         {
             public override bool Equals(ProducerAddress other)
