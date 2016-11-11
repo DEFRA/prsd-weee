@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
     using System;
-    using System.Collections.Generic;
-    using DataReturns;
-    using EA.Weee.Core.Shared;
+    using Shared;
 
     /// <summary>
     /// Provides scheme-specific details about a producer (identified by their
@@ -40,5 +38,11 @@
         public ProducerEeeDetails ProducerEeeDetails { get; set; }
 
         public bool CanRemoveProducer { get; set; }
+
+        public string Address { get; set; }
+
+        public bool IsCompany { get; set; }
+
+        public ProducerContactDetails CorrespondentForNotices { get; set; }
     }
 }
