@@ -30,52 +30,34 @@
         }
 
         /// <summary>
-        /// /Gets all the member detail for specified compliance year
-        /// </summary>
-        /// <param name="complianceYear"></param>
-        /// <returns></returns>
-        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear)
-        {
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-
-            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", DBNull.Value);
-            SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
-            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", false);
-
-            return await context.Database
-                .SqlQuery<MembersDetailsCsvData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,
-                     includeRemovedProducerParameter,
-                    schemeIdParameter,
-                     competentAuthorityIdParameter)
-                .ToListAsync();
-        }
-
-        /// <summary>
         /// Gets all the member detail for specified compliance year for all schemes and all authorised authority.
         ///     If scheme Id is specified then filters on scheme Id
         ///     If AA Id is specified then filters on AA Id
         /// </summary>
         /// <param name="complianceYear"></param>
+        /// <param name="includeRemovedProducer"></param>
+        /// <param name="includeBrandNames"></param>
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
         /// <returns></returns>
-        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId)
+        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
+            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
             SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
+            SqlParameter includeBrandNamesParameter = new SqlParameter("@IncludeBrandNames", includeBrandNames);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCsvData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @IncludeBrandNames, @SchemeId, @CompetentAuthorityId",
                     complianceYearParameter,
-                     includeRemovedProducerParameter,
+                    includeRemovedProducerParameter,
+                    includeBrandNamesParameter,
                     schemeIdParameter,
-                     competentAuthorityIdParameter)
+                    competentAuthorityIdParameter)
                 .ToListAsync();
         }
 
@@ -382,6 +364,17 @@
                 .SqlQuery<DataReturnSummaryCsvData>(
                     "[PCS].[spgDataReturnSummaryCsv] @SchemeID, @ComplianceYear",
                     schemeIdParameter,
+                    complianceYearParameter)
+                .ToListAsync();
+        }
+
+        public async Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<SchemeObligationCsvData>(
+                    "[Producer].[spgSchemeObligationCsvData] @ComplianceYear",
                     complianceYearParameter)
                 .ToListAsync();
         }

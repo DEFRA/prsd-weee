@@ -20,6 +20,8 @@
         
         public bool IncludeRemovedProducer { get; set; }
 
+        public bool IncludeBrandNames { get; set; }
+
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
         public IEnumerable<SelectListItem> SchemeNames { get; set; }

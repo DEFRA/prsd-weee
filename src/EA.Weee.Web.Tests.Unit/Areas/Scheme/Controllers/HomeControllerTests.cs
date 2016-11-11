@@ -931,6 +931,30 @@
         }
 
         [Fact]
+        public async Task GetViewDataReturnSubmissionHistory_DoesNotRequestForSummaryData()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetDataReturnSubmissionsHistoryResults)a[1]).IncludeSummaryData == false)
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetViewDataReturnSubmissionHistory_DoesNotRequestForEeeOutputDataComparison()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetDataReturnSubmissionsHistoryResults)a[1]).CompareEeeOutputData == false)
+                .MustHaveHappened();
+        }
+
+        [Fact]
         public async void PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);

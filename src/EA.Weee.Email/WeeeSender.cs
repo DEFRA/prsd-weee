@@ -3,8 +3,9 @@
     using System;
     using System.Net.Mail;
     using System.Threading.Tasks;
-    using Core.Logging;
     using Prsd.Email;
+    using Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// Uses an instance of <see cref="ISender"/> to send emails while providing the option to
@@ -32,7 +33,7 @@
                 if (continueOnException)
                 {
                     string errorMessage = string.Format("Error sending notification email with subject of '{0}'. See inner exception for details", message.Subject);
-                    logger.Log(new Exception(errorMessage, exception));
+                    logger.Write(LogEventLevel.Error, new Exception(errorMessage, exception), errorMessage);
 
                     return true;
                 }

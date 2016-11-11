@@ -70,7 +70,7 @@ lines.";
         public void CsvWriter_WithThreeDefinedColumns_WritesValuesInOrder()
         {
             // Arrange
-            CsvWriter<object> writer = new CsvWriter<object>();
+            CsvWriter<object> writer = new CsvWriter<object>(A.Dummy<IExcelSanitizer>());
 
             writer.DefineColumn("Column 1", x => "Value 1");
             writer.DefineColumn("Column 2", x => "Value 2");
@@ -94,7 +94,7 @@ lines.";
         public void CsvWriter_WithFuncColumn_UsesFuncToRetrieveValues()
         {
             // Arrange
-            CsvWriter<int> writer = new CsvWriter<int>();
+            CsvWriter<int> writer = new CsvWriter<int>(A.Dummy<IExcelSanitizer>());
 
             writer.DefineColumn("Column 1", x => x * x);
 
@@ -144,7 +144,7 @@ lines.";
         public void CsvWriter_WithFormatAsText_EscapesValuesAndWritesAsFormula()
         {
             // Arrange
-            CsvWriter<string> writer = new CsvWriter<string>();
+            CsvWriter<string> writer = new CsvWriter<string>(A.Dummy<IExcelSanitizer>());
 
             writer.DefineColumn("Column 1", x => x, true);
 

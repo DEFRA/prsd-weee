@@ -17,7 +17,7 @@
     [Serializable]
     public class ExternalRoute
     {
-        protected readonly string Url;
+        public string Url;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalRoute"/> class.
