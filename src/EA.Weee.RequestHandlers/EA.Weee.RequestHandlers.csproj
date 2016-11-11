@@ -33,16 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16036.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16036.1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -51,10 +55,6 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -76,12 +76,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChangesCsvData.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsvDataAccess.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsvHandler.cs" />
+    <Compile Include="Admin\GetDataReturnSubmissionChanges\IGetDataReturnSubmissionEeeChangesCsvDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandler.cs" />
@@ -100,6 +106,9 @@
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv\GetProducerEeeDataCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv\IGetProducerEeeDataCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetSchemeObligationDataCsv\GetSchemeObligationCsvDataAccess.cs" />
+    <Compile Include="Admin\Reports\GetSchemeObligationDataCsv\GetSchemeObligationDataCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetSchemeObligationDataCsv\IGetSchemeObligationCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvHandler.cs" />
@@ -143,9 +152,11 @@
     <Compile Include="DataReturns\BusinessValidation\Rules\ISubmissionWindowClosed.cs" />
     <Compile Include="DataReturns\BusinessValidation\Rules\SchemeApprovalNumberMismatch.cs" />
     <Compile Include="DataReturns\BusinessValidation\Rules\SubmissionWindowClosed.cs" />
+    <Compile Include="DataReturns\DataReturnVersionComparer.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
     <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
     <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />
@@ -205,6 +216,7 @@
     <Compile Include="Admin\GetRolesHandler.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation\IUpdateSchemeInformationDataAccess.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationDataAccess.cs" />
+    <Compile Include="Shared\DataReturnSubmissionsData.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -268,12 +280,14 @@
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetApiDateHandler.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
+    <Compile Include="DataReturns\IDataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />

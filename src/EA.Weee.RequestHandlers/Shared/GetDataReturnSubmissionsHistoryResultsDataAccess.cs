@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using Core.DataReturns;
-    using DataAccess;
-    using Requests.Shared;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain.Obligation;
+    using Requests.Shared;
 
     public class GetDataReturnSubmissionsHistoryResultsDataAccess : IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
@@ -18,16 +18,16 @@
             this.context = context;
         }
 
-        public async Task<DataReturnSubmissionsHistoryResult> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null,
-            DataReturnSubmissionsHistoryOrderBy? ordering = null)
+        public async Task<List<DataReturnSubmissionsData>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null,
+            DataReturnSubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
-            var results = 
-                from dru in context.DataReturnsUploads
-                join user in context.Users on dru.DataReturnVersion.SubmittingUserId equals user.Id
+            var query =
+                from dru in context.DataReturnsUploads.AsNoTracking()
+                join user in context.Users.AsNoTracking() on dru.DataReturnVersion.SubmittingUserId equals user.Id
                 where dru.Scheme.Id == schemeId &&
                 dru.DataReturnVersion != null &&
                 (!complianceYear.HasValue || dru.ComplianceYear == complianceYear)
-                select new DataReturnSubmissionsHistoryData
+                select new DataReturnSubmissionsData
                 {
                     SchemeId = dru.Scheme.Id,
                     OrganisationId = dru.Scheme.OrganisationId,
@@ -36,56 +36,93 @@
                     ComplianceYear = dru.ComplianceYear.Value,
                     SubmissionDateTime = dru.DataReturnVersion.SubmittedDate.Value,
                     FileName = dru.FileName,
-                    Quarter = (QuarterType)dru.Quarter
-                };
+                    Quarter = (Core.DataReturns.QuarterType)dru.Quarter,
+                    DataReturnVersion = dru.DataReturnVersion,
 
-            IOrderedQueryable<DataReturnSubmissionsHistoryData> sortedResults;
+                    EeeOutputB2b = includeSummaryData && dru.DataReturnVersion.EeeOutputReturnVersion != null ?
+                            dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    EeeOutputB2c = includeSummaryData && dru.DataReturnVersion.EeeOutputReturnVersion != null ?
+                            dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeCollectedB2b = includeSummaryData && dru.DataReturnVersion.WeeeCollectedReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeCollectedB2c = includeSummaryData && dru.DataReturnVersion.WeeeCollectedReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeDeliveredB2b = includeSummaryData && dru.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2B) ?
+                               (decimal?)dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2B).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+
+                    WeeeDeliveredB2c = includeSummaryData && dru.DataReturnVersion.WeeeDeliveredReturnVersion != null ?
+                            dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Any(x => x.DatabaseObligationType == ObligationTypeString.B2C) ?
+                               (decimal?)dru.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                                  .Where(y => y.DatabaseObligationType == ObligationTypeString.B2C).Sum(z => z.Tonnage)
+                               : null
+                             : null,
+                };
 
             switch (ordering)
             {
                 case DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending:
-                    sortedResults = results
+                    query = query
                         .OrderBy(s => s.ComplianceYear)
                         .ThenByDescending(s => s.SubmissionDateTime);
                     break;
 
                 case DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending:
-                    sortedResults = results
+                    query = query
                         .OrderByDescending(s => s.ComplianceYear)
                         .ThenByDescending(s => s.SubmissionDateTime);
                     break;
 
                 case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
-                    sortedResults = results
+                    query = query
                         .OrderByDescending(s => s.ComplianceYear)
                         .ThenBy(s => s.Quarter)
                         .ThenByDescending(s => s.SubmissionDateTime);
                     break;
 
                 case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
-                    sortedResults = results
+                    query = query
                         .OrderByDescending(s => s.ComplianceYear)
                         .ThenByDescending(s => s.Quarter)
                         .ThenByDescending(s => s.SubmissionDateTime);
                     break;
 
                 case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
-                    sortedResults = results
+                    query = query
                         .OrderBy(s => s.SubmissionDateTime);
                     break;
 
                 case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
                 default:
-                    sortedResults = results
+                    query = query
                         .OrderByDescending(s => s.SubmissionDateTime);
                     break;
             }
 
-            var dataReturnSubmissionsHistoryResult = new DataReturnSubmissionsHistoryResult();
-            dataReturnSubmissionsHistoryResult.Data = await sortedResults.ToListAsync();
-            dataReturnSubmissionsHistoryResult.ResultCount = await results.CountAsync();
-
-            return dataReturnSubmissionsHistoryResult;
+            return await query.ToListAsync();
         }
     }
 }

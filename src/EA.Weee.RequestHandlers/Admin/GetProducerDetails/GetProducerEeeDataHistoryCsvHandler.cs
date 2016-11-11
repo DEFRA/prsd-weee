@@ -36,7 +36,7 @@
 
             string fileContent = await GetProducersEeeHistoryCsvContent(request.PRN);
 
-            var fileName = string.Format("{0}_producerEEEhistory_{1:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("{0}_EEEdatachanges_{1:ddMMyyyy_HHmm}.csv",
                 request.PRN,
                 DateTime.UtcNow);
 

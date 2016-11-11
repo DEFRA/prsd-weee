@@ -8,8 +8,8 @@
     {
         Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
-        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear);
-        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId);
+        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
+            bool includeBrandNames, Guid? schemeId = null, Guid? competentAuthorityId = null);
 
         Task<int> SpgNextIbisTransactionNumber();
         
@@ -28,5 +28,7 @@
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
         Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear);
+
+        Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear);
     }
 }

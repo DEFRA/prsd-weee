@@ -21,6 +21,7 @@
     using ViewModels.Submissions;
     using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin.GetActiveComplianceYears;
+    using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
@@ -233,7 +234,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
         {
-            if (!Request.IsAjaxRequest())
+            if (Request != null &&
+                !Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -247,8 +249,10 @@
                 try
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                    var getDataReturnSubmissionsHistoryResults = new GetDataReturnSubmissionsHistoryResults(
+                        schemeId, schemeData.OrganisationId, year, includeSummaryData: true, compareEeeOutputData: true);
 
-                    DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    DataReturnSubmissionsHistoryResult searchResults = await client.SendAsync(User.GetAccessToken(), getDataReturnSubmissionsHistoryResults);
                     return PartialView("_dataReturnSubmissionsResults", searchResults.Data);
                 }
                 catch (ApiBadRequestException ex)
@@ -257,6 +261,20 @@
                     throw;
                 }
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadDataReturnSubmissionEeeChanges(Guid currentSubmission, Guid previousSubmission)
+        {
+            CSVFileData csvFileData;
+            using (IWeeeClient client = apiClient())
+            {
+                var request = new GetDataReturnSubmissionEeeChangesCsv(currentSubmission, previousSubmission);
+                csvFileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
         }
 
         private async Task SetBreadcrumb()

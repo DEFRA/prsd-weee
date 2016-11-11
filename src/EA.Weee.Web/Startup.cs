@@ -14,10 +14,10 @@ namespace EA.Weee.Web
     using System.Web.Routing;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using IdentityModel;
     using Infrastructure;
     using Owin;
     using Services;
-    using Thinktecture.IdentityModel.Client;
 
     public partial class Startup
     {
