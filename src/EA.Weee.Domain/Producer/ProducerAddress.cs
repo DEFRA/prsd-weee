@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
     using System;
+    using System.Linq;
     using Prsd.Core.Domain;
 
     public class ProducerAddress : Entity, IEquatable<ProducerAddress>
@@ -67,6 +68,21 @@
         public virtual Guid CountryId { get; private set; }
 
         public virtual Country Country { get; protected set; }
+
+        /// <summary>
+        /// Returns a concatenated string containing the address represented by this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var addressValues = new[]
+            {
+                PrimaryName, SecondaryName, Street, Town,
+                Locality, AdministrativeArea, PostCode, Country.Name
+            };
+
+            return string.Join(", ", addressValues.Where(x => !string.IsNullOrWhiteSpace(x)));
+        }
 
         public bool IsUkAddress()
         {

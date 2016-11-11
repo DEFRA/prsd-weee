@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\ProducerContactDetails.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchData.cs" />
     <Compile Include="Charges\InvoiceRunInfo.cs" />
