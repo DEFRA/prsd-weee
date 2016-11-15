@@ -378,5 +378,25 @@
                     complianceYearParameter)
                 .ToListAsync();
         }
+
+        public async Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear,
+            string obligationType,
+            int? quarter,
+            Guid? schemeId)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? DBNull.Value);
+            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<MissingProducerDataCsvData>(
+                    "[Producer].[spgMissingProducerDataCsvData] @ComplianceYear, @ObligationType, @Quarter, @SchemeId",
+                    complianceYearParameter,
+                    obligationTypeParameter,
+                    quarterParameter,
+                    schemeIdParameter)
+                .ToListAsync();
+        }
     }
 }
