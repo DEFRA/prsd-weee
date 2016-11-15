@@ -14,16 +14,16 @@
     internal class GetSchemeObligationDataCsvHandler : IRequestHandler<GetSchemeObligationDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGetSchemeObligationCsvDataAccess dataAccess;
+        private readonly IGetSchemeObligationCsvDataProcessor dataProcessor;
         private readonly CsvWriterFactory csvWriterFactory;
 
         public GetSchemeObligationDataCsvHandler(
             IWeeeAuthorization authorization,
-            IGetSchemeObligationCsvDataAccess dataAccess,
+            IGetSchemeObligationCsvDataProcessor dataProcessor,
             CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
-            this.dataAccess = dataAccess;
+            this.dataProcessor = dataProcessor;
             this.csvWriterFactory = csvWriterFactory;
         }
 
@@ -33,7 +33,7 @@
 
             CsvWriter<SchemeObligationCsvData> csvWriter = CreateWriter();
 
-            List<SchemeObligationCsvData> items = await dataAccess.FetchObligationsForComplianceYearAsync(request.ComplianceYear);
+            List<SchemeObligationCsvData> items = await dataProcessor.FetchObligationsForComplianceYearAsync(request.ComplianceYear);
 
             string fileContent = csvWriter.Write(items);
 
