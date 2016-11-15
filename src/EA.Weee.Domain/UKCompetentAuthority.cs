@@ -11,7 +11,7 @@
 
         public virtual Country Country { get; private set; }
 
-        public string Email { get; private set; }
+        public virtual string Email { get; private set; }
 
         protected UKCompetentAuthority()
         {
