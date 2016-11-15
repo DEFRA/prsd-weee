@@ -52,6 +52,11 @@
                 .Where(t => t.Namespace.Contains("Factories"))
                 .AsImplementedInterfaces();
 
+            // Register data processor types
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => t.Name.Contains("DataProcessor"))
+                .AsImplementedInterfaces();
+
             // Register singleton types relating to PCS member upload testing.
             builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
             builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();

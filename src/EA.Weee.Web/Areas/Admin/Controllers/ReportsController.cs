@@ -103,6 +103,9 @@
                 case Reports.SchemeObligationData:
                     return RedirectToAction("SchemeObligationData");
 
+                case Reports.MissingProducerData:
+                    return RedirectToAction("MissingProducerData");
+
                 default:
                     throw new NotSupportedException();
             }
@@ -400,6 +403,46 @@
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(schemeObligationCsvData.FileName));
             }
         }
+        
+        [HttpGet]
+        public async Task<ActionResult> MissingProducerData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            MissingProducerDataViewModel model = new MissingProducerDataViewModel();
+            await PopulateFilters(model);
+
+            return View("MissingProducerData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MissingProducerData(MissingProducerDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadMissingProducerDataCsv(int complianceYear,
+            Guid? schemeId, ObligationType obligationType, int? quarter)
+        {
+            CSVFileData fileData;
+
+            GetMissingProducerDataCsv request = new GetMissingProducerDataCsv(complianceYear, obligationType, quarter, schemeId);
+            using (IWeeeClient client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
 
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
@@ -436,6 +479,15 @@
                 List<SchemeData> schemes = await FetchSchemes();
                 model.Schemes = new SelectList(schemes, "Id", "SchemeName");
             }
+        }
+
+        private async Task PopulateFilters(MissingProducerDataViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForDataReturns();
+            model.ComplianceYears = new SelectList(years);
+
+            List<SchemeData> schemes = await FetchSchemes();
+            model.Schemes = new SelectList(schemes, "Id", "SchemeName");
         }
 
         private async Task<List<int>> FetchComplianceYearsForDataReturns()

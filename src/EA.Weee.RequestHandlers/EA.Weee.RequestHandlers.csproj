@@ -103,6 +103,7 @@
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv\GetMissingProducerDataCsvDataProcessor.cs" />
+    <Compile Include="Admin\Reports\GetMissingProducerDataCsv\GetMissingProducerDataCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv\IGetMissingProducerDataCsvDataProcessor.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv\GetProducerEeeDataCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv\GetProducerEeeDataCsvHandler.cs" />

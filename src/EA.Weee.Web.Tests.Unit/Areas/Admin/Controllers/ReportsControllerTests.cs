@@ -1411,5 +1411,200 @@
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
+
+        /// <summary>
+        /// This test ensures that the GET "MissingProducerData" action calls the API to retrieve
+        /// the list of compliance years + schemes and returns the "MissingProducerData" view with 
+        /// a MissingProducerDataViewModel that has be populated.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetMissingProducerData_Always_ReturnsMissingProducerDataViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            List<SchemeData> schemes = new List<SchemeData>();
+            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
+            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.MissingProducerData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "MissingProducerData");
+
+            MissingProducerDataViewModel model = viewResult.Model as MissingProducerDataViewModel;
+            Assert.NotNull(model);
+
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+
+            Assert.Collection(model.Schemes,
+                s1 => Assert.Equal("Scheme 1", s1.Text),
+                s2 => Assert.Equal("Scheme 2", s2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "MissingProducerData" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetMissingProducerData_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.MissingProducerData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "MissingProducerData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetMissingProducerData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.MissingProducerData();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "MissingProducerData" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "MissingProducerData"
+        /// view with a MissingProducerDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostMissingProducerData_WithInvalidViewModel_ReturnsMissingProducerDataViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+
+            List<SchemeData> schemes = new List<SchemeData>();
+            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
+            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.MissingProducerData(new MissingProducerDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "MissingProducerData");
+
+            MissingProducerDataViewModel model = viewResult.Model as MissingProducerDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "MissingProducerData" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostMissingProducerData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.MissingProducerData(new MissingProducerDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "MissingProducerData" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostMissingProducerData_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.MissingProducerData(new MissingProducerDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "MissingProducerData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostMissingProducerData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.MissingProducerData(A.Dummy<MissingProducerDataViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
     }
 }
