@@ -7,11 +7,11 @@
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
 
-    public class GetSchemeObligationCsvDataAccess : IGetSchemeObligationCsvDataAccess
+    public class GetSchemeObligationCsvDataProcessor : IGetSchemeObligationCsvDataProcessor
     {
         private readonly WeeeContext context;
 
-        public GetSchemeObligationCsvDataAccess(WeeeContext context)
+        public GetSchemeObligationCsvDataProcessor(WeeeContext context)
         {
             this.context = context;
         }
