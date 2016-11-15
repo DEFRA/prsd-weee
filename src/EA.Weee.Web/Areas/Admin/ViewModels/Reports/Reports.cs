@@ -9,5 +9,6 @@
         public const string SchemeWeeeData = "PCS WEEE data";
         public const string UkEeeData = "UK EEE data";
         public const string UkWeeeData = "UK WEEE data";
+        public const string MissingProducerData = "Missing producer data";
     }
 }
