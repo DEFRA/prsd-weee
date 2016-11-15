@@ -1,0 +1,7 @@
+﻿Hello,
+
+@Model.SchemeName has submitted changes to their organisation’s contact details.
+
+To view the changed contact details, manage PCSs on the WEEE Online service.
+
+This is an automated email. Do not reply.
