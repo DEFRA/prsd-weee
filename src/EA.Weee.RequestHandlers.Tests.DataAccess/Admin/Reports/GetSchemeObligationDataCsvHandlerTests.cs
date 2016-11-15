@@ -47,7 +47,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                GetSchemeObligationCsvDataAccess obligationDataAccess = new GetSchemeObligationCsvDataAccess(db.WeeeContext);
+                GetSchemeObligationCsvDataProcessor obligationDataAccess = new GetSchemeObligationCsvDataProcessor(db.WeeeContext);
                 var results = await obligationDataAccess.FetchObligationsForComplianceYearAsync(2001);
 
                 // Assert
