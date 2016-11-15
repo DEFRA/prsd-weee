@@ -20,5 +20,7 @@
         Task<bool> SendInternalUserAccountActivated(string emailAddress, string userFullName, string userEmailAddress, string viewUserLink);
 
         Task<bool> SendTestEmail(string emailAddress);
+
+        Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName);
     }
 }
