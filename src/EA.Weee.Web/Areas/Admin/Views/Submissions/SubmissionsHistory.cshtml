@@ -5,36 +5,35 @@
     ViewBag.Title = "Submissions history";
 }
 
-
-
-@section main_content {
-
+<section>
     <header class="hgroup">
         <h1 class="heading-large">Submissions history</h1>
     </header>
 
-    <p>View submissions for:</p>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
-        @Html.Gds().LabelFor(m => m.SelectedYear)
-        @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-        @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
-        @Html.Gds().LabelFor(m => m.SelectedScheme)
-        @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
-        @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
-    </div>
+    <div class="column-two-thirds">
+        <p>View submissions for:</p>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+            @Html.Gds().LabelFor(m => m.SelectedScheme)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
+            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
+        </div>
 
-    <p>
-        <span class="font-bold">Submission type:</span> Member registrations
-    </p>
+        <p>
+            <span class="font-bold">Submission type:</span> Member registrations
+        </p>
+    </div>
 
     <div class="form-group" id="submissionResults"></div>
 
     <p class="left-cleared">
         <a href="javascript:history.back();">Back</a>
     </p>
-}
+</section>
 
 @section scripts {
     <script type="text/javascript">

@@ -19,13 +19,27 @@
         }
 
         public async Task<SubmissionsHistorySearchResult> GetSubmissionsHistory(Guid schemeId, int? complianceYear = null,
-            SubmissionsHistoryOrderBy? ordering = null)
+            SubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
             var results =
                 from mu in context.MemberUploads
                 where mu.IsSubmitted &&
                 mu.Scheme.Id == schemeId &&
-                (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)
+                (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)               
+                let submissionProducers = context.AllProducerSubmissions // Producers associated with the submission
+                                            .Where(s => s.MemberUploadId == mu.Id)
+                                            .Select(s => s.RegisteredProducer.ProducerRegistrationNumber)
+                let submissionProducersCount = submissionProducers.Count()                
+                let schemeProducers = context.AllProducerSubmissions // Producers registered with the scheme prior to the submission
+                                            .Where(s => s.RegisteredProducer.Scheme.Id == schemeId)
+                                            .Where(s => s.RegisteredProducer.ComplianceYear == mu.ComplianceYear)
+                                            .Where(s => s.MemberUpload.SubmittedDate < mu.SubmittedDate)
+                                            .Where(s => s.MemberUpload.IsSubmitted)
+                                            .Select(s => s.RegisteredProducer.ProducerRegistrationNumber)
+                                            .Distinct()
+                let producerAmendmentsCount = schemeProducers // Producers associated with the submission and having records prior to the current submission are classed as amendments
+                                            .Intersect(submissionProducers)
+                                            .Count()
                 select new SubmissionsHistorySearchData
                 {
                     SchemeId = mu.Scheme.Id,
@@ -39,7 +53,10 @@
                                     where me.MemberUploadId == mu.Id &&
                                     (me.ErrorLevel.Value == Domain.Error.ErrorLevel.Warning.Value)
                                     select me).Count(),
-                    FileName = mu.FileName
+                    FileName = mu.FileName,
+                    NumberOfChangedProducers = includeSummaryData ? (int?)producerAmendmentsCount : null,
+                    NumberOfNewProducers = includeSummaryData ? (int?)(submissionProducersCount - producerAmendmentsCount) : null,
+                    ProducersChanged = includeSummaryData ? (bool?)(submissionProducersCount > 0) : null
                 };
 
             IOrderedQueryable<SubmissionsHistorySearchData> sortedResults;
