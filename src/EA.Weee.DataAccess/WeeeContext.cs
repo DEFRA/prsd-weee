@@ -66,8 +66,14 @@
             }
         }
 
+        /// <summary>
+        /// Producer submissions including removed producers.
+        /// </summary>
         public virtual DbSet<ProducerSubmission> AllProducerSubmissions { get; set; }
 
+        /// <summary>
+        /// Producer submissions excluding removed producers.
+        /// </summary>
         public virtual IQueryable<ProducerSubmission> ProducerSubmissions
         {
             get

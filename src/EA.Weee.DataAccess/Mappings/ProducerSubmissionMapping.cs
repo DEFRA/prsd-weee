@@ -18,12 +18,12 @@
                     mc.MapKey("RegisteredProducerId");
                 });
 
-            HasRequired(ps => ps.MemberUpload)
-                .WithMany(m => m.ProducerSubmissions)
-                .Map(mc =>
-                {
-                    mc.MapKey("MemberUploadId");
-                });
+            //HasRequired(ps => ps.MemberUpload)
+            //    .WithMany(m => m.ProducerSubmissions)
+            //    .Map(mc =>
+            //    {
+            //        mc.MapKey("MemberUploadId");
+            //    });
 
             Ignore(ps => ps.ObligationType);
             Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");

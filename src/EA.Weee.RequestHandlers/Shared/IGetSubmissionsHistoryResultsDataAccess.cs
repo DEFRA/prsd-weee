@@ -8,6 +8,6 @@
     public interface IGetSubmissionsHistoryResultsDataAccess
     {
         Task<SubmissionsHistorySearchResult> GetSubmissionsHistory(Guid schemeId, int? complianceYear,
-            SubmissionsHistoryOrderBy? ordering);
+            SubmissionsHistoryOrderBy? ordering, bool includeSummaryData);
     }
 }

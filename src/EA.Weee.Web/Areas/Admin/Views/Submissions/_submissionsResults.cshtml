@@ -34,8 +34,10 @@
                             </th>
                             break;
                     }
-                    <th>Warnings</th>
                     <th>Submitted by</th>
+                    <th>Number of new producers</th>
+                    <th>Number of changed producers</th>
+                    <th>Warnings</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +46,9 @@
                     string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
                     <tr>
                         <td>@datetime</td>
+                        <td style="text-align:left">@item.SubmittedBy</td>
+                        <td>@(item.NumberOfNewProducers.HasValue && item.NumberOfNewProducers > 0 ? item.NumberOfNewProducers : null)</td>
+                        <td>@(item.NumberOfChangedProducers.HasValue && item.NumberOfChangedProducers > 0 ? item.NumberOfChangedProducers : null)</td>
                         <td>
                             @if (item.NoOfWarnings > 0)
                             {
@@ -51,7 +56,6 @@
                                 <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                             }
                         </td>
-                        <td style="text-align:left">@item.SubmittedBy</td>
                     </tr>
                 }
             </tbody>
