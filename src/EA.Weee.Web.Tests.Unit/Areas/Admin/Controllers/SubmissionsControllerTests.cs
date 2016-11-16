@@ -106,6 +106,16 @@
         }
 
         [Fact]
+        public async Task FetchSubmissionResults_RequestsForSummaryData()
+        {
+            await SubmissionsController().FetchSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetSubmissionsHistoryResults)a[1]).IncludeSummaryData == true)
+                .MustHaveHappened();
+        }
+
+        [Fact]
         public async Task GetSubmissionResults_RequestsForDataSortedBySpecifiedValue()
         {
             await SubmissionsController().GetSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), SubmissionsHistoryOrderBy.SubmissionDateAscending);
@@ -126,6 +136,16 @@
 
             Assert.NotNull(model);
             Assert.Equal(SubmissionsHistoryOrderBy.SubmissionDateAscending, model.OrderBy);
+        }
+
+        [Fact]
+        public async Task GetSubmissionResults_RequestsForSummaryData()
+        {
+            await SubmissionsController().GetSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), SubmissionsHistoryOrderBy.SubmissionDateAscending);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => ((GetSubmissionsHistoryResults)a[1]).IncludeSummaryData == true)
+                .MustHaveHappened();
         }
 
         [Fact]

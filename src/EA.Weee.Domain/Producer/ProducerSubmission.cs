@@ -75,6 +75,8 @@
 
         public virtual RegisteredProducer RegisteredProducer { get; private set; }
 
+        public virtual Guid MemberUploadId { get; private set; }
+
         public virtual MemberUpload MemberUpload { get; private set; }
 
         public virtual Guid? AuthorisedRepresentativeId { get; private set; }
