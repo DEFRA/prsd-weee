@@ -851,6 +851,18 @@
             Assert.Equal(SubmissionsHistoryOrderBy.ComplianceYearDescending, model.OrderBy);
         }
 
+        [Fact]
+        public async void GetViewSubmissionHistory_DoesNotRequestForSummaryData()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetSubmissionsHistoryResults>(1).IncludeSummaryData == false)
+                .MustHaveHappened();
+        }
+
         [Theory]
         [InlineData(SubmissionsHistoryOrderBy.ComplianceYearAscending)]
         [InlineData(SubmissionsHistoryOrderBy.ComplianceYearDescending)]
@@ -908,7 +920,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
 
-            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
                 .MustNotHaveHappened();

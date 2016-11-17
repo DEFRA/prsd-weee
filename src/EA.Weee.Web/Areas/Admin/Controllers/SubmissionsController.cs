@@ -175,7 +175,7 @@
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
                     var request = new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId,
-                        year, orderBy);
+                        year, orderBy, true);
 
                     var searchResults = await client.SendAsync(User.GetAccessToken(), request);
 
