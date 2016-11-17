@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -25,20 +24,28 @@
                 from mu in context.MemberUploads
                 where mu.IsSubmitted &&
                 mu.Scheme.Id == schemeId &&
-                (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)               
+                (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)
                 let submissionProducers = context.AllProducerSubmissions // Producers associated with the submission
                                             .Where(s => s.MemberUploadId == mu.Id)
                                             .Select(s => s.RegisteredProducer.ProducerRegistrationNumber)
-                let submissionProducersCount = submissionProducers.Count()                
-                let schemeProducers = context.AllProducerSubmissions // Producers registered with the scheme prior to the submission
+                let submissionProducersCount = submissionProducers.Count()
+                let schemeNonRemovedProducers = context.ProducerSubmissions // Non-removed producers registered with the scheme prior to the submission
                                             .Where(s => s.RegisteredProducer.Scheme.Id == schemeId)
                                             .Where(s => s.RegisteredProducer.ComplianceYear == mu.ComplianceYear)
-                                            .Where(s => s.MemberUpload.SubmittedDate < mu.SubmittedDate)
                                             .Where(s => s.MemberUpload.IsSubmitted)
+                                            .Where(s => s.MemberUpload.SubmittedDate < mu.SubmittedDate)
                                             .Select(s => s.RegisteredProducer.ProducerRegistrationNumber)
-                                            .Distinct()
-                let producerAmendmentsCount = schemeProducers // Producers associated with the submission and having records prior to the current submission are classed as amendments
-                                            .Intersect(submissionProducers)
+                let schemeRemovedProducers = context.RemovedProducerSubmissions // Producers submitted prior to the current submission but removed after the submission
+                                            .Where(s => s.RegisteredProducer.Scheme.Id == schemeId)
+                                            .Where(s => s.RegisteredProducer.ComplianceYear == mu.ComplianceYear)
+                                            .Where(s => s.MemberUpload.IsSubmitted)
+                                            .Where(s => s.MemberUpload.SubmittedDate < mu.SubmittedDate)
+                                            .Where(s => s.RegisteredProducer.RemovedDate > mu.SubmittedDate)
+                                            .Select(s => s.RegisteredProducer.ProducerRegistrationNumber)
+                let schemeProducers = schemeRemovedProducers
+                                            .Union(schemeNonRemovedProducers)
+                let producerAmendmentsCount = submissionProducers // Producers associated with the submission and having records prior to the current submission are classed as amendments
+                                            .Intersect(schemeProducers)
                                             .Count()
                 select new SubmissionsHistorySearchData
                 {
