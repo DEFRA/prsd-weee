@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Error;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
@@ -67,15 +69,19 @@
 
         public void Submit(string userId)
         {
-            if (DataReturnVersion != null)
-            {
-                DataReturnVersion.Submit(userId);
-            }
-            else
+            if (DataReturnVersion == null)
             {
                 string errorMessage = "This data upload cannot be submitted as it does not have an associated data return version.";
                 throw new InvalidOperationException(errorMessage);
-            }          
+            }
+
+            if (Errors != null &&
+                Errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
+            {
+                throw new InvalidOperationException("A data return upload cannot be submitted when it contains errors.");
+            }
+
+            DataReturnVersion.Submit(userId);
         }
     }
 }

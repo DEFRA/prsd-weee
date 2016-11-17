@@ -8,6 +8,7 @@
     using Domain.Producer.Classfication;
     using Domain.Scheme;
     using Domain.User;
+    using Error;
     using Events;
     using FakeItEasy;
     using Lookup;
@@ -78,6 +79,79 @@
             Assert.Equal(1, memberUpload.Events.Count());
             Assert.IsType<SchemeMemberSubmissionEvent>(memberUpload.Events.Single());
             Assert.Same(memberUpload, ((SchemeMemberSubmissionEvent)memberUpload.Events.Single()).MemberUpload);
+        }
+
+        [Fact]
+        public void Submit_WhenContainsErrors_ThrowInvalidOperationException()
+        {
+            var error = new MemberUploadError(ErrorLevel.Error, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                new List<MemberUploadError> { error },
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            Assert.Throws<InvalidOperationException>(() => memberUpload.Submit(A.Dummy<User>()));
+        }
+
+        [Fact]
+        public void Submit_WhenContainsErrorsAndWarnings_ThrowInvalidOperationException()
+        {
+            var error = new MemberUploadError(ErrorLevel.Error, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+            var warning = new MemberUploadError(ErrorLevel.Warning, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                new List<MemberUploadError> { error, warning },
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            Assert.Throws<InvalidOperationException>(() => memberUpload.Submit(A.Dummy<User>()));
+        }
+
+        [Fact]
+        public void Submit_WhenContainsWarnings_SubmitsWithNoException()
+        {
+            var warning = new MemberUploadError(ErrorLevel.Warning, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                new List<MemberUploadError> { warning },
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            var exception = Record.Exception(() => memberUpload.Submit(A.Dummy<User>()));
+
+            Assert.Null(exception);
+            Assert.True(memberUpload.IsSubmitted);
+        }
+
+        [Fact]
+        public void Submit_WhenContainsNoErrorsOrWarnings_SubmitsWithNoException()
+        {
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                null,
+                A.Dummy<int>(),
+                A.Dummy<int>(),
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            var exception = Record.Exception(() => memberUpload.Submit(A.Dummy<User>()));
+
+            Assert.Null(exception);
+            Assert.True(memberUpload.IsSubmitted);
         }
 
         [Fact]
