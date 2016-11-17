@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Domain.DataReturns;
     using Domain.Scheme;
+    using Error;
     using FakeItEasy;
     using Xunit;
 
@@ -41,6 +42,83 @@
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
+        }
+
+        [Fact]
+        public void Submit_WhenContainsErrors_ThrowInvalidOperationException()
+        {
+            var error = new DataReturnUploadError(ErrorLevel.Error, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var dataReturnUpload = new DataReturnUpload(
+                 A.Dummy<Scheme>(),
+                 A.Dummy<string>(),
+                 new List<DataReturnUploadError> { error },
+                 A.Dummy<string>(),
+                 A.Dummy<int>(),
+                 A.Dummy<int>());
+
+            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>()));
+
+            Assert.Throws<InvalidOperationException>(() => dataReturnUpload.Submit("test@co.uk"));
+        }
+
+        [Fact]
+        public void Submit_WhenContainsErrorsAndWarnings_ThrowInvalidOperationException()
+        {
+            var error = new DataReturnUploadError(ErrorLevel.Error, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+            var warning = new DataReturnUploadError(ErrorLevel.Warning, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var dataReturnUpload = new DataReturnUpload(
+                 A.Dummy<Scheme>(),
+                 A.Dummy<string>(),
+                 new List<DataReturnUploadError> { error, warning },
+                 A.Dummy<string>(),
+                 A.Dummy<int>(),
+                 A.Dummy<int>());
+
+            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>()));
+
+            Assert.Throws<InvalidOperationException>(() => dataReturnUpload.Submit("test@co.uk"));
+        }
+
+        [Fact]
+        public void Submit_WhenContainsWarnings_SubmitsWithNoException()
+        {
+            var warning = new DataReturnUploadError(ErrorLevel.Warning, A.Dummy<UploadErrorType>(), A.Dummy<string>());
+
+            var dataReturnUpload = new DataReturnUpload(
+                 A.Dummy<Scheme>(),
+                 A.Dummy<string>(),
+                 new List<DataReturnUploadError> { warning },
+                 A.Dummy<string>(),
+                 A.Dummy<int>(),
+                 A.Dummy<int>());
+
+            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>()));
+
+            var exception = Record.Exception(() => dataReturnUpload.Submit("test@co.uk"));
+
+            Assert.Null(exception);
+            Assert.True(dataReturnUpload.DataReturnVersion.IsSubmitted);
+        }
+
+        [Fact]
+        public void Submit_WhenContainsNoErrorsOrWarnings_SubmitsWithNoException()
+        {
+            var dataReturnUpload = new DataReturnUpload(
+                 A.Dummy<Scheme>(),
+                 A.Dummy<string>(),
+                 null,
+                 A.Dummy<string>(),
+                 A.Dummy<int>(),
+                 A.Dummy<int>());
+
+            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>()));
+
+            var exception = Record.Exception(() => dataReturnUpload.Submit("test@co.uk"));
+
+            Assert.Null(exception);
+            Assert.True(dataReturnUpload.DataReturnVersion.IsSubmitted);
         }
 
         [Fact]
