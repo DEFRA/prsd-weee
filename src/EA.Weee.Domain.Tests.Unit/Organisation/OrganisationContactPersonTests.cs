@@ -5,7 +5,7 @@
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 
-    public class ContactPersonTests
+    public class OrganisationContactPersonTests
     {
         [Fact]
         public void AddContact_OrganisationAlreadyHasContact_UpdateContactDetails()

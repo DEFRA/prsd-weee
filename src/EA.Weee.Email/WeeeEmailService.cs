@@ -187,5 +187,26 @@
                 return await sender.SendAsync(message, false);
             }
         }
+
+        public async Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName)
+        {
+            var model = new
+            {
+                SchemeName = schemeName
+            };
+
+            EmailContent content = new EmailContent
+            {
+                HtmlText = templateExecutor.Execute("OrganisationContactDetailsChanged.cshtml", model),
+                PlainText = templateExecutor.Execute("OrganisationContactDetailsChanged.txt", model)
+            };
+
+            var subject = string.Format("Change of contact details for {0}", schemeName);
+
+            using (MailMessage message = messageCreator.Create(emailAddress, subject, content))
+            {
+                return await sender.SendAsync(message, true);
+            }
+        }
     }
 }

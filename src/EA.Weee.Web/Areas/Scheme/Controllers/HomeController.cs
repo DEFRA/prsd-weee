@@ -445,7 +445,7 @@
 
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model));
+                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model, true));
             }
 
             return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
