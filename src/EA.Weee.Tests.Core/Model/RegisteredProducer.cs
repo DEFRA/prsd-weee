@@ -27,6 +27,7 @@ namespace EA.Weee.Tests.Core.Model
         public int ComplianceYear { get; set; }
         public Nullable<System.Guid> CurrentSubmissionId { get; set; }
         public bool Removed { get; set; }
+        public Nullable<System.DateTime> RemovedDate { get; set; }
     
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
