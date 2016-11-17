@@ -4,7 +4,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Address : Entity
+    public class Address : Entity, IEquatable<Address>
     {
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
             Country country, string telephone, string email)
@@ -160,6 +160,33 @@
             otherAddress.Email = Email;
 
             return otherAddress;
+        }
+
+        public bool Equals(Address other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Address1 == other.Address1 &&
+                   Address2 == other.Address2 &&
+                   TownOrCity == other.TownOrCity &&
+                   CountyOrRegion == other.CountyOrRegion &&
+                   Postcode == other.Postcode &&
+                   Telephone == other.Telephone &&
+                   Email == other.Email &&
+                   Equals(Country, other.Country);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Address);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
 
-    public interface IGetSchemeObligationCsvDataAccess
+    public interface IGetSchemeObligationCsvDataProcessor
     {
         Task<List<SchemeObligationCsvData>> FetchObligationsForComplianceYearAsync(int complianceYear);
     }
