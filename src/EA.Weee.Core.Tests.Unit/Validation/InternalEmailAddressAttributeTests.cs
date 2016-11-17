@@ -9,6 +9,7 @@
         [InlineData("test@someotherdomain.com")]
         [InlineData("test@environment-agency.gov.uka")]
         [InlineData("test@aenvironment-agency.gov.uk")]
+        [InlineData("test@doeni.gov.uk")] // Old NIEA domain no longer considered internal
         public void IsValid_EmailAddressDoesNotBelongToCompetentAuthority_ReturnsFalse(string emailAddress)
         {
             // Arrange
@@ -26,7 +27,7 @@
         [InlineData("test@cyfoethnaturiolcymru.gov.uk")]
         [InlineData("test@naturalresourceswales.gov.uk")]
         [InlineData("test@sepa.org.uk")]
-        [InlineData("test@doeni.gov.uk")]
+        [InlineData("test@daera-ni.gov.uk")]
         public void IsValid_EmailAddressDoesBelongToCompetentAuthority_ReturnsTrue(string emailAddress)
         {
             // Arrange
