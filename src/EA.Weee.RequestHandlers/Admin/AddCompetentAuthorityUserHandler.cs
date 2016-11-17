@@ -74,7 +74,7 @@
                     authorityName = "SEPA";
                     break;
 
-                case "doeni.gov.uk":
+                case "daera-ni.gov.uk":
                     authorityName = "NIEA";
                     break;
 
