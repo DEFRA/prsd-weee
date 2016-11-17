@@ -10,6 +10,7 @@
     using Prsd.Core;
     using User;
     using System.Linq;
+    using Error;
 
     public class MemberUpload : AuditableEntity
     {
@@ -88,6 +89,12 @@
             if (IsSubmitted)
             {
                 throw new InvalidOperationException("IsSubmitted status must be false to transition to true");
+            }
+
+            if (Errors != null &&
+                Errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
+            {
+                throw new InvalidOperationException("A member upload cannot be submitted when it contains errors");
             }
 
             IsSubmitted = true;
