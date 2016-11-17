@@ -578,7 +578,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNewAndChanged_WhenRemovedAfterSubmission()
+        public async void GetSubmissionHistory_ReturnsProducerAsNew_WhenRemovedPriorToSubmission()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -591,17 +591,25 @@
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.SubmittedDate = new DateTime(2016, 1, 1);
 
-                modelHelper.CreateProducerAsCompany(memberUpload, "1111");
+                var producer = modelHelper.CreateProducerAsCompany(memberUpload, "1111");
+                producer.RegisteredProducer.Removed = true;
+                producer.RegisteredProducer.RemovedDate = new DateTime(2016, 1, 2);
 
                 var memberUpload2 = modelHelper.CreateSubmittedMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.SubmittedDate = new DateTime(2016, 2, 2);
 
-                var producer1 = modelHelper.CreateProducerAsCompany(memberUpload2, "1111");
-                var producer2 = modelHelper.CreateProducerAsCompany(memberUpload2, "2222");
+                modelHelper.CreateProducerAsCompany(memberUpload2, "1111");
 
-                producer1.RegisteredProducer.Removed = true;
-                producer2.RegisteredProducer.Removed = true;
+                var memberUpload3 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload3.ComplianceYear = 2016;
+                memberUpload3.SubmittedDate = new DateTime(2016, 3, 3);
+
+                modelHelper.CreateProducerAsCompany(memberUpload3, "1111");
+
+                var memberUpload4 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload4.ComplianceYear = 2016;
+                memberUpload4.SubmittedDate = new DateTime(2016, 4, 4);
 
                 database.Model.SaveChanges();
 
@@ -611,15 +619,23 @@
                 var result = await dataAccess.GetSubmissionsHistory(scheme.Id, ordering: SubmissionsHistoryOrderBy.SubmissionDateAscending, includeSummaryData: true);
 
                 // Assert
-                Assert.Equal(2, result.Data.Count);
+                Assert.Equal(4, result.Data.Count);
 
                 Assert.Equal(0, result.Data[0].NumberOfChangedProducers);
                 Assert.Equal(1, result.Data[0].NumberOfNewProducers);
                 Assert.True(result.Data[0].ProducersChanged);
 
-                Assert.Equal(1, result.Data[1].NumberOfChangedProducers);
+                Assert.Equal(0, result.Data[1].NumberOfChangedProducers);
                 Assert.Equal(1, result.Data[1].NumberOfNewProducers);
                 Assert.True(result.Data[1].ProducersChanged);
+
+                Assert.Equal(1, result.Data[2].NumberOfChangedProducers);
+                Assert.Equal(0, result.Data[2].NumberOfNewProducers);
+                Assert.True(result.Data[2].ProducersChanged);
+
+                Assert.Equal(0, result.Data[3].NumberOfChangedProducers);
+                Assert.Equal(0, result.Data[3].NumberOfNewProducers);
+                Assert.False(result.Data[3].ProducersChanged);
             }
         }
     }

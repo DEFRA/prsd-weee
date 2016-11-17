@@ -44,8 +44,14 @@
 
         public virtual DbSet<Scheme> Schemes { get; set; }
 
+        /// <summary>
+        /// Registered producers including items marked as removed.
+        /// </summary>
         internal virtual DbSet<RegisteredProducer> AllRegisteredProducers { get; set; }
 
+        /// <summary>
+        /// Registered producers excluding records marked as removed.
+        /// </summary>
         public IQueryable<RegisteredProducer> RegisteredProducers
         {
             get
@@ -56,6 +62,9 @@
             }
         }
 
+        /// <summary>
+        /// Registered producers marked as removed.
+        /// </summary>
         public virtual IQueryable<RegisteredProducer> RemovedRegisteredProducers
         {
             get

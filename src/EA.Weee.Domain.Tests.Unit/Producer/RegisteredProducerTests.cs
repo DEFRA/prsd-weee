@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.Producer;
     using FakeItEasy;
+    using Prsd.Core;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -78,6 +75,38 @@
             var producer = RegisteredProducerBuilder.NewRegisteredProducer;
             var producer2 = RegisteredProducerBuilder.NewRegisteredProducer;
             producer2.Remove();
+
+            Assert.NotEqual(producer, producer2);
+        }
+
+        [Fact]
+        public void RegisteredProducer_EqualsRemovedRegisteredProducerWithSameRemovedDate_ReturnsTrue()
+        {
+            var producer = RegisteredProducerBuilder.NewRegisteredProducer;
+            var producer2 = RegisteredProducerBuilder.NewRegisteredProducer;
+
+            SystemTime.Freeze(new DateTime(2016, 1, 1));
+            producer.Remove();
+            producer2.Remove();
+
+            SystemTime.Unfreeze();
+
+            Assert.Equal(producer, producer2);
+        }
+
+        [Fact]
+        public void RegisteredProducer_EqualsRemovedRegisteredProducerWithDifferentRemovedDate_ReturnsFalse()
+        {
+            var producer = RegisteredProducerBuilder.NewRegisteredProducer;
+            var producer2 = RegisteredProducerBuilder.NewRegisteredProducer;
+
+            SystemTime.Freeze(new DateTime(2016, 1, 1));
+            producer.Remove();
+
+            SystemTime.Freeze(new DateTime(2016, 10, 1));
+            producer2.Remove();
+
+            SystemTime.Unfreeze();
 
             Assert.NotEqual(producer, producer2);
         }

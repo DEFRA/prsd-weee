@@ -31,6 +31,8 @@
 
         public virtual bool Removed { get; private set; }
 
+        public DateTime? RemovedDate { get; private set; }
+
         public virtual string ProducerRegistrationNumber { get; private set; }
 
         public virtual int ComplianceYear { get; private set; }
@@ -60,6 +62,7 @@
             }
 
             Removed = true;
+            RemovedDate = SystemTime.UtcNow;
         }
 
         public virtual bool Equals(RegisteredProducer other)
@@ -72,7 +75,8 @@
             return ProducerRegistrationNumber == other.ProducerRegistrationNumber &&
                    ComplianceYear == other.ComplianceYear &&
                    Scheme.ApprovalNumber == other.Scheme.ApprovalNumber &&
-                   Removed == other.Removed;
+                   Removed == other.Removed &&
+                   RemovedDate == other.RemovedDate;                   
         }
 
         public override bool Equals(object obj)
@@ -82,8 +86,15 @@
 
         public override int GetHashCode()
         {
-            return ProducerRegistrationNumber.GetHashCode() ^ ComplianceYear.GetHashCode() ^
-                   Scheme.ApprovalNumber.GetHashCode() ^ Removed.GetHashCode();
+            var hashCode = ProducerRegistrationNumber.GetHashCode() ^ ComplianceYear.GetHashCode() ^
+                Scheme.ApprovalNumber.GetHashCode() ^ Removed.GetHashCode();
+
+            if (RemovedDate.HasValue)
+            {
+                hashCode ^= RemovedDate.Value.GetHashCode();
+            }
+
+            return hashCode;
         }
     }
 }

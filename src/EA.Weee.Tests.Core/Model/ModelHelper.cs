@@ -281,11 +281,13 @@
         public RegisteredProducer GetOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
         {
             // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
+            // A removed producer is not reused.
             RegisteredProducer registeredProducer =
                 model.RegisteredProducers.Local
                 .SingleOrDefault(rp => rp.ProducerRegistrationNumber == registrationNumber &&
                                        rp.ComplianceYear == complianceYear &&
-                                       rp.SchemeId == scheme.Id);
+                                       rp.SchemeId == scheme.Id &&
+                                       !rp.Removed);
 
             if (registeredProducer == null)
             {
