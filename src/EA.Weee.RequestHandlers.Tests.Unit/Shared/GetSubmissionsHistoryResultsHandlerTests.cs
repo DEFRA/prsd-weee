@@ -49,7 +49,29 @@
             var results = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, SubmissionsHistoryOrderBy.SubmissionDateAscending))
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, SubmissionsHistoryOrderBy.SubmissionDateAscending, A<bool>._))
+                .MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesDataWithValueForIncludeSummaryData(bool includeSummaryData)
+        {
+            // Arrange
+            var dataAccess = A.Fake<IGetSubmissionsHistoryResultsDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
+            var handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+            var request = new GetSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
+            request.Ordering = SubmissionsHistoryOrderBy.SubmissionDateAscending;
+            request.IncludeSummaryData = includeSummaryData;
+
+            // Act
+            var results = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, SubmissionsHistoryOrderBy.SubmissionDateAscending, includeSummaryData))
                 .MustHaveHappened();
         }
 
@@ -67,7 +89,7 @@
                 ResultCount = 2
             };
 
-            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, A<SubmissionsHistoryOrderBy>._))
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._, A<SubmissionsHistoryOrderBy>._, A<bool>._))
                 .Returns(results);
 
             return dataAccess;
