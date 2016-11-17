@@ -12,7 +12,7 @@
             "cyfoethnaturiolcymru.gov.uk",
             "naturalresourceswales.gov.uk",
             "sepa.org.uk",
-            "doeni.gov.uk"
+            "daera-ni.gov.uk"
         };
 
         public static readonly Regex EmailRegex = new Regex(@"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}",
