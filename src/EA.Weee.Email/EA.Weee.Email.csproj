@@ -125,6 +125,7 @@
     <EmbeddedResource Include="Templates\SchemeDataReturnSubmitted.cshtml" />
     <EmbeddedResource Include="Templates\InternalUserAccountActivated.cshtml" />
     <EmbeddedResource Include="Templates\Test.cshtml" />
+    <EmbeddedResource Include="Templates\OrganisationContactDetailsChanged.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\OrganisationUserRequestCompleted.txt" />
@@ -146,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\Test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\OrganisationContactDetailsChanged.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

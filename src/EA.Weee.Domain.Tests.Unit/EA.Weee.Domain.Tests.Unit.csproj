@@ -98,7 +98,9 @@
     <Compile Include="Helpers\CountryFactory.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
-    <Compile Include="Organisation\ContactPersonTests.cs" />
+    <Compile Include="Organisation\AddressTests.cs" />
+    <Compile Include="Organisation\ContactTests.cs" />
+    <Compile Include="Organisation\OrganisationContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
     <Compile Include="Organisation\OrganisationUserTests.cs" />

@@ -20,7 +20,7 @@
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                // Arranage
+                // Arrange
                 Guid organisationId = new Guid("C826DCE8-78EB-4BE4-B419-4DE73D1AD181");
                 Organisation organisation = new Organisation()
                 {
@@ -51,7 +51,7 @@
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                // Arranage
+                // Arrange
                 Guid organisationId = new Guid("5EC74E27-8D5C-4D4D-8A49-20BBD5E9611E");
                 OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
@@ -98,7 +98,7 @@
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                // Arranage
+                // Arrange
                 Guid countryId = new Guid("5840BF0B-0CAF-4AF9-9881-F22DB7720F98");
                 OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
@@ -129,6 +129,56 @@
             // Assert
             A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task FetchSchemeAsync_ReturnsSchemeWithSpecifiedOrganisationId()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(database.Model);
+
+                var organisationId = new Guid("C826DCE8-78EB-4BE4-B419-4DE73D1AD181");
+
+                var organisation = modelHelper.CreateOrganisation();
+                organisation.Id = organisationId;
+
+                modelHelper.CreateScheme(organisation);
+
+                database.Model.SaveChanges();
+
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
+
+                // Act
+                Domain.Scheme.Scheme result = await dataAccess.FetchSchemeAsync(organisationId);
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(organisationId, result.OrganisationId);
+            }
+        }
+
+        [Fact]
+        public async Task FetchSchemeAsync_ReturnsNull_WhenNoSchemeWithSpecifiedOrganisationId()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(database.Model);
+
+                var organisationId = new Guid("C826DCE8-78EB-4BE4-B419-4DE73D1AD181");
+
+                database.Model.SaveChanges();
+
+                OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
+
+                // Act
+                Domain.Scheme.Scheme result = await dataAccess.FetchSchemeAsync(organisationId);
+
+                // Assert
+                Assert.Null(result);
+            }
         }
     }
 }

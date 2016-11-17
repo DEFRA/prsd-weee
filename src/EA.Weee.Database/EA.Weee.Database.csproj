@@ -199,6 +199,7 @@
     <Content Include="scripts\Update\Sprint25\20161026-1700-UpdateSpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Sprint26\20161103-1715-CreateSpgSchemeObligationCsvData.sql" />
     <Content Include="scripts\Update\Sprint26\20161108-1555-UpdateSpgSchemeObligationCsvData.sql" />
+    <Content Include="scripts\Update\Sprint27\20161111-1716-CreateSpgMissingProducerDataCsvData.sql" />
     <Content Include="scripts\Update\Sprint27\20161116-1700-AddRemovedDateToRegisteredProducer.sql" />
     <Content Include="scripts\Update\Sprint27\20161115-1700-AddIndexToProducerSubmissionAndUpload.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
