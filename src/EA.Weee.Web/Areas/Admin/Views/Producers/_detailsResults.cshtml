@@ -12,12 +12,11 @@
             <li class="active">
                 <a href="#" id="@(scheme.ObligationType)-registration-details-tab">Overview</a>
             </li>
-            @if (scheme.CorrespondentForNotices != null)
-            {
-                <li>
-                    <a href="#" id="@(scheme.ObligationType)-contact-details-tab">Contact details</a>
-                </li>
-            }
+
+            <li>
+                <a href="#" id="@(scheme.ObligationType)-contact-details-tab">Contact details</a>
+            </li>
+
             <li>
                 <a href="#" id="@(scheme.ObligationType)-total-eee-details-tab">Total EEE</a>
             </li>
@@ -90,7 +89,7 @@
             }
             <tr>
                 <th>@(scheme.IsCompany ? "Registered office" : "Principal place of business")</th>
-                <td>@scheme.Address</td>
+                <td>@scheme.ProducerBusinessContact.Address</td>
             </tr>
             <tr>
                 <th>Obligation type</th>
@@ -114,38 +113,35 @@
         </tbody>
     </table>
 
-    if (scheme.CorrespondentForNotices != null)
-    {
-        <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
-            <thead>
-                <tr class="visually-hidden">
-                    <th colspan="2">Contact details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Contact name</th>
-                    <td>@scheme.CorrespondentForNotices.ContactName</td>
-                </tr>
-                <tr>
-                    <th>Telephone</th>
-                    <td>@scheme.CorrespondentForNotices.Telephone</td>
-                </tr>
-                <tr>
-                    <th>Mobile</th>
-                    <td>@scheme.CorrespondentForNotices.Mobile</td>
-                </tr>
-                <tr>
-                    <th>E-mail</th>
-                    <td>@scheme.CorrespondentForNotices.Email</td>
-                </tr>
-                <tr>
-                    <th>Address</th>
-                    <td>@scheme.CorrespondentForNotices.Address</td>
-                </tr>
-            </tbody>
-        </table>
-    }
+    <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
+        <thead>
+            <tr class="visually-hidden">
+                <th colspan="2">Contact details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Contact name</th>
+                <td>@scheme.ProducerBusinessContact.ContactName</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>@scheme.ProducerBusinessContact.Telephone</td>
+            </tr>
+            <tr>
+                <th>Mobile</th>
+                <td>@scheme.ProducerBusinessContact.Mobile</td>
+            </tr>
+            <tr>
+                <th>E-mail</th>
+                <td>@scheme.ProducerBusinessContact.Email</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>@scheme.ProducerBusinessContact.Address</td>
+            </tr>
+        </tbody>
+    </table>
 
     <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden">
         <thead>
