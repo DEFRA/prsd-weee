@@ -42,7 +42,5 @@
         public ProducerContactDetails ProducerBusinessContact { get; set; }
 
         public bool IsCompany { get; set; }
-
-        public ProducerContactDetails CorrespondentForNotices { get; set; }
     }
 }
