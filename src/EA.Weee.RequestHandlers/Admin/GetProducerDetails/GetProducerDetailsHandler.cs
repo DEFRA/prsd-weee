@@ -86,34 +86,20 @@
                 {
                     producerBusinessContact = latestDetails.ProducerBusiness.Partnership.PrincipalPlaceOfBusiness;
                 }
-
-                ProducerContactDetails producerBusinessContactDetails = null;
-                if (producerBusinessContact != null)
+                else
                 {
-                    producerBusinessContactDetails = new ProducerContactDetails
-                    {
-                        ContactName = producerBusinessContact.ContactName,
-                        Email = producerBusinessContact.Email,
-                        Mobile = producerBusinessContact.Mobile,
-                        Telephone = producerBusinessContact.Telephone,
-                        Address = producerBusinessContact.Address.ToString()
-                    };
+                    throw new MissingFieldException(
+                        string.Format("No producer business details could be found for producer:{0}", latestDetails.Id));
                 }
 
-                ProducerContactDetails correspondentForNotices = null;
-                if (latestDetails.ProducerBusiness.CorrespondentForNoticesContact != null)
+                ProducerContactDetails producerBusinessContactDetails = new ProducerContactDetails
                 {
-                    var correspondentDetails = latestDetails.ProducerBusiness.CorrespondentForNoticesContact;
-
-                    correspondentForNotices = new ProducerContactDetails
-                    {
-                        ContactName = correspondentDetails.ContactName,
-                        Email = correspondentDetails.Email,
-                        Mobile = correspondentDetails.Mobile,
-                        Telephone = correspondentDetails.Telephone,
-                        Address = correspondentDetails.Address.ToString()
-                    };
-                }
+                    ContactName = producerBusinessContact.ContactName,
+                    Email = producerBusinessContact.Email,
+                    Mobile = producerBusinessContact.Mobile,
+                    Telephone = producerBusinessContact.Telephone,
+                    Address = producerBusinessContact.Address.ToString()
+                };
 
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
@@ -129,7 +115,6 @@
                     IsAuthorisedRepresentative = isAuthorisedRepresentative,
                     ProducerBusinessContact = producerBusinessContactDetails,
                     IsCompany = isCompany,
-                    CorrespondentForNotices = correspondentForNotices,
                     ProducerEeeDetails =
                         mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
                             (await

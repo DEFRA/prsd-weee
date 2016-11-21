@@ -109,7 +109,7 @@
             var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme),
                 memberUpload2,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 2),
                 0,
@@ -167,7 +167,7 @@
             var producer1 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme1),
                 memberUpload1,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -193,7 +193,7 @@
             var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme2),
                 memberUpload2,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -262,7 +262,7 @@
             var producer = new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -322,7 +322,7 @@
             var producer = new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -378,7 +378,7 @@
                 2017,
                 scheme);
 
-            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea", 
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
                 new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
 
             var producerContact = new ProducerContact(
@@ -512,7 +512,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ForUnknownBusinessType_ReturnsNullContactDetails_AndIsCompanyValueFalse()
+        public async Task HandleAsync_ForUnknownBusinessType_ThrowsException()
         {
             // Arrange
             Scheme scheme = new Scheme(A.Dummy<Guid>());
@@ -532,12 +532,10 @@
                 2017,
                 scheme);
 
-            var producerBusiness = new ProducerBusiness();
-
             var producer = new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                producerBusiness,
+                new ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -566,156 +564,21 @@
             GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             // Act
-            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetProducerDetails>());
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Single(result.Schemes);
-
-            Assert.Null(result.Schemes[0].ProducerBusinessContact);
-            Assert.False(result.Schemes[0].IsCompany);
-        }
-        
-        [Fact]
-        public async Task Handle_Async_ReturnsNullCorrespondentForNotices_WhenCorrespondentForNoticesUnavailable()
-        {  
-            // Arrange
-            Scheme scheme = new Scheme(A.Dummy<Guid>());
-
-            MemberUpload memberUpload = new MemberUpload(
-                A.Dummy<Guid>(),
-                A.Dummy<string>(),
-                A.Dummy<List<MemberUploadError>>(),
-                A.Dummy<decimal>(),
-                2017,
-                scheme,
-                A.Dummy<string>(),
-                A.Dummy<string>());
-
-            RegisteredProducer registeredProducer = new RegisteredProducer(
-                "WEE/AA1111AA",
-                2017,
-                scheme);
-
-            var producerBusiness = new ProducerBusiness();
-
-            var producer = new ProducerSubmission(
-                registeredProducer,
-                memberUpload,
-                producerBusiness,
-                null,
-                new DateTime(2015, 1, 1),
-                0,
-                false,
-                null,
-                "Trading Name 1",
-                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                SellingTechniqueType.Both,
-                Domain.Obligation.ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds,
-                new List<BrandName>(),
-                new List<SICCode>(),
-                A.Dummy<ChargeBandAmount>(),
-                0);
-
-            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
-                .Returns(new List<ProducerSubmission> { producer });
-
-            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
-            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
-                .Returns(false);
-
-            IMapper mapper = A.Fake<IMapper>();
-
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
-
-            // Act
-            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result.Schemes);
-
-            Assert.Null(result.Schemes[0].CorrespondentForNotices);
+            await Assert.ThrowsAsync<MissingFieldException>(action);
         }
 
-        [Fact]
-        public async Task Handle_Async_ReturnsCorrespondentForNoticesDetails()
+        private ProducerBusiness CreatePartnershipBusiness()
         {
-            // Arrange
-            Scheme scheme = new Scheme(A.Dummy<Guid>());
-
-            MemberUpload memberUpload = new MemberUpload(
-                A.Dummy<Guid>(),
-                A.Dummy<string>(),
-                A.Dummy<List<MemberUploadError>>(),
-                A.Dummy<decimal>(),
-                2017,
-                scheme,
-                A.Dummy<string>(),
-                A.Dummy<string>());
-
-            RegisteredProducer registeredProducer = new RegisteredProducer(
-                "WEE/AA1111AA",
-                2017,
-                scheme);
-
-            var correspondentForNoticesAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
                 new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
 
-            var correspondentForNotices = new ProducerContact(
-                "Title", "Forename", "Surname", "123456", "98765", "123456", "a@b.c", correspondentForNoticesAddress);
+            var producerContact = new ProducerContact(
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
 
-            var producerBusiness = new ProducerBusiness(correspondentForNoticesContact: correspondentForNotices);
-
-            var producer = new ProducerSubmission(
-                registeredProducer,
-                memberUpload,
-                producerBusiness,
-                null,
-                new DateTime(2015, 1, 1),
-                0,
-                false,
-                null,
-                "Trading Name 1",
-                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                SellingTechniqueType.Both,
-                Domain.Obligation.ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds,
-                new List<BrandName>(),
-                new List<SICCode>(),
-                A.Dummy<ChargeBandAmount>(),
-                0);
-
-            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
-                .Returns(new List<ProducerSubmission> { producer });
-
-            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
-            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
-                .Returns(false);
-
-            IMapper mapper = A.Fake<IMapper>();
-
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
-
-            // Act
-            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result.Schemes);
-
-            var details = result.Schemes[0];
-
-            Assert.NotNull(details.CorrespondentForNotices);
-
-            Assert.Equal("Title Forename Surname", details.CorrespondentForNotices.ContactName);
-            Assert.Equal("a@b.c", details.CorrespondentForNotices.Email);
-            Assert.Equal("123456", details.CorrespondentForNotices.Telephone);
-            Assert.Equal("98765", details.CorrespondentForNotices.Mobile);
-            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", details.CorrespondentForNotices.Address);
+            return new ProducerBusiness(partnership: new Partnership("TestPartnership", producerContact, new List<Partner> { }));
         }
     }
 }
