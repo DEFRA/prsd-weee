@@ -38,6 +38,7 @@
                     <th>Number of new producers</th>
                     <th>Number of changed producers</th>
                     <th>Warnings</th>
+                    <th>Changes</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +55,14 @@
                             {
                                 string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
                                 <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                            }
+                        </td>
+                        <td>
+                            @if (item.ProducersChanged.HasValue && item.ProducersChanged.Value)
+                            {
+                                <div style="width:120px;">
+                                    <a href="@Url.Action("DownloadSubmissionChanges", new { memberUploadId = item.MemberUploadId })">View changes (CSV)</a>
+                                </div>
                             }
                         </td>
                     </tr>

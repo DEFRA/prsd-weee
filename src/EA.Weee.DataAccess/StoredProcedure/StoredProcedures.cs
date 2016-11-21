@@ -398,5 +398,15 @@
                     schemeIdParameter)
                 .ToListAsync();
         }
+
+        public async Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId)
+        {
+            SqlParameter memberUploadIdParameter = new SqlParameter("@MemberUploadId", memberUploadId);
+
+            return await context.Database
+                .SqlQuery<SubmissionChangesCsvData>(
+                    "[PCS].[spgSubmissionChangesCsvData] @MemberUploadId", memberUploadIdParameter)
+                    .ToListAsync();
+        }
     }
 }

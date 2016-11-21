@@ -50,6 +50,7 @@
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
