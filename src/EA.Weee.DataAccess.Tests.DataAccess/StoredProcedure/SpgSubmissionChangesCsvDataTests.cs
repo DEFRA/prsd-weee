@@ -170,7 +170,7 @@
                 // Assert
                 Assert.Equal(3, result.Count);
 
-                Assert.Equal("Changed", result[0].ChangeType);
+                Assert.Equal("Amended", result[0].ChangeType);
                 Assert.Equal("1111", result[0].ProducerRegistrationNumber);
                 Assert.Equal(new DateTime(2016, 3, 3), result[0].SubmittedDate);
 
@@ -261,7 +261,7 @@
                 // Assert
                 Assert.Equal(2, result.Count);
 
-                Assert.Equal("Changed", result[0].ChangeType);
+                Assert.Equal("Amended", result[0].ChangeType);
                 Assert.Equal(new DateTime(2016, 3, 3), result[0].SubmittedDate);
 
                 Assert.Equal(string.Empty, result[1].ChangeType);
@@ -314,7 +314,7 @@
                 // Assert
                 Assert.Equal(2, result.Count);
 
-                Assert.Equal("Changed", result[0].ChangeType);
+                Assert.Equal("Amended", result[0].ChangeType);
                 Assert.Equal("1111", result[0].ProducerRegistrationNumber);
                 Assert.Equal(new DateTime(2016, 3, 3), result[0].SubmittedDate);
 
@@ -370,7 +370,7 @@
                 // Assert
                 Assert.Equal(2, result.Count);
 
-                Assert.Equal("Changed", result[0].ChangeType);
+                Assert.Equal("Amended", result[0].ChangeType);
                 Assert.Equal("1111", result[0].ProducerRegistrationNumber);
                 Assert.Equal(new DateTime(2016, 3, 3), result[0].SubmittedDate);
 
@@ -413,7 +413,7 @@
                 // Assert
                 Assert.Equal(3, result.Count);
 
-                Assert.Equal("Changed", result[0].ChangeType);
+                Assert.Equal("Amended", result[0].ChangeType);
                 Assert.Equal("1111", result[0].ProducerRegistrationNumber);
                 Assert.Equal(new DateTime(2016, 3, 3), result[0].SubmittedDate);
 

@@ -75,7 +75,7 @@ BEGIN
        @MemberUploadSubmittedDate 'SubmittedDate',
        CASE
           WHEN ExistingProducers.ProducerRegistrationNumber IS NULL THEN 'New'
-          ELSE 'Changed' 
+          ELSE 'Amended' 
        END AS 'ChangeType'
     INTO #SubmissionDetails
     FROM Producer.ProducerSubmission PS
@@ -102,7 +102,7 @@ BEGIN
     JOIN Producer.RegisteredProducer RP ON PS.RegisteredProducerId = RP.Id
     JOIN PCS.MemberUpload MU ON PS.MemberUploadId = MU.Id
     JOIN #SubmissionDetails SD ON RP.ProducerRegistrationNumber = SD.ProducerRegistrationNumber
-       AND SD.ChangeType = 'Changed'
+       AND SD.ChangeType = 'Amended'
     WHERE
       RP.SchemeId = @SchemeId
     AND
