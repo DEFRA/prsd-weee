@@ -100,6 +100,9 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccess.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandler.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\IGetSubmissionChangesCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv\GetMissingProducerDataCsvDataProcessor.cs" />

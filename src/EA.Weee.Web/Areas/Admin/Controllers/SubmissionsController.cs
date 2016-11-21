@@ -22,6 +22,7 @@
     using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
+    using Weee.Requests.Admin.GetSubmissionChanges;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
@@ -218,6 +219,20 @@
             }
         }
         
+        [HttpGet]
+        public async Task<ActionResult> DownloadSubmissionChanges(Guid memberUploadId)
+        {
+            CSVFileData csvFileData;
+            using (IWeeeClient client = apiClient())
+            {
+                var request = new GetSubmissionChangesCsv(memberUploadId);
+                csvFileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
+        }
+
         [HttpGet]
         public async Task<ActionResult> DataReturnSubmissionHistory()
         {
