@@ -547,7 +547,7 @@
                 modelHelper.CreateProducerAsCompany(memberUpload3, "2222");
 
                 var memberUpload4 = modelHelper.CreateSubmittedMemberUpload(scheme);
-                memberUpload3.SubmittedDate = new DateTime(2016, 4, 4);
+                memberUpload4.SubmittedDate = new DateTime(2016, 4, 4);
 
                 database.Model.SaveChanges();
 
