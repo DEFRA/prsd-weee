@@ -2,7 +2,7 @@
 {
     public enum DataReturnSubmissionChangeType
     {
-        Inserted,
+        New,
         Amended,
         Removed
     }
