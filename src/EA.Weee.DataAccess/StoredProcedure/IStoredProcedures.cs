@@ -33,5 +33,7 @@
 
         Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear, string obligationType, int? quarter,
             Guid? schemeId);
+
+        Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
     }
 }

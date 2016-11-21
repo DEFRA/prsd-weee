@@ -39,7 +39,7 @@
 
         public virtual User SubmittedByUser { get; private set; }
 
-        public DateTime? SubmittedDate { get; private set; }
+        public virtual DateTime? SubmittedDate { get; private set; }
 
         public MemberUpload(
             Guid organisationId,
