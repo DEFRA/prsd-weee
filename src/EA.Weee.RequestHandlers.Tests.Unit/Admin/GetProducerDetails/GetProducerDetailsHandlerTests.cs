@@ -358,7 +358,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ForCompanyProducer_ReturnsCompanyAddress_AndIsCompanyValueTrue()
+        public async Task HandleAsync_ForCompanyProducer_ReturnsCompanyContactDetails_AndIsCompanyValueTrue()
         {
             // Arrange
             Scheme scheme = new Scheme(A.Dummy<Guid>());
@@ -382,7 +382,7 @@
                 new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
 
             var producerContact = new ProducerContact(
-                "Title", "Forename", "Surname", "123456", "123546", "123456", "a@b.c", producerAddress);
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
 
             var producerBusiness = new ProducerBusiness(
                 companyDetails: new Company("TestCompany", "123", producerContact));
@@ -425,12 +425,17 @@
             Assert.NotNull(result);
             Assert.Single(result.Schemes);
 
-            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", result.Schemes[0].Address);
+            ProducerContactDetails businessContact = result.Schemes[0].ProducerBusinessContact;
+            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", businessContact.Address);
+            Assert.Equal("Title Forename Surname", businessContact.ContactName);
+            Assert.Equal("123456", businessContact.Telephone);
+            Assert.Equal("1235467", businessContact.Mobile);
+            Assert.Equal("a@b.c", businessContact.Email);
             Assert.True(result.Schemes[0].IsCompany);
         }
 
         [Fact]
-        public async Task HandleAsync_ForPartnershipProducer_ReturnsPartnershipAddress_AndIsCompanyValueFalse()
+        public async Task HandleAsync_ForPartnershipProducer_ReturnsPartnershipContactDetails_AndIsCompanyValueFalse()
         {
             // Arrange
             Scheme scheme = new Scheme(A.Dummy<Guid>());
@@ -454,7 +459,7 @@
                 new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
 
             var producerContact = new ProducerContact(
-                "Title", "Forename", "Surname", "123456", "123546", "123456", "a@b.c", producerAddress);
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
 
             var producerBusiness = new ProducerBusiness(
                 partnership: new Partnership("TestPartnership", producerContact, new List<Partner> { }));
@@ -497,12 +502,17 @@
             Assert.NotNull(result);
             Assert.Single(result.Schemes);
 
-            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", result.Schemes[0].Address);
+            ProducerContactDetails businessContact = result.Schemes[0].ProducerBusinessContact;
+            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", businessContact.Address);
+            Assert.Equal("Title Forename Surname", businessContact.ContactName);
+            Assert.Equal("123456", businessContact.Telephone);
+            Assert.Equal("1235467", businessContact.Mobile);
+            Assert.Equal("a@b.c", businessContact.Email);
             Assert.False(result.Schemes[0].IsCompany);
         }
 
         [Fact]
-        public async Task HandleAsync_ForUnknownBusinessType_ReturnsNullAddress_AndIsCompanyValueFalse()
+        public async Task HandleAsync_ForUnknownBusinessType_ReturnsNullContactDetails_AndIsCompanyValueFalse()
         {
             // Arrange
             Scheme scheme = new Scheme(A.Dummy<Guid>());
@@ -562,7 +572,7 @@
             Assert.NotNull(result);
             Assert.Single(result.Schemes);
 
-            Assert.Null(result.Schemes[0].Address);
+            Assert.Null(result.Schemes[0].ProducerBusinessContact);
             Assert.False(result.Schemes[0].IsCompany);
         }
         
