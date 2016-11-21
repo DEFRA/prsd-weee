@@ -39,7 +39,7 @@
 
         public bool CanRemoveProducer { get; set; }
 
-        public string Address { get; set; }
+        public ProducerContactDetails ProducerBusinessContact { get; set; }
 
         public bool IsCompany { get; set; }
 
