@@ -99,7 +99,7 @@
                     }
                     else
                     {
-                        csvData.Add(ExtractProducerData(currentProducerAmounts.Key, currentProducerAmounts.Value, year, quarter, currentSubmission.SubmittedDate.Value, DataReturnSubmissionChangeType.Inserted));
+                        csvData.Add(ExtractProducerData(currentProducerAmounts.Key, currentProducerAmounts.Value, year, quarter, currentSubmission.SubmittedDate.Value, DataReturnSubmissionChangeType.New));
                     }
                 }
 
@@ -124,7 +124,7 @@
             {
                 csvData =
                     GroupByProducer(currentAmounts)
-                    .Select(x => ExtractProducerData(x.Key, x.Value, year, quarter, currentSubmission.SubmittedDate.Value, DataReturnSubmissionChangeType.Inserted))
+                    .Select(x => ExtractProducerData(x.Key, x.Value, year, quarter, currentSubmission.SubmittedDate.Value, DataReturnSubmissionChangeType.New))
                     .ToList();
             }
 

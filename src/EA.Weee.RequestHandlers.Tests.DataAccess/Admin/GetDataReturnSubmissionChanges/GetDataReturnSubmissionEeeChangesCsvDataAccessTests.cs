@@ -219,7 +219,7 @@
 
                 // Assert
                 Assert.Single(results.CsvData);
-                Assert.Equal(DataReturnSubmissionChangeType.Inserted, results.CsvData[0].ChangeType);
+                Assert.Equal(DataReturnSubmissionChangeType.New, results.CsvData[0].ChangeType);
                 Assert.Equal(10, results.CsvData[0].Cat1B2B);
                 Assert.Equal(20, results.CsvData[0].Cat2B2B);
                 Assert.Equal(new DateTime(2016, 2, 1), results.CsvData[0].SubmissionDate);
@@ -343,7 +343,7 @@
 
                 // Assert
                 Assert.Single(results.CsvData);
-                Assert.Equal(DataReturnSubmissionChangeType.Inserted, results.CsvData[0].ChangeType);
+                Assert.Equal(DataReturnSubmissionChangeType.New, results.CsvData[0].ChangeType);
                 Assert.Equal(20, results.CsvData[0].Cat2B2B);
                 Assert.Equal(new DateTime(2016, 2, 1), results.CsvData[0].SubmissionDate);
             }
@@ -485,7 +485,7 @@
                 Assert.Equal(new DateTime(2016, 1, 1), results.CsvData[1].SubmissionDate);
 
                 Assert.Equal("BBB", results.CsvData[2].ProducerName);
-                Assert.Equal(DataReturnSubmissionChangeType.Inserted, results.CsvData[2].ChangeType);
+                Assert.Equal(DataReturnSubmissionChangeType.New, results.CsvData[2].ChangeType);
                 Assert.Equal(30, results.CsvData[2].Cat1B2B);
                 Assert.Equal(new DateTime(2016, 2, 1), results.CsvData[2].SubmissionDate);
             }
