@@ -95,6 +95,8 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandlerTests.cs" />
     <Compile Include="Admin\GetRolesHandlerTests.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccessTests.cs" />
+    <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetSchemesHandlerTests.cs" />

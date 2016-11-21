@@ -15,6 +15,7 @@
     using Web.Areas.Admin.ViewModels.Submissions;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
+    using Weee.Requests.Admin.GetSubmissionChanges;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -146,6 +147,29 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
                 .WhenArgumentsMatch(a => ((GetSubmissionsHistoryResults)a[1]).IncludeSummaryData == true)
                 .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task DownloadSubmissionChanges_CallsApiAndReturnsFileResult()
+        {
+            // Arrange
+            var csvFileData = new CSVFileData { FileName = "Test file.csv", FileContent = "CSV content" };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionChangesCsv>._))
+               .Returns(csvFileData);
+
+            // Act
+            var result = await SubmissionsController().DownloadSubmissionChanges(A.Dummy<Guid>());
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionChangesCsv>._))
+                .MustHaveHappened();
+
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.csv", fileResult.FileDownloadName);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         [Fact]
