@@ -9,7 +9,7 @@
         @Html.HiddenFor(m => m.Year, new { id = "ComplianceYear" })
         @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
 
-        <div class="section-tabs">
+        <div class="section-tabs" id="tabs-div">
             <ul>
                 <li id="collectedDelivered-list-item" class="active">
                     <a href="#" id="collectedDelivered-data-tab">WEEE data</a>
@@ -77,7 +77,7 @@
                     string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                     <tr>
-                        <td><div style="width:120px;">@datetimeValue</div></td>
+                        <td>@datetimeValue</td>
                         <td>@item.Quarter</td>
                         <td style="text-align:left">@item.SubmittedBy</td>
                         <td>@item.WeeeCollectedB2c</td>
@@ -145,7 +145,7 @@
                     string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                     <tr>
-                        <td><div style="width:120px;">@datetimeValue</div></td>
+                        <td>@datetimeValue</td>
                         <td>@item.Quarter</td>
                         <td style="text-align:left">@item.SubmittedBy</td>
                         <td>@item.EeeOutputB2c</td>
@@ -153,10 +153,8 @@
                         <td>
                             @if (item.EeeDataChanged)
                             {
-                                <div style="width:180px;">
-                                    @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
+                                @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
                                    new { currentSubmission = item.DataReturnVersionId, PreviousSubmission = item.PreviousSubmissionDataReturnVersionId })
-                                </div>
                             }
                         </td>
                     </tr>
@@ -186,6 +184,9 @@
 
                 // Except for the table corresponding to this tab
                 $("table[id$='" + tabIdentifier + "-data-table']").removeClass('visually-hidden');
+
+                // Resize the div containing the tabs to match the width of the selected table
+                $("#tabs-div").width($("table[id$='" + tabIdentifier + "-data-table']").width());
             })
 
             $("#collected-date-descending, #collected-date, #output-date-descending, #output-date").click(function (event) {
@@ -206,6 +207,13 @@
             $("#collected-quarter-ascending, #output-quarter-ascending").click(function (event) {
                 event.preventDefault();
                 SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterDescending');
+            })
+
+            // Resize the div containing the tabs after the data for the visible table has been loaded
+            $("table[id$='data-table']").each(function () {
+                if (!$(this).hasClass("visually-hidden")) {
+                    $("#tabs-div").width($("#" + $(this).attr('id')).width());
+                }
             })
 
             function SortDataReturnSubmissionResults(orderBy) {
