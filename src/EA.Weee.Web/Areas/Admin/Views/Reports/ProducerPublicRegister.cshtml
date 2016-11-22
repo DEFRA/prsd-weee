@@ -27,7 +27,8 @@
         <p>
             If there are a large number of producers for your selected criteria, it may take a while to download your results.
         </p>
-        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+           "Report download", "Producer public register", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
