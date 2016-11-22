@@ -91,21 +91,21 @@
             var csvData1 = new ProducerAmendmentsHistoryCSVData
             {
                 ProducerName = "Producer1",
-                DateRegistered = new DateTime(2000, 3, 2),
+                DateRegistered = new DateTime(2000, 3, 2, 11, 25, 13),
                 BrandNames = new string('A', GetMembersDetailsCsvHandler.MaxBrandNamesLength + 1)
             };
 
             var csvData2 = new ProducerAmendmentsHistoryCSVData
             {
                 ProducerName = "Producer1",
-                DateRegistered = new DateTime(2001, 7, 12),
+                DateRegistered = new DateTime(2001, 7, 12, 16, 12, 54),
                 BrandNames = "BrandName2"
             };
 
             var csvData3 = new ProducerAmendmentsHistoryCSVData
             {
                 ProducerName = "Producer1",
-                DateRegistered = new DateTime(2002, 8, 5),
+                DateRegistered = new DateTime(2002, 8, 5, 9, 3, 28),
                 BrandNames = new string('A', GetMembersDetailsCsvHandler.MaxBrandNamesLength + 1)
             };
 
@@ -121,8 +121,8 @@
 
             // Assert
             Assert.NotNull(exception);
-            Assert.Contains("02/03/2000", exception.Message);
-            Assert.Contains("05/08/2002", exception.Message);
+            Assert.Contains("02/03/2000 11:25:13", exception.Message);
+            Assert.Contains("05/08/2002 09:03:28", exception.Message);
             Assert.Contains("brand names", exception.Message);
         }
     }
