@@ -325,6 +325,140 @@
         }
 
         [Fact]
+        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUpload_ForEachProducer()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.SubmittedDate = new DateTime(2016, 1, 1);
+
+                modelHelper.CreateProducerAsCompany(memberUpload, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload, "2222");
+
+                var memberUpload2 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.SubmittedDate = new DateTime(2016, 1, 2);
+
+                modelHelper.CreateProducerAsCompany(memberUpload2, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload2, "2222");
+
+                var memberUpload3 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload3.ComplianceYear = 2016;
+                memberUpload3.SubmittedDate = new DateTime(2016, 2, 2);
+
+                modelHelper.CreateProducerAsCompany(memberUpload3, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload3, "2222");
+
+                // Member upload which will be ignored as it is submitted after
+                var memberUpload4 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload4.ComplianceYear = 2016;
+                memberUpload4.SubmittedDate = new DateTime(2016, 3, 3);
+
+                modelHelper.CreateProducerAsCompany(memberUpload4, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload4, "2222");
+
+                database.Model.SaveChanges();
+
+                StoredProcedures storedProcedures = new StoredProcedures(database.WeeeContext);
+
+                // Act
+                var result = await storedProcedures.SpgSubmissionChangesCsvData(memberUpload3.Id);
+
+                // Assert
+                Assert.Equal(4, result.Count);
+
+                Assert.Equal("Amended", result[0].ChangeType);
+                Assert.Equal("1111", result[0].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 2, 2), result[0].SubmittedDate);
+
+                Assert.Equal(string.Empty, result[1].ChangeType);
+                Assert.Equal("1111", result[1].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 1, 2), result[1].SubmittedDate);
+
+                Assert.Equal("Amended", result[2].ChangeType);
+                Assert.Equal("2222", result[2].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 2, 2), result[2].SubmittedDate);
+
+                Assert.Equal(string.Empty, result[3].ChangeType);
+                Assert.Equal("2222", result[3].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 1, 2), result[3].SubmittedDate);
+            }
+        }
+
+        [Fact]
+        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUploadAffectingProducer_ForEachProducer()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper modelHelper = new ModelHelper(database.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var memberUpload = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.SubmittedDate = new DateTime(2016, 1, 1);
+
+                modelHelper.CreateProducerAsCompany(memberUpload, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload, "2222");
+
+                // Member upload does not affect producer 2222
+                var memberUpload2 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.SubmittedDate = new DateTime(2016, 1, 2);
+
+                modelHelper.CreateProducerAsCompany(memberUpload2, "1111");
+
+                var memberUpload3 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload3.ComplianceYear = 2016;
+                memberUpload3.SubmittedDate = new DateTime(2016, 2, 2);
+
+                modelHelper.CreateProducerAsCompany(memberUpload3, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload3, "2222");
+
+                // Member upload which will be ignored as it is submitted after
+                var memberUpload4 = modelHelper.CreateSubmittedMemberUpload(scheme);
+                memberUpload4.ComplianceYear = 2016;
+                memberUpload4.SubmittedDate = new DateTime(2016, 3, 3);
+
+                modelHelper.CreateProducerAsCompany(memberUpload4, "1111");
+                modelHelper.CreateProducerAsCompany(memberUpload4, "2222");
+
+                database.Model.SaveChanges();
+
+                StoredProcedures storedProcedures = new StoredProcedures(database.WeeeContext);
+
+                // Act
+                var result = await storedProcedures.SpgSubmissionChangesCsvData(memberUpload3.Id);
+
+                // Assert
+                Assert.Equal(4, result.Count);
+
+                Assert.Equal("Amended", result[0].ChangeType);
+                Assert.Equal("1111", result[0].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 2, 2), result[0].SubmittedDate);
+
+                Assert.Equal(string.Empty, result[1].ChangeType);
+                Assert.Equal("1111", result[1].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 1, 2), result[1].SubmittedDate);
+
+                Assert.Equal("Amended", result[2].ChangeType);
+                Assert.Equal("2222", result[2].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 2, 2), result[2].SubmittedDate);
+
+                Assert.Equal(string.Empty, result[3].ChangeType);
+                Assert.Equal("2222", result[3].ProducerRegistrationNumber);
+                Assert.Equal(new DateTime(2016, 1, 1), result[3].SubmittedDate);
+            }
+        }
+
+        [Fact]
         public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousSubmittedUpload_AndIgnoresUnsubmittedUpload()
         {
             using (var database = new DatabaseWrapper())
