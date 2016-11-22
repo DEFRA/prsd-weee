@@ -125,11 +125,11 @@
 
             var outOfRangeProducerBrandAmendments = items
                 .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
-                .Select(r => r.DateRegistered);
+                .Select(r => r.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
             if (outOfRangeProducerBrandAmendments.Any())
             {
                 throw new Exception(
-                    string.Format("The producer '{0}' has brand names exceeding the maximum allowed length for the following registrations: {1:ddMMyyyy_HHmm}.",
+                    string.Format("The producer '{0}' has brand names exceeding the maximum allowed length for the following registrations: {1}.",
                         request.PRN, string.Join(", ", outOfRangeProducerBrandAmendments)));
             }
             csvWriter.DefineColumn("Brand names", i => i.BrandNames);
