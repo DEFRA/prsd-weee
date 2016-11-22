@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -10,12 +11,14 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-
+    
     internal class GetProducerAmendmentsHistoryCSVHandler : IRequestHandler<GetProducerAmendmentsHistoryCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
+
+        public const short MaxBrandNamesLength = short.MaxValue;
 
         public GetProducerAmendmentsHistoryCSVHandler(IWeeeAuthorization authorization, WeeeContext context,
             CsvWriterFactory csvWriterFactory)
@@ -119,6 +122,17 @@
             csvWriter.DefineColumn(@"Overseas producer administrative area", i => i.OverseasContactAdministrativeArea);
             csvWriter.DefineColumn(@"Overseas producer post code", i => i.OverseasContactPostcode);
             csvWriter.DefineColumn(@"Overseas producer country", i => i.OverseasContactCountry);
+
+            var outOfRangeProducerBrandAmendments = items
+                .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
+                .Select(r => r.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
+            if (outOfRangeProducerBrandAmendments.Any())
+            {
+                throw new Exception(
+                    string.Format("The producer '{0}' has brand names exceeding the maximum allowed length for the following registrations: {1}.",
+                        request.PRN, string.Join(", ", outOfRangeProducerBrandAmendments)));
+            }
+            csvWriter.DefineColumn("Brand names", i => i.BrandNames);
 
             string fileContent = csvWriter.Write(items);
 
