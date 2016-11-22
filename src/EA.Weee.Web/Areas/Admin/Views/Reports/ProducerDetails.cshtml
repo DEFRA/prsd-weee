@@ -34,7 +34,8 @@
             If your selection criteria is broad, it may take a while to download your results.
         </p>
 
-        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+           "Report download", "Producer details", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -47,12 +48,12 @@
 
 @section scripts
 {
-    @if (ViewBag.TriggerDownload)
+        @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadProducerDetailsCsv", new
                           {
-                              complianceYear = Model.SelectedYear,
+                complianceYear = Model.SelectedYear,
                               schemeId = Model.SelectedScheme,
                               authorityId = Model.SelectedAA,
                               includeRemovedProducers = Model.IncludeRemovedProducer,
