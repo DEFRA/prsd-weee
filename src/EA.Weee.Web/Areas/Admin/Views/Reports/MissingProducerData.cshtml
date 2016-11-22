@@ -44,7 +44,8 @@
             If there is a large amount of data for your selected criteria, it may take a while to download your results.
         </p>
 
-        @(this.WeeeGds().Submit("Download (CSV)", new { @class = "button" }))
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+           "Report download", "Missing producer data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
