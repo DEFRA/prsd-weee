@@ -205,6 +205,7 @@
     <Content Include="scripts\Update\Sprint27\20161116-1700-AddRemovedDateToRegisteredProducer.sql" />
     <Content Include="scripts\Update\Sprint27\20161115-1700-AddIndexToProducerSubmissionAndUpload.sql" />
     <Content Include="scripts\Update\Sprint27\20161121-1606-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Sprint28\20161123-1030-UpdateSpgSubmissionChangesCsvData.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

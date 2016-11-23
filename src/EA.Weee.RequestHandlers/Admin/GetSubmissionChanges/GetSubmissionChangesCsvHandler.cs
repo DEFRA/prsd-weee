@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -15,6 +16,8 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGetSubmissionChangesCsvDataAccess dataAccess;
         private readonly ICsvWriter<SubmissionChangesCsvData> csvWriter;
+
+        public const short MaxBrandNamesLength = short.MaxValue;
 
         public GetSubmissionChangesCsvHandler(IWeeeAuthorization authorization, IGetSubmissionChangesCsvDataAccess dataAccess,
             ICsvWriter<SubmissionChangesCsvData> csvWriter)
@@ -122,7 +125,20 @@
             csvWriter.DefineColumn(@"Overseas producer post code", i => i.OverseasContactPostcode);
             csvWriter.DefineColumn(@"Overseas producer country", i => i.OverseasContactCountry);
 
+            csvWriter.DefineColumn("Brand names", i => i.BrandNames);
+
             var items = await dataAccess.GetSubmissionChanges(message.MemberUploadId);
+
+            var outOfRangeProducerBrandNames = items
+                .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
+                .Select(r => r.ProducerName);
+
+            if (outOfRangeProducerBrandNames.Any())
+            {
+                throw new Exception(
+                   string.Format("The following producers have brand names exceeding the maximum allowed length: {0}.", string.Join(", ", outOfRangeProducerBrandNames)));
+            }
+
             var fileContent = csvWriter.Write(items);
 
             var fileName = string.Format("{0}_{1}_memberchanges_{2:ddMMyyyy_HHmm}.csv",

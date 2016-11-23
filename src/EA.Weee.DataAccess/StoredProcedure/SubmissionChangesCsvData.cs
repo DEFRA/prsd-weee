@@ -38,6 +38,8 @@
 
         public DateTime? CeaseToExist { get; set; }
 
+        public string BrandNames { get; set; }
+
         // Correspondence of Notices details
         public string CNTitle { get; set; }
 
