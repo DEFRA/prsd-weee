@@ -162,5 +162,54 @@
             // Assert
             Assert.Equal("2016_ABC_memberchanges_01022016_0405.csv", result.FileName);
         }
+
+        [Fact]
+        public async Task HandleAsync_WithBrandNamesLongerThanMaxLength_ThrowsException()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var dataAccess = A.Fake<IGetSubmissionChangesCsvDataAccess>();
+            var csvWriter = A.Fake<ICsvWriter<SubmissionChangesCsvData>>();
+
+            var memberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload.IsSubmitted)
+                .Returns(true);
+
+            A.CallTo(() => dataAccess.GetMemberUpload(A<Guid>._))
+                .Returns(memberUpload);
+
+            var csvData1 = new SubmissionChangesCsvData
+            {
+                ProducerName = "Producer1",
+                BrandNames = new string('A', GetSubmissionChangesCsvHandler.MaxBrandNamesLength + 1)
+            };
+
+            var csvData2 = new SubmissionChangesCsvData
+            {
+                ProducerName = "Producer2",
+                BrandNames = "BrandName2"
+            };
+
+            var csvData3 = new SubmissionChangesCsvData
+            {
+                ProducerName = "Producer3",
+                BrandNames = new string('A', GetSubmissionChangesCsvHandler.MaxBrandNamesLength + 1)
+            };
+
+            A.CallTo(() => dataAccess.GetSubmissionChanges(A<Guid>._))
+                .Returns(new List<SubmissionChangesCsvData> { csvData1, csvData2, csvData3 });
+
+            var handler = new GetSubmissionChangesCsvHandler(authorization, dataAccess, csvWriter);
+            var request = new GetSubmissionChangesCsv(Guid.NewGuid());
+
+            // Act
+            var exception = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Contains("Producer1", exception.Message);
+            Assert.Contains("Producer3", exception.Message);
+            Assert.Contains("brand names", exception.Message);
+        }
     }
 }
