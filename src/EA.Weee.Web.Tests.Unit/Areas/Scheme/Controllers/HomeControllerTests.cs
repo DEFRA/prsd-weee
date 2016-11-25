@@ -778,6 +778,32 @@
         }
 
         [Fact]
+        public async Task PostManageContactDetails_UpdatesDetailsAndSendNotificationOnChange()
+        {
+            // Arrange
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            Func<IWeeeClient> apiClient = () => client;
+
+            IWeeeCache cache = A.Dummy<IWeeeCache>();
+
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+
+            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
+
+            ConfigurationService configService = A.Dummy<ConfigurationService>();
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
+
+            // Act
+            ActionResult result = await controller.ManageContactDetails(A.Dummy<OrganisationData>());
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .WhenArgumentsMatch(a => ((UpdateOrganisationContactDetails)a[1]).SendNotificationOnChange == true)
+                .MustHaveHappened();
+        }
+
+        [Fact]
         public async void GetViewSubmissionHistory_ShouldExecuteGetSubmissionsHistoryResultsAndReturnsView()
         {
             var controller = HomeController();
@@ -823,6 +849,18 @@
             var model = viewResult.Model as SubmissionHistoryViewModel;
 
             Assert.Equal(SubmissionsHistoryOrderBy.ComplianceYearDescending, model.OrderBy);
+        }
+
+        [Fact]
+        public async void GetViewSubmissionHistory_DoesNotRequestForSummaryData()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .WhenArgumentsMatch(a => a.Get<GetSubmissionsHistoryResults>(1).IncludeSummaryData == false)
+                .MustHaveHappened();
         }
 
         [Theory]
@@ -882,7 +920,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
 
-            var result = await controller.ViewSubmissionHistory(A.Dummy<Guid>());
+            var result = await controller.ViewDataReturnSubmissionHistory(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
                 .MustNotHaveHappened();

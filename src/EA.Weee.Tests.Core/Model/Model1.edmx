@@ -477,6 +477,7 @@
           <Property Name="ComplianceYear" Type="int" Nullable="false" />
           <Property Name="CurrentSubmissionId" Type="uniqueidentifier" />
           <Property Name="Removed" Type="bit" Nullable="false" />
+          <Property Name="RemovedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="SICCode">
           <Key>
@@ -2395,6 +2396,7 @@
           <NavigationProperty Name="CurrentSubmission" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
           <NavigationProperty Name="EeeOutputAmounts" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" FromRole="RegisteredProducer" ToRole="EeeOutputAmount" />
           <Property Name="Removed" Type="Boolean" Nullable="false" />
+          <Property Name="RemovedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_ProducerSubmission_ChargeBandAmount">
           <End Type="EA.Weee.TestModel.ChargeBandAmount" Role="ChargeBandAmount" Multiplicity="1" />
@@ -3365,6 +3367,7 @@
           <EntitySetMapping Name="RegisteredProducers">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.RegisteredProducer">
               <MappingFragment StoreEntitySet="RegisteredProducer">
+                <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
                 <ScalarProperty Name="Removed" ColumnName="Removed" />
                 <ScalarProperty Name="CurrentSubmissionId" ColumnName="CurrentSubmissionId" />
                 <ScalarProperty Name="ComplianceYear" ColumnName="ComplianceYear" />

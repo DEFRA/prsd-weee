@@ -41,6 +41,7 @@
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)
                 .Include(p => p.ProducerBusiness.Partnership)
+                .Include(p => p.ProducerBusiness.CorrespondentForNoticesContact)
                 .AsNoTracking()
                 .ToListAsync();
         }
