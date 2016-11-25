@@ -1,39 +1,104 @@
 ﻿@using System.Globalization
-@using EA.Weee.Core.Admin
-@model IEnumerable<SubmissionsHistorySearchData>
+@using EA.Weee.Requests.Shared
+@using EA.Weee.Web.Areas.Admin.ViewModels.Submissions
+@model SubmissionsResultsViewModel
 
-@if (Model.Any())
-{
-    <div class="table-hr"></div>
-    <table id="submissions" class="prsd-table">
-        <caption class="hidden-for-screen-reader">This table shows the submissions for the selected year and scheme.</caption>
-        <thead>
-            <tr>
-                <th>Date and time (GMT)</th>
-                <th>Warnings</th>
-                <th>Submitted by</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
-            <tr>
-                <td>@datetime</td>
-                <td>
-                    @if (item.NoOfWarnings > 0)
+<div id="submissionsGrid">
+    @if (Model.Results.Any())
+    {
+        @Html.HiddenFor(m => m.Year, new { id = "ComplianceYear" })
+        @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
+
+        <div class="table-hr"></div>
+        <table id="submissions" class="prsd-table">
+            <caption class="hidden-for-screen-reader">This table shows the submissions for the selected year and scheme.</caption>
+            <thead>
+                <tr>
+                    @switch (Model.OrderBy)
                     {
-                        string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
-                        <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                        case SubmissionsHistoryOrderBy.SubmissionDateAscending:
+                            <th class="sorted-ascending">
+                                <a href="#" id="date-ascending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                            </th>
+                            break;
+                        case SubmissionsHistoryOrderBy.SubmissionDateDescending:
+                            <th class="sorted-descending">
+                                <a href="#" id="date-descending">Date and time (GMT)</a>
+                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                            </th>
+                            break;
+                        default:
+                            <th>
+                                <a href="#" id="date">Date and time (GMT)</a>
+                            </th>
+                            break;
                     }
-                </td>
-                <td style="text-align:left">@item.SubmittedBy</td>
+                    <th>Submitted by</th>
+                    <th>Number of new producers</th>
+                    <th>Number of amended producers</th>
+                    <th>Warnings</th>
+                    <th>Changes</th>
                 </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <span>No submissions have been made for the chosen compliance year and PCS.</span>
-}
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+                    <tr>
+                        <td>@datetime</td>
+                        <td style="text-align:left">@item.SubmittedBy</td>
+                        <td>@(item.NumberOfNewProducers.HasValue && item.NumberOfNewProducers > 0 ? item.NumberOfNewProducers : null)</td>
+                        <td>@(item.NumberOfChangedProducers.HasValue && item.NumberOfChangedProducers > 0 ? item.NumberOfChangedProducers : null)</td>
+                        <td>
+                            @if (item.NoOfWarnings > 0)
+                            {
+                                string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
+                                <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                            }
+                        </td>
+                        <td>
+                            @if (item.ProducersChanged.HasValue && item.ProducersChanged.Value)
+                            {
+                                <div style="width:120px;">
+                                    <a href="@Url.Action("DownloadSubmissionChanges", new { memberUploadId = item.MemberUploadId })">View changes (CSV)</a>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $("#date-descending, #date").click(function (event) {
+                event.preventDefault();
+                SortSubmissionResults('@SubmissionsHistoryOrderBy.SubmissionDateAscending');
+            })
+
+            $("#date-ascending").click(function (event) {
+                event.preventDefault();
+                SortSubmissionResults('@SubmissionsHistoryOrderBy.SubmissionDateDescending');
+            })
+
+            function SortSubmissionResults(orderBy) {
+                var selectedYear = $("#ComplianceYear").val()
+                var selectedScheme = $("#SchemeId").val()
+
+                $.ajax({
+                    url: '@Url.Action("GetSubmissionResults")',
+                    type: 'GET',
+                    cache: false,
+                    data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
+                    success: function (data) {
+                        $('#submissionsGrid').replaceWith(data);
+                    }
+                });
+            }
+        </script>
+    }
+    else
+    {
+        <span>No submissions have been made for the chosen compliance year and PCS.</span>
+    }
+</div>

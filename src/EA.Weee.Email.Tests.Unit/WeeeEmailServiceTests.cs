@@ -292,7 +292,7 @@
         }
 
         [Fact]
-        public async Task SendTestEmail_SendsCreatedMailMessageWithTrowOnException()
+        public async Task SendTestEmail_SendsCreatedMailMessageWithThrowOnException()
         {
             // Arrange
             var builder = new WeeeEmailServiceBuilder();
@@ -308,6 +308,73 @@
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, false))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationContactDetailsChanged_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationContactDetailsChanged_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged("a@b.com", A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationContactDetailsChanged_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "TestPCS");
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A.Dummy<string>(), "Change of contact details for TestPCS", A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationContactDetailsChanged_SendsCreatedMailMessageWithContinueOnException()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            var mailMessage = new MailMessage();
+
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, A<string>._, A<EmailContent>._))
+                .Returns(mailMessage);
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
                 .MustHaveHappened();
         }
 

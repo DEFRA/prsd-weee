@@ -236,6 +236,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\ManagePendingChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
@@ -249,6 +250,8 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewDisplayOption.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\PcsDetails\PcsDetailsOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionsResultsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionsResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\TestEmail\TestEmailViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
@@ -528,6 +531,7 @@
     <Content Include="Areas\Admin\Views\TestEmail\Index.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Success.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeObligationData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\MissingProducerData.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\govuk_elements\application.js" />
     <Content Include="Scripts\govuk_elements\govuk\details.polyfill.js" />

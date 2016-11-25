@@ -19,13 +19,16 @@
         /// </summary>
         public SubmissionsHistoryOrderBy? Ordering { get; set; }
 
+        public bool IncludeSummaryData { get; set; }
+
         public GetSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null,
-            SubmissionsHistoryOrderBy? ordering = null)
+            SubmissionsHistoryOrderBy? ordering = null, bool includeSummaryData = false)
         {
             SchemeId = schemeId;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
             Ordering = ordering;
+            IncludeSummaryData = includeSummaryData;
         }
     }
 }

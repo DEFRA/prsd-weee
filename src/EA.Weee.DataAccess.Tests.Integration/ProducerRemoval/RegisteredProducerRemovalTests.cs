@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using FakeItEasy;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -46,6 +47,43 @@
 
                 Assert.NotNull(producer);
                 Assert.False(producer.Removed);
+                Assert.Null(producer.RemovedDate);
+            }
+        }
+
+        [Fact]
+        public async Task RemoveRegisteredProducer_ProducerIsMarkedAsRemovedAndRemovedDateIsSet()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+
+                var organisation = Organisation.CreateSoleTrader("My trading name");
+                context.Organisations.Add(organisation);
+                await context.SaveChangesAsync();
+
+                var scheme = new Scheme(organisation.Id);
+                context.Schemes.Add(scheme);
+                await context.SaveChangesAsync();
+
+                var producer = new RegisteredProducer("ABC12345", 2017, scheme);
+                context.AllRegisteredProducers.Add(producer);
+
+                SystemTime.Freeze(new DateTime(2016, 10, 1));
+
+                producer.Remove();
+
+                SystemTime.Unfreeze();
+
+                await context.SaveChangesAsync();
+
+                producer = context.AllRegisteredProducers
+                    .SingleOrDefault(p => p.Id == producer.Id);
+
+                Assert.NotNull(producer);
+                Assert.True(producer.Removed);
+                Assert.NotNull(producer.RemovedDate);
+                Assert.Equal(new DateTime(2016, 10, 1), producer.RemovedDate);
             }
         }
 
@@ -117,6 +155,7 @@
 
                 Assert.NotNull(producer);
                 Assert.False(producer.Removed);
+                Assert.Null(producer.RemovedDate);
             }
         }
     }

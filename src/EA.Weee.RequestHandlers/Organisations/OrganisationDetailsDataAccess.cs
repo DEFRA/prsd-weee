@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
+    using Domain.Scheme;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
@@ -17,7 +19,10 @@
 
         public async Task<Organisation> FetchOrganisationAsync(Guid organisationId)
         {
-            Organisation organisation = await context.Organisations.FindAsync(organisationId);
+            Organisation organisation = await context.Organisations
+                .Include(o => o.Contact)
+                .Include(o => o.OrganisationAddress)
+                .SingleOrDefaultAsync(o => o.Id == organisationId);
 
             if (organisation == null)
             {
@@ -26,6 +31,13 @@
             }
 
             return organisation;
+        }
+
+        public Task<Scheme> FetchSchemeAsync(Guid organisationId)
+        {
+            return context.Schemes
+                .Include(s => s.CompetentAuthority)
+                .FirstOrDefaultAsync(s => s.OrganisationId == organisationId);
         }
 
         public async Task<Country> FetchCountryAsync(Guid countryId)

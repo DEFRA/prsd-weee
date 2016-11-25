@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain;
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
@@ -108,7 +109,7 @@
             var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme),
                 memberUpload2,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 2),
                 0,
@@ -166,7 +167,7 @@
             var producer1 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme1),
                 memberUpload1,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -192,7 +193,7 @@
             var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
                 new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme2),
                 memberUpload2,
-                new EA.Weee.Domain.Producer.ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -261,7 +262,7 @@
             var producer = new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                new ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -321,7 +322,7 @@
             var producer = new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                new ProducerBusiness(),
+                CreatePartnershipBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
@@ -354,6 +355,230 @@
             Assert.False(result.CanRemoveProducer);
             A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
                 .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ForCompanyProducer_ReturnsCompanyContactDetails_AndIsCompanyValueTrue()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
+                new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
+
+            var producerContact = new ProducerContact(
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
+
+            var producerBusiness = new ProducerBusiness(
+                companyDetails: new Company("TestCompany", "123", producerContact));
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                producerBusiness,
+                null,
+                new DateTime(2015, 1, 1),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0);
+
+            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
+                .Returns(new List<ProducerSubmission> { producer });
+
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .Returns(false);
+
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result.Schemes);
+
+            ProducerContactDetails businessContact = result.Schemes[0].ProducerBusinessContact;
+            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", businessContact.Address);
+            Assert.Equal("Title Forename Surname", businessContact.ContactName);
+            Assert.Equal("123456", businessContact.Telephone);
+            Assert.Equal("1235467", businessContact.Mobile);
+            Assert.Equal("a@b.c", businessContact.Email);
+            Assert.True(result.Schemes[0].IsCompany);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ForPartnershipProducer_ReturnsPartnershipContactDetails_AndIsCompanyValueFalse()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
+                new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
+
+            var producerContact = new ProducerContact(
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
+
+            var producerBusiness = new ProducerBusiness(
+                partnership: new Partnership("TestPartnership", producerContact, new List<Partner> { }));
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                producerBusiness,
+                null,
+                new DateTime(2015, 1, 1),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0);
+
+            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
+                .Returns(new List<ProducerSubmission> { producer });
+
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .Returns(false);
+
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result.Schemes);
+
+            ProducerContactDetails businessContact = result.Schemes[0].ProducerBusinessContact;
+            Assert.Equal("PrimaryName, SecondaryName, Street, Town, Locality, AdministrativeArea, PostCode, TestCountry", businessContact.Address);
+            Assert.Equal("Title Forename Surname", businessContact.ContactName);
+            Assert.Equal("123456", businessContact.Telephone);
+            Assert.Equal("1235467", businessContact.Mobile);
+            Assert.Equal("a@b.c", businessContact.Email);
+            Assert.False(result.Schemes[0].IsCompany);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ForUnknownBusinessType_ThrowsException()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                new ProducerBusiness(),
+                null,
+                new DateTime(2015, 1, 1),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0);
+
+            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
+                .Returns(new List<ProducerSubmission> { producer });
+
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .Returns(false);
+
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
+
+            // Act
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+
+            // Assert
+            await Assert.ThrowsAsync<MissingFieldException>(action);
+        }
+
+        private ProducerBusiness CreatePartnershipBusiness()
+        {
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
+                new Country(A.Dummy<Guid>(), "TestCountry"), "PostCode");
+
+            var producerContact = new ProducerContact(
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
+
+            return new ProducerBusiness(partnership: new Partnership("TestPartnership", producerContact, new List<Partner> { }));
         }
     }
 }

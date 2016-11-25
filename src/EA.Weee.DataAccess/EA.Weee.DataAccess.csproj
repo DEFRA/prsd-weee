@@ -96,6 +96,7 @@
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="StoredProcedure\DataReturnSummaryCsvData.cs" />
+    <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerEeeCsvData.cs" />
     <Compile Include="StoredProcedure\ProducerEeeHistoryCsvData.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="StoredProcedure\ProducerCsvData.cs" />
     <Compile Include="StoredProcedure\ProducerPublicRegisterCSVData.cs" />
     <Compile Include="StoredProcedure\StoredProcedures.cs" />
+    <Compile Include="StoredProcedure\SubmissionChangesCsvData.cs" />
     <Compile Include="StoredProcedure\UkEeeCsvData.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
