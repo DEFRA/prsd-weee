@@ -21,5 +21,11 @@
         public decimal TotalCharges { get; set; }
 
         public string FileName { get; set; }
+
+        public int? NumberOfNewProducers { get; set; }
+
+        public int? NumberOfChangedProducers { get; set; }
+
+        public bool? ProducersChanged { get; set; }
     }
 }

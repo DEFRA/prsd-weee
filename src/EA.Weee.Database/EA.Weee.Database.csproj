@@ -199,6 +199,13 @@
     <Content Include="scripts\Update\Sprint25\20161026-1700-UpdateSpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Sprint26\20161103-1715-CreateSpgSchemeObligationCsvData.sql" />
     <Content Include="scripts\Update\Sprint26\20161108-1555-UpdateSpgSchemeObligationCsvData.sql" />
+    <Content Include="scripts\Update\Sprint27\20161111-1716-CreateSpgMissingProducerDataCsvData.sql" />
+    <Content Include="scripts\Update\Sprint27\20161122-1130-UpdateSpgSubmissionChangesCsvData.sql" />
+    <Content Include="scripts\Update\Sprint27\20161118-1000-CreateSpgSubmissionChangesCsvData.sql" />
+    <Content Include="scripts\Update\Sprint27\20161116-1700-AddRemovedDateToRegisteredProducer.sql" />
+    <Content Include="scripts\Update\Sprint27\20161115-1700-AddIndexToProducerSubmissionAndUpload.sql" />
+    <Content Include="scripts\Update\Sprint27\20161121-1606-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Sprint28\20161123-1030-UpdateSpgSubmissionChangesCsvData.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

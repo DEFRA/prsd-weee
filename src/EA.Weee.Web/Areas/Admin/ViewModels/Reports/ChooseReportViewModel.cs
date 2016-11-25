@@ -13,8 +13,9 @@
                 Reports.SchemeWeeeData,
                 Reports.UkEeeData,
                 Reports.UkWeeeData,
-                Reports.ProducerPublicRegister//,
-                //Reports.SchemeObligationData
+                Reports.ProducerPublicRegister,
+                Reports.SchemeObligationData,
+                Reports.MissingProducerData
             })
         {
         }

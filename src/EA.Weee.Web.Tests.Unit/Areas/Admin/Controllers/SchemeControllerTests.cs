@@ -686,6 +686,29 @@
         }
 
         [Fact]
+        public async Task PostManageContactDetails_UpdatesDetailsAndDoesNotSendNotificationOnChange()
+        {
+            // Arrange
+            var manageContactDetailsViewModel = new ManageContactDetailsViewModel
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData(),
+                SchemeId = Guid.NewGuid(),
+                OrgId = Guid.NewGuid()
+            };
+
+            var schemeController = SchemeController();
+
+            // Act
+            await schemeController.ManageContactDetails(manageContactDetailsViewModel);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .WhenArgumentsMatch(a => ((UpdateOrganisationContactDetails)a[1]).SendNotificationOnChange == false)
+                .MustHaveHappened();
+        }
+
+        [Fact]
         public async void GetViewOrganisationDetails_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))

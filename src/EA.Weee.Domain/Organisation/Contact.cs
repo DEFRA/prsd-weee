@@ -4,7 +4,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Contact : Entity
+    public class Contact : Entity, IEquatable<Contact>
     {
         public Contact(string firstName, string lastName, string position)
         {
@@ -81,6 +81,28 @@
             otherContact.Position = Position;
 
             return otherContact;
+        }
+
+        public virtual bool Equals(Contact other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return FirstName == other.FirstName &&
+                   LastName == other.LastName &&
+                   Position == other.Position;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Contact);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

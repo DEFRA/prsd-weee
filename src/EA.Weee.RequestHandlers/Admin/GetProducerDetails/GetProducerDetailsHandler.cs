@@ -75,6 +75,32 @@
                     isAuthorisedRepresentative = "Yes";
                 }
 
+                ProducerContact producerBusinessContact = null;
+                bool isCompany = false;
+                if (latestDetails.ProducerBusiness.CompanyDetails != null)
+                {
+                    producerBusinessContact = latestDetails.ProducerBusiness.CompanyDetails.RegisteredOfficeContact;
+                    isCompany = true;
+                }
+                else if (latestDetails.ProducerBusiness.Partnership != null)
+                {
+                    producerBusinessContact = latestDetails.ProducerBusiness.Partnership.PrincipalPlaceOfBusiness;
+                }
+                else
+                {
+                    throw new MissingFieldException(
+                        string.Format("No producer business details could be found for producer:{0}", latestDetails.Id));
+                }
+
+                ProducerContactDetails producerBusinessContactDetails = new ProducerContactDetails
+                {
+                    ContactName = producerBusinessContact.ContactName,
+                    Email = producerBusinessContact.Email,
+                    Mobile = producerBusinessContact.Mobile,
+                    Telephone = producerBusinessContact.Telephone,
+                    Address = producerBusinessContact.Address.ToString()
+                };
+
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
                     RegisteredProducerId = latestDetails.RegisteredProducer.Id,
@@ -87,6 +113,8 @@
                     ChargeBandType = (ChargeBandType)latestDetails.ChargeBandAmount.ChargeBand,
                     CeasedToExist = latestDetails.CeaseToExist,
                     IsAuthorisedRepresentative = isAuthorisedRepresentative,
+                    ProducerBusinessContact = producerBusinessContactDetails,
+                    IsCompany = isCompany,
                     ProducerEeeDetails =
                         mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
                             (await
