@@ -614,6 +614,9 @@
 
             var viewResult = ((ViewResult)result);
             Assert.Equal("UkEeeData", viewResult.ViewName);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .MustHaveHappened();
         }
 
         [Fact]
@@ -642,7 +645,7 @@
                 A.Dummy<BreadcrumbService>());
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.UkEeeData(new ComplianceYearReportViewModel());
+            var result = await controller.UkEeeData(new UkEeeDataViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
@@ -656,7 +659,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            ComplianceYearReportViewModel viewModel = new ComplianceYearReportViewModel();
+            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
@@ -676,7 +679,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            ComplianceYearReportViewModel viewModel = new ComplianceYearReportViewModel();
+            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
 
             // Act
             ActionResult result = await controller.UkEeeData(viewModel);
@@ -1233,37 +1236,34 @@
         }
 
         /// <summary>
-        /// This test ensures that the GET "SchemeObligationData" action calls the API to retrieve
-        /// the list of compliance years and returns the "SchemeObligationData" view with 
-        /// a ComplianceYearReportViewModel that has be populated with the list of years.
+        /// This test ensures that the GET "SchemeObligationData" action returns the
+        /// "SchemeObligationData" view with a ComplianceYearReportViewModel that has be populated
+        /// with a list of years.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetSchemeObligationData_Always_ReturnsComplianceYearReportViewModel()
+        public void GetSchemeObligationData_Always_ReturnsComplianceYearReportViewModel()
         {
             // Arrange
-            List<int> years = new List<int>() { 2001, 2002 };
-
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
-
             ReportsController controller = new ReportsController(
                 () => weeeClient,
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.SchemeObligationData();
+            ActionResult result = controller.SchemeObligationData();
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
 
-            ComplianceYearReportViewModel model = viewResult.Model as ComplianceYearReportViewModel;
+            SchemeObligationDataViewModel model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
-            Assert.Collection(model.ComplianceYears,
-                y1 => Assert.Equal("2001", y1.Text),
-                y2 => Assert.Equal("2002", y2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .MustNotHaveHappened();
+            Assert.NotNull(model.ComplianceYears);
         }
 
         /// <summary>
@@ -1272,7 +1272,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetSchemeObligationData_Always_SetsTriggerDownloadToFalse()
+        public void GetSchemeObligationData_Always_SetsTriggerDownloadToFalse()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1280,7 +1280,7 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.SchemeObligationData();
+            ActionResult result = controller.SchemeObligationData();
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1294,7 +1294,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
+        public void GetSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -1304,45 +1304,42 @@
                 breadcrumb);
 
             // Act
-            await controller.SchemeObligationData();
+            controller.SchemeObligationData();
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
-        /// This test ensures that the POST "SchemeObligationData" action with an invalid view model
-        /// calls the API to retrieve the list of compliance years and returns the "SchemeObligationData"
-        /// view with a ComplianceYearReportViewModel that has be populated with the list of years.
+        /// This test ensures that the POST "SchemeObligationData" action returns the
+        /// "SchemeObligationData" view with a ComplianceYearReportViewModel that has be populated
+        /// with a list of years.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeObligationData_WithInvalidViewModel_ReturnsUkWeeeDataProducerDataViewModel()
+        public void PostSchemeObligationData_WithInvalidViewModel_ReturnsUkWeeeDataProducerDataViewModel()
         {
             // Arrange
-            List<int> years = new List<int>() { 2001, 2002 };
-
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
-
             ReportsController controller = new ReportsController(
                 () => weeeClient,
                 A.Dummy<BreadcrumbService>());
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+            ActionResult result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
 
-            ComplianceYearReportViewModel model = viewResult.Model as ComplianceYearReportViewModel;
+            SchemeObligationDataViewModel model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
-            Assert.Collection(model.ComplianceYears,
-                y1 => Assert.Equal("2001", y1.Text),
-                y2 => Assert.Equal("2002", y2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .MustNotHaveHappened();
+            Assert.NotNull(model.ComplianceYears);
         }
 
         /// <summary>
@@ -1351,7 +1348,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeObligationData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        public void PostSchemeObligationData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1360,7 +1357,7 @@
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+            ActionResult result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1374,7 +1371,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeObligationData_WithViewModel_SetsTriggerDownloadToTrue()
+        public void PostSchemeObligationData_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1382,7 +1379,7 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.SchemeObligationData(new ComplianceYearReportViewModel());
+            ActionResult result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1396,7 +1393,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
+        public void PostSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -1406,7 +1403,7 @@
                 breadcrumb);
 
             // Act
-            await controller.SchemeObligationData(A.Dummy<ComplianceYearReportViewModel>());
+            controller.SchemeObligationData(A.Dummy<SchemeObligationDataViewModel>());
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
