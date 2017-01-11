@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -12,8 +13,6 @@
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
     using Services;
     using ViewModels.Home;
     using ViewModels.Reports;
@@ -23,7 +22,7 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
     using GetSchemes = Weee.Requests.Admin.GetSchemes;
-
+    
     public class ReportsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -338,7 +337,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            ComplianceYearReportViewModel model = new ComplianceYearReportViewModel();
+            UkEeeDataViewModel model = new UkEeeDataViewModel();
             await PopulateFilters(model);
 
             return View("UkEeeData", model);
@@ -346,7 +345,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkEeeData(ComplianceYearReportViewModel model)
+        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -369,25 +368,25 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SchemeObligationData()
+        public ActionResult SchemeObligationData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            ComplianceYearReportViewModel model = new ComplianceYearReportViewModel();
-            await PopulateFilters(model);
+            SchemeObligationDataViewModel model = new SchemeObligationDataViewModel();
+            PopulateFilters(model);
 
             return View("SchemeObligationData", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SchemeObligationData(ComplianceYearReportViewModel model)
+        public ActionResult SchemeObligationData(SchemeObligationDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model);
+            PopulateFilters(model);
 
             return View(model);
         }
@@ -462,11 +461,15 @@
             model.ComplianceYears = new SelectList(years);
         }
 
-        private async Task PopulateFilters(ComplianceYearReportViewModel model)
+        private async Task PopulateFilters(UkEeeDataViewModel model)
         {
             List<int> years = await FetchComplianceYearsForDataReturns();
-
             model.ComplianceYears = new SelectList(years);
+        }
+
+        private void PopulateFilters(SchemeObligationDataViewModel model)
+        {
+            model.ComplianceYears = new SelectList(FetchAllComplianceYears());
         }
 
         private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
@@ -490,6 +493,21 @@
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");
         }
 
+        /// <summary>
+        /// Return all years from 2016 to the current year in descending order
+        /// </summary>
+        /// <returns>descending list of compliance years</returns>
+        private List<int> FetchAllComplianceYears()
+        {
+            return Enumerable.Range(2016, DateTime.Now.Year - 2015)
+                .OrderByDescending(year => year)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Return all years with valid data returns uploads associated with them
+        /// </summary>
+        /// <returns></returns>
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
             var request = new GetDataReturnsActiveComplianceYears();

@@ -237,6 +237,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
@@ -263,7 +264,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ComplianceYearReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\SchemeObligationDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
