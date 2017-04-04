@@ -29,6 +29,7 @@
         {
             return await context.ProducerSubmissions
                 .Where(ps => ps.RegisteredProducer.Id == registeredProducerId)
+                .Where(ps => ps.MemberUpload.IsSubmitted)
                 .Include(ps => ps.MemberUpload)
                 .ToListAsync();
         }

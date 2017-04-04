@@ -98,6 +98,7 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerComplianceYearDataAccessTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccessTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccessTests.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccessTests.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataHistoryCsvHandlerTests.cs" />
