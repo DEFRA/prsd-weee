@@ -12,7 +12,10 @@ param
     [string]$DatabaseName = $null,
 
     [Parameter(Mandatory=$true)]
-    [string]$Location = $null
+    [string]$Location = $null,
+
+	[Parameter(Mandatory=$false)]
+	[int]$Timeout = 30
 )
 
 . "$PSScriptRoot\sql\RunQuery.ps1"
@@ -25,7 +28,8 @@ $FileName = $DatabaseName + " " + (Get-Date).ToString("yyyy-MM-dd HH-mm") + ".ba
 
 Run-Query -ConnectionString $ConnectionString `
           -QueryFile $PSScriptRoot\sql\BackupDatabase.sql `
-          -Parameters "@DatabaseName=$DatabaseName", "@Location=$Location", "@FileName=$FileName";
+          -Parameters "@DatabaseName=$DatabaseName", "@Location=$Location", "@FileName=$FileName" `
+	      -CommandTimeout $Timeout;
 }
 Catch
 {
