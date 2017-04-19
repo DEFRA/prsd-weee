@@ -41,7 +41,8 @@
             IEnumerable<DataReturn> dataReturns = await dataAccess.FetchDataReturns(registeredProducer.Scheme, registeredProducer.ComplianceYear);
             foreach (DataReturn dataReturn in dataReturns)
             {
-                if (dataReturn.CurrentVersion != null)
+                if (dataReturn.CurrentVersion != null &&
+                    dataReturn.CurrentVersion.EeeOutputReturnVersion != null)
                 {
                     ICollection<EeeOutputAmount> eeeOutputAmounts = dataReturn.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts;
                     if (eeeOutputAmounts.Any(a => a.RegisteredProducer == registeredProducer))

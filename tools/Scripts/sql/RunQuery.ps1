@@ -8,7 +8,10 @@ function Run-Query
         [string]$QueryFile,
 
         [Parameter(Mandatory=$false)]
-        [string[]]$Parameters = $null
+        [string[]]$Parameters = $null,
+
+		[Parameter(Mandatory=$false)]
+		[int]$CommandTimeout = 30
     )
 
     $ParametersTable = ConvertFrom-StringData ($Parameters | Out-String)
@@ -20,6 +23,7 @@ function Run-Query
     $Query = get-content $QueryFile
     $SqlCmd.CommandText = $Query
     $SqlCmd.Connection = $SqlConnection
+	$SqlCmd.CommandTimeout = $CommandTimeout
     
     $ParametersTable.GetEnumerator() | % {
         Write-Verbose "Setting parameter $($_.key) as $($_.value)"
