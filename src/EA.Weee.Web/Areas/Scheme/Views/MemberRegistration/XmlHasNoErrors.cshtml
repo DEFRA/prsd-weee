@@ -54,14 +54,24 @@
 			</details>
 		}
 
-		<div class="highlight-section">
-			<div class="highlight-section-text">
-				Based on the information provided in your XML, your charges are:
-			</div>
-			<div class="highlight-section-amount">
-				@Model.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
-			</div>
-		</div>
+	    <div class="highlight-section">
+	        @if (Model.ComplianceYear.HasValue && Model.ComplianceYear.Value > 2018)
+            {
+                <div class="highlight-section-text">
+                    The charge amount normally displayed here is being updated to account for changes brought about by the introduction of a charging scheme by the Environment Agency. 
+                    These changes will affect charges for scheme members based in England and some non-UK based scheme members.
+                </div>
+            }
+            else
+            {
+	            <div class="highlight-section-text">
+	                Based on the information provided in your XML, your charges are:
+	            </div>
+	            <div class="highlight-section-amount">
+	                @Model.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))
+	            </div>
+	        }
+	    </div>
 
 		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
