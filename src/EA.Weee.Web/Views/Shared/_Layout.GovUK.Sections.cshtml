@@ -83,17 +83,17 @@
         {
             <li>
                 @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-                    Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                    "Policies",
-                    "Terms and conditions",
-                    newTab: true))
+                            Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                            "Policies",
+                            "Terms and conditions",
+                            newTab: true))
             </li>
             <li>
                 @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
-                    Url.UrlFor<NewUserController>(c => c.Privacy()),
-                    "Policies", 
-                    "Privacy",
-                    newTab: true))
+                            Url.UrlFor<NewUserController>(c => c.Privacy()),
+                            "Policies",
+                            "Privacy",
+                            newTab: true))
             </li>
         }
         <li>
@@ -105,9 +105,8 @@
 @section body_end {
     <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
     <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
-    @Scripts.Render("~/bundles/govuk_toolkit")
-    @Scripts.Render("~/bundles/govuk_elements")
     @Scripts.Render("~/bundles/govuk_weee")
+    @Scripts.Render("~/bundles/govuk_frontend_script")
     @RenderSection("scripts", required: false)
 }
 

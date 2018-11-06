@@ -40,6 +40,9 @@
                       "~/Scripts/vendor/details.polyfill.js",
                       "~/Scripts/weee-application.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/govuk_frontend_script").Include(
+          "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.css"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 
@@ -51,6 +54,10 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                       "~/Content/weee-page.css"));
+
+            bundles.Add(new StyleBundle("~/Content/govuk_frontend_css").Include(
+                "~/Content/govuk_frontend/images/govuk-frontend-2.3.0.min.css",
+                "~/Content/govuk_frontend/images/govuk-frontend-ie8-2.3.0.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
