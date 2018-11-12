@@ -1,12 +1,12 @@
 .prsd-table {
-    background: $page-colour;
+    background: govuk-colour('white');
     position: relative;
 
     thead {
         th {
-            background: $panel-colour;
+            background: govuk-colour('grey-3');
             padding-left: 15px;
-            border: 5px solid $page-colour;
+            border: 5px solid govuk-colour('white');
         }
 
         tr {
@@ -16,10 +16,10 @@
 
     tbody {
         td {
-            background: $highlight-colour;
+            background: govuk-colour('grey-4');
             padding-left: 15px;
             border-bottom: none;
-            border: 3px solid $page-colour;
+            border: 3px solid govuk-colour('white');
 
             &:last-child {
                 text-align: center;
@@ -46,7 +46,7 @@
         tr {
             &:hover {
                 td {
-                    background: $page-colour;
+                    background: govuk-colour('white');
                     cursor: default;
                 }
             }

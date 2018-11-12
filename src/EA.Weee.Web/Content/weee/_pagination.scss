@@ -1,79 +1,85 @@
 ﻿.previous-next-navigation {
-  position: relative;
-  overflow: hidden;
-  margin-top: $gutter*2;
-  width: $full-width;
-  padding-left: 0;
+    position: relative;
+    overflow: hidden;
+    margin-top: $govuk-gutter*2;
+    width: 100%;
+    padding-left: 0;
 
-  li {
-    @include core-27;
-    display: block;
-    padding: 0;
-    margin: 0;
-    width: 50%;
-    float: left;
-
-    &.next {
-      float: right;
-      text-align: right;
-
-      a {
-        padding: $gutter-half $gutter+5px $gutter-half 0;
-      }
-      a:before {
-        background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -102px -11px;
-        margin: -4px -32px 0 0;
+    li {
+        @include govuk-font(27);
         display: block;
-        float: right;
-        width: $gutter;
-        height: 38px;
-        content: " ";
-      }
-    }
-    &.previous {
-      a {
-          padding: $gutter-half 0 $gutter-half $gutter+5px;
-      }
-      a:before {
-        background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -20px -11px;
-        margin: -4px 0 0 -32px;
-        display: block;
+        padding: 0;
+        margin: 0;
+        width: 50%;
         float: left;
-        width: $gutter;
-        height: 38px;
-        content: " ";
-      }
-    }
 
-    a {
-      display: block;
-      text-decoration: none;
+        &.next {
+            float: right;
+            text-align: right;
 
-      span {
-        display: block;
-        @include core-14;
-        padding: 6px 0;
-      }
-      &:focus .page-numbers,
-      &:hover .page-numbers {
-        text-decoration: underline;
-      }
-      &:hover {
-        background: $grey-4;
-      }
-      &:active {
-        background: $grey-3;
-      }
-    }
+            a {
+                padding: $govuk-gutter-half $govuk-gutter+5px $govuk-gutter-half 0;
+            }
 
-    @include media(tablet) {
-      .visuallyhidden {
-        @include core-27;
-        display: inline-block;
-        position: static;
-      }
+            a:before {
+                background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -102px -11px;
+                margin: -4px -32px 0 0;
+                display: block;
+                float: right;
+                width: $govuk-gutter;
+                height: 38px;
+                content: " ";
+            }
+        }
+
+        &.previous {
+            a {
+                padding: $govuk-gutter-half 0 $govuk-gutter-half $govuk-gutter+5px;
+            }
+
+            a:before {
+                background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -20px -11px;
+                margin: -4px 0 0 -32px;
+                display: block;
+                float: left;
+                width: $govuk-gutter;
+                height: 38px;
+                content: " ";
+            }
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+
+            span {
+                display: block;
+                @include govuk-font(14);
+                padding: 6px 0;
+            }
+
+            &:focus .page-numbers,
+            &:hover .page-numbers {
+                text-decoration: underline;
+            }
+
+            &:hover {
+                background: govuk-colour('grey-4');
+            }
+
+            &:active {
+                background: govuk-colour('grey-3');
+            }
+        }
+
+        @include govuk-media-query($from: tablet) {
+            .visuallyhidden {
+                @include govuk-font(27);
+                display: inline-block;
+                position: static;
+            }
+        }
     }
-  }
 }
 
 /* Pager */
