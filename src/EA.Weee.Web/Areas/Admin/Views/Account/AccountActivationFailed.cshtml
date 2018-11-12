@@ -4,7 +4,7 @@
     ViewBag.Title = "Account activation request expired";
 }
 
-<h2 class="heading-large">Your request to activate your account has expired</h2>
+<h2 class="govuk-heading-l">Your request to activate your account has expired</h2>
 
 @using (Html.BeginForm("AdminAccountActivationFailed", "Account", new { id = ViewContext.RouteData.Values["id"] }, FormMethod.Post))
 {

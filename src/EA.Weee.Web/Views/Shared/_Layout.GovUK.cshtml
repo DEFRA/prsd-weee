@@ -78,11 +78,13 @@
 
     @RenderSection("after_header", required: false)
 
-    <div class="govuk-width-container">
-        <main class="govuk-main-wrapper " id="main-content" role="main">
-            @RenderBody()
-        </main>
-    </div>
+@*<div class="govuk-width-container">*@
+
+    @*<main class="govuk-main-wrapper app-main-class" id="main-content" role="main">*@
+        @RenderBody()
+    @*</main>*@
+
+@*</div>*@
 
     <footer class="govuk-footer " role="contentinfo" id="footer">
         <div class="govuk-width-container ">
@@ -114,10 +116,6 @@
     
     @RenderSection("body_end", required: false)
 
-    @*<script src="@Url.Content("~/Content/govuk_frontend/package/all.js")"></script>*@
-    @*<script>
-        window.GOVUKFrontend.initAll();
-    </script>*@
 </body>
 
 </html>
