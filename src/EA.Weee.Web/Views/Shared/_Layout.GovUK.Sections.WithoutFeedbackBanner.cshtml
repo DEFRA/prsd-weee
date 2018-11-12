@@ -87,8 +87,8 @@
     @RenderBody()
     @if (IsSectionDefined("main_content"))
     {
-        <div class="grid-row">
-            <section class="column-two-thirds">
+        <div class="govuk-grid-row">
+            <section class="govuk-grid-column-two-thirds">
                 @RenderSection("main_content", required: false)
             </section>
             @if (IsSectionDefined("related_content"))

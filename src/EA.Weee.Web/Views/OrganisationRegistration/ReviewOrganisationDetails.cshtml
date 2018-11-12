@@ -8,7 +8,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Check your details before creating your organisation</h1>
+        <h1 class="govuk-heading-l">Check your details before creating your organisation</h1>
     </header>
 
     @using (Html.BeginForm("ConfirmOrganisationDetails", "OrganisationRegistration", new { OrganisationId = Model.OrganisationData.Id }))
@@ -49,10 +49,10 @@
                 <!-- //////////// About-your-organisation /////////////// -->
                 <h2 class="heading-medium" title="About-your-organisation">Organisation details</h2>
                 <div class="form-detail-cont">
-                    <div class="grid-row form-detail">
+                    <div class="govuk-grid-row form-detail">
                     </div>
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Organisation type
                         </span>
                         <span class="column-third">
@@ -73,16 +73,16 @@
 
                     @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
                     {
-                        <div class="grid-row form-detail">
-                            <span class="column-two-thirds font-bold">
+                        <div class="govuk-grid-row form-detail">
+                            <span class="govuk-grid-column-two-thirds font-bold">
                                 Company name
                             </span>
                             <span class="column-third">
                                 @Model.OrganisationData.Name
                             </span>
                         </div>
-                        <div class="grid-row form-detail">
-                            <span class="column-two-thirds font-bold">
+                        <div class="govuk-grid-row form-detail">
+                            <span class="govuk-grid-column-two-thirds font-bold">
                                 Company registration number
                             </span>
                             <span class="column-third">
@@ -91,8 +91,8 @@
                         </div>
                     }
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">Business trading name</span>
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">Business trading name</span>
                         <span class="column-third">@Model.OrganisationData.TradingName</span>
                     </div>
 
@@ -106,10 +106,10 @@
                 <h2 class="heading-medium" title="The-main-contact-for-your-organisation">Main contact</h2>
 
                 <div class="form-detail-cont" id="details-content-2">
-                    <div class="grid-row form-detail">
+                    <div class="govuk-grid-row form-detail">
                     </div>
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Name
                         </span>
                         <span class="column-third">
@@ -117,8 +117,8 @@
                         </span>
                     </div>
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Position
                         </span>
                         <span class="column-third">
@@ -136,10 +136,10 @@
 
 
                 <div class="form-detail-cont" id="details-content-3">
-                    <div class="grid-row form-detail">
+                    <div class="govuk-grid-row form-detail">
                     </div>
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Address
                         </span>
                         <span class="column-third">
@@ -161,8 +161,8 @@
                         </span>
                     </div>
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Phone
                         </span>
                         <span class="column-third">
@@ -170,8 +170,8 @@
                         </span>
                     </div>
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">Email</span>
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">Email</span>
                         <span class="column-third">@Model.OrganisationData.OrganisationAddress.Email</span>
                     </div>
                 </div>
@@ -191,10 +191,10 @@
                 }
 
                 <div class="form-detail-cont" id="details-content-4">
-                    <div class="grid-row form-detail">
+                    <div class="govuk-grid-row form-detail">
                     </div>
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Address
                         </span>
                         <span class="column-third">
@@ -216,8 +216,8 @@
                         </span>
                     </div>
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
                             Phone
                         </span>
                         <span class="column-third">
@@ -225,8 +225,8 @@
                         </span>
                     </div>
 
-                    <div class="grid-row form-detail">
-                        <span class="column-two-thirds font-bold">Email</span>
+                    <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">Email</span>
                         <span class="column-third">@Model.OrganisationData.BusinessAddress.Email</span>
                     </div>
                 </div>
