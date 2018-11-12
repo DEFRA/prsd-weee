@@ -9,7 +9,11 @@ $govuk-compatibility-govuktemplate: true;
 $govuk-compatibility-govukelements: true;*/
 
 
-@import "govuk_frontend/package/all";
+@import "govuk_frontend/package/tools/all";
+@import "govuk_frontend/package/helpers/all";
+@import "govuk_frontend/package/settings/all";
+
+
 
 /*@import "colours";
 @import "conditionals";

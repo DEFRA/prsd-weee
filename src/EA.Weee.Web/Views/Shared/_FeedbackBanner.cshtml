@@ -1,19 +1,21 @@
 ﻿@using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+
 <div class="govuk-phase-banner">
-    <p>
-        <strong class="phase-tag">BETA</strong>
-        <span>
+    <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag ">
+            BETA
+        </strong>
+        <span class="govuk-phase-banner__text">
             This is a new service – your
             @(this.WeeeGds().ActionLinkWithEventTracking("feedback",
-            Url.UrlFor<NewUserController>(c => c.Feedback()),
-            "Feedback",
-            "Banner",
-            "Feedback link",
-            null,
-            true
-            )) will help us to improve it
+                  Url.UrlFor<NewUserController>(c => c.Feedback()),
+                  "Feedback",
+                  "Banner",
+                  "Feedback link",
+                  null,
+                  true
+                  )) will help us to improve it
         </span>
     </p>
 </div>
