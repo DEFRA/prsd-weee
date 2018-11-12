@@ -15,6 +15,7 @@
 
             var tagBuilder = new TagBuilder("a");
             tagBuilder.Attributes.Add("href", url);
+            tagBuilder.Attributes.Add("class", "govuk-footer__link");
             tagBuilder.Attributes.Add("target", "_blank");
             tagBuilder.InnerHtml = span;
 
