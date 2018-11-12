@@ -5,19 +5,20 @@
 // ==========================================================================
 // Override here until updated in the GOV.UK template
 
-#global-header-bar {
+/*#global-header-bar {
     @include govuk-width-container;
 }
 
 #global-header-bar .inner-block {
     padding: 0;
+}*/
+
+.govuk-main-wrapper {
+    padding-top: 0;
 }
-
-
 // ==========================================================================
 // Service Design Manual styles
 // ==========================================================================
-
 @import "service-design-manual/helpers/page-header";
 
 // ==========================================================================
@@ -328,7 +329,7 @@ th.sorted-descending:after {
 p.important {
     @include govuk-font(19, $weight: bold);
     padding-left: 50px;
-    background: url(govuk_toolkit/images/icon-important.png) no-repeat 0% 50%;
+    background: url(govuk_frontend/images/icon-important.png) no-repeat 0% 50%;
     min-height: 35px;
 }
 
