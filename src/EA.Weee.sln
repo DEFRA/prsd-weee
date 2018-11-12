@@ -77,8 +77,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Email.Tests.Unit", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Email.Tests.DataAccess", "EA.Weee.Email.Tests.DataAccess\EA.Weee.Email.Tests.DataAccess.csproj", "{5C05870F-5355-4064-8B46-8F748DC89618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Prsd.Core.Web.Mvc", "..\..\prsd\src\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj", "{212C8803-BFE2-4091-81B0-B25BE91C1C04}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,10 +207,6 @@ Global
 		{5C05870F-5355-4064-8B46-8F748DC89618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C05870F-5355-4064-8B46-8F748DC89618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C05870F-5355-4064-8B46-8F748DC89618}.Release|Any CPU.Build.0 = Release|Any CPU
-		{212C8803-BFE2-4091-81B0-B25BE91C1C04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{212C8803-BFE2-4091-81B0-B25BE91C1C04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{212C8803-BFE2-4091-81B0-B25BE91C1C04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{212C8803-BFE2-4091-81B0-B25BE91C1C04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
