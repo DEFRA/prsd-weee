@@ -32,72 +32,69 @@
 }
 
 @section footer_top {
-    <div class="footer_agencies">
-        @if (ViewBag.ShowLinksToAgencies ?? true)
-        {
-            <h2 class="heading-medium">Contact us</h2>
-            <div class="grid-row">
+<div class="footer_agencies">
+    @if (ViewBag.ShowLinksToAgencies ?? true)
+    {
+        <h2 class="govuk-footer__heading govuk-heading-m govuk-!-margin-bottom-2" style="border-bottom: 0px;">Contact us</h2>
+        <ul class="govuk-footer__list govuk-footer__list--columns-2">
+            <li class="govuk-footer__list-item">
+                <h4 class="govuk-heading-s">England</h4>
+                <p class="govuk-body govuk-body govuk-!-font-size-16">
+                    Environment Agency<br />
+                    Producer Responsibility Regulatory Services<br />
+                    Telephone: 03708 506 506
+                </p>
+            </li>
+            <li class="govuk-footer__list-item">
+                <h4 class="govuk-heading-s">Scotland</h4>
+                <p class="govuk-body govuk-body govuk-!-font-size-16">
+                    Scottish Environment Protection Agency<br />
+                    Producer Compliance and Waste Shipments Unit<br />
+                    Telephone: 01786 457700
+                </p>
+            </li>
+            <li class="govuk-footer__list-item">
+                <h4 class="govuk-heading-s">Northern Ireland</h4>
+                <p class="govuk-body govuk-body govuk-!-font-size-16">
+                    Northern Ireland Environment Agency<br />
+                    Producer Responsibility Unit<br />
+                    Telephone: 02 890 569338
+                </p>
+            </li>
+            <li class="govuk-footer__list-item">
+                <h4 class="govuk-heading-s">Wales</h4>
+                <p class="govuk-body govuk-body govuk-!-font-size-16">
+                    Natural Resources Wales<br />
+                    Producer Responsibility Unit<br />
+                    Telephone: 03000 65 3096
+                </p>
+            </li>
+        </ul>
 
-                <div class="column-half">
-                    <h3 class="heading-small">England</h3>
-                    <p>
-                        Environment Agency<br />
-                        Producer Responsibility Regulatory Services<br />
-                        Telephone: 03708 506 506<br />
-                    </p>
-
-                    <h3 class="heading-small">Scotland</h3>
-                    <p>
-                        Scottish Environment Protection Agency<br />
-                        Producer Compliance and Waste Shipments Unit<br />
-                        Telephone: 01786 457700<br />
-                    </p>
-                </div>
-
-                <div class="column-half">
-                    <h3 class="heading-small">Northern Ireland</h3>
-                    <p>
-                        Northern Ireland Environment Agency<br />
-                        Producer Responsibility Unit<br />
-                        Telephone: 02 890 569338<br />
-                    </p>
-
-                    <h3 class="heading-small">Wales</h3>
-                    <p>
-                        Natural Resources Wales<br />
-                        Producer Responsibility Unit<br />
-                        Telephone: 03000 65 3096<br />
-                    </p>
-                </div>
-
-            </div>
-
-            <hr />
-        }
-    </div>
+    }
+</div>
 }
 
 @section footer_support_links {
-    <ul>
+    <ul class="govuk-footer__inline-list">
         @* Show terms and conditions and privacy policy only on external site *@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
-            <li>
+            <li class="govuk-footer__inline-list-item">
                 @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-                              Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                              "Policies",
-                              "Terms and conditions",
-                              newTab: true))
+                                      Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                                      "Policies",
+                                      "Terms and conditions", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true
+                                      ))
             </li>
-            <li>
+            <li class="govuk-footer__inline-list-item">
                 @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
                               Url.UrlFor<NewUserController>(c => c.Privacy()),
                               "Policies",
-                              "Privacy",
-                              newTab: true))
+                              "Privacy", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true))
             </li>
         }
-        <li>
+        <li class="govuk-footer__inline-list-item">
             @(this.WeeeGds().ActionLinkToNewTab("Cookies", Url.UrlFor<NewUserController>(c => c.Cookies())))
         </li>
     </ul>
