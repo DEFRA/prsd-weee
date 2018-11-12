@@ -71,6 +71,10 @@
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="FakeItEasy, Version=2.3.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.2.3.1\lib\net40\FakeItEasy.dll</HintPath>
       <Private>True</Private>
@@ -200,10 +204,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\prsd\src\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
-      <Project>{212C8803-BFE2-4091-81B0-B25BE91C1C04}</Project>
-      <Name>EA.Prsd.Core.Web.Mvc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
