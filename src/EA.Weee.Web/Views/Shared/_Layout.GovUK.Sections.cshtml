@@ -36,7 +36,7 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <h2 class="heading-medium">Contact us</h2>
-            <div class="grid-row">
+            <div class="govuk-grid-row">
 
                 <div class="column-half">
                     <h3 class="heading-small">England</h3>
@@ -110,24 +110,28 @@
     @Scripts.Render("~/bundles/govuk_frontend")
     @RenderSection("scripts", required: false)
 }
-<main id="content">
-    @Html.Partial("_FeedbackBanner")
-    @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
-    @RenderBody()
-    @if (IsSectionDefined("main_content"))
-    {
-        <div class="grid-row">
-            <section id="main-content" class="column-two-thirds">
-                @RenderSection("main_content", required: false)
-            </section>
-            @if (IsSectionDefined("related_content"))
+
+    <div class="govuk-width-container">
+        @Html.Partial("_FeedbackBanner")
+
+        <main class="govuk-main-wrapper app-main-class" id="main-content" role="main">
+            @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
+            @RenderBody()
+            @if (IsSectionDefined("main_content"))
             {
-                <section class="column-third">
-                    <div class="related">
-                        @RenderSection("related_content", required: false)
-                    </div>
-                </section>
+                <div class="govuk-grid-row">
+                    <section id="main-content" class="govuk-grid-column-two-thirds">
+                        @RenderSection("main_content", required: false)
+                    </section>
+                    @if (IsSectionDefined("related_content"))
+                    {
+                        <section class="column-third">
+                            <div class="related">
+                                @RenderSection("related_content", required: false)
+                            </div>
+                        </section>
+                    }
+                </div>
             }
-        </div>
-    }
-</main>
+        </main>
+    </div>
