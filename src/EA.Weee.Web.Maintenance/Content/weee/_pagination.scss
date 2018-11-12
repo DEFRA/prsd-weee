@@ -1,12 +1,12 @@
 ﻿.previous-next-navigation {
   position: relative;
   overflow: hidden;
-  margin-top: $gutter*2;
-  width: $full-width;
+  margin-top: $govuk-gutter*2;
+  width: 100%;
   padding-left: 0;
 
   li {
-    @include core-27;
+    @include govuk-font(27);
     display: block;
     padding: 0;
     margin: 0;
@@ -18,28 +18,28 @@
       text-align: right;
 
       a {
-        padding: $gutter-half $gutter+5px $gutter-half 0;
+        padding: $govuk-gutter-half $govuk-gutter+5px $govuk-gutter-half 0;
       }
       a:before {
         background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -102px -11px;
         margin: -4px -32px 0 0;
         display: block;
         float: right;
-        width: $gutter;
+        width: $govuk-gutter;
         height: 38px;
         content: " ";
       }
     }
     &.previous {
       a {
-          padding: $gutter-half 0 $gutter-half $gutter+5px;
+          padding: $govuk-gutter-half 0 $govuk-gutter-half $govuk-gutter+5px;
       }
       a:before {
         background: transparent image-url("../content/govuk_toolkit/images/arrow-sprite.png") no-repeat -20px -11px;
         margin: -4px 0 0 -32px;
         display: block;
         float: left;
-        width: $gutter;
+        width: $govuk-gutter;
         height: 38px;
         content: " ";
       }
@@ -51,7 +51,7 @@
 
       span {
         display: block;
-        @include core-14;
+        @include govuk-font(14);
         padding: 6px 0;
       }
       &:focus .page-numbers,
@@ -59,16 +59,16 @@
         text-decoration: underline;
       }
       &:hover {
-        background: $grey-4;
+        background: govuk-colour('grey-4');
       }
       &:active {
-        background: $grey-3;
+        background: govuk-colour('grey-3');
       }
     }
 
-    @include media(tablet) {
+    @include govuk-media-query($from: tablet) {
       .visuallyhidden {
-        @include core-27;
+        @include govuk-font(27);
         display: inline-block;
         position: static;
       }

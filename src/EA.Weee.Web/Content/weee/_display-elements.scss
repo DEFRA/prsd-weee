@@ -1,8 +1,8 @@
-﻿@import "colours";
+﻿@import "../govuk_frontend/package/helpers/colour";
 
 .gov-border {
     margin-top: em(8, 3);
-    border-top: 10px solid $link-colour;
+    border-top: 10px solid $govuk-link-colour;
 
     h2 {
         margin-top: em(3, 5);
@@ -15,7 +15,7 @@
     }
 
     h6 {
-        color: $secondary-text-colour;
+        color: $govuk-secondary-text-colour;
     }
 
     h6:first-child {
@@ -65,16 +65,16 @@
     width: 100%;
     margin: 0 0;
     height: 10px;
-    background-color: $govuk_blue;
+    background-color: govuk-colour("blue");
     margin-bottom: 16px;
 }
 
 #orange {
-    background-color: $orange;
+    background-color: govuk-colour("orange");
 }
 
 #turquoise {
-    background-color: $turquoise;
+    background-color: govuk-colour("turquoise");
 }
 
 .section-bottom {
@@ -86,7 +86,7 @@
     font-weight: normal;
     text-decoration: underline;
     font-size: 16px;
-    color: $grey-1;
+    color: govuk-colour("grey-1");
     margin-right: 5px;
 }
 
@@ -118,7 +118,7 @@
 }
 
 .formatted-block-table-body td:first-child .formatted-block-table-cell {
-    border-left: 10px solid $turquoise;
+    border-left: 10px solid govuk-colour('turquoise');
     font-weight: bold;
 }
 
@@ -134,8 +134,8 @@ h2 + hr{
 }
 
 hr.grey {
-    background-color: $grey-2;
+    background-color: govuk-colour('grey-2');
     border: 0 none;
-    color: $grey-2;
-    height: 1px; 
+    color: govuk-colour("grey-2");
+    height: 1px;
 }

@@ -29,7 +29,7 @@
 // Headings
 // Used with heading-large = 36px
 .heading-with-border {
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
     padding-top: em(45, 36);
 }
 
@@ -40,7 +40,7 @@
 
 // Lists
 .list-bullet {
-    margin-bottom: ($gutter*1.5);
+    margin-bottom: ($govuk-gutter*1.5);
 }
 
 
@@ -51,19 +51,19 @@
     @extend %contain-floats;
     position: relative;
     overflow: hidden;
-    border: 1px solid $grey-2;
-    margin-top: $gutter-half;
-    margin-bottom: $gutter*1.5;
-    padding-top: $gutter;
-    padding-right: $gutter-half;
-    padding-bottom: $gutter-half;
-    padding-left: $gutter-half;
+    border: 1px solid govuk-colour('grey-2');
+    margin-top: $govuk-gutter-half;
+    margin-bottom: $govuk-gutter*1.5;
+    padding-top: $govuk-gutter;
+    padding-right: $govuk-gutter-half;
+    padding-bottom: $govuk-gutter-half;
+    padding-left: $govuk-gutter-half;
 
-    @include media(tablet) {
-        padding-top: $gutter*1.5;
-        padding-right: $gutter;
-        padding-bottom: $gutter;
-        padding-left: $gutter;
+    @include govuk-media-query($from: tablet) {
+        padding-top: $govuk-gutter*1.5;
+        padding-right: $govuk-gutter;
+        padding-bottom: $govuk-gutter;
+        padding-left: $govuk-gutter;
     }
 
     &:before {
@@ -73,24 +73,24 @@
         left: 0;
         padding: em(4) em(15) em(4) em(15);
 
-        @include core-14;
-        background: $grey-2;
+        @include govuk-font(14);
+        background: govuk-colour('grey-2');
         color: white;
     }
     // Blue text for heading sizes
     .highlight {
         font-style: normal;
-        color: $hm-government;
+        color: govuk-colour-organisations('hm-government');
     }
     // Fix grid layout within example boxes for IE7 and below
     // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
     @mixin example-box-column($width) {
-        width: (($site-width - $gutter) * $width) - $gutter;
+        width: (($govuk-page-width - $govuk-gutter) * $width) - $govuk-gutter;
     }
 
     @include ie-lte(7) {
         // Set example box width to 900px (removing left and right padding)
-        $example-box-width: $site-width - ($gutter * 2);
+        $example-box-width: $govuk-page-width - ($govuk-gutter * 2);
         width: $example-box-width;
         // Recalculate grid column widths
         .column-quarter {
@@ -125,7 +125,7 @@
     margin-bottom: 0;
     height: 30px;
 
-    @include media(tablet) {
+    @include govuk-media-query($from: tablet) {
         height: 60px;
     }
 
@@ -147,20 +147,20 @@
     height: 60px;
     @include border-radius(100%);
 
-    @include media(mobile) {
+    @include govuk-media-query($from: mobile) {
         clear: both;
         float: left;
-        margin-right: $gutter-half;
-        margin-bottom: $gutter-half;
+        margin-right: $govuk-gutter-half;
+        margin-bottom: $govuk-gutter-half;
     }
 
-    @include media(tablet) {
-        margin: 0 auto $gutter-half auto;
+    @include govuk-media-query($from: tablet) {
+        margin: 0 auto $govuk-gutter-half auto;
     }
 }
 
 // Sass list for colour palette
-$palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pink", $pink), ("baby-pink", $baby-pink), ("red", $red), ("mellow-red", $mellow-red), ("orange", $orange), ("brown", $brown), ("yellow", $yellow), ("green", $green), ("grass-green", $grass-green), ("turquoise", $turquoise), ("light-blue", $light-blue) );
+$palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-purple')), ("fuschia", govuk-colour('bright-purple')), ("pink", govuk-colour('pink')), ("baby-pink", govuk-colour('light-pink')), ("red", govuk-colour('red')), ("mellow-red", govuk-colour('bright-red')), ("orange", govuk-colour('orange')), ("brown", govuk-colour('brown')), ("yellow", govuk-colour('yellow')), ("green", govuk-colour('green')), ("grass-green", govuk-colour('light-green')), ("turquoise", govuk-colour('turquoise')), ("light-blue", govuk-colour('light-blue')) );
 
 @mixin color-swatches {
     @each $color in $palette {
@@ -177,102 +177,102 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 @include color-swatches;
 
 .swatch-alpha {
-    background-color: $alpha-colour;
+    background-color: govuk-colour('pink');
 }
 
 .swatch-beta {
-    background-color: $beta-colour;
+    background-color: govuk-colour('orange');
 }
 
 .swatch-discovery {
-    background-color: $discovery-colour;
+    background-color: govuk-colour('bright-purple');
 }
 
 .swatch-live {
-    background-color: $live-colour;
+    background-color: govuk-colour('light-green');
 }
 
 .swatch-error {
-    background-color: $error-colour;
+    background-color: govuk-colour('red');
 }
 
 .swatch-focus {
-    background-color: $focus-colour;
+    background-color: govuk-colour('yellow');
 }
 
 .swatch-button-colour {
-    background-color: $button-colour;
+    background-color: $govuk-button-colour;
 }
 
 .swatch-black {
-    background-color: $black;
+    background-color: govuk-colour('black');
 }
 
 .swatch-grey-1 {
-    background-color: $grey-1;
+    background-color: govuk-colour('grey-1');
 }
 
 .swatch-grey-2 {
-    background-color: $grey-2;
+    background-color: govuk-colour('grey-2');
 }
 
 .swatch-grey-3 {
-    background-color: $grey-3;
+    background-color: govuk-colour('grey-3');
 }
 
 .swatch-grey-4 {
-    background-color: $grey-4;
+    background-color: govuk-colour('grey-4');
 }
 
 .swatch-white {
-    background-color: $white;
-    border: 1px solid $grey-3;
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('grey-3');
 }
 
 .swatch-text-colour {
-    background-color: $text-colour;
+    background-color: $govuk-text-colour;
 }
 
 .swatch-text-secondary {
-    background-color: $secondary-text-colour;
+    background-color: $govuk-secondary-text-colour;
 }
 
 .swatch-page-colour {
-    background-color: $page-colour;
-    border: 1px solid $grey-3;
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('grey-3');
 }
 
 .swatch-button-colour {
-    background-color: $button-colour;
+    background-color: $govuk-button-colour;
 }
 
 .swatch-link-colour {
-    background-color: $link-colour;
+    background-color: $govuk-link-colour;
 }
 
 .swatch-link-colour-visited {
-    background-color: $link-visited-colour;
+    background-color: $govuk-link-visited-colour;
 }
 
 .swatch-link-colour-hover {
-    background-color: $link-hover-colour;
+    background-color: $govuk-link-hover-colour;
 }
 
 .swatch-border-colour {
-    background-color: $border-colour;
+    background-color: $govuk-border-colour;
 }
 
 .swatch-panel-colour {
-    background-color: $panel-colour;
+    background-color: govuk-colour('grey-3');
 }
 
 .swatch-highlight-colour {
-    background-color: $highlight-colour;
+    background-color: govuk-colour('grey-4');
 }
 
 // Colour swatch layout
 .swatch-wrapper {
-    @include media(tablet) {
+    @include govuk-media-query($from: tablet) {
         float: left;
         width: 20%;
         text-align: center;
@@ -283,16 +283,16 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     }
 
     ul {
-        padding-bottom: $gutter-half;
+        padding-bottom: $govuk-gutter-half;
 
-        @include media(mobile) {
+        @include govuk-media-query($from: mobile) {
             min-height: 50px;
             padding-top: 10px;
         }
     }
 
     li {
-        @include core-16;
+        @include govuk-font(16);
     }
 
     b {
@@ -366,12 +366,12 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 
 // Alpha
 .phase-banner-alpha {
-    @include phase-banner($state: alpha);
+    //@include phase-banner($state: alpha);
 }
 
 // Beta
 .phase-banner-beta {
-    @include phase-banner($state: beta);
+    //@include phase-banner($state: beta);
 }
 
 // Custom
@@ -380,15 +380,15 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 .hgroup {
     h2.subtitle {
         margin: 0;
-        color: $secondary-text-colour;
-        @include core-24;
+        color: $govuk-secondary-text-colour;
+        @include  govuk-font(24);
     }
 
     margin-bottom: em(5, 3);
 }
 
 .account-link-banner {
-    border-bottom: 1px solid $border-colour;
+    border-bottom: 1px solid $govuk-border-colour;
 
     .account-links {
         clear: both;
@@ -401,7 +401,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
             padding: 3px 12px;
 
             a {
-                @include core-16();
+                @include govuk-font(16);
             }
         }
 
@@ -429,11 +429,11 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 .return-link {
-    margin-top: $gutter;
+    margin-top: $govuk-gutter;
 }
 
 .table-divider {
-    color: $border-colour;
+    color: $govuk-border-colour;
 }
 
 .validation-summary-errors {
@@ -448,11 +448,11 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     background: none;
     border: none;
     padding: 0;
-    color: $govuk-blue;
+    color: govuk-colour('blue');
     font-family: $NTA-Light;
     cursor: pointer;
 
-    @include core-19;
+    @include  govuk-font(19);
 
     text-decoration: underline;
 }
@@ -462,7 +462,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 #link-sign-out {
-    @include core-16;
+    @include govuk-font(16);
 }
 
 .text-area {
@@ -470,7 +470,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 .full-width {
-    width: $full-width;
+    width: 100%
 }
 
 .grid-view:last-child {
@@ -479,7 +479,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 .two-thirds {
-    width: $two-thirds;
+    @extend .govuk-\!-width-two-thirds;
 }
 
 .important-image {
@@ -502,7 +502,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 .error-details {
-    border-left: 3px solid $error-colour;
+    border-left: 3px solid govuk-colour('red');
     padding: 10px 0 10px 10px;
     background-color: #FEF7F7;
 }

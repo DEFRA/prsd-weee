@@ -1,11 +1,11 @@
 ﻿#footer .footer_agencies {
 
-	@include media(desktop) {
-		padding-left: 30px;
-		padding-right: 30px;
-	}
+    @include govuk-media-query(desktop) {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-    @include media($max-width: 640px) {
+    @include govuk-media-query(640px) {
         padding-left: 15px;
         padding-right: 15px;
     }

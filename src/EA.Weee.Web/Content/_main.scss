@@ -1,6 +1,17 @@
-$path: "govuk_toolkit/images/";
 
-@import "colours";
+$path: "govuk_frontend/images/";
+$govuk-assets-path: "govuk_frontend/package/assets/";
+$govuk-images-path: "govuk_frontend/images/";
+$govuk-fonts-path: "govuk_frontend/fonts/";
+/*$govuk-global-styles: true;
+$govuk-compatibility-govukfrontendtoolkit: true;
+$govuk-compatibility-govuktemplate: true;
+$govuk-compatibility-govukelements: true;*/
+
+
+@import "govuk_frontend/package/all";
+
+/*@import "colours";
 @import "conditionals";
 @import "device-pixels";
 // @import "font_stack";
@@ -31,7 +42,7 @@ $path: "govuk_toolkit/images/";
 @import "govuk_elements/icons";
 
 @import "govuk_elements/components";
-@import "govuk_elements/breadcrumbs";
+@import "govuk_elements/breadcrumbs";*/
 
 //CUSTOM WEEE AND OVERRIDES
 
@@ -62,4 +73,10 @@ $path: "govuk_toolkit/images/";
 @import "jquery-autocomplete";
 
 @import "weee/pagination";
+
+@import "weee/button";
+
+@import "weee/css3";
+
+@import "weee/font_stack";
 
