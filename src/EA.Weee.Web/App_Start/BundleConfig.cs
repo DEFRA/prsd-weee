@@ -25,15 +25,20 @@
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/custom-validation.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
-                      "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_toolkit/govuk/selection-buttons.js",
-                      "~/Scripts/govuk_toolkit/govuk/show-hide-content.js",
-                      "~/Scripts/govuk_toolkit/govuk/shim-links-with-button-role.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
+            //          "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
+            //          "~/Scripts/govuk_toolkit/govuk/selection-buttons.js",
+            //          "~/Scripts/govuk_toolkit/govuk/show-hide-content.js",
+            //          "~/Scripts/govuk_toolkit/govuk/shim-links-with-button-role.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
-                      "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_elements/application.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
+            //          "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
+            //          "~/Scripts/govuk_elements/application.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
+                      "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.js",
+                      "~/Scripts/govuk_frontend/html5shiv.js",
+                        "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                       "~/Scripts/vendor/modernizr.custom.77028.js",
@@ -41,7 +46,7 @@
                       "~/Scripts/weee-application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend_script").Include(
-          "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.css"));
+                "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
@@ -55,13 +60,13 @@
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                       "~/Content/weee-page.css"));
 
-            bundles.Add(new StyleBundle("~/Content/govuk_frontend_css").Include(
-                "~/Content/govuk_frontend/images/govuk-frontend-2.3.0.min.css",
-                "~/Content/govuk_frontend/images/govuk-frontend-ie8-2.3.0.min.css"));
+            //bundles.Add(new StyleBundle("~/Content/govuk_frontend_css").Include(
+            //    "~/Content/govuk_frontend/images/govuk-frontend-2.3.0.min.css",
+            //    "~/Content/govuk_frontend/images/govuk-frontend-ie8-2.3.0.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

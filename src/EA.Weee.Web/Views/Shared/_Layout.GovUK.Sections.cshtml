@@ -8,9 +8,9 @@
 
 @* Implement sections here *@
 
-@section top_of_page {
+@*@section top_of_page {
 
-}
+    }*@
 
 @section head {
     @Html.Partial("_WeeeHead")
@@ -25,6 +25,7 @@
 @section proposition_header {
     @Html.Partial("_WeeeNavigation")
 }
+
 
 @section after_header {
 
@@ -83,17 +84,17 @@
         {
             <li>
                 @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-                            Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                            "Policies",
-                            "Terms and conditions",
-                            newTab: true))
+                              Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                              "Policies",
+                              "Terms and conditions",
+                              newTab: true))
             </li>
             <li>
                 @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
-                            Url.UrlFor<NewUserController>(c => c.Privacy()),
-                            "Policies",
-                            "Privacy",
-                            newTab: true))
+                              Url.UrlFor<NewUserController>(c => c.Privacy()),
+                              "Policies",
+                              "Privacy",
+                              newTab: true))
             </li>
         }
         <li>
@@ -105,11 +106,10 @@
 @section body_end {
     <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
     <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
-    @Scripts.Render("~/bundles/govuk_weee")
-    @Scripts.Render("~/bundles/govuk_frontend_script")
+    @*@Scripts.Render("~/bundles/govuk_weee")*@
+    @Scripts.Render("~/bundles/govuk_frontend")
     @RenderSection("scripts", required: false)
 }
-
 <main id="content">
     @Html.Partial("_FeedbackBanner")
     @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
