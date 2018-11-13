@@ -43,7 +43,7 @@
             </p>
         }
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -52,6 +52,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

@@ -20,7 +20,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
             @this.WeeeGds().RadioButtonsFor(
                  m => m.SelectedOrganisationId,
                  Model.Organisations,

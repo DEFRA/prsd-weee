@@ -70,7 +70,7 @@
                     }))
                 {
                     @Html.AntiForgeryToken()
-                    @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+                    @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "govuk-button", style = "margin-top: 20px" }, true))
                     <p>
                         @Html.ActionLink("Perform another activity", "Index", "Home")
                     </p>
@@ -79,7 +79,7 @@
             else
             {
                 <p>
-                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "govuk-button" })
                 </p>
             }
 
@@ -99,7 +99,7 @@
                 There are no pending charges.
             </p>
             <p>
-                @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "govuk-button" })
             </p>
         }
 
@@ -126,7 +126,7 @@
         </table>
         <br />
         <p>
-            @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" })
+            @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "govuk-button" })
         </p>
     </div>
 }

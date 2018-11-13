@@ -19,7 +19,7 @@
 
         <p>Your results will be provided as a CSV file download.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })

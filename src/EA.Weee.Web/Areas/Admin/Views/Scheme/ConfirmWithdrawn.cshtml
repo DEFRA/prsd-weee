@@ -17,11 +17,11 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <p>Once withdrawn, PCS users will no longer be able to perform PCS activities. Please note that this change, once saved, cannot be undone.</p>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmWithdrawnOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmWithdrawnOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -30,6 +30,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

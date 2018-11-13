@@ -23,7 +23,7 @@
         @Html.HiddenFor(m => m.Username)
         @Html.HiddenFor(m => m.UserStatus)
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <table>
                 <caption><span class="hidden-for-screen-reader">User Details</span></caption>
                 <thead>
@@ -45,7 +45,7 @@
             </table>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,

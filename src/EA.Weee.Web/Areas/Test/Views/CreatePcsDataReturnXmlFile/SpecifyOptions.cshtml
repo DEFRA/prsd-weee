@@ -30,31 +30,31 @@
 
         @Html.HiddenFor(model => model.OrganisationID);
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
             @Html.Gds().LabelFor(model => model.ComplianceYear)
             @Html.Gds().ValidationMessageFor(mode => Model.ComplianceYear)
             @Html.Gds().TextBoxFor(model => model.ComplianceYear)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.Quarter)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.Quarter)>
             @Html.Gds().LabelFor(model => model.Quarter)
             @Html.Gds().ValidationMessageFor(mode => Model.Quarter)
             @Html.Gds().DropDownListFor(model => model.Quarter, quarterSelectListItems)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAatfs)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAatfs)>
             @Html.Gds().LabelFor(model => model.NumberOfAatfs)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfAatfs)
             @Html.Gds().TextBoxFor(model => model.NumberOfAatfs)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAes)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAes)>
             @Html.Gds().LabelFor(model => model.NumberOfAes)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfAes)
             @Html.Gds().TextBoxFor(model => model.NumberOfAes)
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.AllProducers)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AllProducers)">
             @Html.Gds().ValidationMessageFor(m => m.AllProducers)
             @Html.Gds().LabelFor(model => model.AllProducers)
             <label class="block-label" for="PrivacyPolicy">
@@ -63,13 +63,13 @@
             </label>
         </div>
 
-        <div id="numberOfProducersDiv" class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfProducers)>
+        <div id="numberOfProducersDiv" class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfProducers)>
             @Html.Gds().LabelFor(model => model.NumberOfProducers)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfProducers)
             @Html.Gds().TextBoxFor(model => model.NumberOfProducers)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
 
         @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsDataReturnXmlFile", null, null)
     }

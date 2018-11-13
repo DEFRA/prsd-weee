@@ -17,7 +17,7 @@
 </p>
 @if (Model.Results.Any())
 {
-    <div class="form-group">
+    <div class="govuk-form-group">
         <table id="submissions">
             <caption><span class="visuallyhidden">Submissions</span></caption>
             <thead>
@@ -108,11 +108,11 @@
 }
 else
 {
-    <div class="form-group">
+    <div class="govuk-form-group">
         <p>There are no submissions to view.</p>
     </div>
 }
 
-<div class="form-group">
-    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @class = "button" })
+<div class="govuk-form-group">
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @class = "govuk-button" })
 </div>

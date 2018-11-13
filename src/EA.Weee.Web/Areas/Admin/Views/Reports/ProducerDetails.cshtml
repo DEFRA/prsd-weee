@@ -21,7 +21,7 @@
 
         @Html.Partial("_ReportSearchFilters")
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
             <fieldset>
                 <label class="block-label" for="IncludeBrandNames">
                     @Html.CheckBoxFor(m => m.IncludeBrandNames, new { @id = "IncludeBrandNames" })

@@ -1,8 +1,8 @@
 
-$path: "govuk_frontend/images/";
-$govuk-assets-path: "govuk_frontend/package/assets/";
-$govuk-images-path: "govuk_frontend/images/";
-$govuk-fonts-path: "govuk_frontend/fonts/";
+
+$govuk-assets-path: "/content/govuk_frontend/assets/";
+$govuk-images-path: "/content/govuk_frontend/assets/images/";
+$govuk-fonts-path: "/content/govuk_frontend/assets/fonts/";
 /*$govuk-global-styles: true;
 $govuk-compatibility-govukfrontendtoolkit: true;
 $govuk-compatibility-govuktemplate: true;
@@ -12,9 +12,8 @@ $govuk-compatibility-govukelements: true;*/
 @import "govuk_frontend/package/tools/all";
 @import "govuk_frontend/package/helpers/all";
 @import "govuk_frontend/package/settings/all";
-
-
-
+@import "govuk_frontend/package/components/footer/footer";
+@import "govuk_frontend/package/core/all";
 /*@import "colours";
 @import "conditionals";
 @import "device-pixels";
@@ -47,9 +46,7 @@ $govuk-compatibility-govukelements: true;*/
 
 @import "govuk_elements/components";
 @import "govuk_elements/breadcrumbs";*/
-
 //CUSTOM WEEE AND OVERRIDES
-
 @import "weee/errors";
 
 @import "weee/display-elements";

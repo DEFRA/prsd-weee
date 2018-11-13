@@ -17,21 +17,21 @@
 
         @Html.HiddenFor(m => m.ReturnUrl)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
             @Html.Gds().TextBoxFor(m => m.Email, new { autocomplete = "off" })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
             @Html.Gds().PasswordFor(m => m.Password)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 
-    <p>
+    <p class="govuk-body">
         @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
     </p>
     <p>

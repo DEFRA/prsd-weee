@@ -98,7 +98,7 @@
             <p class="important">
                 Your XML file must use the version 3.07 schema.
             </p>
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
