@@ -29,7 +29,7 @@
 
         <p>If your file does not download automatically, use the button below.</p>
 
-        @(this.WeeeGds().Submit("Download file", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Download file"))
         
         @Html.ActionLink("Create another file", "SpecifyOptions", "CreatePcsDataReturnXmlFile", new { OrganisationID = Model.OrganisationID }, null)
 

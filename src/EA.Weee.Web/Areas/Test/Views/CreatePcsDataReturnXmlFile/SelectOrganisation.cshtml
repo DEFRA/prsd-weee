@@ -27,13 +27,13 @@
 
         @Html.ValidationSummary()
 
-        <div class="form-group" id="companyName">
+        <div class="govuk-form-group" id="companyName">
             @Html.Gds().LabelFor(m => m.OrganisationName)
             @Html.Gds().ValidationMessageFor(m => m.OrganisationName)
             @Html.Gds().TextBoxFor(m => m.OrganisationName)
         </div>
 
-        @(this.WeeeGds().Submit("Search", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Search"))
     }
 
     @if (Model.MatchingOrganisations != null)

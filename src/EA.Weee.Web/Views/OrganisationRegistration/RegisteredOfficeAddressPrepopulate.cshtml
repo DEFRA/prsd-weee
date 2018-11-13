@@ -34,7 +34,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ContactDetailsSameAs">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ContactDetailsSameAs">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -43,6 +43,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

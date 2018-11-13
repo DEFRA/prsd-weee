@@ -10,7 +10,7 @@
     @switch (Model.Status)
     {
         case UserStatus.Pending:
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <header class="hgroup">
                     <div>
                         <h1 class="govuk-heading-l">Authorisation pending</h1>
@@ -21,7 +21,7 @@
             break;
 
         case UserStatus.Inactive:
-        <div class="form-group">
+        <div class="govuk-form-group">
             <header class="hgroup">
                 <div>
                     <h1 class="govuk-heading-l">Account Inactive</h1>
@@ -32,7 +32,7 @@
             break;
             
         case UserStatus.Rejected:
-        <div class="form-group">
+        <div class="govuk-form-group">
             <header class="hgroup">
                 <div>
                     <h1 class="govuk-heading-l">Authorisation rejected</h1>
@@ -46,6 +46,6 @@
     @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutForm" }))
     {
         @Html.AntiForgeryToken()
-        @(this.WeeeGds().Submit("Sign out", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Sign out"))
     }
 }

@@ -21,19 +21,19 @@
 
         @Html.HiddenFor(m => m.Contact.RowVersion)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
             @Html.Gds().LabelFor(m => m.Contact.FirstName)
             @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
             @Html.Gds().LabelFor(m => m.Contact.LastName)
             @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
             @Html.Gds().LabelFor(m => m.Contact.Position)
             @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @maxlength = CommonMaxFieldLengths.Position })
@@ -41,7 +41,7 @@
 
         @Html.EditorFor(m => m.OrganisationAddress)
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <button class="button">Save and Continue</button>
         </div>
         <p>

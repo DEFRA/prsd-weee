@@ -19,23 +19,23 @@
             <p>Enter the name of your registered company. For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
             @Html.Gds().ValidationMessageFor(m => m.CompanyName)
             @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
             @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
             @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
             @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
             {
                 <p>
@@ -47,7 +47,7 @@
             }
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <button class="button" type="submit">Continue</button>
         </div>
     }

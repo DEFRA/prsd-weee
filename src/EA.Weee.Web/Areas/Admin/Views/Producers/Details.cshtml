@@ -13,7 +13,7 @@
     </header>  
 
     <p>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             <span class="font-bold">@Html.LabelFor(m => m.SelectedYear):</span>
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             <span class="text-margin">@Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })</span>
@@ -23,7 +23,7 @@
         @Html.HiddenFor(m => m.RegistrationNumber)
     </p>
 
-    <div class="form-group" id="detailsResults"></div>
+    <div class="govuk-form-group" id="detailsResults"></div>
 
     <br />
     <p>
@@ -33,7 +33,7 @@
         @Html.ActionLink("Download EEE data changes (CSV)", "DownloadProducerEeeDataHistoryCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
     </p>
     <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
     </p>
     <p>
         <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>

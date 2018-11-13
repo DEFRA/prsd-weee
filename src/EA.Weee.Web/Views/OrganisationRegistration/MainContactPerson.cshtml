@@ -19,23 +19,23 @@
             <p>We're looking for the details of your nominated day-to-day contact for the producer compliance scheme (PCS).</p>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
             @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
             @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Position)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Position)">
             @Html.Gds().LabelFor(m => m.Position)
             @Html.Gds().ValidationMessageFor(m => m.Position)
             @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = CommonMaxFieldLengths.Position })
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <button class="button" type="submit">Continue</button>
         </div>
     }

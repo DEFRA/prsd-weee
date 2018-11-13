@@ -17,7 +17,7 @@
         <p>Filter the report to download entries that match your criteria.</p>
         <p>All data is reported in tonnes (t) to three decimal places.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })

@@ -11,14 +11,14 @@
             (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
     </script>*@
 
-    <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/images/favicon.ico")" type="image/x-icon" />
+    <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="" @Url.Content("~/Content/govuk_frontend/images/favicon.ico") type="image/x-icon" />
-    <link rel="mask-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-mask-icon.svg")" color="#0b0c0c">
-    <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-180x180.png")">
-    <link rel="apple-touch-icon" sizes="167x167" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-167x167.png")">
-    <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-152x152.png")">
-    <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon.png")">
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="" @Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico") type="image/x-icon" />
+    <link rel="mask-icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-mask-icon.svg")" color="#0b0c0c">
+    <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-180x180.png")">
+    <link rel="apple-touch-icon" sizes="167x167" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-167x167.png")">
+    <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-152x152.png")">
+    <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon.png")">
 
     <!--[if !IE 8]><!-->
     <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-2.3.0.min.css")" rel="stylesheet" />
@@ -30,7 +30,7 @@
         <script src="@Url.Content("~/Scripts/govuk_frontend/html5shiv.js")"></script>
     <![endif]-->
 
-    <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/images/opengraph-image.png")" />
+    <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/assets/images/opengraph-image.png")" />
     @RenderSection("head", required: false)
 </head>
 
@@ -101,7 +101,7 @@
                     </span>
                 </div>
                 <div class="govuk-footer__meta-item">
-                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+                    <a class="footer-logo govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
                 </div>
             </div>
         </div>

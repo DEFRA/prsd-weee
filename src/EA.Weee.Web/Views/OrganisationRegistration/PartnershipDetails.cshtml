@@ -15,7 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
             {
                 <p>
@@ -24,13 +24,13 @@
             }
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <button class="button" type="submit">Continue</button>
         </div>
     }

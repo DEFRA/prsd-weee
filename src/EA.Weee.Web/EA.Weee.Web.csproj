@@ -71,7 +71,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
@@ -83,8 +84,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -283,22 +284,22 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Content\govuk_frontend\assets\images\favicon.ico" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-152x152.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-167x167.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-180x180.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-crest-2x.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-crest.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-logotype-crown.png" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-mask-icon.svg" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-opengraph-image.png" />
+    <Content Include="Content\govuk_frontend\assets\images\icon-arrow-left.png" />
+    <Content Include="Content\govuk_frontend\assets\images\icon-important.png" />
+    <Content Include="Content\govuk_frontend\assets\images\icon-pointer-2x.png" />
+    <Content Include="Content\govuk_frontend\assets\images\icon-pointer.png" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.3.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.3.0.min.css" />
-    <Content Include="Content\govuk_frontend\images\favicon.ico" />
-    <Content Include="Content\govuk_frontend\images\govuk-apple-touch-icon-152x152.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-apple-touch-icon-167x167.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-apple-touch-icon-180x180.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-apple-touch-icon.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-crest-2x.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-crest.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-logotype-crown.png" />
-    <Content Include="Content\govuk_frontend\images\govuk-mask-icon.svg" />
-    <Content Include="Content\govuk_frontend\images\govuk-opengraph-image.png" />
-    <Content Include="Content\govuk_frontend\images\icon-arrow-left.png" />
-    <Content Include="Content\govuk_frontend\images\icon-important.png" />
-    <Content Include="Content\govuk_frontend\images\icon-pointer-2x.png" />
-    <Content Include="Content\govuk_frontend\images\icon-pointer.png" />
     <Content Include="Content\govuk_frontend\package\all.js" />
     <Content Include="Content\govuk_frontend\package\assets\images\favicon.ico" />
     <Content Include="Content\govuk_frontend\package\assets\images\govuk-apple-touch-icon-152x152.png" />
@@ -602,18 +603,18 @@
     <Content Include="Content\govuk_frontend\package\assets\fonts\bold-a2452cb66f-v1.woff2" />
     <Content Include="Content\govuk_frontend\package\all.scss" />
     <Content Include="Content\govuk_frontend\package\all-ie8.scss" />
-    <Content Include="Content\govuk_frontend\fonts\light-tabular-851b10ccdd-v1.woff2" />
-    <Content Include="Content\govuk_frontend\fonts\light-tabular-62cc6f0a28-v1.woff" />
-    <Content Include="Content\govuk_frontend\fonts\light-tabular-498ea8ffe2-v1.eot" />
-    <Content Include="Content\govuk_frontend\fonts\light-f38ad40456-v1.woff2" />
-    <Content Include="Content\govuk_frontend\fonts\light-458f8ea81c-v1.woff" />
-    <Content Include="Content\govuk_frontend\fonts\light-2c037cf7e1-v1.eot" />
-    <Content Include="Content\govuk_frontend\fonts\bold-tabular-b89238d840-v1.woff2" />
-    <Content Include="Content\govuk_frontend\fonts\bold-tabular-784c21afb8-v1.woff" />
-    <Content Include="Content\govuk_frontend\fonts\bold-tabular-357fdfbcc3-v1.eot" />
-    <Content Include="Content\govuk_frontend\fonts\bold-fb2676462a-v1.eot" />
-    <Content Include="Content\govuk_frontend\fonts\bold-f38c792ac2-v1.woff" />
-    <Content Include="Content\govuk_frontend\fonts\bold-a2452cb66f-v1.woff2" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-851b10ccdd-v1.woff2" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-62cc6f0a28-v1.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-498ea8ffe2-v1.eot" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-f38ad40456-v1.woff2" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-458f8ea81c-v1.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\light-2c037cf7e1-v1.eot" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-b89238d840-v1.woff2" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-784c21afb8-v1.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-357fdfbcc3-v1.eot" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-2.3.0.min.js" />

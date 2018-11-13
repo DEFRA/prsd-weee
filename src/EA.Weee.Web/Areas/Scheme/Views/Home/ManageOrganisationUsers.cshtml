@@ -16,7 +16,7 @@
        @Html.Gds().ValidationSummary()
        @Html.AntiForgeryToken()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
             @this.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
                 Model.OrganisationUsers,
                 r => r.Value,
@@ -25,7 +25,7 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
     <div>
          @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")

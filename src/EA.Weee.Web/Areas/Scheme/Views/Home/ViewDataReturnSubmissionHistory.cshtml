@@ -17,7 +17,7 @@
 </p>
 @if (Model.Results.Any())
 {
-    <div class="form-group">
+    <div class="govuk-form-group">
         <table id="submissions">
             <caption><span class="visuallyhidden">Data returns submission history</span></caption>
             <thead>
@@ -121,12 +121,12 @@
 }
 else
 {
-    <div class="form-group">
+    <div class="govuk-form-group">
         <p>There are no submissions to view.</p>
     </div>
 }
 <p>
-    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "govuk-button" })
 </p>
 
 

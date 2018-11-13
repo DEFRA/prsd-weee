@@ -17,52 +17,58 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelFor(m => m.Name)
             @Html.Gds().ValidationMessageFor(m => m.Name)
             @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Surname)">
             @Html.Gds().LabelFor(m => m.Surname)
             @Html.Gds().ValidationMessageFor(m => m.Surname)
             @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
             @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
             <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
             @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
             @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
-            <fieldset>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
+            <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
                     @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", 
-                        Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                        "Policies", 
-                        "Terms and conditions",
-                        null, 
-                        null, 
-                        true))
+                          Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                          "Policies", 
+                          "Terms and conditions",
+                          null, 
+                          null, 
+                          true))
                 </p>
-                <label class="block-label" for="TermsAndConditions">
-                    @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })
-                    Accept terms and conditions of use
-                </label>
+                
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input name="TermsAndConditions" class="govuk-checkboxes__input" id="TermsAndConditions" type="checkbox" value="true">   
+                        <label class="govuk-label govuk-checkboxes__label" for="TermsAndConditions">
+                            Accept terms and conditions of use
+                        </label>
+                        <input name="TermsAndConditions" type="hidden" value="false">
+                    </div>
+                </div>
             </fieldset>
         </div>
 
-        @(this.WeeeGds().Submit("Create a user account", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Create a user account"))
 
         <p>
             @Html.ActionLink("Sign in to your account", "SignIn", "Account")

@@ -21,7 +21,7 @@
         <p>We will send an access request to the administrator of @Model.OrganisationName.</p>
         <p>You will not be able to perform activities on behalf of this organisation until your request is authorised.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -30,6 +30,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

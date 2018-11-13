@@ -9,7 +9,7 @@
     @switch (Model.Status)
     {
         case SchemeStatus.Pending:
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <header class="hgroup">
                     <div>
                         <h1 class="govuk-heading-l">Your organisation is awaiting authorisation</h1>
@@ -22,7 +22,7 @@
             break;
 
         case SchemeStatus.Rejected:
-        <div class="form-group">
+        <div class="govuk-form-group">
             <header class="hgroup">
                 <div>
                     <h1 class="govuk-heading-l">Your organisation's authorisation has been rejected</h1>
@@ -35,7 +35,7 @@
             break;
 
         case SchemeStatus.Withdrawn:
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <header class="hgroup">
                     <div>
                         <h1 class="govuk-heading-l">Your organisation's approval has been withdrawn</h1>
@@ -48,7 +48,7 @@
             break;
     }
     <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "govuk-button" })
     </p>
     @if (Model.ShowLinkToSelectOrganisation)
     {

@@ -28,33 +28,33 @@
 
     if (Model.IsChangeableStatus)
     {
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
         @Html.Gds().ValidationMessageFor(m => m.SchemeName)
         @Html.Gds().TextBoxFor(m => m.SchemeName, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
     </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
         @Html.Gds().LabelFor(m => m.ApprovalNumber)
         @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
         @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
     </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
         @Html.Gds().LabelFor(m => m.IbisCustomerReference, "(optional for SEPA, NIEA, NRW)")
         @Html.Gds().ValidationMessageFor(m => m.IbisCustomerReference)
         @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @maxlength = EnvironmentAgencyMaxFieldLengths.IbisBillingReference })
     </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.ObligationType)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ObligationType)">
         @Html.Gds().LabelFor(m => m.ObligationType)
         @Html.Gds().ValidationMessageFor(m => m.ObligationType)
         @Html.Gds().DropDownListFor(m => m.ObligationType, Model.ObligationTypeSelectList, string.Empty, new { autocomplete = "false" })
     </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
         @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
         @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
         @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
     </div>
     }
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Status)">
         @Html.Gds().LabelFor(m => m.Status)
         @Html.Gds().ValidationMessageFor(m => m.Status)
         @if (!Model.IsChangeableStatus)
@@ -72,7 +72,7 @@
 
     if (Model.IsChangeableStatus)
     {
-        @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Save and Continue"))
     }
     <p>
         <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null)))">Back</a>
