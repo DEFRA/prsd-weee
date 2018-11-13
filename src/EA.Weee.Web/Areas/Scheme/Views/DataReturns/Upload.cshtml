@@ -103,7 +103,7 @@
             <p class="important">
                 Your XML file must use the version 3.35 schema.
             </p>
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
@@ -111,7 +111,7 @@
 
         </div>
 
-        @(this.WeeeGds().Submit("Check file for errors", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+        @(this.WeeeGds().Submit("Check file for errors", new { id = "submitButton", @class = "govuk-button", style = "margin-top: 20px" }, true))
 
         <p>
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })

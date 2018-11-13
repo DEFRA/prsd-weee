@@ -17,11 +17,11 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <p>Please note that this change, once saved, cannot be undone.</p>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRejectionOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRejectionOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -30,6 +30,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

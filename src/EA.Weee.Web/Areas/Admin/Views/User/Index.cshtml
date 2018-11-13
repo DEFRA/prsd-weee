@@ -153,7 +153,7 @@
         <p>Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
     }
 
-    @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    @(this.WeeeGds().Submit("Continue"))
 
     <p>
         <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>

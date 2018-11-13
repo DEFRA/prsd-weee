@@ -25,7 +25,7 @@
         @Html.HiddenFor(m => m.IsCompetentAuthorityUser)
         @Html.HiddenFor(m => m.CanManageStatus)
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <table title="This table contains the organisation user details.">
                 <tbody>
                     <tr>
@@ -40,13 +40,13 @@
             </table>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
             @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
             @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
@@ -56,7 +56,7 @@
         {
             if (Model.IsCompetentAuthorityUser)
             {
-                <div class="form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
                     @Html.Gds().LabelFor(m => m.Role)
                     @Html.Gds().ValidationMessageFor(m => m.Role)
                     @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { autocomplete = "false" })
@@ -67,7 +67,7 @@
                 @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
             }
 
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
                 @Html.Gds().LabelFor(m => m.UserStatus)
                 @Html.Gds().ValidationMessageFor(m => m.UserStatus)
                 @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { autocomplete = "false" })
@@ -79,7 +79,7 @@
             @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
         }
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <button class="button" type="submit">Save and continue</button>
         </div>
         <p>

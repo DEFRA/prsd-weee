@@ -251,7 +251,7 @@
 
         @Html.Partial("_PrivacyPolicy");
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
             <label class="block-label" for="PrivacyPolicy">
                 @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
@@ -259,7 +259,7 @@
             </label>
         </div>
 
-        @(this.WeeeGds().Submit("Create organisation", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Create organisation"))
     }
 }
 

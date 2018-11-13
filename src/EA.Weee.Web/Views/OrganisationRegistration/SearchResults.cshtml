@@ -29,7 +29,7 @@
                 <li>you entered something other than the organisation name</li>
             </ul>
 
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
                 @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedOrganisationId,
@@ -40,7 +40,7 @@
                     RadioButtonLayout.Stacked)
             </div>
 
-            @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+            @(this.WeeeGds().Submit("Continue"))
         }
 
         <p>
@@ -68,7 +68,7 @@
         </ul>
         
         <p>
-            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
         </p>
         <p>
             @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")

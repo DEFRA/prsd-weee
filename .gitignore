@@ -10,6 +10,7 @@ error**.xml
 *.user
 *.userosscache
 *.sln.docstates
+*.nugetreferenceswitcher
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

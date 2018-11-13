@@ -17,7 +17,7 @@
     
     @Html.Gds().ValidationSummary()
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         @using (this.WeeeGds().ProgressiveDisclosure("What is a registered company partnership or sole trader?"))
         {
             <p>
@@ -41,7 +41,7 @@
         }
     </div>
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
         @this.WeeeGds().RadioButtonsFor(
             m => m.SelectedValue,
             Model.PossibleValues,
@@ -50,7 +50,7 @@
             RadioButtonLayout.Stacked)
     </div>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         <button class="button" type="submit">Continue</button>
     </div>
 }

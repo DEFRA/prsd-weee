@@ -110,24 +110,27 @@
     @Scripts.Render("~/bundles/govuk_frontend")
     @RenderSection("scripts", required: false)
 }
-<main id="content">
+
+<div class="govuk-width-container">
     @Html.Partial("_FeedbackBanner")
-    @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
-    @RenderBody()
-    @if (IsSectionDefined("main_content"))
-    {
-    <div class="grid-row">
-        <section id="main-content" class="column-two-thirds">
-            @RenderSection("main_content", required: false)
-        </section>
-        @if (IsSectionDefined("related_content"))
+    <main class="govuk-main-wrapper app-main-class" id="content" role="main">
+        @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
+        @RenderBody()
+        @if (IsSectionDefined("main_content"))
         {
-        <section class="column-third">
-            <div class="related">
-                @RenderSection("related_content", required: false)
+            <div class="govuk-grid-row">
+                <section id="main-content" class="govuk-grid-column-two-thirds">
+                    @RenderSection("main_content", required: false)
+                </section>
+                @if (IsSectionDefined("related_content"))
+                {
+                    <section class="govuk-grid-column-one-third">
+                        <div class="related">
+                            @RenderSection("related_content", required: false)
+                        </div>
+                    </section>
+                }
             </div>
-        </section>
         }
-    </div>
-    }
-</main>
+    </main>
+</div>
