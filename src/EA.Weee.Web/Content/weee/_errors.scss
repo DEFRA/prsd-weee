@@ -1,5 +1,9 @@
 ﻿@import "../govuk_frontend/package/helpers/colour";
 
+.input-validation-error {
+    @extend .govuk-input--error;
+}
+
 .form-group-error {
     border-left: 3px solid $govuk-error-colour;
     padding: 10px 0 10px 10px;
