@@ -19,7 +19,7 @@
 {
     <div class="govuk-form-group">
         <table id="submissions">
-            <caption><span class="visuallyhidden">Submissions</span></caption>
+            <caption><span class="govuk-visually-hidden">Submissions</span></caption>
             <thead>
                 <tr>
                     @switch (Model.OrderBy)
@@ -27,14 +27,14 @@
                         case SubmissionsHistoryOrderBy.ComplianceYearAscending:
                             <th class="sorted-ascending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
-                                <span class="visuallyhidden">Sorted by earliest compliance year.</span>
+                                <span class="govuk-visually-hidden">Sorted by earliest compliance year.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.ComplianceYearDescending:
                             <th class="sorted-descending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
-                                <span class="visuallyhidden">Sorted by most recent compliance year.</span>
+                                <span class="govuk-visually-hidden">Sorted by most recent compliance year.</span>
                             </th>
                             break;
 
@@ -50,14 +50,14 @@
                         case SubmissionsHistoryOrderBy.SubmissionDateAscending:
                             <th class="sorted-ascending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
-                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                                <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.SubmissionDateDescending:
                             <th class="sorted-descending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
-                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                                <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
                             break;
 

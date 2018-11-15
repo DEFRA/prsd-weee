@@ -67,7 +67,7 @@
     }
 
     @include govuk-media-query($from: tablet) {
-      .visuallyhidden {
+      .govuk-visually-hidden {
         @include govuk-font(27);
         display: inline-block;
         position: static;
