@@ -26,7 +26,7 @@
             break;
             
         case 2:
-            columnClass = "column-half";
+            columnClass = "column-one-half";
             break;
     }
 }
@@ -39,7 +39,7 @@
     {
     <div class="@columnClass">
         <div class="breadcrumb-title-display font-xsmall">
-            <ul>
+            <ul class="govuk-breadcrumbs__list">
                 @if (Model.Breadcrumb.ExternalOrganisation != null)
                 {
                     <li>
@@ -107,23 +107,27 @@
     
     @if (showIdentity)
     {
-    <div class="@columnClass">
-        <div class="username-title-display font-xsmall">
-            <ul>
-                <li>
-                    <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
-                </li>
-                <li>
-                    @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
+        <div class="@columnClass">
+           
 
-                        <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
-                    }
-                </li>
-            </ul>
+            <div class="username-title-display font-xsmall ">
+             
+                <ul class="govuk-breadcrumbs__list">
+                    <li>
+                        <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
+                    </li>
+                    <li>
+                        @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input class="link-submit" id="link-sign-out" type="submit" value="Sign out" />
+                        }
+                    </li>
+                </ul>
+             
+            </div>
         </div>
-    </div>
     }
     
 </div>
