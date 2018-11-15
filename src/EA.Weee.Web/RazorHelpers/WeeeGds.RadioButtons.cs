@@ -17,6 +17,9 @@
             RadioButtonLayout layout)
         {
             string labelsHtml = string.Empty;
+
+            var outerDiv = "<div class=\"govuk-radios\">{0}</div>";
+
             foreach (T possibleValue in possibleValues)
             {
                 MvcHtmlString name = HtmlHelper.NameFor(expression);
@@ -26,11 +29,15 @@
                 
                 string id = string.Format("{0}-{1}", name, key);
 
-                string inputHtml = string.Format("<input id=\"{0}\" type=\"radio\" name=\"{1}\" value=\"{2}\">", id, name, key);
+                var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>";
 
-                string labelHtml = string.Format("<label class=\"block-label\" for=\"{0}\">{1}{2}</label>", id, inputHtml, value);
+                string inputHtml = string.Format("<input class=\"govuk-radios__input\" id=\"{0}\" type=\"radio\" name=\"{1}\" value=\"{2}\">", id, name, key);
 
-                labelsHtml += labelHtml;
+                string labelHtml = string.Format("<label class=\"govuk-label govuk-radios__label\" for=\"{0}\">{1}{2}</label>", id, inputHtml, value);
+
+                radioButtonDiv = string.Format(radioButtonDiv, inputHtml + labelHtml);
+
+                labelsHtml += radioButtonDiv;
             }
 
             MvcHtmlString legendText = HtmlHelper.DisplayNameFor(expression);
@@ -58,23 +65,50 @@
             }
 
             var radioButtonHtml = string.Empty;
+
+            var outerDiv = GetRadioButtonsDiv(layout);
+
             for (var i = 0; i < possibleValues.Count; i++)
             {
                 var idForThisButton = string.Format("{0}-{1}", HtmlHelper.NameFor(expression), i);
 
-                var div = string.Format("<div>{0}</div>", HtmlHelper.HiddenFor(m => possibleValues[i]));
+                var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>"; 
 
                 var radioButton = HtmlHelper.RadioButtonFor(expression,
-                    possibleValues[i], new { id = idForThisButton }).ToString();
+                    possibleValues[i], new { id = idForThisButton, @class = "govuk-radios__input" }).ToString();
 
                 var display = HtmlHelper.DisplayFor(m => possibleValues[i]);
 
-                var label = string.Format("<label for=\"{0}\" class=\"block-label\">{1}</label>", idForThisButton, radioButton + display);
+                var label = string.Format("<label for=\"{0}\" class=\"govuk-label govuk-radios__label\">{1}</label>", idForThisButton,  display);
 
-                radioButtonHtml += div + label;
+                radioButtonDiv = string.Format(radioButtonDiv, HtmlHelper.HiddenFor(m => possibleValues[i]) + radioButton + label);
+
+                radioButtonHtml += radioButtonDiv;
             }
 
-            return WrapRadioButtonsInFieldSet(radioButtonHtml, new MvcHtmlString(legendText), legend, layout);
+            return WrapRadioButtonsInFieldSet(string.Format(outerDiv, radioButtonHtml), new MvcHtmlString(legendText), legend, layout);
+        }
+
+        private string GetRadioButtonsDiv(RadioButtonLayout layout)
+        {
+            var style = string.Empty;
+
+            switch (layout)
+            {
+                case RadioButtonLayout.Inline:
+                    style = "govuk-radios--inline";
+                    break;
+
+                case RadioButtonLayout.Stacked:
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+            var classAttribute = $"class=\"govuk-radios {style}\"";
+
+            return $"<div {classAttribute}>{{0}}</div>";
         }
 
         private MvcHtmlString WrapRadioButtonsInFieldSet(
@@ -91,7 +125,7 @@
                     break;
 
                 case RadioButtonLegend.VisuallyHidden:
-                    legendClassHtml = "class=\"visuallyhidden\"";
+                    legendClassHtml = "class=\"govuk-visually-hidden\"";
                     break;
 
                 default:
@@ -100,22 +134,22 @@
 
             string legendHtml = string.Format("<legend {0}>{1}</legend>", legendClassHtml, legendText);
 
-            string fieldSetClassHtml;
-            switch (layout)
-            {
-                case RadioButtonLayout.Stacked:
-                    fieldSetClassHtml = string.Empty;
-                    break;
+            //string fieldSetClassHtml;
+            //switch (layout)
+            //{
+            //    case RadioButtonLayout.Stacked:
+            //        fieldSetClassHtml = "class=\"govuk-fieldset\"";
+            //        break;
 
-                case RadioButtonLayout.Inline:
-                    fieldSetClassHtml = "class=\"inline\"";
-                    break;
+            //    case RadioButtonLayout.Inline:
+            //        fieldSetClassHtml = "class=\"govuk-fieldset inline\"";
+            //        break;
 
-                default:
-                    throw new NotSupportedException();
-            }
+            //    default:
+            //        throw new NotSupportedException();
+            //}
 
-            string fieldSetHtml = string.Format("<fieldset {0}>{1}{2}</fieldset>", fieldSetClassHtml, legendHtml, radioButtonsHtml);
+            string fieldSetHtml = string.Format("<fieldset class=\"govuk-fieldset inline\">{0}{1}</fieldset>", legendHtml, radioButtonsHtml);
 
             return new MvcHtmlString(fieldSetHtml);
         }
