@@ -19,7 +19,7 @@
 {
     <div class="govuk-form-group">
         <table id="submissions">
-            <caption><span class="visuallyhidden">Data returns submission history</span></caption>
+            <caption><span class="govuk-visually-hidden">Data returns submission history</span></caption>
             <thead>
                 <tr>
                     @switch (Model.OrderBy)
@@ -27,14 +27,14 @@
                         case DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending:
                             <th class="sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
-                                <span class="visuallyhidden">Sorted by earliest compliance year.</span>
+                                <span class="govuk-visually-hidden">Sorted by earliest compliance year.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending:
                             <th class="sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
-                                <span class="visuallyhidden">Sorted by most recent compliance year.</span>
+                                <span class="govuk-visually-hidden">Sorted by most recent compliance year.</span>
                             </th>
                             break;
 
@@ -50,14 +50,14 @@
                         case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
                             <th class="sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterDescending })">Quarter reported</a>
-                                <span class="visuallyhidden">Sorted by earliest quarter.</span>
+                                <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
                             <th class="sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterAscending })">Quarter reported</a>
-                                <span class="visuallyhidden">Sorted by most recent quarter.</span>
+                                <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
                             </th>
                             break;
 
@@ -73,14 +73,14 @@
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
                             <th class="sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
-                                <span class="visuallyhidden">Sorted by earliest submission date.</span>
+                                <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
                             <th class="sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
-                                <span class="visuallyhidden">Sorted by most recent submission date.</span>
+                                <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
                             break;
 

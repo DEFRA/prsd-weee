@@ -27,7 +27,7 @@
         </noscript>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
-            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = EnvironmentAgencyMaxFieldLengths.ProducerSearchTerm })
         </div>
