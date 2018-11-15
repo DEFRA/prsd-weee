@@ -106,9 +106,9 @@
                     throw new NotSupportedException();
             }
 
-            var classAttribute = $"class=\"govuk-radios {style}\"";
+            var classAttribute = string.Format("class=\"govuk-radios {0}\"", style);
 
-            return $"<div {classAttribute}>{{0}}</div>";
+            return string.Format("<div {0}>{1}</div>", classAttribute, "{0}");
         }
 
         private MvcHtmlString WrapRadioButtonsInFieldSet(

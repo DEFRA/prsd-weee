@@ -102,7 +102,7 @@ a{
             @include example-box-column( 1/4 );
         }
 
-        .column-half {
+        .column-one-half {
             @include example-box-column( 1/2 );
         }
 
@@ -647,6 +647,9 @@ input[type="file"].form-control {
         font-weight: bold;
         color: govuk-colour('black');
     }
+
+    @include govuk-font(16);
+
 }
 
 .breadcrumb-title-display {
@@ -656,6 +659,8 @@ input[type="file"].form-control {
         font-weight: bold;
         color: govuk-colour('black');
     }
+
+    @include govuk-font(16);
 }
 
 // Used to right-align the registration numbers on the admin's find producer page.
@@ -728,6 +733,8 @@ input[type="file"].form-control {
 	padding: 5px 10px;
 	background: govuk-colour('grey-3');
 	font-size: 16px;
+
+    @include govuk-font(16);
 }
 
 .secondaryHeaderContent {

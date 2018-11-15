@@ -4,13 +4,24 @@
 /*.phase-banner {
   @include govuk-phase-banner(beta);
 }*/
+@import "../govuk_frontend/package/helpers/grid";
+
+#main-content {
+    padding-top: govuk-spacing(7);
+}
+.govuk-main-wrapper {
+    padding-top: 0px;
+}
 
 // Use .grid-column to create a grid column with 15px govuk-gutter
 // By default grid columns break to become full width at tablet size
-.column-whole {
-    @include govuk-grid-column(full);
-}
+/*.column-whole {
+    @extend govuk-grid-column-whole;
+}*/
+@include govuk-grid-column($width: full, $class: column);
 
+@include govuk-grid-column($width: one-half, $class: column);
+    
 .spacer {
     margin: 0;
     width: 100%;
