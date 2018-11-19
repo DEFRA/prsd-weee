@@ -278,7 +278,7 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
         text-align: center;
     }
 
-    .heading-small {
+    .govuk-heading-s {
         margin-bottom: em(10);
     }
 
@@ -346,7 +346,7 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 }
 
 // Remove top margin from "Creating buttons" example
-.example-button .heading-small {
+.example-button .govuk-heading-s {
     margin-top: 0;
 }
 

@@ -16,7 +16,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <h2 class="heading-small">Overall, how did you feel about the service you received today?</h2>
+        <h2 class="govuk-heading-s">Overall, how did you feel about the service you received today?</h2>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="FeedbackOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
@@ -27,7 +27,7 @@
         </div>
 
         <div class="govuk-form-group">
-            <h2 class="heading-small">How could we improve this service?</h2>
+            <h2 class="govuk-heading-s">How could we improve this service?</h2>
             @Html.Gds().ValidationMessageFor(m => m.FeedbackDescription)
             @Html.TextAreaFor(m => m.FeedbackDescription, new { @maxlength = "1200", @class = "text-area full-width" })
             <p>(Limit is 1200 characters)</p>

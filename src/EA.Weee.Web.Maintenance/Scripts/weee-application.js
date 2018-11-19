@@ -42,7 +42,7 @@
     }
 
     // Set the country drop-down list for any address to use auto-complete.
-    var countryInput = $(".form-group.countries select");
+    var countryInput = $(".govuk-form-group.countries select");
     countryInput.selectToAutocomplete();
 
     // When there is a validation erorr, move the ID from the select element to the auto-complete
