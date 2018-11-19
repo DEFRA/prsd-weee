@@ -18,8 +18,6 @@
         {
             string labelsHtml = string.Empty;
 
-            var outerDiv = "<div class=\"govuk-radios\">{0}</div>";
-
             foreach (T possibleValue in possibleValues)
             {
                 MvcHtmlString name = HtmlHelper.NameFor(expression);
