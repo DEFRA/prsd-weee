@@ -15,7 +15,7 @@
     @if (ViewBag.Errors != null && ((string[])ViewBag.Errors).Length > 0)
     {
         <div class="validation-summary" style="margin-top: 25px">
-            <h2 class="heading-small">An error occurred.</h2>
+            <h2 class="govuk-heading-s">An error occurred.</h2>
             <ul>
                 @foreach (var error in (string[])ViewBag.Errors)
                 {
