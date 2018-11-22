@@ -18,30 +18,30 @@
 
     @if (Model.Count > 0)
     {
-        <table width="100%" class="">
-            <thead>
-                <tr>
-                    <th>Date issued</th>
-                    <th>Issued by</th>
-                    <th>Summary file (csv)</th>
+        <table class="govuk-table" style="width: 100%">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Date issued</th>
+                    <th class="govuk-table__header" scope="col">Issued by</th>
+                    <th class="govuk-table__header" scope="col">Summary file (csv)</th>
                     @if (ViewBag.AllowDownloadOfInvoiceFiles)
                     {
-                        <th>Invoice files (zip)</th>
+                        <th class="govuk-table__header" scope="col">Invoice files (zip)</th>
                     }
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (InvoiceRunInfo invoiceRun in Model)
                 {
-                    <tr>
-                        <td>@invoiceRun.IssuedDate.ToString("dd MMM yyyy")</td>
-                        <td>@invoiceRun.IssuedByUserFullName</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@invoiceRun.IssuedDate.ToString("dd MMM yyyy")</td>
+                        <td class="govuk-table__cell">@invoiceRun.IssuedByUserFullName</td>
+                        <td class="govuk-table__cell">
                             @Html.ActionLink("Download", "DownloadChargeBreakdown", new { id = invoiceRun.InvoiceRunId })
                         </td>
                         @if (ViewBag.AllowDownloadOfInvoiceFiles)
                         {
-                            <td>
+                            <td class="govuk-table__cell">
                                 @Html.ActionLink("Download", "DownloadInvoiceFiles", new { id = invoiceRun.InvoiceRunId })
                             </td>
                         }

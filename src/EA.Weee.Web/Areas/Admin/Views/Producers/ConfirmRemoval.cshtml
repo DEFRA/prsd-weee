@@ -17,20 +17,20 @@
 
         <p>The following producer will no longer be a member of @Model.Producer.SchemeName for @Model.Producer.ComplianceYear.</p>
 
-        <table>
-            <thead>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
                     <th colspan="2">Confirm Producer Details</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <th>Producer name</th>
-                    <td>@Model.Producer.ProducerName</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Producer name</th>
+                    <td class="govuk-table__header" scope="col">@Model.Producer.ProducerName</td>
                 </tr>
-                <tr>
-                    <th>Producer registration number</th>
-                    <td>@Model.Producer.RegistrationNumber</td>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Producer registration number</th>
+                    <td class="govuk-table__cell">@Model.Producer.RegistrationNumber</td>
                 </tr>
             </tbody>
         </table>

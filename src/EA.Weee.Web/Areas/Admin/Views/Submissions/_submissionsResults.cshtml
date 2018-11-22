@@ -10,54 +10,54 @@
         @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
 
         <div class="table-hr"></div>
-        <table id="submissions" class="prsd-table">
+        <table id="submissions" class="govuk-table prsd-table">
             <caption class="hidden-for-screen-reader">This table shows the submissions for the selected year and scheme.</caption>
-            <thead>
-                <tr>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case SubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="#" id="date-ascending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
                         case SubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="#" id="date-descending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
                             break;
                         default:
-                            <th>
+                            <th class="govuk-table__header" scope="col">
                                 <a href="#" id="date">Date and time (GMT)</a>
                             </th>
                             break;
                     }
-                    <th>Submitted by</th>
-                    <th>Number of new producers</th>
-                    <th>Number of amended producers</th>
-                    <th>Warnings</th>
-                    <th>Changes</th>
+                    <th class="govuk-table__header" scope="col">Submitted by</th>
+                    <th class="govuk-table__header" scope="col">Number of new producers</th>
+                    <th class="govuk-table__header" scope="col">Number of amended producers</th>
+                    <th class="govuk-table__header" scope="col">Warnings</th>
+                    <th class="govuk-table__header" scope="col">Changes</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (var item in Model.Results)
                 {
                     string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
-                    <tr>
-                        <td>@datetime</td>
-                        <td style="text-align:left">@item.SubmittedBy</td>
-                        <td>@(item.NumberOfNewProducers.HasValue && item.NumberOfNewProducers > 0 ? item.NumberOfNewProducers : null)</td>
-                        <td>@(item.NumberOfChangedProducers.HasValue && item.NumberOfChangedProducers > 0 ? item.NumberOfChangedProducers : null)</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@datetime</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.SubmittedBy</td>
+                        <td class="govuk-table__cell">@(item.NumberOfNewProducers.HasValue && item.NumberOfNewProducers > 0 ? item.NumberOfNewProducers : null)</td>
+                        <td class="govuk-table__cell">@(item.NumberOfChangedProducers.HasValue && item.NumberOfChangedProducers > 0 ? item.NumberOfChangedProducers : null)</td>
+                        <td class="govuk-table__cell">
                             @if (item.NoOfWarnings > 0)
                             {
                                 string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
                                 <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                             }
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             @if (item.ProducersChanged.HasValue && item.ProducersChanged.Value)
                             {
                                 <div style="width:120px;">
