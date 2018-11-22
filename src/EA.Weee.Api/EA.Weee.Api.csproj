@@ -22,6 +22,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,10 +68,6 @@
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Email, Version=1.0.16077.1, Culture=neutral, processorArchitecture=MSIL">
@@ -288,6 +285,10 @@
     <Folder Include="Documents\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\prsd\src\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
+      <Project>{67EB0694-6149-4A6F-89DE-144F24802C7F}</Project>
+      <Name>EA.Prsd.Core.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>

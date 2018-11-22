@@ -20,10 +20,10 @@
             </ul>
         </div>
 
-        <table id="collectedDelivered-data-table">
+        <table id="collectedDelivered-data-table" class="govuk-table">
             <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
-            <thead>
-                <tr>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
@@ -76,7 +76,7 @@
                 {
                     string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-                    <tr>
+                    <tr class="govuk-table__row">
                         <td><div style="width:190px;">@datetimeValue</div></td>
                         <td>@item.Quarter</td>
                         <td style="text-align:left">@item.SubmittedBy</td>
@@ -89,7 +89,7 @@
             </tbody>
         </table>
 
-        <table id="output-data-table" class="visually-hidden">
+        <table id="output-data-table" class="govuk-visually-hidden">
             <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
             <thead>
                 <tr>

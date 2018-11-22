@@ -6,39 +6,39 @@
 @section main_content {
     @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    <table id="pcs-details-table">
-        <thead>
+    <table id="pcs-details-table" class="govuk-table">
+        <thead class="govuk-table__head">
         <tr class="govuk-visually-hidden">
             <th colspan="2">PCS Details</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
         @if (!Model.IsRejected)
         {
-            <tr>
-                <th>PCS name</th>
-                <td>@Model.SchemeName</td>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">PCS name</th>
+                <td class="govuk-table__cell">@Model.SchemeName</td>
             </tr>
-            <tr>
-                <th>Approval number</th>
-                <td>@Model.ApprovalNumber</td>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Approval number</th>
+                <td class="govuk-table__cell">@Model.ApprovalNumber</td>
             </tr>
-            <tr>
-                <th>Billing reference</th>
-                <td>@Model.BillingReference</td>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Billing reference</th>
+                <td class="govuk-table__cell">@Model.BillingReference</td>
             </tr>
-            <tr>
-                <th>Obligation type</th>
-                <td>@Model.ObligationType</td>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Obligation type</th>
+                <td class="govuk-table__cell">@Model.ObligationType</td>
             </tr>
-            <tr>
-                <th>Appropriate Authority</th>
-                <td>@Model.AppropriateAuthority</td>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Appropriate Authority</th>
+                <td class="govuk-table__cell">@Model.AppropriateAuthority</td>
             </tr>
         }
-        <tr>
-            <th>Status</th>
-            <td>@Model.Status</td>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Status</th>
+            <td class="govuk-table__cell">@Model.Status</td>
         </tr>
         </tbody>
     </table>

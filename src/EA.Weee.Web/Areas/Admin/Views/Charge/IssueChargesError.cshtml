@@ -14,12 +14,12 @@
         <span class="bold-small"> The following must be fixed before charges can be issued.</span>
     </p>
 
-    <table width="100%" class="">
-        <tbody>
+    <table class="govuk-table" style="width:100%">
+        <tbody class="govuk-table__body">
             @foreach (var error in Model)
             {
-                <tr>
-                    <td>@error</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">@error</td>
                 </tr>
             }
         </tbody>
