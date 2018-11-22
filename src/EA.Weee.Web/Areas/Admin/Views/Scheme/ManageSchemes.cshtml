@@ -27,23 +27,23 @@
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
     <div class="table-hr"></div>
-    <table id="idManageSchemesTable" class="prsd-table hover-effect">
-        <thead>
-            <tr>
-                <th>Organisation name</th>
-                <th>Scheme name</th>
-                <th>Status</th>
-                <th>Select</th>
+    <table id="idManageSchemesTable" class="govuk-table prsd-table hover-effect">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Organisation name</th>
+                <th class="govuk-table__header" scope="col">Scheme name</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" scope="col">Select</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
             @foreach (var scheme in Model.Schemes)
             {
                 <tr>
-                    <td width="100%">@scheme.Name.HardTrim(80)</td>
-                    <td>@scheme.SchemeName</td>
-                    <td>@scheme.SchemeStatus</td>
-                    <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
+                    <td class="govuk-table__cell" width="100%">@scheme.Name.HardTrim(80)</td>
+                    <td class="govuk-table__cell">@scheme.SchemeName</td>
+                    <td class="govuk-table__cell">@scheme.SchemeStatus</td>
+                    <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                 </tr>
             }
         </tbody>

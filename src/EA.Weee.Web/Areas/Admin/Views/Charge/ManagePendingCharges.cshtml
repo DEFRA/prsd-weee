@@ -37,23 +37,23 @@
 
         @if (Model.PendingCharges.Count > 0)
         {
-            <table width="100%" class="">
-                <thead>
-                    <tr>
-                        <th>PCS name</th>
-                        <th>Approval number</th>
-                        <th>Compliance year</th>
-                        <th class="numeric">Total</th>
+            <table class="govuk-table" style="width: 100%">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">PCS name</th>
+                        <th class="govuk-table__header" scope="col">Approval number</th>
+                        <th class="govuk-table__header" scope="col">Compliance year</th>
+                        <th class="govuk-table__header numeric" scope="col">Total</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                     @foreach (PendingCharge pendingCharge in Model.PendingCharges)
                     {
-                        <tr>
-                            <td>@pendingCharge.SchemeName</td>
-                            <td>@pendingCharge.SchemeApprovalNumber</td>
-                            <td>@pendingCharge.ComplianceYear</td>
-                            <td class="numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@pendingCharge.SchemeName</td>
+                            <td class="govuk-table__cell">@pendingCharge.SchemeApprovalNumber</td>
+                            <td class="govuk-table__cell">@pendingCharge.ComplianceYear</td>
+                            <td class="govuk-table__cell numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
                         </tr>
                     }
                 </tbody>
