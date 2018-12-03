@@ -761,6 +761,14 @@ input[type="file"].form-control {
     margin-right: 40px;
 }
 
+.govuk-heading-l {
+    margin-top: 40px;
+}
+
+#main-content .govuk-heading-l {
+    margin-top: 0px;
+}
+
 .section-tabs {
     @include govuk-clearfix;
     border-bottom: 1px solid $govuk-border-colour;

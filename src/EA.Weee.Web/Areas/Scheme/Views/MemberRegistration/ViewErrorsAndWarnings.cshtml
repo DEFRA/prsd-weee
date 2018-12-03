@@ -34,14 +34,14 @@
 			}
 		</div>
 	</header>
-	<h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
-	<p>
+	<h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
+	<p class="govuk-body">
 		Errors are problems with the XML file structure and content, which prevent our system from validating your file. You must rectify all errors before we can continue our validation process. You may see several error messages before your file is ready to be submitted.
 	</p>
 
 	@if (numWarnings > 0)
 	{
-		<p>
+		<p class="govuk-body">
 			Warnings are displayed when members details are changed or when your file contains an inconsistent value. You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. Or, if you are happy with its content, you can submit your file with warnings.
 		</p>
 	}

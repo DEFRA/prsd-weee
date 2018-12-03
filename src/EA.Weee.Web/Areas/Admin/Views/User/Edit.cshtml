@@ -26,15 +26,15 @@
         @Html.HiddenFor(m => m.CanManageStatus)
 
         <div class="govuk-form-group">
-            <table title="This table contains the organisation user details.">
-                <tbody>
-                    <tr>
-                        <th>Company</th>
-                        <td>@Model.OrganisationName</td>
+            <table class="govuk-table" title="This table contains the organisation user details.">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Company</th>
+                        <td class="govuk-table__cell">@Model.OrganisationName</td>
                     </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Email</th>
+                        <td class="govuk-table__cell"><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
                     </tr>
                 </tbody>
             </table>
