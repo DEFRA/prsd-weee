@@ -23,12 +23,12 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new { autocomplete = "off" })
+            @Html.Gds().TextBoxFor(m => m.Email, new { @class = "govuk-!-width-one-half", autocomplete = "off" })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
-            @Html.Gds().PasswordFor(m => m.Password)
+            @Html.Gds().PasswordFor(m => m.Password, new { @class = "govuk-!-width-one-half" })
         </div>
 
         @(this.WeeeGds().Submit("Continue"))

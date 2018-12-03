@@ -31,7 +31,7 @@
 
                 string inputHtml = string.Format("<input class=\"govuk-radios__input\" id=\"{0}\" type=\"radio\" name=\"{1}\" value=\"{2}\">", id, name, key);
 
-                string labelHtml = string.Format("<label class=\"govuk-label govuk-radios__label\" for=\"{0}\">{1}{2}</label>", id, inputHtml, value);
+                string labelHtml = string.Format("<label class=\"govuk-label govuk-radios__label\" for=\"{0}\">{2}</label>", id, inputHtml, value);
 
                 radioButtonDiv = string.Format(radioButtonDiv, inputHtml + labelHtml);
 
