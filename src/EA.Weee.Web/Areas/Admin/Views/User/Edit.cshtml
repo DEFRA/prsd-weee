@@ -43,13 +43,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
-            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
-            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
         </div>
 
         if (Model.CanManageStatus)
@@ -64,7 +64,9 @@
             }
             else
             {
-                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                    @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                </div>
             }
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
@@ -75,8 +77,10 @@
         }
         else
         {
-            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
-            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
+            </div>
         }
 
         <div class="govuk-form-group">
