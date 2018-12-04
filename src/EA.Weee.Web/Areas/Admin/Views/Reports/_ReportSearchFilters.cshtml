@@ -15,10 +15,14 @@
     @Html.Gds().DropDownListFor(m => m.SelectedAA, Model.AppropriateAuthorities, string.Empty, new { autocomplete = "false" })
 </div>
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeRemovedProducer)">
-    <fieldset>
-        <label class="block-label" for="IncludeRemovedProducer">
-            @Html.CheckBoxFor(m => m.IncludeRemovedProducer, new { @id = "IncludeRemovedProducer" })
-            Include removed producers?
-        </label>
+    <fieldset class="govuk-fieldset">
+        <div class="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                @Html.CheckBoxFor(m => m.IncludeRemovedProducer, new { @class = "govuk-checkboxes__input", @id = "IncludeRemovedProducer" })
+                <label class="block-label govuk-label govuk-checkboxes__label" for="IncludeRemovedProducer">
+                    Include removed producers?
+                </label>
+            </div>
+        </div>
     </fieldset>
 </div>

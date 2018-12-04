@@ -20,28 +20,28 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelFor(m => m.Name)
             @Html.Gds().ValidationMessageFor(m => m.Name)
-            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Surname)">
             @Html.Gds().LabelFor(m => m.Surname)
             @Html.Gds().ValidationMessageFor(m => m.Surname)
-            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.Surname, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+            @Html.Gds().TextBoxFor(m => m.Email, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
             <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
-            @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
+            @Html.Gds().PasswordFor(m => m.Password, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
-            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
+            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
             <fieldset class="govuk-fieldset">

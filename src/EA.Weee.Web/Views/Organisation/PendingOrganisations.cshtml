@@ -13,25 +13,25 @@
         </h1>
     </header>
 
-    <table title="This table lists the organisation you have applied to perform activities for.">
-        <thead>
-            <tr>
-                <th>Organisation name</th>
-                <th>Your account status</th>
+    <table class="govuk-table" title="This table lists the organisation you have applied to perform activities for.">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">Organisation name</th>
+                <th class="govuk-table__header">Your account status</th>
             </tr>
         </thead>
         <tbody>
             @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
             {
-                <tr>
-                    <td>@item.Organisation.OrganisationName</td>
-                    <td>@item.UserStatus</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">@item.Organisation.OrganisationName</td>
+                    <td class="govuk-table__cell">@item.UserStatus</td>
                 </tr>
             }
         </tbody>
     </table>
     <br/>
-    <p>
+    <p class="govuk-body">
         If your account status is incorrect, contact your organisation's administrator.
     </p>
 
