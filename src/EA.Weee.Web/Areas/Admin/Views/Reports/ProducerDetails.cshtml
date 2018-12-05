@@ -16,11 +16,11 @@
         @Html.Gds().ValidationSummary()
 
         <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
-        
+
         <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
 
         @Html.Partial("_ReportSearchFilters")
-
+        /*
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
             <fieldset>
                 <label class="block-label" for="IncludeBrandNames">
@@ -29,13 +29,27 @@
                 </label>
             </fieldset>
         </div>
+        */
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <!-- Removed the checkboxfor helper as it was causing the check box to be invisible, check with John about this happening -->
+                        <input id="IncludeBrandNames" class="govuk-checkboxes__input" name="IncludeBrandNames" type="checkbox" value="true" />
+                        <label class="govuk-label govuk-checkboxes__label">
+                            Include brand names?
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
 
         <p class="small">
             If your selection criteria is broad, it may take a while to download your results.
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "Producer details", new Dictionary<string, object> { { "class", "button" } }))
+                   "Report download", "Producer details", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -48,7 +62,7 @@
 
 @section scripts
 {
-        @if (ViewBag.TriggerDownload)
+    @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadProducerDetailsCsv", new

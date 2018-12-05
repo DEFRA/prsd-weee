@@ -43,205 +43,207 @@
         @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Telephone)
         @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.TownOrCity)
 
-          <!-- //////////// Main Accordion /////////////// -->
+        <!-- //////////// Main Accordion /////////////// -->
         <section id="form-summary">
-            
-                <!-- //////////// About-your-organisation /////////////// -->
-                <h2 class="heading-medium" title="About-your-organisation">Organisation details</h2>
-                <div class="form-detail-cont">
+
+            <!-- //////////// About-your-organisation /////////////// -->
+            <h2 class="govuk-heading-m" title="About-your-organisation">Organisation details</h2>
+            <div class="form-detail-cont govuk-body">
+                <div class="govuk-grid-row form-detail">
+                </div>
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Organisation type
+                    </span>
+                    <span class="column-third">
+                        @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                        {
+                            @:Sole trader or individual
+                        }
+                        else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                        }
+                        else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                        }
+                    </span>
+                </div>
+
+                @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                {
                     <div class="govuk-grid-row form-detail">
+                        <span class="govuk-grid-column-two-thirds font-bold">
+                            Company name
+                        </span>
+                        <span class="column-third">
+                            @Model.OrganisationData.Name
+                        </span>
                     </div>
                     <div class="govuk-grid-row form-detail">
                         <span class="govuk-grid-column-two-thirds font-bold">
-                            Organisation type
+                            Company registration number
                         </span>
                         <span class="column-third">
-                            @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                            {
-                                @:Sole trader or individual
-                                }
-                            else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
-                            {
-                                @:Partnership
-                                }
-                            else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-                            {
-                                @:Registered company
-                                }
+                            @Model.OrganisationData.CompanyRegistrationNumber
                         </span>
                     </div>
+                }
 
-                    @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-                    {
-                        <div class="govuk-grid-row form-detail">
-                            <span class="govuk-grid-column-two-thirds font-bold">
-                                Company name
-                            </span>
-                            <span class="column-third">
-                                @Model.OrganisationData.Name
-                            </span>
-                        </div>
-                        <div class="govuk-grid-row form-detail">
-                            <span class="govuk-grid-column-two-thirds font-bold">
-                                Company registration number
-                            </span>
-                            <span class="column-third">
-                                @Model.OrganisationData.CompanyRegistrationNumber
-                            </span>
-                        </div>
-                    }
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">Business trading name</span>
-                        <span class="column-third">@Model.OrganisationData.TradingName</span>
-                    </div>
-
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">Business trading name</span>
+                    <span class="column-third">@Model.OrganisationData.TradingName</span>
                 </div>
+
+            </div>
+            <div class="font-xsmall">
+                <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit your organisation details">Edit your organisation details</a>
+            </div>
+
+            <!-- //////////// The-main-contact-for-your-organisation /////////////// -->
+            <div class="govuk-!-padding-bottom-4"></div>
+            <h2 class="govuk-heading-m" title="The-main-contact-for-your-organisation">Main contact</h2>
+
+            <div class="form-detail-cont govuk-body" id="details-content-2">
+                <div class="govuk-grid-row form-detail">
+                </div>
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Name
+                    </span>
+                    <span class="column-third">
+                        @Model.OrganisationData.Contact.FirstName @Model.OrganisationData.Contact.LastName
+                    </span>
+                </div>
+
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Position
+                    </span>
+                    <span class="column-third">
+                        @Model.OrganisationData.Contact.Position
+                    </span>
+                </div>
+            </div>
+            <div class="font-xsmall">
+                <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit main contact</a>
+            </div>
+
+            <!-- //////////// Your-organisation-details /////////////// -->
+            <div class="govuk-!-padding-bottom-4"></div>
+            <h2 class="govuk-heading-m" title="Main-contact-details">Main contact details</h2>
+
+
+            <div class="form-detail-cont govuk-body" id="details-content-3">
+                <div class="govuk-grid-row form-detail">
+                </div>
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Address
+                    </span>
+                    <span class="govuk-grid-column-two-thirds column-third">
+                        @Model.OrganisationData.OrganisationAddress.Address1<br />
+                        @if (Model.OrganisationData.OrganisationAddress.Address2 != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.Address2<br />
+                        }
+                        @Model.OrganisationData.OrganisationAddress.TownOrCity<br />
+                        @if (Model.OrganisationData.OrganisationAddress.CountyOrRegion != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.CountyOrRegion<br />
+                        }
+                        @if (Model.OrganisationData.OrganisationAddress.Postcode != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.Postcode<br />
+                        }
+                        @Model.OrganisationData.OrganisationAddress.CountryName<br />
+                    </span>
+                </div>
+
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Phone
+                    </span>
+                    <span class="column-third">
+                        @Model.OrganisationData.OrganisationAddress.Telephone
+                    </span>
+                </div>
+
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">Email</span>
+                    <span class="column-third">@Model.OrganisationData.OrganisationAddress.Email</span>
+                </div>
+            </div>
+            <div class="font-xsmall">
+                <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit main contact details</a>
+            </div>
+
+
+            <!-- //////////// Your-principal-place-of-business or Your-registered-company /////////////// -->
+            @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+            {
+                <div class="govuk-!-padding-bottom-4"></div>
+                <h2 class="govuk-heading-m" title="Your-principal-place-of-business">Principal place of business</h2>
+            }
+            else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+            {
+                <div class="govuk-!-padding-bottom-4"></div>
+                <h2 class="govuk-heading-m" title="Your-registered-company">Registered company details</h2>
+            }
+
+            <div class="form-detail-cont govuk-body" id="details-content-4">
+                <div class="govuk-grid-row form-detail">
+                </div>
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Address
+                    </span>
+                    <span class="govuk-grid-column-two-thirds column-third">
+                        @Model.OrganisationData.BusinessAddress.Address1<br />
+                        @if (Model.OrganisationData.BusinessAddress.Address2 != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.Address2<br />
+                        }
+                        @Model.OrganisationData.BusinessAddress.TownOrCity<br />
+                        @if (Model.OrganisationData.BusinessAddress.CountyOrRegion != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.CountyOrRegion<br />
+                        }
+                        @if (Model.OrganisationData.BusinessAddress.Postcode != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.Postcode<br />
+                        }
+                        @Model.OrganisationData.BusinessAddress.CountryName<br />
+                    </span>
+                </div>
+
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">
+                        Phone
+                    </span>
+                    <span class="column-third">
+                        @Model.OrganisationData.BusinessAddress.Telephone
+                    </span>
+                </div>
+
+                <div class="govuk-grid-row form-detail">
+                    <span class="govuk-grid-column-two-thirds font-bold">Email</span>
+                    <span class="column-third">@Model.OrganisationData.BusinessAddress.Email</span>
+                </div>
+            </div>
+            @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+            {
                 <div class="font-xsmall">
-                    <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" title="Edit your organisation details">Edit your organisation details</a>
+                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit principal place of business</a>
                 </div>
-
-                <!-- //////////// The-main-contact-for-your-organisation /////////////// -->
-
-                <h2 class="heading-medium" title="The-main-contact-for-your-organisation">Main contact</h2>
-
-                <div class="form-detail-cont" id="details-content-2">
-                    <div class="govuk-grid-row form-detail">
-                    </div>
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Name
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.Contact.FirstName @Model.OrganisationData.Contact.LastName
-                        </span>
-                    </div>
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Position
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.Contact.Position
-                        </span>
-                    </div>
-                </div>
+            }
+            else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+            {
                 <div class="font-xsmall">
-                    <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit main contact</a>
+                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit registered company details</a>
                 </div>
-
-                <!-- //////////// Your-organisation-details /////////////// -->
-
-                <h2 class="heading-medium" title="Main-contact-details">Main contact details</h2>
-
-
-                <div class="form-detail-cont" id="details-content-3">
-                    <div class="govuk-grid-row form-detail">
-                    </div>
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Address
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.OrganisationAddress.Address1<br />
-                            @if (Model.OrganisationData.OrganisationAddress.Address2 != null)
-                            {
-                                @Model.OrganisationData.OrganisationAddress.Address2<br />
-                            }
-                            @Model.OrganisationData.OrganisationAddress.TownOrCity<br />
-                            @if (Model.OrganisationData.OrganisationAddress.CountyOrRegion != null)
-                            {
-                                @Model.OrganisationData.OrganisationAddress.CountyOrRegion<br />
-                            }
-                            @if (Model.OrganisationData.OrganisationAddress.Postcode != null)
-                            {
-                                @Model.OrganisationData.OrganisationAddress.Postcode<br />
-                            }
-                            @Model.OrganisationData.OrganisationAddress.CountryName<br />
-                        </span>
-                    </div>
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Phone
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.OrganisationAddress.Telephone
-                        </span>
-                    </div>
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">Email</span>
-                        <span class="column-third">@Model.OrganisationData.OrganisationAddress.Email</span>
-                    </div>
-                </div>
-                <div class="font-xsmall">
-                    <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit main contact details</a>
-                </div>
-
-
-                <!-- //////////// Your-principal-place-of-business or Your-registered-company /////////////// -->
-                @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                {
-                    <h2 class="heading-medium" title="Your-principal-place-of-business">Principal place of business</h2>
-                }
-                else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-                {
-                    <h2 class="heading-medium" title="Your-registered-company">Registered company details</h2>
-                }
-
-                <div class="form-detail-cont" id="details-content-4">
-                    <div class="govuk-grid-row form-detail">
-                    </div>
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Address
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.BusinessAddress.Address1<br />
-                            @if (Model.OrganisationData.BusinessAddress.Address2 != null)
-                            {
-                                @Model.OrganisationData.BusinessAddress.Address2<br />
-                            }
-                            @Model.OrganisationData.BusinessAddress.TownOrCity<br />
-                            @if (Model.OrganisationData.BusinessAddress.CountyOrRegion != null)
-                            {
-                                @Model.OrganisationData.BusinessAddress.CountyOrRegion<br />
-                            }
-                            @if (Model.OrganisationData.BusinessAddress.Postcode != null)
-                            {
-                                @Model.OrganisationData.BusinessAddress.Postcode<br />
-                            }
-                            @Model.OrganisationData.BusinessAddress.CountryName<br />
-                        </span>
-                    </div>
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">
-                            Phone
-                        </span>
-                        <span class="column-third">
-                            @Model.OrganisationData.BusinessAddress.Telephone
-                        </span>
-                    </div>
-
-                    <div class="govuk-grid-row form-detail">
-                        <span class="govuk-grid-column-two-thirds font-bold">Email</span>
-                        <span class="column-third">@Model.OrganisationData.BusinessAddress.Email</span>
-                    </div>
-                </div>
-                @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                {
-                    <div class="font-xsmall">
-                        <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit principal place of business</a>
-                    </div>
-                }
-                else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-                {
-                    <div class="font-xsmall">
-                        <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit registered company details</a>
-                    </div>
-                }
+            }
 
         </section>
 
@@ -250,13 +252,28 @@
         <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
 
         @Html.Partial("_PrivacyPolicy");
-
+        /*
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
             <label class="block-label" for="PrivacyPolicy">
                 @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
                 Confirm you have read our privacy policy
             </label>
+        </div>
+        */
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-checkboxes">
+                    @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                    <div class="govuk-checkboxes__item">
+                        <!-- Removed the checkboxfor helper as it was causing the check box to be invisible, check with John about this happening -->
+                        <input id="PrivacyPolicy" class="govuk-checkboxes__input" name="PrivacyPolicy" type="checkbox" value="true" />
+                        <label class="govuk-label govuk-checkboxes__label">
+                            Confirm you have read our privacy policy
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
         </div>
 
         @(this.WeeeGds().Submit("Create organisation"))

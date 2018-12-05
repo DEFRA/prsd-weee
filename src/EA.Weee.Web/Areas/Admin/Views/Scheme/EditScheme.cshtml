@@ -31,27 +31,27 @@
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
         @Html.Gds().ValidationMessageFor(m => m.SchemeName)
-        @Html.Gds().TextBoxFor(m => m.SchemeName, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
+        @Html.Gds().TextBoxFor(m => m.SchemeName, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
     </div>
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
         @Html.Gds().LabelFor(m => m.ApprovalNumber)
         @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
-        @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
+        @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
     </div>
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
         @Html.Gds().LabelFor(m => m.IbisCustomerReference, "(optional for SEPA, NIEA, NRW)")
         @Html.Gds().ValidationMessageFor(m => m.IbisCustomerReference)
-        @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @maxlength = EnvironmentAgencyMaxFieldLengths.IbisBillingReference })
+        @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @class= "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.IbisBillingReference })
     </div>
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ObligationType)">
         @Html.Gds().LabelFor(m => m.ObligationType)
         @Html.Gds().ValidationMessageFor(m => m.ObligationType)
-        @Html.Gds().DropDownListFor(m => m.ObligationType, Model.ObligationTypeSelectList, string.Empty, new { autocomplete = "false" })
+        @Html.Gds().DropDownListFor(m => m.ObligationType, Model.ObligationTypeSelectList, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
     </div>
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
         @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
         @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
-        @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
+        @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
     </div>
     }
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Status)">
@@ -59,14 +59,14 @@
         @Html.Gds().ValidationMessageFor(m => m.Status)
         @if (!Model.IsChangeableStatus)
         {
-            <select class="form-control" disabled="disabled">
+            <select class="form-control govuk-select govuk-!-width-one-half" disabled="disabled">
                 <option>@Model.Status</option>
             </select>
             @Html.HiddenFor(m => m.Status)
         }
         else
         {
-            @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList)
+            @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList, string.Empty, new { @class = "govuk-!-width-one-half" })
         }
     </div>
 
