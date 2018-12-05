@@ -24,22 +24,22 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
             @Html.Gds().LabelFor(m => m.Contact.FirstName)
-            @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
             @Html.Gds().LabelFor(m => m.Contact.LastName)
-            @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
             @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
             @Html.Gds().LabelFor(m => m.Contact.Position)
-            @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @maxlength = CommonMaxFieldLengths.Position })
+            @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Position })
         </div>
 
-        @Html.EditorFor(m => m.OrganisationAddress)
+        @Html.EditorFor(m => m.OrganisationAddress, new { htmlAttributes = new { @class= "govuk-!-width-one-half" } })
 
         <div class="govuk-form-group">
             <button class="govuk-button">Save and Continue</button>

@@ -3,19 +3,19 @@
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
     @Html.Gds().LabelFor(m => m.SelectedYear)
     @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-    @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+    @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
 </div>
 
 @if (Model.Schemes != null)
 {
     <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
         @Html.Gds().LabelFor(m => m.SelectedSchemeId)
-        @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" })
+        @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
     </div>
 }
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationType)">
     @Html.Gds().LabelFor(m => m.SelectedObligationType)
     @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)
-    @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
+    @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
 </div>

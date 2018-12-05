@@ -30,18 +30,18 @@
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
                 @Html.Gds().LabelFor(m => m.CompanyName)
                 @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-                @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+                @Html.Gds().TextBoxFor(m => m.CompanyName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
             </div>
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
                 @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
                 @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-                @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+                @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
             </div>
         
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
-            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         @Html.EditorFor(m => m.BusinessAddress)
