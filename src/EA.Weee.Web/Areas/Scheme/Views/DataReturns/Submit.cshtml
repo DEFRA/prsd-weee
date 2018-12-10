@@ -51,8 +51,8 @@
 
     @if (hasErrors)
     {
-        <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
-            <p>
+        <h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
+            <p class="govuk-body">
                 Errors are problems with the XML file structure and content, which prevent our system from validating your file.
                 All errors must be rectified before we can continue our validation process. You may see several error messages
                 before you can submit your file.
@@ -60,14 +60,14 @@
     }
     else
     {
-        <p>
+        <p class="govuk-body">
             Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.
         </p>
     }
 
     @if (hasWarnings)
     {
-        <p>
+        <p class="govuk-body">
             @if (!hasErrors)
             {
                 <span>Your XML file contains @warningCount @warningText.</span>
@@ -82,22 +82,21 @@
 
     @if (hasErrors)
     {
-        <details>
+        <details class="govuk-details" style="background-color: #B10E1E ; padding-top: 5px; color: black;">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
-                this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
+                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary govuk-!-font-weight-bold bold-small", "Data return errors", "View data return errors");
             }
-            <div class="error-list-container">
-                <ul>
-                    @foreach (DataReturnError error in Model.DataReturn.Errors)
-                    {
-                        <li class="error-list-item font-xsmall">
-                            @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
-                        </li>
-                    }
-                </ul>
-            </div>
-        </details>
+
+            <table class="govuk-table" style="background-color:#FDE3E6;">
+                @foreach (DataReturnError error in Model.DataReturn.Errors)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="padding-left: 5px">@Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())</td>
+                    </tr>
+                }
+               </table>
+            </details>
                 }
 
     @if (hasWarnings)
@@ -117,7 +116,7 @@
 
     @if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
     {
-        <p>
+        <p class="govuk-body">
             <div class="highlight-section">
                 <div class="highlight-section-text">
                     The XML file you are submitting is for:
@@ -149,7 +148,7 @@
                 {
 
                     <div class="highlight-section-text negative-margin">
-                        <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;">
+                        <img src="~/Content/govuk_frontend/assets/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;">
                         Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
                     </div>
                 }
@@ -160,7 +159,7 @@
 
     @if (hasErrors)
     {
-        <p>
+        <p class="govuk-body">
             To see your XML file’s full list,
             @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
                       Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
@@ -168,7 +167,7 @@
                       "Data return downloads",
                       "Data return errors and warnings")).
         </p>
-            <p>
+            <p class="govuk-body">
                 @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
                       Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
                       "Data return loop",
@@ -183,13 +182,13 @@
     }
     else
     {
-        <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
+        <p class="govuk-body">By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
 
         using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
 
-            <p>
+            <p class="govuk-body">
                 @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",
                     "Data return uploads",
@@ -199,7 +198,7 @@
             </p>
         }
 
-        <p>
+        <p class="govuk-body">
             Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
                                     Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
                                     "Data return loop",

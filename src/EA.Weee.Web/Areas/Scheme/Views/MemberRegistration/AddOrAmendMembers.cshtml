@@ -101,7 +101,9 @@
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
-                @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
+                <!-- Removed this as the TextBoxFor helper was adding the govuk-input class to the browse button, causing some formatting issues SG -->
+                <!--@Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })-->
+                <input class="govuk-file-upload" id="File" data-val="true" data-val-required="You must choose a file" name="File" accept=".xml" type="file">
             </div>
 
         </div>

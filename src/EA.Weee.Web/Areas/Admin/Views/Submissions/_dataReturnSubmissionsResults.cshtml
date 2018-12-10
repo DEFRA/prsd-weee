@@ -27,19 +27,19 @@
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending">
+                            <th class="sorted-ascending govuk-table__header">
                                 <a href="#" id="collected-date-ascending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="#" id="collected-date-descending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
                             break;
                         default:
-                            <th>
+                            <th class="govuk-table__header">
                                 <a href="#" id="collected-date">Date and time (GMT)</a>
                             </th>
                             break;
@@ -47,43 +47,43 @@
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
-                            <th class="sorted-ascending">
+                            <th class="sorted-ascending govuk-table__header">
                                 <a href="#" id="collected-quarter-ascending">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
                             </th>
                             break;
                         case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="#" id="collected-quarter-descending">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
                             </th>
                             break;
                         default:
-                            <th>
+                            <th class="govuk-table__header">
                                 <a href="#" id="collected-quarter">Quarter reported</a>
                             </th>
                             break;
                     }
-                    <th>Submitted by</th>
-                    <th>B2C collected (tonnes)</th>
-                    <th>B2C delivered (tonnes)</th>
-                    <th>B2B collected (tonnes)</th>
-                    <th>B2B delivered (tonnes)</th>
+                    <th class="govuk-table__header">Submitted by</th>
+                    <th class="govuk-table__header">B2C collected (tonnes)</th>
+                    <th class="govuk-table__header">B2C delivered (tonnes)</th>
+                    <th class="govuk-table__header">B2B collected (tonnes)</th>
+                    <th class="govuk-table__header">B2B delivered (tonnes)</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (var item in Model.Results)
                 {
                     string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                     <tr class="govuk-table__row">
-                        <td><div style="width:190px;">@datetimeValue</div></td>
-                        <td>@item.Quarter</td>
-                        <td style="text-align:left">@item.SubmittedBy</td>
-                        <td>@item.WeeeCollectedB2c</td>
-                        <td>@item.WeeeDeliveredB2c</td>
-                        <td>@item.WeeeCollectedB2b</td>
-                        <td>@item.WeeeDeliveredB2b</td>
+                        <td class="govuk-table__cell"><div style="width:190px;">@datetimeValue</div></td>
+                        <td class="govuk-table__cell">@item.Quarter</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.SubmittedBy</td>
+                        <td class="govuk-table__cell">@item.WeeeCollectedB2c</td>
+                        <td class="govuk-table__cell">@item.WeeeDeliveredB2c</td>
+                        <td class="govuk-table__cell">@item.WeeeCollectedB2b</td>
+                        <td class="govuk-table__cell">@item.WeeeDeliveredB2b</td>
                     </tr>
                 }
             </tbody>
