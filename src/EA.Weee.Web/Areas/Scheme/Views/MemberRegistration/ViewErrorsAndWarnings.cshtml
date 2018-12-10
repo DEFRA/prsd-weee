@@ -46,25 +46,38 @@
 		</p>
 	}
 
-	<details>
-		@{
-			string errorSummaryText = string.Format("View {0} {1}",numOfErrors, errorText);
-			this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Member registration errors", "View member registration errors");
-		}
-		<div class="error-list-container">
-			<ul>
-				@foreach (var uploadError in Model.ErrorData)
-				{
-					if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
-					{
-				<li class="error-list-item font-xsmall">
-					@uploadError.Description
-				</li>
-					}
-				}
-			</ul>
-		</div>
-	</details>
+        <details class="govuk-details" style="background-color: #B10E1E ; padding-top: 5px; color: black;">
+            @{
+                string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
+                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
+            }
+            <!--
+    <div class="error-list-container">
+        <ul>
+            @foreach (var uploadError in Model.ErrorData)
+            {
+                if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+                {
+                    <li class="error-list-item font-xsmall">
+                        @uploadError.Description
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+        -->
+            <table class="govuk-table" style="background-color:#FDE3E6;">
+                @foreach (var uploadError in Model.ErrorData)
+                {
+                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" style="padding-left: 5px"> @uploadError.Description</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </details>
 
 	@if (numWarnings > 0)
 	{
