@@ -13,12 +13,12 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
             @Html.Gds().LabelFor(m => m.SelectedScheme)
             @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
-            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
         </div>
 
         <p>
