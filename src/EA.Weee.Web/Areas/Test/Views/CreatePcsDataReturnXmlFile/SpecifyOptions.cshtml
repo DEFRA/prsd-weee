@@ -57,40 +57,47 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AllProducers)">
             @Html.Gds().ValidationMessageFor(m => m.AllProducers)
             @Html.Gds().LabelFor(model => model.AllProducers)
-            <label class="block-label" for="PrivacyPolicy">
-                @Html.CheckBoxFor(m => m.AllProducers, new { @id = "allProducersCheckbox" })
-                Include all registered producers
-            </label>
-        </div>
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input id="allProducersCheckbox" class="govuk-checkboxes__input" name="allProducersCheckbox" type="checkbox" value="true" />
+                        <label class="block-label govuk-label govuk-checkboxes__label" for="PrivacyPolicy">
+                            <!--@Html.CheckBoxFor(m => m.AllProducers, new { @id = "allProducersCheckbox" })-->
+                            Include all registered producers
+                        </label>
+                        </div>
+                    </div>
+                </fieldset>
+                    </div>
 
-        <div id="numberOfProducersDiv" class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfProducers)>
-            @Html.Gds().LabelFor(model => model.NumberOfProducers)
-            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfProducers)
-            @Html.Gds().TextBoxFor(model => model.NumberOfProducers)
-        </div>
+                    <div id="numberOfProducersDiv" class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfProducers)>
+                        @Html.Gds().LabelFor(model => model.NumberOfProducers)
+                        @Html.Gds().ValidationMessageFor(mode => Model.NumberOfProducers)
+                        @Html.Gds().TextBoxFor(model => model.NumberOfProducers)
+                    </div>
 
-        @(this.WeeeGds().Submit("Continue"))
+                    @(this.WeeeGds().Submit("Continue"))
 
-        @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsDataReturnXmlFile", null, null)
-    }
-}
+                    @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsDataReturnXmlFile", null, null)
+                    }
+                    }
 
-@section scripts
+                    @section scripts
 {
-    <script type="text/javascript">
+                        <script type="text/javascript">
 
-        function showHideNumberOfProducersDiv() {
-            if ($("#allProducersCheckbox").is(":checked")) {
-                $("#numberOfProducersDiv").hide();
-                $("#numberOfProducersDiv input").val(0);
-            } else {
-                $("#numberOfProducersDiv").show();
-            }
-        }
+                            function showHideNumberOfProducersDiv() {
+                                if ($("#allProducersCheckbox").is(":checked")) {
+                                    $("#numberOfProducersDiv").hide();
+                                    $("#numberOfProducersDiv input").val(0);
+                                } else {
+                                    $("#numberOfProducersDiv").show();
+                                }
+                            }
 
-        $(function () {
-            showHideNumberOfProducersDiv();
-            $("#allProducersCheckbox").on("click", showHideNumberOfProducersDiv);
-        });
-    </script>
-}
+                            $(function () {
+                                showHideNumberOfProducersDiv();
+                                $("#allProducersCheckbox").on("click", showHideNumberOfProducersDiv);
+                            });
+                        </script>
+                    }

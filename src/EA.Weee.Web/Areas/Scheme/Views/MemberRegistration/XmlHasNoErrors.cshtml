@@ -54,7 +54,7 @@
 			</details>
 		}
 
-	    <div class="highlight-section">
+	    <div class="highlight-section govuk-body">
 	        @if (Model.ComplianceYear.HasValue && Model.ComplianceYear.Value > 2018)
             {
                 <div class="highlight-section-text">
@@ -77,13 +77,19 @@
 
 		@Html.Partial("_PrivacyPolicy");
 
-		<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-			@Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-			<label class="block-label" for="PrivacyPolicy">
-				@Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-				Confirm you have read our privacy policy
-			</label>
-		</div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            <fieldset class="govuk-fieldset">
+                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        @Html.Gds().CheckBoxForFrontEnd(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "govuk-checkboxes__input" })
+                        <label class="govuk-label govuk-checkboxes__label" for="PrivacyPolicy">
+                            Confirm you have read our privacy policy
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
 
 		<p>
 			@this.WeeeGds().SubmitWithEventTracking(
