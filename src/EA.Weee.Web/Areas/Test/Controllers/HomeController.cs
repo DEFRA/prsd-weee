@@ -33,6 +33,9 @@
                     case HomeViewModel.ManagePcsReturnsSubmissionWindow:
                         return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
 
+                    case HomeViewModel.CopyAndPaste:
+                        return RedirectToAction("Index", "CopyValues");
+
                     default:
                         throw new NotSupportedException();
                 }
