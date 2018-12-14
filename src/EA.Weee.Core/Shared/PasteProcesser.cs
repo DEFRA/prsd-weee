@@ -19,7 +19,7 @@
         {
             var categoryValues = new CategoryValues();
 
-            if (string.IsNullOrWhiteSpace(pasteValues?.ToString()))
+            if (pasteValues == null || string.IsNullOrWhiteSpace(pasteValues.ToString()))
             {
                 return categoryValues;
             }
