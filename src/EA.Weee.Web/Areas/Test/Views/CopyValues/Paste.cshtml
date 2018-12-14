@@ -1,0 +1,25 @@
+﻿@model string
+@{
+    ViewBag.Title = "Redirect";
+}
+
+@section main_content
+{
+
+
+    <h2 class="govuk-heading-l" id="heading-text">Past Values</h2>
+    <p class="govuk-body">Provide tonnage to 3 decimal places for 14 categories. For example 1.238</p>
+    <p class="govuk-body">You can copy the WEEE in tonnes from an Excel spreadsheet.</p>
+    <p class="govuk-body">Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom.</p>
+
+    @using (Html.BeginForm("Paste", "CopyValues", FormMethod.Post, new { @style = "display: inline"}))
+    {
+        @Html.Hidden("returnUrl", Model)
+        <textarea class="govuk-textarea" placeholder="Paste values here" id="pasteValues" name="pasteValues" style="height: 400px;"></textarea>
+        <button type="submit" class="govuk-button" id="paste-values-save">
+            Continue
+        </button>
+    }
+    
+    <a href="@Model" class="govuk-button", style="background-color: #bfc1c3; color: #0b0c0c">Cancel</a>
+}

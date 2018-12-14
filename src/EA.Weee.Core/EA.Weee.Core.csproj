@@ -165,14 +165,18 @@
     <Compile Include="Search\Simple\SimpleSearcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Shared\CategoryValue.cs" />
+    <Compile Include="Shared\CategoryValues.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\ICsvWriter.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
+    <Compile Include="Shared\IPasteProcesser.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Shared\PasteProcesser.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />
     <Compile Include="Admin\UserSearchData.cs" />

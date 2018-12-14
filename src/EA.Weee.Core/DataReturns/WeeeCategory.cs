@@ -4,46 +4,46 @@
 
     public enum WeeeCategory
     {
-        [Display(Name = "Large Household Appliances")]
+        [Display(Name = "Large household appliances")]
         LargeHouseholdAppliances = 1,
 
-        [Display(Name = "Small Household Appliances")]
+        [Display(Name = "Small household appliances")]
         SmallHouseholdAppliances = 2,
 
-        [Display(Name = "IT and Telecomms Equipment")]
+        [Display(Name = "IT and telecommunications equipment")]
         ITAndTelecommsEquipment = 3,
 
-        [Display(Name = "Consumer Equipment")]
+        [Display(Name = "Consumer equipment")]
         ConsumerEquipment = 4,
 
-        [Display(Name = "Lighting Equipment")]
+        [Display(Name = "Lighting equipment")]
         LightingEquipment = 5,
 
-        [Display(Name = "Electrical and Electronic Tools")]
+        [Display(Name = "Electrical and electronic tools")]
         ElectricalAndElectronicTools = 6,
 
-        [Display(Name = "Toys Leisure and Sports")]
+        [Display(Name = "Toys leisure and sports equipment")]
         ToysLeisureAndSports = 7,
 
-        [Display(Name = "Medical Devices")]
+        [Display(Name = "Medical devices")]
         MedicalDevices = 8,
 
-        [Display(Name = "Monitoring and Control Instruments")]
+        [Display(Name = "Monitoring and control instruments")]
         MonitoringAndControlInstruments = 9,
 
-        [Display(Name = "Automatic Dispensers")]
+        [Display(Name = "Automatic dispensers")]
         AutomaticDispensers = 10,
 
-        [Display(Name = "Display Equipment")]
+        [Display(Name = "Display equipment")]
         DisplayEquipment = 11,
 
-        [Display(Name = "Cooling Appliances Containing Refrigerants")]
+        [Display(Name = "Appliances containing refrigerants")]
         CoolingApplicancesContainingRefrigerants = 12,
 
-        [Display(Name = "Gas Discharge Lamps and LED light sources")]
+        [Display(Name = "Gas discharge lamps and LED light sources")]
         GasDischargeLampsAndLedLightSources = 13,
 
-        [Display(Name = "Photovoltaic Panels")]
+        [Display(Name = "Photovoltaic panels")]
         PhotovoltaicPanels = 14
     }
 }
