@@ -53,12 +53,12 @@
 
             return categoryValues;
         }
+        //private string StripCharactors(string line)
+        //{
 
-        private string StripCharactors(string line)
-        {
-            var allowed = line.Select(c => AllowedCharactors.Contains(c.ToString()) ? c : ' ');
+        //    var allowed = line.Select(c => AllowedCharactors.Contains(c.ToString()) ? c : ' ');
 
-            return new string(allowed.ToArray()).Replace(" ", string.Empty);
-        }
+        //    return new string(allowed.ToArray()).Replace(" ", string.Empty);
+        //}
     }
 }
