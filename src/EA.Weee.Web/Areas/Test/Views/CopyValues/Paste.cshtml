@@ -14,6 +14,7 @@
 
     @using (Html.BeginForm("Paste", "CopyValues", FormMethod.Post, new { @style = "display: inline"}))
     {
+        @Html.AntiForgeryToken()
         @Html.Hidden("returnUrl", Model)
         <textarea class="govuk-textarea" placeholder="Paste values here" id="pasteValues" name="pasteValues" style="height: 400px;"></textarea>
         <button type="submit" class="govuk-button" id="paste-values-save">
