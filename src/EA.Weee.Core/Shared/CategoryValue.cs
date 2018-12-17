@@ -6,9 +6,9 @@
     {
         public WeeeCategory Category { get; private set; }
 
-        public decimal? HouseHold { get; set; }
+        public string HouseHold { get; set; }
 
-        public decimal? NonHouseHold { get; set; }
+        public string NonHouseHold { get; set; }
 
         public CategoryValue(WeeeCategory category)
         {

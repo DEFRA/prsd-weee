@@ -13,7 +13,7 @@
     {
         private static readonly List<string> AllowedCharactors = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\r", "\n" };
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
-        private static readonly char[] LineSplitCharactors = { '\t' };
+        private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
 
         public CategoryValues BuildModel(object pasteValues)
         {
@@ -29,7 +29,7 @@
             if (lines.Any() && lines.ElementAt(lines.Count() - 1).Equals(string.Empty))
             {
                 lines.RemoveAt(lines.Count() - 1);
-            }
+            } 
 
             for (var lineCount = 0; lineCount < lines.Count; lineCount++)
             {
@@ -41,24 +41,29 @@
                 {
                     if (splitLine.Length > 0 && !string.IsNullOrWhiteSpace(splitLine[0]))
                     {
-                        category.HouseHold = Convert.ToDecimal(splitLine[0]);
+                        category.HouseHold = splitLine[0];
                     }
 
                     if (splitLine.Length > 1 && !string.IsNullOrWhiteSpace(splitLine[1]))
                     {
-                        category.NonHouseHold = Convert.ToDecimal(splitLine[1]);
+                        category.NonHouseHold = splitLine[1];
                     }
                 }
             }
 
             return categoryValues;
         }
-        //private string StripCharactors(string line)
-        //{
 
-        //    var allowed = line.Select(c => AllowedCharactors.Contains(c.ToString()) ? c : ' ');
+        private decimal? TryCastToDecimal(string value)
+        {
+            decimal output;
 
-        //    return new string(allowed.ToArray()).Replace(" ", string.Empty);
-        //}
+            if (decimal.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return null;
+        }
     }
 }
