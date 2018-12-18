@@ -43,6 +43,11 @@ a{
     margin-bottom: 0;
 }
 
+.unordered-list-xml {
+    list-style: none;
+    padding-left: 0px;
+}
+
 // Lists
 .list-bullet {
     margin-bottom: ($govuk-gutter*1.5);
