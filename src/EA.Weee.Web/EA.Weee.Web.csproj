@@ -618,6 +618,9 @@
     <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
+    <Content Include="Scripts\govuk\govuk-template.js" />
+    <Content Include="Scripts\govuk\ie.js" />
+    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-2.3.0.min.js" />
     <Content Include="Scripts\govuk_frontend\html5shiv.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />

@@ -46,9 +46,9 @@
             <a href="#main-content" class="govuk-skip-link">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
         </div>
     </div>
-    @*<div id="global-cookie-message">
-            @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
-        </div>*@
+    <div id="global-cookie-message">
+        @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
+    </div>
     <!--end global-cookie-message-->
     <!--end header-->
 
@@ -71,7 +71,7 @@
                     </a>
                 </div>
                 @RenderSection("inside_header", required: false)
-                
+
             </div>
             @RenderSection("proposition_header", required: false)
         </div>
@@ -79,13 +79,13 @@
 
     @RenderSection("after_header", required: false)
 
-@*<div class="govuk-width-container">*@
+    @*<div class="govuk-width-container">*@
 
     @*<main class="govuk-main-wrapper app-main-class" id="main-content" role="main">*@
-        @RenderBody()
+    @RenderBody()
     @*</main>*@
 
-@*</div>*@
+    @*</div>*@
 
     <footer class="govuk-footer " role="contentinfo" id="footer">
         <div class="govuk-width-container ">
@@ -107,14 +107,16 @@
             </div>
         </div>
     </footer>
-    
 
-<div hidden="hidden" class="hidden-for-screen-reader">
+
+    <div hidden="hidden" class="hidden-for-screen-reader">
         Version: @Startup.ApplicationVersion
     </div>
 
     <div id="global-app-error" class="app-error hidden"></div>
-    
+
+    <script src="@Url.Content("~/Scripts/govuk/govuk-template.js")" type="text/javascript"></script>
+
     @RenderSection("body_end", required: false)
 
 </body>
