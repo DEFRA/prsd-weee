@@ -1,54 +1,55 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.ContactDetails.ContactDetailsOverviewViewModel
-
+<div class="govuk-!-padding-bottom-8"></div>
+@Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 @section main_content {
-    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+
 
     <table id="pcs-details-table" class="govuk-table">
         <thead class="govuk-table__head">
-        <tr class="govuk-visually-hidden">
-            <th colspan="2">Contact Details</th>
-        </tr>
+            <tr class="govuk-visually-hidden">
+                <th colspan="2">Contact Details</th>
+            </tr>
         </thead>
         <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Name</th>
-            <td class="govuk-table__cell">@(Model.Contact.FirstName + " " + Model.Contact.LastName)</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Position</th>
-            <td class="govuk-table__cell">@Model.Contact.Position</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Address</th>
-            <td class="govuk-table__cell">
-                @Model.Address.Address.Address1<br/>
-                @Model.Address.Address.Address2<br/>
-                @Model.Address.Address.TownOrCity<br/>
-                @Model.Address.Address.CountyOrRegion<br/>
-                @Model.Address.Address.Postcode<br/>
-                @Model.Address.Address.CountryName<br/>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Telephone</th>
-            <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Email</th>
-            <td class="govuk-table__cell">@Model.Address.Address.Email</td>
-        </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <td class="govuk-table__cell">@(Model.Contact.FirstName + " " + Model.Contact.LastName)</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Position</th>
+                <td class="govuk-table__cell">@Model.Contact.Position</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Address</th>
+                <td class="govuk-table__cell">
+                    @Model.Address.Address.Address1<br />
+                    @Model.Address.Address.Address2<br />
+                    @Model.Address.Address.TownOrCity<br />
+                    @Model.Address.Address.CountyOrRegion<br />
+                    @Model.Address.Address.Postcode<br />
+                    @Model.Address.Address.CountryName<br />
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Telephone</th>
+                <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Email</th>
+                <td class="govuk-table__cell">@Model.Address.Address.Email</td>
+            </tr>
         </tbody>
     </table>
 
     <br />
-@if (Model.CanEditContactDetails)
-{
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageContactDetails(Model.SchemeId, Model.Contact.OrganisationId)))">Edit contact details</a>
-    </p>
-}
+    @if (Model.CanEditContactDetails)
+    {
+        <p>
+            <a href="@(Url.UrlFor<SchemeController>(a => a.ManageContactDetails(Model.SchemeId, Model.Contact.OrganisationId)))">Edit contact details</a>
+        </p>
+    }
 
     @Html.Partial("Overview/_OverviewAvailableActions")
 }
