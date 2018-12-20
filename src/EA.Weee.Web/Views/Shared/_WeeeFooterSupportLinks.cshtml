@@ -1,0 +1,29 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+
+<ul class="govuk-footer__inline-list">
+    @* Show terms and conditions and privacy policy only on external site *@
+    @if (ViewBag.ShowLinksToAgencies ?? true)
+    {
+        <li class="govuk-footer__inline-list-item">
+            @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
+                  Url.UrlFor<NewUserController>
+                      (c => c.TermsAndConditions()),
+                  "Policies",
+                  "Terms and conditions", "", new Dictionary<string, object>
+                  { { "class", "govuk-footer__link" } }, true
+                  ))
+        </li>
+        <li class="govuk-footer__inline-list-item">
+            @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
+                  Url.UrlFor<NewUserController>
+                      (c => c.Privacy()),
+                  "Policies",
+                  "Privacy", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true))
+        </li>
+    }
+    <li class="govuk-footer__inline-list-item">
+        @(this.WeeeGds().ActionLinkToNewTab("Cookies", Url.UrlFor<NewUserController>(c => c.Cookies())))
+    </li>
+</ul>

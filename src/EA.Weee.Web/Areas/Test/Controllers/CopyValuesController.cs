@@ -6,6 +6,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Core.Shared;
+    using Web.ViewModels.Shared;
 
     public class CopyValuesController : Controller
     {
@@ -19,14 +20,23 @@
         // GET: Test/CopyValues
         public ActionResult Index()
         {
-            var pastValues = TempData["pasteValues"];
+            var pastValues = TempData["pasteValues"] as CategoryValues;
 
             if (pastValues != null)
             {
-                return View(pastValues);
+                var model = new WeeeCategoryValueViewModel(pastValues);
+
+                return View(model);
             }
 
-            return View(new CategoryValues());
+            return View(new WeeeCategoryValueViewModel(new CategoryValues()));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(WeeeCategoryValueViewModel values)
+        {
+            return View(values);
         }
 
         public ActionResult Paste(string returnUrl)

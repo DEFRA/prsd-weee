@@ -20,10 +20,8 @@
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
-
-
-            <p>If your organisation is not listed, this may be because:</p>
-            <ul class="govuk-list--bullet govuk-body">
+            <p class="govuk-body">If your organisation is not listed, this may be because:</p>
+            <ul class="govuk-list govuk-list--bullet">
                 <li>you mistyped the organisation’s name</li>
                 <li>your organisation has not yet been created in our service</li>
                 <li>you entered something other than the organisation name</li>
@@ -59,9 +57,9 @@
             <h2 class="govuk-heading-s">We found no results for ‘@Model.SearchTerm’</h2>
         </header>
 
-        <p>If your organisation is not listed, this may be because:</p>
+        <p class="govuk-body">If your organisation is not listed, this may be because:</p>
 
-        <ul class="list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li>you mistyped the organisation’s name</li>
             <li>your organisation has not yet been created in our service</li>
             <li>you entered something other than the organisation name</li>
