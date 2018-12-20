@@ -14,11 +14,11 @@
 
     <p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
-            <span class="font-bold">@Html.LabelFor(m => m.SelectedYear):</span>
+            <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedYear):</span>
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             <span class="text-margin">@Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })</span>
         </div>
-        <span class="font-bold">@Html.LabelFor(m => m.RegistrationNumber):</span><span class="text-margin">@Model.RegistrationNumber</span>
+        <span class="font-bold govuk-body">@Html.LabelFor(m => m.RegistrationNumber):</span><span class="text-margin govuk-body">@Model.RegistrationNumber</span>
         
         @Html.HiddenFor(m => m.RegistrationNumber)
     </p>

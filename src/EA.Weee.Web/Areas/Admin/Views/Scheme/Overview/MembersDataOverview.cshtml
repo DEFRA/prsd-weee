@@ -1,9 +1,10 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData.MembersDataOverviewViewModel
-
+<div class="govuk-!-padding-bottom-8"></div>
+@Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 @section main_content {
-    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+
 
     @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
     {
