@@ -4,11 +4,15 @@
 
     public class CategoryValue
     {
-        public WeeeCategory Category { get; private set; }
+        public WeeeCategory Category { get; set; }
 
         public string HouseHold { get; set; }
 
         public string NonHouseHold { get; set; }
+
+        public CategoryValue()
+        {
+        }
 
         public CategoryValue(WeeeCategory category)
         {
