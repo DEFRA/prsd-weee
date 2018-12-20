@@ -8,9 +8,9 @@
 
 @* Implement sections here *@
 
-@section top_of_page {
+@*@section top_of_page {
 
-}
+    }*@
 
 @section head {
     @Html.Partial("_WeeeHead")
@@ -23,7 +23,7 @@
 }
 
 @section proposition_header {
-    @Html.Partial("_WeeeNavigation")
+    @*@Html.Partial("_WeeeNavigation")*@
 }
 
 @section after_header {
@@ -34,71 +34,43 @@
     <div class="footer_agencies">
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
-            <div>
-                <p>Environment Agency (England) helpline: 03708 506 506 – Producer Responsibility Regulatory Services</p>
-                <p>Scottish Environment Protection Agency helpline: 01786 457700 - Producer Compliance and Waste Shipments Unit</p>
-                <p>Northern Ireland Environment Agency helpline: 02 890 569338 - Producer Responsibility Unit</p>
-                <p>Natural Resources Wales helpline: 03000 65 3096 - Producer Responsibility Unit</p>
-            </div>
-            <hr />
+            @Html.Partial("_WeeeFooter")
         }
     </div>
 }
 
 @section footer_support_links {
-    <ul>
-       @* Show terms and conditions and privacy policy only on external site *@
-        @if (ViewBag.ShowLinksToAgencies ?? true)
-        {
-            <li>
-                @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-                    Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                    "Policies",
-                    "Terms and conditions",
-                    newTab: true))
-            </li>
-            <li>
-                @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
-                    Url.UrlFor<NewUserController>(c => c.Privacy()),
-                    "Policies",
-                    "Privacy",
-                    newTab: true))
-            </li>
-        }
-       
-        <li>
-            @(this.WeeeGds().ActionLinkToNewTab("Cookies", Url.UrlFor<NewUserController>(c => c.Cookies())))
-        </li>
-    </ul>
+    @Html.Partial("_WeeeFooterSupportLinks")
 }
 
 @section body_end {
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jquery-ui")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/govuk_toolkit")
-    @Scripts.Render("~/bundles/govuk_elements")
-    @Scripts.Render("~/bundles/govuk_weee")
+    <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
+    <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
+    @*@Scripts.Render("~/bundles/govuk_weee")*@
+    @Scripts.Render("~/bundles/govuk_frontend")
     @RenderSection("scripts", required: false)
 }
 
-<main id="content" role="main">
-    @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
-    @RenderBody()
-    @if (IsSectionDefined("main_content"))
-    {
-        <div class="govuk-grid-row">
-            <section class="govuk-grid-column-two-thirds">
-                @RenderSection("main_content", required: false)
-            </section>
-            @if (IsSectionDefined("related_content"))
-            {
-                <section class="column-third">
-                    <div class="related">
-                        @RenderSection("related_content", required: false)
-                    </div>
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper app-main-class" id="content" role="main">
+        @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
+        @RenderBody()
+        @if (IsSectionDefined("main_content"))
+        {
+            <div class="govuk-grid-row">
+                <section id="main-content" class="govuk-grid-column-two-thirds">
+                    @RenderSection("main_content", required: false)
                 </section>
-            }
-        </div>
-    }
-</main>
+                @if (IsSectionDefined("related_content"))
+                {
+                    <section class="govuk-grid-column-one-third">
+                        <div class="related">
+                            @RenderSection("related_content", required: false)
+                        </div>
+                    </section>
+                }
+            </div>
+        }
+    </main>
+</div>
+
