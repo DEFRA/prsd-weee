@@ -12,7 +12,6 @@
         [InlineData("000", "")]
         [InlineData("  000  ", "")]
         [InlineData("000  ", "")]
-        [InlineData("  000  ", "")]
         [InlineData("  123", "123")]
         [InlineData("123  ", "123")]
         [InlineData("  123  ", "123")]
