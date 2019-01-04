@@ -113,37 +113,38 @@
             </tbody>
         </table>
     </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
-        <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="visually-hidden">
-                    <th colspan="2">Contact details</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Contact name</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.ContactName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Telephone</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Mobile</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Mobile</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">E-mail</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Email</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+<section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
+    <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
+        <thead class="govuk-table__head">
+        <tr class="visually-hidden">
+            <th colspan="2">Contact details</th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Contact name</th>
+            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.ContactName</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Telephone</th>
+            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Telephone</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Mobile</th>
+            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Mobile</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">E-mail</th>
+            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Email</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Address</th>
+            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="eee-details">
         <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden">
@@ -581,6 +582,16 @@
     $("a[id$='details-tab']").click(function (event) {
         event.preventDefault();
 
+        var sectionId = $(this).attr('href').replace('#', '');
+
+        $("section[id$='details']").each(function () {
+            if ($(this).attr('id') !== sectionId) {
+                $(this).addClass('govuk-tabs__panel--hidden');
+            } else {
+                $(this).removeClass('govuk-tabs__panel--hidden');
+            }
+        });
+
         var schemeIdentifier = $(this).attr('id')
             .replace('registration', '')
             .replace('contact', '')
@@ -594,23 +605,23 @@
         // Inactivate scheme tags
         $("a[id$='details-tab']").each(function () {
             if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
-                $(this).parent().removeClass();
+                $(this).removeClass('govuk-tabs__tab--selected');
             }
         });
 
         // Except this tab
-        $(this).parent().addClass("active");
+        $(this).addClass('govuk-tabs__tab--selected');
 
         var tableIdentifier = $(this).attr('id').replace('details-tab', '');
 
         // Hide all data tables in scheme
         $("table[id$='details-table']").each(function () {
             if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
-                $(this).addClass('govuk-visually-hidden');
+               $(this).addClass('govuk-visually-hidden');
             }
         });
 
         // Except for the table corresponding to this tab
-        $("table[id$='" + tableIdentifier + "details-table']").removeClass('visually-hidden');
+        $("table[id$='" + tableIdentifier + "details-table']").removeClass('govuk-visually-hidden');
     })
 </script>

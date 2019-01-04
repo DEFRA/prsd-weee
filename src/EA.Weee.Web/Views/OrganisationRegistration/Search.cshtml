@@ -88,7 +88,7 @@
                 },
                 disabled: window.innerWidth <= 640
             }).autocomplete("instance")._renderItem = function (ul, item) {
-                $(ul).addClass("govuk-list govuk-list--bullet");
+                $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
                 return $("<li></li>")
                     .data("item.autocomplete", item)
                     .append("<span>" + item.Name + "</span>")
