@@ -9,100 +9,101 @@
         @Html.HiddenFor(m => m.Year, new { id = "ComplianceYear" })
         @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
 
-        <div class="section-tabs" id="tabs-div">
-            <ul>
-                <li id="collectedDelivered-list-item" class="active">
-                    <a href="#" id="collectedDelivered-data-tab">WEEE data</a>
-                </li>
-                <li id="output-list-item">
-                    <a href="#" id="output-data-tab">EEE data</a>
-                </li>
-            </ul>
-        </div>
+    <div class="govuk-tabs" id="tabs-div" data-module="tabs">
+        <ul class="govuk-tabs__list">
+            <li id="collectedDelivered-list-item" class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#collected-details" id="collectedDelivered-data-tab">WEEE data</a>
+            </li>
+            <li id="output-list-item" class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab" href="#output-details" id="output-data-tab">EEE data</a>
+            </li>
+        </ul>
+        <section class="govuk-tabs__panel" id="collected-details">
+            <table id="collectedDelivered-data-table" class="govuk-table">
+                <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        @switch (Model.OrderBy)
+                        {
+                            case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
+                                <th class="sorted-ascending govuk-table__header">
+                                    <a href="#" id="collected-date-ascending">Date and time (GMT)</a>
+                                    <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
+                                </th>
+                                break;
+                            case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
+                                <th class="sorted-descending govuk-table__header">
+                                    <a href="#" id="collected-date-descending">Date and time (GMT)</a>
+                                    <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
+                                </th>
+                                break;
+                            default:
+                                <th class="govuk-table__header">
+                                    <a href="#" id="collected-date">Date and time (GMT)</a>
+                                </th>
+                                break;
+                        }
+                        @switch (Model.OrderBy)
+                        {
+                            case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
+                                <th class="sorted-ascending govuk-table__header">
+                                    <a href="#" id="collected-quarter-ascending">Quarter reported</a>
+                                    <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
+                                </th>
+                                break;
+                            case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
+                                <th class="sorted-descending govuk-table__header">
+                                    <a href="#" id="collected-quarter-descending">Quarter reported</a>
+                                    <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
+                                </th>
+                                break;
+                            default:
+                                <th class="govuk-table__header">
+                                    <a href="#" id="collected-quarter">Quarter reported</a>
+                                </th>
+                                break;
+                        }
+                        <th class="govuk-table__header">Submitted by</th>
+                        <th class="govuk-table__header">B2C collected (tonnes)</th>
+                        <th class="govuk-table__header">B2C delivered (tonnes)</th>
+                        <th class="govuk-table__header">B2B collected (tonnes)</th>
+                        <th class="govuk-table__header">B2B delivered (tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var item in Model.Results)
+                    {
+                        string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-        <table id="collectedDelivered-data-table" class="govuk-table">
-            <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
-            <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><div style="width:190px;">@datetimeValue</div></td>
+                            <td class="govuk-table__cell">@item.Quarter</td>
+                            <td class="govuk-table__cell" style="text-align:left">@item.SubmittedBy</td>
+                            <td class="govuk-table__cell">@item.WeeeCollectedB2c</td>
+                            <td class="govuk-table__cell">@item.WeeeDeliveredB2c</td>
+                            <td class="govuk-table__cell">@item.WeeeCollectedB2b</td>
+                            <td class="govuk-table__cell">@item.WeeeDeliveredB2b</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="output-details">
+            <table id="output-data-table" class="govuk-table govuk-visually-hidden">
+                <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
+                <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
                             <th class="sorted-ascending govuk-table__header">
-                                <a href="#" id="collected-date-ascending">Date and time (GMT)</a>
-                                <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
-                            </th>
-                            break;
-                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending govuk-table__header">
-                                <a href="#" id="collected-date-descending">Date and time (GMT)</a>
-                                <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
-                            </th>
-                            break;
-                        default:
-                            <th class="govuk-table__header">
-                                <a href="#" id="collected-date">Date and time (GMT)</a>
-                            </th>
-                            break;
-                    }
-                    @switch (Model.OrderBy)
-                    {
-                        case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
-                            <th class="sorted-ascending govuk-table__header">
-                                <a href="#" id="collected-quarter-ascending">Quarter reported</a>
-                                <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
-                            </th>
-                            break;
-                        case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
-                            <th class="sorted-descending govuk-table__header">
-                                <a href="#" id="collected-quarter-descending">Quarter reported</a>
-                                <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
-                            </th>
-                            break;
-                        default:
-                            <th class="govuk-table__header">
-                                <a href="#" id="collected-quarter">Quarter reported</a>
-                            </th>
-                            break;
-                    }
-                    <th class="govuk-table__header">Submitted by</th>
-                    <th class="govuk-table__header">B2C collected (tonnes)</th>
-                    <th class="govuk-table__header">B2C delivered (tonnes)</th>
-                    <th class="govuk-table__header">B2B collected (tonnes)</th>
-                    <th class="govuk-table__header">B2B delivered (tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @foreach (var item in Model.Results)
-                {
-                    string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
-
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell"><div style="width:190px;">@datetimeValue</div></td>
-                        <td class="govuk-table__cell">@item.Quarter</td>
-                        <td class="govuk-table__cell" style="text-align:left">@item.SubmittedBy</td>
-                        <td class="govuk-table__cell">@item.WeeeCollectedB2c</td>
-                        <td class="govuk-table__cell">@item.WeeeDeliveredB2c</td>
-                        <td class="govuk-table__cell">@item.WeeeCollectedB2b</td>
-                        <td class="govuk-table__cell">@item.WeeeDeliveredB2b</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <table id="output-data-table" class="govuk-visually-hidden">
-            <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
-            <thead>
-                <tr>
-                    @switch (Model.OrderBy)
-                    {
-                        case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending">
                                 <a href="#" id="output-date-ascending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="#" id="output-date-descending">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
@@ -116,132 +117,157 @@
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
-                            <th class="sorted-ascending">
+                            <th class="sorted-ascending govuk-table__header">
                                 <a href="#" id="output-quarter-ascending">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
                             </th>
                             break;
                         case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="#" id="output-quarter-descending">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
                             </th>
                             break;
                         default:
-                            <th>
+                            <th class="govuk-table__header">
                                 <a href="#" id="output-quarter">Quarter reported</a>
                             </th>
                             break;
                     }
-                    <th>Submitted by</th>
-                    <th>B2C (tonnes)</th>
-                    <th>B2B (tonnes)</th>
-                    <th>Producer EEE changes</th>
+                    <th class="govuk-table__header">Submitted by</th>
+                    <th class="govuk-table__header">B2C (tonnes)</th>
+                    <th class="govuk-table__header">B2B (tonnes)</th>
+                    <th class="govuk-table__header">Producer EEE changes</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody class="govuk-table__body">
                 @foreach (var item in Model.Results)
                 {
                     string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-                    <tr>
-                        <td><div style="width:190px;">@datetimeValue</div></td>
-                        <td>@item.Quarter</td>
-                        <td style="text-align:left">@item.SubmittedBy</td>
-                        <td>@item.EeeOutputB2c</td>
-                        <td>@item.EeeOutputB2b</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><div style="width:190px;">@datetimeValue</div></td>
+                        <td class="govuk-table__cell">@item.Quarter</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.SubmittedBy</td>
+                        <td class="govuk-table__cell">@item.EeeOutputB2c</td>
+                        <td class="govuk-table__cell">@item.EeeOutputB2b</td>
+                        <td class="govuk-table__cell">
                             @if (item.EeeDataChanged)
                             {
                                 <div style="width:150px;">
                                     @Html.ActionLink("View changes (CSV)", "DownloadDataReturnSubmissionEeeChanges",
-                                   new { currentSubmission = item.DataReturnVersionId, PreviousSubmission = item.PreviousSubmissionDataReturnVersionId })
+                                        new { currentSubmission = item.DataReturnVersionId, PreviousSubmission = item.PreviousSubmissionDataReturnVersionId })
                                 </div>
                             }
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </section>
 
-        <script type="text/javascript">
-            $("a[id$='data-tab']").click(function (event) {
-                event.preventDefault();
+            <script type="text/javascript">
+                $("a[id$='data-tab']").click(function (event) {
+                    event.preventDefault();
 
-                // Inactivate tabs
-                $("a[id$='data-tab']").each(function () {
-                    $(this).parent().removeClass();
+                    var sectionId = $(this).attr('href').replace('#', '');
+
+                    $("section[id$='details']").each(function () {
+                        if ($(this).attr('id') !== sectionId) {
+                            $(this).addClass('govuk-tabs__panel--hidden');
+                        } else {
+                            $(this).removeClass('govuk-tabs__panel--hidden');
+                        }
+                    });
+
+                    // Inactivate tabs
+                    $("a[id$='data-tab']").each(function () {
+                        $(this).removeClass('govuk-tabs__tab--selected');
+                    });
+
+                    // Except this tab
+                    $(this).addClass("govuk-tabs__tab--selected");
+
+                    // Hide all data tables
+                    $("table[id$='data-table']").each(function () {
+                        $(this).addClass('govuk-visually-hidden');
+                    });
+
+                    var tabIdentifier = $(this).attr('id')
+                        .replace('-data-tab', '');
+
+                    // Except for the table corresponding to this tab
+                    $("table[id$='" + tabIdentifier + "-data-table']").removeClass('govuk-visually-hidden');
+
+                    // Resize the div containing the tabs to match the width of the selected table
+                    $("#tabs-div").width($("table[id$='" + tabIdentifier + "-data-table']").width());
+
+                    // Resize the div containing the tabs after the data for the visible table has been loaded
+                    InitialiseWidth();
+
                 });
 
-                // Except this tab
-                $(this).parent().addClass("active");
-
-                // Hide all data tables
-                $("table[id$='data-table']").each(function () {
-                    $(this).addClass('visually-hidden');
+                $("#collected-date-descending, #collected-date, #output-date-descending, #output-date").click(function (event) {
+                    event.preventDefault();
+                    SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending');
                 });
 
-                var tabIdentifier = $(this).attr('id')
-                    .replace('-data-tab', '');
+                $("#collected-date-ascending, #output-date-ascending").click(function (event) {
+                    event.preventDefault();
+                    SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending');
+                });
 
-                // Except for the table corresponding to this tab
-                $("table[id$='" + tabIdentifier + "-data-table']").removeClass('visually-hidden');
+                $("#collected-quarter-descending, #collected-quarter, #output-quarter-descending, #output-quarter").click(function (event) {
+                    event.preventDefault();
+                    SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterAscending');
+                });
 
-                // Resize the div containing the tabs to match the width of the selected table
-                $("#tabs-div").width($("table[id$='" + tabIdentifier + "-data-table']").width());
-            })
+                $("#collected-quarter-ascending, #output-quarter-ascending").click(function (event) {
+                    event.preventDefault();
+                    SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterDescending');
+                });
 
-            $("#collected-date-descending, #collected-date, #output-date-descending, #output-date").click(function (event) {
-                event.preventDefault();
-                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending');
-            })
+                function InitialiseWidth() {
+                    $("table[id$='data-table']").each(function () {
+                        if (!$(this).hasClass("govuk-visually-hidden")) {
+                            var width = $("#" + $(this).attr('id')).width();
+                            $("#tabs-div").width(width);
+                            $(this).closest('section').width(width);
+                            //$(this).closest('section').siblings('ul').width(calculatedWidth);
+                            $(this).closest('section').siblings('ul').width($(this).closest('section').outerWidth());
 
-            $("#collected-date-ascending, #output-date-ascending").click(function (event) {
-                event.preventDefault();
-                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending');
-            })
-
-            $("#collected-quarter-descending, #collected-quarter, #output-quarter-descending, #output-quarter").click(function (event) {
-                event.preventDefault();
-                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterAscending');
-            })
-
-            $("#collected-quarter-ascending, #output-quarter-ascending").click(function (event) {
-                event.preventDefault();
-                SortDataReturnSubmissionResults('@DataReturnSubmissionsHistoryOrderBy.QuarterDescending');
-            })
-
-            // Resize the div containing the tabs after the data for the visible table has been loaded
-            $("table[id$='data-table']").each(function () {
-                if (!$(this).hasClass("visually-hidden")) {
-                    $("#tabs-div").width($("#" + $(this).attr('id')).width());
+                        }
+                    });
                 }
-            })
 
-            function SortDataReturnSubmissionResults(orderBy) {
-                var selectedYear = $("#ComplianceYear").val()
-                var selectedScheme = $("#SchemeId").val()
+                function SortDataReturnSubmissionResults(orderBy) {
+                    var selectedYear = $("#ComplianceYear").val();
+                    var selectedScheme = $("#SchemeId").val();
 
-                $.ajax({
-                    url: '@Url.Action("GetDataReturnSubmissionResults")',
-                    type: 'GET',
-                    cache: false,
-                    data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
-                    success: function (data) {
-                        // Remember the ID of the active tab
-                        var activeTab = $('.active').attr('id');
- 
-                        $('#submissionsGrid').replaceWith(data);
+                    $.ajax({
+                        url: '@Url.Action("GetDataReturnSubmissionResults")',
+                        type: 'GET',
+                        cache: false,
+                        data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
+                        success: function (data) {
+                            // Remember the ID of the active tab
+                            var activeTab = $('.active').attr('id');
 
-                        // Invoke the click method to make the tab active
-                        $('#' + activeTab + ' > a').click();
-                    }
-                });
-            }
-        </script>
+                            $('#submissionsGrid').replaceWith(data);
+
+                            // Invoke the click method to make the tab active
+                            $('#' + activeTab + ' > a').click();
+                        }
+                    });
+                }
+
+                InitialiseWidth();
+            </script>
+    </div>
     }
     else
     {
-        <span>No submissions have been made for the chosen compliance year and PCS.</span>
+        <span class="govuk-body govuk-!-padding-bottom-8">No submissions have been made for the chosen compliance year and PCS.</span>
+        
     }
 </div>
