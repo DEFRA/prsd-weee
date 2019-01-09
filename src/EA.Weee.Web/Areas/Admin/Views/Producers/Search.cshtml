@@ -93,8 +93,9 @@
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 // Do nothing.
             },
-
-        }).autocomplete("instance")._renderItem = function (ul, item) {
+                disabled: window.innerWidth <= 640
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
             return $("<li></li>")
                 .data("item.autocomplete", item)
                 .append("<span>" + item.Name + "</span><span class=\"registrationNumber\">" + item.RegistrationNumber + "</span>")

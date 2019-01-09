@@ -174,24 +174,21 @@
             AssertPopulatedValues(result);
         }
 
-        //[Fact]
-        //public void BuildModel_GivenStringContainsNoNumericCharactors_CategoryValuesShouldBeNull()
-        //{
-        //    var result = pasteProcesser.BuildModel(@"!\t\n""\t£\n$\t%\n^\t^\n&\t*\n(\t)\n-\t_\n=\t+\n[\t]\n@\t~\n#\t?\n|\t¬\n.\t<\n>\t.\n!\t\n");
+        [Theory]
+        [InlineData("1\t2\t3\t4\r\n5\t6\t7\r\n")]
+        [InlineData("1:2:3:4\r\n5:6:7\r\n")]
+        [InlineData("1,2,3,4\r\n5,6,7\r\n")]
+        public void BuildModel_GivenStringContainsRowsWithMoreThenTwoColumns_CategoryValueShouldBePopulated(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
 
-        //    AssertEmptyValues(result);
-        //}
-        // what about string that just contains newline or spacing char       
-
-        // test for empty lines 
-
-        // too many values pasted into the field / do a test for this
-
-        // strip empty
-
-        // split string by newline 
-
-        // split each newline by spacing char
+            result.ElementAt(0).HouseHold.Should().Be("1");
+            result.ElementAt(0).NonHouseHold.Should().Be("2");
+            result.ElementAt(1).HouseHold.Should().Be("5");
+            result.ElementAt(1).NonHouseHold.Should().Be("6");
+            result.Count(c => c.HouseHold != null).Should().Be(2);
+            result.Count(c => c.NonHouseHold != null).Should().Be(2);
+        }
 
         private static void AssertEmptyValues(CategoryValues result)
         {
