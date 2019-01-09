@@ -365,6 +365,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\weee\images\icon-search-2x.png" />
+    <Content Include="Content\weee\images\icon-search.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
     <Content Include="Content\weee\images\sorted-descending.png" />
     <Content Include="Content\weee\images\spinner.gif" />
@@ -823,6 +825,8 @@
     <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
     <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
     <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
+    <Content Include="Views\Shared\_WeeeFooter.cshtml" />
+    <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -993,6 +997,7 @@
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
+    <Compile Include="ViewModels\Shared\WeeeCategoryValueViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
