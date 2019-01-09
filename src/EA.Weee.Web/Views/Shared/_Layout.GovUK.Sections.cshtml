@@ -33,80 +33,18 @@
 
 @section footer_top {
 <div class="footer_agencies">
-    @if (ViewBag.ShowLinksToAgencies ?? true)
-    {
-    <h2 class="govuk-footer__heading govuk-heading-m govuk-!-margin-bottom-2" style="border-bottom: 0px;">Contact us</h2>
-    <ul class="govuk-footer__list govuk-footer__list--columns-2">
-        <li class="govuk-footer__list-item">
-            <h4 class="govuk-heading-s">England</h4>
-            <p class="govuk-body govuk-body govuk-!-font-size-16">
-                Environment Agency<br />
-                Producer Responsibility Regulatory Services<br />
-                Telephone: 03708 506 506
-            </p>
-        </li>
-        <li class="govuk-footer__list-item">
-            <h4 class="govuk-heading-s">Scotland</h4>
-            <p class="govuk-body govuk-body govuk-!-font-size-16">
-                Scottish Environment Protection Agency<br />
-                Producer Compliance and Waste Shipments Unit<br />
-                Telephone: 01786 457700
-            </p>
-        </li>
-        <li class="govuk-footer__list-item">
-            <h4 class="govuk-heading-s">Northern Ireland</h4>
-            <p class="govuk-body govuk-body govuk-!-font-size-16">
-                Northern Ireland Environment Agency<br />
-                Producer Responsibility Unit<br />
-                Telephone: 02 890 569338
-            </p>
-        </li>
-        <li class="govuk-footer__list-item">
-            <h4 class="govuk-heading-s">Wales</h4>
-            <p class="govuk-body govuk-body govuk-!-font-size-16">
-                Natural Resources Wales<br />
-                Producer Responsibility Unit<br />
-                Telephone: 03000 65 3096
-            </p>
-        </li>
-    </ul>
-
-    }
+   @Html.Partial("_WeeeFooter") 
 </div>
 }
 
 @section footer_support_links {
-<ul class="govuk-footer__inline-list">
-    @* Show terms and conditions and privacy policy only on external site *@
-    @if (ViewBag.ShowLinksToAgencies ?? true)
-    {
-    <li class="govuk-footer__inline-list-item">
-        @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-        Url.UrlFor<NewUserController>
-            (c => c.TermsAndConditions()),
-            "Policies",
-            "Terms and conditions", "", new Dictionary<string, object>
-                { { "class", "govuk-footer__link" } }, true
-                ))
-    </li>
-    <li class="govuk-footer__inline-list-item">
-        @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
-        Url.UrlFor<NewUserController>
-            (c => c.Privacy()),
-            "Policies",
-            "Privacy", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true))
-    </li>
-    }
-    <li class="govuk-footer__inline-list-item">
-        @(this.WeeeGds().ActionLinkToNewTab("Cookies", Url.UrlFor<NewUserController>(c => c.Cookies())))
-    </li>
-</ul>
+    @Html.Partial("_WeeeFooterSupportLinks") 
 }
 
 @section body_end {
 <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
 <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
-    @*@Scripts.Render("~/bundles/govuk_weee")*@
+    @Scripts.Render("~/bundles/govuk_weee")
     @Scripts.Render("~/bundles/govuk_frontend")
     @RenderSection("scripts", required: false)
 }
