@@ -60,7 +60,10 @@ a{
     padding-bottom: 10px;
 }
 
-
+.hidden {
+    display: none;
+    visibility: hidden;
+}
 
 #global-header-bar, #global-cookie-message p {
     max-width: 960px;
