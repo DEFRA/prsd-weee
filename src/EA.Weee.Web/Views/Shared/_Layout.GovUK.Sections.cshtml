@@ -32,20 +32,20 @@
 }
 
 @section footer_top {
-<div class="footer_agencies">
-   @Html.Partial("_WeeeFooter") 
-</div>
+    <div class="footer_agencies">
+        @Html.Partial("_WeeeFooter")
+    </div>
 }
 
 @section footer_support_links {
-    @Html.Partial("_WeeeFooterSupportLinks") 
+    @Html.Partial("_WeeeFooterSupportLinks")
 }
 
 @section body_end {
-<!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
-<!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
-    @Scripts.Render("~/bundles/govuk_weee")
+    <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-3")<!--<![endif]-->
+    <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
     @Scripts.Render("~/bundles/govuk_frontend")
+    @Scripts.Render("~/bundles/govuk_weee")
     @RenderSection("scripts", required: false)
 }
 

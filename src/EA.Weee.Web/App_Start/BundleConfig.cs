@@ -16,24 +16,15 @@
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/custom-validation.js"));
 
-            // JQuery 2.x.x is used for allother browsers.
-            bundles.Add(new ScriptBundle("~/bundles/jquery-2").Include(
-                "~/Scripts/jquery-2*",
+            // JQuery 3.x.x is used for allother browsers.
+            bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
+                "~/Scripts/jquery-3.3.1.js",
+                "~/Scripts/jquery-migrate-3.0.0.js",
                 "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery.select-to-autocomplete.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/custom-validation.js"));
-
-            //bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
-            //          "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
-            //          "~/Scripts/govuk_toolkit/govuk/selection-buttons.js",
-            //          "~/Scripts/govuk_toolkit/govuk/show-hide-content.js",
-            //          "~/Scripts/govuk_toolkit/govuk/shim-links-with-button-role.js"));
-
-            //bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
-            //          "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
-            //          "~/Scripts/govuk_elements/application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
                       "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.js",
@@ -56,13 +47,9 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie8").Include(
                       "~/Content/weee-page-ie8.css"));
-
+            
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                       "~/Content/weee-page.css"));
-
-            //bundles.Add(new StyleBundle("~/Content/govuk_frontend_css").Include(
-            //    "~/Content/govuk_frontend/images/govuk-frontend-2.3.0.min.css",
-            //    "~/Content/govuk_frontend/images/govuk-frontend-ie8-2.3.0.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
