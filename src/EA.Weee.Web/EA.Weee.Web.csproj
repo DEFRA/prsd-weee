@@ -611,7 +611,6 @@
     <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
-    <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -622,6 +621,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery-migrate-3.0.0.js" />
+    <Content Include="Scripts\jquery-migrate-3.0.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
