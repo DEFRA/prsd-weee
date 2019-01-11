@@ -35,9 +35,6 @@
                     "~/Scripts/vendor/modernizr.custom.77028.js",
                     "~/Scripts/weee-application.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_frontend_script").Include(
-                    "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.js"));
-
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 
