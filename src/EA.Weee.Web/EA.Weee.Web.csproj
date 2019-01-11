@@ -388,6 +388,11 @@
     <Content Include="Content\weee\_font_stack.scss" />
     <Content Include="Areas\Test\Views\CopyValues\Index.cshtml" />
     <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
+    <Content Include="Scripts\govuk\govuk-template.js" />
+    <Content Include="Scripts\govuk\ie.js" />
+    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
+    <Content Include="Scripts\govuk_frontend\govuk-frontend-2.3.0.min.js" />
+    <Content Include="Scripts\govuk_frontend\html5shiv.js" />
     <Content Include="Content\govuk_frontend\package\vendor\_sass-mq.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_visually-hidden.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_clearfix.scss" />
@@ -611,11 +616,6 @@
     <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
-    <Content Include="Scripts\govuk\govuk-template.js" />
-    <Content Include="Scripts\govuk\ie.js" />
-    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
-    <Content Include="Scripts\govuk_frontend\govuk-frontend-2.3.0.min.js" />
-    <Content Include="Scripts\govuk_frontend\html5shiv.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

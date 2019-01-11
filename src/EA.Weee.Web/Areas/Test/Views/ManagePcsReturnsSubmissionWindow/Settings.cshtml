@@ -22,7 +22,7 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FixCurrentDate)">
             @Html.Gds().ValidationMessageFor(m => m.FixCurrentDate)
-            @Html.Gds().CheckBoxFor(m => m.FixCurrentDate, new { @class= "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(m => m.FixCurrentDate, new { @class= "govuk-checkboxes__input" })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CurrentDate)">
             @Html.Gds().LabelFor(m => m.CurrentDate)

@@ -20,16 +20,7 @@
         <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
 
         @Html.Partial("_ReportSearchFilters")
-        /*
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
-            <fieldset>
-                <label class="block-label" for="IncludeBrandNames">
-                    @Html.CheckBoxFor(m => m.IncludeBrandNames, new { @id = "IncludeBrandNames" })
-                    Include brand names?
-                </label>
-            </fieldset>
-        </div>
-        */
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-checkboxes">

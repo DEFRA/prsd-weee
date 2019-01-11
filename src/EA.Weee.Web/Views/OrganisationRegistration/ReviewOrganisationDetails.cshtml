@@ -252,21 +252,11 @@
         <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
 
         @Html.Partial("_PrivacyPolicy");
-        /*
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-            @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-            <label class="block-label" for="PrivacyPolicy">
-                @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-                Confirm you have read our privacy policy
-            </label>
-        </div>
-        */
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-checkboxes">
                     @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
                     <div class="govuk-checkboxes__item">
-                        <!-- Removed the checkboxfor helper as it was causing the check box to be invisible, check with John about this happening -->
                         <input id="PrivacyPolicy" class="govuk-checkboxes__input" name="PrivacyPolicy" type="checkbox" value="true" />
                         <label class="govuk-label govuk-checkboxes__label">
                             Confirm you have read our privacy policy

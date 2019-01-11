@@ -48,17 +48,17 @@
         <h3 class="govuk-heading-s">Advanced Options</h3>
 
         <div class="govuk-form-group">
-            @Html.Gds().CheckBoxFor(model => model.NoCompaniesForNewProducers, new { @class = "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(model => model.NoCompaniesForNewProducers, new { @class = "govuk-checkboxes__input" })
         </div>
         
         <h3 class="govuk-heading-s">Optional Errors</h3>
 
         <div class="govuk-form-group">
-            @Html.Gds().CheckBoxFor(model => model.IncludeMalformedSchema, new { @class = "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IncludeMalformedSchema, new { @class = "govuk-checkboxes__input" })
             <div class="govuk-!-padding-bottom-2"></div>
-            @Html.Gds().CheckBoxFor(model => model.IncludeUnexpectedFooElement, new { @class = "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IncludeUnexpectedFooElement, new { @class = "govuk-checkboxes__input" })
             <div class="govuk-!-padding-bottom-2"></div>
-            @Html.Gds().CheckBoxFor(model => model.IgnoreStringLengthConditions, new { @class = "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IgnoreStringLengthConditions, new { @class = "govuk-checkboxes__input" })
         </div>
 
         @(this.WeeeGds().Submit("Continue"))
