@@ -19,13 +19,11 @@
                         "~/Scripts/jquery.validate*",
                         "~/Scripts/custom-validation.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
-                      "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_toolkit/govuk/selection-buttons.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
-                     "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
-                     "~/Scripts/govuk_elements/application.js"));
+            bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
+        "~/Scripts/govuk_frontend/govuk-frontend-2.3.0.min.js",
+        "~/Scripts/govuk_frontend/html5shiv.js",
+        "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                       "~/Scripts/vendor/modernizr.custom.77028.js",

@@ -5,34 +5,31 @@
 
 @* Implement sections here *@
 
-@section top_of_page {
+@*section top_of_page {
 
-}
-
+    }
+*@
 @section head {
     @Html.Partial("_WeeeHead")
+    @*Html.Partial("_WeeeTracking")*@
     @RenderSection("head", required: false)
 }
-
+@*
 @section inside_header {
-
+    @Html.Partial("_WeeeHeader")
 }
+*@
+@*
+    @section footer_top {
+        <div class="footer_agencies">
+            @Html.Partial("_WeeeFooter")
+        </div>
+    }
 
-@section proposition_header {
-    @Html.Partial("_WeeeNavigation")
-}
-
-@section after_header {
-
-}
-
-@section footer_top {
-
-}
-
-@section footer_support_links {
-}
-
+    @section footer_support_links {
+        @Html.Partial("_WeeeFooterSupportLinks")
+    }
+*@
 @section body_end {
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jquery-ui")
