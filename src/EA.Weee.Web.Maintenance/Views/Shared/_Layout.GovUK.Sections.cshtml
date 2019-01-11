@@ -5,37 +5,17 @@
 
 @* Implement sections here *@
 
-@*section top_of_page {
-
-    }
-*@
 @section head {
     @Html.Partial("_WeeeHead")
     @*Html.Partial("_WeeeTracking")*@
     @RenderSection("head", required: false)
 }
-@*
-@section inside_header {
-    @Html.Partial("_WeeeHeader")
-}
-*@
-@*
-    @section footer_top {
-        <div class="footer_agencies">
-            @Html.Partial("_WeeeFooter")
-        </div>
-    }
 
-    @section footer_support_links {
-        @Html.Partial("_WeeeFooterSupportLinks")
-    }
-*@
 @section body_end {
-    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-3")
     @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/govuk_toolkit")
-    @Scripts.Render("~/bundles/govuk_elements")
+    @Scripts.Render("~/bundles/govuk_frontend")
     @Scripts.Render("~/bundles/govuk_weee")
     @RenderSection("scripts", required: false)
 }
