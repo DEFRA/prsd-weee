@@ -442,6 +442,7 @@
     <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-2.3.0.min.js" />
+    <Content Include="Scripts\govuk_frontend\html5shiv.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -453,6 +454,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
