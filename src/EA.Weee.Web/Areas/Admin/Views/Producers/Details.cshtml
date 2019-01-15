@@ -6,39 +6,43 @@
     ViewBag.Title = @InternalUserActivity.ProducerDetails;
 }
 
-@section main_content {
+<div class="govuk-grid-row">
+    <section class="govuk-grid-column-full" id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">@InternalUserActivity.ProducerDetails</h1>
+        </header>
+       
+        <p>
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+                <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedYear):</span>
+                @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+                <span class="text-margin">@Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false", @class= "govuk-!-width-one-third" })</span>
+            </div>
+            <span class="font-bold govuk-body">@Html.LabelFor(m => m.RegistrationNumber):</span><span class="text-margin govuk-body">@Model.RegistrationNumber</span>
 
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">@InternalUserActivity.ProducerDetails</h1>
-    </header>  
+            @Html.HiddenFor(m => m.RegistrationNumber)
+        </p>
 
-    <p>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
-            <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedYear):</span>
-            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            <span class="text-margin">@Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })</span>
-        </div>
-        <span class="font-bold govuk-body">@Html.LabelFor(m => m.RegistrationNumber):</span><span class="text-margin govuk-body">@Model.RegistrationNumber</span>
-        
-        @Html.HiddenFor(m => m.RegistrationNumber)
-    </p>
+        <div class="govuk-form-group" id="detailsResults"></div>
 
-    <div class="govuk-form-group" id="detailsResults"></div>
+        <br />
+        <p>
+            @Html.ActionLink("Download registration details and changes (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
+        </p>
+        <p>
+            @Html.ActionLink("Download EEE data changes (CSV)", "DownloadProducerEeeDataHistoryCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
+        </p>
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
+        </p>
+        <p>
+            <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
+        </p>
+    
+    </section>
 
-    <br />
-    <p>
-        @Html.ActionLink("Download registration details and changes (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
-    </p>
-    <p>
-        @Html.ActionLink("Download EEE data changes (CSV)", "DownloadProducerEeeDataHistoryCsv", "Producers", new { registrationNumber = @Model.RegistrationNumber }, null)
-    </p>
-    <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
-    </p>
-    <p>
-        <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
-    </p>
-}
+</div>
+
 
 @section scripts {
     <script type="text/javascript">
@@ -47,7 +51,7 @@
             var selectedYear = $("#SelectedYear").val();
             var registrationNumber = $("#RegistrationNumber").val();
             FetchProducerDetails(registrationNumber, selectedYear);
-        });        
+        });
 
         function FetchProducerDetails(registrationNumber, selectedYear) {
             $.ajax({
