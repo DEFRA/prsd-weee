@@ -50,26 +50,20 @@
         @RenderBody()
         @if (IsSectionDefined("main_content"))
         {
-        <div class="govuk-grid-row">
-            @if (IsSectionDefined("related_content"))
-            {
+            <div class="govuk-grid-row">
                 <section id="main-content" class="govuk-grid-column-two-thirds">
                     @RenderSection("main_content", required: false)
                 </section>
-
-                <section class="govuk-grid-column-one-third">
-                    <div class="related">
-                        @RenderSection("related_content", required: false)
-                    </div>
-                </section>
-            }
-            else
-            {
-                <section id="main-content" class="govuk-grid-column-full">
-                    @RenderSection("main_content", required: false)
-                </section>
-            }
-        </div>
+                @if (IsSectionDefined("related_content"))
+                {
+                    <section class="govuk-grid-column-one-third">
+                        <div class="related">
+                            @RenderSection("related_content", required: false)
+                        </div>
+                    </section>
+                }
+            </div>
         }
+
     </main>
 </div>
