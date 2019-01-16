@@ -49,7 +49,7 @@
         <details class="govuk-details" style="background-color: #B10E1E ; padding-top: 5px; color: black;">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
-                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
+                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
             }
             <!--
     <div class="error-list-container">

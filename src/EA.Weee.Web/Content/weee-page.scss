@@ -647,8 +647,8 @@ input[type="file"].form-control {
     color: black;
 }
 
-.govuk-details__summary:focus {
-    background: #B10E1E;
+.summary_error:focus {
+    background: #B10E1E !important;
     outline: none;
 }
 
