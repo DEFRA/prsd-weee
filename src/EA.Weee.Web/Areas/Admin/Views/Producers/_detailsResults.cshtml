@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Core.DataReturns
+﻿@using System.Linq
+@using EA.Weee.Core.DataReturns
 @using EA.Weee.Core.Shared
 @using EA.Weee.Web.Extensions
 @using EA.Weee.Core.Admin
@@ -7,576 +8,576 @@
 
 @foreach (var scheme in Model.Schemes)
 {
-<div class="govuk-tabs" data-module="tabs">
-    <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#registration-details" id="@(scheme.ObligationType)-registration-details-tab">Overview</a>
-        </li>
-
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#contact-details" id="@(scheme.ObligationType)-contact-details-tab">Contact details</a>
-        </li>
-
-        <li class="govuk-tabs__list-item" role="tablist">
-            <a class="govuk-tabs__tab" href="#eee-details" id="@(scheme.ObligationType)-total-eee-details-tab">Total EEE</a>
-        </li>
-
-        @if (scheme.ProducerEeeDetails.Q1EEE.Any())
-        {
+    <div class="govuk-tabs" data-module="tabs">
+        <ul class="govuk-tabs__list">
             <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab" href="#q1-details" role="tab" id="@(scheme.ObligationType)-q1-details-tab">Q1</a>
+                <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#registration-details" id="@(scheme.ObligationType)-registration-details-tab">Overview</a>
             </li>
-        }
 
-        @if (scheme.ProducerEeeDetails.Q2EEE.Any())
-        {
-            <li class="govuk-tabs__list-item" role="tablist">
-                <a class="govuk-tabs__tab" href="#q2-details" role="tab" id="@(scheme.ObligationType)-q2-details-tab">Q2</a>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab" href="#contact-details" id="@(scheme.ObligationType)-contact-details-tab">Contact details</a>
             </li>
-        }
 
-        @if (scheme.ProducerEeeDetails.Q3EEE.Any())
-        {
-            <li class="govuk-tabs__list-item" role="tablist">
-                <a class="govuk-tabs__tab" href="#q3-details" role="tab" id="@(scheme.ObligationType)-q3-details-tab">Q3</a>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab" href="#eee-details" id="@(scheme.ObligationType)-total-eee-details-tab">Total EEE</a>
             </li>
-        }
 
-        @if (scheme.ProducerEeeDetails.Q4EEE.Any())
-        {
-            <li class="govuk-tabs__list-item" role="tablist">
-                <a class="govuk-tabs__tab" href="#q4-details" role="tab" id="@(scheme.ObligationType)-q4-details-tab">Q4</a>
-            </li>
-        }
-    </ul>
+            @if (scheme.ProducerEeeDetails.Q1EEE.Any())
+            {
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" href="#q1-details" id="@(scheme.ObligationType)-q1-details-tab">Q1</a>
+                </li>
+            }
 
-    <section class="govuk-tabs__panel" id="registration-details">
-        <table id="@(scheme.ObligationType)-registration-details-table" class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="2">Overview</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Registered PCS</th>
-                    <td class="govuk-table__cell">
-                        @scheme.SchemeName
-                        @if (Model.CanRemoveProducer)
-                        {
-                            <br />@Html.ActionLink("Remove producer", "ConfirmRemoval", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)
-                        }
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Producer name</th>
-                    <td class="govuk-table__cell">@scheme.ProducerName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Trading name</th>
-                    <td class="govuk-table__cell">@scheme.TradingName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Registration date</th>
-                    <td class="govuk-table__cell">@scheme.RegistrationDate.ToString("dd MMMM yyyy")</td>
-                </tr>
-                @if (@scheme.CompanyNumber != null)
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Company registration number</th>
-                        <td class="govuk-table__cell">@scheme.CompanyNumber</td>
+            @if (scheme.ProducerEeeDetails.Q2EEE.Any())
+            {
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" href="#q2-details" id="@(scheme.ObligationType)-q2-details-tab">Q2</a>
+                </li>
+            }
+
+            @if (scheme.ProducerEeeDetails.Q3EEE.Any())
+            {
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" href="#q3-details" id="@(scheme.ObligationType)-q3-details-tab">Q3</a>
+                </li>
+            }
+
+            @if (scheme.ProducerEeeDetails.Q4EEE.Any())
+            {
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" href="#q4-details" id="@(scheme.ObligationType)-q4-details-tab">Q4</a>
+                </li>
+            }
+        </ul>
+
+        <section class="govuk-tabs__panel" id="registration-details">
+            <table id="@(scheme.ObligationType)-registration-details-table" class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="2">Overview</th>
                     </tr>
-                }
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">@(scheme.IsCompany ? "Registered office" : "Principal place of business")</th>
-                    <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Obligation type</th>
-                    <td class="govuk-table__cell">@scheme.ObligationType</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Charge band type</th>
-                    <td class="govuk-table__cell">@scheme.ChargeBandType</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Authorised representative</th>
-                    <td class="govuk-table__cell">@scheme.IsAuthorisedRepresentative</td>
-                </tr>
-                @if (@scheme.CeasedToExist != null)
-                {
+                </thead>
+                <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Ceased to exist</th>
-                        <td class="govuk-table__cell">@scheme.CeasedToExist.Value.ToString("dd MMMM yyyy")</td>
+                        <th class="govuk-table__header" scope="col">Registered PCS</th>
+                        <td class="govuk-table__cell">
+                            @scheme.SchemeName
+                            @if (Model.CanRemoveProducer)
+                            {
+                                <br />@Html.ActionLink("Remove producer", "ConfirmRemoval", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)
+                            }
+                        </td>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </section>
-<section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
-    <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
-        <thead class="govuk-table__head">
-        <tr class="visually-hidden">
-            <th colspan="2">Contact details</th>
-        </tr>
-        </thead>
-
-        <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Contact name</th>
-            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.ContactName</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Telephone</th>
-            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Telephone</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Mobile</th>
-            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Mobile</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">E-mail</th>
-            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Email</td>
-        </tr>
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Address</th>
-            <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
-        </tr>
-        </tbody>
-    </table>
-</section>
-
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="eee-details">
-        <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="3">Total EEE</th>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Category</th>
-                    <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
-                    <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q1-details">
-        <table id="@(scheme.ObligationType)-q1-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="3">Q1 EEE</th>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Category</th>
-                    <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
-                    <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q2-details">
-        <table id="@(scheme.ObligationType)-q2-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="3">Q2 EEE</th>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Category</th>
-                    <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
-                    <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q3-details">
-        <table id="@(scheme.ObligationType)-q3-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="3">Q3 EEE</th>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Category</th>
-                    <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
-                    <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Producer name</th>
+                        <td class="govuk-table__cell">@scheme.ProducerName</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Trading name</th>
+                        <td class="govuk-table__cell">@scheme.TradingName</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Registration date</th>
+                        <td class="govuk-table__cell">@scheme.RegistrationDate.ToString("dd MMMM yyyy")</td>
+                    </tr>
+                    @if (@scheme.CompanyNumber != null)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Company registration number</th>
+                            <td class="govuk-table__cell">@scheme.CompanyNumber</td>
+                        </tr>
+                    }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">@(scheme.IsCompany ? "Registered office" : "Principal place of business")</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Obligation type</th>
+                        <td class="govuk-table__cell">@scheme.ObligationType</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Charge band type</th>
+                        <td class="govuk-table__cell">@scheme.ChargeBandType</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Authorised representative</th>
+                        <td class="govuk-table__cell">@scheme.IsAuthorisedRepresentative</td>
+                    </tr>
+                    @if (@scheme.CeasedToExist != null)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Ceased to exist</th>
+                            <td class="govuk-table__cell">@scheme.CeasedToExist.Value.ToString("dd MMMM yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q4-details">
-        <table id="@(scheme.ObligationType)-q4-details-table" class="visually-hidden">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="3">Q4 EEE</th>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Category</th>
-                    <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
-                    <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
-                    <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
-                </tr>
-            </tbody>
-        </table>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
+            <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="visually-hidden">
+                        <th colspan="2">Contact details</th>
+                    </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Contact name</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.ContactName</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Telephone</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Telephone</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Mobile</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Mobile</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">E-mail</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Email</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Address</th>
+                        <td class="govuk-table__cell">@scheme.ProducerBusinessContact.Address</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
-</div>
+
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="eee-details">
+            <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="3">Total EEE</th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Category</th>
+                        <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
+                        <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.All, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q1-details">
+            <table id="@(scheme.ObligationType)-q1-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="3">Q1 EEE</th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Category</th>
+                        <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
+                        <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q1, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q2-details">
+            <table id="@(scheme.ObligationType)-q2-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="3">Q2 EEE</th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Category</th>
+                        <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
+                        <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q2, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q3-details">
+            <table id="@(scheme.ObligationType)-q3-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="3">Q3 EEE</th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Category</th>
+                        <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
+                        <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q3, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q4-details">
+            <table id="@(scheme.ObligationType)-q4-details-table" class="visually-hidden">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-visually-hidden">
+                        <th colspan="3">Q4 EEE</th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Category</th>
+                        <th class="govuk-table__header" scope="col">B2C (Tonnes)</th>
+                        <th class="govuk-table__header" scope="col">B2B (Tonnes)</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LargeHouseholdAppliances) - @(WeeeCategory.LargeHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LargeHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.SmallHouseholdAppliances) - @(WeeeCategory.SmallHouseholdAppliances.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.SmallHouseholdAppliances, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ITAndTelecommsEquipment) - @(WeeeCategory.ITAndTelecommsEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ITAndTelecommsEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ConsumerEquipment) - @(WeeeCategory.ConsumerEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ConsumerEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.LightingEquipment) - @(WeeeCategory.LightingEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.LightingEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ElectricalAndElectronicTools) - @(WeeeCategory.ElectricalAndElectronicTools.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ElectricalAndElectronicTools, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.ToysLeisureAndSports) - @(WeeeCategory.ToysLeisureAndSports.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.ToysLeisureAndSports, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MedicalDevices) - @(WeeeCategory.MedicalDevices.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MedicalDevices, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.MonitoringAndControlInstruments) - @(WeeeCategory.MonitoringAndControlInstruments.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.MonitoringAndControlInstruments, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.AutomaticDispensers) - @(WeeeCategory.AutomaticDispensers.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.AutomaticDispensers, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.DisplayEquipment) - @(WeeeCategory.DisplayEquipment.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.DisplayEquipment, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.CoolingApplicancesContainingRefrigerants) - @(WeeeCategory.CoolingApplicancesContainingRefrigerants.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.CoolingApplicancesContainingRefrigerants, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.GasDischargeLampsAndLedLightSources) - @(WeeeCategory.GasDischargeLampsAndLedLightSources.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.GasDischargeLampsAndLedLightSources, ObligationType.B2B)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@((int)WeeeCategory.PhotovoltaicPanels) - @(WeeeCategory.PhotovoltaicPanels.ToDisplayString())</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2C)</td>
+                        <td class="govuk-table__cell numeric">@scheme.ProducerEeeDetails.DisplayTonnage(QuarterSelection.Q4, WeeeCategory.PhotovoltaicPanels, ObligationType.B2B)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
 }
 <script type="text/javascript">
     $("a[id$='details-tab']").click(function (event) {
@@ -617,7 +618,7 @@
         // Hide all data tables in scheme
         $("table[id$='details-table']").each(function () {
             if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
-               $(this).addClass('govuk-visually-hidden');
+                $(this).addClass('govuk-visually-hidden');
             }
         });
 
