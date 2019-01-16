@@ -18,28 +18,28 @@
 @if (Model.Results.Any())
 {
     <div class="govuk-form-group">
-        <table id="submissions">
-            <caption><span class="govuk-visually-hidden">Submissions</span></caption>
-            <thead>
-                <tr>
+        <table id="submissions" class="govuk-table">
+            <caption class="govuk-table__caption"><span class="govuk-visually-hidden">Submissions</span></caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case SubmissionsHistoryOrderBy.ComplianceYearAscending:
-                            <th class="sorted-ascending">
+                            <th class="sorted-ascending govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest compliance year.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.ComplianceYearDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent compliance year.</span>
                             </th>
                             break;
 
                         default:
-                            <th>
+                            <th class="govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
                             </th>
                             break;
@@ -48,49 +48,49 @@
                     @switch (Model.OrderBy)
                     {
                         case SubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending">
+                            <th class="sorted-ascending govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending">
+                            <th class="sorted-descending govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
                             break;
 
                         default:
-                            <th>
+                            <th class="govuk-table__header">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
                             </th>
                             break;
                     }
-                    <th>Warnings</th>
-                    <th class="numeric">Charge amount</th>
-                    <th>Submitted by</th>
-                    <th>File name</th>
+                    <th class="govuk-table__header">Warnings</th>
+                    <th class="numeric govuk-table__header">Charge amount</th>
+                    <th class="govuk-table__header">Submitted by</th>
+                    <th class="govuk-table__header">File name</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (var item in Model.Results)
                 {
                     string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-                    <tr>
-                        <td>@item.Year</td>
-                        <td>@datetimeValue</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@item.Year</td>
+                        <td class="govuk-table__cell">@datetimeValue</td>
+                        <td class="govuk-table__cell">
                             @if (item.NoOfWarnings > 0)
                             {
                                 string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
                                 <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                             }
                         </td>
-                        <td class="numeric">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
-                        <td>@item.SubmittedBy</td>
-                        <td>@item.FileName</td>
+                        <td class="numeric govuk-table__cell">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                        <td class="govuk-table__cell">@item.SubmittedBy</td>
+                        <td class="govuk-table__cell">@item.FileName</td>
                     </tr>
                 }
             </tbody>
