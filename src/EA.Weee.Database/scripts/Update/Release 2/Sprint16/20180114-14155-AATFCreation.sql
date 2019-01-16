@@ -288,6 +288,7 @@ GO
 CREATE TABLE [AATF].[WeeeSentOn] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
     [AATFReturnId]				  UNIQUEIDENTIFIER NOT NULL,
+	[SiteAddressId]				  UNIQUEIDENTIFIER NOT NULL
 
 
     CONSTRAINT [PK_WeeeSentOn_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
