@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using System.Linq
 @using EA.Weee.Requests.Shared;
 @using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Scheme.ViewModels.SubmissionHistoryViewModel
@@ -19,20 +20,20 @@
 {
     <div class="govuk-form-group">
         <table id="submissions" class="govuk-table">
-            <caption class="govuk-table__caption"><span class="govuk-visually-hidden">Submissions</span></caption>
+            <caption><span class="govuk-visually-hidden">Submissions</span></caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case SubmissionsHistoryOrderBy.ComplianceYearAscending:
-                            <th class="sorted-ascending govuk-table__header">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest compliance year.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.ComplianceYearDescending:
-                            <th class="sorted-descending govuk-table__header">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent compliance year.</span>
                             </th>
@@ -48,14 +49,14 @@
                     @switch (Model.OrderBy)
                     {
                         case SubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending govuk-table__header">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
 
                         case SubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending govuk-table__header">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="@Url.Action("ViewSubmissionHistory", new { OrderBy = SubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
@@ -68,7 +69,7 @@
                             break;
                     }
                     <th class="govuk-table__header">Warnings</th>
-                    <th class="numeric govuk-table__header">Charge amount</th>
+                    <th class="govuk-table__header numeric">Charge amount</th>
                     <th class="govuk-table__header">Submitted by</th>
                     <th class="govuk-table__header">File name</th>
                 </tr>
@@ -88,7 +89,7 @@
                                 <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                             }
                         </td>
-                        <td class="numeric govuk-table__cell">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                        <td class="govuk-table__cell numeric">@item.TotalCharges.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
                         <td class="govuk-table__cell">@item.SubmittedBy</td>
                         <td class="govuk-table__cell">@item.FileName</td>
                     </tr>
