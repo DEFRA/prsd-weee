@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using System.Linq
 @using EA.Weee.Requests.Shared
 @using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturnSubmissionHistoryViewModel
@@ -19,20 +20,20 @@
 {
     <div class="govuk-form-group">
         <table id="submissions" class="govuk-table">
-            <caption class="govuk-table__caption"><span class="govuk-visually-hidden">Data returns submission history</span></caption>
+            <caption><span class="govuk-visually-hidden">Data returns submission history</span></caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending:
-                            <th class="sorted-ascending govuk-table__header">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest compliance year.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending:
-                            <th class="sorted-descending govuk-table__header">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent compliance year.</span>
                             </th>
@@ -48,14 +49,14 @@
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.QuarterAscending:
-                            <th class="sorted-ascending govuk-table__header">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterDescending })">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest quarter.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.QuarterDescending:
-                            <th class="sorted-descending govuk-table__header">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterAscending })">Quarter reported</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent quarter.</span>
                             </th>
@@ -71,14 +72,14 @@
                     @switch (Model.OrderBy)
                     {
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending:
-                            <th class="sorted-ascending govuk-table__header">
+                            <th class="govuk-table__header sorted-ascending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by earliest submission date.</span>
                             </th>
                             break;
 
                         case DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending:
-                            <th class="sorted-descending govuk-table__header">
+                            <th class="govuk-table__header sorted-descending">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
                                 <span class="govuk-visually-hidden">Sorted by most recent submission date.</span>
                             </th>
