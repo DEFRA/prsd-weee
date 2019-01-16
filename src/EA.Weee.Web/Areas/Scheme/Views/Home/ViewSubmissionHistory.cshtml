@@ -100,17 +100,17 @@
 
         @if (@Model.Results.PageCount > 1)
         {
-           <div class="pager">
+           <div class="pager govuk-body">
                @Html.Pager(Model.Results.PageSize, Model.Results.PageNumber, Model.Results.TotalItemCount).Options(o => o.AddRouteValue("orderby", @Model.OrderBy))
            </div>
-           <p>Showing @Model.Results.ItemStart - @Model.Results.ItemEnd of @Model.Results.TotalItemCount</p>
+           <p class="govuk-body">Showing @Model.Results.ItemStart - @Model.Results.ItemEnd of @Model.Results.TotalItemCount</p>
         }
     </div>
 }
 else
 {
     <div class="govuk-form-group">
-        <p>There are no submissions to view.</p>
+        <p class="govuk-body">There are no submissions to view.</p>
     </div>
 }
 
