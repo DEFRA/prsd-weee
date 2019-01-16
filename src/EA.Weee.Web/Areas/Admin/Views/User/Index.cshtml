@@ -48,12 +48,12 @@
                         break;
 
                     default:
-                    <th>
+                    <th class="govuk-table__header">
                         <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
                     </th>
                         break;
                 }
-                <th>
+                <th class="govuk-table__header">
                     Email
                 </th>
                 @switch (@Model.OrderBy)
@@ -122,7 +122,7 @@
                     </th>
                         break;
                 }
-                <th class="govuk-table__header">Select</th>
+                <th class="govuk-table__header" style="padding-right: 15px">Select</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -145,12 +145,12 @@
 
     if (@Model.Users.PageCount > 1)
     {
-        <div class="pager">
+        <div class="pager govuk-body">
             @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o =>
                 o.AddRouteValue("orderby", @Model.OrderBy))
         </div>
 
-        <p>Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
+        <p class="govuk-body">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
     }
 
     @(this.WeeeGds().Submit("Continue"))

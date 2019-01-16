@@ -9,17 +9,17 @@
         Status of your request to access an organisation(s):
     </h2>
     <div class="govuk-form-group">
-        <table title="This table lists the organisation you have applied to perform activities for.">
-            <thead>
-                <tr>
-                    <th></th>
+        <table class="govuk-table" title="This table lists the organisation you have applied to perform activities for.">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (OrganisationUserData item in Model)
                 {
-                    <tr>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
                             <span>@item.Organisation.OrganisationName</span><br/>
                             <span style="color:#6F777B;">- @item.UserStatus</span>
                         </td>

@@ -119,8 +119,8 @@
             <span class="bold-small"> The following must be fixed before charges can be issued.</span>
         </p>
 
-        <table width="100%" class="">
-            <tbody>
+        <table width="100%" class="govuk-table">
+            <tbody class="govuk-table__body">
                 @* Rows added here by JavaScript *@
             </tbody>
         </table>
@@ -179,8 +179,8 @@
                         } else {
                             @* Populate the table in the ajaxErrorView *@
                             for (i = 0; i < response.Errors.length; ++i) {
-                                var tr = $("<tr/>");
-                                var td = $("<td/>");
+                                var tr = $("<tr class='govuk-table__row' />");
+                                var td = $("<td class='govuk-table__cell' />");
                                 td.text(response.Errors[i]);
                                 tr.append(td);
                                 $("#ajaxErrorView table tbody").append(tr);

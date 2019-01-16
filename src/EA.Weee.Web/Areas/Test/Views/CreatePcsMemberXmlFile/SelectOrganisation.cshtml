@@ -89,7 +89,7 @@
             {
                     <br />
                     <span style="display: inline-block">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</span>
-                    <div class="pager">
+                    <div class="pager govuk-body">
 
                         @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount).Options(o => o.RouteValues(@Model))
 
@@ -100,7 +100,7 @@
         }
         else
         {
-            <p>We haven't found any organisations that match your search criteria.</p>
+            <p class="govuk-body">We haven't found any organisations that match your search criteria.</p>
         }
     }
 }
