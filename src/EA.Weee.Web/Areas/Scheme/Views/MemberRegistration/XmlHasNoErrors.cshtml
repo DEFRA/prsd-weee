@@ -81,11 +81,8 @@
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
                 <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
+                    <div class="govuk-checkboxes__item" style="padding-left: 0px;">
                         @Html.Gds().CheckBoxFrontEndFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "govuk-checkboxes__input" })
-                        <label class="govuk-label govuk-checkboxes__label" for="PrivacyPolicy">
-                            Confirm you have read our privacy policy
-                        </label>
                     </div>
                 </div>
             </fieldset>
