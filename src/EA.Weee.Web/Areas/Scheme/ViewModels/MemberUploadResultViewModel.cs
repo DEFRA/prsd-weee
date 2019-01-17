@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Core.Shared;
     using Prsd.Core.Validation;
 
@@ -16,6 +17,7 @@
         public decimal TotalCharges { get; set; }
 
         [MustBeTrue(ErrorMessage = "Please confirm that you have read the privacy policy")]
+        [DisplayName("Confirm you have read our privacy policy")]
         public bool PrivacyPolicy { get; set; }
 
         public int? ComplianceYear { get; set; }
