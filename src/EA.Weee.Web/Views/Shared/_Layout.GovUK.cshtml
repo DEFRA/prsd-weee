@@ -96,7 +96,9 @@
                     </span>
                 </div>
                 <div class="govuk-footer__meta-item">
-                    <a class="footer-logo govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+                    <a class="footer-logo govuk-footer__link " href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">
+                        <img src="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-crest.png")" alt="*" /><br /> @Html.Raw(ViewBag.CrownCopyrightMessage ?? "&copy; Crown copyright")
+                    </a>
                 </div>
             </div>
         </div>
