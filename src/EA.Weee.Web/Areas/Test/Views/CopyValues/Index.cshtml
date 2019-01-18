@@ -14,7 +14,7 @@
                 <td class="govuk-table__cell" style="border-bottom: 0px;" colspan="2">
                     <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
                         <div class="govuk-body govuk-!-font-size-19">
-                            @Html.ActionLink("Use copy and paste to populate the table", "Paste", "CopyValues", new { returnUrl = "/test/CopyValues" }, null)
+                            @Html.ActionLink("Use copy and paste to populate the table", "Paste", "CopyValues", new { returnUrl = Url.Action("Index", "CopyValues", new { area = "Test" }) }, null)
                             @*, new { returnUrl = "/test/CopyValues/Index" }, null)*/
                                 @*<a href="paste-values-redirect?returnUrl=WEEE-received-for-treatment-paste&title=WEEE that has been received for treatment">
                                     Use
