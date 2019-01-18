@@ -134,7 +134,7 @@ GO
 CREATE TABLE [AATF].[AATFReturn] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
     [ReturnId]				      UNIQUEIDENTIFIER NOT NULL,
-	[OperatorAATFId]			  UNIQUEIDENTIFIER NOT NULL,	
+	[AATFId]					  UNIQUEIDENTIFIER NOT NULL,	
 
 
     CONSTRAINT [PK_AATFReturn_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
@@ -154,13 +154,13 @@ ALTER TABLE [AATF].[AATFReturn] WITH NOCHECK
 
 
 GO
-PRINT N'Creating FK_AATFReturn_OperatorAATF...';
+PRINT N'Creating FK_AATFReturn_AATF...';
 
 
 
 GO
 ALTER TABLE [AATF].[AATFReturn] WITH NOCHECK
-    ADD CONSTRAINT [FK_AATFReturn_OperatorAATF] FOREIGN KEY ([OperatorAATFId]) REFERENCES [AATF].[OperatorAATF] ([Id]);
+    ADD CONSTRAINT [FK_AATFReturn_AATF] FOREIGN KEY ([AATFId]) REFERENCES [AATF].[AATF] ([Id]);
 
 
 
@@ -374,6 +374,18 @@ ALTER TABLE [AATF].[WeeeReceived] WITH NOCHECK
 
 
 GO
+PRINT N'Creating FK_WeeeReceived_Scheme...';
+
+
+
+GO
+ALTER TABLE [AATF].[WeeeReceived] WITH NOCHECK
+    ADD CONSTRAINT [FK_WeeeReceived_Scheme] FOREIGN KEY ([SchemeId]) REFERENCES [PCS].[Scheme] ([Id]);
+
+
+
+
+GO
 PRINT N'Creating [AATF].[WeeeReceivedAmount]...';
 
 
@@ -402,4 +414,3 @@ PRINT N'Creating FK_WeeeReceived_WeeeReceived...';
 GO
 ALTER TABLE [AATF].[WeeeReceivedAmount] WITH NOCHECK
     ADD CONSTRAINT [FK_WeeeReceivedAmount_AATFReturn] FOREIGN KEY ([WeeeReceivedId]) REFERENCES [AATF].[WeeeReceived] ([Id]);
-
