@@ -6,14 +6,32 @@ PRINT N'Creating [AATF].[ReportOnQuestion]...';
 
 GO
 CREATE TABLE [AATF].[ReportOnQuestion] (
-    [Id]                          UNIQUEIDENTIFIER NOT NULL,
+    [Id]                          INT NOT NULL,
 	[Question]					  NVARCHAR (300) NOT NULL,
-	[Description]				  NVARCHAR (300) NOT NULL,
-	[ParentId]					  INT NOT NULL
+	[Description]				  NVARCHAR (1000) NOT NULL,
+	[ParentId]					  INT
 
 
     CONSTRAINT [PK_ReportOnQuestion_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
+
+
+GO
+PRINT N'Adding questions to [AATF].[ReportOnQuestion]...';
+
+
+
+
+GO
+INSERT [AATF].[ReportOnQuestion]
+VALUES
+('1', 'PCS', 'Obligated WEEE received on behalf of producer compliance schemes (PCSs)', NULL),
+('2', 'SentToAnotherATF', 'WEEE sent to another AATF or ATF for treatment', NULL),
+('3', 'WEEEReused', 'WEEE reused as a whole appliance', NULL),
+('4', 'NonObligated', 'Non-obligated WEEE', NULL),
+('5', 'NonObligatedDCF', 'Was any of this non-obligated WEEE received on behalf of a DCF', '4');
 
 
 
@@ -28,7 +46,7 @@ GO
 CREATE TABLE [AATF].[AATFReturnReportOn] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
 	[AATFReturnId]				  UNIQUEIDENTIFIER NOT NULL,
-	[ReportOnQuestionId]		  UNIQUEIDENTIFIER NOT NULL
+	[ReportOnQuestionId]		  INT NOT NULL
 
 
     CONSTRAINT [PK_AATFReturnReportOn_Id] PRIMARY KEY CLUSTERED ([Id] ASC)

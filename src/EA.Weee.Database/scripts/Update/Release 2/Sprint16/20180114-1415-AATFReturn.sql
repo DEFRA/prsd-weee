@@ -70,7 +70,7 @@ GO
 CREATE TABLE [AATF].[NonObligatedWeee] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
     [ReturnId]				      UNIQUEIDENTIFIER NOT NULL,
-	[CategoryId]				  UNIQUEIDENTIFIER NOT NULL,	
+	[CategoryId]				  INT NOT NULL,	
 	[Dcf]					      BIT NOT NULL,
 	[Tonnage]					  DECIMAL(28, 3)
 
@@ -225,7 +225,7 @@ GO
 CREATE TABLE [AATF].[WeeeReusedAmount] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
     [WeeeReusedId]				  UNIQUEIDENTIFIER NOT NULL,
-	[CategoryId]				  UNIQUEIDENTIFIER NOT NULL,
+	[CategoryId]				  INT NOT NULL,
 	[ObligationType]			  INT NOT NULL,
 	[Tonnage]					  DECIMAL(28, 3)
 
@@ -320,7 +320,7 @@ CREATE TABLE [AATF].[WeeeSentOnAmount] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
     [WeeeSentOnId]				  UNIQUEIDENTIFIER NOT NULL,
 	[ObligationType]			  INT NOT NULL,
-	[CategoryId]				  UNIQUEIDENTIFIER NOT NULL,
+	[CategoryId]				  INT NOT NULL,
 	[Tonnage]					  DECIMAL(28, 3)
 
 
@@ -396,7 +396,7 @@ CREATE TABLE [AATF].[WeeeReceivedAmount] (
     [Id]                          UNIQUEIDENTIFIER NOT NULL,
 	[WeeeReceivedId]			  UNIQUEIDENTIFIER NOT NULL,
 	[ObligationType]			  INT NOT NULL,
-	[CategoryId]				  UNIQUEIDENTIFIER NOT NULL,
+	[CategoryId]				  INT NOT NULL,
 	[Tonnage]					  DECIMAL(28, 3)
 
 
