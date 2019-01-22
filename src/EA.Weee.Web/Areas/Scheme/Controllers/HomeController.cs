@@ -104,6 +104,11 @@
                 activities.Add(PcsAction.ManageOrganisationUsers);
             }
 
+            if (configurationService.CurrentConfiguration.EnableAATFReturns)
+            {
+                activities.Add(PcsAction.MakeAATFReturn);
+            }
+
             return activities;
         }
 

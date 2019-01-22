@@ -40,6 +40,9 @@
         [DefaultValue("false")]
         public bool EnableDataReturns { get; set; }
 
+        [DefaultValue("false")]
+        public bool EnableAATFReturns { get; set; }
+
         /// <summary>
         /// This setting determines whether the admin area allows managing of charges and invoicing.
         /// </summary>
