@@ -115,6 +115,22 @@
         }
 
         [Fact]
+        public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrue_ReturnsAATFReturnOption()
+        {
+            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
+
+            Assert.Contains(PcsAction.MakeAATFReturn, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToFalse_DoesNotReturnsAATFReturnOption()
+        {
+            var result = await HomeControllerSetupForAATFReturns(false).GetActivities(A.Dummy<Guid>());
+
+            Assert.DoesNotContain(PcsAction.MakeAATFReturn, result);
+        }
+
+        [Fact]
         public async Task GetActivities_DoesNotHaveMemberSubmissions_AndDoesNotHaveDataReturnSubmissions_DoesNotReturnViewSubmissionHistoryOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
@@ -615,6 +631,16 @@
         {
             ConfigurationService configService = A.Fake<ConfigurationService>();
             configService.CurrentConfiguration.EnableDataReturns = enableDataReturns;
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
+        private HomeController HomeControllerSetupForAATFReturns(bool enableAATFReturns = false)
+        {
+            ConfigurationService configService = A.Fake<ConfigurationService>();
+            configService.CurrentConfiguration.EnableAATFReturns = enableAATFReturns;
             var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
             new HttpContextMocker().AttachToController(controller);
 
