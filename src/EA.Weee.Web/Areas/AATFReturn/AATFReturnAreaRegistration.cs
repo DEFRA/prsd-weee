@@ -1,26 +1,20 @@
-﻿namespace EA.Weee.Web.Areas.AATFReturn
+﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
     using System.Web.Mvc;
-    using Controllers;
+    using AATF_Return.Controllers;
     using Infrastructure;
 
-    public class AATFReturnAreaRegistration : AreaRegistration 
+    public class AatfReturnAreaRegistration : AreaRegistration 
     {
-        public override string AreaName 
-        {
-            get 
-            {
-                return "AATFReturn";
-            }
-        }
+        public override string AreaName => "AatfReturn";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapLowercaseDashedRoute(
-                name: "AATFReturn_default",
-                url: "AATFReturn/{organisationId}/{controller}/{action}/{entityId}",
+                name: "AatfReturn_default",
+                url: "AatfReturn/{organisationId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "NonObligated", entityId = UrlParameter.Optional },
-                namespaces: new[] { typeof(HomeController).Namespace });
+                namespaces: new[] { typeof(NonObligatedController).Namespace });
         }
     }
 }

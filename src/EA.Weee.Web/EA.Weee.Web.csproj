@@ -212,9 +212,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\AATFReturn\Controllers\NonObligatedController.cs" />
-    <Compile Include="Areas\AATFReturn\AATFReturnAreaRegistration.cs" />
-    <Compile Include="Areas\AATFReturn\ViewModels\IndexViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
+    <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\IndexViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -628,13 +628,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Areas\AATFReturn\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\AATFReturn\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\AATFReturn\Views\NonObligated\Index.cshtml" />
-    <Content Include="Areas\AATFReturn\Views\web.config">
+    <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\AATFReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
