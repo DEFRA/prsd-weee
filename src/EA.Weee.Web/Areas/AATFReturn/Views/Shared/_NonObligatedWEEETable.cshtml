@@ -1,229 +1,52 @@
-﻿<table class="govuk-table" id="non-obligated-weee-table">
-    <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
-            <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;">
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell"></td>
-            <td class="govuk-table__cell govuk-!-margin-bottom-0">
+﻿@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.ViewModels.Shared.WeeeCategoryValueViewModel
+@{
+    ViewBag.Title = "Index";
+}
 
-                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
-                    WEEE in tonnes
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell">1. Large household appliances</td>
-            <td class="govuk-table__cell">
-                <div class="govuk-form-group">
-                    <span id="large-household-appliances-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="large-household-appliances-input-SC004"
-                           name="large-household-appliances-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">2. Small household appliances</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="small-household-appliances-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="small-household-appliances-input-SC004"
-                           name="small-household-appliances-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">3. IT and telecommunications equipment</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="it-and-telecomms-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="it-and-telecomms-input-SC004"
-                           name="it-and-telecomms-input-SC004" value="" type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">4. Consumer equipment</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="consumer-equipment-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="consumer-equipment-input-SC004"
-                           name="consumer-equipment-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">5. Lighting equipment</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="lighting-equipment-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
+@using (Html.BeginForm("Index", "CopyValues", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <table class="govuk-table" id="non-obligated-weee-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
+                <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell govuk-!-margin-bottom-0">
 
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="lighting-equipment-input-SC004"
-                           name="lighting-equipment-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">6. Electrical and electronic tools</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="electrical-and-electronic-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
+                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
+                        WEEE in tonnes
+                    </div>
+                </td>
+            </tr>
+            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            {
+                var category = Model.CategoryValues.ElementAt(i);
 
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="electrical-and-electronic-input-SC004"
-                           name="electrical-and-electronic-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">7. Toys, leisure and sports equipment</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="toys-leisure-sports-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="toys-leisure-sports-input-SC004"
-                           name="toys-leisure-sports-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">8. Medical devices</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="medical-devices-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="medical-devices-input-SC004"
-                           name="medical-devices-input-SC004" value="" type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">9. Monitoring and control instruments</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="monitoring-control-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="monitoring-control-input-SC004"
-                           name="monitoring-control-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">10. Automatic dispensers</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="automatic-dispensers-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="automatic-dispensers-input-SC004"
-                           name="automatic-dispensers-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">11. Display equipment</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="display-equipment-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="display-equipment-input-SC004"
-                           name="display-equipment-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">12. Appliances containing refrigerants</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="cooling-appliance-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="cooling-appliance-input-SC004"
-                           name="cooling-appliance-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">13. Gas discharge lamps and LED light sources</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="gas-discharge-led-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="gas-discharge-led-input-SC004"
-                           name="gas-discharge-led-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">14. Photovoltaic panels</td>
-            <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                <div class="govuk-form-group">
-                    <span id="photovolatic-panels-input-SC004-error" class="govuk-error-message govuk-!-font-size-14"
-                          style="margin-bottom: 0px; display: none;">
-                        Please fill in this field
-                    </span>
-                    <input class="govuk-input govuk-!-width-two-thirds weee-input" id="photovolatic-panels-input-SC004"
-                           name="photovolatic-panels-input-SC004" value=""
-                           type="text">
-                </div>
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell">
-                <h3 class="govuk-heading-m">Total</h3>
-            </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">
-                <h3 class="govuk-heading-m" style="float: left" id="tonneTotal">
-                    0.000 tonnes
-                </h3>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString() </td>
+                    <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                        <div class="govuk-form-group">
+                            <span id="CategoryValues_@{@i}__Error" class="govuk-error-message govuk-!-font-size-14"
+                                  style="margin-bottom: 0px; display: none;">
+                            </span>
+                            <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}"
+                                   name="CategoryValues[@{@i}].NonObligated" type="text" value="@category.NonObligated">
+                        </div>
+                    </td>
+                </tr>
+            }
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <h3 class="govuk-heading-m">Total</h3>
+                </td>
+                <td class="govuk-table__cell govuk-!-margin-bottom-0">
+                    <h3 class="govuk-heading-m" style="float: left;" id="tonneTotal">0.000 tonnes</h3>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
