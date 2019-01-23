@@ -212,6 +212,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AATFReturn\Controllers\NonObligatedController.cs" />
+    <Compile Include="Areas\AATFReturn\AATFReturnAreaRegistration.cs" />
+    <Compile Include="Areas\AATFReturn\ViewModels\IndexViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -276,6 +279,8 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\govuk_frontend\assets\images\favicon.ico" />
     <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-152x152.png" />
     <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-167x167.png" />
@@ -324,6 +329,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Function\prototype\bind.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
+    <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -372,6 +378,7 @@
     <Content Include="Content\weee\images\spinner.gif" />
     <Content Include="Content\weee\_forms.scss" />
     <Content Include="Content\weee\_panels.scss" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -388,6 +395,8 @@
     <Content Include="Content\weee\_font_stack.scss" />
     <Content Include="Areas\Test\Views\CopyValues\Index.cshtml" />
     <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -616,6 +625,16 @@
     <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Areas\AATFReturn\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AATFReturn\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\AATFReturn\Views\NonObligated\Index.cshtml" />
+    <Content Include="Areas\AATFReturn\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\AATFReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -634,6 +653,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
