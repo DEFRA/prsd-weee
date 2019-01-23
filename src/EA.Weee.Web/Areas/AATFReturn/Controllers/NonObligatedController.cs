@@ -24,14 +24,14 @@
     public class NonObligatedController : Controller
     {
         [HttpGet]
-        public ActionResult Index()
+        public async Task<ActionResult> Index(Guid organisationId)
         {
-            IndexViewModel viewModel = new IndexViewModel();
+            var viewModel = new IndexViewModel();
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(IndexViewModel viewModel)
+        public async Task<ActionResult> Index(IndexViewModel viewModel)
         {
             return View(viewModel);
         }
