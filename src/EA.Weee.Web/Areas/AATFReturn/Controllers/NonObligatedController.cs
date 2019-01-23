@@ -31,6 +31,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(IndexViewModel viewModel)
         {
             return View(viewModel);
