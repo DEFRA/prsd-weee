@@ -1,30 +1,13 @@
-﻿namespace EA.Weee.Web.Areas.AATF_Return.Controllers
+﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.DataReturns;
-    using Core.Scheme;
-    using Core.Shared;
-    using Infrastructure;
-    using Prsd.Core;
-    using Prsd.Core.Mapper;
-    using Services;
-    using Services.Caching;
-    using ViewModels;
-    using Web.Controllers.Base;
-    using Weee.Requests.DataReturns;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Scheme;
-    using Weee.Requests.Shared;
+    using AATF_Return.ViewModels;
 
     public class NonObligatedController : Controller
     {
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId)
+        public ActionResult Index(Guid organisationId)
         {
             var viewModel = new IndexViewModel();
             return View(viewModel);
@@ -32,7 +15,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(IndexViewModel viewModel)
+        public ActionResult Index(IndexViewModel viewModel)
         {
             return View(viewModel);
         }
