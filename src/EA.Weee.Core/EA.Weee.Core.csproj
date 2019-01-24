@@ -228,6 +228,7 @@
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="Validation\TonnageValueAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
   <ItemGroup>

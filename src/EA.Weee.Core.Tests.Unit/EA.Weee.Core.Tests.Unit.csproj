@@ -122,6 +122,7 @@
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
+    <Compile Include="Validation\TonnageValueAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
