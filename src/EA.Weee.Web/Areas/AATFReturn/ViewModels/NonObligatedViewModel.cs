@@ -1,10 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.AATF_Return.ViewModels
+﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using Prsd.Core;
+    using Core.Validation;
 
-    public class IndexViewModel
+    public class NonObligatedViewModel
     {
         public Guid NonObligatedId { get; private set; }
 
