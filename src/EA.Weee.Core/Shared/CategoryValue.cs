@@ -10,7 +10,7 @@
 
         public string NonHouseHold { get; set; }
 
-        public string NonObligated { get; set; }
+        public decimal NonObligated { get; set; }
 
         public CategoryValue()
         {

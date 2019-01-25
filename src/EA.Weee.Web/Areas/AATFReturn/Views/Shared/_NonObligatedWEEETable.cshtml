@@ -4,9 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-@using (Html.BeginForm("Index", "CopyValues", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+
     <table class="govuk-table" id="non-obligated-weee-table">
         <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
@@ -49,4 +47,3 @@
             </tr>
         </tbody>
     </table>
-}
