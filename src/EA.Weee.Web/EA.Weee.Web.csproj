@@ -214,7 +214,7 @@
   <ItemGroup>
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\IndexViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
