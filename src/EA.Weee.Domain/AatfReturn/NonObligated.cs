@@ -2,11 +2,11 @@
 {
     using System;
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Domain;          
 
     public partial class NonObligatedWeee : Entity
     {
-        public NonObligatedWeee(Guid nonobligatedid, Guid returnid, int categoryid, bool dcf, decimal tonnage)
+        public NonObligatedWeee(Guid nonobligatedid, Guid returnid, Enum categoryid, bool dcf, decimal tonnage)
         {
             NonObligatedId = nonobligatedid;
             ReturnId = returnid;
@@ -18,7 +18,7 @@
 
         public Guid ReturnId { get; private set; }
 
-        public int CategoryId { get; private set; }
+        public Enum CategoryId { get; private set; }
 
         public bool Dcf { get; private set; }
 
