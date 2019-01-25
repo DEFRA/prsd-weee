@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
+    using EA.Weee.Core.AatfReturn;
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core.Mediator;
 
     public class NonObligatedRequest : IRequest
     {
+        public IList<CategoryValue> CategoryValues { get; set; }
+
         public Guid NonObligatedId { get; set; }
 
         public Guid ReturnId { get; set; }
-
-        public int CategoryId { get; set; }
-
-        public bool Dcf { get; set; }
-
-        public decimal Tonnage { get; set; }
     }
 }
