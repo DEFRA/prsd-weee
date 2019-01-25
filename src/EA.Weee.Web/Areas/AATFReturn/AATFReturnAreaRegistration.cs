@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
-    using System.Web.Mvc;
+    using Areas.AatfReturn;
     using Controllers;
     using Infrastructure;
-    using Areas.AatfReturn;
-
+    using System.Web.Mvc;
+    
     public class AatfReturnAreaRegistration : AreaRegistration 
     {
         public override string AreaName => "AatfReturn";
