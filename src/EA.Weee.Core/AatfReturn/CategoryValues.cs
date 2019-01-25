@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Shared
+﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
     using System.Collections.Generic;
