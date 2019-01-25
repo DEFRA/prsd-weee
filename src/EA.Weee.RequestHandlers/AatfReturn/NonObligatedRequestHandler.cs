@@ -12,13 +12,13 @@
     using System;
     using System.Threading.Tasks;
 
-    public class CreateNonObligatedRequestHandler
+    public class NonObligatedRequestHandler
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext db;
         private readonly IUserContext userContext;
 
-        public CreateNonObligatedRequestHandler(IWeeeAuthorization authorization, WeeeContext db, IUserContext userContext)
+        public NonObligatedRequestHandler(IWeeeAuthorization authorization, WeeeContext db, IUserContext userContext)
         {
             this.authorization = authorization;
             this.db = db;

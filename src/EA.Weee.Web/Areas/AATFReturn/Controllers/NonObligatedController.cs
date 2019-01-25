@@ -66,8 +66,9 @@
                         Dcf = false,
                         Tonnage = viewModel.CategoryValues[i].NonObligated
                     };
-                    NonObligatedRequestList.Add(newCategory);
+                    await client.SendAsync(newCategory);
                 }
+
                 return View(viewModel);
             }
         }
