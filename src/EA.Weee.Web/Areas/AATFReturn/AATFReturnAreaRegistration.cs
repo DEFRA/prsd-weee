@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
     using System.Web.Mvc;
-    using AATF_Return.Controllers;
+    using Controllers;
     using Infrastructure;
 
     public class AatfReturnAreaRegistration : AreaRegistration 
