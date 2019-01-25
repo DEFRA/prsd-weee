@@ -10,15 +10,17 @@
     using Requests.Organisations.Create;
     using Security;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class CreateNonObligatedRequestHandler
+    public class NonObligatedRequestHandler
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext db;
         private readonly IUserContext userContext;
+        public List<NonObligatedWeee> Nonobligatedlist;
 
-        public CreateNonObligatedRequestHandler(IWeeeAuthorization authorization, WeeeContext db, IUserContext userContext)
+        public NonObligatedRequestHandler(IWeeeAuthorization authorization, WeeeContext db, IUserContext userContext)
         {
             this.authorization = authorization;
             this.db = db;
@@ -37,13 +39,15 @@
             var returnTest = new Return(Guid.NewGuid(), operatorTest.Id, 1, 1, 1);
             db.Return.Add(returnTest);
 
-            var nonobligated = new NonObligatedWeee(message.NonObligatedId, returnTest.Id, message.CategoryId, message.Dcf, message.Tonnage);
-
-            db.NonObligatedWeee.Add(nonobligated);
+            for (var i = 0; i < message.CategoryValues.Count; i++)
+            {
+                var nonobligated = new NonObligatedWeee(message.NonObligatedId, returnTest.Id, message.CategoryValues[i].Category, message.CategoryValues[i].Dcf, message.CategoryValues[i].NonObligated);
+                db.NonObligatedWeee.Add(nonobligated);
+            }
 
             await db.SaveChangesAsync();
 
-            return nonobligated.Id;
+            return Guid.NewGuid();
         }
     }
 }

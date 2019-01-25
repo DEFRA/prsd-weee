@@ -36,14 +36,16 @@
         private readonly IExternalRouteService externalRouteService;
         private readonly IAppConfiguration appConfig;
         public List<NonObligatedRequest> NonObligatedRequestList;
+        private readonly IMapper mapper;
 
-        public NonObligatedController(Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig)
+        public NonObligatedController(IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.externalRouteService = externalRouteService;
             this.appConfig = appConfig;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -59,16 +61,8 @@
         {
             using (var client = apiClient())
             {
-                for (var i = 0; i < viewModel.CategoryValues.Count; i++)
-                {
-                    var newCategory = new NonObligatedRequest
-                    {
-                        NonObligatedId = Guid.NewGuid(),
-                        Dcf = false,
-                        Tonnage = viewModel.CategoryValues[i].NonObligated
-                    };
-                    NonObligatedRequestList.Add(newCategory);
-                }
+                var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
+                await client.SendAsync(request);
                 return View(viewModel);
             }
         }
