@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using Prsd.Core.Mediator;
 
-    public class NonObligatedRequest : IRequest<Guid>
+    public class NonObligatedRequest : IRequest
     {
         public Guid NonObligatedId { get; set; }
 
