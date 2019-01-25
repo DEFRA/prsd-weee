@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Shared
+﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
 
@@ -11,6 +11,8 @@
         public string NonHouseHold { get; set; }
 
         public decimal NonObligated { get; set; }
+
+        public bool Dcf { get; set; }
 
         public CategoryValue()
         {
