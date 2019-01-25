@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AATF_Return.Controllers
+﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
     using System.Collections.Generic;
