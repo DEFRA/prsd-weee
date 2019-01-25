@@ -2,19 +2,35 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.RegularExpressions;
+    using DataReturns;
 
     public class TonnageValueAttribute : ValidationAttribute
     {
-        private readonly int category;
+        private readonly string categoryProperty;
 
-        public TonnageValueAttribute(int category)
+        public TonnageValueAttribute(string category)
         {
-            this.category = category;
+            this.categoryProperty = category;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            var propertyInfos = validationContext.ObjectType.GetProperties().FirstOrDefault(p => p.Name == this.categoryProperty);
+
+            if (propertyInfos == null)
+            {
+                throw new ValidationException($"Property {categoryProperty} does not exist");
+            }
+
+            var propertyValue = propertyInfos.GetValue(validationContext.ObjectInstance, null);
+
+            if (propertyValue.GetType() != typeof(WeeeCategory))
+            {
+                throw new ValidationException($"Property {categoryProperty} should be of type {typeof(WeeeCategory).Name}");
+            }
+
             if (value is null)
             {
                 return ValidationResult.Success;
@@ -22,18 +38,18 @@
 
             if (!decimal.TryParse(value.ToString(), out var decimalResult))
             {
-                return new ValidationResult($"Category {category} tonnage value must be a numerical value");
+                return new ValidationResult($"Category {(int)propertyValue} tonnage value must be a numerical value");
             }
             else
             {
                 if (decimalResult < 0)
                 {
-                    return new ValidationResult($"Category {category} tonnage value must be 0 or greater");
+                    return new ValidationResult($"Category {(int)propertyValue} tonnage value must be 0 or greater");
                 }
 
                 if (DecimalPlaces(decimalResult) > 3)
                 {
-                    return new ValidationResult($"Category {category} tonnage value must be 3 decimal places or less");
+                    return new ValidationResult($"Category {(int)propertyValue} tonnage value must be 3 decimal places or less");
                 }
             }
 
