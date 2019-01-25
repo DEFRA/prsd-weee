@@ -443,7 +443,7 @@
         /// <summary>
         /// This test ensures that the GET "Index" action calls the API to fetch summary
         /// data about the data returns for the specified organisation. It ensures that
-        /// this information is populated into the IndexViewModel provided with the
+        /// this information is populated into the NonObligatedViewModel provided with the
         /// result.
         /// </summary>
         /// <returns></returns>
