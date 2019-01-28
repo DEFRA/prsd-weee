@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using Core.AatfReturn;
 
     public class NonObligatedValuesViewModel
     {
         public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
+
+        public Guid OrganisationId { get; set; }
 
         public NonObligatedValuesViewModel()
         {

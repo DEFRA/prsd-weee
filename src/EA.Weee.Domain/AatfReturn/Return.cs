@@ -6,10 +6,10 @@
 
     public partial class Return : Entity
     {
-        public Return(Guid returnid, Guid operatorid, int complianceyear, int period, int status)
+        public Return(Guid returnid, int complianceyear, int period, int status, Operator aatfOperator)
         {
             ReturnId = returnid;
-            OperatorId = operatorid;
+            Operator = aatfOperator;
             ComplianceYear = complianceyear;
             Period = period;
             Status = status;
@@ -24,5 +24,7 @@
         public int Period { get; private set; }
 
         public int Status { get; private set; }
-    }
+
+        public virtual Operator Operator { get; private set; }
+}
 }
