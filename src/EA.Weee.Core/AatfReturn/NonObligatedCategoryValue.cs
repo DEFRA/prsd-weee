@@ -1,14 +1,17 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
+    using Helpers;
     using Validation;
 
     public class NonObligatedCategoryValue
     {
-        public WeeeCategory Category { get; set; }
+        public string CategoryDisplay { get; set; }
 
-        [TonnageValue("Category")]
-        public decimal Tonnage { get; set; }
+        public int CategoryId { get; set; }
+
+        //[TonnageValue("Category")]
+        public decimal? Tonnage { get; set; }
 
         public string HouseHold { get; set; }
 
@@ -22,7 +25,8 @@
 
         public NonObligatedCategoryValue(WeeeCategory category)
         {
-            Category = category;
+            CategoryDisplay = category.ToDisplayString();
+            CategoryId = (int)category;
         }
     }
 }

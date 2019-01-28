@@ -12,7 +12,7 @@
 
         public NonObligatedValuesViewModel()
         {
-            AddCategoryValues(new CategoryValues());
+            //AddCategoryValues(new CategoryValues());
         }
 
         public NonObligatedValuesViewModel(CategoryValues categoryValues)

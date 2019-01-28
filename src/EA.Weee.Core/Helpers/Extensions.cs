@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -114,6 +115,21 @@
                             .GetMember(enumValue.ToString())
                             .First()
                             .GetCustomAttribute<TAttribute>();
+        }
+
+        public static string ToDisplayString<T>(this T value)
+        {
+            var fieldInfo = typeof(T).GetField(value.ToString());
+
+            if (!(fieldInfo.GetCustomAttributes(
+                typeof(DisplayAttribute), false) is DisplayAttribute[] descriptionAttributes))
+            {
+                return string.Empty;
+            }
+
+            return descriptionAttributes.Length > 0
+                ? descriptionAttributes[0].Name
+                : value.ToString();
         }
     }
 }
