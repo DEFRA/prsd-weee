@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.Helpers;
     using Core.Shared;
     using DataReturns;
     using FluentAssertions;
@@ -18,21 +19,24 @@
         {
             var result = new CategoryValues();
 
-            foreach (var category in Enum.GetValues(typeof(WeeeCategory)))
+            foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                result.Count(c => c.Category.Equals(category)).Should().Be(1);
+                var foundCategory = result.FirstOrDefault(c => c.CategoryId == (int)category);
+                foundCategory.Should().NotBeNull();
+                foundCategory.CategoryDisplay.Should().Be(category.ToDisplayString<WeeeCategory>());
             }
 
             result.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
         }
 
         [Fact]
-        public void CategoryValues_CategorieValuesShouldBeNull()
+        public void CategoryValues_CategoryValuesShouldBeNull()
         {
             var result = new CategoryValues();
 
             result.Count(c => c.HouseHold != null).Should().Be(0);
             result.Count(c => c.NonHouseHold != null).Should().Be(0);
+            result.Count(c => c.Tonnage != null).Should().Be(0);
         }
     }
 }
