@@ -37,9 +37,9 @@
         }
 
         [Fact]
-        public void IsValid_GivenRelatedPropertyIsNotOfTypeWeeeCategory_ValidationExceptionExpected()
+        public void IsValid_GivenRelatedPropertyIsNotWeeeCategoryValue_ValidationExceptionExpected()
         {
-            var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType();
+            var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType() { Category = 15 };
             var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
             var attribute = new TonnageValueAttribute(CategoryIdProperty);
 
