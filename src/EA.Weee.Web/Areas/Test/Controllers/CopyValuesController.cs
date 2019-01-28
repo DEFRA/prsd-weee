@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
+    using AatfReturn.ViewModels;
     using Core.AatfReturn;
     using Core.Shared;
     using Web.ViewModels.Shared;
@@ -25,17 +26,17 @@
 
             if (pastValues != null)
             {
-                var model = new WeeeCategoryValueViewModel(pastValues);
+                var model = new NonObligatedValuesViewModel(pastValues);
 
                 return View(model);
             }
 
-            return View(new WeeeCategoryValueViewModel(new CategoryValues()));
+            return View(new NonObligatedValuesViewModel(new CategoryValues()));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(WeeeCategoryValueViewModel values)
+        public ActionResult Index(NonObligatedValuesViewModel values)
         {
             return View(values);
         }

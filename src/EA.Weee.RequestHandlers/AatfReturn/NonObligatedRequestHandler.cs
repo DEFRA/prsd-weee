@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using Core.AatfReturn;
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.User;
     using Prsd.Core.Domain;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
+    using RequestHandlers.Mappings;
     using Requests.AatfReturn;
     using Requests.Organisations.Create;
     using Security;
@@ -27,7 +30,7 @@
             this.userContext = userContext;
         }
 
-        public async Task<Guid> HandleAsync(NonObligatedRequest message)
+        public async Task<Guid> HandleAsync(NonObligatedCategoryValue message)
         {
             authorization.EnsureCanAccessExternalArea();
             var organisation = Organisation.CreateSoleTrader("TESTINGTRADING");
@@ -39,11 +42,12 @@
             var returnTest = new Return(Guid.NewGuid(), operatorTest.Id, 1, 1, 1);
             db.Return.Add(returnTest);
 
-            for (var i = 0; i < message.CategoryValues.Count; i++)
-            {
-                var nonobligated = new NonObligatedWeee(message.NonObligatedId, returnTest.Id, message.CategoryValues[i].Category, message.CategoryValues[i].Dcf, message.CategoryValues[i].NonObligated);
-                db.NonObligatedWeee.Add(nonobligated);
-            }
+            //for (var i = 0; i < message.CategoryValues.Count; i++)
+            //{
+            //    var nonobligated = new NonObligatedWeee(message.NonObligatedId, returnTest.Id, message.CategoryValues[i].Category, message.CategoryValues[i].Dcf, message.CategoryValues[i].NonObligated);
+            //    db.NonObligatedWeee.Add(nonobligated);
+            //}
+            //db.NonObligatedWeee.Add(request);
 
             await db.SaveChangesAsync();
 

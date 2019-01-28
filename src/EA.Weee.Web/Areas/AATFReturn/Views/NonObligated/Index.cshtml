@@ -1,8 +1,5 @@
-﻿@using EA.Weee.Web.Areas.Scheme.Controllers
-@using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
-@using EA.Weee.Core.Shared;
-@model EA.Weee.Web.ViewModels.Shared.WeeeCategoryValueViewModel
+﻿@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
     ViewBag.Title = "Non-obligated WEEE";
 }
@@ -15,8 +12,7 @@
 {
     @Html.AntiForgeryToken()
 
-    var categoryValues = new CategoryValues();
-    Html.RenderPartial("_NonObligatedWEEETable", new EA.Weee.Web.ViewModels.Shared.WeeeCategoryValueViewModel(categoryValues));
+    Html.RenderPartial("_NonObligatedWEEETable", Model);
 
     <div class="govuk-form-group">
         <button class="govuk-button" type="submit">Save and Continue</button>

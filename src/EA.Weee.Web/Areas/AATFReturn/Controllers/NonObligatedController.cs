@@ -17,6 +17,7 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
+    using Requests;
     using Services;
     using Services.Caching;
     using ViewModels;
@@ -36,34 +37,35 @@
         private readonly IExternalRouteService externalRouteService;
         private readonly IAppConfiguration appConfig;
         public List<NonObligatedRequest> NonObligatedRequestList;
-        private readonly IMapper mapper;
+        private readonly INonObligatedWeeRequestCreator requestCreator;
 
-        public NonObligatedController(IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig)
+        public NonObligatedController(IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig, INonObligatedWeeRequestCreator requestCreator)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.externalRouteService = externalRouteService;
             this.appConfig = appConfig;
-            this.mapper = mapper;
+            this.requestCreator = requestCreator;
         }
 
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId)
         {
-            var viewModel = new WeeeCategoryValueViewModel();
+            var viewModel = new NonObligatedValuesViewModel();
+
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(WeeeCategoryValueViewModel viewModel)
+        public async Task<ActionResult> Index(NonObligatedValuesViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
+                    var request = requestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(request);
                     return View(viewModel);
                 }
