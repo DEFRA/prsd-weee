@@ -8,14 +8,11 @@
     {
         public Return(Guid returnid, int complianceyear, int period, int status, Operator aatfOperator)
         {
-            ReturnId = returnid;
             Operator = aatfOperator;
             ComplianceYear = complianceyear;
             Period = period;
             Status = status;
         }
-
-        public Guid ReturnId { get; private set; }
 
         public Guid OperatorId { get; private set; }
 
