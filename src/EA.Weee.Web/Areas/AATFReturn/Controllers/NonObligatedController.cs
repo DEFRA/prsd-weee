@@ -36,7 +36,7 @@
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IExternalRouteService externalRouteService;
         private readonly IAppConfiguration appConfig;
-        public List<NonObligatedRequest> NonObligatedRequestList;
+        public List<AddNonObligatedRequest> NonObligatedRequestList;
         private readonly INonObligatedWeeRequestCreator requestCreator;
 
         public NonObligatedController(IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig, INonObligatedWeeRequestCreator requestCreator)
@@ -52,7 +52,7 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId)
         {
-            var viewModel = new NonObligatedValuesViewModel();
+            var viewModel = new NonObligatedValuesViewModel { OrganisationId = organisationId };
 
             return View(viewModel);
         }
@@ -66,7 +66,7 @@
                 using (var client = apiClient())
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
-                    await client.SendAsync(request);
+                    await client.SendAsync(User.GetAccessToken(), request);
                     return View(viewModel);
                 }
             }

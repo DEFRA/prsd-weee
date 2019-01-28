@@ -8,9 +8,9 @@
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn;
 
-    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, NonObligatedRequest>, INonObligatedWeeRequestCreator
+    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligatedRequest>, INonObligatedWeeRequestCreator
     {
-        public override NonObligatedRequest ViewModelToRequest(NonObligatedValuesViewModel viewModel)
+        public override AddNonObligatedRequest ViewModelToRequest(NonObligatedValuesViewModel viewModel)
         {
             // Auto mappings
             var request = base.ViewModelToRequest(viewModel);

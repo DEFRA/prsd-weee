@@ -6,10 +6,10 @@
 
     public partial class NonObligatedWeee : Entity
     {
-        public NonObligatedWeee(Guid nonobligatedid, Guid returnid, Enum categoryid, bool dcf, decimal tonnage)
+        public NonObligatedWeee(Guid nonobligatedid, Return aatfReturn, Enum categoryid, bool dcf, decimal tonnage)
         {
             NonObligatedId = nonobligatedid;
-            ReturnId = returnid;
+            AatfReturn = aatfReturn;
             Dcf = dcf;
             Tonnage = tonnage;
         }
@@ -27,5 +27,7 @@
         public bool Dcf { get; set; }
 
         public decimal Tonnage { get; set; }
+
+        public virtual Return AatfReturn { get; private set; }
     }
 }
