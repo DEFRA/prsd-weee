@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Validation
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -24,9 +25,11 @@
                 throw new ValidationException($"Property {categoryProperty} does not exist");
             }
 
-            var propertyValue = propertyInfos.GetValue(validationContext.ObjectInstance, null);
+            var propertyValue = (int)propertyInfos.GetValue(validationContext.ObjectInstance, null) as int?;
 
-            if (propertyValue.GetType() != typeof(WeeeCategory))
+            var categoryId = Enum.GetValues(typeof(WeeeCategory)).Cast<int>().ToList();
+
+            if (propertyValue == null || !categoryId.Contains(propertyValue.Value))
             {
                 throw new ValidationException($"Property {categoryProperty} should be of type {typeof(WeeeCategory).Name}");
             }

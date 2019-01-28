@@ -121,8 +121,10 @@
         {
             var fieldInfo = typeof(T).GetField(value.ToString());
 
-            if (!(fieldInfo.GetCustomAttributes(
-                typeof(DisplayAttribute), false) is DisplayAttribute[] descriptionAttributes))
+            var descriptionAttributes = fieldInfo.GetCustomAttributes(
+                typeof(DisplayAttribute), false) as DisplayAttribute[];
+
+            if (descriptionAttributes == null)
             {
                 return string.Empty;
             }
