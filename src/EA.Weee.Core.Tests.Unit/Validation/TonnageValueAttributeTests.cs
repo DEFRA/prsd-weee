@@ -7,53 +7,77 @@
     using System.Text;
     using System.Threading.Tasks;
     using Core.Validation;
+    using DataReturns;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
     public class TonnageValueAttributeTests
     {
-        private const int Category = 1;
-        private readonly ValidationContext validationContext;
-        private readonly TonnageValueAttribute attribute;
+        private const string CategoryIdProperty = "Category";
+        private const int CategoryIdValue = 1;
+        private readonly List<ValidationResult> validationResults;
+        private const WeeeCategory Category = WeeeCategory.AutomaticDispensers;
 
         public TonnageValueAttributeTests()
         {
-            attribute = new TonnageValueAttribute(Category);
+            validationResults = new List<ValidationResult>();
+        }
 
-            var tonnageValue = new TestTonnageValue();
-            validationContext = new ValidationContext(tonnageValue);
+        [Fact]
+        public void IsValid_GivenRelatedPropertyDoesNotExist_ValidationExceptionExpected()
+        {
+            var tonnageValue = new TestTonnageValueNonRelatedProperty();
+            var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+
+            Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
+
+            action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} does not exist");
+        }
+
+        [Fact]
+        public void IsValid_GivenRelatedPropertyIsNotOfTypeWeeeCategory_ValidationExceptionExpected()
+        {
+            var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType();
+            var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+
+            Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
+
+            action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} should be of type { typeof(WeeeCategory).Name }");
         }
 
         [Fact]
         public void IsValid_ValueIsNull_ReturnsTrue()
         {
-            var result = attribute.IsValid(null);
+            var result = Validate(null);
 
             result.Should().BeTrue();
         }
 
         [Theory]
         [InlineData("A")]
-        public void IsValid_ValueIsNotANumber_ReturnsFalse(object input)
+        public void IsValid_ValueIsNotANumber_ReturnsFalse(string input)
         {
-            var result = attribute.IsValid(input);
+            var result = Validate(input);
 
             result.Should().BeFalse();
         }
 
         [Theory]
         [InlineData("A")]
-        public void ValidationResult_ValueIsNotANumber_ErrorMessageShouldBeCorrect(object input)
+        public void ValidationResult_ValueIsNotANumber_ErrorMessageShouldBeCorrect(string input)
         {
-            var result = attribute.GetValidationResult(input, validationContext);
+            var result = Validate(input);
 
-            result.ErrorMessage.Should().Be("Category 1 tonnage value must be a numerical value");
-        }
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value");
+        }       
 
         [Fact]
         public void IsValid_ValueIsLessThanZero_ReturnsFalse()
         {
-            var result = attribute.IsValid(-1);
+            var result = Validate(-1);
 
             result.Should().BeFalse();
         }
@@ -61,15 +85,15 @@
         [Fact]
         public void ValidationResult_ValueIsLessThanZero_ErrorMessageShouldBeCorrect()
         {
-            var result = attribute.GetValidationResult(-1, validationContext);
+            var result = Validate(-1);
 
-            result.ErrorMessage.Should().Be("Category 1 tonnage value must be 0 or greater");
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 0 or greater");
         }
 
         [Fact]
         public void IsValid_ValueHasMoreThanThreeDecimalPlaces_ReturnsFalse()
         {
-            var result = attribute.IsValid(1.1111M);
+            var result = Validate(1.1111M);
 
             result.Should().BeFalse();
         }
@@ -77,9 +101,9 @@
         [Fact]
         public void ValidationResult_ValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect()
         {
-            var result = attribute.GetValidationResult(1.1111M, validationContext);
+            var result = Validate(1.1111M);
 
-            result.ErrorMessage.Should().Be("Category 1 tonnage value must be 3 decimal places or less");
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 3 decimal places or less");
         }
 
         [Theory]
@@ -90,15 +114,56 @@
         [InlineData(1.111)]
         public void IsValid_ValueIsValid_ReturnsTrue(object input)
         {
-            var result = attribute.IsValid(input);
+            var result = Validate(input);
 
             result.Should().BeTrue();
         }
 
+        private void ValidateErrorMessage(string errorMessage)
+        {
+            validationResults.Count(e => e.ErrorMessage == errorMessage).Should().Be(1);
+            validationResults.Count().Should().Be(1);
+        }
+
+        private bool Validate(object input)
+        {
+            var tonnageValueModel = TonnageValueModel(input);
+            var validationContext = new ValidationContext(tonnageValueModel);
+
+            return Validator.TryValidateObject(tonnageValueModel, validationContext, validationResults, true);
+        }
+
+        private TestTonnageValue TonnageValueModel(object tonnage)
+        {
+            var tonnageValueModel = new TestTonnageValue()
+            {
+                Category = Category,
+                Tonnage = tonnage
+            };
+
+            return tonnageValueModel;
+        }
+
+        public class TestTonnageValueNonRelatedProperty
+        {
+            [TonnageValue(CategoryIdProperty)]
+            public object Tonnage { get; set; }
+        }
+
+        public class TestTonnageValueRelatedPropertyNotOfCorrectType
+        {
+            [TonnageValue(CategoryIdProperty)]
+            public object Tonnage { get; set; }
+
+            public int Category { get; set; }
+        }
+
         public class TestTonnageValue
         {
-            [TonnageValue(Category)]
-            public string Tonnage { get; set; }
+            [TonnageValue(CategoryIdProperty)]
+            public object Tonnage { get; set; }
+
+            public WeeeCategory Category { get; set; }
         }
     }
 }
