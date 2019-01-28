@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
+    using Validation;
 
     public class CategoryValue
     {
@@ -10,6 +11,7 @@
 
         public string NonHouseHold { get; set; }
 
+        [TonnageValue("Category")]
         public decimal NonObligated { get; set; }
 
         public bool Dcf { get; set; }
