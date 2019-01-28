@@ -13,6 +13,7 @@
 
         public bool Dcf { get; private set; }
 
+        [TonnageValue("CategoryId")]
         public decimal Tonnage { get; private set; }
     }
 }
