@@ -59,12 +59,17 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(WeeeCategoryValueViewModel viewModel)
         {
-            using (var client = apiClient())
+            if (ModelState.IsValid)
             {
-                var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
-                await client.SendAsync(request);
-                return View(viewModel);
+                using (var client = apiClient())
+                {
+                    var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
+                    await client.SendAsync(request);
+                    return View(viewModel);
+                }
             }
+
+            return View(viewModel);
         }
     }
 }
