@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Scheme;
     using Core.Shared;
@@ -52,8 +53,8 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId)
         {
-            var viewModel = new NonObligatedValuesViewModel { OrganisationId = organisationId };
-
+            var viewModel = new NonObligatedValuesViewModel(new CategoryValues()) { OrganisationId = organisationId };
+            
             return View(viewModel);
         }
 

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.Organisation;
@@ -37,9 +38,9 @@
 
             var nonObligatedWee = new List<NonObligatedWeee>();
 
-            for (var i = 0; i < message.CategoryValues.Count; i++)
+            foreach (var categoryValue in message.CategoryValues)
             {
-                nonObligatedWee.Add(new NonObligatedWeee(message.NonObligatedId, aatfReturn, message.CategoryValues[i].Category, message.CategoryValues[i].Dcf, message.CategoryValues[i].Tonnage));
+                nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, categoryValue.Dcf, categoryValue.Tonnage));
             }
 
             await nonObligatedDataAccess.Submit(nonObligatedWee);

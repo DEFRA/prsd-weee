@@ -25,14 +25,14 @@
             var category = Model.CategoryValues.ElementAt(i);
 
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString() </td>
+                <td class="govuk-table__cell govuk-!-padding-bottom-0">@(@category.CategoryId). @category.CategoryDisplay <input type="hidden" name="CategoryValues[@{@i}].CategoryId" value="@category.CategoryId"/> </td>
                 <td class="govuk-table__cell govuk-!-padding-bottom-0">
                     <div class="govuk-form-group">
                         <span id="CategoryValues_@{@i}__Error" class="govuk-error-message govuk-!-font-size-14"
                               style="margin-bottom: 0px; display: none;">
                         </span>
                         <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}"
-                               name="CategoryValues[@{@i}].Tonnage" type="text" value="@category.Tonnage">
+                               name="CategoryValues[@{@i}].Tonnage" type="text" value="">
                     </div>
                 </td>
             </tr>

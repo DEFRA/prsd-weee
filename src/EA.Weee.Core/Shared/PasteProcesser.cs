@@ -36,7 +36,7 @@
             {
                 var splitLine = lines.ElementAt(lineCount).Split(LineSplitCharactors);
 
-                var category = categoryValues.FirstOrDefault(c => c.Category == (WeeeCategory)lineCount + 1);
+                var category = categoryValues.FirstOrDefault(c => c.CategoryId == lineCount + 1);
 
                 if (category != null)
                 {
