@@ -1,49 +1,49 @@
 ﻿@using EA.Weee.Web.Extensions
-@model EA.Weee.Web.ViewModels.Shared.WeeeCategoryValueViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
     ViewBag.Title = "Index";
 }
 
 
-    <table class="govuk-table" id="non-obligated-weee-table">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
-                <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell"></td>
-                <td class="govuk-table__cell govuk-!-margin-bottom-0">
+<table class="govuk-table" id="non-obligated-weee-table">
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell"></td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0">
 
-                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
-                        WEEE in tonnes
+                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
+                    WEEE in tonnes
+                </div>
+            </td>
+        </tr>
+        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+        {
+            var category = Model.CategoryValues.ElementAt(i);
+
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString() </td>
+                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                    <div class="govuk-form-group">
+                        <span id="CategoryValues_@{@i}__Error" class="govuk-error-message govuk-!-font-size-14"
+                              style="margin-bottom: 0px; display: none;">
+                        </span>
+                        <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}"
+                               name="CategoryValues[@{@i}].Tonnage" type="text" value="@category.Tonnage">
                     </div>
                 </td>
             </tr>
-            @for (var i = 0; i < Model.CategoryValues.Count; i++)
-            {
-                var category = Model.CategoryValues.ElementAt(i);
-
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString() </td>
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                        <div class="govuk-form-group">
-                            <span id="CategoryValues_@{@i}__Error" class="govuk-error-message govuk-!-font-size-14"
-                                  style="margin-bottom: 0px; display: none;">
-                            </span>
-                            <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}"
-                                   name="CategoryValues[@{@i}].NonObligated" type="text" value="@category.NonObligated">
-                        </div>
-                    </td>
-                </tr>
-            }
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    <h3 class="govuk-heading-m">Total</h3>
-                </td>
-                <td class="govuk-table__cell govuk-!-margin-bottom-0">
-                    <h3 class="govuk-heading-m" style="float: left;" id="tonneTotal">0.000 tonnes</h3>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        }
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <h3 class="govuk-heading-m">Total</h3>
+            </td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0">
+                <h3 class="govuk-heading-m" style="float: left;" id="tonneTotal">0.000 tonnes</h3>
+            </td>
+        </tr>
+    </tbody>
+</table>

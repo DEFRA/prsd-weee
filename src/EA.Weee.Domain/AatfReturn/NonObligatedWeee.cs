@@ -14,14 +14,18 @@
             Tonnage = tonnage;
         }
 
-        public Guid NonObligatedId { get; private set; }
+        public NonObligatedWeee()
+        {
+        }
 
-        public Guid ReturnId { get; private set; }
+        public Guid NonObligatedId { get; set; }
 
-        public Enum CategoryId { get; private set; }
+        public Guid ReturnId { get; set; }
 
-        public bool Dcf { get; private set; }
+        public int CategoryId { get; set; }
 
-        public decimal Tonnage { get; private set; }
+        public bool Dcf { get; set; }
+
+        public decimal Tonnage { get; set; }
     }
 }

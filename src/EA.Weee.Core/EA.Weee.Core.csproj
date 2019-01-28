@@ -158,7 +158,7 @@
     <Compile Include="Search\Simple\SimpleSearcher.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AatfReturn\CategoryValue.cs" />
+    <Compile Include="AatfReturn\NonObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />

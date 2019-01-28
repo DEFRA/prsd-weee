@@ -3,24 +3,24 @@
     using DataReturns;
     using Validation;
 
-    public class CategoryValue
+    public class NonObligatedCategoryValue
     {
         public WeeeCategory Category { get; set; }
+
+        [TonnageValue("Category")]
+        public decimal Tonnage { get; set; }
 
         public string HouseHold { get; set; }
 
         public string NonHouseHold { get; set; }
 
-        [TonnageValue("Category")]
-        public decimal NonObligated { get; set; }
-
         public bool Dcf { get; set; }
 
-        public CategoryValue()
+        public NonObligatedCategoryValue()
         {
         }
 
-        public CategoryValue(WeeeCategory category)
+        public NonObligatedCategoryValue(WeeeCategory category)
         {
             Category = category;
         }

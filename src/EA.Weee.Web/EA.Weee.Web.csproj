@@ -214,6 +214,8 @@
   <ItemGroup>
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
@@ -1015,7 +1017,7 @@
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
-    <Compile Include="ViewModels\Shared\WeeeCategoryValueViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
