@@ -86,6 +86,8 @@
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\ReturnMapping.cs" />
+    <Compile Include="Mappings\OperatorMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\RoleMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />

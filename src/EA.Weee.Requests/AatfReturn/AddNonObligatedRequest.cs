@@ -5,12 +5,14 @@
     using System;
     using System.Collections.Generic;
 
-    public class NonObligatedRequest : IRequest
+    public class AddNonObligatedRequest : IRequest<Guid>
     {
         public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
 
         public Guid NonObligatedId { get; set; }
 
         public Guid ReturnId { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }

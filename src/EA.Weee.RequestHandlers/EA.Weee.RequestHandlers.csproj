@@ -67,7 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfReturn\NonObligatedRequestHandler.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligatedRequestHandler.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\NonObligated\IAddNonObligatedDataAccess.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
