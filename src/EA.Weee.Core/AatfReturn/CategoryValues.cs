@@ -5,13 +5,13 @@
     using System.Diagnostics;
     using DataReturns;
 
-    public class CategoryValues : List<CategoryValue>
+    public class CategoryValues : List<NonObligatedCategoryValue>
     {
         public CategoryValues()
         {
             foreach (var category in GetEnumValues())
             {
-                Add(new CategoryValue(category));
+                Add(new NonObligatedCategoryValue(category));
             }
         }
 
