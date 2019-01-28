@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfReturn\NonObligated.cs" />
+    <Compile Include="AatfReturn\NonObligatedWeee.cs" />
     <Compile Include="AatfReturn\Operator.cs" />
     <Compile Include="AatfReturn\Return.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />

@@ -60,8 +60,12 @@
         {
             using (var client = apiClient())
             {
-                var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
-                await client.SendAsync(request);
+                var request = new NonObligatedRequest
+                {
+                    CategoryValues = viewModel.CategoryValues
+                };
+                //var request = mapper.Map<WeeeCategoryValueViewModel, NonObligatedRequest>(viewModel);
+                //await client.SendAsync(request);
                 return View(viewModel);
             }
         }
