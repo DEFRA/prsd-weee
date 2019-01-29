@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Core.AatfReturn;
 
     public class NonObligatedValuesViewModel
@@ -12,21 +13,37 @@
 
         public NonObligatedValuesViewModel()
         {
-            //AddCategoryValues(new CategoryValues());
+            AddCategoryValues(new NonObligatedCategoryValues());
         }
 
-        public NonObligatedValuesViewModel(CategoryValues categoryValues)
+        public NonObligatedValuesViewModel(NonObligatedCategoryValues values)
         {
-            AddCategoryValues(categoryValues);
+            AddCategoryValues(values);
         }
 
-        private void AddCategoryValues(CategoryValues categories)
+        private void AddCategoryValues(NonObligatedCategoryValues nonObligatedCategories)
         {
             CategoryValues = new List<NonObligatedCategoryValue>();
 
-            foreach (var categoryValue in categories)
+            foreach (var categoryValue in nonObligatedCategories)
             {
                 CategoryValues.Add(categoryValue);
+            }
+        }
+
+        public string Total
+        {
+            get
+            {
+                var total = 0.000m;
+                var values = CategoryValues.Where(c => c.Tonnage.HasValue).Select(c => c.Tonnage.Value).ToList();
+
+                if (values.Any())
+                {
+                    total = values.Sum();
+                }
+
+                return string.Format("{0:0.000}", total);
             }
         }
     }

@@ -35,6 +35,9 @@
                     "~/Scripts/vendor/modernizr.custom.77028.js",
                     "~/Scripts/weee-application.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
+                "~/Scripts/weee-tonnage-totals.js"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 
