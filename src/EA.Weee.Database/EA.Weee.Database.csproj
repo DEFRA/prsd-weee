@@ -207,9 +207,9 @@
     <Content Include="scripts\Update\Release 1\Sprint27\20161115-1700-AddIndexToProducerSubmissionAndUpload.sql" />
     <Content Include="scripts\Update\Release 1\Sprint27\20161121-1606-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
     <Content Include="scripts\Update\Release 1\Sprint28\20161123-1030-UpdateSpgSubmissionChangesCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint16\20180118-1056-AATFPreferences.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint16\20180114-1415-AATFReturn.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint16\20190128-1300-AddRowVersions.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint1\20180118-1056-AATFPreferences.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint1\20180114-1415-AATFReturn.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint1\20190128-1300-AddRowVersions.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
