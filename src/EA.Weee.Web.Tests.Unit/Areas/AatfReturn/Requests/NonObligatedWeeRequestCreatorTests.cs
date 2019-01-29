@@ -31,7 +31,7 @@
         [Fact]
         public async void AddNonObligatedRequest_GivenValidViewModel_CorrectlyMapToARequest()
         {
-            var categoryValues = new CategoryValues();
+            var categoryValues = new NonObligatedCategoryValues();
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
