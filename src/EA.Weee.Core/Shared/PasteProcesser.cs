@@ -16,9 +16,9 @@
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
         private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
 
-        public CategoryValues BuildModel(object pasteValues)
+        public NonObligatedCategoryValues BuildModel(object pasteValues)
         {
-            var categoryValues = new CategoryValues();
+            var categoryValues = new NonObligatedCategoryValues();
 
             if (pasteValues == null || string.IsNullOrWhiteSpace(pasteValues.ToString()))
             {
