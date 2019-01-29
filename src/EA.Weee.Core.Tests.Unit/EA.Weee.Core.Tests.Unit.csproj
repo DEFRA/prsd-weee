@@ -114,7 +114,7 @@
     <Compile Include="Search\Simple\SimpleSearcherTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Shared\CategoryValuesTests.cs" />
+    <Compile Include="AatfReturn\NonObligatedCategoryValuesTests.cs" />
     <Compile Include="Shared\CsvWriterTests.cs" />
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
@@ -148,6 +148,7 @@
       <Name>EA.Weee.XmlValidation</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

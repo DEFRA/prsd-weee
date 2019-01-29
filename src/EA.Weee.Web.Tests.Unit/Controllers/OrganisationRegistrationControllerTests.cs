@@ -9,11 +9,11 @@
     using Core.Shared;
     using EA.Weee.Core.Search;
     using FakeItEasy;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.Type;
-    using ViewModels.Shared;
     using Web.Controllers;
+    using Web.ViewModels.OrganisationRegistration;
+    using Web.ViewModels.OrganisationRegistration.Details;
+    using Web.ViewModels.OrganisationRegistration.Type;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Xunit;
 

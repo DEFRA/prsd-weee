@@ -5,9 +5,9 @@
     using System.Diagnostics;
     using DataReturns;
 
-    public class CategoryValues : List<NonObligatedCategoryValue>
+    public class NonObligatedCategoryValues : List<NonObligatedCategoryValue>
     {
-        public CategoryValues()
+        public NonObligatedCategoryValues()
         {
             foreach (var category in GetEnumValues())
             {

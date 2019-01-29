@@ -22,7 +22,7 @@
         // GET: Test/CopyValues
         public ActionResult Index()
         {
-            var pastValues = TempData["pasteValues"] as CategoryValues;
+            var pastValues = TempData["pasteValues"] as NonObligatedCategoryValues;
 
             if (pastValues != null)
             {
@@ -31,7 +31,7 @@
                 return View(model);
             }
 
-            return View(new NonObligatedValuesViewModel(new CategoryValues()));
+            return View(new NonObligatedValuesViewModel(new NonObligatedCategoryValues()));
         }
 
         [HttpPost]
