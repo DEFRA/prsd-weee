@@ -164,8 +164,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfReturn\Controller\NonObligatedControllerTests.cs" />
     <Compile Include="App_Start\ReturnUrlMappingTests.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />

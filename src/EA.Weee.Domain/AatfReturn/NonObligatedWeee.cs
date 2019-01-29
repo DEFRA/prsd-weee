@@ -8,6 +8,8 @@
     {
         public NonObligatedWeee(Return aatfReturn, int categoryId, bool dcf, decimal? tonnage)
         {
+            Guard.ArgumentNotNull(() => aatfReturn, aatfReturn);
+
             Return = aatfReturn;
             Dcf = dcf;
             Tonnage = tonnage;
