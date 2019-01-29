@@ -13,8 +13,8 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
     using Services;
-    using ViewModels.NewUser;
     using Web.Controllers;
+    using Web.ViewModels.NewUser;
     using Xunit;
 
     public class NewUserControllerTests
