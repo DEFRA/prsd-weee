@@ -216,7 +216,6 @@
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -785,6 +784,7 @@
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
+    <Content Include="Scripts\weee-tonnage-totals.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />

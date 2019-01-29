@@ -28,7 +28,7 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.Should().BeOfType<CategoryValues>();
+            result.Should().BeOfType<NonObligatedCategoryValues>();
             AssertEmptyValues(result);
         }
 
@@ -191,13 +191,13 @@
             result.Count(c => c.NonHouseHold != null).Should().Be(2);
         }
 
-        private static void AssertEmptyValues(CategoryValues result)
+        private static void AssertEmptyValues(NonObligatedCategoryValues result)
         {
             result.Count(c => c.HouseHold != null).Should().Be(0);
             result.Count(c => c.NonHouseHold != null).Should().Be(0);
         }
 
-        private static void AssertPopulatedValues(CategoryValues result)
+        private static void AssertPopulatedValues(NonObligatedCategoryValues result)
         {
             result.ElementAt(0).HouseHold.Should().Be("1");
             result.ElementAt(0).NonHouseHold.Should().Be("2");
