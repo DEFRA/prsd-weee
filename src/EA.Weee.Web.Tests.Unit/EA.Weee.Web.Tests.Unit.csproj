@@ -193,6 +193,7 @@
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />
     <Compile Include="Controllers\NewUserControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValueViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

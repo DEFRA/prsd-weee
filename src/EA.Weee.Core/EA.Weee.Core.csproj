@@ -159,7 +159,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AatfReturn\NonObligatedCategoryValue.cs" />
-    <Compile Include="AatfReturn\CategoryValues.cs" />
+    <Compile Include="AatfReturn\NonObligatedCategoryValues.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
