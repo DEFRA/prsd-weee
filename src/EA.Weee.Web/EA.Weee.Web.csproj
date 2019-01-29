@@ -65,20 +65,20 @@
     <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19021-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19021-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19021-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19021-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.19021-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
+    <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Email.1.0.19029-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -212,6 +212,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
+    <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -276,6 +280,8 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\govuk_frontend\assets\images\favicon.ico" />
     <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-152x152.png" />
     <Content Include="Content\govuk_frontend\assets\images\govuk-apple-touch-icon-167x167.png" />
@@ -324,6 +330,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Function\prototype\bind.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
+    <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -372,6 +379,7 @@
     <Content Include="Content\weee\images\spinner.gif" />
     <Content Include="Content\weee\_forms.scss" />
     <Content Include="Content\weee\_panels.scss" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -388,6 +396,8 @@
     <Content Include="Content\weee\_font_stack.scss" />
     <Content Include="Areas\Test\Views\CopyValues\Index.cshtml" />
     <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -616,6 +626,15 @@
     <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -634,6 +653,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
@@ -764,6 +784,7 @@
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
+    <Content Include="Scripts\weee-tonnage-totals.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
@@ -996,7 +1017,7 @@
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
-    <Compile Include="ViewModels\Shared\WeeeCategoryValueViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />

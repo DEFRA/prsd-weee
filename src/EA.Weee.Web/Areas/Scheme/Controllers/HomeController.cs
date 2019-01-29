@@ -176,6 +176,10 @@
                 {
                     return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
+                if (viewModel.SelectedValue == PcsAction.MakeAATFReturn)
+                {
+                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", organisationId = viewModel.OrganisationId });
+                }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null);

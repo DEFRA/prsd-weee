@@ -1035,5 +1035,21 @@
             Assert.Equal("Index", routeValues["action"]);
             Assert.Equal("DataReturns", routeValues["controller"]);
         }
+
+        [Fact]
+        public async void PostChooseActivity_MakeAATFReturn_RedirectsToNonObligatedWeee()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.MakeAATFReturn
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("NonObligated", routeValues["controller"]);
+        }
     }
 }

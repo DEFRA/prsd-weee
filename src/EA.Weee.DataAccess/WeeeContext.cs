@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Domain;
+    using Domain.AatfReturn;
     using Domain.Admin;
     using Domain.Audit;
     using Domain.Charges;
@@ -20,6 +17,10 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -29,6 +30,12 @@
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
         public virtual DbSet<Organisation> Organisations { get; set; }
+
+        public virtual DbSet<NonObligatedWeee> NonObligatedWeee { get; set; }
+
+        public virtual DbSet<Return> Returns { get; set; }
+
+        public virtual DbSet<Operator> Operators { get; set; }
 
         public virtual DbSet<User> Users { get; set; }
 

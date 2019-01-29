@@ -1,17 +1,17 @@
-﻿namespace EA.Weee.Core.Shared
+﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using DataReturns;
 
-    public class CategoryValues : List<CategoryValue>
+    public class NonObligatedCategoryValues : List<NonObligatedCategoryValue>
     {
-        public CategoryValues()
+        public NonObligatedCategoryValues()
         {
             foreach (var category in GetEnumValues())
             {
-                Add(new CategoryValue(category));
+                Add(new NonObligatedCategoryValue(category));
             }
         }
 

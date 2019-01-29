@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Core.Shared
 {
+    using Core.AatfReturn;
+    using DataReturns;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using DataReturns;
     using Prsd.Core;
     using Prsd.Core.Extensions;
 
@@ -15,9 +16,9 @@
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
         private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
 
-        public CategoryValues BuildModel(object pasteValues)
+        public NonObligatedCategoryValues BuildModel(object pasteValues)
         {
-            var categoryValues = new CategoryValues();
+            var categoryValues = new NonObligatedCategoryValues();
 
             if (pasteValues == null || string.IsNullOrWhiteSpace(pasteValues.ToString()))
             {
@@ -35,7 +36,7 @@
             {
                 var splitLine = lines.ElementAt(lineCount).Split(LineSplitCharactors);
 
-                var category = categoryValues.FirstOrDefault(c => c.Category == (WeeeCategory)lineCount + 1);
+                var category = categoryValues.FirstOrDefault(c => c.CategoryId == lineCount + 1);
 
                 if (category != null)
                 {
