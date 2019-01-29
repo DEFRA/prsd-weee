@@ -9,6 +9,6 @@
     
     public interface IPasteProcesser
     {
-        CategoryValues BuildModel(object pasteValues);
+        NonObligatedCategoryValues BuildModel(object pasteValues);
     }
 }

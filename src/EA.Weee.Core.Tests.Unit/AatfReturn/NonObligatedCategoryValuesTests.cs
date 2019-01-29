@@ -1,23 +1,19 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Shared
+﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.Helpers;
-    using Core.Shared;
     using DataReturns;
     using FluentAssertions;
     using Xunit;
 
-    public class CategoryValuesTests
+    public class NonObligatedCategoryValuesTests
     {
         [Fact]
-        public void CategoryValues_CategoriesShouldBePopulated()
+        public void NonObligatedCategoryValues_CategoriesShouldBePopulated()
         {
-            var result = new CategoryValues();
+            var result = new NonObligatedCategoryValues();
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
@@ -30,9 +26,9 @@
         }
 
         [Fact]
-        public void CategoryValues_CategoryValuesShouldBeNull()
+        public void NonObligatedCategoryValues_CategoryValuesShouldBeNull()
         {
-            var result = new CategoryValues();
+            var result = new NonObligatedCategoryValues();
 
             result.Count(c => c.HouseHold != null).Should().Be(0);
             result.Count(c => c.NonHouseHold != null).Should().Be(0);

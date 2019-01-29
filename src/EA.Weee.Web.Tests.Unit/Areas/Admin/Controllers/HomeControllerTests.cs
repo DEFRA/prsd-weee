@@ -7,9 +7,9 @@
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
-    using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class HomeControllerTests

@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Requests
 {
-    using ViewModels.OrganisationRegistration.Details;
+    using Web.ViewModels.OrganisationRegistration.Details;
     using Weee.Web.Requests;
     using Xunit;
 

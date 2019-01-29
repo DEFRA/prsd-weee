@@ -42,11 +42,11 @@
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.19021-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.19021.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.19021-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
+    <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Email.1.0.19029-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.4.9.2\lib\net45\FakeItEasy.dll</HintPath>
@@ -114,7 +114,7 @@
     <Compile Include="Search\Simple\SimpleSearcherTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Shared\CategoryValuesTests.cs" />
+    <Compile Include="AatfReturn\NonObligatedCategoryValuesTests.cs" />
     <Compile Include="Shared\CsvWriterTests.cs" />
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
@@ -148,6 +148,7 @@
       <Name>EA.Weee.XmlValidation</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
