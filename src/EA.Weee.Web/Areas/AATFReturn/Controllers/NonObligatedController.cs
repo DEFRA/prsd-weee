@@ -30,7 +30,7 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
-    public class NonObligatedController : Controller
+    public class NonObligatedController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
@@ -60,7 +60,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(NonObligatedValuesViewModel viewModel)
+        public virtual async Task<ActionResult> Index(NonObligatedValuesViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

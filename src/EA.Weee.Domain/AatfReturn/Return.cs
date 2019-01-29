@@ -8,6 +8,8 @@
     {
         public Return(Guid returnid, int complianceyear, int period, int status, Operator aatfOperator)
         {
+            Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
+
             Operator = aatfOperator;
             ComplianceYear = complianceyear;
             Period = period;

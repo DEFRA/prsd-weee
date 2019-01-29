@@ -31,7 +31,7 @@
         public async Task<Guid> HandleAsync(AddNonObligatedRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
-
+            
             var operatorTest = new Operator(Guid.NewGuid(), message.OrganisationId);
 
             var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
