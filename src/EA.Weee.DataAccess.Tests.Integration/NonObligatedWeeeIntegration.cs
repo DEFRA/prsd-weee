@@ -45,7 +45,7 @@
 
                 var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
 
-                var categoryValues = new CategoryValues();
+                var categoryValues = new NonObligatedCategoryValues();
 
                 for (var i = 0; i < categoryValues.Count; i++)
                 {
