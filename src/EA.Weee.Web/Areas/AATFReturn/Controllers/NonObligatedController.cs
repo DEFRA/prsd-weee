@@ -51,7 +51,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId)
+        public ActionResult Index(Guid organisationId)
         {
             var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId };
             

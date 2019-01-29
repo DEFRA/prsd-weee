@@ -59,6 +59,5 @@
 
             model.Total.Should().Be("3.000");
         }
-
     }
 }
