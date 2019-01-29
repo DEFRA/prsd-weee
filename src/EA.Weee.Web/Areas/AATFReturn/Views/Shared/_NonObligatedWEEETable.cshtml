@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.Extensions
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
     ViewBag.Title = "Index";
@@ -11,28 +12,30 @@
             <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
             <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
         </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell"></td>
-            <td class="govuk-table__cell govuk-!-margin-bottom-0">
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell"></td>
+        <td class="govuk-table__cell govuk-!-margin-bottom-0">
 
-                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
-                    WEEE in tonnes
-                </div>
-            </td>
-        </tr>
-        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
+                WEEE in tonnes
+            </div>
+        </td>
+    </tr>
+
+    @for (var i = 0; i < Model.CategoryValues.Count; i++)
         {
-            var category = Model.CategoryValues.ElementAt(i);
+            var category = Model.CategoryValues[i];
 
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">@(@category.CategoryId). @category.CategoryDisplay <input type="hidden" name="CategoryValues[@{@i}].CategoryId" value="@category.CategoryId"/> </td>
                 <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                    <div class="govuk-form-group">
-                        <span id="CategoryValues_@{@i}__Error" class="govuk-error-message govuk-!-font-size-14"
-                              style="margin-bottom: 0px; display: none;">
-                        </span>
-                        <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}"
-                               name="CategoryValues[@{@i}].Tonnage" type="text" value="">
+                    @(@category.CategoryId). @category.CategoryDisplay
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                </td>
+                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
+                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
+                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class="govuk-input govuk-!-width-two-thirds weee-input"})
                     </div>
                 </td>
             </tr>
