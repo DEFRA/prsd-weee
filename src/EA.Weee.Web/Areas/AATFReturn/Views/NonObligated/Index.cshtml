@@ -1,0 +1,22 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
+@{
+    ViewBag.Title = "Non-obligated WEEE";
+}
+
+<h2 class="govuk-heading-l">Non-obligated WEEE</h2>
+<p class="govuk-body">This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).</p>
+<br />
+<p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
+@using (Html.BeginForm("Index", "NonObligated", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    Html.RenderPartial("_NonObligatedWEEETable", Model);
+
+    <div class="govuk-form-group">
+        <button class="govuk-button" type="submit">Save and Continue</button>
+    </div>
+}
+

@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
+    using AatfReturn.ViewModels;
+    using Core.AatfReturn;
     using Core.Shared;
     using Web.ViewModels.Shared;
 
@@ -20,21 +22,21 @@
         // GET: Test/CopyValues
         public ActionResult Index()
         {
-            var pastValues = TempData["pasteValues"] as CategoryValues;
+            var pastValues = TempData["pasteValues"] as NonObligatedCategoryValues;
 
             if (pastValues != null)
             {
-                var model = new WeeeCategoryValueViewModel(pastValues);
+                var model = new NonObligatedValuesViewModel(pastValues);
 
                 return View(model);
             }
 
-            return View(new WeeeCategoryValueViewModel(new CategoryValues()));
+            return View(new NonObligatedValuesViewModel(new NonObligatedCategoryValues()));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(WeeeCategoryValueViewModel values)
+        public ActionResult Index(NonObligatedValuesViewModel values)
         {
             return View(values);
         }
