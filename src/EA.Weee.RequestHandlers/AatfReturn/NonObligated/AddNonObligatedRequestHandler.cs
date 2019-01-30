@@ -15,17 +15,12 @@
     internal class AddNonObligatedRequestHandler : IRequestHandler<AddNonObligatedRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IUserContext userContext;
         private readonly IAddNonObligatedDataAccess nonObligatedDataAccess;
-        private readonly WeeeContext context;
-        public List<NonObligatedWeee> Nonobligatedlist;
 
-        public AddNonObligatedRequestHandler(IWeeeAuthorization authorization, WeeeContext db, IUserContext userContext, IAddNonObligatedDataAccess nonObligatedDataAccess, WeeeContext context)
+        public AddNonObligatedRequestHandler(IWeeeAuthorization authorization, IAddNonObligatedDataAccess nonObligatedDataAccess)
         {
             this.authorization = authorization;
-            this.userContext = userContext;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
-            this.context = context;
         }
 
         public async Task<Guid> HandleAsync(AddNonObligatedRequest message)

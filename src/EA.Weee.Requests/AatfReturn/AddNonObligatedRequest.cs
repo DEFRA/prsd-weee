@@ -7,7 +7,7 @@
 
     public class AddNonObligatedRequest : IRequest<Guid>
     {
-        public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
+        public IList<NonObligatedRequestValue> CategoryValues { get; set; }
 
         public bool Dcf { get; set; }
 

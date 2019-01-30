@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Web.OAuth;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Services;
+        using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
     using Microsoft.Owin.Security;
     using Requests.AatfReturn;
-    using Requests.DataReturns;
     using System;
     using System.Security;
     using System.Security.Principal;
@@ -28,6 +26,7 @@
         private readonly ConfigurationService configService;
         private readonly INonObligatedWeeRequestCreator requestCreator;
         private readonly NonObligatedController controller;
+        private readonly BreadcrumbService breadcrumb;
 
         public NonObligatedControllerTests()
         {
@@ -35,11 +34,12 @@
             mapper = A.Fake<IMapper>();
             configService = A.Fake<ConfigurationService>();
             requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
-            controller = new NonObligatedController(mapper, A.Fake<IOAuthClient>, () => weeeClient, A.Fake<IAuthenticationManager>(), A.Fake<IExternalRouteService>(), A.Fake<IAppConfiguration>(), requestCreator);
+            breadcrumb = A.Fake<BreadcrumbService>();
+            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, mapper, A.Fake<IOAuthClient>, () => weeeClient, A.Fake<IAuthenticationManager>(), A.Fake<IExternalRouteService>(), A.Fake<IAppConfiguration>(), requestCreator);
         }
 
         [Fact]
-        public async void CheckNonObligatedControllerInheritsExternalSiteController()
+        public void CheckNonObligatedControllerInheritsExternalSiteController()
         {
             typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
@@ -55,6 +55,16 @@
             await controller.Index(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void Index_GivenValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+
+            await controller.Index(organisationId);
+
+            Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
         }
     }
 }
