@@ -35,7 +35,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, categoryValue.Dcf, categoryValue.Tonnage));
+                nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, message.Dcf, categoryValue.Tonnage));
             }
 
             await nonObligatedDataAccess.Submit(nonObligatedWee);
