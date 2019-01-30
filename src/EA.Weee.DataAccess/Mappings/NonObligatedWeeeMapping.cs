@@ -13,6 +13,8 @@
         public NonObligatedWeeeMapping()
         {
             ToTable("NonObligatedWeee", "AATF");
+
+            Property(p => p.Tonnage).HasPrecision(28, 3);
         }
     }
 }

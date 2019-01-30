@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public async void CheckNonObligatedControllerInheritsExternalSiteController()
+        public void CheckNonObligatedControllerInheritsExternalSiteController()
         {
             typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
