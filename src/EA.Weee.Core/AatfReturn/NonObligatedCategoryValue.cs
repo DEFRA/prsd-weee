@@ -11,7 +11,7 @@
         public int CategoryId { get; set; }
 
         [TonnageValue("CategoryId")]
-        public decimal? Tonnage { get; set; }
+        public string Tonnage { get; set; }
 
         public string HouseHold { get; set; }
 
