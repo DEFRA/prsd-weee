@@ -55,9 +55,9 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, bool dcf)
         {
-            var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId };
+            var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, Dcf = dcf };
             await SetBreadcrumb(organisationId, "AATF Return");
             return View(viewModel);
         }
@@ -72,7 +72,7 @@
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
-                    return View(viewModel);
+                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", dcf = true });
                 }
             }
 
