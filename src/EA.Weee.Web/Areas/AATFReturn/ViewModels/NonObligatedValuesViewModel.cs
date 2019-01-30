@@ -11,6 +11,8 @@
 
         public Guid OrganisationId { get; set; }
 
+        public bool Dcf { get; set; }
+
         public NonObligatedValuesViewModel()
         {
             AddCategoryValues(new NonObligatedCategoryValues());
