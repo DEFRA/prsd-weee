@@ -178,7 +178,7 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.MakeAATFReturn)
                 {
-                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, dcf = false });
+                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, dcf = false});
                 }
             }
 

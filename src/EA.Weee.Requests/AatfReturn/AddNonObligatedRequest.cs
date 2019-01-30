@@ -9,6 +9,8 @@
     {
         public IList<NonObligatedRequestValue> CategoryValues { get; set; }
 
+        public bool Dcf { get; set; }
+
         public Guid NonObligatedId { get; set; }
 
         public Guid ReturnId { get; set; }
