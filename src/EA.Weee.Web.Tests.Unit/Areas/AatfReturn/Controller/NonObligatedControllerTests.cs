@@ -62,7 +62,7 @@
         {
             var organisationId = Guid.NewGuid();
 
-            await controller.Index(organisationId);
+            await controller.Index(organisationId, false);
 
             Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
         }
