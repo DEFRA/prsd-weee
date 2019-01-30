@@ -36,14 +36,15 @@
             get
             {
                 var total = 0.000m;
-                var values = CategoryValues.Where(c => c.Tonnage.HasValue).Select(c => c.Tonnage.Value).ToList();
+                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage)).Select(c => c.Tonnage).ToList();
 
                 if (values.Any())
                 {
-                    total = values.Sum();
+                    var convertedValues = values.ConvertAll(Convert.ToDecimal);
+                    total = convertedValues.Sum();
                 }
 
-                return string.Format("{0:0.000}", total);
+                return $"{total:0.000}";
             }
         }
     }

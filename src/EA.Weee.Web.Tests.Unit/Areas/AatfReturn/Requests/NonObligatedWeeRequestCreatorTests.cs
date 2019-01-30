@@ -11,6 +11,7 @@
     using FluentAssertions;
     using Microsoft.Owin.Security;
     using System;
+    using System.Globalization;
     using System.Security;
     using System.Security.Principal;
     using System.Threading.Tasks;
@@ -29,24 +30,93 @@
         }
 
         [Fact]
-        public async void AddNonObligatedRequest_GivenValidViewModel_CorrectlyMapToARequest()
+        public void ViewModelToRequested_GivenValidViewModel_RequestShouldNotBeNull()
         {
             var categoryValues = new NonObligatedCategoryValues();
-
-            for (var i = 0; i < categoryValues.Count; i++)
-            {
-                categoryValues[i].Tonnage = i;
-            }
 
             var viewModel = new NonObligatedValuesViewModel(categoryValues);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
-            Assert.NotNull(request);
+
+            request.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ViewModelToRequested_GivenValidViewModel_CategoryValuesRequestPropertiesShouldBeMapped()
+        {
+            var categoryValues = new NonObligatedCategoryValues();
+
+            var viewModel = new NonObligatedValuesViewModel(categoryValues);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                Assert.Equal(request.CategoryValues[i].Tonnage, viewModel.CategoryValues[i].Tonnage);
-                Assert.Equal(request.CategoryValues[i].CategoryId, viewModel.CategoryValues[i].CategoryId);
+                categoryValues[i].Tonnage = i.ToString();
+            }
+
+            var request = requestCreator.ViewModelToRequest(viewModel);
+
+            for (var i = 0; i < categoryValues.Count; i++)
+            {
+                request.CategoryValues[i].Tonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].Tonnage));
+                request.CategoryValues[i].CategoryId.Should().Be(viewModel.CategoryValues[i].CategoryId);
+            }
+        }
+
+        [Fact]
+        public void ViewModelToRequested_GivenValidViewModelWithDecimalValues_CategoryValuesRequestPropertiesShouldBeMapped()
+        {
+            var categoryValues = new NonObligatedCategoryValues();
+
+            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+
+            for (var i = 0; i < categoryValues.Count; i++)
+            {
+                categoryValues[i].Tonnage = (i * 0.001m).ToString(CultureInfo.InvariantCulture);
+            }
+
+            var request = requestCreator.ViewModelToRequest(viewModel);
+
+            for (var i = 0; i < categoryValues.Count; i++)
+            {
+                request.CategoryValues[i].Tonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].Tonnage));
+            }
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void ViewModelToRequested_GivenValidViewModelWithEmptyValues_CategoryValuesRequestPropertiesShouldBeMapped(string value)
+        {
+            var categoryValues = new NonObligatedCategoryValues();
+
+            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+
+            foreach (var t in categoryValues)
+            {
+                t.Tonnage = value;
+            }
+
+            var request = requestCreator.ViewModelToRequest(viewModel);
+
+            for (var i = 0; i < categoryValues.Count; i++)
+            {
+                request.CategoryValues[i].Tonnage.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public void ViewModelToRequested_GivenValidViewModel_CategoryValuesDcfShouldBeFalse()
+        {
+            var categoryValues = new NonObligatedCategoryValues();
+
+            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+
+            var request = requestCreator.ViewModelToRequest(viewModel);
+
+            for (var i = 0; i < categoryValues.Count; i++)
+            {
+                request.CategoryValues[i].Dcf.Should().BeFalse();
             }
         }
     }

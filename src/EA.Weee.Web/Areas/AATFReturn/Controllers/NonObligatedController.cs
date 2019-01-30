@@ -39,8 +39,10 @@
         private readonly IAppConfiguration appConfig;
         public List<AddNonObligatedRequest> NonObligatedRequestList;
         private readonly INonObligatedWeeRequestCreator requestCreator;
+        private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
 
-        public NonObligatedController(IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig, INonObligatedWeeRequestCreator requestCreator)
+        public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper, Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IExternalRouteService externalRouteService, IAppConfiguration appConfig, INonObligatedWeeRequestCreator requestCreator)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
@@ -48,13 +50,15 @@
             this.externalRouteService = externalRouteService;
             this.appConfig = appConfig;
             this.requestCreator = requestCreator;
+            this.breadcrumb = breadcrumb;
+            this.cache = cache;
         }
 
         [HttpGet]
-        public ActionResult Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId)
         {
             var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId };
-            
+            await SetBreadcrumb(organisationId, "AATF Return");
             return View(viewModel);
         }
 
@@ -73,6 +77,13 @@
             }
 
             return View(viewModel);
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }
