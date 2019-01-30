@@ -29,7 +29,7 @@
                         false));
             }
 
-            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId };
+            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf };
         }
     }
 }
