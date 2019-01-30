@@ -31,9 +31,9 @@
             {
                 var context = database.WeeeContext;
 
-                string name = "Test Name" + Guid.NewGuid();
-                string tradingName = "Test Trading Name" + Guid.NewGuid();
-                string crn = "ABC12345";
+                var name = "Test Name" + Guid.NewGuid();
+                var tradingName = "Test Trading Name" + Guid.NewGuid();
+                const string crn = "ABC12345";
                 var nonObligatedId = Guid.NewGuid();
                 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
@@ -45,11 +45,11 @@
 
                 var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
 
-                var categoryValues = new NonObligatedCategoryValues();
+                var categoryValues = new List<NonObligatedRequestValue>();
 
-                for (var i = 0; i < categoryValues.Count; i++)
+                foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues[i].Tonnage = 1;
+                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, false));
                 }
 
                 var nonObligatedRequest = new AddNonObligatedRequest
