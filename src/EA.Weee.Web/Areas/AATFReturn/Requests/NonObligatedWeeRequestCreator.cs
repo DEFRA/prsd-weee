@@ -12,10 +12,24 @@
     {
         public override AddNonObligatedRequest ViewModelToRequest(NonObligatedValuesViewModel viewModel)
         {
-            // Auto mappings
-            var request = base.ViewModelToRequest(viewModel);
+            var nonObligatedRequestValues = new List<NonObligatedRequestValue>();
 
-            return request;
+            foreach (var nonObligatedCategoryValue in viewModel.CategoryValues)
+            {
+                decimal? value = null;
+                if (!string.IsNullOrWhiteSpace(nonObligatedCategoryValue.Tonnage))
+                {
+                    value = Convert.ToDecimal(nonObligatedCategoryValue.Tonnage);
+                }
+
+                nonObligatedRequestValues.Add(
+                    new NonObligatedRequestValue(
+                        nonObligatedCategoryValue.CategoryId,
+                        value,
+                        false));
+            }
+
+            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId };
         }
     }
 }

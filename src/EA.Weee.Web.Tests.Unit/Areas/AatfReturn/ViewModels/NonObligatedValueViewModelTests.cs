@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using Core.DataReturns;
     using FluentAssertions;
@@ -34,7 +35,7 @@
         {
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
-                model.CategoryValues.ElementAt(count).Tonnage = count + 1;
+                model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
             }
 
             model.Total.Should().Be("105.000");
@@ -45,7 +46,7 @@
         {
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
-                model.CategoryValues.ElementAt(count).Tonnage = count * 0.001m;
+                model.CategoryValues.ElementAt(count).Tonnage = (count * 0.001m).ToString(CultureInfo.InvariantCulture);
             }
 
             model.Total.Should().Be("0.091");
@@ -54,8 +55,8 @@
         [Fact]
         public void Total_GivenNonObligatedValuesViewModelWithNullValues_TotalShouldBeCorrect()
         {
-            model.CategoryValues.ElementAt(2).Tonnage = 1;
-            model.CategoryValues.ElementAt(4).Tonnage = 2;
+            model.CategoryValues.ElementAt(2).Tonnage = 1.ToString();
+            model.CategoryValues.ElementAt(4).Tonnage = 2.ToString();
 
             model.Total.Should().Be("3.000");
         }
