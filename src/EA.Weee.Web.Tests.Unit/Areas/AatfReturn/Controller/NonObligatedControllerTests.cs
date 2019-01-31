@@ -22,8 +22,6 @@
     public class NonObligatedControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly IMapper mapper;
-        private readonly ConfigurationService configService;
         private readonly INonObligatedWeeRequestCreator requestCreator;
         private readonly NonObligatedController controller;
         private readonly BreadcrumbService breadcrumb;
@@ -31,11 +29,9 @@
         public NonObligatedControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            mapper = A.Fake<IMapper>();
-            configService = A.Fake<ConfigurationService>();
             requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, mapper, A.Fake<IOAuthClient>, () => weeeClient, A.Fake<IAuthenticationManager>(), A.Fake<IExternalRouteService>(), A.Fake<IAppConfiguration>(), requestCreator);
+            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator);
         }
 
         [Fact]
