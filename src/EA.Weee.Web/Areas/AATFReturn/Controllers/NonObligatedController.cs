@@ -52,7 +52,7 @@
 
                     if (viewModel.Dcf)
                     {
-                        return RedirectToAction("Index", "Holding", new { area = "AatfReturn" });
+                        return RedirectToAction("Index", "CheckYourReturn", new { area = "AatfReturn" });
                     }
 
                     return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", dcf = true });

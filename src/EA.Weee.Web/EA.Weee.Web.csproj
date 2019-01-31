@@ -212,11 +212,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -637,6 +639,7 @@
     </Content>
     <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

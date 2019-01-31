@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AddNonObligatedRequest.cs" />
+    <Compile Include="AatfReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\NonObligatedRequestValue.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
