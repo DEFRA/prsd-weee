@@ -11,6 +11,8 @@
 
         public Guid OrganisationId { get; set; }
 
+        public bool Dcf { get; set; }
+
         public NonObligatedValuesViewModel()
         {
             AddCategoryValues(new NonObligatedCategoryValues());
@@ -36,7 +38,7 @@
             get
             {
                 var total = 0.000m;
-                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage)).Select(c => c.Tonnage).ToList();
+                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage) && decimal.TryParse(c.Tonnage, out var output)).Select(c => c.Tonnage).ToList();
 
                 if (values.Any())
                 {
