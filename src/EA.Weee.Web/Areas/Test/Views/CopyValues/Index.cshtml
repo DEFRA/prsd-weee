@@ -15,11 +15,6 @@
                     <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
                         <div class="govuk-body govuk-!-font-size-19">
                             @Html.ActionLink("Use copy and paste to populate the table", "Paste", "CopyValues", new { returnUrl = Url.Action("Index", "CopyValues", new { area = "Test" }) }, null)
-                            @*, new { returnUrl = "/test/CopyValues/Index" }, null)*/
-                                @*<a href="paste-values-redirect?returnUrl=WEEE-received-for-treatment-paste&title=WEEE that has been received for treatment">
-                                    Use
-                                    copy and paste to populate the table
-                                </a>*@
                         </div>
                     </div>
                 </td>
@@ -44,7 +39,7 @@
                 var category = Model.CategoryValues.ElementAt(i);
 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString() </td>
+                    <td class="govuk-table__cell govuk-!-padding-bottom-0">@category.CategoryId. @category.CategoryDisplay </td>
                     <td class="govuk-table__cell govuk-!-padding-bottom-0">
                         <div class="govuk-form-group">
                             <span id="large-household-appliances-input-SC009-error" class="govuk-error-message govuk-!-font-size-14"
@@ -65,35 +60,8 @@
                     </td>
                 </tr>
             }
-            @*@foreach (var category in Model)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">@((int)@category.Category). @category.Category.ToDisplayString()</td>
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                        <div class="govuk-form-group">
-                            <span id="large-household-appliances-input-SC009-error" class="govuk-error-message govuk-!-font-size-14"
-                                  style="margin-bottom: 0px; display: none;">
-                            </span>
-                            <input class="govuk-input govuk-!-width-two-thirds weee-input" id="large-household-appliances-input-SC009"
-                                   name="large-household-appliances-input-SC009" type="text" value="@category.HouseHold">
-                        </div>
-                    </td>
-                    <td class="govuk-table__cell govuk-!-padding-bottom-0">
-                        <div class="govuk-form-group">
-                            <span id="large-household-appliances-input-SC009-error-b2b" class="govuk-error-message govuk-!-font-size-14"
-                                  style="margin-bottom: 0px; display: none;">
-                            </span>
-                            <input class="govuk-input govuk-!-width-two-thirds weee-input-b2b" id="large-household-appliances-input-SC009-b2b"
-                                   name="large-household-appliances-input-SC009-b2b" type="text" value="@category.NonHouseHold">
-                        </div>
-                    </td>
-                </tr>
-            }*@
 
         </tbody>
     </table>
 
-    @*<button type="submit" class="govuk-button" id="paste-values-save">
-            Save
-        </button>*@
 }
