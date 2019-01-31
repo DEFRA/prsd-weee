@@ -60,5 +60,18 @@
 
             model.Total.Should().Be("3.000");
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("AAA")]
+        [InlineData(" ")]
+        [InlineData("")]
+        public void Total_GivenNonObligatedValuesViewModelWithInvalidValues_TotalShouldBeCorrect(string value)
+        {
+            model.CategoryValues.ElementAt(2).Tonnage = value;
+            model.CategoryValues.ElementAt(4).Tonnage = value;
+
+            model.Total.Should().Be("0.000");
+        }
     }
 }
