@@ -40,7 +40,7 @@ function TonnageTotals(controlId) {
                     if (!isNaN(value) && value) {
                         totalTonnage += parseFloat(value);
                     }
-                    tonnageTotal.innerText = totalTonnage.toFixed(3);
+                    tonnageTotal.innerText = totalTonnage.toFixed(3) + ' tonnes';
                 }
             });
     }
