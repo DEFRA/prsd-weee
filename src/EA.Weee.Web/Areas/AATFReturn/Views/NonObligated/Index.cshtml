@@ -4,17 +4,26 @@
 @{
     ViewBag.Title = "Non-obligated WEEE";
 }
-
-<h2 class="govuk-heading-l">Non-obligated WEEE</h2>
-<p class="govuk-body">This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).</p>
-<br />
-<p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
+@{ if (Model.Dcf == true)
+    {
+        <h2 class="govuk-heading-l">Non-obligated WEEE as retained by a DCF</h2>
+        <p class="govuk-body">This is how much of the total non-obligated WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.</p>
+        
+    }
+    else
+    {
+        <h2 class="govuk-heading-l">Non-obligated WEEE</h2>
+        <p class="govuk-body">This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).</p>
+    }
+    <br />
+    <p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
+}
 @using (Html.BeginForm("Index", "NonObligated", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
     Html.RenderPartial("_NonObligatedWEEETable", Model);
-
+    @Html.HiddenFor(m => m.Dcf)
     <div class="govuk-form-group">
         <button class="govuk-button" type="submit">Save and Continue</button>
     </div>
