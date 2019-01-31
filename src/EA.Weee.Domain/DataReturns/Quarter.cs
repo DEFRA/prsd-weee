@@ -43,6 +43,29 @@
                 && Q == other.Q;
         }
 
+        public string ConvertToString(Quarter quarter)
+        {
+            var q = quarter.Q.ToString();
+            var period = string.Empty;
+            switch (q)
+            {
+                case "Q1":
+                    period = "Jan - Mar";
+                    break;
+                case "Q2":
+                    period = "Apr - Jun";
+                    break;
+                case "Q3":
+                    period = "Jul - Sep";
+                    break;
+                case "Q4":
+                    period = "Oct - Dec";
+                    break;
+            }
+            var stringHolder = q + " " + period;
+            return stringHolder;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
