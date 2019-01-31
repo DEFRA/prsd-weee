@@ -1,23 +1,17 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Web.OAuth;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Web.Areas.AatfReturn.Requests;
-    using EA.Weee.Web.Services;
-        using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Web.Mvc;
+    using Api.Client;
     using FakeItEasy;
     using FluentAssertions;
-    using Microsoft.Owin.Security;
-    using Requests.AatfReturn;
-    using System;
-    using System.Security;
-    using System.Security.Principal;
-    using System.Threading.Tasks;
-    using Requests.AatfReturn.NonObligated;
+    using Services;
+    using Services.Caching;
     using Web.Areas.AatfReturn.Controllers;
+    using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
     using Web.Controllers.Base;
+    using Weee.Requests.AatfReturn.NonObligated;
     using Xunit;
 
     public class NonObligatedControllerTests
@@ -42,7 +36,7 @@
         }
 
         [Fact]
-        public async void Index_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new NonObligatedValuesViewModel();
             var request = new AddNonObligatedRequest();
@@ -51,17 +45,52 @@
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void Index_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        {
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.Index(A.Dummy<NonObligatedValuesViewModel>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddNonObligatedRequest>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
 
-            await controller.Index(organisationId, false);
+            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<bool>());
 
             Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
+        }
+
+        [Fact]
+        public async void IndexPost_GivenNonObligatedValuesAreSubmitted_PageRedirectShouldBeCorrect()
+        {
+            var model = new NonObligatedValuesViewModel() { Dcf = false };
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("NonObligated");
+            result.RouteValues["dcf"].Should().BeEquivalentTo(true);
+            result.RouteValues["area"].Should().Be("AatfReturn");
+        }
+
+        [Fact]
+        public async void IndexPost_GivenNonObligatedDcfValuesAreSubmitted_PageRedirectShouldBeCorrect()
+        {
+            var model = new NonObligatedValuesViewModel() { Dcf = true };
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["area"].Should().Be("AatfReturn");
         }
     }
 }

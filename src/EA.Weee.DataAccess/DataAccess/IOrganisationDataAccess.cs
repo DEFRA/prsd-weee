@@ -7,5 +7,7 @@
     public interface IOrganisationDataAccess
     {
         Task<Organisation> GetBySchemeId(Guid schemeId);
+
+        Task<Organisation> GetById(Guid organisationId);
     }
 }

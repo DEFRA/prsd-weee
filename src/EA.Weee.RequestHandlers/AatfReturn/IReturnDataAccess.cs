@@ -7,8 +7,10 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IAddReturnDataAccess
+    public interface IReturnDataAccess
     {
-        Task Submit(Return aatfReturn);
+        Task<Guid> Submit(Return aatfReturn);
+
+        Task<Return> GetById(Guid id);
     }
 }
