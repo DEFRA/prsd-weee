@@ -119,5 +119,19 @@
                 request.CategoryValues[i].Dcf.Should().BeFalse();
             }
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ViewModelToRequested_GivenValidViewModel_CategoryValuesDcfShouldBeMapped(bool dcf)
+        {
+            var model = new NonObligatedValuesViewModel()
+            {
+                Dcf = dcf
+            };
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Dcf.Should().Be(model.Dcf);
+        }
     }
 }
