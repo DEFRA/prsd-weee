@@ -11,6 +11,7 @@
     using EA.Weee.Core.DataReturns;
     using FakeItEasy;
     using Prsd.Core.Domain;
+    using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.NonObligated;
     using RequestHandlers.DataReturns.FetchDataReturnForSubmission;
     using RequestHandlers.DataReturns.SubmitReturnVersion;
@@ -21,7 +22,7 @@
 
     public class AddNonObligatedRequestHandlerTests
     {
-        private readonly AddNonObligatedRequestHandler requestHandler;
+        private readonly RequestHandlers.AatfReturn.AddReturnRequestHandler requestHandler;
         private readonly IWeeeAuthorization authorization;
         private readonly IAddNonObligatedDataAccess dataAccess;
         
@@ -30,7 +31,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             dataAccess = A.Fake<IAddNonObligatedDataAccess>();
 
-            requestHandler = new AddNonObligatedRequestHandler(authorization, dataAccess);
+            requestHandler = new RequestHandlers.AatfReturn.AddReturnRequestHandler(authorization, dataAccess);
         }
         /*
         [Fact]

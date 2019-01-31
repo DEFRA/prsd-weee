@@ -7,6 +7,7 @@
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.AatfReturn.NonObligated;
 
     public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligatedRequest>, INonObligatedWeeRequestCreator
     {

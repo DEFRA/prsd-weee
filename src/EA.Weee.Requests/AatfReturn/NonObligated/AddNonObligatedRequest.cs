@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.Requests.AatfReturn
+﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
-    using EA.Weee.Core.AatfReturn;
-    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
+    using Prsd.Core.Mediator;
 
     public class AddNonObligatedRequest : IRequest<Guid>
     {

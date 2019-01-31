@@ -10,6 +10,7 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
+    using Requests.AatfReturn.NonObligated;
     using Security;
 
     internal class AddNonObligatedRequestHandler : IRequestHandler<AddNonObligatedRequest, Guid>

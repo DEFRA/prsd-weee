@@ -15,6 +15,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Requests.AatfReturn.NonObligated;
     using Weee.Tests.Core.Model;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
