@@ -1,26 +1,28 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
     public partial class Return : Entity
     {
-        public Return(Guid returnid, int complianceyear, int period, int status, Operator aatfOperator)
+        protected Return()
+        {
+        }
+        public Return(Operator aatfOperator, Quarter quarter)
         {
             Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
+            Guard.ArgumentNotNull(() => quarter, quarter);
 
             Operator = aatfOperator;
-            ComplianceYear = complianceyear;
-            Period = period;
-            Status = status;
+            Quarter = quarter;
+            Status = 1;
         }
 
+        public virtual Quarter Quarter { get; private set; }
+
         public Guid OperatorId { get; private set; }
-
-        public int ComplianceYear { get; private set; }
-
-        public int Period { get; private set; }
 
         public int Status { get; private set; }
 

@@ -7,6 +7,7 @@
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.AatfReturn.NonObligated;
 
     public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligatedRequest>, INonObligatedWeeRequestCreator
     {
@@ -29,7 +30,7 @@
                         false));
             }
 
-            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf };
+            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf, ReturnId = viewModel.ReturnId };
         }
     }
 }
