@@ -13,6 +13,9 @@
         public ReturnMapping()
         {
             ToTable("Return", "AATF");
+
+            Property(dr => dr.Quarter.Year).HasColumnName("ComplianceYear");
+            Property(dr => dr.Quarter.Q).HasColumnName("Quarter");
         }
     }
 }
