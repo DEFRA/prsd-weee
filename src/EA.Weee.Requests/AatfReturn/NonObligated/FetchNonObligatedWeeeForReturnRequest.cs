@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Prsd.Core.Mediator;
 
-    public class FetchNonObligatedWeeeForReturnRequest : IRequest<List<int>>
+    public class FetchNonObligatedWeeeForReturnRequest : IRequest<List<decimal?>>
     {
         public Guid ReturnId { get; set; }
 

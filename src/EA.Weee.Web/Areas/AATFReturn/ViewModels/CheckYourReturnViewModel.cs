@@ -7,11 +7,13 @@
 
     public class CheckYourReturnViewModel
     {
-        public int NonObliagtedTotal;
+        public decimal? NonObliagtedTotal { get; set; }
 
-        public int NonObligatedDcfTotal;
+        public decimal? NonObligatedDcfTotal { get; set; }
 
-        public CheckYourReturnViewModel(int total, int dcftotal)
+        public Guid ReturnId { get; set; }
+
+        public CheckYourReturnViewModel(decimal? total, decimal? dcftotal)
         {
             NonObliagtedTotal = total;
             NonObligatedDcfTotal = dcftotal;

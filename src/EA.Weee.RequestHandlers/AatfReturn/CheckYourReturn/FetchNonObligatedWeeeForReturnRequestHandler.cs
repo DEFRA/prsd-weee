@@ -7,7 +7,7 @@
     using Security;
     using Request = EA.Weee.Requests.AatfReturn.FetchNonObligatedWeeeForReturnRequest;
 
-    public class FetchNonObligatedWeeeForReturnRequestHandler : IRequestHandler<Request, List<int>>
+    public class FetchNonObligatedWeeeForReturnRequestHandler : IRequestHandler<Request, List<decimal?>>
     {
         private readonly IFetchNonObligatedWeeeForReturnDataAccess dataAccess;
 
@@ -17,7 +17,7 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<List<int>> HandleAsync(Request message)
+        public async Task<List<decimal?>> HandleAsync(Request message)
         {
             return await dataAccess.GetDataReturnComplianceYearsForScheme(message.ReturnId, message.Dcf);
         }

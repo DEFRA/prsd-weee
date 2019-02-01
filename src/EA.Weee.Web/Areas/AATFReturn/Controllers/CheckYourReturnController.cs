@@ -22,8 +22,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        public int TonnageTotal;
-        public int TonnageDcfTotal;
+        public decimal? TonnageTotal;
+        public decimal? TonnageDcfTotal;
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
@@ -35,21 +35,21 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index()
+        public virtual async Task<ActionResult> Index(Guid returnid)
         {
-            List<int> tonnageList;
-            List<int> tonnageDcfList;
+            List<decimal?> tonnageList;
+            List<decimal?> tonnageDcfList;
             Guid test = Guid.Parse("1952037B-BE7F-4515-BD01-A9E600FEBA78");
 
             using (var client = apiClient())
             {
-                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(test, false));
-                //tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, true));
+                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, false));
+                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, true));
             }
 
             CalculateListTotal(tonnageList, false);
-            //CalculateListTotal(tonnageDcfList, true);
-
+            CalculateListTotal(tonnageDcfList, true);
+            //TonnageTotal = Math.Round(TonnageTotal, 3)
             var viewModel = new CheckYourReturnViewModel(TonnageTotal, TonnageDcfTotal);
             return View(viewModel);
         }
@@ -60,7 +60,7 @@
             return View(viewModel);
         }
 
-        private void CalculateListTotal(List<int> list, bool dcf)
+        private void CalculateListTotal(List<decimal?> list, bool dcf)
         {
             if (dcf)
             {
