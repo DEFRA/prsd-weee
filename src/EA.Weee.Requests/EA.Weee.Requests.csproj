@@ -46,8 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfReturn\AddNonObligatedRequest.cs" />
-    <Compile Include="AatfReturn\NonObligatedRequestValue.cs" />
+    <Compile Include="AatfReturn\AddReturnRequest.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligatedRequest.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligatedRequestValue.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />

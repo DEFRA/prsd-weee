@@ -1,20 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using Core.AatfReturn;
-    using DataAccess;
-    using Domain;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.NonObligated;
     using FakeItEasy;
     using FluentAssertions;
-    using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.DataReturns;
+    using Requests.AatfReturn.NonObligated;
     using Weee.Tests.Core.Model;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
@@ -41,9 +36,9 @@
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
 
-                var operatorTest = new Operator(Guid.NewGuid(), organisation.Id);
-
-                var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
+                var operatorTest = new Operator(organisation);
+                var quarter = new Quarter(2019, QuarterType.Q1);
+                var aatfReturn = new Return(operatorTest, quarter);
 
                 var categoryValues = new List<NonObligatedRequestValue>();
 
@@ -56,8 +51,7 @@
                 {
                     ReturnId = aatfReturn.Id,
                     OrganisationId = organisation.Id,
-                    CategoryValues = categoryValues,
-                    NonObligatedId = nonObligatedId
+                    CategoryValues = categoryValues
                 };
 
                 var nonObligatedWee = new List<NonObligatedWeee>();
@@ -92,7 +86,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task CheckCategoryValuesContainSameDCFValueAsRequest(bool dcf)
+        public async Task CheckCategoryValuesContainSameDcfValueAsRequest(bool dcf)
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -106,11 +100,12 @@
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
 
                 context.Organisations.Add(organisation);
+
                 await context.SaveChangesAsync();
 
-                var operatorTest = new Operator(Guid.NewGuid(), organisation.Id);
-
-                var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
+                var operatorTest = new Operator(organisation);
+                var quarter = new Quarter(2019, QuarterType.Q1);
+                var aatfReturn = new Return(operatorTest, quarter);
 
                 var categoryValues = new List<NonObligatedRequestValue>();
 
@@ -124,7 +119,6 @@
                     ReturnId = aatfReturn.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues,
-                    NonObligatedId = nonObligatedId,
                     Dcf = dcf
                 };
 

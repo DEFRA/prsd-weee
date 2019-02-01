@@ -1,13 +1,5 @@
-﻿namespace EA.Weee.Requests.AatfReturn
+﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
-    using Core.DataReturns;
-    using Core.Helpers;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     public class NonObligatedRequestValue
     {
         public int CategoryId { get; private set; }
