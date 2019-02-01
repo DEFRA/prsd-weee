@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using DataReturns;
+    using DataStandards;
 
     public class TonnageValueAttribute : ValidationAttribute
     {
@@ -39,20 +40,25 @@
                 return ValidationResult.Success;
             }
 
+            if (value.ToString().Length > CommonMaxFieldLengths.Tonnage)
+            {
+                return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
+            }
+
             if (!decimal.TryParse(value.ToString(), out var decimalResult))
             {
-                return new ValidationResult($"Category {(int)propertyValue} tonnage value must be a numerical value");
+                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
             }
             else
             {
                 if (decimalResult < 0)
                 {
-                    return new ValidationResult($"Category {(int)propertyValue} tonnage value must be 0 or greater");
+                    return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
                 }
 
                 if (DecimalPlaces(decimalResult) > 3)
                 {
-                    return new ValidationResult($"Category {(int)propertyValue} tonnage value must be 3 decimal places or less");
+                    return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
                 }
             }
 
@@ -80,6 +86,11 @@
 
                 return result;
             }
+        }
+
+        private string GenerateMessage(string message, int categoryId)
+        {
+            return $"Category {categoryId} tonnage value must be {message}";
         }
     }
 }
