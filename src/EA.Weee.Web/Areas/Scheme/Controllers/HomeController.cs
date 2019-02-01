@@ -21,6 +21,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
     using Web.ViewModels.Shared.Submission;
+    using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
@@ -178,7 +179,14 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.MakeAATFReturn)
                 {
-                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, dcf = false});
+                    using (var client = apiClient())
+                    {
+                        var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
+                            new AddReturnRequest() { OrganisationId = viewModel.OrganisationId });
+
+                        return RedirectToAction("Index", "NonObligated",
+                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId, dcf = false });
+                    }
                 }
             }
 
