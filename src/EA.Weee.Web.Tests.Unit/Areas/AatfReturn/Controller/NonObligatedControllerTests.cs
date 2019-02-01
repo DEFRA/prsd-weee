@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -91,6 +92,24 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding");
             result.RouteValues["area"].Should().Be("AatfReturn");
+        }
+
+        [Fact]
+        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        {
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenActionAndParameters_NonObligatedViewModelShouldBeReturned()
+        {
+            var model = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { Dcf = true, OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid() };
+
+            var result = await controller.Index(model.OrganisationId, model.ReturnId, model.Dcf) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(model);
         }
     }
 }
