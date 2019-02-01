@@ -20,6 +20,8 @@ namespace EA.Weee.Tests.Core.Model
             this.RegisteredProducers = new HashSet<RegisteredProducer>();
             this.DataReturns = new HashSet<DataReturn>();
             this.DataReturnUploads = new HashSet<DataReturnUpload>();
+            this.AATFReturnSchemes = new HashSet<AATFReturnScheme>();
+            this.WeeeReceiveds = new HashSet<WeeeReceived>();
         }
     
         public System.Guid Id { get; set; }
@@ -37,5 +39,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
         public virtual ICollection<DataReturn> DataReturns { get; set; }
         public virtual ICollection<DataReturnUpload> DataReturnUploads { get; set; }
+        public virtual ICollection<AATFReturnScheme> AATFReturnSchemes { get; set; }
+        public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
     }
 }
