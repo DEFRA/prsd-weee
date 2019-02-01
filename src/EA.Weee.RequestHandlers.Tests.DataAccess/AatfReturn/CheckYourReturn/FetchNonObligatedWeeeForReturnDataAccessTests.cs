@@ -10,12 +10,11 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    class FetchNonObligatedWeeeForReturnDataAccessTests
+    public class FetchNonObligatedWeeeForReturnDataAccessTests
     {
         [Fact]
         public async Task FetchNonObligatedWeeeForReturn_ListOfDecimalsShouldBeReturned()
         {
-
         }
     }
 }
