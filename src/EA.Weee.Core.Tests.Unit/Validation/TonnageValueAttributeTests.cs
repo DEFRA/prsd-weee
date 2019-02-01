@@ -119,6 +119,43 @@
             result.Should().BeTrue();
         }
 
+        [Theory]
+        [InlineData("00000000000000")]
+        [InlineData("000000000000000")]
+        [InlineData("000000000000.00")]
+        [InlineData("000000000000.00")]
+        [InlineData("00000000000.000")]
+        public void IsValid_GivenValueIsFifteenOrLessCharactors_ReturnsTrue(object input)
+        {
+            var result = Validate(input);
+
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("0000000000000000")]
+        [InlineData("00000000000000.0")]
+        [InlineData("0000000000000.00")]
+        [InlineData("000000000000.000")]
+        public void IsValid_GivenValueIsMoreThanFifteenCharactors_ReturnsFalse(object input)
+        {
+            var result = Validate(input);
+
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("0000000000000000")]
+        [InlineData("00000000000000.0")]
+        [InlineData("0000000000000.00")]
+        [InlineData("000000000000.000")]
+        public void IsValid_GivenValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect(object input)
+        {
+            var result = Validate(input);
+
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 15 digits or less");
+        }
+
         private void ValidateErrorMessage(string errorMessage)
         {
             validationResults.Count(e => e.ErrorMessage == errorMessage).Should().Be(1);
