@@ -33,7 +33,7 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool dcf)
         {
-            var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, Dcf = dcf };
+            var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf };
 
             await SetBreadcrumb(organisationId, "AATF Return");
 
