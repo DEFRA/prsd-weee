@@ -8,7 +8,7 @@
     {
         <h2 class="govuk-heading-l">Non-obligated WEEE as retained by a DCF</h2>
         <p class="govuk-body">This is how much of the total non-obligated WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.</p>
-        
+
     }
     else
     {
@@ -22,8 +22,11 @@
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
-    Html.RenderPartial("_NonObligatedWEEETable", Model);
+
     @Html.HiddenFor(m => m.Dcf)
+
+    Html.RenderPartial("_NonObligatedWEEETable", Model);
+
     <div class="govuk-form-group">
         <button class="govuk-button" type="submit">Save and Continue</button>
     </div>

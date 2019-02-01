@@ -12,19 +12,23 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class AeDeliveryLocation
+    public partial class Return
     {
-        public AeDeliveryLocation()
+        public Return()
         {
-            this.WeeeDeliveredAmounts = new HashSet<WeeeDeliveredAmount>();
+            this.AATFReturns = new HashSet<AATFReturn>();
+            this.NonObligatedWeees = new HashSet<NonObligatedWeee>();
         }
     
         public System.Guid Id { get; set; }
-        public string ApprovalNumber { get; set; }
-        public string OperatorName { get; set; }
+        public System.Guid OperatorId { get; set; }
+        public int ComplianceYear { get; set; }
+        public int Quarter { get; set; }
+        public int Status { get; set; }
         public byte[] RowVersion { get; set; }
-        public Nullable<int> OperatorNameDataLength { get; set; }
     
-        public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
+        public virtual ICollection<AATFReturn> AATFReturns { get; set; }
+        public virtual ICollection<NonObligatedWeee> NonObligatedWeees { get; set; }
+        public virtual Operator Operator { get; set; }
     }
 }
