@@ -133,5 +133,22 @@
 
             request.Dcf.Should().Be(model.Dcf);
         }
+
+        [Fact]
+        public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
+        {
+            var model = new NonObligatedValuesViewModel()
+            {
+                Dcf = true,
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid()
+            };
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.OrganisationId.Should().Be(model.OrganisationId);
+            request.ReturnId.Should().Be(model.ReturnId);
+            request.Dcf.Should().Be(model.Dcf);
+        }
     }
 }

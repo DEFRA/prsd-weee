@@ -9,6 +9,8 @@
     {
         public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
 
+        public Guid ReturnId { get; set; }
+
         public Guid OrganisationId { get; set; }
 
         public bool Dcf { get; set; }

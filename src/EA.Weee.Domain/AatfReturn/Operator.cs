@@ -7,13 +7,13 @@
 
     public partial class Operator : Entity
     {
-        public Operator(Guid operatorid, Guid organisationid)
+        public Operator(Organisation organisation)
         {
-            OrganisationId = organisationid;
+            Guard.ArgumentNotNull(() => organisation, organisation);
+
+            Organisation = organisation;
         }
 
-        public Guid OrganisationId { get; private set; }
-
-        public Organisation Organisation { get; private set; }
+        public virtual Organisation Organisation { get; private set; }
     }
 }

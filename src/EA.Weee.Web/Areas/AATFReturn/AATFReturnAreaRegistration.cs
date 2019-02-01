@@ -13,13 +13,13 @@
         {
             context.MapLowercaseDashedRoute(
                 name: "AatfReturn_NonObligatedDcf",
-                url: "AatfReturn/{organisationId}/{controller}/dcf/{action}/{entityId}",
+                url: "AatfReturn/{organisationId}/{returnId}/{controller}/dcf/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "NonObligated", Dcf = true, entityId = UrlParameter.Optional },
                 namespaces: new[] { typeof(NonObligatedController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "AatfReturn_NonObligated",
-                url: "AatfReturn/{organisationId}/{controller}/{action}/{entityId}",
+                url: "AatfReturn/{organisationId}/{returnId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "NonObligated", Dcf = false, entityId = UrlParameter.Optional },
                 namespaces: new[] { typeof(NonObligatedController).Namespace });
 

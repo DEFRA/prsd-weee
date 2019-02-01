@@ -11,26 +11,29 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
+    using Requests.AatfReturn.NonObligated;
     using Security;
 
-    internal class AddNonObligatedRequestHandler : IRequestHandler<AddNonObligatedRequest, Guid>
+    internal class AddNonObligatedRequestHandler : IRequestHandler<AddNonObligatedRequest, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddNonObligatedDataAccess nonObligatedDataAccess;
+        private readonly IReturnDataAccess returnDataAccess;
 
-        public AddNonObligatedRequestHandler(IWeeeAuthorization authorization, IAddNonObligatedDataAccess nonObligatedDataAccess)
+        public AddNonObligatedRequestHandler(IWeeeAuthorization authorization, 
+            IAddNonObligatedDataAccess nonObligatedDataAccess, 
+            IReturnDataAccess returnDataAccess)
         {
             this.authorization = authorization;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
+            this.returnDataAccess = returnDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(AddNonObligatedRequest message)
+        public async Task<bool> HandleAsync(AddNonObligatedRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
-            
-            var operatorTest = new Operator(Guid.NewGuid(), message.OrganisationId);
 
-            var aatfReturn = new Return(Guid.NewGuid(), 1, 1, 1, operatorTest);
+            var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
             var nonObligatedWee = new List<NonObligatedWeee>();
 
@@ -40,8 +43,8 @@
             }
 
             await nonObligatedDataAccess.Submit(nonObligatedWee);
-            
-            return Guid.NewGuid();
+
+            return true;
         }
     }
 }
