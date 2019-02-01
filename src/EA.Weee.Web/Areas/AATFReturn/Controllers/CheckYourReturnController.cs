@@ -22,8 +22,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        public decimal? TonnageTotal;
-        public decimal? TonnageDcfTotal;
+        public decimal? TonnageTotal = 0.000m;
+        public decimal? TonnageDcfTotal = 0.000m;
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
@@ -39,7 +39,6 @@
         {
             List<decimal?> tonnageList;
             List<decimal?> tonnageDcfList;
-            Guid test = Guid.Parse("1952037B-BE7F-4515-BD01-A9E600FEBA78");
 
             using (var client = apiClient())
             {
@@ -49,7 +48,7 @@
 
             CalculateListTotal(tonnageList, false);
             CalculateListTotal(tonnageDcfList, true);
-            //TonnageTotal = Math.Round(TonnageTotal, 3)
+
             var viewModel = new CheckYourReturnViewModel(TonnageTotal, TonnageDcfTotal);
             return View(viewModel);
         }
@@ -66,14 +65,20 @@
             {
                 foreach (var number in list)
                 {
-                    TonnageDcfTotal += number;
+                    if (number != null)
+                    {
+                        TonnageDcfTotal += number;
+                    }
                 }
             }
             else
             {
                 foreach (var number in list)
                 {
-                    TonnageTotal += number;
+                    if (number != null)
+                    {
+                        TonnageTotal += number;
+                    }
                 }
             }
         }

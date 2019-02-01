@@ -19,7 +19,7 @@
 
         public async Task<List<decimal?>> HandleAsync(Request message)
         {
-            return await dataAccess.GetDataReturnComplianceYearsForScheme(message.ReturnId, message.Dcf);
+            return await dataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId, message.Dcf);
         }
     }
 }
