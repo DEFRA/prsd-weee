@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\ReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AddReturnRequestHandler.cs" />
+    <Compile Include="AatfReturn\IReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandler.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\IFetchNonObligatedWeeeForReturnDataAccess.cs" />
