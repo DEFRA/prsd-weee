@@ -15,11 +15,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            return new SubmittedReturnViewModel()
-            {
-                Year = source.Quarter.Year.ToString(),
-                Quarter = source.Quarter.Q.ToString()
-            };
+            return new SubmittedReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year);
         }
     }
 }

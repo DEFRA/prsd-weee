@@ -51,13 +51,12 @@
         {
             var aatfOperator = A.Fake<Operator>();
             var quater = A.Fake<Quarter>();
-            var returnStatus = A.Fake<ReturnStatus>();
 
-            var @return = new Return(aatfOperator, quater, returnStatus);
+            var @return = new Return(aatfOperator, quater, ReturnStatus.Created);
 
             @return.Operator.Should().Be(aatfOperator);
             @return.Quarter.Should().Be(quater);
-            @return.ReturnStatus.Should().Be(returnStatus);
+            @return.ReturnStatus.Should().Be(ReturnStatus.Created);
         }
     }
 }

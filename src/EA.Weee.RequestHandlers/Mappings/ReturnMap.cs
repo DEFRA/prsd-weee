@@ -13,16 +13,17 @@
     using Core.DataReturns;
     using Prsd.Core;
 
-    public class ReturnMap : IMap<Return, ReturnData>
+    public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
     {
-        public ReturnData Map(Return source)
+        public ReturnData Map(ReturnQuarterWindow source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
             return new ReturnData()
             {
-                Id = source.Id,
-                Quarter = new Quarter(source.Quarter.Year, (QuarterType)source.Quarter.Q)
+                Id = source.Return.Id,
+                Quarter = new Quarter(source.Return.Quarter.Year, (QuarterType)source.Return.Quarter.Q),
+                QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate)
             };
         }
     }

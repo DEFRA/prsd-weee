@@ -12,5 +12,7 @@
         public Guid Id { get; set; }
 
         public Quarter Quarter { get; set; }
+
+        public QuarterWindow QuarterWindow { get; set; }
     }
 }

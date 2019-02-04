@@ -35,13 +35,19 @@
             var organisation = Organisation.CreatePartnership("trading name");
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
+            var startTime = DateTime.Now;
+            var endTime = DateTime.Now.AddDays(1);
+            var @return = new Return(@operator, quarter, ReturnStatus.Created);
+            var quarterWindow = new QuarterWindow(startTime, endTime);
 
-            var source = new Return(@operator, quarter, ReturnStatus.Created);
+            var source = new ReturnQuarterWindow(@return, quarterWindow);
 
             var result = map.Map(source);
 
             result.Quarter.Q.Should().Be(EA.Weee.Core.DataReturns.QuarterType.Q1);
             result.Quarter.Year.Should().Be(2019);
+            result.QuarterWindow.EndDate.Should().Be(endTime);
+            result.QuarterWindow.StartDate.Should().Be(startTime);
         }
     }
 }

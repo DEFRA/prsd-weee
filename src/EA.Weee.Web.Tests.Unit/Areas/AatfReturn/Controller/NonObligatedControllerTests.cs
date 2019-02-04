@@ -89,7 +89,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["controller"].Should().Be("CheckYourReturn");
             result.RouteValues["area"].Should().Be("AatfReturn");
         }
     }

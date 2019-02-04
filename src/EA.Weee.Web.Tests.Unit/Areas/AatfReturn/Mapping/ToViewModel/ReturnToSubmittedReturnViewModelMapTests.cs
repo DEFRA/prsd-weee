@@ -29,15 +29,18 @@
         }
 
         [Fact]
-        public void Maop_GivenValidSource_PropertiesShouldBeMapped()
+        public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
             var id = Guid.NewGuid();
 
-            var returnData = new ReturnData() { Id = id, Quarter = new Quarter(2019, QuarterType.Q1) };
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31));
+            var returnData = new ReturnData() { Id = id, Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = quarterWindow };
 
             var result = map.Map(returnData);
 
-            int i = 10;
+            result.Quarter.Should().Be("Q1");
+            result.Year.Should().Be("2019");
+            result.Period.Should().Be("Q1 Jan - Mar 2019");
         }
     }
 }

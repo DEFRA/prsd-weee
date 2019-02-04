@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AatfReturn\NonObligatedWeeeTests.cs" />
     <Compile Include="AatfReturn\OperatorTests.cs" />
+    <Compile Include="AatfReturn\ReturnQuarterWindowTests.cs" />
     <Compile Include="AatfReturn\ReturnTests.cs" />
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>

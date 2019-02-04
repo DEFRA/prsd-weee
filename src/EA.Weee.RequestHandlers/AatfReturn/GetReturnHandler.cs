@@ -6,6 +6,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
@@ -16,17 +17,20 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
-        private readonly IMap<Return, ReturnData> mapper;
+        private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public GetReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
             IOrganisationDataAccess organisationDataAccess, 
-            IMap<Return, ReturnData> mapper)
+            IMap<ReturnQuarterWindow, ReturnData> mapper, 
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.organisationDataAccess = organisationDataAccess;
             this.mapper = mapper;
+            this.quarterWindowFactory = quarterWindowFactory;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -37,7 +41,9 @@
 
             authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
 
-            return mapper.Map(@return);
+            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
+
+            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow));
         }
     }
 }

@@ -11,6 +11,8 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.DataReturns;
+    using Factories;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -24,7 +26,8 @@
             var handler = new GetReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
-                A.Dummy<IMap<Return, ReturnData>>());
+                A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
+                A.Dummy<IQuarterWindowFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -40,7 +43,8 @@
             var handler = new GetReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
-                A.Dummy<IMap<Return, ReturnData>>());
+                A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
+                A.Dummy<IQuarterWindowFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -55,18 +59,23 @@
                 .AllowOrganisationAccess()
                 .Build();
 
+            //var returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
             var @return = A.Fake<Return>();
             var dataAccess = A.Fake<IReturnDataAccess>();
             var returnData = A.Fake<ReturnData>();
-            var mapper = A.Fake<IMap<Return, ReturnData>>();
-            
-            A.CallTo(() => dataAccess.GetById(A.Dummy<Guid>())).Returns(@return);
-            A.CallTo(() => mapper.Map(@return)).Returns(returnData);
+            var mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
+            var quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+           // var quarterWindow = A.Fake<Domain.DataReturns.QuarterWindow>();
+
+            A.CallTo(() => dataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>._)).Returns(returnData);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(A.Fake<Domain.DataReturns.QuarterWindow>());
 
             var handler = new GetReturnHandler(authorization,
                 dataAccess,
                 A.Dummy<IOrganisationDataAccess>(),
-                mapper);
+                mapper,
+                quarterWindowFactory);
 
             var result = await handler.HandleAsync(A.Dummy<GetReturn>());
 
