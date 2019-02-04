@@ -19,8 +19,10 @@
 
     public class NonObligatedWeeeIntegration
     {
-        [Fact]
-        public async Task CanCreateNonObligatedWeeeEntry()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanCreateNonObligatedWeeeEntry(bool dcf)
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -44,7 +46,7 @@
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, false));
+                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, dcf));
                 }
 
                 var nonObligatedRequest = new AddNonObligatedRequest
@@ -80,52 +82,6 @@
                     Assert.Equal(foundCategory.Tonnage, nonObligatedWee[indexNum].Tonnage);
                     Assert.Equal(foundCategory.ReturnId, nonObligatedWee[indexNum].ReturnId);
                 }
-            }
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task CheckCategoryValuesContainSameDcfValueAsRequest(bool dcf)
-        {
-            using (DatabaseWrapper database = new DatabaseWrapper())
-            {
-                var context = database.WeeeContext;
-
-                var name = "Test Name" + Guid.NewGuid();
-                var tradingName = "Test Trading Name" + Guid.NewGuid();
-                const string crn = "ABC12345";
-                var nonObligatedId = Guid.NewGuid();
-
-                var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-
-                context.Organisations.Add(organisation);
-
-                await context.SaveChangesAsync();
-
-                var operatorTest = new Operator(organisation);
-                var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter);
-
-                var categoryValues = new List<NonObligatedRequestValue>();
-
-                foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
-                {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, dcf));
-                }
-
-                var nonObligatedRequest = new AddNonObligatedRequest
-                {
-                    ReturnId = aatfReturn.Id,
-                    OrganisationId = organisation.Id,
-                    CategoryValues = categoryValues,
-                    Dcf = dcf
-                };
-
-                foreach (var categoryValue in nonObligatedRequest.CategoryValues)
-                {
-                    categoryValue.Dcf.Should().Be(nonObligatedRequest.Dcf);
-                } 
             }
         }
     }
