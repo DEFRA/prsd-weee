@@ -14,13 +14,13 @@
     using Requests.AatfReturn.NonObligated;
     using Security;
 
-    internal class AddNonObligatedRequestHandler : IRequestHandler<AddNonObligatedRequest, bool>
+    internal class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddNonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
 
-        public AddNonObligatedRequestHandler(IWeeeAuthorization authorization, 
+        public AddNonObligatedHandler(IWeeeAuthorization authorization, 
             IAddNonObligatedDataAccess nonObligatedDataAccess, 
             IReturnDataAccess returnDataAccess)
         {
@@ -29,7 +29,7 @@
             this.returnDataAccess = returnDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddNonObligatedRequest message)
+        public async Task<bool> HandleAsync(AddNonObligated message)
         {
             authorization.EnsureCanAccessExternalArea();
 

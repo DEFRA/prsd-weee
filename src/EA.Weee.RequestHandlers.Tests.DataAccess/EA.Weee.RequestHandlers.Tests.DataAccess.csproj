@@ -95,7 +95,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AatfReturn\AddReturnDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccessTests.cs" />

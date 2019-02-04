@@ -5,7 +5,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.RequestHandlers.DataReturns.FetchDataReturnComplianceYearsForScheme;
     using Security;
-    using Request = EA.Weee.Requests.AatfReturn.FetchNonObligatedWeeeForReturnRequest;
+    using Request = Requests.AatfReturn.NonObligated.FetchNonObligatedWeeeForReturnRequest;
 
     public class FetchNonObligatedWeeeForReturnRequestHandler : IRequestHandler<Request, List<decimal?>>
     {

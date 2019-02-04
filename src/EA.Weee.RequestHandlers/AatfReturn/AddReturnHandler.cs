@@ -13,13 +13,13 @@
     using Requests.AatfReturn.NonObligated;
     using Security;
 
-    internal class AddReturnRequestHandler : IRequestHandler<AddReturnRequest, Guid>
+    internal class AddReturnHandler : IRequestHandler<AddReturn, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public AddReturnRequestHandler(IWeeeAuthorization authorization, 
+        public AddReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
             IOrganisationDataAccess organisationDataAccess)
         {
@@ -28,7 +28,7 @@
             this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(AddReturnRequest message)
+        public async Task<Guid> HandleAsync(AddReturn message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
@@ -39,7 +39,7 @@
 
             var aatfOperator = new Operator(organisation);
 
-            var aatfReturn = new Return(aatfOperator, quarter);
+            var aatfReturn = new Return(aatfOperator, quarter, ReturnStatus.Created);
 
             await returnDataAccess.Submit(aatfReturn);
 

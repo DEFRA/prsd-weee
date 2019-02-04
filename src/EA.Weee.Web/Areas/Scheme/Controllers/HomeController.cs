@@ -182,7 +182,7 @@
                     using (var client = apiClient())
                     {
                         var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
-                            new AddReturnRequest() { OrganisationId = viewModel.OrganisationId });
+                            new AddReturn() { OrganisationId = viewModel.OrganisationId });
 
                         return RedirectToAction("Index", "NonObligated",
                             new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId, dcf = false });

@@ -67,13 +67,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\GetReturnHandler.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
-    <Compile Include="AatfReturn\AddReturnRequestHandler.cs" />
+    <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandler.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\IFetchNonObligatedWeeeForReturnDataAccess.cs" />
-    <Compile Include="AatfReturn\NonObligated\AddNonObligatedRequestHandler.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\IAddNonObligatedDataAccess.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
+    <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
