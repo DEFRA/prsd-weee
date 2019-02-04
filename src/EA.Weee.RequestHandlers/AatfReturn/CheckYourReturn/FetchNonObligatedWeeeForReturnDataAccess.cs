@@ -16,7 +16,7 @@
             this.context = context;
         }
 
-        public async Task<List<decimal?>> GetDataReturnComplianceYearsForScheme(Guid returnId, bool dcf)
+        public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
         {
             return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Where(now => now.Dcf == dcf).Select(now => (decimal?)now.Tonnage).ToListAsync();
         }

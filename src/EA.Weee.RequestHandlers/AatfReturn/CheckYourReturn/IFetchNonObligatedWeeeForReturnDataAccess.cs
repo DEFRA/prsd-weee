@@ -5,6 +5,6 @@
     using System.Threading.Tasks;
     public interface IFetchNonObligatedWeeeForReturnDataAccess
     {
-        Task<List<decimal?>> GetDataReturnComplianceYearsForScheme(Guid returnId, bool dcf);
+        Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf);
     }
 }
