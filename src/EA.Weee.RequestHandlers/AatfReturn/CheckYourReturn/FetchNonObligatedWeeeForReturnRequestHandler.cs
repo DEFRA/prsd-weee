@@ -22,6 +22,7 @@
         public async Task<List<decimal?>> HandleAsync(Request message)
         {
             authorization.EnsureCanAccessExternalArea();
+            authorization.EnsureOrganisationAccess(message.OrganisationsId);
 
             return await dataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId, message.Dcf);
         }

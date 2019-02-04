@@ -33,13 +33,26 @@
             await action.Should().ThrowAsync<SecurityException>();
         }
 
+        [Fact]
+        public async Task HandleAsync_NoOrganisationAccess_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+
+            var handler = new FetchNonObligatedWeeeForReturnRequestHandler(A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(), authorization);
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<FetchNonObligatedWeeeForReturnRequest>());
+
+            await action.Should().ThrowAsync<SecurityException>();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async Task HandleAsync_GivenFetchNonObligatedWeeeForReturnRequest_DataAccessFetchIsCalled(bool dcf)
         {
             Guid returnId = Guid.NewGuid();
-            var request = new FetchNonObligatedWeeeForReturnRequest(returnId, dcf);
+            Guid organisationId = Guid.NewGuid();
+            var request = new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, dcf);
             var dataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
 
             A.CallTo(() => dataAccess.FetchNonObligatedWeeeForReturn(returnId, dcf)).Returns(TonnageList);

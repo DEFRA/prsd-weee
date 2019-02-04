@@ -36,15 +36,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnid)
+        public virtual async Task<ActionResult> Index(Guid returnid, Guid organisationid)
         {
             List<decimal?> tonnageList;
             List<decimal?> tonnageDcfList;
 
             using (var client = apiClient())
             {
-                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, false));
-                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, true));
+                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, organisationid, false));
+                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, organisationid, true));
             }
 
             CalculateListTotal(tonnageList, false);
