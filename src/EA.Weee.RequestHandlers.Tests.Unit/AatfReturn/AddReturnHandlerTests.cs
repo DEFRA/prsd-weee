@@ -21,11 +21,11 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddReturnRequestHandler(authorization,
+            var handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>());
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturnRequest>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -35,11 +35,11 @@
         {
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            var handler = new AddReturnRequestHandler(authorization,
+            var handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>());
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturnRequest>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -50,7 +50,7 @@
             const int year = 2019;
             const int quarter = 1;
 
-            var request = new AddReturnRequest { OrganisationId = Guid.NewGuid(), Quarter = quarter,  Year = year };
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter,  Year = year };
 
             var returnDataAccess = A.Fake<IReturnDataAccess>();
             var organisationDataAccess = A.Fake<IOrganisationDataAccess>();
@@ -59,7 +59,7 @@
 
             A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
 
-            var handler = new AddReturnRequestHandler(A.Dummy<IWeeeAuthorization>(), returnDataAccess, organisationDataAccess);
+            var handler = new AddReturnHandler(A.Dummy<IWeeeAuthorization>(), returnDataAccess, organisationDataAccess);
 
             await handler.HandleAsync(request);
 

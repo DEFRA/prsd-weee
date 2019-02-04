@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.AatfReturn
+﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
     using System;
     using System.Collections.Generic;

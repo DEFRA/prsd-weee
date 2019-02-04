@@ -10,21 +10,23 @@
         protected Return()
         {
         }
-        public Return(Operator aatfOperator, Quarter quarter)
+
+        public Return(Operator aatfOperator, Quarter quarter, ReturnStatus returnStatus)
         {
             Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
             Guard.ArgumentNotNull(() => quarter, quarter);
+            Guard.ArgumentNotNull(() => returnStatus, returnStatus);
 
             Operator = aatfOperator;
             Quarter = quarter;
-            Status = 1;
+            ReturnStatus = returnStatus;
         }
 
         public virtual Quarter Quarter { get; private set; }
 
         public Guid OperatorId { get; private set; }
 
-        public int Status { get; private set; }
+        public virtual ReturnStatus ReturnStatus { get; private set; }
 
         public virtual Operator Operator { get; private set; }
 }

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
@@ -11,7 +12,7 @@
     using Operator = Domain.AatfReturn.Operator;
     using Return = Domain.AatfReturn.Return;
 
-    public class AddReturnDataAccessTests
+    public class ReturnDataAccessTests
     {
         [Fact]
         public async Task Submit_ReturnShouldBeSubmitted()
@@ -47,6 +48,8 @@
                 var result = await dataAccess.GetById(id);
 
                 result.Should().NotBeNull();
+                result.Operator.Should().NotBeNull();
+                result.Operator.Organisation.Should().NotBeNull();
             }
         }
 
@@ -56,7 +59,7 @@
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter);
+            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created);
         }
     }
 }

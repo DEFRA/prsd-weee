@@ -210,6 +210,7 @@
     <Content Include="scripts\Update\Release 2\Sprint1\20180118-1056-AATFPreferences.sql" />
     <Content Include="scripts\Update\Release 2\Sprint1\20180114-1415-AATFReturn.sql" />
     <Content Include="scripts\Update\Release 2\Sprint1\20190128-1300-AddRowVersions.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint1\20190131-1220-RenameAATFReturnStatusColumn.sql" />
     <Content Include="scripts\Update\Release 2\Sprint1\20190131-1220-RenameAATFReturnColumns.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

@@ -5,7 +5,7 @@
     using Weee.Requests.AatfReturn;
     using Weee.Requests.AatfReturn.NonObligated;
 
-    public interface INonObligatedWeeRequestCreator : IRequestCreator<NonObligatedValuesViewModel, AddNonObligatedRequest>
+    public interface INonObligatedWeeRequestCreator : IRequestCreator<NonObligatedValuesViewModel, AddNonObligated>
     { 
     }
 }

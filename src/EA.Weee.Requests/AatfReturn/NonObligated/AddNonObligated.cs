@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using Prsd.Core.Mediator;
     
-    public class AddNonObligatedRequest : IRequest<bool>
+    public class AddNonObligated : IRequest<bool>
     {
-        public IList<NonObligatedRequestValue> CategoryValues { get; set; }
+        public IList<NonObligatedValue> CategoryValues { get; set; }
 
         public bool Dcf { get; set; }
 
