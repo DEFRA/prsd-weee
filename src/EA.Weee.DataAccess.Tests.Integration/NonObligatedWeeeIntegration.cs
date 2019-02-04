@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using Domain.DataReturns;
     using Requests.AatfReturn.NonObligated;
     using Weee.Tests.Core.Model;
@@ -40,16 +41,16 @@
 
                 var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter);
+                var aatfReturn = new Return(operatorTest, quarter, ReturnStatus.Created);
 
-                var categoryValues = new List<NonObligatedRequestValue>();
+                var categoryValues = new List<NonObligatedValue>();
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, dcf));
+                    categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf));
                 }
 
-                var nonObligatedRequest = new AddNonObligatedRequest
+                var nonObligatedRequest = new AddNonObligated
                 {
                     ReturnId = aatfReturn.Id,
                     OrganisationId = organisation.Id,

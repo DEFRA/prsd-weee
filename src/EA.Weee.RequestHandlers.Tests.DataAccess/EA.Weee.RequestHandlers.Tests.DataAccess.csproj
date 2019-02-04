@@ -95,7 +95,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AatfReturn\AddReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />

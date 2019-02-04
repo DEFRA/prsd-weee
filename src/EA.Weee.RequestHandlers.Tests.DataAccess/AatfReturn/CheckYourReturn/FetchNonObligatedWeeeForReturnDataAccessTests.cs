@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.CheckYourReturn
 {
+    using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
@@ -39,14 +40,14 @@
 
                 await returnDataAccess.Submit(@return);
 
-                var categoryValues = new List<NonObligatedRequestValue>();
+                var categoryValues = new List<NonObligatedValue>();
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, dcf));
+                    categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf));
                 }
 
-                var nonObligatedRequest = new AddNonObligatedRequest()
+                var nonObligatedRequest = new AddNonObligated()
                 {
                     ReturnId = @return.Id,
                     OrganisationId = @return.Operator.Organisation.Id,
@@ -82,7 +83,7 @@
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter);
+            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created);
         }
     }
 }

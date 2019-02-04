@@ -8,6 +8,7 @@
     using Domain.AatfReturn;
     using Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
+    using EA.Weee.Requests.AatfReturn.NonObligated;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
