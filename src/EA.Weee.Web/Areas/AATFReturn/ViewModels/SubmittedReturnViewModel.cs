@@ -14,6 +14,9 @@
         private readonly QuarterWindow quarterWindow;
         private readonly Quarter quarter;
         private readonly int year;
+        public SubmittedReturnViewModel()
+        {
+        }
 
         public SubmittedReturnViewModel(Quarter quarter, QuarterWindow window, int year)
         {

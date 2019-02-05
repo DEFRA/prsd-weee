@@ -51,8 +51,9 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            await controller.Index(returnId);
+            await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
         }

@@ -37,17 +37,24 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
+            await SetBreadcrumb(organisationId, "AATF Return");
+
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-
+                
                 return View("Index", mapper.Map<SubmittedReturnViewModel>(@return));
             }
-            
-            //await SetBreadcrumb(organisationId, "AATF Return");
-            //await SetBreadcrumb(organisationId, "AATF Return");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(SubmittedReturnViewModel model)
+        {
+            return await Task.Run<ActionResult>(() =>
+                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = RouteData.Values["organisationId"] }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

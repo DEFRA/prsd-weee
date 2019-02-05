@@ -32,14 +32,13 @@
         [Fact]
         public void Map_GivenSource_PropertiesShouldBeMapped()
         {
-            var organisation = Organisation.CreatePartnership("trading name");
+            var organisation = Organisation.CreatePartnership("trading name");   
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
             var @return = new Return(@operator, quarter, ReturnStatus.Created);
             var quarterWindow = new QuarterWindow(startTime, endTime);
-
             var source = new ReturnQuarterWindow(@return, quarterWindow);
 
             var result = map.Map(source);
