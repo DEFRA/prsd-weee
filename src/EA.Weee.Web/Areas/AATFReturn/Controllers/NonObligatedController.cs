@@ -52,12 +52,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    if (viewModel.Dcf)
-                    {
-                        return RedirectToAction("Index", "CheckYourReturn", new { area = "AatfReturn", returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId });
-                    }
-
-                    return RedirectToAction("Index", "NonObligated", new { area = "AatfReturn", dcf = true });
+                    return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
             }
             await SetBreadcrumb(viewModel.OrganisationId, "AATF Return");

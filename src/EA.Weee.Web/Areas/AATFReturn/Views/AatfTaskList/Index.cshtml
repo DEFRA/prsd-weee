@@ -1,0 +1,138 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.AatfTaskListViewModel
+@{
+    /**/
+
+    ViewBag.Title = "AATF Task List";
+}
+
+<h2 class="govuk-heading-l">AATF return task list for @Model.OrganisationName</h2>
+
+@using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
+{
+    <table class="govuk-table" style="width: 30%;" id="compliance-information-table">
+        <tbody>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border: 0px;">Compliance year</td>
+                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Year</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border: 0px;">Reporting period</td>
+                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Quarter @Model.Period</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="govuk-!-margin-bottom-4"></div>
+
+    foreach (var item in Model.Aatfs)
+    {
+        <table class="govuk-table" style="width: 70%;">
+            <tbody>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
+                        @if (item == Model.Aatfs[0])
+                        {
+                            <b>1.</b>
+                        }
+                    </td>
+                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
+                        Obligated WEEE - @item
+                    </td>
+                    <td class="govuk-table__cell" style="width:15%">B2C</td>
+                    <td class="govuk-table__cell" style="width:15%">B2B</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink("Received on behalf of PCS(s)", "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink("Sent to another AATF / ATF", "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink("Reused as a whole appliance", "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    <table class="govuk-table" style="width: 70%;">
+        <tbody>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">2.</td>
+                <td class="govuk-table__cell govuk-!-font-weight-bold" style="width: 60%;">
+                    Non-obligated WEEE
+                </td>
+                <td class="govuk-table__cell" style="width: 30%;"></td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border: 0px;"></td>
+                <td class="govuk-table__cell">
+                    @Html.ActionLink("Received", "Index", "NonObligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                </td>
+                <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border: 0px;"></td>
+                <td class="govuk-table__cell">
+                    @Html.ActionLink("Retained by a DCF", "Index", "NonObligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                </td>
+                <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="govuk-!-padding-bottom-7"></div>
+    <form action="/version1-9/AATF-Returns/pcs-check-my-return" method="post" class="form" style="display: inline">
+        <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
+            Check my return
+        </button>
+    </form>
+    <details class="govuk-details govuk-!-font-size-16" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+            <span class="govuk-details__summary-text">
+                Some of my AATFs are missing
+            </span>
+        </summary>
+        <div class="govuk-details__text" id="details-content" aria-hidden="true">
+            <div class="govuk-body govuk-!-font-size-16">
+                Contact your environmental regulator<br><br>
+                <b>England</b><br>
+                Environment Agency<br>
+                Producer Responsibility Regulatroy Services<br>
+                Telephone: 03708 506 506<br><br>
+                <b>Northern Ireland</b><br>
+                Northern Ireland Environment Agency<br>
+                Producer Responsibility Unit<br>
+                Telephone: 02 890 569338<br><br>
+                <b>Scotland</b><br>
+                Scottish Environment Protection Agency<br>
+                Producer Compliance and Waste Shipments Unit<br>
+                Telephone: 01786 457700<br><br>
+                <b>Wales</b><br>
+                Natural Resources Wales<br>
+                Producer Responsibility Unit<br>
+                Telephone: 03000 65 3096
+            </div>
+        </div>
+    </details>
+}
