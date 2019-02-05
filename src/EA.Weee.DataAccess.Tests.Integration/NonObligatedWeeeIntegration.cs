@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using Domain.DataReturns;
     using Requests.AatfReturn.NonObligated;
     using Weee.Tests.Core.Model;
@@ -19,8 +20,10 @@
 
     public class NonObligatedWeeeIntegration
     {
-        [Fact]
-        public async Task CanCreateNonObligatedWeeeEntry()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanCreateNonObligatedWeeeEntry(bool dcf)
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -38,16 +41,16 @@
 
                 var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter);
+                var aatfReturn = new Return(operatorTest, quarter, ReturnStatus.Created);
 
-                var categoryValues = new List<NonObligatedRequestValue>();
+                var categoryValues = new List<NonObligatedValue>();
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, false));
+                    categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf));
                 }
 
-                var nonObligatedRequest = new AddNonObligatedRequest
+                var nonObligatedRequest = new AddNonObligated
                 {
                     ReturnId = aatfReturn.Id,
                     OrganisationId = organisation.Id,
@@ -80,52 +83,6 @@
                     Assert.Equal(foundCategory.Tonnage, nonObligatedWee[indexNum].Tonnage);
                     Assert.Equal(foundCategory.ReturnId, nonObligatedWee[indexNum].ReturnId);
                 }
-            }
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task CheckCategoryValuesContainSameDcfValueAsRequest(bool dcf)
-        {
-            using (DatabaseWrapper database = new DatabaseWrapper())
-            {
-                var context = database.WeeeContext;
-
-                var name = "Test Name" + Guid.NewGuid();
-                var tradingName = "Test Trading Name" + Guid.NewGuid();
-                const string crn = "ABC12345";
-                var nonObligatedId = Guid.NewGuid();
-
-                var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-
-                context.Organisations.Add(organisation);
-
-                await context.SaveChangesAsync();
-
-                var operatorTest = new Operator(organisation);
-                var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter);
-
-                var categoryValues = new List<NonObligatedRequestValue>();
-
-                foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
-                {
-                    categoryValues.Add(new NonObligatedRequestValue((int)category, (int)category, dcf));
-                }
-
-                var nonObligatedRequest = new AddNonObligatedRequest
-                {
-                    ReturnId = aatfReturn.Id,
-                    OrganisationId = organisation.Id,
-                    CategoryValues = categoryValues,
-                    Dcf = dcf
-                };
-
-                foreach (var categoryValue in nonObligatedRequest.CategoryValues)
-                {
-                    categoryValue.Dcf.Should().Be(nonObligatedRequest.Dcf);
-                } 
             }
         }
     }
