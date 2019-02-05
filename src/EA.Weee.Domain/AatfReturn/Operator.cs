@@ -7,6 +7,10 @@
 
     public partial class Operator : Entity
     {
+        public Operator()
+        {
+        }
+
         public Operator(Organisation organisation)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);

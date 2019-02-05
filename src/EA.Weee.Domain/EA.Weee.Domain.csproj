@@ -49,6 +49,8 @@
     <Compile Include="AatfReturn\NonObligatedWeee.cs" />
     <Compile Include="AatfReturn\Operator.cs" />
     <Compile Include="AatfReturn\Return.cs" />
+    <Compile Include="AatfReturn\ReturnQuarterWindow.cs" />
+    <Compile Include="AatfReturn\ReturnStatus.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />

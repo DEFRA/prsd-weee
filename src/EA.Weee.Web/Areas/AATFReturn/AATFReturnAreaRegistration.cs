@@ -24,6 +24,12 @@
                 namespaces: new[] { typeof(NonObligatedController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: "AatfReturn_submitted",
+                url: "AatfReturn/{organisationId}/{returnId}/{controller}/{action}",
+                defaults: new { action = "Index", controller = "SubmittedReturn" },
+                namespaces: new[] { typeof(SubmittedReturnController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "AatfReturn_default",
                 url: "AatfReturn/{organisationId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "NonObligated", entityId = UrlParameter.Optional },

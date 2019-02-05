@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AatfReturn\NonObligatedWeeeTests.cs" />
     <Compile Include="AatfReturn\OperatorTests.cs" />
+    <Compile Include="AatfReturn\ReturnQuarterWindowTests.cs" />
     <Compile Include="AatfReturn\ReturnTests.cs" />
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>
@@ -95,6 +96,7 @@
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersionTests.cs" />
+    <Compile Include="DataReturns\QuarterTests.cs" />
     <Compile Include="DataReturns\QuarterWindowTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmountTests.cs" />
