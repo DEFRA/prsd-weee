@@ -27,7 +27,10 @@
 
         public async Task<Return> GetById(Guid id)
         {
-            return await context.Returns.FindAsync(id);
+            return await context.Returns
+                    .Include(r => r.Operator)
+                    .Include(r => r.Operator.Organisation)
+                    .SingleOrDefaultAsync(o => o.Id == id);
         }
     }
 }

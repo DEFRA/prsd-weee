@@ -40,7 +40,7 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new NonObligatedValuesViewModel();
-            var request = new AddNonObligatedRequest();
+            var request = new AddNonObligated();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -56,7 +56,7 @@
 
             await controller.Index(A.Dummy<NonObligatedValuesViewModel>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddNonObligatedRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddNonObligated>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -90,7 +90,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["controller"].Should().Be("CheckYourReturn");
             result.RouteValues["area"].Should().Be("AatfReturn");
         }
 

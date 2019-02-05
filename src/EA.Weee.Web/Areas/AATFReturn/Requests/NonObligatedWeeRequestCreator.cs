@@ -9,11 +9,11 @@
     using Weee.Requests.AatfReturn;
     using Weee.Requests.AatfReturn.NonObligated;
 
-    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligatedRequest>, INonObligatedWeeRequestCreator
+    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligated>, INonObligatedWeeRequestCreator
     {
-        public override AddNonObligatedRequest ViewModelToRequest(NonObligatedValuesViewModel viewModel)
+        public override AddNonObligated ViewModelToRequest(NonObligatedValuesViewModel viewModel)
         {
-            var nonObligatedRequestValues = new List<NonObligatedRequestValue>();
+            var nonObligatedRequestValues = new List<NonObligatedValue>();
 
             foreach (var nonObligatedCategoryValue in viewModel.CategoryValues)
             {
@@ -24,13 +24,13 @@
                 }
 
                 nonObligatedRequestValues.Add(
-                    new NonObligatedRequestValue(
+                    new NonObligatedValue(
                         nonObligatedCategoryValue.CategoryId,
                         value,
                         false));
             }
 
-            return new AddNonObligatedRequest() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf, ReturnId = viewModel.ReturnId };
+            return new AddNonObligated() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf, ReturnId = viewModel.ReturnId };
         }
     }
 }

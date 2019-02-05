@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Mediator;
 
-    public class AddReturnRequest : IRequest<Guid>
+    public class AddReturn : IRequest<Guid>
     {
         public Guid OrganisationId { get; set; }
 
