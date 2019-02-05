@@ -36,6 +36,7 @@
         }
 
         [HttpGet]
+        [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(Guid returnid, Guid organisationid)
         {
             List<decimal?> tonnageList;
@@ -55,6 +56,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
         {
             return View(viewModel);
