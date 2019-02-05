@@ -40,9 +40,11 @@
         {
             List<decimal?> tonnageList;
             List<decimal?> tonnageDcfList;
+            ReturnData @return;
 
             using (var client = apiClient())
             {
+                @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
                 tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, false));
                 tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, true));
             }
@@ -50,7 +52,7 @@
             CalculateListTotal(tonnageList, false);
             CalculateListTotal(tonnageDcfList, true);
 
-            var viewModel = new CheckYourReturnViewModel(TonnageTotal, TonnageDcfTotal);
+            var viewModel = new CheckYourReturnViewModel(TonnageTotal, TonnageDcfTotal, @return.Quarter, @return.QuarterWindow, @return.Quarter.Year);
             return View(viewModel);
         }
 
