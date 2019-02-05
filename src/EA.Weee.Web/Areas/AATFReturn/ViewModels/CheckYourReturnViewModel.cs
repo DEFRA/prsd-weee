@@ -7,6 +7,10 @@
 
     public class CheckYourReturnViewModel
     {
+        public CheckYourReturnViewModel()
+        {
+        }
+
         public decimal? NonObliagtedTotal { get; set; }
 
         public decimal? NonObligatedDcfTotal { get; set; }

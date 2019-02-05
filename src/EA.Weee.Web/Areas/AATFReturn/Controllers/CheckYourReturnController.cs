@@ -36,16 +36,15 @@
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(Guid returnid, Guid organisationid)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId)
         {
             List<decimal?> tonnageList;
             List<decimal?> tonnageDcfList;
 
             using (var client = apiClient())
             {
-                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, organisationid, false));
-                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnid, organisationid, true));
+                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, false));
+                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, true));
             }
 
             CalculateListTotal(tonnageList, false);
@@ -59,7 +58,8 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
         {
-            return View(viewModel);
+            return await Task.Run<ActionResult>(() => 
+                RedirectToAction("Index", "SubmittedReturn", new { area  = "AatfReturn", organisationId = RouteData.Values["organisationId"], returnId = RouteData.Values["returnId"] }));
         }
 
         private void CalculateListTotal(List<decimal?> list, bool dcf)

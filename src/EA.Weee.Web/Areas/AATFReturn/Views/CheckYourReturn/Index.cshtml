@@ -51,4 +51,13 @@
     </tbody>
 </table>
 <div class="govuk-!-padding-bottom-6"></div>
-@Html.HiddenFor(m => m.ReturnId)
+
+@using (Html.BeginForm("Index", "CheckYourReturn", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ReturnId)
+
+    <div class="govuk-form-group">
+        <button class="govuk-button" type="submit">Submit</button>
+    </div>
+}
