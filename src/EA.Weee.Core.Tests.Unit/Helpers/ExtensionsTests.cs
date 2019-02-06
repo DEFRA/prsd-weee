@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
     using System;
+    using System.Collections.Generic;
     using Core.Helpers;
     using FluentAssertions;
     using Xunit;
@@ -102,11 +103,17 @@
             Assert.False(type.IsCustom());
         }
 
+        public static IEnumerable<object[]> Data =>
+            new List<object[]>
+            {
+                new object[] { 0.0M },
+                new object[] { 0.00M },
+                new object[] { 0.000M },
+                new object[] { null }
+            };
+
         [Theory]
-        [InlineData(0)]
-        [InlineData(0.0)]
-        [InlineData(0.000)]
-        [InlineData(null)]
+        [MemberData(nameof(Data))]
         public void ToTonnageDisplay_GivenNullOrZeroValue_DisplayShouldBeCorrect(decimal? value)
         {
             value.ToTonnageDisplay().Should().Be("0.000");

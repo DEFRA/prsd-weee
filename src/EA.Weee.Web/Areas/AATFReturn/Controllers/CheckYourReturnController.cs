@@ -23,37 +23,28 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        public decimal? TonnageTotal = 0.000m;
-        public decimal? TonnageDcfTotal = 0.000m;
+        private readonly IMap<ReturnData, CheckYourReturnViewModel> mapper;
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            BreadcrumbService breadcrumb)
+            BreadcrumbService breadcrumb, 
+            IMap<ReturnData, CheckYourReturnViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId)
         {
-            List<decimal?> tonnageList;
-            List<decimal?> tonnageDcfList;
-            ReturnData @return;
-
             using (var client = apiClient())
             {
-                @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                tonnageList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, false));
-                tonnageDcfList = await client.SendAsync(User.GetAccessToken(), new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, true));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                
+                return View(mapper.Map(@return));
             }
-
-            CalculateListTotal(tonnageList, false);
-            CalculateListTotal(tonnageDcfList, true);
-
-            var viewModel = new CheckYourReturnViewModel(TonnageTotal, TonnageDcfTotal, @return.Quarter, @return.QuarterWindow, @return.Quarter.Year);
-            return View(viewModel);
         }
 
         [HttpPost]
@@ -62,30 +53,6 @@
         {
             return await Task.Run<ActionResult>(() => 
                 RedirectToAction("Index", "SubmittedReturn", new { area  = "AatfReturn", organisationId = RouteData.Values["organisationId"], returnId = RouteData.Values["returnId"] }));
-        }
-
-        private void CalculateListTotal(List<decimal?> list, bool dcf)
-        {
-            if (dcf)
-            {
-                foreach (var number in list)
-                {
-                    if (number != null)
-                    {
-                        TonnageDcfTotal += number;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var number in list)
-                {
-                    if (number != null)
-                    {
-                        TonnageTotal += number;
-                    }
-                }
-            }
-        }
+        }  
     }
 }

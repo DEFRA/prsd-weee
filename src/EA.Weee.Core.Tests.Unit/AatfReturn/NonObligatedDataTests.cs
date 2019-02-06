@@ -11,11 +11,17 @@
 
     public class NonObligatedDataTests
     {
+        public static IEnumerable<object[]> Data =>
+            new List<object[]>
+            {
+                new object[] { 1, null, true },
+                new object[] { 1, null, false },
+                new object[] { 1, 2.1M, true },
+                new object[] { 1, 2.1M, false },
+            };
+
         [Theory]
-        [InlineData(1, null, true)]
-        [InlineData(1, null, false)]
-        [InlineData(1, 1, true)]
-        [InlineData(1, 1, false)]
+        [MemberData(nameof(Data))]
         public void NonObligatedData_PropertiesShouldBeSet(int categoryId, decimal? value, bool dcf)
         {
             var result = new NonObligatedData(categoryId, value, dcf);

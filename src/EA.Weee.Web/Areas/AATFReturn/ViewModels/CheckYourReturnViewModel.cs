@@ -24,9 +24,9 @@
 
         public string Period => $"{Quarter} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
 
-        public decimal? NonObliagtedTotal { get; set; }
+        public string NonObliagtedTotal { get; set; }
 
-        public decimal? NonObligatedDcfTotal { get; set; }
+        public string NonObligatedDcfTotal { get; set; }
 
         public Guid ReturnId { get; set; }
 
@@ -35,8 +35,8 @@
             Guard.ArgumentNotNull(() => quarter, quarter);
             Guard.ArgumentNotNull(() => window, window);
 
-            this.NonObliagtedTotal = total;
-            this.NonObligatedDcfTotal = dcftotal;
+            this.NonObliagtedTotal = "0";
+            this.NonObligatedDcfTotal = "0";
             this.quarter = quarter;
             this.quarterWindow = window;
             this.year = year;
