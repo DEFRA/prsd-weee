@@ -3,6 +3,8 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -43,8 +45,16 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
-        {      
+        public async void IndexGet_GivenValidViewModel_SubmittedReturnViewModelShouldBeReturned()
+        {
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+
+            var result = await controller.Index(organisationId, returnId) as ViewResult;
+            result.Should().NotBeNull();
+
+            SubmittedReturnViewModel viewModel = result.Model as SubmittedReturnViewModel;
+            result.Should().NotBeNull();
         }
 
         [Fact]

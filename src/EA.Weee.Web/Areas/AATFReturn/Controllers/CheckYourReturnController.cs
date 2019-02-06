@@ -42,6 +42,8 @@
             List<decimal?> tonnageDcfList;
             ReturnData @return;
 
+            await SetBreadcrumb(organisationId, "AATF Return");
+
             using (var client = apiClient())
             {
                 @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
@@ -86,6 +88,13 @@
                     }
                 }
             }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }
