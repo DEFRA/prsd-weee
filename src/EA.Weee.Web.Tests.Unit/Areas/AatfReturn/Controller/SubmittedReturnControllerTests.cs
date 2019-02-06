@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Constant;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -55,7 +56,7 @@
 
             await controller.Index(organisationId, returnId);
 
-            Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
     }
 }
