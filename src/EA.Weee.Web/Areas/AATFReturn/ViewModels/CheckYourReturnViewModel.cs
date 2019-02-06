@@ -35,8 +35,8 @@
             Guard.ArgumentNotNull(() => quarter, quarter);
             Guard.ArgumentNotNull(() => window, window);
 
-            this.NonObliagtedTotal = "0";
-            this.NonObligatedDcfTotal = "0";
+            this.NonObliagtedTotal = total.ToString();
+            this.NonObligatedDcfTotal = dcftotal.ToString();
             this.quarter = quarter;
             this.quarterWindow = window;
             this.year = year;
