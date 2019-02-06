@@ -60,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
+        public async void IndexGet_GivenReturn_SubmittedReturnViewModelShouldBeBuilt()
         {
             var returnData = new ReturnData();
 
@@ -72,7 +72,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeReturned()
+        public async void IndexGet_GivenReturn_SubmittedReturnViewModelShouldBeReturned()
         {
             var model = A.Fake<SubmittedReturnViewModel>();
 

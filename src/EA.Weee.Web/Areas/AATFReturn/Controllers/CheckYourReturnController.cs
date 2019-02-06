@@ -19,17 +19,17 @@
     using Web.Controllers.Base;
     using Weee.Requests.AatfReturn.NonObligated;
 
-    public class CheckYourReturnController : Controller
+    public class CheckYourReturnController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IMap<ReturnData, CheckYourReturnViewModel> mapper;
+        private readonly IMapper mapper;
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb, 
-            IMap<ReturnData, CheckYourReturnViewModel> mapper)
+            IMapper mapper)
         {
             this.apiClient = apiClient;
             this.cache = cache;
@@ -46,7 +46,7 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
                 
-                return View(mapper.Map(@return));
+                return View("Index", mapper.Map<CheckYourReturnViewModel>(@return));
             }
         }
 
