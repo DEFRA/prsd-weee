@@ -15,6 +15,6 @@
 
         public QuarterWindow QuarterWindow { get; set; }
 
-        public List<NonObligatedCategoryValue> NonObligatedWeeeList { get; set; }
+        public List<NonObligatedData> NonObligatedData { get; set; }
     }
 }

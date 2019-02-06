@@ -22,13 +22,13 @@
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
-        public List<NonObligatedCategoryValue> NonObligatedWeeeList = new List<NonObligatedCategoryValue>();
 
-        public GetReturnHandler(IWeeeAuthorization authorization, 
-            IReturnDataAccess returnDataAccess, 
-            IOrganisationDataAccess organisationDataAccess, 
-            IMap<ReturnQuarterWindow, ReturnData> mapper, 
-            IQuarterWindowFactory quarterWindowFactory, IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess)
+        public GetReturnHandler(IWeeeAuthorization authorization,
+            IReturnDataAccess returnDataAccess,
+            IOrganisationDataAccess organisationDataAccess,
+            IMap<ReturnQuarterWindow, ReturnData> mapper,
+            IQuarterWindowFactory quarterWindowFactory, 
+            IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -48,21 +48,9 @@
 
             var quarterWindow = await quarterWindowFactory.GetQuarter(@return.Quarter);
 
-            List<NonObligatedWeee> nonObligatedWeeeListHolder = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
+            var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
 
-            foreach (var nonObligatedWeee in nonObligatedWeeeListHolder)
-            {
-                var buffer = new NonObligatedCategoryValue()
-                {
-                    Dcf = nonObligatedWeee.Dcf,
-                    Tonnage = nonObligatedWeee.Tonnage.ToString(),
-                    CategoryId = nonObligatedWeee.CategoryId,
-                };
-
-                NonObligatedWeeeList.Add(buffer);
-            }
-
-            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow, nonObligatedWeeeListHolder));
+            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues));
         }
     }
 }

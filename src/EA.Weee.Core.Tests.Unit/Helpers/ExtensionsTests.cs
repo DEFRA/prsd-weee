@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Helpers;
+    using FluentAssertions;
     using Xunit;
 
     public class ExtensionsTests
@@ -99,6 +100,44 @@
         public void PrimitiveTypesAreNotCustom(Type type)
         {
             Assert.False(type.IsCustom());
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(0.0)]
+        [InlineData(0.000)]
+        [InlineData(null)]
+        public void ToTonnageDisplay_GivenNullOrZeroValue_DisplayShouldBeCorrect(decimal? value)
+        {
+            value.ToTonnageDisplay().Should().Be("0.000");
+        }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenValueWithNoDecimalPlace_DisplayShouldBeCorrect()
+        {
+            decimal value = 1;
+            value.ToTonnageDisplay().Should().Be("1.000");
+        }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenValueWithSingleDecimalPlace_DisplayShouldBeCorrect()
+        {
+            decimal value = 1.1m;
+            value.ToTonnageDisplay().Should().Be("1.100");
+        }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenValueWithTwoDecimalPlace_DisplayShouldBeCorrect()
+        {
+            decimal value = 1.11m;
+            value.ToTonnageDisplay().Should().Be("1.110");
+        }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenValueWithThreeDecimalPlace_DisplayShouldBeCorrect()
+        {
+            decimal value = 1.111m;
+            value.ToTonnageDisplay().Should().Be("1.111");
         }
     }
 }
