@@ -3,8 +3,6 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
     using Constant;
     using FakeItEasy;
     using FluentAssertions;
