@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Constant;
     using Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using Infrastructure;
@@ -38,7 +39,9 @@
 
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId)
-        {
+        { 
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
@@ -53,6 +56,13 @@
         {
             return await Task.Run<ActionResult>(() => 
                 RedirectToAction("Index", "SubmittedReturn", new { area  = "AatfReturn", organisationId = RouteData.Values["organisationId"], returnId = RouteData.Values["returnId"] }));
-        }  
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
     }
 }

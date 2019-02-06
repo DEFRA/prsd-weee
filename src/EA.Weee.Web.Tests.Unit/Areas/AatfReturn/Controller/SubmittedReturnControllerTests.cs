@@ -4,6 +4,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
+    using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -13,6 +14,7 @@
     using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
     using Web.Controllers.Base;
+    using Weee.Requests.AatfReturn;
     using Weee.Requests.AatfReturn.NonObligated;
     using Xunit;
 
@@ -39,13 +41,46 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+
+            result.ViewName.Should().Be("Index");
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
-        {      
+        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
+        {
+            var returnId = Guid.NewGuid();
+
+            await controller.Index(A.Dummy<Guid>(), returnId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(g => g.ReturnId.Equals(returnId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
+        {
+            var returnData = new ReturnData();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            A.CallTo(() => mapper.Map<SubmittedReturnViewModel>(returnData)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeReturned()
+        {
+            var model = A.Fake<SubmittedReturnViewModel>();
+
+            A.CallTo(() => mapper.Map<SubmittedReturnViewModel>(A<ReturnData>._)).Returns(model);
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+
+            result.Model.Should().Be(model);
         }
 
         [Fact]
