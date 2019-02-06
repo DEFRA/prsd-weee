@@ -41,9 +41,11 @@
 
             authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
 
-            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
+            var quarterWindow = await quarterWindowFactory.GetQuarter(@return.Quarter);
 
-            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow));
+            var returnQuarterWindow = mapper.Map(new ReturnQuarterWindow(@return, quarterWindow));
+
+            return returnQuarterWindow;
         }
     }
 }
