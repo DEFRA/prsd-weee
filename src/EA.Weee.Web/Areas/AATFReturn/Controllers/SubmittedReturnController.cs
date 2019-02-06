@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Constant;
     using Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using Infrastructure;
@@ -39,7 +40,7 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            await SetBreadcrumb(organisationId, "AATF Return");
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             using (var client = apiClient())
             {
