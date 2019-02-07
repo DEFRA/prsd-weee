@@ -30,7 +30,7 @@
                 }
             }
 
-            return new CheckYourReturnViewModel(TonnageTotal, TonnageTotalDcf, source.Quarter, source.QuarterWindow, source.Quarter.Year);
+            return new CheckYourReturnViewModel(source.ReturnOperatorData, TonnageTotal, TonnageTotalDcf, source.Quarter, source.QuarterWindow, source.Quarter.Year);
         }
     }
 }

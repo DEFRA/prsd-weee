@@ -8,6 +8,7 @@
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
+    using EA.Weee.Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -33,7 +34,7 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<QuarterWindow>());
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>());
 
             var result = map.Map(source);
 
@@ -46,7 +47,7 @@
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
             var source = new ReturnQuarterWindow(GetReturn(), quarterWindow);
 
             var result = map.Map(source);
@@ -85,11 +86,11 @@
             return @return;
         }
 
-        public QuarterWindow GetQuarterWindow()
+        public Domain.DataReturns.QuarterWindow GetQuarterWindow()
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
 
             return quarterWindow;
         }

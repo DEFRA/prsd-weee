@@ -33,7 +33,7 @@
 
         public Guid ReturnId { get; set; }
 
-        public CheckYourReturnViewModel(decimal? total, decimal? dcftotal, Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)
+        public CheckYourReturnViewModel(OperatorData returnOperator, decimal? total, decimal? dcftotal, Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)
         {
             /*
             Guard.ArgumentNotNull(() => quarter, quarter);
@@ -44,6 +44,7 @@
             */
             this.NonObliagtedTotal = total.ToString();
             this.NonObligatedDcfTotal = dcftotal.ToString();
+            this.OperatorName = returnOperator.OperatorName;
         }
     }
 }
