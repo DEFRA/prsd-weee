@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
@@ -10,6 +12,7 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using TestHelpers;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
@@ -60,7 +63,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_SubmittedReturnViewModelShouldBeBuilt()
+        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
         {
             var returnData = new ReturnData();
 
@@ -72,7 +75,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_SubmittedReturnViewModelShouldBeReturned()
+        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeReturned()
         {
             var model = A.Fake<SubmittedReturnViewModel>();
 
@@ -92,6 +95,22 @@
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            httpContext.RouteData.Values.Add("organisationId", 1);
+
+            var redirect = await controller.Index(A.Dummy<SubmittedReturnViewModel>()) as RedirectToRouteResult;
+
+            redirect.RouteValues["action"].Should().Be("ChooseActivity");
+            redirect.RouteValues["controller"].Should().Be("Home");
+            redirect.RouteValues["area"].Should().Be("Scheme");
+            redirect.RouteValues["pcsId"].Should().Be(1);
         }
     }
 }
