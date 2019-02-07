@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using EA.Weee.Domain.AatfReturn;
 
     public class FetchNonObligatedWeeeForReturnDataAccess : IFetchNonObligatedWeeeForReturnDataAccess
     {
@@ -14,6 +15,11 @@
         public FetchNonObligatedWeeeForReturnDataAccess(WeeeContext context)
         {
             this.context = context;
+        }
+
+        public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
+        {
+            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Select(now => now).ToListAsync();
         }
 
         public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
