@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Constant;
     using Core.AatfReturn;
     using Infrastructure;
     using Microsoft.Owin.Security;
@@ -35,7 +36,7 @@
         {
             var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf };
 
-            await SetBreadcrumb(organisationId, "AATF Return");
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
         }
@@ -55,7 +56,7 @@
                     return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
             }
-            await SetBreadcrumb(viewModel.OrganisationId, "AATF Return");
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
 

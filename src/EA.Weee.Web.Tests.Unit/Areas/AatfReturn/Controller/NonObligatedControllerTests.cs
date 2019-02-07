@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Constant;
     using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
@@ -66,7 +67,7 @@
 
             await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<bool>());
 
-            Assert.Equal(breadcrumb.ExternalActivity, "AATF Return");
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
 
         [Fact]

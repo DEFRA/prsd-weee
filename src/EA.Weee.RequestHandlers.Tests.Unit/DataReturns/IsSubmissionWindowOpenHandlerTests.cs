@@ -9,6 +9,7 @@
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns;
+    using RequestHandlers.Factories;
     using Requests.DataReturns;
     using Xunit;
 
