@@ -179,15 +179,6 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.MakeAATFReturn)
                 {
-                    //using (var client = apiClient())
-                    //{
-                    //    var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
-                    //        new AddReturn() { OrganisationId = viewModel.OrganisationId });
-
-                    //    return RedirectToAction("Index", "NonObligated",
-                    //        new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId, dcf = false });
-                    //}
-                                        
                     using (var client = apiClient())
                     {
                         var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
@@ -196,7 +187,6 @@
                         return RedirectToAction("Index", "AatfTaskList",
                             new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId });
                     }
-                    
                 }
             }
 

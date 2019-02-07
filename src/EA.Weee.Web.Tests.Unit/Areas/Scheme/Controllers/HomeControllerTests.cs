@@ -1037,7 +1037,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_MakeAATFReturn_RedirectsToNonObligatedWeee()
+        public async void PostChooseActivity_MakeAATFReturn_RedirectsToAatfTaskList()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -1049,7 +1049,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("NonObligated", routeValues["controller"]);
+            Assert.Equal("AatfTaskList", routeValues["controller"]);
         }
     }
 }

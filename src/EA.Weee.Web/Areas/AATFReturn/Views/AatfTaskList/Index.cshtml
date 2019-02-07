@@ -11,14 +11,15 @@
 
 @using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <table class="govuk-table" style="width: 30%;" id="compliance-information-table">
         <tbody>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;">Compliance year</td>
+                <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Year)</td>
                 <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Year</td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;">Reporting period</td>
+                <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Period)</td>
                 <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Quarter @Model.Period</td>
             </tr>
         </tbody>

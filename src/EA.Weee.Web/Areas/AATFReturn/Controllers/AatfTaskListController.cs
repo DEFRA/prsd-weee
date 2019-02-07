@@ -1,19 +1,19 @@
-﻿using EA.Prsd.Core.Mapper;
-using EA.Weee.Api.Client;
-using EA.Weee.Requests.AatfReturn;
-using EA.Weee.Requests.Organisations;
-using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-using EA.Weee.Web.Controllers.Base;
-using EA.Weee.Web.Infrastructure;
-using EA.Weee.Web.Services;
-using EA.Weee.Web.Services.Caching;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-
-namespace EA.Weee.Web.Areas.AatfReturn.Controllers
+﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+
     public class AatfTaskListController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -58,6 +58,7 @@ namespace EA.Weee.Web.Areas.AatfReturn.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(AatfTaskListViewModel viewModel)
         {
             return RedirectToAction("Index", "CheckYourReturn", new { area = "AatfReturn", returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId });
