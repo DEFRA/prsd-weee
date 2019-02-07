@@ -14,5 +14,7 @@
         public Quarter Quarter { get; set; }
 
         public QuarterWindow QuarterWindow { get; set; }
+
+        public List<NonObligatedData> NonObligatedData { get; set; }
     }
 }

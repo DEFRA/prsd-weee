@@ -1,4 +1,4 @@
-﻿ namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using Core.AatfReturn;
     using DataAccess.DataAccess;
@@ -9,25 +9,55 @@
     using RequestHandlers.AatfReturn;
     using Requests.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using Domain.DataReturns;
     using Factories;
+    using FluentAssertions.Common;
+    using RequestHandlers.AatfReturn.CheckYourReturn;
+    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
 
     public class GetReturnHandlerTests
     {
+        private GetReturnHandler handler;
+        private readonly IReturnDataAccess returnDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
+        private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
+
+        public GetReturnHandlerTests()
+        {
+            returnDataAccess = A.Fake<IReturnDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+            mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+
+            handler = new GetReturnHandler(new AuthorizationBuilder()
+                .AllowExternalAreaAccess()
+                .AllowOrganisationAccess().Build(),
+                returnDataAccess,
+                organisationDataAccess,
+                mapper,
+                quarterWindowFactory,
+                fetchNonObligatedWeeeDataAccess);
+        }
+
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new GetReturnHandler(authorization,
+            handler = new GetReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
-                A.Dummy<IQuarterWindowFactory>());
+                A.Dummy<IQuarterWindowFactory>(),
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -40,11 +70,12 @@
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             var dataAccess = A.Fake<IReturnDataAccess>();
 
-            var handler = new GetReturnHandler(authorization,
+            handler = new GetReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
-                A.Dummy<IQuarterWindowFactory>());
+                A.Dummy<IQuarterWindowFactory>(),
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -52,30 +83,61 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenUserHasAccess_MappedObjectShouldBeReturned()
+        public async Task HandeAsync_GivenReturn_ReturnShouldBeRetrieved()
         {
-            var authorization = new AuthorizationBuilder()
-                .AllowExternalAreaAccess()
-                .AllowOrganisationAccess()
-                .Build();
+            var returnId = Guid.NewGuid();
 
-            //var returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
-            var @return = A.Fake<Return>();
-            var dataAccess = A.Fake<IReturnDataAccess>();
-            var returnData = A.Fake<ReturnData>();
-            var mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
-            var quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-           // var quarterWindow = A.Fake<Domain.DataReturns.QuarterWindow>();
+            var result = await handler.HandleAsync(new GetReturn(returnId));
 
-            A.CallTo(() => dataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_QuarterWindowShouldBeRetrieved()
+        {
+            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());
+
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
+
+            var result = await handler.HandleAsync(A.Dummy<GetReturn>());
+
+            A.CallTo(() => quarterWindowFactory.GetQuarter(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_NonObligatedValuesShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_MapperShouldBeCalled()
+        {
+            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue);
+            var nonObligatedValues = new List<NonObligatedWeee>();
+
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => quarterWindowFactory.GetQuarter(A<Quarter>._)).Returns(quarterWindow);
+            A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
+
+            await handler.HandleAsync(A.Dummy<GetReturn>());
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.IsSameOrEqualTo(quarterWindow)
+                                                                                && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
+                                                                                && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_MappedObjectShouldBeReturned()
+        {
+            var returnData = new ReturnData();
+
             A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>._)).Returns(returnData);
-            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(A.Fake<Domain.DataReturns.QuarterWindow>());
-
-            var handler = new GetReturnHandler(authorization,
-                dataAccess,
-                A.Dummy<IOrganisationDataAccess>(),
-                mapper,
-                quarterWindowFactory);
 
             var result = await handler.HandleAsync(A.Dummy<GetReturn>());
 
