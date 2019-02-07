@@ -9,6 +9,7 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -32,18 +33,14 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            var viewModel = new AatfTaskListViewModel() { OrganisationId = organisationId, ReturnId = returnId};
+            var viewModel = new ReturnViewModel() { OrganisationId = organisationId, ReturnId = returnId };
             using (var client = apiClient())
             {
                 var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var compliancePeriod = mapper.Map<SubmittedReturnViewModel>(@return);
+                viewModel = mapper.Map<ReturnViewModel>(@return);
 
                 viewModel.OrganisationName = organisationName;
-
-                viewModel.Year = compliancePeriod.Year;
-                viewModel.Quarter = compliancePeriod.Quarter;
-                viewModel.Period = compliancePeriod.Period;
             }
 
             var aatfs = new List<string>();
@@ -53,13 +50,13 @@
 
             viewModel.Aatfs = aatfs;
 
-            await SetBreadcrumb(organisationId, "AATF Task List");
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(AatfTaskListViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ReturnViewModel viewModel)
         {
             return RedirectToAction("Index", "CheckYourReturn", new { area = "AatfReturn", returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId });
         }

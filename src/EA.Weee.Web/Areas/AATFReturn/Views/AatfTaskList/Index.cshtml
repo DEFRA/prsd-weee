@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.AatfTaskListViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
     /**/
 
@@ -20,7 +20,7 @@
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Period)</td>
-                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Quarter @Model.Period</td>
+                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Period</td>
             </tr>
         </tbody>
     </table>
@@ -91,14 +91,14 @@
                 <td class="govuk-table__cell">
                     @Html.ActionLink("Received", "Index", "NonObligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotal</strong></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
                     @Html.ActionLink("Retained by a DCF", "Index", "NonObligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
             </tr>
         </tbody>
     </table>
@@ -114,26 +114,6 @@
                 Some of my AATFs are missing
             </span>
         </summary>
-        <div class="govuk-details__text" id="details-content" aria-hidden="true">
-            <div class="govuk-body govuk-!-font-size-16">
-                Contact your environmental regulator<br><br>
-                <b>England</b><br>
-                Environment Agency<br>
-                Producer Responsibility Regulatroy Services<br>
-                Telephone: 03708 506 506<br><br>
-                <b>Northern Ireland</b><br>
-                Northern Ireland Environment Agency<br>
-                Producer Responsibility Unit<br>
-                Telephone: 02 890 569338<br><br>
-                <b>Scotland</b><br>
-                Scottish Environment Protection Agency<br>
-                Producer Compliance and Waste Shipments Unit<br>
-                Telephone: 01786 457700<br><br>
-                <b>Wales</b><br>
-                Natural Resources Wales<br>
-                Producer Responsibility Unit<br>
-                Telephone: 03000 65 3096
-            </div>
-        </div>
+        @Html.Partial("_ContactProgressiveDisclosure")
     </details>
 }

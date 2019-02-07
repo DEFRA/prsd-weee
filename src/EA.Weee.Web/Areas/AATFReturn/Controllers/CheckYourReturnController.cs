@@ -1,23 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
-    using Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using Infrastructure;
-    using Microsoft.Owin.Security;
     using Prsd.Core.Mapper;
-    using Prsd.Core.Web.OAuth;
-    using Requests;
     using Services;
     using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
-    using Weee.Requests.AatfReturn.NonObligated;
 
     public class CheckYourReturnController : ExternalSiteController
     {
@@ -46,13 +40,13 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
                 
-                return View("Index", mapper.Map<CheckYourReturnViewModel>(@return));
+                return View("Index", mapper.Map<ReturnViewModel>(@return));
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ReturnViewModel viewModel)
         {
             return await Task.Run<ActionResult>(() => 
                 RedirectToAction("Index", "SubmittedReturn", new { area  = "AatfReturn", organisationId = RouteData.Values["organisationId"], returnId = RouteData.Values["returnId"] }));

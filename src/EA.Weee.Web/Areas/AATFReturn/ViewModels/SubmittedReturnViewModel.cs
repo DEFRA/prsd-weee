@@ -11,7 +11,7 @@
 
     public class SubmittedReturnViewModel : ReturnViewModelBase
     {
-        //private readonly QuarterWindow quarterWindow;
+        //private readonly QuarterWindow QuarterWindow;
         //private readonly Quarter quarter;
         //private readonly int year;
 
@@ -27,6 +27,6 @@
 
         //public string Quarter => quarter.Q.ToString();
 
-        //public string Period => $"{Quarter} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {year}";
+        //public string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {year}";
     }
 }
