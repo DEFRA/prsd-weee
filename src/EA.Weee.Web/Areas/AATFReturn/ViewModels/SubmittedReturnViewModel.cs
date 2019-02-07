@@ -9,29 +9,14 @@
     using Core.DataReturns;
     using Prsd.Core;
 
-    public class SubmittedReturnViewModel
+    public class SubmittedReturnViewModel : ReturnViewModelBase
     {
-        private readonly QuarterWindow quarterWindow;
-        private readonly Quarter quarter;
-        private readonly int year;
         public SubmittedReturnViewModel()
         {
         }
 
-        public SubmittedReturnViewModel(Quarter quarter, QuarterWindow window, int year)
+        public SubmittedReturnViewModel(Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)
         {
-            Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => window, window);
-
-            this.quarterWindow = window;
-            this.quarter = quarter;
-            this.year = year;
         }
-
-        public string Year => year.ToString();
-
-        public string Quarter => quarter.Q.ToString();
-
-        public string Period => $"{Quarter} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {year}";
     }
 }

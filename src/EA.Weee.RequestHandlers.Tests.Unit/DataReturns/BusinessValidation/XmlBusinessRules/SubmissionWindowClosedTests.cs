@@ -9,6 +9,7 @@
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
+    using RequestHandlers.Factories;
     using Xml.DataReturns;
     using Xunit;
 

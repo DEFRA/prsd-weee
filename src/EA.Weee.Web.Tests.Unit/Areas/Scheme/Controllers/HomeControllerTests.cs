@@ -119,7 +119,7 @@
         {
             var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
 
-            Assert.Contains(PcsAction.MakeAATFReturn, result);
+            Assert.Contains(PcsAction.MakeAatfReturn, result);
         }
 
         [Fact]
@@ -127,7 +127,7 @@
         {
             var result = await HomeControllerSetupForAATFReturns(false).GetActivities(A.Dummy<Guid>());
 
-            Assert.DoesNotContain(PcsAction.MakeAATFReturn, result);
+            Assert.DoesNotContain(PcsAction.MakeAatfReturn, result);
         }
 
         [Fact]
@@ -1041,7 +1041,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.MakeAATFReturn
+                SelectedValue = PcsAction.MakeAatfReturn
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
