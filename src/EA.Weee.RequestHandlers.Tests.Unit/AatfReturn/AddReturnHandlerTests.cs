@@ -83,7 +83,6 @@
             A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        
         public async Task HandleAsync_GivenAddReturnRequest_OperatorShouldBeRetrieved()
         {
             var organisationId = Guid.NewGuid();
