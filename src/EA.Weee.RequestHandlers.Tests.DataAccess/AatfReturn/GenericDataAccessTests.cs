@@ -6,6 +6,7 @@
     using Domain.AatfReturn;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.Organisations;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -23,9 +24,12 @@
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
 
-                var aatf = CreateAatf();
-
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
+                var countryId = new Guid("B5EBE1D1-8349-43CD-9E87-0081EA0A8463");
+                var organisationDetailsDataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
+                var country = await organisationDetailsDataAccess.FetchCountryAsync(countryId);
+
+                var aatf = CreateAatf(country);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -33,11 +37,11 @@
             }
         }
 
-        private Aatf CreateAatf()
+        private Aatf CreateAatf(Country country)
         {
             return new Aatf("name", 
-                new UKCompetentAuthority(Guid.NewGuid(), "competantauth", "abbv", 
-                    new Country(Guid.NewGuid(), "country"), "email"), 
+                new UKCompetentAuthority(Guid.NewGuid(), "competantauth", "abbv",
+                    country, "email"), 
                 "12345678",
                 AatfStatus.Approved,
                 new Operator(Organisation.CreatePartnership("trading")));
