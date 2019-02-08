@@ -212,6 +212,7 @@
     <Content Include="scripts\Update\Release 2\Sprint1\20190128-1300-AddRowVersions.sql" />
     <Content Include="scripts\Update\Release 2\Sprint1\20190131-1220-RenameAATFReturnStatusColumn.sql" />
     <Content Include="scripts\Update\Release 2\Sprint1\20190131-1220-RenameAATFReturnColumns.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint2\20190207-1400-fixAatfColumnUpdateUniqueColumnOperator.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
@@ -228,6 +229,7 @@
     <Content Include="scripts\Update\Release 1\Sprint23\20160204-1513-UpdateSpgforProducerEeeDataHistory.sql" />
     <None Include="scripts\Update\Release 1\Sprint21\20160119-1306-RemoveSpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />
     <None Include="scripts\Update\Release 1\Sprint22\20160121-1440-CreateSpgUKEEEDataByComplianceYear.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint2\20190207-1340-RemoveOperatorAATFtable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
