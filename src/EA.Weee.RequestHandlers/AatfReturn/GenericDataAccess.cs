@@ -7,6 +7,7 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Prsd.Core.Domain;
+    using Specification;
 
     public class GenericDataAccess : IGenericDataAccess
     {
@@ -31,9 +32,9 @@
             return await context.Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<TEntity> GetById<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : Entity
+        public async Task<TEntity> GetById<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity
         {
-            return await context.Set<TEntity>().SingleOrDefaultAsync(expression);
+            return await context.Set<TEntity>().SingleOrDefaultAsync(specification.ToExpression());
         }
     }
 }

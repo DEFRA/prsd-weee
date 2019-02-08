@@ -14,6 +14,7 @@
     using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
+    using Specification;
 
     public class AddDefaultAatfHandler : IRequestHandler<AddDefaultAatf, bool>
     {
@@ -32,7 +33,7 @@
 
         public async Task<bool> HandleAsync(AddDefaultAatf message)
         {
-            var @operator = await genericDataAccess.GetById<Operator>(c => c.Organisation.Id == message.OrganisationId);
+            var @operator = await genericDataAccess.GetById<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
             
             if (@operator == null)
             {

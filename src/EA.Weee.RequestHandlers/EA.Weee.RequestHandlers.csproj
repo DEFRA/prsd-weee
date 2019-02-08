@@ -80,6 +80,9 @@
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\IAddNonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\Specification\ISpecification.cs" />
+    <Compile Include="AatfReturn\Specification\OperatorByOrganisationIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />

@@ -12,6 +12,7 @@
     using Requests.AatfReturn;
     using Requests.AatfReturn.NonObligated;
     using Security;
+    using Specification;
 
     internal class AddReturnHandler : IRequestHandler<AddReturn, Guid>
     {
@@ -40,7 +41,7 @@
 
             var organisation = await organisationDataAccess.GetById(message.OrganisationId);
 
-            var aatfOperator = await operatorAccess.GetById<Operator>(c => c.Organisation.Id == message.OrganisationId);
+            var aatfOperator = await operatorAccess.GetById<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
 
             var aatfReturn = new Return(aatfOperator, quarter, ReturnStatus.Created);
 
