@@ -181,6 +181,8 @@
                 {
                     using (var client = apiClient())
                     {
+                        await client.SendAsync(User.GetAccessToken(), new AddDefaultAatf() { OrganisationId = viewModel.OrganisationId });
+
                         var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
                             new AddReturn() { OrganisationId = viewModel.OrganisationId });
 

@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnHandlerTests.cs" />
+    <Compile Include="AatfReturn\ExpressionComparison.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedRequestHandlerTests.cs" />

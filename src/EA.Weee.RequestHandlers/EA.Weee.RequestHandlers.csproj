@@ -67,7 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AddDefaultAatfHandler.cs" />
+    <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
+    <Compile Include="AatfReturn\IGenericDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />

@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\NonObligatedWeee.cs" />
     <Compile Include="AatfReturn\Operator.cs" />
     <Compile Include="AatfReturn\Return.cs" />
