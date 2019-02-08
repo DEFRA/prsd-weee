@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "CheckYourReturnView";
 }
-<h2 class="govuk-heading-l">Check your AATF return for @Model.OrganisationName</h2>
+<h2 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h2>
 <p style="display: inline">Check and review your AATF return before you proceed to submit</p>
 <div class="govuk-!-padding-bottom-9"></div>
 <div class="govuk-grid-row">
@@ -43,9 +43,9 @@
     </thead>
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-            <td class="govuk-table__cell">@Model.NonObligatedTonnageTotal</td>
+            <td class="govuk-table__cell">@Model.NonObliagtedTotal</td>
             <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
-            <td class="govuk-table__cell">@Model.NonObligatedTonnageTotalDcf</td>
+            <td class="govuk-table__cell">@Model.NonObligatedDcfTotal</td>
             <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
         </tr>
     </tbody>
