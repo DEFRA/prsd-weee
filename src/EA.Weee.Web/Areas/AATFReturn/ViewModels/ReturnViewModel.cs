@@ -14,11 +14,12 @@
         {
         }
 
-        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf) : base(quarter, window, year)
+        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf, OperatorData returnOperator) : base(quarter, window, year)
         {
             this.Year = year.ToString();
             this.NonObligatedTonnageTotal = nonObligatedTonnageTotal;
             this.NonObligatedTonnageTotalDcf = nonObligatedTonnageTotalDcf;
+            this.ReturnOperator = returnOperator;
         }
         
         public Guid OrganisationId { get; set; }
@@ -38,5 +39,7 @@
         public string NonObligatedTonnageTotal { get; set; }
 
         public string NonObligatedTonnageTotalDcf { get; set; }
+
+        public OperatorData ReturnOperator { get; set; }
     }
 }
