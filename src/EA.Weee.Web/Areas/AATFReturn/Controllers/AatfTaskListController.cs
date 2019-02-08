@@ -33,13 +33,15 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            var viewModel = new ReturnViewModel() { OrganisationId = organisationId, ReturnId = returnId };
+            var viewModel = new ReturnViewModel();
             using (var client = apiClient())
             {
-                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
                 viewModel = mapper.Map<ReturnViewModel>(@return);
 
+                viewModel.OrganisationId = organisationId;
+                viewModel.ReturnId = returnId;
+                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 viewModel.OrganisationName = organisationName;
             }
 
