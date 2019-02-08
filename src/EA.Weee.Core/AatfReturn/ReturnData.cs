@@ -16,5 +16,7 @@
         public QuarterWindow QuarterWindow { get; set; }
 
         public List<NonObligatedData> NonObligatedData { get; set; }
+
+        public OperatorData ReturnOperatorData { get; set; }
     }
 }

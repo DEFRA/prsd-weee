@@ -83,6 +83,7 @@
     <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\OperatorData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
