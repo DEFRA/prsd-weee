@@ -1,0 +1,25 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectYourPCSViewModel
+@{
+    ViewBag.Title = "SelectYourPCSView";
+}
+<h2 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h2>
+<h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
+<div class="govuk-!-padding-bottom-5"></div>
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
+        <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" checked id="temp" name="pcs-selection-check"
+                       type="checkbox" value="">
+                <label class="govuk-label govuk-checkboxes__label" for="temp">
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<button type="submit" class="govuk-button" id='addPCS'>
+    Add PCSs
+</button>
+
