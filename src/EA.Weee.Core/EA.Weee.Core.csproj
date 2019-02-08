@@ -79,7 +79,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\CategoryValue.cs" />
+    <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />

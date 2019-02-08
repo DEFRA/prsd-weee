@@ -7,20 +7,20 @@
 
     public class NonObligatedCategoryValues : List<NonObligatedCategoryValue>
     {
-        public NonObligatedCategoryValues()
+        public NonObligatedCategoryValues() : base()
         {
-            foreach (var category in GetEnumValues())
-            {
-                Add(new NonObligatedCategoryValue(category));
-            }
+            //foreach (var category in GetEnumValues())
+            //{
+            //    Add(new NonObligatedCategoryValue(category));
+            //}
         }
 
-        private IEnumerable<WeeeCategory> GetEnumValues()
-        {
-            foreach (var item in Enum.GetValues(typeof(WeeeCategory)))
-            {
-                yield return (WeeeCategory)item;
-            }
-        }
+        //private IEnumerable<WeeeCategory> GetEnumValues()
+        //{
+        //    foreach (var item in Enum.GetValues(typeof(WeeeCategory)))
+        //    {
+        //        yield return (WeeeCategory)item;
+        //    }
+        //}
     }
 }
