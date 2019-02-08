@@ -50,7 +50,7 @@
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
 
-            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues));
+            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues, @return.Operator));
         }
     }
 }
