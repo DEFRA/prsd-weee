@@ -10,16 +10,16 @@
 
     public class OperatorByOrganisationIdSpecification : Specification<Operator>
     {
-        private readonly Guid organisationId;
+        public Guid OrganisationId { get; private set; }
 
         public OperatorByOrganisationIdSpecification(Guid organisationId)
         {
-            this.organisationId = organisationId;
+            OrganisationId = organisationId;
         }
 
         public override Expression<Func<Operator, bool>> ToExpression()
         {
-            return @operator => @operator.Organisation.Id == organisationId;
+            return @operator => @operator.Organisation.Id == OrganisationId;
         }
     }
 }
