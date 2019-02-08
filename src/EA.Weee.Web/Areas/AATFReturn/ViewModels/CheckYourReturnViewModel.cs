@@ -29,7 +29,7 @@
 
         public string NonObligatedDcfTotal { get; set; }
 
-        public string OperatorName { get; set; }
+        public OperatorData ReturnOperator { get; set; }
 
         public Guid ReturnId { get; set; }
 
@@ -44,7 +44,7 @@
             */
             this.NonObliagtedTotal = total.ToString();
             this.NonObligatedDcfTotal = dcftotal.ToString();
-            this.OperatorName = returnOperator.OperatorName;
+            this.ReturnOperator = returnOperator;
         }
     }
 }
