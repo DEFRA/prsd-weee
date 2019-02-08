@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.AatfReturn
+﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
+    using System;
+    using System.Collections.Generic;
 
-    public class CategoryValues : List<CategoryValue>
+    public class CategoryValues<T> : List<T> where T : CategoryValue, new()
     {
         public CategoryValues()
         {
             foreach (var category in GetEnumValues())
             {
-                Add(new CategoryValue(category));
+                Add((T)Activator.CreateInstance(typeof(T), category));
+                //Add(new T(){ CategoryId = (int)category, CategoryDisplay = category.ToString()});
             }
         }
 

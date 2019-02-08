@@ -6,7 +6,6 @@
 
     public class NonObligatedCategoryValue : CategoryValue
     {
-
         [TonnageValue("CategoryId")]
         public string Tonnage { get; set; }
 

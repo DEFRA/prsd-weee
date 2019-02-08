@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using DataReturns;
+    using Helpers;
 
     public class CategoryValue
     {
@@ -19,6 +20,8 @@
 
         public CategoryValue(WeeeCategory category)
         {
+            CategoryDisplay = category.ToDisplayString();
+            CategoryId = (int)category;
         }
     }
 }

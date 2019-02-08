@@ -5,9 +5,9 @@
     using System.Diagnostics;
     using DataReturns;
 
-    public class NonObligatedCategoryValues : CategoryValues<NonObligatedCategoryValue>
+    public class ObligatedCategoryValues : CategoryValues<ObligatedCategoryValue>
     {
-        public NonObligatedCategoryValues() : base()
+        public ObligatedCategoryValues() : base()
         {
         }
     }
