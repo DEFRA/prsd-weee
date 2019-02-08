@@ -78,8 +78,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("NonObligated");
-            result.RouteValues["dcf"].Should().BeEquivalentTo(true);
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteValues["area"].Should().Be("AatfReturn");
         }
 
@@ -91,7 +90,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("CheckYourReturn");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteValues["area"].Should().Be("AatfReturn");
         }
 
