@@ -47,7 +47,7 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var mappedView = mapper.Map<CheckYourReturnViewModel>(@return);
+                var mappedView = mapper.Map<ReturnViewModel>(@return);
 
                 return View("Index", mappedView);
             }

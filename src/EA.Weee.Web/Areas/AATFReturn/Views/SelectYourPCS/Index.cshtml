@@ -10,7 +10,7 @@
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
         <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
-            @foreach (var scheme in Model.schemeList)
+            @foreach (var scheme in Model.SchemeList)
             {
                 <div class="govuk-checkboxes__item">
                     <input class="govuk-checkboxes__input" checked id="@scheme.Name--@scheme.Id" name="pcs-selection-check"

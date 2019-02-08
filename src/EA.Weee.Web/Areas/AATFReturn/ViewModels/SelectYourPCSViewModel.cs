@@ -8,15 +8,15 @@
 
     public class SelectYourPCSViewModel
     {
-        public SelectYourPCSViewModel(List<SchemeData> schemeList) {
-            this.schemeList = schemeList;
+        public SelectYourPCSViewModel(List<SchemeData> schemeList)
+        {
+            this.SchemeList = schemeList;
         }
 
         public SelectYourPCSViewModel()
         {
-
         }
 
-        public List<SchemeData> schemeList;
+        public List<SchemeData> SchemeList;
     }
 }

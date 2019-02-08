@@ -16,7 +16,6 @@
     using System.Web;
     using System.Web.Mvc;
 
-
     public class SelectYourPCSController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -40,7 +39,7 @@
             {
                 var schemeRequest = new GetSchemes();
                 schemeList = await client.SendAsync(User.GetAccessToken(), schemeRequest);
-                viewModel.schemeList = schemeList;
+                viewModel.SchemeList = schemeList;
             }
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 

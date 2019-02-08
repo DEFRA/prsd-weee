@@ -18,13 +18,7 @@
         public CheckYourReturnViewModel()
         {
         }
-        /*
-        public string Year => year.ToString();
 
-        public string Quarter => quarter.Q.ToString();
-
-        public string Period => $"{Quarter} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
-        */
         public string NonObliagtedTotal { get; set; }
 
         public string NonObligatedDcfTotal { get; set; }
@@ -35,13 +29,6 @@
 
         public CheckYourReturnViewModel(OperatorData returnOperator, decimal? total, decimal? dcftotal, Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)
         {
-            /*
-            Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => window, window);
-            this.quarter = quarter;
-            this.quarterWindow = window;
-            this.year = year;
-            */
             this.NonObliagtedTotal = total.ToString();
             this.NonObligatedDcfTotal = dcftotal.ToString();
             this.ReturnOperator = returnOperator;
