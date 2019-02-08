@@ -11,7 +11,7 @@
     public class ReturnToAatfTaskListViewModelMapTests
     {
         private readonly ReturnToReturnViewModelMap map;
-        private readonly string ZeroTonnage = "0.000";
+        private readonly string zeroTonnage = "0.000";
         private Guid mapperTestId;
         private int mapperTestYear;
         private Quarter mapperTestQuarter;
@@ -77,8 +77,8 @@
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
-            result.NonObligatedTonnageTotal.Should().Be(ZeroTonnage);
-            result.NonObligatedTonnageTotalDcf.Should().Be(ZeroTonnage);
+            result.NonObligatedTonnageTotal.Should().Be(zeroTonnage);
+            result.NonObligatedTonnageTotalDcf.Should().Be(zeroTonnage);
         }
 
         [Fact]
@@ -100,8 +100,8 @@
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
-            result.NonObligatedTonnageTotal.Should().Be(ZeroTonnage);
-            result.NonObligatedTonnageTotalDcf.Should().Be(ZeroTonnage);
+            result.NonObligatedTonnageTotal.Should().Be(zeroTonnage);
+            result.NonObligatedTonnageTotalDcf.Should().Be(zeroTonnage);
         }
     }
 }
