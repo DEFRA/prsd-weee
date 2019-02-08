@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\AatfWeeReceivedAmount.cs" />
+    <Compile Include="AatfReturn\AatfWeeReceived.cs" />
+    <Compile Include="AatfReturn\AatfReturn.cs" />
     <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\NonObligatedWeee.cs" />
     <Compile Include="AatfReturn\Operator.cs" />

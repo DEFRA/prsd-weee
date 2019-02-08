@@ -52,6 +52,8 @@
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceived.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedValue.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
