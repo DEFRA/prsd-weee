@@ -29,6 +29,8 @@
 
         public string NonObligatedDcfTotal { get; set; }
 
+        public string OperatorName { get; set; }
+
         public Guid ReturnId { get; set; }
 
         public CheckYourReturnViewModel(decimal? total, decimal? dcftotal, Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)

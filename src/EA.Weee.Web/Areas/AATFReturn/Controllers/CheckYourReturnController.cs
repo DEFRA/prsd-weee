@@ -8,6 +8,7 @@
     using Constant;
     using Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Organisations;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Mapper;
@@ -44,9 +45,15 @@
 
             using (var client = apiClient())
             {
+                var orgResult = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                
-                return View("Index", mapper.Map<CheckYourReturnViewModel>(@return));
+
+                var mappedView = mapper.Map<CheckYourReturnViewModel>(@return);
+
+                mappedView.OperatorName = orgResult.Name;
+
+                return View("Index", mappedView);
             }
         }
 
