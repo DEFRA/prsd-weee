@@ -84,7 +84,7 @@
         {
             var model = A.Fake<ReturnViewModel>();
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(A< ReturnData>._)).Returns(model);
+            A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
 
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
