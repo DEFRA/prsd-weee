@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Charges;
     using Domain;
     using Domain.AatfReturn;
     using FluentAssertions;
@@ -10,6 +11,7 @@
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Country = Domain.Country;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
@@ -26,10 +28,10 @@
 
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var countryId = new Guid("B5EBE1D1-8349-43CD-9E87-0081EA0A8463");
-                var organisationDetailsDataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
-                var country = await organisationDetailsDataAccess.FetchCountryAsync(countryId);
+                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var aatf = CreateAatf(country);
+                var aatf = CreateAatf(competantAuthority);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -37,11 +39,10 @@
             }
         }
 
-        private Aatf CreateAatf(Country country)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority)
         {
-            return new Aatf("name", 
-                new UKCompetentAuthority(Guid.NewGuid(), "competantauth", "abbv",
-                    country, "email"), 
+            return new Aatf("name",
+                competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
                 new Operator(Organisation.CreatePartnership("trading")));
