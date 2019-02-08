@@ -47,7 +47,14 @@
 
             if (!decimal.TryParse(value.ToString(), out var decimalResult))
             {
-                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                if (decimalResult == 0 && (value.ToString() == string.Empty) || value is null)
+                {
+                    return ValidationResult.Success;
+                }
+                else
+                {
+                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                }
             }
             else
             {
