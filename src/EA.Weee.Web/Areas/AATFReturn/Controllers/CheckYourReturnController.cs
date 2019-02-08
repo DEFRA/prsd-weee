@@ -6,6 +6,7 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Organisations;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
@@ -38,9 +39,15 @@
 
             using (var client = apiClient())
             {
+                var orgResult = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                
-                return View("Index", mapper.Map<ReturnViewModel>(@return));
+
+                var mappedView = mapper.Map<ReturnViewModel>(@return);
+
+                mappedView.OrganisationName = orgResult.Name;
+
+                return View("Index", mappedView);
             }
         }
 
