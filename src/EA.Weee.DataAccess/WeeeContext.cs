@@ -144,6 +144,8 @@
 
         public virtual DbSet<Role> Roles { get; set; }
 
+        public virtual DbSet<Aatf> Aatfs { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)

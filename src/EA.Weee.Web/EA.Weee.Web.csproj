@@ -72,9 +72,11 @@
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
@@ -212,16 +214,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToCheckReturnViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
@@ -648,6 +651,8 @@
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

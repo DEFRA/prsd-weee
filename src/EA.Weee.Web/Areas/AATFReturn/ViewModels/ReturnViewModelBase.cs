@@ -11,22 +11,22 @@
 
     public abstract class ReturnViewModelBase : IReturnViewModel
     {
-        private readonly QuarterWindow quarterWindow;
+        protected readonly QuarterWindow QuarterWindow;
         private readonly Quarter quarter;
         private readonly int year;
 
-        public string Year => year.ToString();
+        public virtual string Year => year.ToString();
 
-        public string Quarter => quarter.Q.ToString();
+        public virtual string Quarter => quarter.Q.ToString();
 
-        public string Period => $"{Quarter} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {Year}";
+        public virtual string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {Year}";
 
         protected ReturnViewModelBase(Quarter quarter, QuarterWindow window, int year)
         {
             Guard.ArgumentNotNull(() => quarter, quarter);
             Guard.ArgumentNotNull(() => window, window);
 
-            this.quarterWindow = window;
+            this.QuarterWindow = window;
             this.quarter = quarter;
             this.year = year;
         }
