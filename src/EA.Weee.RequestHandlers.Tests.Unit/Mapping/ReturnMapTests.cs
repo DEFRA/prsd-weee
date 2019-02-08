@@ -57,6 +57,23 @@
         }
 
         [Fact]
+        public void Map_GivenSource_OperatorShouldBeMapped()
+        {
+            var @return = GetReturn();
+
+            var organisation = Organisation.CreatePartnership("trading name");
+            var @operator = new Operator(organisation);
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<NonObligatedWeee>>(), @operator);
+
+            var result = map.Map(source);
+
+            result.ReturnOperatorData.OperatorName.Should().Be(@operator.Organisation.TradingName);
+            result.ReturnOperatorData.OrganisationId.Should().Be(@operator.Organisation.Id);
+            result.ReturnOperatorData.Id.Should().Be(@operator.Id);
+        }
+
+        [Fact]
         public void Map_GivenSource_NonObligatedValuesShouldBeMapped()
         {
             var @return = GetReturn();
@@ -87,6 +104,15 @@
         }
 
         public Domain.DataReturns.QuarterWindow GetQuarterWindow()
+        {
+            var startTime = DateTime.Now;
+            var endTime = DateTime.Now.AddDays(1);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
+
+            return quarterWindow;
+        }
+
+        public Domain.DataReturns.QuarterWindow GetQuarterWindowWithOperator()
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
