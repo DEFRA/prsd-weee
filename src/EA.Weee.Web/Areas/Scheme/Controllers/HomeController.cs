@@ -184,8 +184,8 @@
                         var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
                             new AddReturn() { OrganisationId = viewModel.OrganisationId });
 
-                        return RedirectToAction("Index", "NonObligated",
-                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId, dcf = false });
+                        return RedirectToAction("Index", "AatfTaskList",
+                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = aatfReturnId });
                     }
                 }
             }
