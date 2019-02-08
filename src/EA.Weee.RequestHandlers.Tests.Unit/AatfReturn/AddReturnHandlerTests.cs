@@ -90,8 +90,6 @@
             var organisation = A.Fake<Organisation>();
             var request = new AddReturn { OrganisationId = organisationId };
 
-            var specification = new OperatorByOrganisationIdSpecification(request.OrganisationId);
-
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => organisation.Id).Returns(organisationId);
 
