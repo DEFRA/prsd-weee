@@ -10,12 +10,16 @@
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
         <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
-            <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" checked id="temp" name="pcs-selection-check"
-                       type="checkbox" value="">
-                <label class="govuk-label govuk-checkboxes__label" for="temp">
-                </label>
-            </div>
+            @foreach (var scheme in Model.schemeList)
+            {
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" checked id="@scheme.Name--@scheme.Id" name="pcs-selection-check"
+                           type="checkbox" value="">
+                    <label class="govuk-label govuk-checkboxes__label" for="@scheme.Name#@scheme.Id">
+                        @scheme.Name  - @scheme.Id
+                    </label>
+                </div>
+            }
         </div>
     </fieldset>
 </div>
