@@ -101,7 +101,7 @@
 
             var result = await handler.HandleAsync(A.Dummy<GetReturn>());
 
-            A.CallTo(() => quarterWindowFactory.GetQuarter(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -122,7 +122,7 @@
             var nonObligatedValues = new List<NonObligatedWeee>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
-            A.CallTo(() => quarterWindowFactory.GetQuarter(A<Quarter>._)).Returns(quarterWindow);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
