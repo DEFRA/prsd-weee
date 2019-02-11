@@ -17,5 +17,6 @@
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
         public SchemeDataAvailability SchemeDataAvailability { get; set; }
         public bool CanEdit { get; set; }
+        public bool Selected { get; set; }
     }
 }

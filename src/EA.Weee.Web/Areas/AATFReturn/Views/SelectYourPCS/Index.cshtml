@@ -4,26 +4,38 @@
 @{
     ViewBag.Title = "SelectYourPCSView";
 }
-<h2 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h2>
-<h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
-<div class="govuk-!-padding-bottom-5"></div>
-<div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
-        <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
-            @foreach (var scheme in Model.SchemeList)
-            {
+@using (Html.BeginForm("Index", "SelectYourPCS", FormMethod.Post))
+{
+    <h2 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h2>
+    <h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
+            <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
+                @for (var i = 0; i < Model.SchemeList.Count; i++)
+                {
+                    <div class="govuk-checkboxes__item">
+                        <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
+                        <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name#@Model.SchemeList[i].Id">
+                            @Model.SchemeList[i].Name  - @Model.SchemeList[i].ApprovalName
+                        </label>
+                    </div>
+                }
                 <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" checked id="@scheme.Name--@scheme.Id" name="pcs-selection-check"
-                           type="checkbox" value="">
-                    <label class="govuk-label govuk-checkboxes__label" for="@scheme.Name#@scheme.Id">
-                        @scheme.Name  - @scheme.Id
+                    <input type="checkbox" name="SelectedSchemes" value="TEST" class="govuk-checkboxes__input" id="TEST" />
+                    <label class="govuk-label govuk-checkboxes__label" for="TEST">
+                        TEST  - TEST
                     </label>
                 </div>
-            }
-        </div>
-    </fieldset>
-</div>
-<button type="submit" class="govuk-button" id='addPCS'>
-    Add PCSs
-</button>
+            </div>
+        </fieldset>
+    </div>
 
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.OrganisationId)
+    @Html.HiddenFor(m => m.ReturnId)
+    @Html.HiddenFor(m => m.SchemeList)
+    <button type="submit" class="govuk-button">
+        Add PCSs
+    </button>
+}

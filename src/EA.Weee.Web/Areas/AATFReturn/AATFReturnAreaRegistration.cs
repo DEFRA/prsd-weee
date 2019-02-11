@@ -12,6 +12,12 @@
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapLowercaseDashedRoute(
+    name: "AatfReturn_SelectYourPCS",
+    url: "AatfReturn/{organisationId}/{controller}/{action}/{entityId}",
+    defaults: new { action = "Index", controller = "SelectYourPCS", entityId = UrlParameter.Optional },
+    namespaces: new[] { typeof(SelectYourPCSController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "AatfReturn_NonObligatedDcf",
                 url: "AatfReturn/{organisationId}/{returnId}/{controller}/dcf/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "NonObligated", Dcf = true, entityId = UrlParameter.Optional },
