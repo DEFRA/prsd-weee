@@ -654,6 +654,8 @@
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
