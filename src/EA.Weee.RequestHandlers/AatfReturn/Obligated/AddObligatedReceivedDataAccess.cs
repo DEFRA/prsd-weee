@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
@@ -17,7 +18,7 @@
             this.context = context;
         }
 
-        public Task Submit(IEnumerable<AatfWeeeReceivedAmount> aatfWeeReceivedAmounts)
+        public Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmounts)
         {
             foreach (var aatfWeeReceived in aatfWeeReceivedAmounts)
             {
@@ -34,7 +35,9 @@
 
         public async Task<Guid> GetAatfId(Guid organisationId)
         {
-            return (await context.Aatfs.FirstOrDefaultAsync(a => a.Operator.Id == organisationId)).Id;
+            return (await context.Aatfs
+                    .Include(c => c.Operator)
+                .FirstOrDefaultAsync(a => a.Operator.Organisation.Id == organisationId)).Id;
         }
     }
 }

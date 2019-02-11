@@ -7,7 +7,7 @@
 
     internal interface IAddObligatedReceivedDataAccess
     {
-        Task Submit(IEnumerable<AatfWeeeReceivedAmount> aatfWeeReceivedAmount);
+        Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmount);
         Task<Guid> GetSchemeId(Guid organisationId);
         Task<Guid> GetAatfId(Guid organisationId);
     }

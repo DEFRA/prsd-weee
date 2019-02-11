@@ -3,7 +3,7 @@
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class AatfWeeeReceivedMapping : EntityTypeConfiguration<AatfWeeeReceived>
+    internal class AatfWeeeReceivedMapping : EntityTypeConfiguration<WeeeReceived>
     {
         public AatfWeeeReceivedMapping()
         {

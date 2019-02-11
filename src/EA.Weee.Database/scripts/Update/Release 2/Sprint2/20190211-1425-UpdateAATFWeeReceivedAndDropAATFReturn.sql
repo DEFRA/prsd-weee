@@ -3,7 +3,7 @@ ALTER TABLE [AATF].[WeeeReceived] DROP COLUMN AATFReturnId
 ALTER TABLE [AATF].[WeeeReceived] ADD  ReturnId uniqueidentifier NOT NULL
 ALTER TABLE [AATF].[WeeeReceived] ADD CONSTRAINT FK_Return_ReturnId FOREIGN KEY (ReturnId) REFERENCES [AATF].[Return](Id);
 ALTER TABLE [AATF].[WeeeReceived] Add AatfId uniqueidentifier NOT NULL
-ALTER TABLE [AATF].[WeeeReceived] ADD CONSTRAINT FK_Aatf_AatfId FOREIGN KEY (AatfId) REFERENCES [AATF].[AATF](Id);#
+ALTER TABLE [AATF].[WeeeReceived] ADD CONSTRAINT FK_Aatf_AatfId FOREIGN KEY (AatfId) REFERENCES [AATF].[AATF](Id);
 ALTER TABLE [AATF].[AATFReturnReportOn] DROP CONSTRAINT [FK_AATFReturnReportOn_AATFReturn]
 ALTER TABLE [AATF].[AATFReturnScheme] DROP CONSTRAINT [FK_AATFReturnScheme_AATFReturn]
 ALTER TABLE [AATF].[WeeeReused] DROP CONSTRAINT [FK_WeeeReused_AATFReturn]

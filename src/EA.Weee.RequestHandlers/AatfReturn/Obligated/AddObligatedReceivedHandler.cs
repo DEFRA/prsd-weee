@@ -27,18 +27,16 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfWeeReceived = new AatfWeeeReceived(
+            var aatfWeeReceived = new WeeeReceived(
                 await obligatedReceivedDataAccess.GetSchemeId(message.OrganisationId),
                 await obligatedReceivedDataAccess.GetAatfId(message.OrganisationId),
                 message.ReturnId);
 
-            var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
-
-            var aatfWeeReceivedAmount = new List<AatfWeeeReceivedAmount>();
+            var aatfWeeReceivedAmount = new List<WeeeReceivedAmount>();
 
             foreach (var categoryValue in message.Tonnage)
             {
-                aatfWeeReceivedAmount.Add(new AatfWeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
             await obligatedReceivedDataAccess.Submit(aatfWeeReceivedAmount);
