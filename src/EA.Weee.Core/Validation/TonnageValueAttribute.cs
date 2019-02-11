@@ -58,7 +58,7 @@
             }
             else
             {
-                if (decimalResult < 0 || value.ToString() == "-0")
+                if (decimalResult < 0 || value.ToString().Substring(0, 1) == "-")
                 {
                     return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
                 }
