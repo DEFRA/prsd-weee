@@ -8,6 +8,7 @@
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
+    using EA.Weee.Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -33,7 +34,7 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<QuarterWindow>());
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>());
 
             var result = map.Map(source);
 
@@ -46,13 +47,30 @@
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
             var source = new ReturnQuarterWindow(GetReturn(), quarterWindow);
 
             var result = map.Map(source);
 
             result.QuarterWindow.EndDate.Should().Be(endTime);
             result.QuarterWindow.StartDate.Should().Be(startTime);
+        }
+
+        [Fact]
+        public void Map_GivenSource_OperatorShouldBeMapped()
+        {
+            var @return = GetReturn();
+
+            var organisation = Organisation.CreatePartnership("trading name");
+            var @operator = new Operator(organisation);
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<NonObligatedWeee>>(), @operator);
+
+            var result = map.Map(source);
+
+            result.ReturnOperatorData.OperatorName.Should().Be(@operator.Organisation.TradingName);
+            result.ReturnOperatorData.OrganisationId.Should().Be(@operator.Organisation.Id);
+            result.ReturnOperatorData.Id.Should().Be(@operator.Id);
         }
 
         [Fact]
@@ -85,11 +103,20 @@
             return @return;
         }
 
-        public QuarterWindow GetQuarterWindow()
+        public Domain.DataReturns.QuarterWindow GetQuarterWindow()
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
+
+            return quarterWindow;
+        }
+
+        public Domain.DataReturns.QuarterWindow GetQuarterWindowWithOperator()
+        {
+            var startTime = DateTime.Now;
+            var endTime = DateTime.Now.AddDays(1);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
 
             return quarterWindow;
         }
