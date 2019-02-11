@@ -33,14 +33,14 @@
 
             A.CallTo(() => dataAccess.GetByQuarter((int)quarter.Q)).Returns(quarterWindowTemplate);
 
-            var result = await quarterWindowFactory.GetQuarter(quarter);
+            var result = await quarterWindowFactory.GetAnnualQuarter(quarter);
 
             result.StartDate.Year.Should().Be(2019);
-            result.StartDate.Month.Should().Be(4);
+            result.StartDate.Month.Should().Be(1);
             result.StartDate.Day.Should().Be(1);
             result.EndDate.Year.Should().Be(2019);
-            result.EndDate.Month.Should().Be(6);
-            result.EndDate.Day.Should().Be(30);
+            result.EndDate.Month.Should().Be(3);
+            result.EndDate.Day.Should().Be(31);
         }
 
         [Fact]
@@ -51,13 +51,13 @@
 
             A.CallTo(() => dataAccess.GetByQuarter((int)quarter.Q)).Returns(quarterWindowTemplate);
 
-            var result = await quarterWindowFactory.GetQuarter(quarter);
+            var result = await quarterWindowFactory.GetAnnualQuarter(quarter);
 
             result.StartDate.Year.Should().Be(2019);
-            result.StartDate.Month.Should().Be(7);
+            result.StartDate.Month.Should().Be(4);
             result.StartDate.Day.Should().Be(1);
             result.EndDate.Year.Should().Be(2019);
-            result.EndDate.Month.Should().Be(9);
+            result.EndDate.Month.Should().Be(6);
             result.EndDate.Day.Should().Be(30);
         }
 
@@ -69,14 +69,14 @@
 
             A.CallTo(() => dataAccess.GetByQuarter((int)quarter.Q)).Returns(quarterWindowTemplate);
 
-            var result = await quarterWindowFactory.GetQuarter(quarter);
+            var result = await quarterWindowFactory.GetAnnualQuarter(quarter);
 
             result.StartDate.Year.Should().Be(2019);
-            result.StartDate.Month.Should().Be(10);
+            result.StartDate.Month.Should().Be(7);
             result.StartDate.Day.Should().Be(1);
             result.EndDate.Year.Should().Be(2019);
-            result.EndDate.Month.Should().Be(12);
-            result.EndDate.Day.Should().Be(31);
+            result.EndDate.Month.Should().Be(9);
+            result.EndDate.Day.Should().Be(30);
         }
 
         [Fact]
@@ -87,13 +87,13 @@
 
             A.CallTo(() => dataAccess.GetByQuarter((int)quarter.Q)).Returns(quarterWindowTemplate);
 
-            var result = await quarterWindowFactory.GetQuarter(quarter);
+            var result = await quarterWindowFactory.GetAnnualQuarter(quarter);
 
-            result.StartDate.Year.Should().Be(2020);
-            result.StartDate.Month.Should().Be(1);
+            result.StartDate.Year.Should().Be(2019);
+            result.StartDate.Month.Should().Be(10);
             result.StartDate.Day.Should().Be(1);
-            result.EndDate.Year.Should().Be(2020);
-            result.EndDate.Month.Should().Be(3);
+            result.EndDate.Year.Should().Be(2019);
+            result.EndDate.Month.Should().Be(12);
             result.EndDate.Day.Should().Be(31);
         }
 
