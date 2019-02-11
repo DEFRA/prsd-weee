@@ -76,6 +76,7 @@
 
         [Theory]
         [InlineData("-0")]
+        [InlineData("-00")]
         public void ValidationResult_ValueIsNegativeZero_ErrorMessageShouldBeCorrect(string input)
         {
             var result = Validate(input);
@@ -130,11 +131,10 @@
 
         [Theory]
         [InlineData("00000000000000")]
-        [InlineData("000000000000000")]
-        [InlineData("000000000000.00")]
-        [InlineData("000000000000.00")]
-        [InlineData("00000000000.000")]
-        public void IsValid_GivenValueIsFifteenOrLessCharactors_ReturnsTrue(object input)
+        [InlineData("000000000000.0")]
+        [InlineData("00000000000.00")]
+        [InlineData("0000000000.000")]
+        public void IsValid_GivenValueIsFourteenOrLessCharactors_ReturnsTrue(object input)
         {
             var result = Validate(input);
 
@@ -142,11 +142,11 @@
         }
 
         [Theory]
-        [InlineData("0000000000000000")]
-        [InlineData("00000000000000.0")]
-        [InlineData("0000000000000.00")]
-        [InlineData("000000000000.000")]
-        public void IsValid_GivenValueIsMoreThanFifteenCharactors_ReturnsFalse(object input)
+        [InlineData("000000000000000")]
+        [InlineData("0000000000000.0")]
+        [InlineData("000000000000.00")]
+        [InlineData("00000000000.000")]
+        public void IsValid_GivenValueIsMoreThanFourteenCharactors_ReturnsFalse(object input)
         {
             var result = Validate(input);
 
@@ -154,10 +154,10 @@
         }
 
         [Theory]
-        [InlineData("0000000000000000")]
-        [InlineData("00000000000000.0")]
-        [InlineData("0000000000000.00")]
-        [InlineData("000000000000.000")]
+        [InlineData("000000000000000")]
+        [InlineData("0000000000000.0")]
+        [InlineData("000000000000.00")]
+        [InlineData("00000000000.000")]
         public void IsValid_GivenValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect(object input)
         {
             var result = Validate(input);

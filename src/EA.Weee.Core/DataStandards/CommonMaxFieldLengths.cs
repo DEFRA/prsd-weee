@@ -13,6 +13,6 @@
         public const int Telephone = 20;
         public const int Password = 100;
         public const int Year = 4;
-        public const int Tonnage = 15;
+        public const int Tonnage = 14;
     }
 }
