@@ -226,6 +226,7 @@
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />

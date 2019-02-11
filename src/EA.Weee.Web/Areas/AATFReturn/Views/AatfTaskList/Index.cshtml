@@ -12,6 +12,7 @@
 @using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    @Html.ActionLink("GO TO OBLIGATED RECEIVED SCREEN", "Index", "ObligatedReceived", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId}, new { @class = "govuk-link govuk-link--no-visited-state" })
     <table class="govuk-table" style="width: 30%;" id="compliance-information-table">
         <tbody>
             <tr class="govuk-table__row">

@@ -95,6 +95,7 @@
     <Compile Include="DataAccess\SchemeDataAccessTests.cs" />
     <Compile Include="MigratedProducersIntegration.cs" />
     <Compile Include="NonObligatedWeeeIntegration.cs" />
+    <Compile Include="ObligatedReceivedWeeIntegration.cs" />
     <Compile Include="OrganisationIntegration.cs" />
     <Compile Include="PrnGenerationIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

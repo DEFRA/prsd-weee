@@ -4,15 +4,15 @@
     {
         public int CategoryId { get; private set; }
 
-        public decimal? Tonnage { get; private set; }
+        public decimal? HouseholdTonnage { get; private set; }
 
-        public bool IsHousehold { get; private set; }
-
-        public ObligatedReceivedValue(int categoryId, decimal? tonnage, bool isHousehold)
+        public decimal? NonHouseholdTonnage { get; private set; }
+        
+        public ObligatedReceivedValue(int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
         {
             CategoryId = categoryId;
-            Tonnage = tonnage;
-            IsHousehold = isHousehold;
+            HouseholdTonnage = householdTonnage;
+            NonHouseholdTonnage = nonHouseholdTonnage;
         }
     }
 }

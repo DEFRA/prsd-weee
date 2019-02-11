@@ -33,6 +33,8 @@
 
         public virtual DbSet<NonObligatedWeee> NonObligatedWeee { get; set; }
 
+        public virtual DbSet<AatfWeeeReceivedAmount> AatfWeeReceivedAmount { get; set; }
+
         public virtual DbSet<Return> Returns { get; set; }
 
         public virtual DbSet<Operator> Operators { get; set; }
