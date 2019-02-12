@@ -93,6 +93,7 @@
     <Compile Include="Mappings\OperatorMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\AatfStatusMapping.cs" />
+    <Compile Include="Mappings\ReturnSchemeMapping.cs" />
     <Compile Include="Mappings\RoleMapping.cs" />
     <Compile Include="Mappings\ReturnStatusMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
