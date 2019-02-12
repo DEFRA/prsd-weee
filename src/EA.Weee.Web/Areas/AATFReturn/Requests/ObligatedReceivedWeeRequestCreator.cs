@@ -14,8 +14,8 @@
 
             foreach (var categoryValue in viewModel.CategoryValues)
             {
-                var householdValue = ConvertStringToDecimal(categoryValue.HouseHold);
-                var nonHouseholdValue = ConvertStringToDecimal(categoryValue.NonHouseHold);
+                var householdValue = ConvertStringToDecimal(categoryValue.B2C);
+                var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
 
                 obligatedRequestValues.Add(
                     new ObligatedReceivedValue(

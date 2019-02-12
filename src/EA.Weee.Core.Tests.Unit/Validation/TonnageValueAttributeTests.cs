@@ -149,7 +149,7 @@
         [InlineData("00000000000000.0")]
         [InlineData("0000000000000.00")]
         [InlineData("000000000000.000")]
-        public void IsValid_GivenValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect(object input)
+        public void ValidationResult_GivenValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect(object input)
         {
             var result = Validate(input);
 
@@ -157,19 +157,47 @@
         }
 
         [Fact]
-        //TEST EMPTY MESSAGE
-        public void IsValid_GivenTypeMessageIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
+        public void ValidationResult_GivenTypeMessageIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessage(-1);
+
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 0 or greater");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageIsProvidedAndValueIsNotANumber_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessage("A");
+
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageIsProvidedAndValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessage("000000000000.000");
+
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value with 15 digits or less");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageIsProvidedAndValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessage(1.1111M);
+
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 3 decimal places or less");
+        }
+
+        private void ValidationWithTypeMessage(object value)
         {
             var tonnageValueModel = new TestTonnageValueWithTypeMessage()
             {
                 Category = Category,
-                Tonnage = "-1"
+                Tonnage = value
             };
 
             var validationContext = new ValidationContext(tonnageValueModel);
             Validator.TryValidateObject(tonnageValueModel, validationContext, validationResults, true);
-
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 0 or greater");
         }
 
         private void ValidateErrorMessage(string errorMessage)

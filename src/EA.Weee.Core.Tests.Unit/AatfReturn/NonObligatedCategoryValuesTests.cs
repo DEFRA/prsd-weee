@@ -45,8 +45,8 @@
         {
             var result = new ObligatedCategoryValues();
 
-            result.Count(c => c.HouseHold != null).Should().Be(0);
-            result.Count(c => c.NonHouseHold != null).Should().Be(0);
+            result.Count(c => c.B2C != null).Should().Be(0);
+            result.Count(c => c.B2B != null).Should().Be(0);
         }
 
         [Fact]

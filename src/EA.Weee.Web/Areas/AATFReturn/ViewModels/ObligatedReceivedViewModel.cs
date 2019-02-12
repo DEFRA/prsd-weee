@@ -40,9 +40,9 @@
                 CategoryValues.Add(categoryValue);
             }
         }
-        public string HouseHoldTotal => Total(CategoryValues, true);
+        public string B2CTotal => Total(CategoryValues, true);
 
-        public string NonHouseHoldTotal => Total(CategoryValues, false);
+        public string B2BTotal => Total(CategoryValues, false);
 
         public string Total(IList<ObligatedCategoryValue> categoryValues, bool isHousehold)
         {
@@ -50,11 +50,11 @@
             var values = new List<string>();
             if (isHousehold)
             {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.HouseHold) && decimal.TryParse(c.HouseHold, out var output)).Select(c => c.HouseHold).ToList();
+                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2C) && decimal.TryParse(c.B2C, out var output)).Select(c => c.B2C).ToList();
             }
             else
             {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.NonHouseHold) && decimal.TryParse(c.NonHouseHold, out var output)).Select(c => c.NonHouseHold).ToList();
+                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2B) && decimal.TryParse(c.B2B, out var output)).Select(c => c.B2B).ToList();
             }
 
             if (values.Any())

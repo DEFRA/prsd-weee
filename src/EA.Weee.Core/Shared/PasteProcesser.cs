@@ -42,12 +42,12 @@
                 {
                     if (splitLine.Length > 0 && !string.IsNullOrWhiteSpace(splitLine[0]))
                     {
-                        category.HouseHold = splitLine[0];
+                        category.B2C = splitLine[0];
                     }
 
                     if (splitLine.Length > 1 && !string.IsNullOrWhiteSpace(splitLine[1]))
                     {
-                        category.NonHouseHold = splitLine[1];
+                        category.B2B = splitLine[1];
                     }
                 }
             }
