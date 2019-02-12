@@ -2,6 +2,8 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -24,6 +26,7 @@
         private readonly SelectYourPCSController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        public List<SchemeData> SchemeList;
 
         public SelectYourPCSControllerTests()
         {
@@ -57,18 +60,6 @@
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
-        }
-
-        [Fact]
-        public async void IndexGet_GivenReturn_SelectYourPCSViewModelShouldBeReturned()
-        {
-            var orgId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var model = new SelectYourPCSViewModel();
-
-            var result = await controller.Index(orgId, returnId) as ViewResult;
-
-            result.Model.Should().Be(model);
         }
     }
 }
