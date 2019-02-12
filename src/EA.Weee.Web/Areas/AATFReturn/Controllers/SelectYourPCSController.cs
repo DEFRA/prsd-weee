@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -52,10 +53,20 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            foreach (var scheme in viewModel.SelectedSchemes)
+            using (var client = apiClient())
             {
+                foreach (var scheme in viewModel.SelectedSchemes)
+                {
+                    var returnSchemeRequest = new AddReturnScheme()
+                    {
+                        SchemeId = scheme,
+                        ReturnId = viewModel.ReturnId
+                    };
+
+                    await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                }
             }
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return RedirectToAction("Index", "AatfTaskList",
                                         new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
         }
