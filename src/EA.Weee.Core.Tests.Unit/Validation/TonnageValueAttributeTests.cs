@@ -72,7 +72,16 @@
             var result = Validate(input);
 
             ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value");
-        }       
+        }
+
+        [Theory]
+        [InlineData("-0")]
+        public void ValidationResult_ValueIsNegativeZero_ErrorMessageShouldBeCorrect(string input)
+        {
+            var result = Validate(input);
+
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 0 or greater");
+        }
 
         [Fact]
         public void IsValid_ValueIsLessThanZero_ReturnsFalse()

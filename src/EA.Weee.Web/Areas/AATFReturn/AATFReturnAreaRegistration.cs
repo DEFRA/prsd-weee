@@ -35,6 +35,12 @@
                 defaults: new { action = "Index", controller = "SubmittedReturn" },
                 namespaces: new[] { typeof(SubmittedReturnController).Namespace });
 
+             context.MapLowercaseDashedRoute(
+               name: "AatfReturn_holding",
+               url: "AatfReturn/{controller}/{action}",
+               defaults: new { action = "Index", controller = "Holding"},
+               namespaces: new[] { typeof(HoldingController).Namespace });
+
             context.MapLowercaseDashedRoute(
                 name: "AatfReturn_default",
                 url: "AatfReturn/{organisationId}/{controller}/{action}/{entityId}",
