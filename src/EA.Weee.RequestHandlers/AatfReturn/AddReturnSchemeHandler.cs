@@ -34,13 +34,8 @@
 
             var @return = await returnDataAccess.GetById(message.ReturnId);
             var returnScheme = new ReturnScheme(scheme, @return);
-            try
-            {
-                await returnSchemeDataAccess.Submit(returnScheme);
-            }
-            catch (Exception ex)
-            {
-            }
+
+            await returnSchemeDataAccess.Submit(returnScheme);
 
             return returnScheme.Id;
         }

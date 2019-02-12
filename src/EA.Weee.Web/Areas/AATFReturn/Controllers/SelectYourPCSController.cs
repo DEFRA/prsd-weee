@@ -46,7 +46,7 @@
             }
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-            return View(viewModel);
+            return View("Index", viewModel);
         }
 
         [HttpPost]

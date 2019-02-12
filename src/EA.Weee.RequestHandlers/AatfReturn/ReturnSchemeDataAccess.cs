@@ -3,7 +3,9 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class ReturnSchemeDataAccess : IReturnSchemeDataAccess
@@ -24,9 +26,9 @@
             return scheme.Id;
         }
 
-        public async Task<ReturnScheme> GetById(Guid returnSchemeId)
+        public async Task<List<Guid>> GetSelectedSchemesByReturnId(Guid returnId)
         {
-            return await context.ReturnScheme.Include(r => r.Scheme).Include(r => r.Return).SingleOrDefaultAsync(o => o.Id == returnSchemeId);
+            return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Select(now => now.SchemeId).ToListAsync();
         }
     }
 }

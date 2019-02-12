@@ -11,6 +11,6 @@
     {
         Task<Guid> Submit(ReturnScheme scheme);
 
-        Task<ReturnScheme> GetById(Guid returnSchemeId);
+        Task<List<Guid>> GetSelectedSchemesByReturnId(Guid returnId);
     }
 }

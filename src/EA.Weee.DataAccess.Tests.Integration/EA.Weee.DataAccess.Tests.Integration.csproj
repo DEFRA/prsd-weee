@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="Auditing\AuditingTests.cs" />
     <Compile Include="DataAccess\SchemeDataAccessTests.cs" />
     <Compile Include="MigratedProducersIntegration.cs" />
