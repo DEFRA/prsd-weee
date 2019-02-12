@@ -156,6 +156,22 @@
             ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 15 digits or less");
         }
 
+        [Fact]
+        //TEST EMPTY MESSAGE
+        public void IsValid_GivenTypeMessageIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
+        {
+            var tonnageValueModel = new TestTonnageValueWithTypeMessage()
+            {
+                Category = Category,
+                Tonnage = "-1"
+            };
+
+            var validationContext = new ValidationContext(tonnageValueModel);
+            Validator.TryValidateObject(tonnageValueModel, validationContext, validationResults, true);
+
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 0 or greater");
+        }
+
         private void ValidateErrorMessage(string errorMessage)
         {
             validationResults.Count(e => e.ErrorMessage == errorMessage).Should().Be(1);
@@ -198,6 +214,14 @@
         public class TestTonnageValue
         {
             [TonnageValue(CategoryIdProperty)]
+            public object Tonnage { get; set; }
+
+            public WeeeCategory Category { get; set; }
+        }
+
+        public class TestTonnageValueWithTypeMessage
+        {
+            [TonnageValue(CategoryIdProperty, "B2C")]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }

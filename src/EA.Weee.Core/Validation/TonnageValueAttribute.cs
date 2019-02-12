@@ -11,10 +11,18 @@
     public class TonnageValueAttribute : ValidationAttribute
     {
         private readonly string categoryProperty;
+        private readonly string typeMessage;
 
         public TonnageValueAttribute(string category)
         {
             this.categoryProperty = category;
+            this.typeMessage = null;
+        }
+
+        public TonnageValueAttribute(string category, string typeMessage)
+        {
+            this.categoryProperty = category;
+            this.typeMessage = typeMessage;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -90,7 +98,9 @@
 
         private string GenerateMessage(string message, int categoryId)
         {
-            return $"Category {categoryId} tonnage value must be {message}";
+            var additionalMessage = typeMessage == null ? string.Empty : $" {typeMessage}";
+            
+            return $"Category {categoryId}{additionalMessage} tonnage value must be {message}";
         }
     }
 }
