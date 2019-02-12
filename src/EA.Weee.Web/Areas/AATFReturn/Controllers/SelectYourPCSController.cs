@@ -31,19 +31,33 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            var viewModel = new SelectYourPCSViewModel();
+            var viewModel = new SelectYourPCSViewModel()
+            {
+                OrganisationId = organisationId,
+                ReturnId = returnId
+            };
 
             using (var client = apiClient())
             {
-                var schemeRequest = new GetSchemes();
-                schemeList = await client.SendAsync(User.GetAccessToken(), schemeRequest);
-                viewModel.SchemeList = schemeList;
+                viewModel.SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal());
             }
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
+        {
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            foreach (var scheme in viewModel.SelectedSchemes)
+            {
+            }
+            return RedirectToAction("Index", "AatfTaskList",
+                                        new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

@@ -17,6 +17,12 @@
         {
         }
 
-        public List<SchemeData> SchemeList;
+        public List<SchemeData> SchemeList { get; set; }
+
+        public List<Guid> SelectedSchemes { get; set; }
+
+        public Guid OrganisationId { get; set; }
+
+        public Guid ReturnId { get; set; }
     }
 }

@@ -6,5 +6,7 @@
     public interface IGetSchemesDataAccess
     {
         Task<IList<Domain.Scheme.Scheme>> GetCompleteSchemes();
+
+        Task<IList<Domain.Scheme.Scheme>> GetAllSchemes();
     }
 }

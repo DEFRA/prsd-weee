@@ -22,5 +22,10 @@
                 .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
                 .ToListAsync();
         }
+
+        public async Task<IList<Domain.Scheme.Scheme>> GetAllSchemes()
+        {
+            return await context.Schemes.ToListAsync();
+        }
     }
 }
