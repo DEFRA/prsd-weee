@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using DataAccess;
     using Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligatesd;
+    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
     using FakeItEasy;
     using FluentAssertions;
     using Weee.Tests.Core;

@@ -10,10 +10,11 @@
 
     public class ObligatedCategoryValue : CategoryValue
     {
-        [TonnageValue("CategoryId")]
-        public string HouseHold { get; set; }
+        [TonnageValue("CategoryId", "B2C")]
+        public string B2C { get; set; }
 
-        public string NonHouseHold { get; set; }
+        [TonnageValue("CategoryId", "B2B")]
+        public string B2B { get; set; }
 
         public ObligatedCategoryValue()
         {

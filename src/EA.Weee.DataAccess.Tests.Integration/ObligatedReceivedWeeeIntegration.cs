@@ -7,19 +7,18 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
     using EA.Weee.Requests.AatfReturn.ObligatedReceived;
     using EA.Weee.Tests.Core.Model;
+    using FluentAssertions;
     using Xunit;
-    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
-    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
+    using Aatf = Domain.AatfReturn.Aatf;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
-    using Scheme = Domain.Scheme.Scheme;
-    using Aatf = Domain.AatfReturn.Aatf;
     using Return = Domain.AatfReturn.Return;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligatesd;
-    using FluentAssertions;
-    using System.Data.Entity;
+    using Scheme = Domain.Scheme.Scheme;
+    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
+    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
 
     public class ObligatedReceivedWeeeIntegration
     {
@@ -38,20 +37,20 @@
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var scheme = new Scheme(organisation);
 
+                var operatorTest = new Operator(organisation);
+                var competentAuthority = context.UKCompetentAuthorities.FirstOrDefault();
+                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
+                var quarter = new Quarter(2019, QuarterType.Q1);
+                var @return = new Return(operatorTest, quarter, ReturnStatus.Created);
+
+                context.Returns.Add(@return);
                 context.Organisations.Add(organisation);
                 context.Schemes.Add(scheme);
+                context.Aatfs.Add(aatf);
                 await context.SaveChangesAsync();
-
-                var allOrganisations = context.Organisations.ToList();
-                var allSchemes = context.Schemes.ToList();
-                var schemeId = (await context.Schemes.FirstOrDefaultAsync(s => s.OrganisationId == organisation.Id)).Id;
-                var aatfId = (await context.Aatfs
-                    .Include(c => c.Operator)
-                    .FirstOrDefaultAsync(a => a.Operator.Organisation.Id == organisation.Id)).Id;
-
-                var operatorTest = new Operator(organisation);
-                var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter, ReturnStatus.Created);
+                
+                var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
+                var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
 
                 var categoryValues = new List<ObligatedReceivedValue>();
 
@@ -62,24 +61,26 @@
 
                 var obligatedWeeeRequest = new AddObligatedReceived
                 {
-                    ReturnId = aatfReturn.Id,
+                    ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
 
-                var weeeReceived = new WeeeReceived(schemeId, aatfId, aatfReturn.Id);
+                var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
 
-                var weeeReceivedAmounts = new List<WeeeReceivedAmount>();
+                var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
                 foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
                 {
-                    weeeReceivedAmounts.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId,categoryValue.HouseholdTonnage,categoryValue.NonHouseholdTonnage));
+                    weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
 
-                await addObligatedReceivedDataAccess.Submit(weeeReceivedAmounts);
+                await addObligatedReceivedDataAccess.Submit(weeeReceivedAmount);
+
+                var allWeeeReceived = context.AatfWeeReceivedAmount.ToList();
 
                 var thisTestObligatedWeeeArray =
-                    context.AatfWeeReceivedAmount.Where(t => t.WeeeReceived.ReturnId == aatfReturn.Id).ToArray();
+                    context.AatfWeeReceivedAmount.Where(t => t.WeeeReceived.ReturnId == @return.Id).ToArray();
 
                 Assert.NotNull(thisTestObligatedWeeeArray);
                 Assert.NotEmpty(thisTestObligatedWeeeArray);
@@ -89,9 +90,9 @@
                     var foundCategory = thisTestObligatedWeeeArray.FirstOrDefault(o => o.CategoryId == (int)category);
                     foundCategory.Should().NotBeNull();
                     var indexNum = (int)category - 1;
-                    Assert.Equal(foundCategory.HouseholdTonnage, weeeReceivedAmounts[indexNum].HouseholdTonnage);
-                    Assert.Equal(foundCategory.NonHouseholdTonnage, weeeReceivedAmounts[indexNum].NonHouseholdTonnage);
-                    Assert.Equal(foundCategory.WeeeReceived.ReturnId, weeeReceivedAmounts[indexNum].WeeeReceived.ReturnId);
+                    Assert.Equal(foundCategory.HouseholdTonnage, weeeReceivedAmount[indexNum].HouseholdTonnage);
+                    Assert.Equal(foundCategory.NonHouseholdTonnage, weeeReceivedAmount[indexNum].NonHouseholdTonnage);
+                    Assert.Equal(foundCategory.WeeeReceived.ReturnId, weeeReceivedAmount[indexNum].WeeeReceived.ReturnId);
                 }
             }
         }

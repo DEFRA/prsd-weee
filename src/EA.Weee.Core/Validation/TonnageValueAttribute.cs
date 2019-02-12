@@ -10,20 +10,28 @@
 
     public class TonnageValueAttribute : ValidationAttribute
     {
-        private readonly string categoryProperty;
+        public string CategoryProperty { get; private set; }
+        public string TypeMessage { get; private set; }
 
         public TonnageValueAttribute(string category)
         {
-            this.categoryProperty = category;
+            this.CategoryProperty = category;
+            this.TypeMessage = null;
+        }
+
+        public TonnageValueAttribute(string category, string typeMessage)
+        {
+            this.CategoryProperty = category;
+            this.TypeMessage = typeMessage;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var propertyInfos = validationContext.ObjectType.GetProperties().FirstOrDefault(p => p.Name == this.categoryProperty);
+            var propertyInfos = validationContext.ObjectType.GetProperties().FirstOrDefault(p => p.Name == this.CategoryProperty);
 
             if (propertyInfos == null)
             {
-                throw new ValidationException($"Property {categoryProperty} does not exist");
+                throw new ValidationException($"Property {CategoryProperty} does not exist");
             }
 
             var propertyValue = (int)propertyInfos.GetValue(validationContext.ObjectInstance, null) as int?;
@@ -32,7 +40,7 @@
 
             if (propertyValue == null || !categoryId.Contains(propertyValue.Value))
             {
-                throw new ValidationException($"Property {categoryProperty} should be of type {typeof(WeeeCategory).Name}");
+                throw new ValidationException($"Property {CategoryProperty} should be of type {typeof(WeeeCategory).Name}");
             }
 
             if (value is null)
@@ -87,10 +95,11 @@
                 return result;
             }
         }
-
         private string GenerateMessage(string message, int categoryId)
         {
-            return $"Category {categoryId} tonnage value must be {message}";
+            var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
+            
+            return $"Category {categoryId}{additionalMessage} tonnage value must be {message}";
         }
     }
 }

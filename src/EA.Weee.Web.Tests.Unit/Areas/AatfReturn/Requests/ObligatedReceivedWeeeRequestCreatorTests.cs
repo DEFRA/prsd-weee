@@ -38,17 +38,17 @@
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                categoryValues[i].HouseHold = i.ToString();
-                categoryValues[i].NonHouseHold = i.ToString();
+                categoryValues[i].B2C = i.ToString();
+                categoryValues[i].B2B = i.ToString();
             }
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].HouseHold));
+                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
                 request.CategoryValues[i].CategoryId.Should().Be(viewModel.CategoryValues[i].CategoryId);
-                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].NonHouseHold));
+                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
                 request.CategoryValues[i].CategoryId.Should().Be(viewModel.CategoryValues[i].CategoryId);
             }
         }
@@ -62,16 +62,16 @@
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                categoryValues[i].HouseHold = (i * 0.001m).ToString(CultureInfo.InvariantCulture);
-                categoryValues[i].NonHouseHold = (i * 0.001m).ToString(CultureInfo.InvariantCulture);
+                categoryValues[i].B2C = (i * 0.001m).ToString(CultureInfo.InvariantCulture);
+                categoryValues[i].B2B = (i * 0.001m).ToString(CultureInfo.InvariantCulture);
             }
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].HouseHold));
-                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].NonHouseHold));
+                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
+                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
             }
         }
 
@@ -87,8 +87,8 @@
 
             foreach (var c in categoryValues)
             {
-                c.HouseHold = value;
-                c.NonHouseHold = value;
+                c.B2C = value;
+                c.B2B = value;
             }
 
             var request = requestCreator.ViewModelToRequest(viewModel);

@@ -12,15 +12,12 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReceivedDataAccess obligatedReceivedDataAccess;
-        private readonly IReturnDataAccess returnDataAccess;
 
         public AddObligatedReceivedHandler(IWeeeAuthorization authorization,
-            IAddObligatedReceivedDataAccess obligatedReceivedDataAccess,
-            IReturnDataAccess returnDataAccess)
+            IAddObligatedReceivedDataAccess obligatedReceivedDataAccess)
         {
             this.authorization = authorization;
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
-            this.returnDataAccess = returnDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddObligatedReceived message)
