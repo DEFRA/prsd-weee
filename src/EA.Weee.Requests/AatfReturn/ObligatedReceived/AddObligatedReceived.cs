@@ -6,7 +6,7 @@
 
     public class AddObligatedReceived : IRequest<bool>
     {
-        public IList<ObligatedReceivedValue> Tonnage { get; set; }
+        public IList<ObligatedReceivedValue> CategoryValues { get; set; }
 
         public Guid ReturnId { get; set; }
 

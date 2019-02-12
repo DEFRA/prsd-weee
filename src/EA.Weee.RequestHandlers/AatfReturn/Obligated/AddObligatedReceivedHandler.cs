@@ -34,7 +34,7 @@
 
             var aatfWeeReceivedAmount = new List<WeeeReceivedAmount>();
 
-            foreach (var categoryValue in message.Tonnage)
+            foreach (var categoryValue in message.CategoryValues)
             {
                 aatfWeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
