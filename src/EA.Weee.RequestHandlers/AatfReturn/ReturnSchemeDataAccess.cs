@@ -26,7 +26,7 @@
 
         public async Task<ReturnScheme> GetById(Guid returnSchemeId)
         {
-            return await context.ReturnScheme.Include(r => r.SchemeId).Include(r => r.ReturnId).SingleOrDefaultAsync(o => o.Id == returnSchemeId);
+            return await context.ReturnScheme.Include(r => r.Scheme).Include(r => r.Return).SingleOrDefaultAsync(o => o.Id == returnSchemeId);
         }
     }
 }

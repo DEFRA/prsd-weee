@@ -10,5 +10,7 @@
     public interface IReturnSchemeDataAccess
     {
         Task<Guid> Submit(ReturnScheme scheme);
+
+        Task<ReturnScheme> GetById(Guid returnSchemeId);
     }
 }
