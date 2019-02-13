@@ -32,7 +32,6 @@
                 var name = "Test Name" + Guid.NewGuid();
                 var tradingName = "Test Trading Name" + Guid.NewGuid();
                 const string crn = "ABC12345";
-                var nonObligatedId = Guid.NewGuid();
                 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
 
