@@ -36,17 +36,15 @@
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var scheme = new Scheme(organisation);
-
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = context.UKCompetentAuthorities.FirstOrDefault();
                 var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
-                var quarter = new Quarter(2019, QuarterType.Q1);
-                var @return = new Return(operatorTest, quarter, ReturnStatus.Created);
+                var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
-                context.Returns.Add(@return);
                 context.Organisations.Add(organisation);
                 context.Schemes.Add(scheme);
                 context.Aatfs.Add(aatf);
+                context.Returns.Add(@return);
                 await context.SaveChangesAsync();
                 
                 var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
@@ -76,9 +74,7 @@
                 }
 
                 await addObligatedReceivedDataAccess.Submit(weeeReceivedAmount);
-
-                var allWeeeReceived = context.AatfWeeReceivedAmount.ToList();
-
+                
                 var thisTestObligatedWeeeArray =
                     context.AatfWeeReceivedAmount.Where(t => t.WeeeReceived.ReturnId == @return.Id).ToArray();
 

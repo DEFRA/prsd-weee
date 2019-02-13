@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
@@ -30,7 +31,6 @@
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
         {
-
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
             var handler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
@@ -39,27 +39,18 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-
+        
         [Fact]
-        public async Task HandleAsync_NoOrganisationAccess_ThrowsSecurityException()
-        {
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-
-            var handler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedReceived>());
-
-            await action.Should().ThrowAsync<SecurityException>();
-        }
-
-        [Fact]
-        public async Task HandleAsync_WithValidInput_WeeeReceivedAmountIsMapped()
+        public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
             var organisation = A.Fake<Organisation>();
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
-            var weeeReceived = A.Fake<WeeeReceived>();
+            var weeeReceived = new WeeeReceived(
+                await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id),
+                await addObligatedReceivedDataAccess.GetAatfId(organisation.Id),
+                aatfReturn.Id);
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
             var categoryValues = new List<ObligatedReceivedValue>();
@@ -80,14 +71,12 @@
             {
                 weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
-
-            //A.CallTo(() => addObligatedReceivedDataAccess.Submit(weeeReceivedAmount)).Returns(TonnageList);
-
+            
             var requestHandler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);
 
-            A.CallTo(() => addObligatedReceivedDataAccess.Submit(weeeReceivedAmount)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => addObligatedReceivedDataAccess.Submit(A<List<WeeeReceivedAmount>>.That.IsSameAs(weeeReceivedAmount)));
         }
     }
 }

@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.NonObligated;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.ObligatedReceived;
 
