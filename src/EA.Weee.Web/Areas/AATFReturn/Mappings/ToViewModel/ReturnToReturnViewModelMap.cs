@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
     using Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -34,7 +35,7 @@
 
         public string CheckIfTonnageIsNull(decimal? tonnage)
         {
-            return (tonnage != null) ? tonnage.ToString() : "0.000";
+            return (tonnage != null) ? tonnage.ToTonnageDisplay() : "0.000";
         }
     }
 }

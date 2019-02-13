@@ -20,6 +20,10 @@
 
         public virtual Operator Operator { get; private set; }
 
+        protected Aatf()
+        {
+        }
+
         public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);

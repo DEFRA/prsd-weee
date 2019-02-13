@@ -26,24 +26,16 @@
             return new QuarterWindow(startDate, endDate);
         }
 
-        public async Task<QuarterWindow> GetAnnualQuarter(Quarter quarter)
+        public async Task<QuarterWindow> GetQuarter(Quarter quarter)
         {
             var quarterWindowTemplate = await dataAccess.GetByQuarter((int)quarter.Q);
 
-            var startMonth = 0;
-            if (quarter.Q == QuarterType.Q4)
-            {
-                startMonth = 10;
-            }
-            else
-            {
-                startMonth = quarterWindowTemplate.StartMonth - 3;
-            }
+            var startDate = new DateTime(quarter.Year + quarterWindowTemplate.AddStartYears, quarterWindowTemplate.StartMonth, quarterWindowTemplate.StartDay);
 
-            var startDate = new DateTime(quarter.Year, startMonth, quarterWindowTemplate.StartDay);
             var endDateMonth = startDate.Month + quarterWindowTemplate.EndMonth - 1;
             var endDateYear = startDate.Year + quarterWindowTemplate.AddStartYears;
-            var endDate = new DateTime(quarter.Year, endDateMonth, DateTime.DaysInMonth(endDateYear, endDateMonth));
+
+            var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddStartYears, endDateMonth, DateTime.DaysInMonth(endDateYear, endDateMonth));
 
             return new QuarterWindow(startDate, endDate);
         }

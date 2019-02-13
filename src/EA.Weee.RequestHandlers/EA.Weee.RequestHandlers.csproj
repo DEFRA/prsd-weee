@@ -71,6 +71,9 @@
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedReceivedHandler.cs" />
+    <Compile Include="AatfReturn\Obligated\IAddObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
