@@ -53,22 +53,31 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-            using (var client = apiClient())
+            if (ModelState.IsValid)
             {
-                foreach (var scheme in viewModel.SelectedSchemes)
+                using (var client = apiClient())
                 {
-                    var returnSchemeRequest = new AddReturnScheme()
+                    if (viewModel.SelectedSchemes == null)
                     {
-                        SchemeId = scheme,
-                        ReturnId = viewModel.ReturnId
-                    };
+                        viewModel.SelectedSchemes = new List<Guid>();
+                    }
 
-                    await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                    foreach (var scheme in viewModel.SelectedSchemes)
+                    {
+                        var returnSchemeRequest = new AddReturnScheme()
+                        {
+                            SchemeId = scheme,
+                            ReturnId = viewModel.ReturnId
+                        };
+
+                        await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                    }
                 }
+                return RedirectToAction("Index", "AatfTaskList",
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
             }
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return RedirectToAction("Index", "AatfTaskList",
-                                        new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+            return View(viewModel);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
