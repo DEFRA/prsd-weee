@@ -11,10 +11,12 @@
     public class MinimumElementsAttribute : ValidationAttribute
     {
         private readonly int minElements;
+        private readonly string errorMessage;
 
-        public MinimumElementsAttribute(int minElements)
+        public MinimumElementsAttribute(int minElements, string errorMessage)
         {
             this.minElements = minElements;
+            this.errorMessage = errorMessage;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -25,7 +27,7 @@
 
             return result
                 ? ValidationResult.Success
-                : new ValidationResult($"You must select at least one PCS from the list");
+                : new ValidationResult(errorMessage);
         }
     }
 }

@@ -25,7 +25,7 @@
 
         public List<SchemeData> SchemeList { get; set; }
 
-        [MinimumElements(1)]
+        [MinimumElements(1, "You must select at least one PCS from the list")]
         public List<Guid> SelectedSchemes { get; set; }
 
         public Guid OrganisationId { get; set; }
