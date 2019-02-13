@@ -73,8 +73,6 @@
         [InlineData("A")]
         [InlineData("+1")]
         [InlineData("+1.1")]
-        [InlineData("-1")]
-        [InlineData("-1.1")]
         public void ValidationResult_ValueIsNotANumber_ErrorMessageShouldBeCorrect(string input)
         {
             var result = Validate(input);
@@ -85,6 +83,8 @@
         [Theory]
         [InlineData("-0")]
         [InlineData("-00")]
+        [InlineData("-1")]
+        [InlineData("-1.1")]
         public void ValidationResult_ValueIsNegativeZero_ErrorMessageShouldBeCorrect(string input)
         {
             var result = Validate(input);
