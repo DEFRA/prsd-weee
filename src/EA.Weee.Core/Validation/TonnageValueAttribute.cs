@@ -55,11 +55,18 @@
 
             if (!decimal.TryParse(value.ToString(), out var decimalResult))
             {
-                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                if (decimalResult == 0 && (value.ToString() == string.Empty) || value is null)
+                {
+                    return ValidationResult.Success;
+                }
+                else
+                {
+                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                }
             }
             else
             {
-                if (decimalResult < 0)
+                if (decimalResult < 0 || (value.ToString().Substring(0, 1) == "-"))
                 {
                     return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
                 }
