@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.Obligated
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
 
-    internal interface IAddObligatedReceivedDataAccess
+    public interface IAddObligatedReceivedDataAccess
     {
         Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmount);
         Task<Guid> GetSchemeId(Guid organisationId);

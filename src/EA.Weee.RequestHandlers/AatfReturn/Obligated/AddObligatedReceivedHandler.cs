@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.NonObligated;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.ObligatedReceived;
 
@@ -12,15 +11,12 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReceivedDataAccess obligatedReceivedDataAccess;
-        private readonly IReturnDataAccess returnDataAccess;
 
         public AddObligatedReceivedHandler(IWeeeAuthorization authorization,
-            IAddObligatedReceivedDataAccess obligatedReceivedDataAccess,
-            IReturnDataAccess returnDataAccess)
+            IAddObligatedReceivedDataAccess obligatedReceivedDataAccess)
         {
             this.authorization = authorization;
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
-            this.returnDataAccess = returnDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddObligatedReceived message)
@@ -34,7 +30,7 @@
 
             var aatfWeeReceivedAmount = new List<WeeeReceivedAmount>();
 
-            foreach (var categoryValue in message.Tonnage)
+            foreach (var categoryValue in message.CategoryValues)
             {
                 aatfWeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }

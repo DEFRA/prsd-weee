@@ -36,7 +36,8 @@ function TonnageTotals(controlId) {
                 var totalTonnage = 0.00;
                 for (var elementCount = 0; elementCount < e.detail.tonnageElements.length; elementCount++) {
                     var element = e.detail.tonnageElements[elementCount];
-                    var value = element.value;
+                    var value = element.value.trim();
+
                     if (!isNaN(value) && value && value > 0) {
                         totalTonnage += parseFloat(value);
                     }

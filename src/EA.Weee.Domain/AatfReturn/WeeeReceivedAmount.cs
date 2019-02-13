@@ -23,5 +23,9 @@
             HouseholdTonnage = householdTonnage;
             NonHouseholdTonnage = nonHouseholdTonnage;
         }
+
+        protected WeeeReceivedAmount()
+        {
+        }
     }
 }

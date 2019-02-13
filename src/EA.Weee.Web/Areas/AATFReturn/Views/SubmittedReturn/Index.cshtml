@@ -5,7 +5,7 @@
 
 <div class="govuk-!-padding-bottom-5"></div>
 <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
-    <h1 class="govuk-panel__title">
+    <h1 class="govuk-panel__title" style="font-size: 2.5rem;">
         You have successfully submitted your AATF return for @Model.Period
     </h1>
 </div>
@@ -13,9 +13,20 @@
 <div class="govuk-!-width-two-thirds">
     <p class="govuk-body">Your AATF quarterly return has been submitted successfully.</p>
     <div class="govuk-!-padding-bottom-2"></div>
+
+    @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
+    {
     <p class="govuk-body">
-        If you have completed all your activities you can @Html.ActionLink("sign out", "SignOut", "Account", new { area = string.Empty }) or proceed to perform more activities.
+        If you have completed all your activities you can
+
+        @Html.AntiForgeryToken()
+        <button type="submit" class="link-submit">
+            sign out
+        </button> 
+        or proceed to perform more activities.
     </p>
+    }
+
 </div>
 
 @using (Html.BeginForm("Index", "SubmittedReturn", FormMethod.Post))

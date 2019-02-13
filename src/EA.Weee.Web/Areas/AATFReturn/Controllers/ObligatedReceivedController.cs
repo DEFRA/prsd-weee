@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -16,11 +17,11 @@
     public class ObligatedReceivedController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IObligatedReceivedWeeRequestCreator requestCreator;
+        private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ObligatedReceivedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeRequestCreator requestCreator)
+        public ObligatedReceivedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
@@ -32,6 +33,13 @@
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
             var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId };
+
+            using (var client = apiClient())
+            {
+                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+            }
+
+            viewModel.PcsName = "ABB Ltd Woking";
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 

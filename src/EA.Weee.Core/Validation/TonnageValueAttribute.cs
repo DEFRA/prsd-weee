@@ -54,23 +54,20 @@
                 return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
             }
 
-            //if (!decimal.TryParse(value.ToString(), out var decimalResult))
-            if (!decimal.TryParse(value.ToString(), 
-                NumberStyles.Number & 
-                ~NumberStyles.AllowLeadingWhite & 
-                ~NumberStyles.AllowTrailingWhite & 
-                ~NumberStyles.AllowLeadingSign, 
-                CultureInfo.InvariantCulture,
-                out var decimalResult))
+            if (!decimal.TryParse(value.ToString(), out var decimalResult))
             {
-                //if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimalResult))
-                //{
-                //}
-                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                if (decimalResult == 0 && (value.ToString() == string.Empty) || value is null)
+                {
+                    return ValidationResult.Success;
+                }
+                else
+                {
+                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                }
             }
             else
             {
-                if (decimalResult < 0)
+                if (decimalResult < 0 || (value.ToString().Substring(0, 1) == "-"))
                 {
                     return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
                 }
