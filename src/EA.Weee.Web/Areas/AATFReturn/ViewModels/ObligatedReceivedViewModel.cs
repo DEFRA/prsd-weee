@@ -3,9 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
 
     public class ObligatedReceivedViewModel
     {
@@ -63,7 +62,7 @@
                 total = convertedValues.Sum();
             }
 
-            return $"{total:0.000}";
+            return total.ToTonnageDisplay();
         }
     }
 }
