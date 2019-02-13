@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
     using DataReturns;
@@ -53,8 +54,18 @@
                 return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
             }
 
-            if (!decimal.TryParse(value.ToString(), out var decimalResult))
+            //if (!decimal.TryParse(value.ToString(), out var decimalResult))
+            if (!decimal.TryParse(value.ToString(), 
+                NumberStyles.Number & 
+                ~NumberStyles.AllowLeadingWhite & 
+                ~NumberStyles.AllowTrailingWhite & 
+                ~NumberStyles.AllowLeadingSign, 
+                CultureInfo.InvariantCulture,
+                out var decimalResult))
             {
+                //if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimalResult))
+                //{
+                //}
                 return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
             }
             else

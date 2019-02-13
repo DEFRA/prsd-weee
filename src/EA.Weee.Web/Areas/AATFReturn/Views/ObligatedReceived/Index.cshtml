@@ -48,13 +48,13 @@
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
                 </td>
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input govuk-!-width-two-thirds weee-input" })
                     </div>
                 </td>
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input govuk-!-width-two-thirds weee-input" })
