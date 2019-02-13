@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Core.AatfReturn;
 
@@ -40,7 +41,11 @@
             get
             {
                 var total = 0.000m;
-                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage) && decimal.TryParse(c.Tonnage, out var output)).Select(c => c.Tonnage).ToList();
+                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage) 
+                                                       && decimal.TryParse(c.Tonnage, 
+                                                        NumberStyles.Number &
+                                                        ~NumberStyles.AllowLeadingSign,
+                                                        CultureInfo.InvariantCulture, out var output)).Select(c => c.Tonnage).ToList();
 
                 if (values.Any())
                 {

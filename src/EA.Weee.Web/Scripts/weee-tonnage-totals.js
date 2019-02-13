@@ -38,7 +38,7 @@ function TonnageTotals(controlId) {
                     var element = e.detail.tonnageElements[elementCount];
                     var value = element.value.trim();
 
-                    if (!isNaN(value) && value && value > 0) {
+                    if (!isNaN(value) && value && value > 0 && value.indexOf("+") === -1) {
                         totalTonnage += parseFloat(value);
                     }
                     tonnageTotal.innerText = totalTonnage.toFixed(3) + ' tonnes';
