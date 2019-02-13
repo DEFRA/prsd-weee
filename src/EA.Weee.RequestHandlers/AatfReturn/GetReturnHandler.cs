@@ -46,7 +46,7 @@
 
             authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
 
-            var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
+            var quarterWindow = await quarterWindowFactory.GetQuarter(@return.Quarter);
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
 

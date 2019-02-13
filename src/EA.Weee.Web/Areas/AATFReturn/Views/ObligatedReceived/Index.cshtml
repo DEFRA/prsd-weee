@@ -1,0 +1,35 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedReceivedViewModel
+@{
+    ViewBag.Title = "Received WEE";
+}
+
+<h2 class="govuk-heading-l">WEEE that has been received for treatment at @Model.OrganisationName from @Model.PcsName</h2>
+
+<p class="govuk-body">
+    This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
+</p>
+<p class="govuk-body">
+    Provide tonnage to 3 decimal places. For example 1.238
+</p>
+
+@using (Html.BeginForm("Index", "ObligatedReceived", FormMethod.Post))
+{
+    @Html.Gds().ValidationSummary()
+
+    Html.RenderPartial("_ObligatedWeeeTable", Model);
+
+    @Html.AntiForgeryToken()
+    <form method="post" class="form" style="display: inline">
+        <button type="submit" name="save" class="govuk-button" id="pcs-check-return">
+            Save and continue
+        </button>
+    </form>
+}
+
+@Scripts.Render("~/bundles/weee_tonnage_totals")
+<script>
+    TonnageTotals('B2C');
+    TonnageTotals('B2B');
+</script>
