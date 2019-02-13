@@ -22,7 +22,6 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private List<SchemeData> schemeList;
 
         public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
@@ -57,11 +56,6 @@
             {
                 using (var client = apiClient())
                 {
-                    if (viewModel.SelectedSchemes == null)
-                    {
-                        viewModel.SelectedSchemes = new List<Guid>();
-                    }
-
                     foreach (var scheme in viewModel.SelectedSchemes)
                     {
                         var returnSchemeRequest = new AddReturnScheme()
@@ -76,8 +70,15 @@
                 return RedirectToAction("Index", "AatfTaskList",
                                             new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
             }
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
+            else
+            {
+                using (var client = apiClient())
+                {
+                    viewModel.SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal());
+                }
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+                return View(viewModel);
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

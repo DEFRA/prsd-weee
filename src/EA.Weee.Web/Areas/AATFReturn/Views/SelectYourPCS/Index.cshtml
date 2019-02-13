@@ -6,6 +6,9 @@
 }
 @using (Html.BeginForm("Index", "SelectYourPCS", FormMethod.Post))
 {
+    <div class="govuk-!-padding-bottom-2"></div>
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
     <h2 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h2>
     <h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
     <div class="govuk-!-padding-bottom-5"></div>
@@ -24,11 +27,8 @@
             </div>
         </fieldset>
     </div>
-
-    @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.ReturnId)
-    @Html.HiddenFor(m => m.SchemeList)
     <button type="submit" class="govuk-button">
         Add PCSs
     </button>
