@@ -30,6 +30,14 @@
         }
 
         [Fact]
+        public void ViewModelToRequested_GivenViewModelIsNull_ArgumentNullExceptionExpected()
+        {
+            Action action = () => requestCreator.ViewModelToRequest(null);
+
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
         public void ViewModelToRequested_GivenValidViewModel_CategoryValuesRequestPropertiesShouldBeMapped()
         {
             var categoryValues = new ObligatedCategoryValues();

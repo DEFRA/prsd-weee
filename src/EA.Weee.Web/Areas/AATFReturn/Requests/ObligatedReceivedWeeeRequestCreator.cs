@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using EA.Prsd.Core;
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.ObligatedReceived;
@@ -10,6 +11,7 @@
     {
         public override AddObligatedReceived ViewModelToRequest(ObligatedReceivedViewModel viewModel)
         {
+            Guard.ArgumentNotNull(() => viewModel, viewModel);
             var obligatedRequestValues = new List<ObligatedReceivedValue>();
 
             foreach (var categoryValue in viewModel.CategoryValues)
