@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using Core.Validation;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
 
@@ -46,14 +48,19 @@
         public string Total(IList<ObligatedCategoryValue> categoryValues, bool isHousehold)
         {
             var total = 0.000m;
-            var values = new List<string>();
+            List<string> values;
+
             if (isHousehold)
             {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2C) && decimal.TryParse(c.B2C, out var output)).Select(c => c.B2C).ToList();
+                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2C)
+                                                    && decimal.TryParse(c.B2C, NumberStyles.Number & ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var output)
+                                                    && output.DecimalPlaces() <= 3).Select(c => c.B2C).ToList();
             }
             else
             {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2B) && decimal.TryParse(c.B2B, out var output)).Select(c => c.B2B).ToList();
+                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2B) 
+                                                    && decimal.TryParse(c.B2B, NumberStyles.Number & ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var output)
+                                                    && output.DecimalPlaces() <= 3).Select(c => c.B2B).ToList();
             }
 
             if (values.Any())

@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using Core.AatfReturn;
+    using Core.Validation;
 
     public class NonObligatedValuesViewModel
     {
@@ -44,8 +45,9 @@
                 var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage) 
                                                        && decimal.TryParse(c.Tonnage, 
                                                         NumberStyles.Number &
-                                                        ~NumberStyles.AllowLeadingSign,
-                                                        CultureInfo.InvariantCulture, out var output)).Select(c => c.Tonnage).ToList();
+                                                        ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign,
+                                                        CultureInfo.InvariantCulture, out var output)
+                                                       && output.DecimalPlaces() <= 3).Select(c => c.Tonnage).ToList();
 
                 if (values.Any())
                 {
