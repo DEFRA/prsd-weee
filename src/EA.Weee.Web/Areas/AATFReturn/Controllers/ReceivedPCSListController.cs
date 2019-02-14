@@ -1,19 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using Api.Client;   
+    using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
     using Web.Controllers.Base;
 
@@ -39,32 +35,30 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            /*
-            var viewModel = new ReturnViewModel();
-            using (var client = apiClient())
-            {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
-                viewModel = mapper.Map<ReturnViewModel>(@return);
-
-                viewModel.OrganisationId = organisationId;
-                viewModel.ReturnId = returnId;
-               
-                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-                viewModel.SchemeName = organisationName;
-            }
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
-            */
             var viewModel = new ReceivedPCSListViewModel();
 
             using (var client = apiClient())
             {
-                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
+                viewModel.OrganisationName = @return[0].Name;
+                viewModel.OrganisationId = organisationId;
+                viewModel.ReturnId = returnId;
+
+                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                
                 viewModel.SchemeList = schemeIDList;
             }
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(ReceivedPCSListViewModel viewModel)
+        {
+            return await Task.Run(() => RedirectToAction("Index", "AatfTaskList", new { returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
