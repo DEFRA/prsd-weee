@@ -41,5 +41,9 @@
         public string NonObligatedTonnageTotalDcf { get; set; }
 
         public OperatorData ReturnOperator { get; set; }
+
+        public string SchemeName { get; set; }
+
+        public string ApprovalNumber { get; set; }
     }
 }

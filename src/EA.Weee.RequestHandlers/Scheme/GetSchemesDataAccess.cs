@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -20,6 +21,13 @@
         {
             return await context.Schemes
                 .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
+                .ToListAsync();
+        }
+
+        public async Task<IList<Domain.Scheme.Scheme>> GetCompleteSchemes(Guid id)
+        {
+            return await context.Schemes
+                .Where(s => s.Organisation.Id == id)
                 .ToListAsync();
         }
 

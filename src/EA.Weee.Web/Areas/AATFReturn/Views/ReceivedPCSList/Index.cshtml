@@ -1,0 +1,51 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
+@{
+    ViewBag.Title = "Received PCS List";
+}
+
+<h2 class="govuk-heading-l">
+    WEEE received for treatment at @Model.OrganisationName
+</h2>
+<div class="govuk-!-padding-bottom-3"></div>
+
+<table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="border: 0px;"></td>
+                <td class="govuk-table__cell" style="border: 0px;"></td>
+                <td class="govuk-table__cell" govuk-!-font-weight-bold colspan="2" style="border-bottom: 0px;">
+                    Received for treatment (t)
+                </td>
+                <td class="govuk-table__cell" style="border: 0px;"></td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-font-weight-bold">PCS Name</td>
+                <td class="govuk-table__cell govuk-!-font-weight-bold">Approval No</td>
+                <td class="govuk-table__cell">B2C</td>
+                <td class="govuk-table__cell">B2B</td>
+                <td class="govuk-table__cell"></td>
+            </tr>
+            foreach (var item in Model)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @Html.DisplayFor(modelItem => modelItem.SchemeName)
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Html.DisplayFor(modelItem => modelItem.ApprovalNumber)
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+@using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <button type="submit" class="govuk-button">
+        AATF Task List
+    </button>
+}
