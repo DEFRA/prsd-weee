@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Admin.GetSchemes;
-    using EA.Weee.RequestHandlers.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using Prsd.Core.Mapper;
@@ -50,28 +45,7 @@
                 schemeListData.Add(data);
             }
 
-            return schemeListData;
-            /*
-            List<Guid> listReturnIds = new List<Guid>();
-            PCSData pcsListData = new PCSData();
-
-            listReturnIds = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
-
-            foreach (var schemeId in listReturnIds)
-            {
-                var schemeList = await schemeDataAccess.GetCompleteSchemes(schemeId);
-
-                foreach (var item in schemeList)
-                {
-                    {
-                        pcsListData.SchemeId = item.Id;
-                        pcsListData.PCSName = item.SchemeName;
-                        pcsListData.ApprovalNumber = item.ApprovalNumber;
-                    }
-                }
-            }
-            return pcsListData;
-            */
+            return schemeListData;           
         }
     }
 }
