@@ -10,6 +10,6 @@
 
         Task<IList<Domain.Scheme.Scheme>> GetAllSchemes();
 
-        Task<IList<Domain.Scheme.Scheme>> GetCompleteSchemes(Guid id);
+        Task<Domain.Scheme.Scheme> GetSchemeBasedOnId(Guid id);
     }
 }

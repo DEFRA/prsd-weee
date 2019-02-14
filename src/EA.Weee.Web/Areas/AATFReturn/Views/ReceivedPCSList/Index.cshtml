@@ -1,12 +1,12 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPCSListViewModel
 @{
     ViewBag.Title = "Received PCS List";
 }
 
 <h2 class="govuk-heading-l">
-    WEEE received for treatment at @Model.OrganisationName
+    WEEE received for treatment at 
 </h2>
 <div class="govuk-!-padding-bottom-3"></div>
 
@@ -27,14 +27,14 @@
                 <td class="govuk-table__cell">B2B</td>
                 <td class="govuk-table__cell"></td>
             </tr>
-            foreach (var item in Model)
+            @foreach (var item in Model.SchemeList)
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        @Html.DisplayFor(modelItem => modelItem.SchemeName)
+                        @item.SchemeName
                     </td>
                     <td class="govuk-table__cell">
-                        @Html.DisplayFor(modelItem => modelItem.ApprovalNumber)
+                        @item.ApprovalName
                     </td>
                 </tr>
             }

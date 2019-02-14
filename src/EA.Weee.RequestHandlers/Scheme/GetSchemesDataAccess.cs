@@ -24,11 +24,9 @@
                 .ToListAsync();
         }
 
-        public async Task<IList<Domain.Scheme.Scheme>> GetCompleteSchemes(Guid id)
+        public async Task<Domain.Scheme.Scheme> GetSchemeBasedOnId(Guid id)
         {
-            return await context.Schemes
-                .Where(s => s.Organisation.Id == id)
-                .ToListAsync();
+            return await context.Schemes.Where(s => s.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IList<Domain.Scheme.Scheme>> GetAllSchemes()

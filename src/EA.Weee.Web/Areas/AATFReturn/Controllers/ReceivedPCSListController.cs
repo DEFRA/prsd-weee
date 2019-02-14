@@ -36,8 +36,10 @@
         }
 
         // GET: AatfReturn/ReceivedPCSList
+        [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
+            /*
             var viewModel = new ReturnViewModel();
             using (var client = apiClient())
             {
@@ -51,6 +53,17 @@
                 viewModel.SchemeName = organisationName;
             }
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+            return View(viewModel);
+            */
+            var viewModel = new ReceivedPCSListViewModel();
+
+            using (var client = apiClient())
+            {
+                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+
+                viewModel.SchemeList = schemeIDList;
+            }
+
             return View(viewModel);
         }
 

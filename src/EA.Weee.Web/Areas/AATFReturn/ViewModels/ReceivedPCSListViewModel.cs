@@ -6,6 +6,7 @@
     using System.Web;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
     public class ReceivedPCSListViewModel : ReturnViewModelBase
@@ -13,6 +14,8 @@
         public Guid ReturnId { get; set; }
 
         public Guid SchemeId { get; set; }
+
+        public List<SchemeData> SchemeList { get; set; }
 
         public string SchemeName { get; set; }
 
