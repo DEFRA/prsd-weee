@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
 
