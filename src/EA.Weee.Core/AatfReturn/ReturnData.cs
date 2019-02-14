@@ -3,9 +3,6 @@
     using DataReturns;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ReturnData
     {
@@ -16,6 +13,8 @@
         public QuarterWindow QuarterWindow { get; set; }
 
         public List<NonObligatedData> NonObligatedData { get; set; }
+
+        public List<ObligatedData> ObligatedData { get; set; }
 
         public OperatorData ReturnOperatorData { get; set; }
     }

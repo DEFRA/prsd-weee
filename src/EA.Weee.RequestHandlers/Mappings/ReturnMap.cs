@@ -18,19 +18,7 @@
         public ReturnData Map(ReturnQuarterWindow source)
         {
             Guard.ArgumentNotNull(() => source, source);
-
-            //foreach (var nonObligatedWeee in source.NonObligatedData)
-            //{
-            //    var buffer = new NonObligatedCategoryValue()
-            //    {
-            //        Dcf = nonObligatedWeee.Dcf,
-            //        Tonnage = nonObligatedWeee.Tonnage.ToString(),
-            //        CategoryId = nonObligatedWeee.CategoryId,
-            //    };
-
-            //    NonObligatedWeeeListMap.Add(buffer);
-            //}
-
+            
             var returnData = new ReturnData()
             {
                 Id = source.Return.Id,
@@ -42,6 +30,11 @@
             if (source.NonObligatedWeeeList != null)
             {
                 returnData.NonObligatedData = source.NonObligatedWeeeList.Select(n => new NonObligatedData(n.CategoryId, n.Tonnage, n.Dcf)).ToList();
+            }
+
+            if (source.ObligatedWeeeList != null)
+            {
+                returnData.ObligatedData = source.ObligatedWeeeList.Select(n => new ObligatedData(n.WeeeReceived, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
             }
 
             return returnData;

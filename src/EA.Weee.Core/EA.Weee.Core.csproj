@@ -79,13 +79,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfObligatedData.cs" />
     <Compile Include="AatfReturn\CategoryValue.cs" />
     <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedProcess.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
     <Compile Include="AatfReturn\PCSData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
+    <Compile Include="AatfReturn\ProcessObligatedData.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
@@ -247,6 +251,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
+      <Project>{A987FFF6-5386-419E-AF0A-E6C74E3323CF}</Project>
+      <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
