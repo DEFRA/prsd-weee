@@ -54,7 +54,7 @@
                 return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
             }
 
-            if (!decimal.TryParse(value.ToString(), out var decimalResult))
+            if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
             {
                 return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
             }
@@ -69,14 +69,15 @@
                     NumberStyles.Number &
                     ~NumberStyles.AllowLeadingWhite &
                     ~NumberStyles.AllowTrailingWhite &
-                    ~NumberStyles.AllowLeadingSign,
+                    ~NumberStyles.AllowLeadingSign &
+                    ~NumberStyles.AllowTrailingSign,
                     CultureInfo.InvariantCulture,
                     out decimalResult))
                 {
                     return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
                 }
 
-                if (DecimalPlaces(decimalResult) > 3)
+                if (decimalResult.DecimalPlaces() > 3)
                 {
                     return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
                 }
@@ -85,28 +86,6 @@
             return ValidationResult.Success;
         }
 
-        private int DecimalPlaces(decimal value)
-        {
-            if (value == 0)
-            {
-                return 0;
-            }
-            else
-            {
-                var bits = decimal.GetBits(value);
-                var exponent = bits[3] >> 16;
-                var result = exponent;
-                long lowDecimal = bits[0] | (bits[1] >> 8);
-
-                while ((lowDecimal % 10) == 0)
-                {
-                    result--;
-                    lowDecimal /= 10;
-                }
-
-                return result;
-            }
-        }
         private string GenerateMessage(string message, int categoryId)
         {
             var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
