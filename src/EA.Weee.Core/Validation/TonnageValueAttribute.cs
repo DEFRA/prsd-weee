@@ -44,7 +44,7 @@
                 throw new ValidationException($"Property {CategoryProperty} should be of type {typeof(WeeeCategory).Name}");
             }
 
-            if (value is null)
+            if (string.IsNullOrWhiteSpace(value?.ToString()))
             {
                 return ValidationResult.Success;
             }

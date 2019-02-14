@@ -132,6 +132,8 @@
         [InlineData(1.1)]
         [InlineData(1.11)]
         [InlineData(1.111)]
+        [InlineData(" ")]
+        [InlineData("  ")]
         public void IsValid_ValueIsValid_ReturnsTrue(object input)
         {
             var result = Validate(input);
