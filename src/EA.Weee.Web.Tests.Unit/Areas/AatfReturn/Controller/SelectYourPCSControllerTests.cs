@@ -5,6 +5,7 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -28,14 +29,16 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         public List<SchemeData> SchemeList;
+        private readonly IAddReturnSchemeRequestCreator requestCreator;
 
         public SelectYourPCSControllerTests()
         {
             weeeClient = A.Fake<Func<IWeeeClient>>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            requestCreator = A.Fake<IAddReturnSchemeRequestCreator>();
 
-            controller = new SelectYourPCSController(weeeClient, breadcrumb, cache);
+            controller = new SelectYourPCSController(weeeClient, breadcrumb, cache, requestCreator);
         }
 
         [Fact]

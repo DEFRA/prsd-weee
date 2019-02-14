@@ -17,9 +17,9 @@
         private readonly IWeeeAuthorization authorization;
 
         public GetSchemesExternalHandler(
-    IGetSchemesDataAccess dataAccess,
-    IMap<Scheme, SchemeData> schemeMap,
-    IWeeeAuthorization authorization)
+            IGetSchemesDataAccess dataAccess,
+            IMap<Scheme, SchemeData> schemeMap,
+            IWeeeAuthorization authorization)
         {
             this.dataAccess = dataAccess;
             this.schemeMap = schemeMap;

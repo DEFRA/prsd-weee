@@ -4,6 +4,7 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -21,13 +22,15 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
+        private readonly IAddReturnSchemeRequestCreator requestCreator;
         private readonly IWeeeCache cache;
 
-        public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddReturnSchemeRequestCreator requestCreator)
         {
             this.apiClient = apiclient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.requestCreator = requestCreator;
         }
 
         [HttpGet]
@@ -52,30 +55,22 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    foreach (var scheme in viewModel.SelectedSchemes)
-                    {
-                        var returnSchemeRequest = new AddReturnScheme()
-                        {
-                            SchemeId = scheme,
-                            ReturnId = viewModel.ReturnId
-                        };
+                    var requests = requestCreator.ViewModelToRequest(viewModel);
 
-                        await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                    foreach (var request in requests)
+                    {
+                        await client.SendAsync(User.GetAccessToken(), request);
                     }
-                }
+                 }
                 return RedirectToAction("Index", "AatfTaskList",
                                             new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
             }
             else
             {
-                using (var client = apiClient())
-                {
-                    viewModel.SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal());
-                }
                 await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }

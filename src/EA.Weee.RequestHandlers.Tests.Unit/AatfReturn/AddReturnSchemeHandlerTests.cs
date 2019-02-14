@@ -24,6 +24,7 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private AddReturnSchemeHandler handler;
+        private Guid returnSchemeId;
 
         public AddReturnSchemeHandlerTests()
         {
@@ -86,6 +87,23 @@
             await handler.HandleAsync(request);
             
             A.CallTo(() => returnSchemeDataAccess.Submit(A<ReturnScheme>.That.Matches(c => c.ReturnId == @return.Id && c.SchemeId == scheme.Id))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAddReturnSchemeRequest_ReturnSchemeIdShouldBeReturned()
+        {
+            var request = new AddReturnScheme { ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
+
+            var @return = A.Dummy<Return>();
+            var scheme = A.Fake<Domain.Scheme.Scheme>();
+
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(request.SchemeId)).Returns(scheme);
+
+            A.CallTo(() => returnDataAccess.GetById(request.ReturnId)).Returns(@return);
+
+            var result = await handler.HandleAsync(request);
+
+            A.CallTo(() => returnSchemeDataAccess.Submit(A<ReturnScheme>.That.Matches(c => c.ReturnId == @return.Id && c.SchemeId == scheme.Id))).Returns(returnSchemeId);
         }
     }
 }

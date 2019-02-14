@@ -59,6 +59,7 @@
 
             using (var client = apiClient())
             {
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
                 var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
                 viewModel.SchemeList = schemeIDList;
