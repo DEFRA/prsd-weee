@@ -34,7 +34,7 @@
 
             if (source.ObligatedWeeeList != null)
             {
-                returnData.ObligatedData = source.ObligatedWeeeList.Select(n => new ObligatedData(n.WeeeReceived, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+                returnData.ObligatedData = source.ObligatedWeeeList.Select(n => new ObligatedData(n.WeeeReceived.SchemeId, n.WeeeReceived.AatfId, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
             }
 
             return returnData;

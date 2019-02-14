@@ -3,23 +3,22 @@
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentAssertions.Common;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.CheckYourReturn;
+    using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using Factories;
-    using FluentAssertions.Common;
-    using RequestHandlers.AatfReturn.CheckYourReturn;
-    using RequestHandlers.Factories;
+    using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
 
     public class GetReturnHandlerTests
     {

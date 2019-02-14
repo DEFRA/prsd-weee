@@ -64,7 +64,7 @@
             var organisation = Organisation.CreatePartnership("trading name");
             var @operator = new Operator(organisation);
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),@operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), @operator);
 
             var result = map.Map(source);
 

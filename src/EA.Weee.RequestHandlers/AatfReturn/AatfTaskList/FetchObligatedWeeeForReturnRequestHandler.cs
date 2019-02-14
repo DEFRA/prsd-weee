@@ -8,7 +8,7 @@
     using EA.Weee.RequestHandlers.Security;
     using Request = Requests.AatfReturn.GetReturn;
 
-    class FetchObligatedWeeeForReturnRequestHandler
+    public class FetchObligatedWeeeForReturnRequestHandler
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IFetchObligatedWeeeForReturnDataAccess dataAccess;

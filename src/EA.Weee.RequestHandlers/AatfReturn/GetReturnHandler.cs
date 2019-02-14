@@ -58,7 +58,9 @@
 
             var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues, returnObligatedValues, @return.Operator);
 
-            return mapper.Map(returnQuarterWindow);
+            var result = mapper.Map(returnQuarterWindow);
+
+            return result;
         }
     }
 }
