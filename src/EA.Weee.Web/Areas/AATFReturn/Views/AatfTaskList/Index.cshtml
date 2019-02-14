@@ -48,7 +48,7 @@
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
                         <a class="govuk-link govuk-link--no-visited-state">
-                            @Html.ActionLink("Received on behalf of PCS(s)", "Index", "ReceivedPCSList")
+                            @Html.ActionLink("Received on behalf of PCS(s)", "Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId },null)
                         </a>
                     </td>
                     <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
