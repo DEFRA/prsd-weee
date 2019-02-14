@@ -10,6 +10,7 @@
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -60,6 +61,29 @@
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+            var orgId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            httpContext.RouteData.Values.Add("organisationId", orgId);
+            httpContext.RouteData.Values.Add("returnId", returnId);
+
+            var viewModel = new SelectYourPCSViewModel(A.Fake<List<SchemeData>>(), A.Fake<List<Guid>>());
+            viewModel.OrganisationId = orgId;
+            viewModel.ReturnId = returnId;
+
+            var redirect = await controller.Index(viewModel) as RedirectToRouteResult;
+
+            redirect.RouteValues["action"].Should().Be("Index");
+            redirect.RouteValues["controller"].Should().Be("AatfTaskList");
+            redirect.RouteValues["organisationId"].Should().Be(orgId);
+            redirect.RouteValues["returnId"].Should().Be(returnId);
         }
     }
 }

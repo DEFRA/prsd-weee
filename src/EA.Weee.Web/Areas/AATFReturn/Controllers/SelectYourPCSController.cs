@@ -22,7 +22,6 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private List<SchemeData> schemeList;
 
         public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
@@ -53,22 +52,33 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-            using (var client = apiClient())
+            if (ModelState.IsValid)
             {
-                foreach (var scheme in viewModel.SelectedSchemes)
+                using (var client = apiClient())
                 {
-                    var returnSchemeRequest = new AddReturnScheme()
+                    foreach (var scheme in viewModel.SelectedSchemes)
                     {
-                        SchemeId = scheme,
-                        ReturnId = viewModel.ReturnId
-                    };
+                        var returnSchemeRequest = new AddReturnScheme()
+                        {
+                            SchemeId = scheme,
+                            ReturnId = viewModel.ReturnId
+                        };
 
-                    await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                        await client.SendAsync(User.GetAccessToken(), returnSchemeRequest);
+                    }
                 }
+                return RedirectToAction("Index", "AatfTaskList",
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
             }
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return RedirectToAction("Index", "AatfTaskList",
-                                        new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+            else
+            {
+                using (var client = apiClient())
+                {
+                    viewModel.SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal());
+                }
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+                return View(viewModel);
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
