@@ -123,6 +123,7 @@
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
     <Compile Include="Shared\PasteProcesserTests.cs" />
+    <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
