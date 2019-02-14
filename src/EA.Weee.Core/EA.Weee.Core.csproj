@@ -233,6 +233,7 @@
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\UserStatus.cs" />
+    <Compile Include="Validation\DecimalPlaceHelper.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
