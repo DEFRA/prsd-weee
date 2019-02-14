@@ -17,5 +17,9 @@
             AatfId = aatfId;
             ReturnId = returnId;
         }
+
+        public WeeeReceived()
+        {
+        }
     }
 }

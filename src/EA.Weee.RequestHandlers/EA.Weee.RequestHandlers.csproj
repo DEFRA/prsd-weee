@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnRequestHandler.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddDefaultAatfHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />

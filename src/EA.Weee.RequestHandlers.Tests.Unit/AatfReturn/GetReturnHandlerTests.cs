@@ -19,6 +19,7 @@
     using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
 
     public class GetReturnHandlerTests
     {
@@ -28,6 +29,7 @@
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
+        private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
 
         public GetReturnHandlerTests()
         {
@@ -36,6 +38,7 @@
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+            fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
 
             handler = new GetReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -44,7 +47,8 @@
                 organisationDataAccess,
                 mapper,
                 quarterWindowFactory,
-                fetchNonObligatedWeeeDataAccess);
+                fetchNonObligatedWeeeDataAccess,
+                fetchObligatedWeeeDataAccess);
         }
 
         [Fact]
@@ -57,7 +61,8 @@
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchObligatedWeeeForReturnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -75,7 +80,8 @@
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchObligatedWeeeForReturnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 

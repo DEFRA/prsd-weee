@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -50,8 +51,20 @@
             aatfs.Add("ABB Ltd Woking");
             aatfs.Add("ABB Ltd Maidenhead");
 
-            viewModel.Aatfs = aatfs;
+            var totalTonnage = new ObligatedData(0, 1.000m, 2.000m);
+            
+            var obligatedData = new List<AatfObligatedData>();
+            var processes = new ObligatedProcess();
+            var processData = new List<ProcessObligatedData>();
 
+            for (int i = 0; i < aatfs.Count; i++)
+            {
+                obligatedData.Add(new AatfObligatedData(Guid.NewGuid(), aatfs[i], processData));
+                processData.Add(new ProcessObligatedData(i, processes.ObligatedProcessList[i], new List<ObligatedData> { totalTonnage }, new List<ObligatedCategoryValue>()));
+            }
+
+            viewModel.AatfsData = obligatedData;
+            
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
