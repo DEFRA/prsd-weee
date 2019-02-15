@@ -28,7 +28,7 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.Should().BeOfType<NonObligatedCategoryValues>();
+            result.Should().BeOfType<ObligatedCategoryValues>();
             AssertEmptyValues(result);
         }
 
@@ -41,7 +41,7 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).HouseHold.Should().Be("1");
+            result.ElementAt(0).B2C.Should().Be("1");
         }
 
         [Theory]
@@ -52,8 +52,8 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).HouseHold.Should().Be("1");
-            result.ElementAt(1).HouseHold.Should().Be("2");
+            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(1).B2C.Should().Be("2");
         }
 
         [Theory]
@@ -92,8 +92,8 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).HouseHold.Should().Be("1");
-            result.ElementAt(0).NonHouseHold.Should().Be("2");
+            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(0).B2B.Should().Be("2");
         }
 
         [Theory]
@@ -127,34 +127,34 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).HouseHold.Should().Be("1");
-            result.ElementAt(0).NonHouseHold.Should().Be("2");
-            result.ElementAt(1).HouseHold.Should().Be("3");
-            result.ElementAt(1).NonHouseHold.Should().Be("4");
-            result.ElementAt(2).HouseHold.Should().BeNull();
-            result.ElementAt(2).NonHouseHold.Should().BeNull();
-            result.ElementAt(3).HouseHold.Should().Be("5");
-            result.ElementAt(3).NonHouseHold.Should().Be("6");
-            result.ElementAt(4).HouseHold.Should().Be("7");
-            result.ElementAt(4).NonHouseHold.Should().Be("8");
-            result.ElementAt(5).HouseHold.Should().Be("9");
-            result.ElementAt(5).NonHouseHold.Should().Be("10");
-            result.ElementAt(6).HouseHold.Should().Be("11");
-            result.ElementAt(6).NonHouseHold.Should().Be("12");
-            result.ElementAt(7).HouseHold.Should().Be("13");
-            result.ElementAt(7).NonHouseHold.Should().Be("14");
-            result.ElementAt(8).HouseHold.Should().BeNull();
-            result.ElementAt(8).NonHouseHold.Should().BeNull();
-            result.ElementAt(9).HouseHold.Should().Be("15");
-            result.ElementAt(9).NonHouseHold.Should().Be("16");
-            result.ElementAt(10).HouseHold.Should().Be("17");
-            result.ElementAt(10).NonHouseHold.Should().Be("18");
-            result.ElementAt(11).HouseHold.Should().Be("19");
-            result.ElementAt(11).NonHouseHold.Should().Be("20");
-            result.ElementAt(12).HouseHold.Should().Be("21");
-            result.ElementAt(12).NonHouseHold.Should().Be("22");
-            result.ElementAt(13).HouseHold.Should().Be("23");
-            result.ElementAt(13).NonHouseHold.Should().Be("24");
+            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(0).B2B.Should().Be("2");
+            result.ElementAt(1).B2C.Should().Be("3");
+            result.ElementAt(1).B2B.Should().Be("4");
+            result.ElementAt(2).B2C.Should().BeNull();
+            result.ElementAt(2).B2B.Should().BeNull();
+            result.ElementAt(3).B2C.Should().Be("5");
+            result.ElementAt(3).B2B.Should().Be("6");
+            result.ElementAt(4).B2C.Should().Be("7");
+            result.ElementAt(4).B2B.Should().Be("8");
+            result.ElementAt(5).B2C.Should().Be("9");
+            result.ElementAt(5).B2B.Should().Be("10");
+            result.ElementAt(6).B2C.Should().Be("11");
+            result.ElementAt(6).B2B.Should().Be("12");
+            result.ElementAt(7).B2C.Should().Be("13");
+            result.ElementAt(7).B2B.Should().Be("14");
+            result.ElementAt(8).B2C.Should().BeNull();
+            result.ElementAt(8).B2B.Should().BeNull();
+            result.ElementAt(9).B2C.Should().Be("15");
+            result.ElementAt(9).B2B.Should().Be("16");
+            result.ElementAt(10).B2C.Should().Be("17");
+            result.ElementAt(10).B2B.Should().Be("18");
+            result.ElementAt(11).B2C.Should().Be("19");
+            result.ElementAt(11).B2B.Should().Be("20");
+            result.ElementAt(12).B2C.Should().Be("21");
+            result.ElementAt(12).B2B.Should().Be("22");
+            result.ElementAt(13).B2C.Should().Be("23");
+            result.ElementAt(13).B2B.Should().Be("24");
             result.Count.Should().Be(14);
         }
 
@@ -183,50 +183,50 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).HouseHold.Should().Be("1");
-            result.ElementAt(0).NonHouseHold.Should().Be("2");
-            result.ElementAt(1).HouseHold.Should().Be("5");
-            result.ElementAt(1).NonHouseHold.Should().Be("6");
-            result.Count(c => c.HouseHold != null).Should().Be(2);
-            result.Count(c => c.NonHouseHold != null).Should().Be(2);
+            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(0).B2B.Should().Be("2");
+            result.ElementAt(1).B2C.Should().Be("5");
+            result.ElementAt(1).B2B.Should().Be("6");
+            result.Count(c => c.B2C != null).Should().Be(2);
+            result.Count(c => c.B2B != null).Should().Be(2);
         }
 
-        private static void AssertEmptyValues(NonObligatedCategoryValues result)
+        private static void AssertEmptyValues(ObligatedCategoryValues result)
         {
-            result.Count(c => c.HouseHold != null).Should().Be(0);
-            result.Count(c => c.NonHouseHold != null).Should().Be(0);
+            result.Count(c => c.B2C != null).Should().Be(0);
+            result.Count(c => c.B2B != null).Should().Be(0);
         }
 
-        private static void AssertPopulatedValues(NonObligatedCategoryValues result)
+        private static void AssertPopulatedValues(ObligatedCategoryValues result)
         {
-            result.ElementAt(0).HouseHold.Should().Be("1");
-            result.ElementAt(0).NonHouseHold.Should().Be("2");
-            result.ElementAt(1).HouseHold.Should().Be("3");
-            result.ElementAt(1).NonHouseHold.Should().Be("4");
-            result.ElementAt(2).HouseHold.Should().Be("5");
-            result.ElementAt(2).NonHouseHold.Should().Be("6");
-            result.ElementAt(3).HouseHold.Should().Be("7");
-            result.ElementAt(3).NonHouseHold.Should().Be("8");
-            result.ElementAt(4).HouseHold.Should().Be("9");
-            result.ElementAt(4).NonHouseHold.Should().Be("10");
-            result.ElementAt(5).HouseHold.Should().Be("11");
-            result.ElementAt(5).NonHouseHold.Should().Be("12");
-            result.ElementAt(6).HouseHold.Should().Be("13");
-            result.ElementAt(6).NonHouseHold.Should().Be("14");
-            result.ElementAt(7).HouseHold.Should().Be("15");
-            result.ElementAt(7).NonHouseHold.Should().Be("16");
-            result.ElementAt(8).HouseHold.Should().Be("17");
-            result.ElementAt(8).NonHouseHold.Should().Be("18");
-            result.ElementAt(9).HouseHold.Should().Be("19");
-            result.ElementAt(9).NonHouseHold.Should().Be("20");
-            result.ElementAt(10).HouseHold.Should().Be("21");
-            result.ElementAt(10).NonHouseHold.Should().Be("22");
-            result.ElementAt(11).HouseHold.Should().Be("23");
-            result.ElementAt(11).NonHouseHold.Should().Be("24");
-            result.ElementAt(12).HouseHold.Should().Be("25");
-            result.ElementAt(12).NonHouseHold.Should().Be("26");
-            result.ElementAt(13).HouseHold.Should().Be("27");
-            result.ElementAt(13).NonHouseHold.Should().Be("28");
+            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(0).B2B.Should().Be("2");
+            result.ElementAt(1).B2C.Should().Be("3");
+            result.ElementAt(1).B2B.Should().Be("4");
+            result.ElementAt(2).B2C.Should().Be("5");
+            result.ElementAt(2).B2B.Should().Be("6");
+            result.ElementAt(3).B2C.Should().Be("7");
+            result.ElementAt(3).B2B.Should().Be("8");
+            result.ElementAt(4).B2C.Should().Be("9");
+            result.ElementAt(4).B2B.Should().Be("10");
+            result.ElementAt(5).B2C.Should().Be("11");
+            result.ElementAt(5).B2B.Should().Be("12");
+            result.ElementAt(6).B2C.Should().Be("13");
+            result.ElementAt(6).B2B.Should().Be("14");
+            result.ElementAt(7).B2C.Should().Be("15");
+            result.ElementAt(7).B2B.Should().Be("16");
+            result.ElementAt(8).B2C.Should().Be("17");
+            result.ElementAt(8).B2B.Should().Be("18");
+            result.ElementAt(9).B2C.Should().Be("19");
+            result.ElementAt(9).B2B.Should().Be("20");
+            result.ElementAt(10).B2C.Should().Be("21");
+            result.ElementAt(10).B2B.Should().Be("22");
+            result.ElementAt(11).B2C.Should().Be("23");
+            result.ElementAt(11).B2B.Should().Be("24");
+            result.ElementAt(12).B2C.Should().Be("25");
+            result.ElementAt(12).B2B.Should().Be("26");
+            result.ElementAt(13).B2C.Should().Be("27");
+            result.ElementAt(13).B2B.Should().Be("28");
             result.Count.Should().Be(14);
         }
     }

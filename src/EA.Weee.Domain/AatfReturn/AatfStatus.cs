@@ -11,6 +11,9 @@
     public class AatfStatus : Enumeration
     {
         public static readonly AatfStatus Approved = new AatfStatus(2, "Approved");
+        protected AatfStatus()
+        {
+        }
 
         private AatfStatus(int value, string displayName)
             : base(value, displayName)

@@ -215,6 +215,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
@@ -226,9 +227,12 @@
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
@@ -657,10 +661,12 @@
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ObligatedReceived\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ObligatedWeeeTable.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

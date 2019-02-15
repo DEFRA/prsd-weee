@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
     using DataReturns;
@@ -10,20 +11,28 @@
 
     public class TonnageValueAttribute : ValidationAttribute
     {
-        private readonly string categoryProperty;
+        public string CategoryProperty { get; private set; }
+        public string TypeMessage { get; private set; }
 
         public TonnageValueAttribute(string category)
         {
-            this.categoryProperty = category;
+            this.CategoryProperty = category;
+            this.TypeMessage = null;
+        }
+
+        public TonnageValueAttribute(string category, string typeMessage)
+        {
+            this.CategoryProperty = category;
+            this.TypeMessage = typeMessage;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var propertyInfos = validationContext.ObjectType.GetProperties().FirstOrDefault(p => p.Name == this.categoryProperty);
+            var propertyInfos = validationContext.ObjectType.GetProperties().FirstOrDefault(p => p.Name == this.CategoryProperty);
 
             if (propertyInfos == null)
             {
-                throw new ValidationException($"Property {categoryProperty} does not exist");
+                throw new ValidationException($"Property {CategoryProperty} does not exist");
             }
 
             var propertyValue = (int)propertyInfos.GetValue(validationContext.ObjectInstance, null) as int?;
@@ -32,10 +41,10 @@
 
             if (propertyValue == null || !categoryId.Contains(propertyValue.Value))
             {
-                throw new ValidationException($"Property {categoryProperty} should be of type {typeof(WeeeCategory).Name}");
+                throw new ValidationException($"Property {CategoryProperty} should be of type {typeof(WeeeCategory).Name}");
             }
 
-            if (value is null)
+            if (string.IsNullOrWhiteSpace(value?.ToString()))
             {
                 return ValidationResult.Success;
             }
@@ -45,16 +54,9 @@
                 return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
             }
 
-            if (!decimal.TryParse(value.ToString(), out var decimalResult))
+            if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
             {
-                if (decimalResult == 0 && (value.ToString() == string.Empty) || value is null)
-                {
-                    return ValidationResult.Success;
-                }
-                else
-                {
-                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
-                }
+                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
             }
             else
             {
@@ -63,7 +65,19 @@
                     return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
                 }
 
-                if (DecimalPlaces(decimalResult) > 3)
+                if (!decimal.TryParse(value.ToString(),
+                    NumberStyles.Number &
+                    ~NumberStyles.AllowLeadingWhite &
+                    ~NumberStyles.AllowTrailingWhite &
+                    ~NumberStyles.AllowLeadingSign &
+                    ~NumberStyles.AllowTrailingSign,
+                    CultureInfo.InvariantCulture,
+                    out decimalResult))
+                {
+                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                }
+
+                if (decimalResult.DecimalPlaces() > 3)
                 {
                     return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
                 }
@@ -72,32 +86,11 @@
             return ValidationResult.Success;
         }
 
-        private int DecimalPlaces(decimal value)
-        {
-            if (value == 0)
-            {
-                return 0;
-            }
-            else
-            {
-                var bits = decimal.GetBits(value);
-                var exponent = bits[3] >> 16;
-                var result = exponent;
-                long lowDecimal = bits[0] | (bits[1] >> 8);
-
-                while ((lowDecimal % 10) == 0)
-                {
-                    result--;
-                    lowDecimal /= 10;
-                }
-
-                return result;
-            }
-        }
-
         private string GenerateMessage(string message, int categoryId)
         {
-            return $"Category {categoryId} tonnage value must be {message}";
+            var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
+            
+            return $"Category {categoryId}{additionalMessage} tonnage value must be {message}";
         }
     }
 }

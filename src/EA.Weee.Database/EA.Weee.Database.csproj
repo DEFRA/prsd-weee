@@ -214,6 +214,8 @@
     <Content Include="scripts\Update\Release 2\Sprint1\20190131-1220-RenameAATFReturnColumns.sql" />
     <Content Include="scripts\Update\Release 2\Sprint2\20190207-1400-fixAatfColumnUpdateUniqueColumnOperator.sql" />
     <Content Include="scripts\Update\Release 2\Sprint2\20190211-1600-CreateTable-AATF-ReturnScheme.SQL" />
+    <Content Include="scripts\Update\Release 2\Sprint2\20190208-1243-UpdateAATFWeeReceivedAmountTable.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint2\20190211-1425-UpdateAATFWeeReceivedAndDropAATFReturn.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
