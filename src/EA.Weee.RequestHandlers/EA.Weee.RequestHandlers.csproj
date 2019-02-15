@@ -68,9 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AddDefaultAatfHandler.cs" />
+    <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
+    <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
+    <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReceivedHandler.cs" />
     <Compile Include="AatfReturn\Obligated\IAddObligatedReceivedDataAccess.cs" />
@@ -83,6 +86,7 @@
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\IAddNonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\ReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\Specification\ISpecification.cs" />
     <Compile Include="AatfReturn\Specification\OperatorByOrganisationIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\Specification.cs" />
@@ -219,6 +223,7 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
+    <Compile Include="Scheme\GetSchemesExternalHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />

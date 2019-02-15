@@ -47,8 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
+    <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
+    <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetSchemesExternal.cs" />
     <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
