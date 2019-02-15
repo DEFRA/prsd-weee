@@ -643,21 +643,10 @@ input[type="file"].form-control {
     padding-left: 3px;
 }
 
-.govuk-details__summary {
-    color: black;
-}
 
 .summary_error:focus {
     background: #B10E1E !important;
     outline: none;
-}
-
-.govuk-details__summary:hover {
-    color: black;
-}
-
-.error-details-summary:hover {
-    color: govuk-colour('black');
 }
 
 .error-list-container {

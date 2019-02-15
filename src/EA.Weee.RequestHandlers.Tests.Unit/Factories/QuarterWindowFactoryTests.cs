@@ -99,7 +99,7 @@
 
         private static QuarterWindowTemplate QuarterWindowTemplate(int startMonth, int startDay, int addStartYear, int addEndYear)
         {
-            return new QuarterWindowTemplate() { StartMonth = startMonth, StartDay = startDay, AddStartYears = addStartYear, EndMonth = 3, AddEndYears = addEndYear};
+            return new QuarterWindowTemplate() { StartMonth = startMonth, StartDay = startDay, AddStartYears = addStartYear, EndMonth = 3, AddEndYears = addEndYear };
         }
     }
 }
