@@ -33,30 +33,47 @@
             <tbody>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
-                        @if (item.AatfName == Model.AatfsData[0].AatfName)
+                        @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name)
                         {
                             <b>1.</b>
                         }
                     </td>
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
-                        Obligated WEEE - @item.AatfName
+                        Obligated WEEE - @item.Aatf.Name
                     </td>
                     <td class="govuk-table__cell" style="width:15%">B2C</td>
                     <td class="govuk-table__cell" style="width:15%">B2B</td>
                 </tr>
-                @foreach (var process in item.ProcessObligatedData)
-                {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" style="border: 0px;"></td>
-                        <td class="govuk-table__cell">
-                            <a class="govuk-link govuk-link--no-visited-state">
-                                @Html.ActionLink(@process.ProcessName, "Index", "Holding")
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell"><strong class="govuk-tag">@process.WeeeData[0].B2C.ToTonnageDisplay()</strong></td>
-                        <td class="govuk-table__cell"><strong class="govuk-tag">@process.WeeeData[0].B2B.ToTonnageDisplay()</strong></td>
-                    </tr>
-                }
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeReceived).ToHtmlString(), "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2B</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeSentOn).ToHtmlString(), "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2B</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeReused).ToHtmlString(), "Index", "Holding")
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2B</strong></td>
+                </tr>
             </tbody>
         </table>
     }

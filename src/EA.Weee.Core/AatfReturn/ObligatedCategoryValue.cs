@@ -15,6 +15,12 @@
         {
         }
 
+        public ObligatedCategoryValue(string b2b, string b2c)
+        {
+            B2B = b2b;
+            B2C = b2c;
+        }
+
         public ObligatedCategoryValue(WeeeCategory category) : base(category)
         {
         }

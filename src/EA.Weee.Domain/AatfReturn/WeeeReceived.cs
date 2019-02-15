@@ -10,7 +10,7 @@
 
         public Guid AatfId { get; private set; }
 
-        public virtual Aatf AAtf { get; private set; }
+        public virtual Aatf Aatf { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
 
