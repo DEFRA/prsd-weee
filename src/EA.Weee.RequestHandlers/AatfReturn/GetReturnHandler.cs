@@ -24,6 +24,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
+        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
             IReturnDataAccess returnDataAccess,
@@ -31,7 +32,8 @@
             IMap<ReturnQuarterWindow, ReturnData> mapper,
             IQuarterWindowFactory quarterWindowFactory, 
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
-            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess)
+            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
+            IFetchAatfByOrganisationIdDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -40,6 +42,7 @@
             this.quarterWindowFactory = quarterWindowFactory;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -56,7 +59,9 @@
 
             var returnObligatedValues = await obligatedDataAccess.FetchObligatedWeeeForReturn(message.ReturnId);
 
-            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues, returnObligatedValues, @return.Operator);
+            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
+
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedValues, @return.Operator);
 
             var result = mapper.Map(returnQuarterWindow);
 

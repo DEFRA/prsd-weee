@@ -12,9 +12,11 @@
 
         public QuarterWindow QuarterWindow { get; set; }
 
+        public List<Aatf> Aatfs { get; set; }
+
         public List<NonObligatedData> NonObligatedData { get; set; }
 
-        public List<ObligatedData> ObligatedData { get; set; }
+        public List<WeeeReceivedObligatedData> ObligatedWeeeReceivedData { get; set; }
 
         public OperatorData ReturnOperatorData { get; set; }
     }

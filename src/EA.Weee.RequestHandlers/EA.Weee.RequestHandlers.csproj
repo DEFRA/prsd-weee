@@ -67,8 +67,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdRequestHandler.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnRequestHandler.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\IFetchAatfByOrganisationIdDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddDefaultAatfHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
