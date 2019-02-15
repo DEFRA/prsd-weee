@@ -40,7 +40,7 @@
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
                 </td>
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
                         @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-!-width-two-thirds weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })

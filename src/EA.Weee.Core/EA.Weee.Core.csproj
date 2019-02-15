@@ -84,6 +84,7 @@
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
+    <Compile Include="AatfReturn\PCSData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="Validation\MinimumElementAttribute.cs" />
     <Compile Include="Validation\TonnageValueAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
