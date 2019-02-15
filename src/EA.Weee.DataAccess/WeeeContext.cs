@@ -39,6 +39,8 @@
 
         public virtual DbSet<Return> Returns { get; set; }
 
+        public virtual DbSet<ReturnScheme> ReturnScheme { get; set; }
+
         public virtual DbSet<Operator> Operators { get; set; }
 
         public virtual DbSet<User> Users { get; set; }

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
 
@@ -41,5 +40,9 @@
         public string NonObligatedTonnageTotalDcf { get; set; }
 
         public OperatorData ReturnOperator { get; set; }
+
+        public string SchemeName { get; set; }
+
+        public string ApprovalNumber { get; set; }
     }
 }
