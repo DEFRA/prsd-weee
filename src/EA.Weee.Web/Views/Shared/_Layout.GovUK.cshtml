@@ -4,12 +4,13 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content="#0b0c0c" />
     <title>@Html.Raw(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
 
     @*<script type="text/javascript">
-            (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
-    </script>*@
+                (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
+        </script>*@
 
     <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
 
@@ -21,10 +22,10 @@
     <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon.png")">
 
     <!--[if !IE 8]><!-->
-    <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-2.3.0.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-2.7.0.min.css")" rel="stylesheet" />
     <!--<![endif]-->
     <!--[if IE 8]>
-        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.3.0.min.css")" rel="stylesheet" />
+        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.7.0.min.css")" rel="stylesheet" />
     <![endif]-->
     <!--[if lt IE 9]>
         <script src="@Url.Content("~/Scripts/govuk_frontend/html5shiv.js")"></script>

@@ -71,8 +71,8 @@
             const int year = 2019;
             const int quarter = 1;
 
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter,  Year = year };
-        
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year };
+
             var @return = A.Dummy<Return>();
             var organisation = A.Fake<Organisation>();
 
