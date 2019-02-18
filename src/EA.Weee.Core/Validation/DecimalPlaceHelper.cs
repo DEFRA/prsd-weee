@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.Core.Validation
 {
+    using System;
+    using System.Globalization;
+
     public static class DecimalPlaceHelper
     {
         public static int DecimalPlaces(this decimal value)
@@ -8,21 +11,11 @@
             {
                 return 0;
             }
-            else
-            {
-                var bits = decimal.GetBits(value);
-                var exponent = bits[3] >> 16;
-                var result = exponent;
-                long lowDecimal = bits[0] | (bits[1] >> 8);
 
-                while ((lowDecimal % 10) == 0)
-                {
-                    result--;
-                    lowDecimal /= 10;
-                }
+            var converted = value.ToString(CultureInfo.InvariantCulture);
+            var indexDecimal = converted.IndexOf(".", StringComparison.Ordinal);
 
-                return result;
-            }
+            return indexDecimal > 0 ? converted.Substring(indexDecimal + 1).Length : 0;
         }
     }
 }
