@@ -53,7 +53,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
