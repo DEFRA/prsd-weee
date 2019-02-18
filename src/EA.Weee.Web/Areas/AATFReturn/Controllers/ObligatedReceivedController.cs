@@ -30,9 +30,9 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId };
+            var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId, AatfId = aatfId };
 
             using (var client = apiClient())
             {

@@ -213,7 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />

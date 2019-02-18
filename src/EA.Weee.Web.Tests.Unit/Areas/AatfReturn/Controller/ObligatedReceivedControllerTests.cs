@@ -37,6 +37,8 @@
         }
 
         [Fact]
+        public void 
+        [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedReceivedViewModel();
