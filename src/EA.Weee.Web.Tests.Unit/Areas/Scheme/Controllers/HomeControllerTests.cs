@@ -1049,7 +1049,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("AatfTaskList", routeValues["controller"]);
+            Assert.Equal("SelectYourPCS", routeValues["controller"]);
         }
     }
 }
