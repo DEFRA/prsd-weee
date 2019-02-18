@@ -14,9 +14,13 @@
     window.CustomEvent = CustomEvent;
 })();
 
-var countDecimals = function(value) {
-    if (Math.floor(value) !== value)
-        return value.toString().split(".")[1].length || 0;
+var countDecimals = function (value) {
+    if (value.indexOf(".") !== -1) {
+        if (Math.floor(value) !== value) {
+            return value.toString().split(".")[1].length || 0;
+        }
+        return 0;
+    }
     return 0;
 };
 
@@ -46,8 +50,8 @@ function TonnageTotals(controlId) {
 
                     if (!isNaN(value) && value && value.indexOf("+") === -1) {
                         var convertedValue = parseFloat(value);
-                        if (convertedValue > 0 && countDecimals(convertedValue) <= 3) {
-                            totalTonnage += parseFloat(value);
+                        if (convertedValue > 0 && countDecimals(value) <= 3) {
+                            totalTonnage += parseFloat(convertedValue);
                         }
                     }
                     tonnageTotal.innerText = totalTonnage.toFixed(3) + ' tonnes';
