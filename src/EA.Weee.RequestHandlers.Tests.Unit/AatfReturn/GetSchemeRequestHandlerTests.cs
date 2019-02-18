@@ -39,7 +39,8 @@
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            
+            var handler = new GetSchemeRequestHandler(authorization, returnSchemeDataAccess, getSchemesDataAccess, mapper);
+
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturnScheme>());
             
             await action.Should().ThrowAsync<SecurityException>();
