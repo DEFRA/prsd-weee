@@ -24,5 +24,11 @@
 
             decimal.Parse(value).DecimalPlaces().Should().Be(numberOfPlaces);
         }
+
+        [Fact]
+        public void DecimalPlaces_GivenValueWithDecimalPlacesAndTrailingZeroes_DecimalPlacesShouldBeCorrect()
+        {
+            decimal.Parse("10.100000").DecimalPlaces().Should().Be(6);
+        }
     }
 }
