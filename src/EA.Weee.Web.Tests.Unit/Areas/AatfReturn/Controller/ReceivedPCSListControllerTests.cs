@@ -8,6 +8,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -72,10 +73,23 @@
         public async void IndexGet_GivenActionAndParameters_ReceivedPCSListViewModelShouldBeReturned()
         {
             var returnData = new List<SchemeData>();
+          
             var model = A.Fake<ReceivedPCSListViewModel>();
+            var schemeList = new List<SchemeData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetReturnScheme>())).Returns(schemeList);
+
+            System.Threading.Tasks.Task<Core.Organisations.OrganisationData> organisationName = null;
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetOrganisationInfo>())).Returns(organisationName);
+
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
-            result.Model.Should().BeEquivalentTo(model);
+            var receivedModel = result.Model as ReceivedPCSListViewModel;
+
+            receivedModel.OrganisationName.Should().Be(null);
+            receivedModel.SchemeList.Should().BeEmpty();
+            receivedModel.ReturnId.Should().BeEmpty();
+            receivedModel.SchemeId.Should().BeEmpty();
         }
 
         [Fact]
