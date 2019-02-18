@@ -12,6 +12,8 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public Guid AatfId { get; set; }
+
         public string OrganisationName { get; set; }
 
         public Guid PcsId { get; set; }

@@ -20,7 +20,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
 
-        public ReceivedPCSListController(Func<IWeeeClient> apiClient,
+        public ReceivedPcsListController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
             IMapper mapper)
@@ -33,7 +33,7 @@
 
         // GET: AatfReturn/ReceivedPCSList
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
         {
             var viewModel = new ReceivedPCSListViewModel();
 
@@ -42,8 +42,8 @@
                 var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                viewModel.OrganisationName = organisationName;
-                viewModel.OrganisationId = organisationId;
+                viewModel.OrganisationName = @return[0].Name;
+                viewModel.OrganisationId = @return[0].OrganisationId;
                 viewModel.ReturnId = returnId;
                 viewModel.SchemeList = schemeIDList;
             }
