@@ -54,31 +54,41 @@
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
-            result.ViewName.Should().Be("Index");        
+            result.ViewName.Should().BeEmpty();
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ReceivedPCSListViewModelShouldBeBuilt()
+        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
-            var returnData = new List<SchemeData>();
+            var returnId = Guid.NewGuid();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(returnData);
+            await controller.Index(Guid.NewGuid(), returnId);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
-
-            A.CallTo(() => mapper.Map<ReceivedPCSListViewModel>(returnData)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(g => g.ReturnId.Equals(returnId))))
+            .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void IndexGet_GivenActionAndParameters_ReceivedPCSListViewModelShouldBeReturned()
         {
+            var returnData = new List<SchemeData>();
             var model = A.Fake<ReceivedPCSListViewModel>();
-
-            A.CallTo(() => mapper.Map<ReceivedPCSListViewModel>(A<ReturnData>._)).Returns(model);
-
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(model);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        {
+            var model = new ReceivedPCSListViewModel();
+            var returnId = new Guid();
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(returnId);
         }
     }
 }
