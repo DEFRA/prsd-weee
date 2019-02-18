@@ -125,6 +125,28 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenReturn_ObligatedValuesShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_AatfsShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            var organisationId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenReturn_MapperShouldBeCalled()
         {
             var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());

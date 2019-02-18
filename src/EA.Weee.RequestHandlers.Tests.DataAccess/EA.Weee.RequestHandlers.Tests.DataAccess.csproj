@@ -95,6 +95,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccessTests.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />

@@ -53,6 +53,7 @@
                     OrganisationId = @return.Operator.Organisation.Id,
                     Dcf = dcf,
                     CategoryValues = categoryValues
+
                 };
 
                 var nonObligatedWee = new List<NonObligatedWeee>();

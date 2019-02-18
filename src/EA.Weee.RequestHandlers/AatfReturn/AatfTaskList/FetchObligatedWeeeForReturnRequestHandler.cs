@@ -1,6 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.AatfTaskList
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
+    using Request = Requests.AatfReturn.ObligatedReceived.FetchObligatedWeeeForReturnRequest;
 
     public class FetchObligatedWeeeForReturnRequestHandler
     {

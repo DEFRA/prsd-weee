@@ -23,6 +23,13 @@
             ReturnId = returnId;
         }
 
+        public WeeeReceived(Scheme scheme, Aatf aatf, Guid returnId)
+        {
+            Scheme = scheme;
+            Aatf = aatf;
+            ReturnId = returnId;
+        }
+
         public WeeeReceived()
         {
         }
