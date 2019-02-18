@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
     /**/
@@ -8,7 +9,6 @@
 }
 
 <h2 class="govuk-heading-l">AATF return task list for @Model.OrganisationName</h2>
-
 @using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -27,19 +27,19 @@
 
     <div class="govuk-!-margin-bottom-4"></div>
 
-    foreach (var item in Model.Aatfs)
+    foreach (var item in Model.AatfsData)
     {
         <table class="govuk-table" style="width: 70%;">
             <tbody>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
-                        @if (item == Model.Aatfs[0])
+                        @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name)
                         {
                             <b>1.</b>
                         }
                     </td>
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
-                        Obligated WEEE - @item
+                        Obligated WEEE - @item.Aatf.Name
                     </td>
                     <td class="govuk-table__cell" style="width:15%">B2C</td>
                     <td class="govuk-table__cell" style="width:15%">B2B</td>
@@ -48,31 +48,32 @@
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
                         <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeReceived).ToHtmlString(), "Index", "Holding")
                             @Html.ActionLink("Received on behalf of PCS(s)", "Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId },null)
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2B</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
-                        <a href="#" class="govuk-link govuk-link--no-visited-state">
-                            @Html.ActionLink("Sent to another AATF / ATF", "Index", "Holding")
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeSentOn).ToHtmlString(), "Index", "Holding")
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2B</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
-                        <a href="#" class="govuk-link govuk-link--no-visited-state">
-                            @Html.ActionLink("Reused as a whole appliance", "Index", "Holding")
+                        <a class="govuk-link govuk-link--no-visited-state">
+                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeReused).ToHtmlString(), "Index", "Holding")
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">N/A</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2B</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -96,7 +97,7 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Retained by a DCF", "AatfReturn_NonObligatedDcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })                    
+                    @Html.RouteLink("Retained by a DCF", "AatfReturn_NonObligatedDcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
             </tr>

@@ -3,16 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
-    using EA.Weee.Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
     using Xunit;
+    using DomainAatf = Domain.AatfReturn.Aatf;
 
     public class ReturnMapTests
     {
@@ -64,7 +62,7 @@
             var organisation = Organisation.CreatePartnership("trading name");
             var @operator = new Operator(organisation);
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<NonObligatedWeee>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), @operator);
 
             var result = map.Map(source);
 

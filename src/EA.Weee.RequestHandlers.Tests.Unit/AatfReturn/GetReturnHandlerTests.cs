@@ -3,20 +3,20 @@
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentAssertions.Common;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.CheckYourReturn;
+    using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using Factories;
-    using FluentAssertions.Common;
-    using RequestHandlers.AatfReturn.CheckYourReturn;
-    using RequestHandlers.Factories;
+    using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -28,6 +28,8 @@
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
+        private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
+        private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
 
         public GetReturnHandlerTests()
         {
@@ -36,6 +38,8 @@
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+            fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
+            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
 
             handler = new GetReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -44,7 +48,9 @@
                 organisationDataAccess,
                 mapper,
                 quarterWindowFactory,
-                fetchNonObligatedWeeeDataAccess);
+                fetchNonObligatedWeeeDataAccess,
+                fetchObligatedWeeeDataAccess,
+                fetchAatfByOrganisationIdDataAccess);
         }
 
         [Fact]
@@ -57,7 +63,9 @@
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchAatfByOrganisationIdDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -75,7 +83,9 @@
                 A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>());
+                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<IFetchAatfByOrganisationIdDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 

@@ -79,15 +79,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\AatfObligatedData.cs" />
     <Compile Include="AatfReturn\CategoryValue.cs" />
     <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\WeeeReceivedObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedProcess.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
     <Compile Include="AatfReturn\PCSData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
+    <Compile Include="AatfReturn\Scheme.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
@@ -115,6 +120,8 @@
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatter.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
+    <Compile Include="Helpers\ISumCategoryTonnageValues.cs" />
+    <Compile Include="Helpers\SumCategoryTonnageValues.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />

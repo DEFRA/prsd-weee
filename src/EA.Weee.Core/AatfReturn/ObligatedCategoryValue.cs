@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Validation;
 
     public class ObligatedCategoryValue : CategoryValue
@@ -18,6 +13,12 @@
 
         public ObligatedCategoryValue()
         {
+        }
+
+        public ObligatedCategoryValue(string b2b, string b2c)
+        {
+            B2B = b2b;
+            B2C = b2c;
         }
 
         public ObligatedCategoryValue(WeeeCategory category) : base(category)
