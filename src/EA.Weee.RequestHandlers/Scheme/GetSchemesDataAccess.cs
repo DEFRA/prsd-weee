@@ -29,9 +29,9 @@
             return await context.Schemes.Where(s => s.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<Domain.Scheme.Scheme>> GetAllSchemes()
+        public async Task<IList<Domain.Scheme.Scheme>> GetAllSchemesApprovedAndWithdrawn()
         {
-            return await context.Schemes.ToListAsync();
+            return await context.Schemes.Where(s => s.SchemeStatus.Value == 2 || s.SchemeStatus.Value == 4).ToListAsync();
         }
     }
 }

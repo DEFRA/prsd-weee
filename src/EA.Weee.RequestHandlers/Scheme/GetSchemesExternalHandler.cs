@@ -30,7 +30,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var schemes = await dataAccess.GetAllSchemes();
+            var schemes = await dataAccess.GetAllSchemesApprovedAndWithdrawn();
 
             return schemes.Select(s => schemeMap.Map(s))
                 .OrderBy(sd => sd.Name)

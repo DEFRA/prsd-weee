@@ -8,7 +8,7 @@
     {
         Task<IList<Domain.Scheme.Scheme>> GetCompleteSchemes();
 
-        Task<IList<Domain.Scheme.Scheme>> GetAllSchemes();
+        Task<IList<Domain.Scheme.Scheme>> GetAllSchemesApprovedAndWithdrawn();
 
         Task<Domain.Scheme.Scheme> GetSchemeBasedOnId(Guid id);
     }
