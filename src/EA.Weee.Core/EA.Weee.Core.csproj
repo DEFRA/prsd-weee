@@ -86,7 +86,6 @@
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
     <Compile Include="AatfReturn\WeeeReceivedObligatedData.cs" />
-    <Compile Include="AatfReturn\ObligatedProcess.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
     <Compile Include="AatfReturn\PCSData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
@@ -120,8 +119,8 @@
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatter.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
-    <Compile Include="Helpers\ISumCategoryTonnageValues.cs" />
-    <Compile Include="Helpers\SumCategoryTonnageValues.cs" />
+    <Compile Include="Helpers\ICategoryValueTotalCalculator.cs" />
+    <Compile Include="Helpers\CategoryValueTotalCalculator.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />

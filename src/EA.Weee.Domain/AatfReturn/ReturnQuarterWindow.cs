@@ -45,17 +45,6 @@
             this.NonObligatedWeeeList = nonObligatedWeeeList;
         }
 
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, List<NonObligatedWeee> nonObligatedWeeeList, List<WeeeReceivedAmount> obligatedWeeeList)
-        {
-            Guard.ArgumentNotNull(() => @return, @return);
-            Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
-
-            this.Return = @return;
-            this.QuarterWindow = quarterWindow;
-            this.NonObligatedWeeeList = nonObligatedWeeeList;
-            this.ObligatedWeeeReceivedList = obligatedWeeeList;
-        }
-
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow)
         {
             Guard.ArgumentNotNull(() => @return, @return);
