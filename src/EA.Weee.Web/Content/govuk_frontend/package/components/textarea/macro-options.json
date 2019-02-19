@@ -51,10 +51,30 @@
         "isComponent": true
     },
     {
+        "name": "formGroup",
+        "type": "object",
+        "required": false,
+        "description": "Options for the form-group wrapper",
+        "params": [
+            {
+                "name": "classes",
+                "type": "string",
+                "required": false,
+                "description": "Optional classes to add to the form group (e.g. to show error state for the whole group)"
+            }
+        ]
+    },
+    {
         "name": "classes",
         "type": "string",
         "required": false,
         "description": "Classes to add to the textarea."
+    },
+    {
+        "name": "autocomplete",
+        "type": "string",
+        "required": false,
+        "description": "Attribute to [identify input purpose](https://www.w3.org/WAI/WCAG21/Understanding/identify-input-purpose.html), for instance \"postal-code\" or \"username\". See [autofill](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill) for full list of attributes that can be used."
     },
     {
         "name": "attributes",

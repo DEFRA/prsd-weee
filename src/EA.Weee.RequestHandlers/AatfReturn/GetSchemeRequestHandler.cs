@@ -5,7 +5,6 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using Prsd.Core.Mapper;
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Scheme = Domain.Scheme.Scheme;
@@ -29,19 +28,13 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            List<Scheme> schemeList = new List<Scheme>();
-            List<SchemeData> schemeListData = new List<SchemeData>();
-            List<Guid> schemeIdList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
+            var schemeListData = new List<SchemeData>();
 
-            foreach (var schemeId in schemeIdList)
-            {
-                Scheme scheme = await schemeDataAccess.GetSchemeBasedOnId(schemeId);
-                schemeList.Add(scheme);
-            }
+            var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
-            foreach (var scheme in schemeList)
+            foreach (var scheme in returnSchemeList)
             {
-                SchemeData data = mapper.Map<Scheme, SchemeData>(scheme);
+                SchemeData data = mapper.Map<Scheme, SchemeData>(scheme.Scheme);
                 schemeListData.Add(data);
             }
 

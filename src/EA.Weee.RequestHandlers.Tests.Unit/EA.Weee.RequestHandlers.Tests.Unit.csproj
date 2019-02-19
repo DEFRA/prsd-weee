@@ -98,6 +98,7 @@
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandlerTests.cs" />
+    <Compile Include="AatfReturn\GetSchemeRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />
