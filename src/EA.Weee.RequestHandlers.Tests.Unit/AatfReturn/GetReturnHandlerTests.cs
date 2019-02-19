@@ -141,7 +141,7 @@
 
             var result = await handler.HandleAsync(new GetReturn(returnId));
 
-            var organisationId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var organisationId = new Guid();
 
             A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
         }
