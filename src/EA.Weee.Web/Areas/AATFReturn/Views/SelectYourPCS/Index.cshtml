@@ -20,7 +20,7 @@
                     <div class="govuk-checkboxes__item">
                         <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
                         <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name#@Model.SchemeList[i].Id">
-                            @Model.SchemeList[i].Name  - @Model.SchemeList[i].ApprovalName
+                            @Model.SchemeList[i].SchemeName  - @Model.SchemeList[i].ApprovalName
                         </label>
                     </div>
                     @Html.HiddenFor(m => Model.SchemeList[i].ApprovalName)
