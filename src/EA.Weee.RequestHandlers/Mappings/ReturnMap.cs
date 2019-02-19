@@ -1,36 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Core.Scheme;
-    using Domain.AatfReturn;
-    using Domain.Scheme;
-    using Prsd.Core.Mapper;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using Domain.AatfReturn;
     using Prsd.Core;
+    using Prsd.Core.Mapper;
+    using Aatf = Core.AatfReturn.Aatf;
+    using Scheme = Core.AatfReturn.Scheme;
 
     public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
     {
         public ReturnData Map(ReturnQuarterWindow source)
         {
             Guard.ArgumentNotNull(() => source, source);
-
-            //foreach (var nonObligatedWeee in source.NonObligatedData)
-            //{
-            //    var buffer = new NonObligatedCategoryValue()
-            //    {
-            //        Dcf = nonObligatedWeee.Dcf,
-            //        Tonnage = nonObligatedWeee.Tonnage.ToString(),
-            //        CategoryId = nonObligatedWeee.CategoryId,
-            //    };
-
-            //    NonObligatedWeeeListMap.Add(buffer);
-            //}
-
+            
             var returnData = new ReturnData()
             {
                 Id = source.Return.Id,
@@ -39,9 +24,32 @@
                 ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, source.Return.Operator.Organisation.Id)
             };
 
+            if (source.Aatfs != null)
+            {
+                var aatfReturnList = new List<Aatf>();
+
+                foreach (var sourceAatf in source.Aatfs)
+                {
+                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name));
+                }
+
+                returnData.Aatfs = aatfReturnList;
+            }
+
             if (source.NonObligatedWeeeList != null)
             {
                 returnData.NonObligatedData = source.NonObligatedWeeeList.Select(n => new NonObligatedData(n.CategoryId, n.Tonnage, n.Dcf)).ToList();
+            }
+
+            if (source.ObligatedWeeeReceivedList != null)
+            {
+                var aatf = new Aatf(
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Id).FirstOrDefault(),
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Name).FirstOrDefault());
+                var scheme = new Scheme(
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.Id).FirstOrDefault(),
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.SchemeName).FirstOrDefault());
+                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeReceivedObligatedData(scheme, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
             }
 
             return returnData;
