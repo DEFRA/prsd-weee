@@ -1,6 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
 {
+    using System;
     using System.Threading.Tasks;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
+    using FluentAssertions;
     using RequestHandlers.Scheme;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
