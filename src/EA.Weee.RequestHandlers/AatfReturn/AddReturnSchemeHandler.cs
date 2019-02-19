@@ -31,13 +31,10 @@
             authorization.EnsureCanAccessExternalArea();
 
             var scheme = await schemeDataAccess.GetSchemeOrDefault(message.SchemeId);
-
             var @return = await returnDataAccess.GetById(message.ReturnId);
             var returnScheme = new ReturnScheme(scheme, @return);
 
-            await returnSchemeDataAccess.Submit(returnScheme);
-
-            return returnScheme.Id;
+            return await returnSchemeDataAccess.Submit(returnScheme);
         }
     }
 }
