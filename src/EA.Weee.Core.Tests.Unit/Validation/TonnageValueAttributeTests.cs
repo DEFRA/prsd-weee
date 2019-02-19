@@ -180,7 +180,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 15 digits or less");
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 14 digits or less");
         }
 
         [Fact]
@@ -204,7 +204,7 @@
         {
             ValidationWithTypeMessage("000000000000.000");
 
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value with 15 digits or less");
+            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value with 14 digits or less");
         }
 
         [Fact]
