@@ -2,8 +2,6 @@
 {
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -11,10 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -32,8 +27,8 @@
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-
             handler = new AddReturnSchemeHandler(weeeAuthorization, returnSchemeDataAccess, returnDataAccess, schemeDataAccess);
+            returnSchemeId = new Guid();
         }
 
         [Fact]

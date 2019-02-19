@@ -135,7 +135,7 @@
 
             var result = map.Map(source);
 
-            var zeroGuid = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var zeroGuid = new Guid();
 
             result.Aatfs.Count(a => a.Name == "Aatf1" && a.Id == zeroGuid).Should().Be(1);
             result.Aatfs.Count(a => a.Name == "Aatf2" && a.Id == zeroGuid).Should().Be(1);
