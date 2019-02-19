@@ -54,55 +54,5 @@
                 Assert.DoesNotContain(result, r => r.Id == scheme4.Id);
             }
         }
-        [Fact]
-        public async Task GetSchemesDataAccess_GetAllSchemesApprovedAndWithdrawn_ReturnsOnlySchemesThatAreApprovedAndWithdrawn()
-        {
-            using (DatabaseWrapper database = new DatabaseWrapper())
-            {
-                var context = database.WeeeContext;
-
-                var name = "Test Name" + Guid.NewGuid();
-                var tradingName = "Test Trading Name" + Guid.NewGuid();
-                const string crn = "ABC12345";
-                var organisationApproved = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                var organisationPending = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                var organisationWithdrawn = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                var organisationRejected = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-
-                context.Organisations.Add(organisationApproved);
-                context.Organisations.Add(organisationPending);
-                context.Organisations.Add(organisationWithdrawn);
-                context.Organisations.Add(organisationRejected);
-                await context.SaveChangesAsync();
-
-                var schemeApproved = new Scheme(organisationApproved.Id);
-                schemeApproved.SetStatus(SchemeStatus.Approved);
-                context.Schemes.Add(schemeApproved);
-
-                var schemePending = new Scheme(organisationPending.Id);
-                schemePending.SetStatus(SchemeStatus.Pending);
-                context.Schemes.Add(schemePending);
-                
-                var schemeWithdrawn = new Scheme(organisationWithdrawn.Id);
-                schemeWithdrawn.SetStatus(SchemeStatus.Approved);
-                schemeWithdrawn.SetStatus(SchemeStatus.Withdrawn);
-                context.Schemes.Add(schemeWithdrawn);
-               
-                var schemeRejected = new Scheme(organisationRejected.Id);
-                schemeRejected.SetStatus(SchemeStatus.Rejected);
-                context.Schemes.Add(schemeRejected);
-
-                await context.SaveChangesAsync();
-
-                var dataAccess = new GetSchemesDataAccess(database.WeeeContext);
-
-                var results = await dataAccess.GetAllSchemesApprovedAndWithdrawn();
-
-                results.Should().Contain(schemeApproved);
-                results.Should().Contain(schemeWithdrawn);
-                results.Should().NotContain(schemePending);
-                results.Should().NotContain(schemeRejected);
-            }
-        }
     }
 }

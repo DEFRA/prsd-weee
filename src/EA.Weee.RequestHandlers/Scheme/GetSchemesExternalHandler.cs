@@ -30,9 +30,10 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var schemes = await dataAccess.GetAllSchemesApprovedAndWithdrawn();
+            var schemes = await dataAccess.GetCompleteSchemes();
 
-            return schemes.Select(s => schemeMap.Map(s))
+            return schemes.Where(s => (s.SchemeStatus == SchemeStatus.Approved) || (s.SchemeStatus == SchemeStatus.Withdrawn))
+                .Select(s => schemeMap.Map(s))
                 .OrderBy(sd => sd.Name)
                 .ToList();
         }
