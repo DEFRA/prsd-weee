@@ -71,7 +71,6 @@
             Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
 
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(request.ReturnId)).Returns(returnSchemeList);
-            A.CallTo(() => getSchemesDataAccess.GetSchemeBasedOnId(A<Guid>._)).Returns(scheme);
 
             var mapper = A.Fake<IMapper>();
             SchemeData schemeData = A.Fake<SchemeData>();
