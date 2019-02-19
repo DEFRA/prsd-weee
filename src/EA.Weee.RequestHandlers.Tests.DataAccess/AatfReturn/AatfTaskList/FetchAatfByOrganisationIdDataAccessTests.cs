@@ -51,7 +51,7 @@
 
                 var aatf = CreateAatf(competantAuthority, @operator);
 
-                var result = await genericDataAccess.Add<Aatf>(aatf);
+                await genericDataAccess.Add<Aatf>(aatf);
 
                 List<Aatf> aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
 
