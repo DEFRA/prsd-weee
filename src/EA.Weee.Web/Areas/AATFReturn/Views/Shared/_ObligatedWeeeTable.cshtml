@@ -12,15 +12,15 @@
     <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
 
     <tr class="govuk-table__row">
-        <td class="govuk-table__cell"></td>
-        <td class="govuk-table__cell govuk-!-margin-bottom-0">
-            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
+        <td class="govuk-table__cell" style="width:40%"></td>
+        <td class="govuk-table__cell govuk-!-margin-bottom-0" style="width:30%">
+            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
                 B2C in tonnes
             </div>
         </td>
-        <td class="govuk-table__cell govuk-!-margin-bottom-0">
+        <td class="govuk-table__cell govuk-!-margin-bottom-0" style="width:30%">
 
-            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
+            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
                 B2B in tonnes
             </div>
         </td>
@@ -36,13 +36,13 @@
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
             </td>
-            <td class="govuk-table__cell">
+            <td class="govuk-table__cell govuk-!-width-one-third">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
                     @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
                     @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input govuk-input--width-10 weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                 </div>
             </td>
-            <td class="govuk-table__cell">
+            <td class="govuk-table__cell govuk-!-width-one-third">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
                     @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
                     @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input govuk-input--width-10 weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
