@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -63,11 +64,13 @@
             var returnId = Guid.NewGuid();
             List<Guid> schemeIdList = new List<Guid>();
 
+            var returnSchemeList = new List<ReturnScheme>();
+
             var request = new GetReturnScheme(returnId);
 
             Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
 
-            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(request.ReturnId)).Returns(schemeIdList);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(request.ReturnId)).Returns(returnSchemeList);
             A.CallTo(() => getSchemesDataAccess.GetSchemeBasedOnId(A<Guid>._)).Returns(scheme);
 
             var mapper = A.Fake<IMapper>();
