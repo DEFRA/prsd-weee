@@ -1,21 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using EA.Weee.Api.Client;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Validation;
-    using EA.Weee.Web.Areas.AatfReturn.Controllers;
-    using EA.Weee.Web.Areas.AatfReturn.Requests;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Validation;
+    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using FakeItEasy;
+    using FluentAssertions;
     using Xunit;
 
     public class SelectYourPCSViewModelTests

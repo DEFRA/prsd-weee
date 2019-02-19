@@ -7,9 +7,6 @@
     using Constant;
     using Core.AatfReturn;
     using Infrastructure;
-    using Microsoft.Owin.Security;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Web.OAuth;
     using Requests;
     using Services;
     using Services.Caching;

@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -8,9 +11,6 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class AddReturnSchemeHandlerTests
