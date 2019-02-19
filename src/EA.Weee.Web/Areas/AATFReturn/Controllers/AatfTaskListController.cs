@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -44,13 +45,6 @@
                 var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 viewModel.OrganisationName = organisationName;
             }
-
-            var aatfs = new List<string>();
-            aatfs.Add("ABB Ltd Darlaston");
-            aatfs.Add("ABB Ltd Woking");
-            aatfs.Add("ABB Ltd Maidenhead");
-
-            viewModel.Aatfs = aatfs;
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);

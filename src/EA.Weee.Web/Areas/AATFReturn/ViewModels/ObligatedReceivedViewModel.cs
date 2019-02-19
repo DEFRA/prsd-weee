@@ -22,14 +22,18 @@
 
         public IList<ObligatedCategoryValue> CategoryValues { get; set; }
 
+        private ICategoryValueTotalCalculator categoryValueCalculator;
+
         public ObligatedReceivedViewModel()
         {
             AddCategoryValues(new ObligatedCategoryValues());
+            categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
         public ObligatedReceivedViewModel(ObligatedCategoryValues values)
         {
             AddCategoryValues(values);
+            categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
         private void AddCategoryValues(ObligatedCategoryValues obligatedCategories)
@@ -41,35 +45,8 @@
                 CategoryValues.Add(categoryValue);
             }
         }
-        public string B2CTotal => Total(CategoryValues, true);
+        public string B2CTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.B2C).ToList());
 
-        public string B2BTotal => Total(CategoryValues, false);
-
-        public string Total(IList<ObligatedCategoryValue> categoryValues, bool isHousehold)
-        {
-            var total = 0.000m;
-            List<string> values;
-
-            if (isHousehold)
-            {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2C)
-                                                    && decimal.TryParse(c.B2C, NumberStyles.Number & ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var output)
-                                                    && output.DecimalPlaces() <= 3).Select(c => c.B2C).ToList();
-            }
-            else
-            {
-                values = categoryValues.Where(c => !string.IsNullOrWhiteSpace(c.B2B) 
-                                                    && decimal.TryParse(c.B2B, NumberStyles.Number & ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var output)
-                                                    && output.DecimalPlaces() <= 3).Select(c => c.B2B).ToList();
-            }
-
-            if (values.Any())
-            {
-                var convertedValues = values.ConvertAll(Convert.ToDecimal);
-                total = convertedValues.Sum();
-            }
-
-            return total.ToTonnageDisplay();
-        }
+        public string B2BTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.B2B).ToList());
     }
 }

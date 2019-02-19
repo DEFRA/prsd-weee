@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
@@ -30,5 +29,5 @@
         public virtual ReturnStatus ReturnStatus { get; private set; }
 
         public virtual Operator Operator { get; private set; }
-}
+    }
 }
