@@ -49,6 +49,7 @@
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\GetAatfInfo.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />

@@ -33,7 +33,7 @@
 
         // GET: AatfReturn/ReceivedPCSList
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
+        public async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
             var viewModel = new ReceivedPCSListViewModel();
 

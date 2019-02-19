@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
+    using Core.AatfReturn;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
@@ -24,10 +25,12 @@
         public Cache<Guid, string> SchemeNames { get; private set; }
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
+        public Cache<Guid, AatfData> AatfPublicInfo { get; private set; }
+
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
-        private string accessToken;
+        private readonly string accessToken;
 
         public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService)
         {
@@ -86,6 +89,14 @@
                 "OrganisationPublicInfoList",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 () => FetchOrganisationSearchResultListFromApi());
+
+            //AatfPublicInfo = new Cache<Guid, AatfData>(
+            //    provider,
+            //    "AatfInfo",
+            //    TimeSpan.FromMinutes(15),
+            //    (key) => key.ToString(),
+            //    (key) => 
+            //    );
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -136,6 +147,17 @@
         }
 
         private async Task<SchemePublicInfo> FetchSchemePublicInfoFromApi(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemePublicInfo(organisationId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
+        private async Task<SchemePublicInfo> FetchAatfInfoFromApi(Guid organisationId)
         {
             using (var client = apiClient())
             {
