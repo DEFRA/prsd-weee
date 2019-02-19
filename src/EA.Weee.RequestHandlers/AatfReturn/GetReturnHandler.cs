@@ -7,6 +7,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using Factories;
     using Prsd.Core.Mapper;
@@ -22,13 +23,17 @@
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
+        private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
+        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
             IReturnDataAccess returnDataAccess,
             IOrganisationDataAccess organisationDataAccess,
             IMap<ReturnQuarterWindow, ReturnData> mapper,
             IQuarterWindowFactory quarterWindowFactory, 
-            IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess)
+            IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
+            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
+            IFetchAatfByOrganisationIdDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -36,6 +41,8 @@
             this.mapper = mapper;
             this.quarterWindowFactory = quarterWindowFactory;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
+            this.obligatedDataAccess = obligatedDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -50,7 +57,15 @@
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
 
-            return mapper.Map(new ReturnQuarterWindow(@return, quarterWindow, returnNonObligatedValues, @return.Operator));
+            var returnObligatedValues = await obligatedDataAccess.FetchObligatedWeeeForReturn(message.ReturnId);
+
+            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
+
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedValues, @return.Operator);
+
+            var result = mapper.Map(returnQuarterWindow);
+
+            return result;
         }
     }
 }
