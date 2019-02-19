@@ -110,18 +110,24 @@
             ValidateErrorMessage($"Category {(int)Category} tonnage value must be 0 or greater");
         }
 
-        [Fact]
-        public void IsValid_ValueHasMoreThanThreeDecimalPlaces_ReturnsFalse()
+        [Theory]
+        [InlineData("1.1111")]
+        [InlineData("10.100000")]
+        public void IsValid_ValueHasMoreThanThreeDecimalPlaces_ReturnsFalse(string value)
         {
-            var result = Validate(1.1111M);
+            var decimalValue = decimal.Parse(value);
+            var result = Validate(decimalValue);
 
             result.Should().BeFalse();
         }
 
-        [Fact]
-        public void ValidationResult_ValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect()
+        [Theory]
+        [InlineData("1.1111")]
+        [InlineData("10.100000")]
+        public void ValidationResult_ValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect(string value)
         {
-            var result = Validate(1.1111M);
+            var decimalValue = decimal.Parse(value);
+            var result = Validate(decimalValue);
 
             ValidateErrorMessage($"Category {(int)Category} tonnage value must be 3 decimal places or less");
         }

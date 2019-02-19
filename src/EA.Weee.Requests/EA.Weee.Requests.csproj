@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
     <Compile Include="Scheme\GetSchemesExternal.cs" />

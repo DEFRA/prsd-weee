@@ -6,6 +6,7 @@
     using System.Linq;
     using Core.AatfReturn;
     using Core.Validation;
+    using EA.Weee.Core.Helpers;
 
     public class NonObligatedValuesViewModel
     {
@@ -17,14 +18,18 @@
 
         public bool Dcf { get; set; }
 
+        private ICategoryValueTotalCalculator categoryValueCalculator;
+
         public NonObligatedValuesViewModel()
         {
             AddCategoryValues(new NonObligatedCategoryValues());
+            categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
         public NonObligatedValuesViewModel(NonObligatedCategoryValues values)
         {
             AddCategoryValues(values);
+            categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
         private void AddCategoryValues(NonObligatedCategoryValues nonObligatedCategories)
@@ -37,26 +42,6 @@
             }
         }
 
-        public string Total
-        {
-            get
-            {
-                var total = 0.000m;
-                var values = CategoryValues.Where(c => !string.IsNullOrWhiteSpace(c.Tonnage) 
-                                                       && decimal.TryParse(c.Tonnage, 
-                                                        NumberStyles.Number &
-                                                        ~NumberStyles.AllowLeadingSign & ~NumberStyles.AllowTrailingSign,
-                                                        CultureInfo.InvariantCulture, out var output)
-                                                       && output.DecimalPlaces() <= 3).Select(c => c.Tonnage).ToList();
-
-                if (values.Any())
-                {
-                    var convertedValues = values.ConvertAll(Convert.ToDecimal);
-                    total = convertedValues.Sum();
-                }
-
-                return $"{total:0.000}";
-            }
-        }
+        public string Total => categoryValueCalculator.Total(CategoryValues.Select(c => c.Tonnage).ToList());
     }
 }

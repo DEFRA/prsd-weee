@@ -43,7 +43,7 @@
                 <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
-                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-!-width-two-thirds weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input govuk-input--width-10 weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                     </div>
                 </td>
             </tr>

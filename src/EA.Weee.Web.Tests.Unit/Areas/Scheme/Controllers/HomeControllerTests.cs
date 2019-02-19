@@ -1037,7 +1037,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_MakeAATFReturn_RedirectsToAatfTaskList()
+        public async void PostChooseActivity_MakeAATFReturn_RedirectsToSelectYourPCS()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {

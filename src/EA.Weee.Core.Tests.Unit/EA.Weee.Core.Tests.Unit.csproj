@@ -105,6 +105,7 @@
     <Compile Include="AatfReturn\ObligatedCategoryValueTests.cs" />
     <Compile Include="AatfReturn\NonObligatedCategoryValueTests.cs" />
     <Compile Include="AatfReturn\NonObligatedDataTests.cs" />
+    <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
