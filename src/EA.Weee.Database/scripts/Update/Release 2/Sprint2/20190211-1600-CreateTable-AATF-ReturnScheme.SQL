@@ -5,7 +5,7 @@ IF (EXISTS (SELECT *
                  WHERE TABLE_SCHEMA = 'AATF' 
                  AND  TABLE_NAME = 'AATFReturnScheme'))
 BEGIN
-	ALTER TABLE [AATF].[AATFReturnScheme] DROP CONSTRAINT [FK_AATFReturnScheme_AATFReturn];
+	ALTER TABLE [AATF].[AATFReturnScheme] DROP CONSTRAINT [FK_AATFReturnScheme_Scheme];
 	DROP TABLE [AATF].[AATFReturnScheme];
 END
 GO
