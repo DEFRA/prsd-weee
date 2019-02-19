@@ -37,14 +37,14 @@
                 namespaces: new[] { typeof(AatfTaskListController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: "aatf-received-scheme",
-                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/{schemeId}/received/{controller}/{action}",
+                name: "aatf-received",
+                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/received/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ReceivedPcsList" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: "aatf-received",
-                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/received/{controller}/{action}",
+                name: "aatf-received-scheme",
+                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/{schemeId}/received/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ReceivedPcsList" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
         }

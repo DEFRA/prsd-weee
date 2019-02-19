@@ -14,7 +14,7 @@
 
         public string OrganisationName { get; set; }
 
-        public Guid PcsId { get; set; }
+        public Guid SchemeId { get; set; }
 
         public string PcsName { get; set; }
 
