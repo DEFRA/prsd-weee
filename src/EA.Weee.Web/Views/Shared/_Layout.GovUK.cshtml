@@ -21,8 +21,11 @@
     <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-152x152.png")">
     <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon.png")">
 
+    <!--[if !IE 8]><!-->
+    <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-2.7.0.min.css")" rel="stylesheet" />
+    <!--<![endif]-->
     <!--[if IE 8]>
-        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.3.0.min.css")" rel="stylesheet" />
+        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.7.0.min.css")" rel="stylesheet" />
     <![endif]-->
     <!--[if lt IE 9]>
         <script src="@Url.Content("~/Scripts/govuk_frontend/html5shiv.js")"></script>

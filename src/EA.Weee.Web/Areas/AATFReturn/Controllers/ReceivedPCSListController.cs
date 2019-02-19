@@ -3,6 +3,7 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Infrastructure;
     using Prsd.Core.Mapper;
@@ -12,7 +13,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Controllers.Base;
-
     public class ReceivedPCSListController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -39,14 +39,12 @@
 
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                viewModel.OrganisationName = @return[0].Name;
+                viewModel.OrganisationName = organisationName;
                 viewModel.OrganisationId = organisationId;
                 viewModel.ReturnId = returnId;
-
-                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
-                
                 viewModel.SchemeList = schemeIDList;
             }
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
@@ -58,7 +56,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReceivedPCSListViewModel viewModel)
         {
-            return await Task.Run(() => RedirectToAction("Index", "AatfTaskList", new { returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
+            return await Task.Run(() => RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", returnId = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

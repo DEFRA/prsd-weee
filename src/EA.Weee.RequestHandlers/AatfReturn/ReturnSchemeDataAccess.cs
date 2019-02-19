@@ -26,9 +26,9 @@
             return scheme.Id;
         }
 
-        public async Task<List<Guid>> GetSelectedSchemesByReturnId(Guid returnId)
+        public async Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId)
         {
-            return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Select(now => now.SchemeId).ToListAsync();
+            return await context.ReturnScheme.Include(r => r.Scheme).Where(now => now.ReturnId == returnId).ToListAsync();
         }
     }
 }
