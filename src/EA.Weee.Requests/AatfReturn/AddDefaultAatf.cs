@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using Prsd.Core.Mediator;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;    
+    using Prsd.Core.Mediator;
 
     public class AddDefaultAatf : IRequest<bool>
     {

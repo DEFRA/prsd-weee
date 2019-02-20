@@ -7,12 +7,10 @@
     using Domain.AatfReturn;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.Organisations;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
-    using Country = Domain.Country;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
 

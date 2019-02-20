@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.DataReturns;
     using FakeItEasy;
