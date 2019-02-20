@@ -13,12 +13,12 @@
     using Services;
     using Services.Caching;
     using Web.Controllers.Base;
-    public class ReceivedPCSListController : ExternalSiteController
+
+    public class ReceivedPcsListController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IMapper mapper;
 
         public ReceivedPcsListController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
@@ -28,25 +28,26 @@
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
-            this.mapper = mapper;
         }
 
-        // GET: AatfReturn/ReceivedPCSList
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            var viewModel = new ReceivedPCSListViewModel();
+            var viewModel = new ReceivedPcsListViewModel
+            {
+                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name,
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                AatfId = aatfId
+            };
 
             using (var client = apiClient())
             {
-                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-                var schemeIDList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                var schemeIdList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                viewModel.OrganisationName = @return[0].Name;
-                viewModel.OrganisationId = @return[0].OrganisationId;
-                viewModel.ReturnId = returnId;
-                viewModel.SchemeList = schemeIDList;
+                viewModel.SchemeList = schemeIdList;
             }
+
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
@@ -54,7 +55,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ReceivedPCSListViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ReceivedPcsListViewModel viewModel)
         {
             return await Task.Run(() => RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", returnId = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
         }

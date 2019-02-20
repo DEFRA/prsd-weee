@@ -19,25 +19,28 @@
     using FluentAssertions;
     using Xunit;
 
-    public class ReceivedPCSListControllerTests
+    public class ReceivedPcsListControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly ReceivedPCSListController controller;
+        private readonly ReceivedPcsListController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
+        private readonly IWeeeCache cache;
 
-        public ReceivedPCSListControllerTests()
+        public ReceivedPcsListControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
-            controller = new ReceivedPCSListController(() => weeeClient, A.Fake<IWeeeCache>(), breadcrumb, mapper);
+            cache = A.Fake<IWeeeCache>();
+
+            controller = new ReceivedPcsListController(() => weeeClient, cache, breadcrumb, mapper);
         }
 
         [Fact]
-        public void CheckReceivedPCSListControllerInheritsExternalSiteController()
+        public void CheckReceivedPcsListControllerInheritsExternalSiteController()
         {
-            typeof(ReceivedPCSListController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ReceivedPcsListController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
@@ -45,7 +48,7 @@
         {
             var organisationId = Guid.NewGuid();
 
-            await controller.Index(organisationId, A.Dummy<Guid>());
+            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
@@ -53,7 +56,7 @@
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -63,39 +66,41 @@
         {
             var returnId = Guid.NewGuid();
 
-            await controller.Index(Guid.NewGuid(), returnId);
+            await controller.Index(Guid.NewGuid(), returnId, A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(g => g.ReturnId.Equals(returnId))))
             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ReceivedPCSListViewModelShouldBeReturned()
+        public async void IndexGet_GivenActionAndParameters_ReceivedPcsListViewModelShouldBeReturned()
         {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
             var returnData = new List<SchemeData>();
-          
-            var model = A.Fake<ReceivedPCSListViewModel>();
+            var model = A.Fake<ReceivedPcsListViewModel>();
             var schemeList = new List<SchemeData>();
+            const string aatfname = "aatfName";
 
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetReturnScheme>())).Returns(schemeList);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(new AatfData(A.Dummy<Guid>(), aatfname, A.Dummy<string>()));
 
-            System.Threading.Tasks.Task<Core.Organisations.OrganisationData> organisationName = null;
-            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetOrganisationInfo>())).Returns(organisationName);
+            var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var receivedModel = result.Model as ReceivedPcsListViewModel;
 
-            var receivedModel = result.Model as ReceivedPCSListViewModel;
-
-            receivedModel.OrganisationName.Should().Be(null);
-            receivedModel.SchemeList.Should().BeEmpty();
-            receivedModel.ReturnId.Should().BeEmpty();
-            receivedModel.SchemeId.Should().BeEmpty();
+            receivedModel.AatfName.Should().Be(aatfname);
+            receivedModel.SchemeList.Should().BeEquivalentTo(schemeList);
+            receivedModel.ReturnId.Should().Be(returnId);
+            receivedModel.AatfId.Should().Be(aatfId);
         }
 
         [Fact]
         public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
         {
-            var model = new ReceivedPCSListViewModel();
+            var model = new ReceivedPcsListViewModel();
             var returnId = new Guid();
             var result = await controller.Index(model) as RedirectToRouteResult;
 
