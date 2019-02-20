@@ -11,8 +11,8 @@
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {
-        public decimal? NonObligatedTonnageTotal = 0.000m;
-        public decimal? NonObligatedTonnageTotalDcf = 0.000m;
+        public decimal? NonObligatedTonnageTotal = null;
+        public decimal? NonObligatedTonnageTotalDcf = null;
 
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
 
@@ -26,10 +26,12 @@
                 {
                     if (category.Dcf && category.Tonnage != null)
                     {
+                        NonObligatedTonnageTotalDcf = initialiseTotalDecimal(NonObligatedTonnageTotalDcf);
                         NonObligatedTonnageTotalDcf += category.Tonnage;
                     }
                     else if (!category.Dcf && category.Tonnage != null)
                     {
+                        NonObligatedTonnageTotal = initialiseTotalDecimal(NonObligatedTonnageTotal);
                         NonObligatedTonnageTotal += category.Tonnage;
                     }
                 }
@@ -41,27 +43,28 @@
                 {
                     var aatfDataSet = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var obligatedData = new AatfObligatedData(aatf);
-                    decimal? obligatedTonnageTotalB2b = 0.000m;
-                    decimal? obligatedTonnageTotalB2c = 0.000m;
+                    decimal? obligatedTonnageTotalB2b = null;
+                    decimal? obligatedTonnageTotalB2c = null;
+
                     if (aatfDataSet.Count != 0)
                     {
-                        obligatedData = new AatfObligatedData(aatfDataSet.FirstOrDefault().Aatf);
+                        obligatedData.Aatf = (aatfDataSet.FirstOrDefault().Aatf);
                         foreach (var category in aatfDataSet)
                         {
                             if (category.B2B != null)
                             {
+                                obligatedTonnageTotalB2b = initialiseTotalDecimal(obligatedTonnageTotalB2b);
                                 obligatedTonnageTotalB2b += category.B2B;
                             }
                             if (category.B2C != null)
                             {
+                                obligatedTonnageTotalB2c = initialiseTotalDecimal(obligatedTonnageTotalB2c);
                                 obligatedTonnageTotalB2c += category.B2C;
                             }
                         }
                     }
-                    var obligatedCategoryValues = new ObligatedCategoryValue(CheckIfTonnageIsNull(obligatedTonnageTotalB2b), CheckIfTonnageIsNull(obligatedTonnageTotalB2c));
 
-                    obligatedData.WeeeReceived = obligatedCategoryValues;
-
+                    obligatedData.WeeeReceived = new ObligatedCategoryValue(CheckIfTonnageIsNull(obligatedTonnageTotalB2b), CheckIfTonnageIsNull(obligatedTonnageTotalB2c));
                     AatfObligatedData.Add(obligatedData);
                 }
             }
@@ -69,9 +72,19 @@
             return new ReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year, CheckIfTonnageIsNull(NonObligatedTonnageTotal), CheckIfTonnageIsNull(NonObligatedTonnageTotalDcf), AatfObligatedData, source.ReturnOperatorData);
         }
 
-        public string CheckIfTonnageIsNull(decimal? tonnage)
+        private decimal? initialiseTotalDecimal(decimal? tonnage)
         {
-            return (tonnage != null) ? tonnage.ToTonnageDisplay() : "0.000";
+            if (tonnage == null)
+            {
+                tonnage = 0.000m;
+            }
+
+            return tonnage;
+        }
+
+        private string CheckIfTonnageIsNull(decimal? tonnage)
+        {
+            return (tonnage != null) ? tonnage.ToTonnageDisplay() : "-";
         }
     }
 }
