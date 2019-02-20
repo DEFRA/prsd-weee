@@ -5,20 +5,12 @@
     using System.Threading.Tasks;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class AddReturnSchemeHandlerTests
