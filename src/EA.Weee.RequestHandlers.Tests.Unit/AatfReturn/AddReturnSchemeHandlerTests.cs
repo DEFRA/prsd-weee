@@ -5,12 +5,20 @@
     using System.Threading.Tasks;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Text;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class AddReturnSchemeHandlerTests
@@ -19,7 +27,6 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private AddReturnSchemeHandler handler;
-        private Guid returnSchemeId;
 
         public AddReturnSchemeHandlerTests()
         {
@@ -27,8 +34,8 @@
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
+
             handler = new AddReturnSchemeHandler(weeeAuthorization, returnSchemeDataAccess, returnDataAccess, schemeDataAccess);
-            returnSchemeId = new Guid();
         }
 
         [Fact]
@@ -88,17 +95,13 @@
         public async Task HandleAsync_GivenAddReturnSchemeRequest_ReturnSchemeIdShouldBeReturned()
         {
             var request = new AddReturnScheme { ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
-
-            var @return = A.Dummy<Return>();
-            var scheme = A.Fake<Domain.Scheme.Scheme>();
-
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(request.SchemeId)).Returns(scheme);
-
-            A.CallTo(() => returnDataAccess.GetById(request.ReturnId)).Returns(@return);
+            var id = Guid.NewGuid();
+            
+            A.CallTo(() => returnSchemeDataAccess.Submit(A<ReturnScheme>._)).Returns(id);
 
             var result = await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.Submit(A<ReturnScheme>.That.Matches(c => c.ReturnId == @return.Id && c.SchemeId == scheme.Id))).Returns(returnSchemeId);
+            result.Should().Be(id);
         }
     }
 }

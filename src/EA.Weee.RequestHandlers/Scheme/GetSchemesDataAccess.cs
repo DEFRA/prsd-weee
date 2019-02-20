@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
 
     public class GetSchemesDataAccess : IGetSchemesDataAccess
     {
@@ -27,11 +28,6 @@
         public async Task<Domain.Scheme.Scheme> GetSchemeBasedOnId(Guid id)
         {
             return await context.Schemes.Where(s => s.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task<IList<Domain.Scheme.Scheme>> GetAllSchemes()
-        {
-            return await context.Schemes.ToListAsync();
         }
     }
 }

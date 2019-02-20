@@ -97,6 +97,7 @@
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandlerTests.cs" />
+    <Compile Include="AatfReturn\GetSchemeRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
+    <Compile Include="Scheme\GetSchemesExternalHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlGenerateProducerDataTests.cs" />

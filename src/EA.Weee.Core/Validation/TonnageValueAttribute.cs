@@ -51,7 +51,7 @@
 
             if (value.ToString().Length > CommonMaxFieldLengths.Tonnage)
             {
-                return new ValidationResult(GenerateMessage("a numerical value with 15 digits or less", (int)propertyValue));
+                return new ValidationResult(GenerateMessage("a numerical value with 14 digits or less", (int)propertyValue));
             }
 
             if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
