@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -12,10 +16,6 @@
     using RequestHandlers.AatfReturn.CheckYourReturn;
     using RequestHandlers.Factories;
     using Requests.AatfReturn;
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;

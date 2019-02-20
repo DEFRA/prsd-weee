@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using Domain.AatfReturn;
-    using FakeItEasy;
-    using Xunit;
     using System;
+    using Domain.AatfReturn;
     using Domain.Organisation;
+    using FakeItEasy;
     using FluentAssertions;
+    using Xunit;
 
     public class OperatorTests
     {

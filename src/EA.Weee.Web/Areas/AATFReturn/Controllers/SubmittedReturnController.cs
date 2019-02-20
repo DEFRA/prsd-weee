@@ -1,19 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
-    using Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using Infrastructure;
-    using Mappings.ToViewModel;
-    using Microsoft.Owin.Security;
     using Prsd.Core.Mapper;
-    using Prsd.Core.Web.OAuth;
-    using Requests;
     using Services;
     using Services.Caching;
     using ViewModels;

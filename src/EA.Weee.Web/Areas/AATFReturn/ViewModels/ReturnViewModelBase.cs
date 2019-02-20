@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using System.Globalization;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Prsd.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Web;
 
     public abstract class ReturnViewModelBase : IReturnViewModel
     {

@@ -5,7 +5,6 @@
     using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.DataReturns.SubmitReturnVersion;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
