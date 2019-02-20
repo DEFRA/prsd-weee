@@ -4,6 +4,13 @@
 
     public class AatfData
     {
+        public AatfData(Guid id, string name, string approvalNumber)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.ApprovalNumber = approvalNumber;
+        }
+
         public Guid Id { get; set; }
 
         public string Name { get; set; }

@@ -6,7 +6,7 @@
 
     public class AatfObligatedData
     {
-        public AatfObligatedData(Aatf aatf, ObligatedCategoryValue weeeReceived, ObligatedCategoryValue weeeReused, ObligatedCategoryValue weeeSentOn)
+        public AatfObligatedData(AatfData aatf, ObligatedCategoryValue weeeReceived, ObligatedCategoryValue weeeReused, ObligatedCategoryValue weeeSentOn)
         {
             Aatf = aatf;
             WeeeReceived = weeeReceived;
@@ -14,7 +14,7 @@
             WeeeSentOn = weeeSentOn;
         }
 
-        public AatfObligatedData(Aatf aatf)
+        public AatfObligatedData(AatfData aatf)
         {
             Aatf = aatf;
         }
@@ -22,7 +22,7 @@
         {
         }
         
-        public Aatf Aatf { get; set; }
+        public AatfData Aatf { get; set; }
 
         [Display(Name = "Received on behalf of PCS(s)")]
         public ObligatedCategoryValue WeeeReceived { get; set; } = new ObligatedCategoryValue("0.000", "0.000");

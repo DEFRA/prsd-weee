@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
 
@@ -23,5 +24,7 @@
         Task InvalidateProducerSearch();
 
         Task InvalidateOrganisationSearch();
+
+        Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
 }

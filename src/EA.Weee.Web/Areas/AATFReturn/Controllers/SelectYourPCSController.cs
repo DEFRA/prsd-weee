@@ -18,14 +18,14 @@
     using System.Web;
     using System.Web.Mvc;
 
-    public class SelectYourPCSController : ExternalSiteController
+    public class SelectYourPcsController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
         private readonly IWeeeCache cache;
 
-        public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddReturnSchemeRequestCreator requestCreator)
+        public SelectYourPcsController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddReturnSchemeRequestCreator requestCreator)
         {
             this.apiClient = apiclient;
             this.breadcrumb = breadcrumb;

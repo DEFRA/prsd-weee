@@ -22,29 +22,29 @@
     using System.Web.Mvc;
     using Xunit;
 
-    public class SelectYourPCSControllerTests
+    public class SelectYourPcsControllerTests
     {
         private readonly Func<IWeeeClient> weeeClient;
-        private readonly SelectYourPCSController controller;
+        private readonly SelectYourPcsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         public List<SchemeData> SchemeList;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
 
-        public SelectYourPCSControllerTests()
+        public SelectYourPcsControllerTests()
         {
             weeeClient = A.Fake<Func<IWeeeClient>>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddReturnSchemeRequestCreator>();
 
-            controller = new SelectYourPCSController(weeeClient, breadcrumb, cache, requestCreator);
+            controller = new SelectYourPcsController(weeeClient, breadcrumb, cache, requestCreator);
         }
 
         [Fact]
         public void CheckCheckYourReturnControllerInheritsExternalSiteController()
         {
-            typeof(SelectYourPCSController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(SelectYourPcsController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]

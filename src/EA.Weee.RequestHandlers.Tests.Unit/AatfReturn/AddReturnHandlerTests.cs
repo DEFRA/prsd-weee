@@ -95,7 +95,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => operDataAccess.GetById<Operator>(A<OperatorByOrganisationIdSpecification>.That.Matches(c => c.OrganisationId == request.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => operDataAccess.GetSingleByExpression<Operator>(A<OperatorByOrganisationIdSpecification>.That.Matches(c => c.OrganisationId == request.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

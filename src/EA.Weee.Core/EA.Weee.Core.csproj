@@ -80,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfData.cs" />
-    <Compile Include="AatfReturn\Aatf.cs" />
     <Compile Include="AatfReturn\AatfObligatedData.cs" />
     <Compile Include="AatfReturn\CategoryValue.cs" />
     <Compile Include="AatfReturn\CategoryValues.cs" />

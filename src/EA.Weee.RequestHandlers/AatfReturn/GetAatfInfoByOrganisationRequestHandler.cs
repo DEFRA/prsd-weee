@@ -10,27 +10,26 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Domain.AatfReturn;
+    using Specification;
     using Scheme = Domain.Scheme.Scheme;
 
-    public class GetAatfInfoByOrganisationRequestHandler : IRequestHandler<GetAatfInfoByOrganisation, List<AatfData>>
+    public class GetAatfInfoByOrganisationRequestHandler : IRequestHandler<GetAatfByOrganisation, List<AatfData>>
     {
-        private readonly IWeeeAuthorization authorization;
-        private readonly IAatfDataAccess aatfDataAccess;
-        private readonly IMapper mapper;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IMap<Aatf, AatfData> mapper;
   
-        public GetAatfInfoByOrganisationRequestHandler(IWeeeAuthorization authorization, IMapper mapper, IAatfDataAccess aatfDataAccess)
+        public GetAatfInfoByOrganisationRequestHandler(IMap<Aatf, AatfData> mapper, IGenericDataAccess genericDataAccess)
         {
-            this.authorization = authorization;
             this.mapper = mapper;
-            this.aatfDataAccess = aatfDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
-        public async Task<List<AatfData>> HandleAsync(GetAatfInfoByOrganisation message)
+        public async Task<List<AatfData>> HandleAsync(GetAatfByOrganisation message)
         {
-            var aatfs = await aatfDataAccess.GetByOrganisationId(message.OrganisationId);
+            var aatfs = await genericDataAccess.GetManyByExpression(new AatfsByOrganisationSpecification(message.OrganisationId));
 
-            //var mapped = mapper.Map<>(aatfs);
-            return new List<AatfData>().ToList();
+            return aatfs.Select(a => mapper.Map(a)).ToList();
         }
     }
 }
