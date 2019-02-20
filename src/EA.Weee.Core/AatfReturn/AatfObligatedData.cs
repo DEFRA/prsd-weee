@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class AatfObligatedData
@@ -25,12 +23,12 @@
         public Aatf Aatf { get; set; }
 
         [Display(Name = "Received on behalf of PCS(s)")]
-        public ObligatedCategoryValue WeeeReceived { get; set; } = new ObligatedCategoryValue("0.000", "0.000");
+        public ObligatedCategoryValue WeeeReceived { get; set; } = new ObligatedCategoryValue("-", "-");
 
         [Display(Name = "Reused as a whole appliance")]
-        public ObligatedCategoryValue WeeeReused { get; set; } = new ObligatedCategoryValue("0.000", "0.000");
+        public ObligatedCategoryValue WeeeReused { get; set; } = new ObligatedCategoryValue("-", "-");
 
         [Display(Name = "Sent to another AATF / ATF")]
-        public ObligatedCategoryValue WeeeSentOn { get; set; } = new ObligatedCategoryValue("0.000", "0.000");
+        public ObligatedCategoryValue WeeeSentOn { get; set; } = new ObligatedCategoryValue("-", "-");
     }
 }
