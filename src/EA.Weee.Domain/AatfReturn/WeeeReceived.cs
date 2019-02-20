@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using Scheme;
 
@@ -25,6 +26,9 @@
 
         public WeeeReceived(Scheme scheme, Aatf aatf, Guid returnId)
         {
+            Guard.ArgumentNotNull(() => scheme, scheme);
+            Guard.ArgumentNotNull(() => aatf, aatf);
+
             Scheme = scheme;
             Aatf = aatf;
             ReturnId = returnId;
