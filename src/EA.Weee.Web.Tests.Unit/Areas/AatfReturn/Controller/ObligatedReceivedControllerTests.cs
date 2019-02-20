@@ -3,7 +3,7 @@
     using System;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -39,8 +39,8 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new ObligatedReceivedViewModel();
-            var request = new AddObligatedReceived();
+            var model = new ObligatedViewModel();
+            var request = new AddObligated();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -54,9 +54,9 @@
         {
             controller.ModelState.AddModelError("error", "error");
 
-            await controller.Index(A.Dummy<ObligatedReceivedViewModel>());
+            await controller.Index(A.Dummy<ObligatedViewModel>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReceived>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligated>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -72,7 +72,7 @@
         [Fact]
         public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
-            var model = new ObligatedReceivedViewModel();
+            var model = new ObligatedViewModel();
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 

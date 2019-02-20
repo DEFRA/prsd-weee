@@ -1,6 +1,6 @@
-﻿namespace EA.Weee.Requests.AatfReturn.ObligatedReceived
+﻿namespace EA.Weee.Requests.AatfReturn.Obligated
 {
-    public class ObligatedReceivedValue
+    public class ObligatedValue
     {
         public int CategoryId { get; private set; }
 
@@ -8,7 +8,7 @@
 
         public decimal? NonHouseholdTonnage { get; private set; }
         
-        public ObligatedReceivedValue(int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
+        public ObligatedValue(int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
         {
             CategoryId = categoryId;
             HouseholdTonnage = householdTonnage;

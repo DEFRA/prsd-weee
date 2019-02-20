@@ -6,7 +6,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
 
-    public class ObligatedReceivedViewModel
+    public class ObligatedViewModel
     {
         public Guid OrganisationId { get; set; }
 
@@ -22,13 +22,13 @@
 
         private ICategoryValueTotalCalculator categoryValueCalculator;
 
-        public ObligatedReceivedViewModel()
+        public ObligatedViewModel()
         {
             AddCategoryValues(new ObligatedCategoryValues());
             categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
-        public ObligatedReceivedViewModel(ObligatedCategoryValues values)
+        public ObligatedViewModel(ObligatedCategoryValues values)
         {
             AddCategoryValues(values);
             categoryValueCalculator = new CategoryValueTotalCalculator();

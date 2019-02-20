@@ -39,11 +39,11 @@
 
             var obligatedReceivedWeeeDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReceivedAmount>());
 
-            A.CallTo(() => context.AatfWeeReceivedAmount).Returns(obligatedReceivedWeeeDbSet);
+            A.CallTo(() => context.WeeeReceivedAmount).Returns(obligatedReceivedWeeeDbSet);
 
             dataAccess.Submit(obligatedReceivedWeee);
 
-            context.AatfWeeReceivedAmount.Should().AllBeEquivalentTo(obligatedReceivedWeee);
+            context.WeeeReceivedAmount.Should().AllBeEquivalentTo(obligatedReceivedWeee);
         }
 
         [Fact]

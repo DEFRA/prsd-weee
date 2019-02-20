@@ -213,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
@@ -227,12 +228,13 @@
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeReusedCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ObligatedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
@@ -294,6 +296,8 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\CannotSubmitDataReturnViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
@@ -437,13 +441,11 @@
     <Content Include="Areas\AatfReturn\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -453,12 +455,10 @@
     <Content Include="Areas\AatfReturn\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedReceived\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_ObligatedWeeeTable.cshtml" />
@@ -697,6 +697,7 @@
     <Content Include="Content\govuk_frontend\fonts\bold-fb2676462a-v1.eot" />
     <Content Include="Content\govuk_frontend\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\fonts\bold-a2452cb66f-v1.woff2" />
+    <Content Include="Areas\AatfReturn\Views\ObligatedReused\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

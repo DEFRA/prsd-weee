@@ -5,9 +5,9 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class AddObligatedReceivedHandler : IRequestHandler<AddObligatedReceived, bool>
+    internal class AddObligatedReceivedHandler : IRequestHandler<AddObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReceivedDataAccess obligatedReceivedDataAccess;
@@ -19,7 +19,7 @@
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddObligatedReceived message)
+        public async Task<bool> HandleAsync(AddObligated message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -28,14 +28,14 @@
                 await obligatedReceivedDataAccess.GetAatfId(message.OrganisationId),
                 message.ReturnId);
 
-            var aatfWeeReceivedAmount = new List<WeeeReceivedAmount>();
+            var aatfWeeeReceivedAmount = new List<WeeeReceivedAmount>();
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
-            await obligatedReceivedDataAccess.Submit(aatfWeeReceivedAmount);
+            await obligatedReceivedDataAccess.Submit(aatfWeeeReceivedAmount);
 
             return true;
         }

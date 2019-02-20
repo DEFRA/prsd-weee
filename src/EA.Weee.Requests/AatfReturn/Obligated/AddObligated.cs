@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Requests.AatfReturn.ObligatedReceived
+﻿namespace EA.Weee.Requests.AatfReturn.Obligated
 {
     using System;
     using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
 
-    public class AddObligatedReceived : IRequest<bool>
+    public class AddObligated : IRequest<bool>
     {
-        public IList<ObligatedReceivedValue> CategoryValues { get; set; }
+        public IList<ObligatedValue> CategoryValues { get; set; }
 
         public Guid ReturnId { get; set; }
 

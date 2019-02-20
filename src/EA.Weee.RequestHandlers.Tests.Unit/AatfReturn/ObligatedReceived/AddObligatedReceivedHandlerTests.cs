@@ -11,7 +11,7 @@
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.Obligated;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
@@ -34,7 +34,7 @@
 
             var handler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedReceived>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligated>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -52,14 +52,14 @@
                 aatfReturn.Id);
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
-            var categoryValues = new List<ObligatedReceivedValue>();
+            var categoryValues = new List<ObligatedValue>();
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedReceivedValue((int)category, (int)category, (int)category));
+                categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
             }
 
-            var obligatedWeeeRequest = new AddObligatedReceived
+            var obligatedWeeeRequest = new AddObligated
             {
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,

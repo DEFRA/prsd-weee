@@ -18,7 +18,7 @@
 
         public async Task<List<WeeeReceivedAmount>> FetchObligatedWeeeForReturn(Guid returnId)
         {
-            return await context.AatfWeeReceivedAmount.Where(a => a.WeeeReceived.ReturnId == returnId)
+            return await context.WeeeReceivedAmount.Where(a => a.WeeeReceived.ReturnId == returnId)
                 .Include(a => a.WeeeReceived.Aatf)
                 .Include(a => a.WeeeReceived.Scheme)
                 .Select(a => a).ToListAsync();

@@ -10,7 +10,7 @@
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.Obligated;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
@@ -63,15 +63,15 @@
                 var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
                 var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
 
-                var categoryValues = new List<ObligatedReceivedValue>();
+                var categoryValues = new List<ObligatedValue>();
                 var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedReceivedValue((int)category, (int)category, (int)category));
+                    categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
                 }
 
-                var obligatedReceivedRequest = new AddObligatedReceived()
+                var obligatedReceivedRequest = new AddObligated()
                 {
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,

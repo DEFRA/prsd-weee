@@ -5,16 +5,16 @@
     ViewBag.Title = "Received WEE";
 }
 
-<h2 class="govuk-heading-l">WEEE that has been received for treatment at @Model.OrganisationName from @Model.PcsName</h2>
+<h2 class="govuk-heading-l">WEEE that has been reused as a whole appliance</h2>
 
 <p class="govuk-body">
-    This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
+    This is WEEE that has been refurbished or repaired to the point it is no longer waste.
 </p>
 <p class="govuk-body">
     Provide tonnage to 3 decimal places. For example 1.238
 </p>
 
-@using (Html.BeginForm("Index", "ObligatedReceived", FormMethod.Post))
+@using (Html.BeginForm("Index", "ObligatedReused", FormMethod.Post))
 {
     @Html.Gds().ValidationSummary()
 

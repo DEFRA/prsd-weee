@@ -14,14 +14,14 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class ObligatedReceivedController : ExternalSiteController
+    public class ObligatedReusedController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ObligatedReceivedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator)
+        public ObligatedReusedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
@@ -38,8 +38,6 @@
             {
                 viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
             }
-
-            viewModel.PcsName = "ABB Ltd Woking";
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 

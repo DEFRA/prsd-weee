@@ -16,11 +16,11 @@
             this.context = context;
         }
 
-        public Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmounts)
+        public Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeeReceivedAmounts)
         {
-            foreach (var aatfWeeReceived in aatfWeeReceivedAmounts)
+            foreach (var aatfWeeeReceived in aatfWeeeReceivedAmounts)
             {
-                context.AatfWeeReceivedAmount.Add(aatfWeeReceived);
+                context.WeeeReceivedAmount.Add(aatfWeeeReceived);
             }
 
             return context.SaveChangesAsync();

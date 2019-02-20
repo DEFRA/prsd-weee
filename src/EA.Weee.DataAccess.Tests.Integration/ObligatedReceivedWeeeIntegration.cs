@@ -8,7 +8,7 @@
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.Obligated;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
     using Xunit;
@@ -50,14 +50,14 @@
                 var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
                 var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
 
-                var categoryValues = new List<ObligatedReceivedValue>();
+                var categoryValues = new List<ObligatedValue>();
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedReceivedValue((int)category, (int)category, (int)category));
+                    categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
                 }
 
-                var obligatedWeeeRequest = new AddObligatedReceived
+                var obligatedWeeeRequest = new AddObligated
                 {
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
@@ -76,7 +76,7 @@
                 await addObligatedReceivedDataAccess.Submit(weeeReceivedAmount);
                 
                 var thisTestObligatedWeeeArray =
-                    context.AatfWeeReceivedAmount.Where(t => t.WeeeReceived.ReturnId == @return.Id).ToArray();
+                    context.WeeeReceivedAmount.Where(t => t.WeeeReceived.ReturnId == @return.Id).ToArray();
 
                 Assert.NotNull(thisTestObligatedWeeeArray);
                 Assert.NotEmpty(thisTestObligatedWeeeArray);

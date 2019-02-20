@@ -78,9 +78,12 @@
     <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
-    <Compile Include="AatfReturn\Obligated\AddObligatedReceivedDataAccess.cs" />
-    <Compile Include="AatfReturn\Obligated\AddObligatedReceivedHandler.cs" />
-    <Compile Include="AatfReturn\Obligated\IAddObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\IAddObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\IAddObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
