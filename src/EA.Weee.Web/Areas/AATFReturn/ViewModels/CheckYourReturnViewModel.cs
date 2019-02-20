@@ -1,20 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using Core.AatfReturn;
-    using EA.Prsd.Core;
     using EA.Weee.Core.DataReturns;
 
     public class CheckYourReturnViewModel : ReturnViewModelBase
     {
-        /*
-        private readonly QuarterWindow quarterWindow;
-        private readonly Quarter quarter;
-        private readonly int year;
-        */
         public CheckYourReturnViewModel()
         {
         }

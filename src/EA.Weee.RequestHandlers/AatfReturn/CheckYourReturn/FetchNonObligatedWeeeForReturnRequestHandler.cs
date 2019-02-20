@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess.DataAccess;
     using Security;
     using Request = Requests.AatfReturn.NonObligated.FetchNonObligatedWeeeForReturnRequest;
 

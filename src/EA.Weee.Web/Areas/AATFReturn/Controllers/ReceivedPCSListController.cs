@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
@@ -9,9 +12,6 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Web.Controllers.Base;
     public class ReceivedPCSListController : ExternalSiteController
     {

@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using System;
-    using System.Linq;
-    using System.Linq.Expressions;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
@@ -10,7 +8,6 @@
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Security;

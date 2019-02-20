@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using Core.AatfReturn;
-    using Core.Validation;
     using EA.Weee.Core.Helpers;
 
     public class NonObligatedValuesViewModel

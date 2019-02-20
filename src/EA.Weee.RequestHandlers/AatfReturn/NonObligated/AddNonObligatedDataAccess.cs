@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
-    using Domain.DataReturns;
 
     public class AddNonObligatedDataAccess : IAddNonObligatedDataAccess
     {
