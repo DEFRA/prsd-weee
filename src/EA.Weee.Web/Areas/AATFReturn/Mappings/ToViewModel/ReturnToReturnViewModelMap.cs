@@ -25,12 +25,12 @@
                 {
                     if (category.Dcf && category.Tonnage != null)
                     {
-                        NonObligatedTonnageTotalDcf = initialiseTotalDecimal(NonObligatedTonnageTotalDcf);
+                        NonObligatedTonnageTotalDcf = InitialiseTotalDecimal(NonObligatedTonnageTotalDcf);
                         NonObligatedTonnageTotalDcf += category.Tonnage;
                     }
                     else if (!category.Dcf && category.Tonnage != null)
                     {
-                        NonObligatedTonnageTotal = initialiseTotalDecimal(NonObligatedTonnageTotal);
+                        NonObligatedTonnageTotal = InitialiseTotalDecimal(NonObligatedTonnageTotal);
                         NonObligatedTonnageTotal += category.Tonnage;
                     }
                 }
@@ -52,12 +52,12 @@
                         {
                             if (category.B2B != null)
                             {
-                                obligatedTonnageTotalB2b = initialiseTotalDecimal(obligatedTonnageTotalB2b);
+                                obligatedTonnageTotalB2b = InitialiseTotalDecimal(obligatedTonnageTotalB2b);
                                 obligatedTonnageTotalB2b += category.B2B;
                             }
                             if (category.B2C != null)
                             {
-                                obligatedTonnageTotalB2c = initialiseTotalDecimal(obligatedTonnageTotalB2c);
+                                obligatedTonnageTotalB2c = InitialiseTotalDecimal(obligatedTonnageTotalB2c);
                                 obligatedTonnageTotalB2c += category.B2C;
                             }
                         }
@@ -71,7 +71,7 @@
             return new ReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year, CheckIfTonnageIsNull(NonObligatedTonnageTotal), CheckIfTonnageIsNull(NonObligatedTonnageTotalDcf), AatfObligatedData, source.ReturnOperatorData);
         }
 
-        private decimal? initialiseTotalDecimal(decimal? tonnage)
+        private decimal? InitialiseTotalDecimal(decimal? tonnage)
         {
             if (tonnage == null)
             {
