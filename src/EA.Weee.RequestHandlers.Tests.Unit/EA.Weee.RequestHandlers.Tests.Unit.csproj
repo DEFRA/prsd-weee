@@ -94,7 +94,6 @@
     <Compile Include="AatfReturn\ExpressionComparison.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
-    <Compile Include="AatfReturn\NonObligated\AddNonObligatedRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandlerTests.cs" />

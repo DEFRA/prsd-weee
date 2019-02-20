@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -11,12 +12,6 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
 
     public class SelectYourPCSController : ExternalSiteController
     {

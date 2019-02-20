@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
-    using Core.Validation;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
 
