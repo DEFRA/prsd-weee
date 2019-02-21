@@ -91,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnHandlerTests.cs" />
-    <Compile Include="AatfReturn\ExpressionComparison.cs" />
+    <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
@@ -159,6 +159,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
+    <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />

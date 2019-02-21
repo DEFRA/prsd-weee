@@ -5,20 +5,20 @@
     using Core.DataReturns;
     using FluentAssertions;
     using Xunit;
-    public class ReceivedPCSListViewModelTests
+    public class ReceivedPcsListViewModelTests
     {
-        private readonly ReceivedPCSListViewModel model;
-        public ReceivedPCSListViewModelTests()
+        private readonly ReceivedPcsListViewModel model;
+        public ReceivedPcsListViewModelTests()
         {
-            model = new ReceivedPCSListViewModel();
+            model = new ReceivedPcsListViewModel();
         }
 
         [Theory]
         [InlineData("Test Organisation")]
         public void GivenReceivedPCSListViewModelDataOrganisationNameShouldBePopulated(string organisationName)
         {
-            var result = model.OrganisationName = organisationName;
-            model.OrganisationName.Should().Be("Test Organisation"); 
+            var result = model.AatfName = organisationName;
+            model.AatfName.Should().Be("Test Organisation"); 
         }
     }
 }

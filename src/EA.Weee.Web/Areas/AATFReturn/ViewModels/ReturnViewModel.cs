@@ -37,7 +37,7 @@
         public Guid ReturnId { get; set; }
 
         [Display(Name = "Reporting period")]
-        public override String Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
+        public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
 
         [Display(Name = "Compliance year")]
         public override string Year { get; }
