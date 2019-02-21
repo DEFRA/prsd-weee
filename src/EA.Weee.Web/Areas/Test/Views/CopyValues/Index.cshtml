@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.Extensions
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedReceivedViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -46,7 +46,7 @@
                                   style="margin-bottom: 0px; display: none;">
                             </span>
                             <input class="govuk-input govuk-!-width-two-thirds weee-input" id="CategoryValues_@{@i}__HouseHold"
-                                   name="CategoryValues[@{@i}].HouseHold" type="text" value="@category.HouseHold">     
+                                   name="CategoryValues[@{@i}].HouseHold" type="text" value="@category.B2C">     
                         </div>
                     </td>
                     <td class="govuk-table__cell govuk-!-padding-bottom-0">
@@ -55,7 +55,7 @@
                                   style="margin-bottom: 0px; display: none;">
                             </span>
                             <input class="govuk-input govuk-!-width-two-thirds weee-input-b2b" id="CategoryValues_@{@i}__NonHouseHold"
-                                   name="CategoryValues[@{@i}].NonHouseHold" type="text" value="@category.NonHouseHold">
+                                   name="CategoryValues[@{@i}].NonHouseHold" type="text" value="@category.B2B">
                         </div>
                     </td>
                 </tr>
