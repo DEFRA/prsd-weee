@@ -99,7 +99,7 @@
         }
 
         [Fact]
-        public void Map_GivenSource_ObligatedValuesShouldBeMapped()
+        public void Map_GivenSource_ObligatedWeeeReceivedValuesShouldBeMapped()
         {
             var @return = GetReturn();
             
@@ -118,6 +118,28 @@
             result.ObligatedWeeeReceivedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
             result.ObligatedWeeeReceivedData.Count(o => o.CategoryId == 2 && o.B2C == 3 && o.B2B == 4).Should().Be(1);
             result.ObligatedWeeeReceivedData.Count().Should().Be(2);
+        }
+
+        [Fact]
+        public void Map_GivenSource_ObligatedWeeeReusedValuesShouldBeMapped()
+        {
+            var @return = GetReturn();
+
+            var weeeReused = ReturnWeeeReused(aatf, @return.Id);
+
+            var obligated = new List<WeeeReusedAmount>()
+            {
+                new WeeeReusedAmount(weeeReused, 1, 1.000m, 2.000m),
+                new WeeeReusedAmount(weeeReused, 2, 3.000m, 4.000m)
+            };
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), obligated, @operator);
+
+            var result = map.Map(source);
+
+            result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
+            result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 2 && o.B2C == 3 && o.B2B == 4).Should().Be(1);
+            result.ObligatedWeeeReusedData.Count().Should().Be(2);
         }
 
         [Fact]
@@ -155,6 +177,13 @@
             var weeeReceived = new WeeeReceived(scheme, aatf, returnId);
 
             return weeeReceived;
+        }
+
+        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Guid returnId)
+        {
+            var weeeReused = new WeeeReused(aatf, returnId);
+
+            return weeeReused;
         }
 
         public Domain.DataReturns.QuarterWindow GetQuarterWindow()
