@@ -57,11 +57,13 @@
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
 
-            var returnObligatedValues = await obligatedDataAccess.FetchObligatedWeeeForReturn(message.ReturnId);
+            var returnObligatedReceivedValues = await obligatedDataAccess.FetchObligatedWeeeReceivedForReturn(message.ReturnId);
+
+            var returnObligatedReusedValues = await obligatedDataAccess.FetchObligatedWeeeReusedForReturn(message.ReturnId);
 
             var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
 
-            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedValues, @return.Operator);
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, @return.Operator);
 
             var result = mapper.Map(returnQuarterWindow);
 

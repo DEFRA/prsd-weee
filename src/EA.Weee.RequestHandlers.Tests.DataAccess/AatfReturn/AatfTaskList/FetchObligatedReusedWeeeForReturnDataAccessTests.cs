@@ -9,8 +9,8 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
@@ -19,17 +19,16 @@
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
-    using Scheme = Domain.Scheme.Scheme;
-    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
-    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
+    using WeeeReused = Domain.AatfReturn.WeeeReused;
+    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
 
-    public class FetchObligatedWeeeForReturnDataAccessTests
+    public class FetchObligatedReusedWeeeForReturnDataAccessTests
     {
         private readonly FetchObligatedWeeeForReturnDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
 
-        public FetchObligatedWeeeForReturnDataAccessTests()
+        public FetchObligatedReusedWeeeForReturnDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
@@ -46,59 +45,54 @@
                 const string companyRegistrationNumber = "ABC12345";
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
-                var scheme = new Scheme(organisation);
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
                 var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
                 var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
                 database.WeeeContext.Organisations.Add(organisation);
-                database.WeeeContext.Schemes.Add(scheme);
                 database.WeeeContext.Aatfs.Add(aatf);
                 database.WeeeContext.Returns.Add(@return);
                 await database.WeeeContext.SaveChangesAsync();
+                
+                var addObligatedReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
 
-                var addObligatedReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
-
-                var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
-                var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
-
-                var categoryValues = new List<ObligatedReceivedValue>();
-                var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
+                var categoryValues = new List<ObligatedValue>();
+                var weeeReused = new WeeeReused(aatf.Id, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedReceivedValue((int)category, (int)category, (int)category));
+                    categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
                 }
 
-                var obligatedReceivedRequest = new AddObligatedReceived()
+                var obligatedReusedRequest = new AddObligatedReused()
                 {
+                    AatfId = aatf.Id,
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
 
-                var weeeReceivedAmount = new List<WeeeReceivedAmount>();
-
-                foreach (var categoryValue in obligatedReceivedRequest.CategoryValues)
+                var weeeReusedAmount = new List<WeeeReusedAmount>();
+                
+                foreach (var categoryValue in obligatedReusedRequest.CategoryValues)
                 {
-                    weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                    weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
-
-                var obligatedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
-
-                await obligatedDataAccess.Submit(weeeReceivedAmount);
+                
+                var obligateReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
+                await obligateReusedDataAccess.Submit(weeeReusedAmount);
 
                 var fetchDataAccess = new FetchObligatedWeeeForReturnDataAccess(database.WeeeContext);
 
-                var tonnageList = await fetchDataAccess.FetchObligatedWeeeForReturn(@return.Id);
-                var nonHouseholdList = tonnageList.Select(t => t.NonHouseholdTonnage);
-                var householdList = tonnageList.Select(t => t.HouseholdTonnage);
+                var reusedTonnageList = await fetchDataAccess.FetchObligatedWeeeReusedForReturn(@return.Id);
+                var reusedNonHouseholdList = reusedTonnageList.Select(t => t.NonHouseholdTonnage);
+                var reusedHouseholdList = reusedTonnageList.Select(t => t.HouseholdTonnage);
 
-                foreach (var category in weeeReceivedAmount)
+                foreach (var category in weeeReusedAmount)
                 {
-                    nonHouseholdList.Should().Contain(category.NonHouseholdTonnage);
-                    householdList.Should().Contain(category.HouseholdTonnage);
+                    reusedNonHouseholdList.Should().Contain(category.NonHouseholdTonnage);
+                    reusedHouseholdList.Should().Contain(category.HouseholdTonnage);
                 }
             }
         }

@@ -1,18 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using Domain;
+    using System;
     using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Xunit;
-    using DomainAatf = Domain.AatfReturn.Aatf;
-    using DomainScheme = Domain.Scheme.Scheme;
 
     public class AatfMapTests
     {
