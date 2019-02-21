@@ -110,7 +110,7 @@
 
             var result = await controller.Index(organisationId, returnId, aatfId, schemeId) as ViewResult;
 
-            var receivedModel = result.Model as ObligatedReceivedViewModel;
+            var receivedModel = result.Model as ObligatedViewModel;
 
             receivedModel.AatfName.Should().Be(aatfname);
             receivedModel.SchemeName.Should().BeEquivalentTo(scheme);

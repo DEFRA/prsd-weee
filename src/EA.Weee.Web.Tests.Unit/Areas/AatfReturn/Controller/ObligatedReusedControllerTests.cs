@@ -64,7 +64,7 @@
         {
             var organisationId = Guid.NewGuid();
 
-            await controller.Index(organisationId, A.Dummy<Guid>());
+            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
@@ -84,7 +84,7 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }

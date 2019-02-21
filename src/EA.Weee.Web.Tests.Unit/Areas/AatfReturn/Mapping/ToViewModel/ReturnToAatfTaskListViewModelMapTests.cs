@@ -13,12 +13,13 @@
         private readonly ReturnToReturnViewModelMap map;
         private readonly string nullTonnageDisplay = "-";
         private readonly Guid mapperTestId;
-        private readonlyint mapperTestYear;
+        private readonly int mapperTestYear;
         private readonly Quarter mapperTestQuarter;
         private readonly QuarterWindow mapperTestQuarterWindow;
         private readonly string mapperTestPeriod;
         private readonly List<NonObligatedData> mapperTestNonObligatedData;
-        private readonly List<WeeeReceivedObligatedData> mapperTestObligatedReceivedData;
+        private readonly List<WeeeObligatedData> mapperTestObligatedReceivedData;
+        private readonly List<WeeeObligatedData> mapperTestObligatedReusedData;
         private readonly Scheme mapperTestScheme;
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
@@ -172,7 +173,7 @@
         {
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(null, mapperTestAatf, 0, 1.234m, 1.234m));
-            mapperTestAatfList.Add(new Aatf(Guid.NewGuid(), "Other New Aatf"));
+            mapperTestAatfList.Add(new AatfData(Guid.NewGuid(), "Other New Aatf", "123456789"));
 
             var returnData = new ReturnData()
             {
