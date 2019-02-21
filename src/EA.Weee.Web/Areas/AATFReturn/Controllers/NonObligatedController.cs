@@ -49,6 +49,8 @@
             var result = validator.Validate(viewModel, User.GetAccessToken(), apiClient);
 
             // CREATE FUNCTION TO DO THIS
+            // create unit test that tests the validator is called
+            // create unit tests to check the model state contains any errors returned from the validate method
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
