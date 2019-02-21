@@ -38,10 +38,10 @@ namespace EA.Weee.Web
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
-            FluentValidationModelValidatorProvider.Configure(provider =>
-            {
-                provider.ValidatorFactory = new AutofacValidatorFactory(container);
-            });
+            //FluentValidationModelValidatorProvider.Configure(provider =>
+            //{
+            //    provider.ValidatorFactory = new AutofacValidatorFactory(container);
+            //});
 
             // Must register Autofac middleware FIRST!
             app.UseAutofacMiddleware(container);

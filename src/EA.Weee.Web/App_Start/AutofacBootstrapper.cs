@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web
 {
     using System.Reflection;
+    using System.Web;
+    using Areas.AatfReturn.ViewModels.Validation;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
@@ -11,6 +13,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FluentValidation;
+    using Infrastructure;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
@@ -81,7 +84,9 @@
 
             builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
-                .AsImplementedInterfaces().InstancePerLifetimeScope();
+                .AsImplementedInterfaces().InstancePerRequest();
+
+            builder.RegisterType<NonObligatedValuesViewModelValidatorWrapper>().As<INonObligatedValuesViewModelValidatorWrapper>();
 
             return builder.Build();
         }

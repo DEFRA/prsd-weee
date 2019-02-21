@@ -2,20 +2,21 @@
 {
     using Api.Client;
     using Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn;
     using FluentValidation;
-    using Security;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Weee.Requests.AatfReturn;
 
     public class NonObligatedValuesViewModelValidator : AbstractValidator<NonObligatedValuesViewModel>
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly string token;
 
-        public NonObligatedValuesViewModelValidator(Func<IWeeeClient> apiClient)
+        public NonObligatedValuesViewModelValidator(Func<IWeeeClient> apiClient, string token)
         {
             this.apiClient = apiClient;
+            this.token = token;
 
             RuleFor(o => o)
                 .MustAsync((o, cancellation) => ValidateValues(o.CategoryValues, o.Dcf, o.ReturnId))
@@ -30,6 +31,7 @@
             {
                 if (!dcf)
                 {
+                    var result = await client.SendAsync(this.token, new GetReturn(returnId));
                 }
                 else
                 {

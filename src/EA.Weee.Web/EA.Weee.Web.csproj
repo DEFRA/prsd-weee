@@ -310,7 +310,9 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
