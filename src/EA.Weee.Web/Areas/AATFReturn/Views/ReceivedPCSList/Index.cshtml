@@ -20,7 +20,7 @@
             </th>
         </tr>
         <tr class="govuk-table__header">
-            <th class="govuk-table__cell">PCS Name</th>
+            <th class="govuk-table__cell" style="width:40%">PCS Name</th>
             <th class="govuk-table__cell">Approval No</th>
             <th class="govuk-table__cell govuk-!-font-weight-regular">B2C</th>
             <th class="govuk-table__cell govuk-!-font-weight-regular">B2B</th>
@@ -31,17 +31,17 @@
         @foreach (var item in Model.SchemeList)
         {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell" style="width:40%">
                     @item.SchemeName
                 </td>
                 <td class="govuk-table__cell">
                     @item.ApprovalName
                 </td>
                 <td class="govuk-table__cell">
-                    <strong>-</strong>
+                    <strong></strong>
                 </td>
                 <td class="govuk-table__cell">
-                    <strong>-</strong>
+                    <strong></strong>
                 </td>
                 <td class="govuk-table__cell">
                     @Html.RouteLink("Add data", "aatf-received-scheme", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
