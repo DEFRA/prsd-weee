@@ -14,6 +14,8 @@ namespace EA.Weee.Web
     using System.Web.Routing;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using FluentValidation;
+    using FluentValidation.Mvc;
     using IdentityModel;
     using Infrastructure;
     using Owin;
@@ -31,10 +33,15 @@ namespace EA.Weee.Web
             builder.Register(c => configuration).As<ConfigurationService>().SingleInstance();
             builder.Register(c => configuration.CurrentConfiguration).As<IAppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
-
+           
             var container = AutofacBootstrapper.Initialize(builder);
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+
+            FluentValidationModelValidatorProvider.Configure(provider =>
+            {
+                provider.ValidatorFactory = new AutofacValidatorFactory(container);
+            });
 
             // Must register Autofac middleware FIRST!
             app.UseAutofacMiddleware(container);
@@ -56,6 +63,8 @@ namespace EA.Weee.Web
             DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(WeeeRequiredAttributeAdapter));
 
             ApplicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            //FluentValidationModelValidatorProvider.Configure();
         }
     }
 }

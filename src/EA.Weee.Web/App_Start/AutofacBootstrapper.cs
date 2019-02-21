@@ -10,6 +10,7 @@
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using FluentValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
@@ -77,6 +78,10 @@
             builder.RegisterType<FuzzyOrganisationSearcher>()
                 .As<ISearcher<OrganisationSearchResult>>()
                 .InstancePerRequest();
+
+            builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
+                .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+                .AsImplementedInterfaces().InstancePerLifetimeScope();
 
             return builder.Build();
         }
