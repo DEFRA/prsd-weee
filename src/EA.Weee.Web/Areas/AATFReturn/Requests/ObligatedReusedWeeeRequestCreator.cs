@@ -26,7 +26,7 @@
                         nonHouseholdValue));
             }
 
-            return new AddObligatedReused() { OrganisationId = viewModel.OrganisationId, ReturnId = viewModel.ReturnId, CategoryValues = obligatedRequestValues };
+            return new AddObligatedReused() { AatfId = viewModel.AatfId, OrganisationId = viewModel.OrganisationId, ReturnId = viewModel.ReturnId, CategoryValues = obligatedRequestValues };
         }
 
         private decimal? ConvertStringToDecimal(string input)

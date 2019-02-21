@@ -2,7 +2,7 @@
 @using EA.Weee.Core.AatfReturn
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Received WEE";
+    ViewBag.Title = "Reused WEE";
 }
 
 <h2 class="govuk-heading-l">WEEE that has been reused as a whole appliance</h2>
@@ -19,10 +19,11 @@
     @Html.Gds().ValidationSummary()
 
     Html.RenderPartial("_ObligatedWeeeTable", Model);
+    @Html.HiddenFor(m => m.AatfId)
 
     @Html.AntiForgeryToken()
     <form method="post" class="form" style="display: inline">
-        <button type="submit" name="save" class="govuk-button" id="pcs-check-return">
+        <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
             Save and continue
         </button>
     </form>

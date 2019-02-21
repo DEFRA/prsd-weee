@@ -29,9 +29,14 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId };
+            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+            {
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                AatfId = aatfId
+            };
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 

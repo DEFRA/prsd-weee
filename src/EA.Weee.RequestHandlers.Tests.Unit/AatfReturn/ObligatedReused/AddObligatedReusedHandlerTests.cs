@@ -45,11 +45,12 @@
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
             var organisation = A.Fake<Organisation>();
+            var aatf = A.Fake<Aatf>();
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
             var weeeReused = new WeeeReused(
-                await addObligatedReusedDataAccess.GetAatfId(organisation.Id),
+                aatf.Id,
                 aatfReturn.Id);
             var weeeReusedAmount = new List<WeeeReusedAmount>();
 
@@ -62,6 +63,7 @@
 
             var obligatedWeeeRequest = new AddObligatedReused
             {
+                AatfId = aatf.Id,
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,
                 CategoryValues = categoryValues

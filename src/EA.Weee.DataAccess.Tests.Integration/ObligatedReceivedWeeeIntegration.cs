@@ -47,9 +47,6 @@
                 context.Returns.Add(@return);
                 await context.SaveChangesAsync();
                 
-                var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
-                var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
-
                 var categoryValues = new List<ObligatedValue>();
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
@@ -59,12 +56,14 @@
 
                 var obligatedWeeeRequest = new AddObligatedReceived
                 {
+                    AatfId = aatf.Id,
+                    SchemeId = scheme.Id,
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
 
-                var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
+                var weeeReceived = new WeeeReceived(scheme.Id, aatf.Id, @return.Id);
 
                 var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 

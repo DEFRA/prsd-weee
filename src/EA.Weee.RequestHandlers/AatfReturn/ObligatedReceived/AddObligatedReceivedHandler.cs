@@ -24,8 +24,8 @@
             authorization.EnsureCanAccessExternalArea();
 
             var aatfWeeReceived = new WeeeReceived(
-                await obligatedReceivedDataAccess.GetSchemeId(message.OrganisationId),
-                await obligatedReceivedDataAccess.GetAatfId(message.OrganisationId),
+                message.SchemeId,
+                message.AatfId,
                 message.ReturnId);
 
             var aatfWeeeReceivedAmount = new List<WeeeReceivedAmount>();

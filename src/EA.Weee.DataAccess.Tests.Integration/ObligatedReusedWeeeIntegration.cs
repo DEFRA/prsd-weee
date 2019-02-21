@@ -46,8 +46,6 @@
                 context.Aatfs.Add(aatf);
                 context.Returns.Add(@return);
                 await context.SaveChangesAsync();
-                
-                var aatfId = await addObligatedReusedDataAccess.GetAatfId(organisation.Id);
 
                 var categoryValues = new List<ObligatedValue>();
 
@@ -58,12 +56,13 @@
 
                 var obligatedWeeeRequest = new AddObligatedReused
                 {
+                    AatfId = aatf.Id,
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
 
-                var weeeReused = new WeeeReused(aatfId, @return.Id);
+                var weeeReused = new WeeeReused(aatf.Id, @return.Id);
 
                 var weeeReusedAmount = new List<WeeeReusedAmount>();
 

@@ -64,12 +64,9 @@
                 var addObligatedReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
                 var addObligatedReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
 
-                var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
-                var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
-
                 var categoryValues = new List<ObligatedValue>();
-                var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
-                var weeeReused = new WeeeReused(aatfId, @return.Id);
+                var weeeReceived = new WeeeReceived(scheme.Id, aatf.Id, @return.Id);
+                var weeeReused = new WeeeReused(aatf.Id, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
@@ -79,12 +76,15 @@
                 var obligatedReceivedRequest = new AddObligatedReceived()
                 {
                     ReturnId = @return.Id,
+                    AatfId = aatf.Id,
+                    SchemeId = scheme.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
 
                 var obligatedReusedRequest = new AddObligatedReused()
                 {
+                    AatfId = aatf.Id,
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues

@@ -24,7 +24,7 @@
             authorization.EnsureCanAccessExternalArea();
 
             var aatfWeeeReused = new WeeeReused(
-                await obligatedReusedDataAccess.GetAatfId(message.OrganisationId),
+                message.AatfId,
                 message.ReturnId);
 
             var aatfWeeeReusedAmount = new List<WeeeReusedAmount>();

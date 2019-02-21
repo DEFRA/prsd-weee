@@ -16,6 +16,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class AddObligatedReceivedHandlerTests
     {
@@ -44,12 +45,14 @@
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
             var organisation = A.Fake<Organisation>();
+            var aatf = A.Fake<Aatf>();
+            var scheme = A.Fake<Scheme>();
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
             var weeeReceived = new WeeeReceived(
-                await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id),
-                await addObligatedReceivedDataAccess.GetAatfId(organisation.Id),
+                scheme.Id,
+                aatf.Id,
                 aatfReturn.Id);
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
@@ -64,7 +67,9 @@
             {
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,
-                CategoryValues = categoryValues
+                CategoryValues = categoryValues,
+                SchemeId = scheme.Id,
+                AatfId = aatf.Id
             };
             
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
