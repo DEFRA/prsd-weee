@@ -122,29 +122,53 @@
         [Fact]
         public void ToTonnageDisplay_GivenValueWithNoDecimalPlace_DisplayShouldBeCorrect()
         {
-            decimal value = 1;
+            const decimal value = 1;
             value.ToTonnageDisplay().Should().Be("1.000");
         }
 
         [Fact]
         public void ToTonnageDisplay_GivenValueWithSingleDecimalPlace_DisplayShouldBeCorrect()
         {
-            decimal value = 1.1m;
+            const decimal value = 1.1m;
             value.ToTonnageDisplay().Should().Be("1.100");
         }
 
         [Fact]
         public void ToTonnageDisplay_GivenValueWithTwoDecimalPlace_DisplayShouldBeCorrect()
         {
-            decimal value = 1.11m;
+            const decimal value = 1.11m;
             value.ToTonnageDisplay().Should().Be("1.110");
         }
 
         [Fact]
         public void ToTonnageDisplay_GivenValueWithThreeDecimalPlace_DisplayShouldBeCorrect()
         {
-            decimal value = 1.111m;
+            const decimal value = 1.111m;
             value.ToTonnageDisplay().Should().Be("1.111");
+        }
+
+        public static IEnumerable<object[]> ThousandData =>
+            new List<object[]>
+            {
+                new object[] { 1000M },
+                new object[] { 10000M },
+                new object[] { 100000M },
+            };
+
+        [Fact]
+        public void ToTonnageDisplay_GivenThousandsValue_DisplayValueShouldBeFomrattedWithCommas()
+        {
+            const decimal value = 1000m;
+
+            value.ToTonnageDisplay().Should().Be("1,000.000");
+        }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenMultipleThousandsValue_DisplayValueShouldBeFomrattedWithCommas()
+        {
+            const decimal value = 10000m;
+
+            value.ToTonnageDisplay().Should().Be("10,000.000");
         }
     }
 }
