@@ -10,17 +10,19 @@
     {
         public Guid OrganisationId { get; set; }
 
-        public string OrganisationName { get; set; }
+        public Guid AatfId { get; set; }
 
-        public Guid PcsId { get; set; }
+        public Guid SchemeId { get; set; }
 
-        public string PcsName { get; set; }
+        public string SchemeName { get; set; }
+
+        public string AatfName { get; set; }
 
         public Guid ReturnId { get; set; }
 
         public IList<ObligatedCategoryValue> CategoryValues { get; set; }
 
-        private ICategoryValueTotalCalculator categoryValueCalculator;
+        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
         public ObligatedViewModel()
         {

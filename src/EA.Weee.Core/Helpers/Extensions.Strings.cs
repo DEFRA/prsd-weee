@@ -27,12 +27,12 @@
 
         public static string ToTonnageDisplay(this decimal? tonnage)
         {
-            return tonnage.HasValue ? $"{tonnage:0.000}" : "0.000";
+            return tonnage.HasValue ? ToTonnageDisplay(tonnage.Value) : "0.000";
         }
 
         public static string ToTonnageDisplay(this decimal tonnage)
         {
-            return $"{tonnage:0.000}";
+            return $"{tonnage:#,##0.000}";
         }
     }
 } 

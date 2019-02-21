@@ -7,7 +7,7 @@
     using Domain.AatfReturn;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using Aatf = Core.AatfReturn.Aatf;
+    using Aatf = Core.AatfReturn.AatfData;
     using Scheme = Core.AatfReturn.Scheme;
 
     public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
@@ -30,7 +30,7 @@
 
                 foreach (var sourceAatf in source.Aatfs)
                 {
-                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name));
+                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber));
                 }
 
                 returnData.Aatfs = aatfReturnList;
@@ -45,7 +45,8 @@
             {
                 var aatf = new Aatf(
                     source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Id).FirstOrDefault(),
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Name).FirstOrDefault());
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Name).FirstOrDefault(),
+                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.ApprovalNumber).FirstOrDefault());
                 var scheme = new Scheme(
                     source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.Id).FirstOrDefault(),
                     source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.SchemeName).FirstOrDefault());
@@ -56,7 +57,8 @@
             {
                 var aatf = new Aatf(
                     source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.Id).FirstOrDefault(),
-                    source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.Name).FirstOrDefault());
+                    source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.Name).FirstOrDefault(),
+                    source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.ApprovalNumber).FirstOrDefault());
                 returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(null, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
             }
 

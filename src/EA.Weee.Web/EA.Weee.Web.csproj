@@ -297,8 +297,6 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\CannotSubmitDataReturnViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
@@ -439,31 +437,22 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ReceivedPcsList\Index.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedReceived\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_ObligatedWeeeTable.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
     <Content Include="Content\govuk_frontend\package\vendor\_sass-mq.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_visually-hidden.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_clearfix.scss" />

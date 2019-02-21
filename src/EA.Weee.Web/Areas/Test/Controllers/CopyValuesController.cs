@@ -22,16 +22,16 @@
         // GET: Test/CopyValues
         public ActionResult Index()
         {
-            var pastValues = TempData["pasteValues"] as NonObligatedCategoryValues;
+            var pastValues = TempData["pasteValues"] as ObligatedCategoryValues;
 
             if (pastValues != null)
             {
-                var model = new NonObligatedValuesViewModel(pastValues);
+                var model = new ObligatedViewModel(pastValues);
 
                 return View(model);
             }
 
-            return View(new NonObligatedValuesViewModel(new NonObligatedCategoryValues()));
+            return View(new ObligatedViewModel(new ObligatedCategoryValues()));
         }
 
         [HttpPost]

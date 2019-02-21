@@ -5,7 +5,7 @@
     ViewBag.Title = "Received WEE";
 }
 
-<h2 class="govuk-heading-l">WEEE that has been received for treatment at @Model.OrganisationName from @Model.PcsName</h2>
+<h2 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h2>
 
 <p class="govuk-body">
     This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
@@ -19,7 +19,8 @@
     @Html.Gds().ValidationSummary()
 
     Html.RenderPartial("_ObligatedWeeeTable", Model);
-
+    @Html.HiddenFor(m => m.AatfName)
+    @Html.HiddenFor(m => m.SchemeName)
     @Html.AntiForgeryToken()
     <form method="post" class="form" style="display: inline">
         <button type="submit" name="save" class="govuk-button" id="pcs-check-return">

@@ -12,17 +12,16 @@
     {
         private readonly ReturnToReturnViewModelMap map;
         private readonly string nullTonnageDisplay = "-";
-        private Guid mapperTestId;
-        private int mapperTestYear;
-        private Quarter mapperTestQuarter;
-        private QuarterWindow mapperTestQuarterWindow;
-        private string mapperTestPeriod;
-        private List<NonObligatedData> mapperTestNonObligatedData;
-        private List<WeeeObligatedData> mapperTestObligatedReceivedData;
-        private List<WeeeObligatedData> mapperTestObligatedReusedData;
-        private Scheme mapperTestScheme;
-        private Aatf mapperTestAatf;
-        private List<Aatf> mapperTestAatfList;
+        private readonly Guid mapperTestId;
+        private readonlyint mapperTestYear;
+        private readonly Quarter mapperTestQuarter;
+        private readonly QuarterWindow mapperTestQuarterWindow;
+        private readonly string mapperTestPeriod;
+        private readonly List<NonObligatedData> mapperTestNonObligatedData;
+        private readonly List<WeeeReceivedObligatedData> mapperTestObligatedReceivedData;
+        private readonly Scheme mapperTestScheme;
+        private readonly AatfData mapperTestAatf;
+        private readonly List<AatfData> mapperTestAatfList;
 
         public ReturnToAatfTaskListViewModelMapTests()
         {
@@ -36,8 +35,8 @@
             mapperTestObligatedReceivedData = new List<WeeeObligatedData>();
             mapperTestObligatedReusedData = new List<WeeeObligatedData>();
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
-            mapperTestAatf = new Aatf(Guid.NewGuid(), "Test Aatf");
-            mapperTestAatfList = new List<Aatf>();
+            mapperTestAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
+            mapperTestAatfList = new List<AatfData>();
         }
 
         [Fact]

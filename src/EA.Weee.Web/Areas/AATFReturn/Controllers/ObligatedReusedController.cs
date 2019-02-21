@@ -34,11 +34,6 @@
         {
             var viewModel = new ObligatedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId };
 
-            using (var client = apiClient())
-            {
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-            }
-
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);

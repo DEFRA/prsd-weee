@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\IOperatorEntity.cs" />
     <Compile Include="AatfReturn\WeeeReused.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmount.cs" />
     <Compile Include="AatfReturn\WeeeReceived.cs" />
