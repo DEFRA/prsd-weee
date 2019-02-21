@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.AatfReturn.ObligatedReceived
+﻿namespace EA.Weee.Requests.AatfReturn.Obligated
 {
     using System;
     using System.Collections.Generic;
@@ -6,10 +6,14 @@
 
     public class AddObligatedReceived : IRequest<bool>
     {
-        public IList<ObligatedReceivedValue> CategoryValues { get; set; }
+        public IList<ObligatedValue> CategoryValues { get; set; }
 
         public Guid ReturnId { get; set; }
 
         public Guid OrganisationId { get; set; }
+
+        public Guid SchemeId { get; set; }
+
+        public Guid AatfId { get; set; }
     }
 }

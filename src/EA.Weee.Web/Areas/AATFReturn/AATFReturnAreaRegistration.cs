@@ -47,6 +47,12 @@
                 url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/{schemeId}/received/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ObligatedReceived" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "aatf-reused",
+                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/reused/{controller}/{action}",
+                defaults: new { action = "Index", controller = "ObligatedReused" },
+                namespaces: new[] { typeof(ObligatedReusedController).Namespace });
         }
     }
 }

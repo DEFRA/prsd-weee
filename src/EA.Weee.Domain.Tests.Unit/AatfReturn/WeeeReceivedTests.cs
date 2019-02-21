@@ -10,7 +10,7 @@
     public class WeeeReceivedTests
     {
         [Fact]
-        public void WeeeReceived_SchemeNotDefined_ThrowsArugmentNullException()
+        public void WeeeReceived_SchemeNotDefined_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {
@@ -21,7 +21,7 @@
         }
 
         [Fact]
-        public void WeeeReceived_AatfNotDefined_ThrowsArugmentNullException()
+        public void WeeeReceived_AatfNotDefined_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {

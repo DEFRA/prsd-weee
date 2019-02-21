@@ -5,7 +5,6 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -32,7 +31,7 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
         {
-            var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues())
+            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
@@ -49,7 +48,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ObligatedReceivedViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ObligatedViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

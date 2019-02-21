@@ -125,13 +125,23 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenReturn_ObligatedValuesShouldBeRetrieved()
+        public async Task HandleAsync_GivenReturn_ObligatedReceivedValuesShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
 
             var result = await handler.HandleAsync(new GetReturn(returnId));
 
-            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturn_ObligatedReusedValuesShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -152,15 +162,21 @@
             var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue);
             var nonObligatedValues = new List<NonObligatedWeee>();
+            var obligatedReceivedValues = new List<WeeeReceivedAmount>();
+            var obligatedReusedValues = new List<WeeeReusedAmount>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
 
             A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.IsSameOrEqualTo(quarterWindow)
                                                                                 && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
+                                                                                && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
+                                                                                && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
                                                                                 && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 

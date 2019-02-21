@@ -84,6 +84,8 @@
     <Compile Include="AatfReturn\ReturnQuarterWindowTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeTests.cs" />
     <Compile Include="AatfReturn\ReturnTests.cs" />
+    <Compile Include="AatfReturn\WeeeReusedAmountTests.cs" />
+    <Compile Include="AatfReturn\WeeeReusedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmountTests.cs" />
     <Compile Include="AddressTests.cs">
