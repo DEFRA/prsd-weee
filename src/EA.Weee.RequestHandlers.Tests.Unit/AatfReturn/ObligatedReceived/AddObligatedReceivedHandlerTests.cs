@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;

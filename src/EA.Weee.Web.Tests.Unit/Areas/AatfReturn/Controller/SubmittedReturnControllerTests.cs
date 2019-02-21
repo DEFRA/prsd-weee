@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
@@ -14,11 +12,9 @@
     using Services.Caching;
     using TestHelpers;
     using Web.Areas.AatfReturn.Controllers;
-    using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.AatfReturn;
-    using Weee.Requests.AatfReturn.NonObligated;
     using Xunit;
 
     public class SubmittedReturnControllerTests

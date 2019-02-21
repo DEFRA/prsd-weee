@@ -1,23 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Web.OAuth;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.AatfReturn.Requests;
-    using EA.Weee.Web.Services;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Microsoft.Owin.Security;
     using System;
     using System.Globalization;
-    using System.Security;
-    using System.Security.Principal;
-    using System.Threading.Tasks;
-    using Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
+    using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
-    using Web.Controllers.Base;
     using Xunit;
 
     public class NonObligatedWeeRequestCreatorTests

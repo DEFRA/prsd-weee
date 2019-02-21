@@ -24,6 +24,10 @@ var countDecimals = function (value) {
     return 0;
 };
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function TonnageTotals(controlId) {
     //var controlId = 'Tonnage';
     var tonnageElements = document.querySelectorAll('input[id$=' + controlId + ']');
@@ -54,7 +58,7 @@ function TonnageTotals(controlId) {
                             totalTonnage += parseFloat(convertedValue);
                         }
                     }
-                    tonnageTotal.innerText = totalTonnage.toFixed(3) + ' tonnes';
+                    tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3)) + ' tonnes';
                 }
             });
     }

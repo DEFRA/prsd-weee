@@ -16,8 +16,7 @@
                 CreatePcsMemberXmlFile,
                 CreatePcsDataReturnXmlFile,
                 ManageCache,
-                ManagePcsReturnsSubmissionWindow,
-                CopyAndPaste
+                ManagePcsReturnsSubmissionWindow
             })
         {
         }

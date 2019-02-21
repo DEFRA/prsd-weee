@@ -1,46 +1,56 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPCSListViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPcsListViewModel
 @{
     ViewBag.Title = "Received PCS List";
 }
 
 <h2 class="govuk-heading-l">
-    WEEE received for treatment at @Model.OrganisationName
+    WEEE received for treatment at @Model.AatfName
 </h2>
 <div class="govuk-!-padding-bottom-3"></div>
 
 <table class="govuk-table">
-        <tbody class="govuk-table__body">
+    <thead>
+        <tr class="govuk-table__header gov-uk-no-bottom-border">
+            <th class="govuk-table__cell gov-uk-no-bottom-border"></th>
+            <th class="govuk-table__cell gov-uk-no-bottom-border"></th>
+            <th class="govuk-table__cell gov-uk-no-bottom-border" colspan="2">
+                Received for treatment (t)
+            </th>
+        </tr>
+        <tr class="govuk-table__header">
+            <th class="govuk-table__cell" style="width:40%">PCS Name</th>
+            <th class="govuk-table__cell">Approval No</th>
+            <th class="govuk-table__cell govuk-!-font-weight-regular">B2C</th>
+            <th class="govuk-table__cell govuk-!-font-weight-regular">B2B</th>
+            <th class="govuk-table__cell"></th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var item in Model.SchemeList)
+        {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;"></td>
-                <td class="govuk-table__cell" style="border: 0px;"></td>
-                <td class="govuk-table__cell" govuk-!-font-weight-bold colspan="2" style="border-bottom: 0px;">
-                    Received for treatment (t)
+                <td class="govuk-table__cell" style="width:40%">
+                    @item.SchemeName
                 </td>
-                <td class="govuk-table__cell" style="border: 0px;"></td>
+                <td class="govuk-table__cell">
+                    @item.ApprovalName
+                </td>
+                <td class="govuk-table__cell">
+                    <strong></strong>
+                </td>
+                <td class="govuk-table__cell">
+                    <strong></strong>
+                </td>
+                <td class="govuk-table__cell">
+                    @Html.RouteLink("Add data", "aatf-received-scheme", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                </td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-font-weight-bold">PCS Name</td>
-                <td class="govuk-table__cell govuk-!-font-weight-bold">Approval No</td>
-                <td class="govuk-table__cell">B2C</td>
-                <td class="govuk-table__cell">B2B</td>
-                <td class="govuk-table__cell"></td>
-            </tr>
-            @foreach (var item in Model.SchemeList)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        @item.SchemeName
-                    </td>
-                    <td class="govuk-table__cell">
-                        @item.ApprovalName
-                    </td>
-                </tr>
-            }
-        </tbody>
+        }
+    </tbody>
 
-    </table>
+</table>
 
 @using (Html.BeginForm("Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, FormMethod.Post))
 {

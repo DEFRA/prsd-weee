@@ -33,7 +33,7 @@
 
         public async Task<bool> HandleAsync(AddDefaultAatf message)
         {
-            var @operator = await genericDataAccess.GetById<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+            var @operator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
             
             if (@operator == null)
             {

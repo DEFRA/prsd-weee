@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -11,21 +12,15 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
 
-    public class SelectYourPCSController : ExternalSiteController
+    public class SelectYourPcsController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
         private readonly IWeeeCache cache;
 
-        public SelectYourPCSController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddReturnSchemeRequestCreator requestCreator)
+        public SelectYourPcsController(Func<IWeeeClient> apiclient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddReturnSchemeRequestCreator requestCreator)
         {
             this.apiClient = apiclient;
             this.breadcrumb = breadcrumb;

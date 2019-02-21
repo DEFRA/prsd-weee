@@ -2,9 +2,10 @@
 @using EA.Weee.Core.AatfReturn
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectYourPCSViewModel
 @{
-    ViewBag.Title = "SelectYourPCSView";
+    ViewBag.Title = "Select Your PCS";
 }
-@using (Html.BeginForm("Index", "SelectYourPCS", FormMethod.Post))
+
+@using (Html.BeginForm("Index", "SelectYourPcs", FormMethod.Post))
 {
     <div class="govuk-!-padding-bottom-2"></div>
     @Html.AntiForgeryToken()

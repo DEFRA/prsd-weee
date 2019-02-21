@@ -1,14 +1,8 @@
-$govuk-assets-path: "../content/govuk_frontend/assets/";
-$govuk-images-path: "../content/govuk_frontend/assets/images/";
-$govuk-fonts-path: "../content/govuk_frontend/assets/fonts/";
+$govuk-assets-path: "../content/govuk_frontend/";
+$govuk-images-path: "../content/govuk_frontend/images/";
+$govuk-fonts-path: "../content/govuk_frontend/fonts/";
 
 @import "govuk_frontend/package/all";
-/*@import "govuk_frontend/package/tools/all";
-@import "govuk_frontend/package/helpers/all";
-@import "govuk_frontend/package/settings/all";
-@import "govuk_frontend/package/components/footer/footer";
-@import "govuk_frontend/package/core/all";
-@import "govuk_frontend/package/components/input/input";*/
 
 @import "weee/errors";
 
