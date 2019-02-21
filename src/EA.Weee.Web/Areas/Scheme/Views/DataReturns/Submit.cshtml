@@ -82,7 +82,7 @@
 
     @if (hasErrors)
     {
-        <details class="govuk-details" style="background-color: #B10E1E ; padding-top: 5px; color: black;">
+        <details class="govuk-details" style="background-color: #ef9998 ; padding-top: 5px; color: #0b0c0c;">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Data return errors", "View data return errors");
