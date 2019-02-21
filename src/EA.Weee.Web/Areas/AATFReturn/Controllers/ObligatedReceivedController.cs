@@ -30,16 +30,17 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
         {
-            var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId };
-
-            using (var client = apiClient())
+            var viewModel = new ObligatedReceivedViewModel(new ObligatedCategoryValues())
             {
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-            }
-
-            viewModel.PcsName = "ABB Ltd Woking";
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                AatfId = aatfId,
+                SchemeId = schemeId,
+                SchemeName = (await cache.FetchSchemePublicInfo(organisationId)).Name,
+                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name,
+            };
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
