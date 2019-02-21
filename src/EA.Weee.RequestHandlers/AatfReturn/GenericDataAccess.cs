@@ -3,7 +3,9 @@
     using DataAccess;
     using Domain.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Prsd.Core.Domain;
@@ -32,9 +34,14 @@
             return await context.Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<TEntity> GetById<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity
+        public async Task<TEntity> GetSingleByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity
         {
             return await context.Set<TEntity>().SingleOrDefaultAsync(specification.ToExpression());
+        }
+
+        public async Task<List<TEntity>> GetManyByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity
+        {
+            return await context.Set<TEntity>().Where(specification.ToExpression()).ToListAsync();
         }
     }
 }

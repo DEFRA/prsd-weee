@@ -88,6 +88,18 @@
       <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.8.1.3\lib\net45\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.Mvc5.8.1.3\lib\net45\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.ValidatorAttribute, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.1.3\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidator, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidator.2.0.4\lib\netstandard1.3\FluentValidator.dll</HintPath>
+    </Reference>
     <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityModel.1.13.1\lib\net45\IdentityModel.dll</HintPath>
     </Reference>
@@ -129,6 +141,9 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -139,15 +154,49 @@
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.3.0\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="MvcNavigationHelpers, Version=0.0.0.5, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvcNavigationHelpers.0.0.0.5\lib\net45\MvcNavigationHelpers.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -159,8 +208,27 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.5.0\lib\netstandard1.0\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -206,15 +274,19 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SelectYourPcsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
@@ -238,6 +310,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -434,17 +507,23 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\web.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ReceivedPcsList\Index.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\AatfReturn\Views\ObligatedReceived\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_ObligatedWeeeTable.cshtml" />
     <Content Include="Content\govuk_frontend\package\vendor\_sass-mq.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_visually-hidden.scss" />
     <Content Include="Content\govuk_frontend\package\utilities\_clearfix.scss" />
@@ -667,36 +746,6 @@
     <Content Include="Content\govuk_frontend\package\assets\fonts\bold-a2452cb66f-v1.woff2" />
     <Content Include="Content\govuk_frontend\package\all.scss" />
     <Content Include="Content\govuk_frontend\package\all-ie8.scss" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-851b10ccdd-v1.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-62cc6f0a28-v1.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-tabular-498ea8ffe2-v1.eot" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-f38ad40456-v1.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-458f8ea81c-v1.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-2c037cf7e1-v1.eot" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-b89238d840-v1.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-784c21afb8-v1.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-tabular-357fdfbcc3-v1.eot" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-fb2676462a-v1.eot" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\AatfTaskList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_ContactProgressiveDisclosure.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ReceivedPCSList\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ObligatedReceived\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_ObligatedWeeeTable.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPCS\Index.cshtml" />
     <Content Include="Content\govuk_frontend\fonts\light-tabular-851b10ccdd-v1.woff2" />
     <Content Include="Content\govuk_frontend\fonts\light-tabular-62cc6f0a28-v1.woff" />
     <Content Include="Content\govuk_frontend\fonts\light-tabular-498ea8ffe2-v1.eot" />
@@ -1116,7 +1165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
-    <Folder Include="Content\govuk_frontend\assets\images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

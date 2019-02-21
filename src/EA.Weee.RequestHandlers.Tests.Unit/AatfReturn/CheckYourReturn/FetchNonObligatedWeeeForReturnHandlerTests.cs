@@ -4,16 +4,11 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn;
     using RequestHandlers.Security;
-    using Requests.AatfReturn;
     using Weee.Tests.Core;
     using Xunit;
 

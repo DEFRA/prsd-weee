@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using EA.Prsd.Core.Mediator;
     using System;
+    using EA.Prsd.Core.Mediator;
 
     public class AddReturnScheme : IRequest<Guid>
     {
