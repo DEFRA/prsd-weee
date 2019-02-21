@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
+    using FluentValidation.Attributes;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
+    using Validation;
 
+    [Validator(typeof(NonObligatedValuesViewModelValidator))]
     public class NonObligatedValuesViewModel
     {
         public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
