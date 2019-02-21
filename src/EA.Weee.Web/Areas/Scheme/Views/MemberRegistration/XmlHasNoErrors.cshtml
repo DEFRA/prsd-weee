@@ -35,10 +35,10 @@
 				You must review all warnings and make any necessary corrections to your file before it is ready to be submitted.
 				Or, if you are happy with its content, you can submit your file with warnings.
 			</p>
-			<details>
+			<details class="govuk-details" style="padding-top: 5px; color: black;">
 				@{
 					string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
-					this.WeeeGds().SummaryExpansion(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings", "Validation sucessful");
+					this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings", "Validation sucessful");
 				}
 				<div class="warning-list-container">
 					<ul>
