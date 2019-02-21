@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReused
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +10,7 @@
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
@@ -17,15 +18,15 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AddObligatedReceivedHandlerTests
+    public class AddObligatedReusedHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReceivedDataAccess addObligatedReceivedDataAccess;
+        private readonly IAddObligatedReusedDataAccess addObligatedReusedDataAccess;
 
-        public AddObligatedReceivedHandlerTests()
+        public AddObligatedReusedHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            addObligatedReceivedDataAccess = A.Dummy<IAddObligatedReceivedDataAccess>();
+            addObligatedReusedDataAccess = A.Dummy<IAddObligatedReusedDataAccess>();
         }
 
         [Fact]
@@ -33,9 +34,9 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
+            var handler = new AddObligatedReusedHandler(authorization, addObligatedReusedDataAccess);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedReceived>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedReused>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -47,11 +48,10 @@
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
-            var weeeReceived = new WeeeReceived(
-                await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id),
-                await addObligatedReceivedDataAccess.GetAatfId(organisation.Id),
+            var weeeReused = new WeeeReused(
+                await addObligatedReusedDataAccess.GetAatfId(organisation.Id),
                 aatfReturn.Id);
-            var weeeReceivedAmount = new List<WeeeReceivedAmount>();
+            var weeeReusedAmount = new List<WeeeReusedAmount>();
 
             var categoryValues = new List<ObligatedValue>();
 
@@ -60,7 +60,7 @@
                 categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
             }
 
-            var obligatedWeeeRequest = new AddObligatedReceived
+            var obligatedWeeeRequest = new AddObligatedReused
             {
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,
@@ -69,14 +69,14 @@
             
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
-                weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
             
-            var requestHandler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
+            var requestHandler = new AddObligatedReusedHandler(authorization, addObligatedReusedDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);
 
-            A.CallTo(() => addObligatedReceivedDataAccess.Submit(A<List<WeeeReceivedAmount>>.That.IsSameAs(weeeReceivedAmount)));
+            A.CallTo(() => addObligatedReusedDataAccess.Submit(A<List<WeeeReusedAmount>>.That.IsSameAs(weeeReusedAmount)));
         }
     }
 }

@@ -15,32 +15,32 @@
     using FluentAssertions;
     using Xunit;
 
-    public class ObligatedReceivedControllerTests
+    public class ObligatedReusedControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
+        private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
-        private readonly ObligatedReceivedController controller;
+        private readonly ObligatedReusedController controller;
 
-        public ObligatedReceivedControllerTests()
+        public ObligatedReusedControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            requestCreator = A.Fake<IObligatedReceivedWeeeRequestCreator>();
+            requestCreator = A.Fake<IObligatedReusedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            controller = new ObligatedReceivedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator);
+            controller = new ObligatedReusedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator);
         }
 
         [Fact]
-        public void CheckObligatedReceivedControllerInheritsExternalSiteController()
+        public void CheckObligatedReusedControllerInheritsExternalSiteController()
         {
-            typeof(ObligatedReceivedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ObligatedReusedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel();
-            var request = new AddObligatedReceived();
+            var request = new AddObligatedReused();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -56,7 +56,7 @@
 
             await controller.Index(A.Dummy<ObligatedViewModel>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReceived>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReused>._)).MustNotHaveHappened();
         }
 
         [Fact]

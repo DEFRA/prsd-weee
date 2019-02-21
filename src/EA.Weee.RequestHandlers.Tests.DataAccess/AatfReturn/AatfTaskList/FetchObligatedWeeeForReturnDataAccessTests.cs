@@ -10,6 +10,7 @@
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
@@ -22,6 +23,8 @@
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
+    using WeeeReused = Domain.AatfReturn.WeeeReused;
+    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
 
     public class FetchObligatedWeeeForReturnDataAccessTests
     {
@@ -59,12 +62,14 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var addObligatedReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
+                var addObligatedReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
 
                 var aatfId = await addObligatedReceivedDataAccess.GetAatfId(organisation.Id);
                 var schemeId = await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id);
 
                 var categoryValues = new List<ObligatedValue>();
                 var weeeReceived = new WeeeReceived(schemeId, aatfId, @return.Id);
+                var weeeReused = new WeeeReused(aatfId, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
@@ -78,27 +83,52 @@
                     CategoryValues = categoryValues
                 };
 
+                var obligatedReusedRequest = new AddObligatedReused()
+                {
+                    ReturnId = @return.Id,
+                    OrganisationId = organisation.Id,
+                    CategoryValues = categoryValues
+                };
+
                 var weeeReceivedAmount = new List<WeeeReceivedAmount>();
+                var weeeReusedAmount = new List<WeeeReusedAmount>();
 
                 foreach (var categoryValue in obligatedReceivedRequest.CategoryValues)
                 {
                     weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
 
-                var obligatedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
+                foreach (var categoryValue in obligatedReusedRequest.CategoryValues)
+                {
+                    weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                }
 
-                await obligatedDataAccess.Submit(weeeReceivedAmount);
+                var obligateReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
+                await obligateReceivedDataAccess.Submit(weeeReceivedAmount);
+
+                var obligateReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
+                await obligateReusedDataAccess.Submit(weeeReusedAmount);
 
                 var fetchDataAccess = new FetchObligatedWeeeForReturnDataAccess(database.WeeeContext);
 
-                var tonnageList = await fetchDataAccess.FetchObligatedWeeeReceivedForReturn(@return.Id);
-                var nonHouseholdList = tonnageList.Select(t => t.NonHouseholdTonnage);
-                var householdList = tonnageList.Select(t => t.HouseholdTonnage);
+                var receivedTonnageList = await fetchDataAccess.FetchObligatedWeeeReceivedForReturn(@return.Id);
+                var receivedNonHouseholdList = receivedTonnageList.Select(t => t.NonHouseholdTonnage);
+                var receivedHouseholdList = receivedTonnageList.Select(t => t.HouseholdTonnage);
+
+                var reusedTonnageList = await fetchDataAccess.FetchObligatedWeeeReceivedForReturn(@return.Id);
+                var reusedNonHouseholdList = reusedTonnageList.Select(t => t.NonHouseholdTonnage);
+                var reusedHouseholdList = reusedTonnageList.Select(t => t.HouseholdTonnage);
 
                 foreach (var category in weeeReceivedAmount)
                 {
-                    nonHouseholdList.Should().Contain(category.NonHouseholdTonnage);
-                    householdList.Should().Contain(category.HouseholdTonnage);
+                    receivedNonHouseholdList.Should().Contain(category.NonHouseholdTonnage);
+                    receivedHouseholdList.Should().Contain(category.HouseholdTonnage);
+                }
+
+                foreach (var category in weeeReusedAmount)
+                {
+                    reusedNonHouseholdList.Should().Contain(category.NonHouseholdTonnage);
+                    reusedHouseholdList.Should().Contain(category.HouseholdTonnage);
                 }
             }
         }
