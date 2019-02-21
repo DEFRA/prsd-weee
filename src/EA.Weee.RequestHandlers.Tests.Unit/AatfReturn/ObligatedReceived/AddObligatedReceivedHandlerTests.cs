@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReused
 {
     using System;
     using System.Collections.Generic;
@@ -9,18 +9,20 @@
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class AddObligatedReceivedHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReceivedDataAccess addObligatedReceivedDataAccess;
+
         public AddObligatedReceivedHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
@@ -43,27 +45,31 @@
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
             var organisation = A.Fake<Organisation>();
+            var aatf = A.Fake<Aatf>();
+            var scheme = A.Fake<Scheme>();
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
             var weeeReceived = new WeeeReceived(
-                await addObligatedReceivedDataAccess.GetSchemeId(organisation.Id),
-                await addObligatedReceivedDataAccess.GetAatfId(organisation.Id),
+                scheme.Id,
+                aatf.Id,
                 aatfReturn.Id);
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
-            var categoryValues = new List<ObligatedReceivedValue>();
+            var categoryValues = new List<ObligatedValue>();
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedReceivedValue((int)category, (int)category, (int)category));
+                categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
             }
 
             var obligatedWeeeRequest = new AddObligatedReceived
             {
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,
-                CategoryValues = categoryValues
+                CategoryValues = categoryValues,
+                SchemeId = scheme.Id,
+                AatfId = aatf.Id
             };
             
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)

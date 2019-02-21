@@ -8,7 +8,7 @@
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.RequestHandlers.Charges;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;

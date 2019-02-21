@@ -5,14 +5,14 @@
     using EA.Prsd.Core;
     using ViewModels;
     using Web.Requests.Base;
-    using Weee.Requests.AatfReturn.ObligatedReceived;
+    using Weee.Requests.AatfReturn.Obligated;
 
-    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedReceivedViewModel, AddObligatedReceived>, IObligatedReceivedWeeeRequestCreator
+    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, AddObligatedReceived>, IObligatedReceivedWeeeRequestCreator
     {
-        public override AddObligatedReceived ViewModelToRequest(ObligatedReceivedViewModel viewModel)
+        public override AddObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
-            var obligatedRequestValues = new List<ObligatedReceivedValue>();
+            var obligatedRequestValues = new List<ObligatedValue>();
 
             foreach (var categoryValue in viewModel.CategoryValues)
             {
@@ -20,16 +20,23 @@
                 var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
 
                 obligatedRequestValues.Add(
-                    new ObligatedReceivedValue(
+                    new ObligatedValue(
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));
             }
 
-            return new AddObligatedReceived() { OrganisationId = viewModel.OrganisationId, ReturnId = viewModel.ReturnId, CategoryValues = obligatedRequestValues };
+            return new AddObligatedReceived()
+            {
+                AatfId = viewModel.AatfId,
+                SchemeId = viewModel.SchemeId,
+                OrganisationId = viewModel.OrganisationId,
+                ReturnId = viewModel.ReturnId,
+                CategoryValues = obligatedRequestValues
+            };
         }
 
-        public decimal? ConvertStringToDecimal(string input)
+        private decimal? ConvertStringToDecimal(string input)
         {
             decimal? value = null;
             if (!string.IsNullOrWhiteSpace(input))

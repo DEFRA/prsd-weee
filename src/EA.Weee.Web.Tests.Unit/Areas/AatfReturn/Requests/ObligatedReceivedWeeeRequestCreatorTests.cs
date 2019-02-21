@@ -22,7 +22,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedReceivedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -42,7 +42,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedReceivedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -66,7 +66,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedReceivedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -91,7 +91,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedReceivedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues);
 
             foreach (var c in categoryValues)
             {
@@ -111,7 +111,7 @@
         [Fact]
         public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
-            var model = new ObligatedReceivedViewModel()
+            var model = new ObligatedViewModel()
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid()
