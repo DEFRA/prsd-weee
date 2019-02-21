@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Scheme;
     public class GetReturnScheme : IRequest<List<SchemeData>>
     {
         public Guid ReturnId { get; set; }

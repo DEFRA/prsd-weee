@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
+    using Core.AatfReturn;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
@@ -12,6 +13,7 @@
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Search;
     using Infrastructure;
+    using Weee.Requests.AatfReturn;
 
     public class WeeeCache : IWeeeCache
     {
@@ -24,10 +26,12 @@
         public Cache<Guid, string> SchemeNames { get; private set; }
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
+        public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
+
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
-        private string accessToken;
+        private readonly string accessToken;
 
         public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService)
         {
@@ -49,7 +53,7 @@
 
             OrganisationNames = new Cache<Guid, string>(
                 provider,
-                "OrganisationName",
+                "AatfName",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 (key) => key.ToString(),
                 (key) => FetchOrganisationNameFromApi(key));
@@ -86,6 +90,13 @@
                 "OrganisationPublicInfoList",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 () => FetchOrganisationSearchResultListFromApi());
+
+            AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
+                provider,
+                "AatfInfo",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                FetchAatfInfoFromApi);
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -140,6 +151,16 @@
             using (var client = apiClient())
             {
                 var request = new GetSchemePublicInfo(organisationId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+        private async Task<IList<AatfData>> FetchAatfInfoFromApi(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetAatfByOrganisation(organisationId);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result;
@@ -216,6 +237,13 @@
         public async Task InvalidateOrganisationSearch()
         {
             await OrganisationSearchResultList.InvalidateCache();
+        }
+
+        public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)
+        {
+            var aatfInfo = await AatfPublicInfo.Fetch(organisationId);
+
+            return aatfInfo.FirstOrDefault(a => a.Id == aatfId);
         }
     }
 }

@@ -10,11 +10,11 @@
 
     public class Aatf : Entity
     {
-        public string Name { get; private set; }
+        public virtual string Name { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public string ApprovalNumber { get; private set; }
+        public virtual string ApprovalNumber { get; private set; }
 
         public virtual AatfStatus AatfStatus { get; private set; }
 

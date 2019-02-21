@@ -1,13 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using Domain.AatfReturn;
-    using FakeItEasy;
-    using Xunit;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Domain.AatfReturn;
+    using Xunit;
 
     public class NonObligatedWeeeTests
     {

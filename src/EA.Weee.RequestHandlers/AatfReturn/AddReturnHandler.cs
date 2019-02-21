@@ -41,7 +41,7 @@
 
             var organisation = await organisationDataAccess.GetById(message.OrganisationId);
 
-            var aatfOperator = await operatorAccess.GetById<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+            var aatfOperator = await operatorAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
 
             var aatfReturn = new Return(aatfOperator, quarter, ReturnStatus.Created);
 

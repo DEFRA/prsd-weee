@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.NonObligated;
 
     public class AddObligatedReceivedDataAccess : IAddObligatedReceivedDataAccess
     {

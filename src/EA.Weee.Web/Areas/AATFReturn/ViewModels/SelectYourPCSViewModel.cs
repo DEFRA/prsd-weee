@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Validation;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
 
     public class SelectYourPCSViewModel
     {

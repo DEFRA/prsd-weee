@@ -3,8 +3,6 @@
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    /**/
-
     ViewBag.Title = "AATF Task List";
 }
 
@@ -28,7 +26,7 @@
     <div class="govuk-!-margin-bottom-4"></div>
 
     foreach (var item in Model.AatfsData)
-    {
+    {        
         <table class="govuk-table" style="width: 70%;">
             <tbody>
                 <tr class="govuk-table__row">
@@ -48,7 +46,8 @@
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
                         <a class="govuk-link govuk-link--no-visited-state">
-                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeReceived).ToHtmlString(), "Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId },null)
+                            @*@Html.ActionLink("Received on behalf of PCS(s)", "Index", "ReceivedPcsList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @aatf.Key }, null)*@
+                            @Html.RouteLink("Received on behalf of PCS(s)", "aatf-received", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
                         </a>
                     </td>
                     <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2C</strong></td>
@@ -89,14 +88,14 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Received", "AatfReturn_NonObligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.RouteLink("Received", "aatf-non-obligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotal</strong></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Retained by a DCF", "AatfReturn_NonObligatedDcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })                    
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
             </tr>

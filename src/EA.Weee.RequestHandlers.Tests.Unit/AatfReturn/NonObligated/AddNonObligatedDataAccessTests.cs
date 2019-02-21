@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.NonObligated
 {
-    using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
-    using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.NonObligated;
-    using RequestHandlers.DataReturns;
     using Weee.Tests.Core;
     using Xunit;
 
