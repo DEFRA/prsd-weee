@@ -604,13 +604,19 @@ input[type="file"].form-control {
 }
 
 .warning-details-summary {
-    width: 100%;
+    width: 96%;
     color: govuk-colour('black');
-    background-color: govuk-colour('yellow')-50;
-    border-left: 3px solid govuk-colour('yellow');
+    //background-color: govuk-colour('yellow')-50;
+    background-color: #FFD990; 
+    //border-left: 3px solid govuk-colour('yellow');
     padding-top: 5px;
     padding-bottom: 5px;
-    padding-left: 3px;
+    //padding-left: 3px;
+}
+
+.warning-details-summary:focus {
+    background: #FFD990;
+    outline: 4px solid #FFD990;
 }
 
 .warning-details-summary:hover {
@@ -619,11 +625,11 @@ input[type="file"].form-control {
 
 .warning-list-container {
     width: 100%;
-    background-color: govuk-colour('yellow')-25;
+    background-color: #FFD990; 
     padding-bottom: 10px;
     border-left: 3px solid govuk-colour('yellow')-25;
     padding-left: 3px;
-    margin-bottom:5px;
+    margin-bottom: 5px;
 }
 
 .warning-list-item {
@@ -643,9 +649,13 @@ input[type="file"].form-control {
     padding-left: 3px;
 }
 
+.summary_error {
+    color: black !important;
+}
+
 
 .summary_error:focus {
-    background: #B10E1E !important;
+    background: none !important;
     outline: none;
 }
 
