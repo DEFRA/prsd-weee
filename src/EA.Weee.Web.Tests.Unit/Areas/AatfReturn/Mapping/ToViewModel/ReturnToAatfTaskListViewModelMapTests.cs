@@ -18,7 +18,7 @@
         private QuarterWindow mapperTestQuarterWindow;
         private string mapperTestPeriod;
         private List<NonObligatedData> mapperTestNonObligatedData;
-        private List<WeeeReceivedObligatedData> mapperTestObligatedReceivedData;
+        private List<WeeeObligatedData> mapperTestObligatedReceivedData;
         private Scheme mapperTestScheme;
         private Aatf mapperTestAatf;
         private List<Aatf> mapperTestAatfList;
@@ -32,7 +32,7 @@
             mapperTestQuarterWindow = new QuarterWindow(new DateTime(mapperTestYear, 1, 1), new DateTime(mapperTestYear, 3, 31));
             mapperTestPeriod = "Q1 Jan - Mar";
             mapperTestNonObligatedData = new List<NonObligatedData>();
-            mapperTestObligatedReceivedData = new List<WeeeReceivedObligatedData>();
+            mapperTestObligatedReceivedData = new List<WeeeObligatedData>();
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
             mapperTestAatf = new Aatf(Guid.NewGuid(), "Test Aatf");
             mapperTestAatfList = new List<Aatf>();
@@ -52,7 +52,7 @@
             mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false));
             mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true));
 
-            mapperTestObligatedReceivedData.Add(new WeeeReceivedObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
 
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -84,7 +84,7 @@
         [Fact]
         public void Map_GivenNullObligatedData_ReturnsNullTonnageDisplay()
         {
-            mapperTestObligatedReceivedData.Add(new WeeeReceivedObligatedData(mapperTestScheme, mapperTestAatf, 0, null, null));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(mapperTestScheme, mapperTestAatf, 0, null, null));
             mapperTestAatfList.Add(mapperTestAatf);
 
             var returnData = new ReturnData()
@@ -138,7 +138,7 @@
         [Fact]
         public void Map_GivenNullAatfList_ReturnsNoObligatedData()
         {
-            mapperTestObligatedReceivedData.Add(new WeeeReceivedObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
 
             var returnData = new ReturnData()
             {
@@ -163,7 +163,7 @@
         [Fact]
         public void Map_GivenAatfInReceivedDataNotPresentInAatfList_ReturnsNullTonnageDisplay()
         {
-            mapperTestObligatedReceivedData.Add(new WeeeReceivedObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestAatfList.Add(new Aatf(Guid.NewGuid(), "Other New Aatf"));
 
             var returnData = new ReturnData()

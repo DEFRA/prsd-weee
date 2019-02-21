@@ -9,7 +9,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
@@ -71,7 +71,7 @@
                     categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
                 }
 
-                var obligatedReceivedRequest = new AddObligated()
+                var obligatedReceivedRequest = new AddObligatedReceived()
                 {
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,
@@ -91,7 +91,7 @@
 
                 var fetchDataAccess = new FetchObligatedWeeeForReturnDataAccess(database.WeeeContext);
 
-                var tonnageList = await fetchDataAccess.FetchObligatedWeeeForReturn(@return.Id);
+                var tonnageList = await fetchDataAccess.FetchObligatedWeeeReceivedForReturn(@return.Id);
                 var nonHouseholdList = tonnageList.Select(t => t.NonHouseholdTonnage);
                 var householdList = tonnageList.Select(t => t.HouseholdTonnage);
 

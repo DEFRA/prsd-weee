@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Obligated
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived
 {
     using System;
     using System.Collections.Generic;

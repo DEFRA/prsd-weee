@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
-    
-    public class WeeeReceivedObligatedData
+
+    public class WeeeObligatedData
     {
-        public WeeeReceivedObligatedData(int categoryId, decimal? b2b, decimal? b2c)
+        public WeeeObligatedData(int categoryId, decimal? b2b, decimal? b2c)
         {
             this.CategoryId = categoryId;
             this.B2B = b2b;
             this.B2C = b2c;
         }
 
-        public WeeeReceivedObligatedData(Scheme scheme, Aatf aatf, int categoryId, decimal? b2b, decimal? b2c)
+        public WeeeObligatedData(Scheme scheme, Aatf aatf, int categoryId, decimal? b2b, decimal? b2c)
         {
             this.Scheme = scheme;
             this.Aatf = aatf;
@@ -21,7 +20,7 @@
             this.B2C = b2c;
         }
 
-        public WeeeReceivedObligatedData()
+        public WeeeObligatedData()
         {
         }
         

@@ -5,7 +5,7 @@
 
     public class WeeeReusedAmount : Entity
     {
-        public virtual WeeeReused WeeeReceived { get; private set; }
+        public virtual WeeeReused WeeeReused { get; private set; }
 
         public int CategoryId { get; set; }
 
@@ -13,11 +13,11 @@
 
         public decimal? NonHouseholdTonnage { get; set; }
 
-        public WeeeReusedAmount(WeeeReused aatfWeeeReceived, int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
+        public WeeeReusedAmount(WeeeReused aatfWeeeReused, int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
         {
-            Guard.ArgumentNotNull(() => aatfWeeeReceived, aatfWeeeReceived);
+            Guard.ArgumentNotNull(() => aatfWeeeReused, aatfWeeeReused);
 
-            WeeeReceived = aatfWeeeReceived;
+            WeeeReused = aatfWeeeReused;
             CategoryId = categoryId;
             HouseholdTonnage = householdTonnage;
             NonHouseholdTonnage = nonHouseholdTonnage;

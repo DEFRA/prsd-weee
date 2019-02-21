@@ -4,7 +4,7 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Requests.Base;
 
-    public interface IObligatedReceivedWeeeReusedCreator : IRequestCreator<ObligatedViewModel, AddObligated>
+    public interface IObligatedReusedWeeeRequestCreator : IRequestCreator<ObligatedViewModel, AddObligatedReused>
     {
     }
 }

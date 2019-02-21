@@ -69,7 +69,7 @@
         {
             var @return = GetReturn();
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator);
 
             var result = map.Map(source);
 
@@ -111,7 +111,7 @@
                 new WeeeReceivedAmount(weeeReceived, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, A.Fake<List<WeeeReusedAmount>>(), @operator);
 
             var result = map.Map(source);
 
@@ -131,7 +131,7 @@
                 new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator);
 
             var result = map.Map(source);
 

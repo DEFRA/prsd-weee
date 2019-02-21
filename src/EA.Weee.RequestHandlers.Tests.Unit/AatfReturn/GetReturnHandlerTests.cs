@@ -131,7 +131,7 @@
 
             var result = await handler.HandleAsync(new GetReturn(returnId));
 
-            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

@@ -49,7 +49,15 @@
                 var scheme = new Scheme(
                     source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.Id).FirstOrDefault(),
                     source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.SchemeName).FirstOrDefault());
-                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeReceivedObligatedData(scheme, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeObligatedData(scheme, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+            }
+
+            if (source.ObligatedWeeeReusedList != null)
+            {
+                var aatf = new Aatf(
+                    source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.Id).FirstOrDefault(),
+                    source.ObligatedWeeeReusedList.Select(s => s.WeeeReused.Aatf.Name).FirstOrDefault());
+                returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(null, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
             }
 
             return returnData;

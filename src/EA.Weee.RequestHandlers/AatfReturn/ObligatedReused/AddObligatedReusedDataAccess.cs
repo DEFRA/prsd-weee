@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Obligated
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
     using System;
     using System.Collections.Generic;
@@ -25,12 +25,7 @@
 
             return context.SaveChangesAsync();
         }
-
-        public async Task<Guid> GetSchemeId(Guid organisationId)
-        {
-            return (await context.Schemes.FirstOrDefaultAsync(s => s.OrganisationId == organisationId)).Id;
-        }
-
+        
         public async Task<Guid> GetAatfId(Guid organisationId)
         {
             return (await context.Aatfs

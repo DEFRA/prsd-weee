@@ -7,6 +7,8 @@
 
     public interface IFetchObligatedWeeeForReturnDataAccess
     {
-        Task<List<WeeeReceivedAmount>> FetchObligatedWeeeForReturn(Guid returnId);
+        Task<List<WeeeReceivedAmount>> FetchObligatedWeeeReceivedForReturn(Guid returnId);
+
+        Task<List<WeeeReusedAmount>> FetchObligatedWeeeReusedForReturn(Guid returnId);
     }
 }

@@ -40,7 +40,7 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel();
-            var request = new AddObligated();
+            var request = new AddObligatedReceived();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -56,7 +56,7 @@
 
             await controller.Index(A.Dummy<ObligatedViewModel>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligated>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReceived>._)).MustNotHaveHappened();
         }
 
         [Fact]

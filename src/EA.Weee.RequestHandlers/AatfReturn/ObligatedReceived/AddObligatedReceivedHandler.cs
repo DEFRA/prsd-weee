@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Obligated
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -7,7 +7,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class AddObligatedReceivedHandler : IRequestHandler<AddObligated, bool>
+    internal class AddObligatedReceivedHandler : IRequestHandler<AddObligatedReceived, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReceivedDataAccess obligatedReceivedDataAccess;
@@ -19,7 +19,7 @@
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddObligated message)
+        public async Task<bool> HandleAsync(AddObligatedReceived message)
         {
             authorization.EnsureCanAccessExternalArea();
 

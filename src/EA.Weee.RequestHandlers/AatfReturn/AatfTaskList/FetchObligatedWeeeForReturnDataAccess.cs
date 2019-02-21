@@ -16,11 +16,18 @@
             this.context = context;
         }
 
-        public async Task<List<WeeeReceivedAmount>> FetchObligatedWeeeForReturn(Guid returnId)
+        public async Task<List<WeeeReceivedAmount>> FetchObligatedWeeeReceivedForReturn(Guid returnId)
         {
             return await context.WeeeReceivedAmount.Where(a => a.WeeeReceived.ReturnId == returnId)
                 .Include(a => a.WeeeReceived.Aatf)
                 .Include(a => a.WeeeReceived.Scheme)
+                .Select(a => a).ToListAsync();
+        }
+
+        public async Task<List<WeeeReusedAmount>> FetchObligatedWeeeReusedForReturn(Guid returnId)
+        {
+            return await context.WeeeReusedAmount.Where(a => a.WeeeReused.ReturnId == returnId)
+                .Include(a => a.WeeeReused.Aatf)
                 .Select(a => a).ToListAsync();
         }
     }

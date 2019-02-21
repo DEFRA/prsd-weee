@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
 
-    public class AddObligated : IRequest<bool>
+    public class AddObligatedReceived : IRequest<bool>
     {
         public IList<ObligatedValue> CategoryValues { get; set; }
 

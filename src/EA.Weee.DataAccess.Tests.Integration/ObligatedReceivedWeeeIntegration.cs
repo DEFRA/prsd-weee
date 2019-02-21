@@ -7,7 +7,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
@@ -57,7 +57,7 @@
                     categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
                 }
 
-                var obligatedWeeeRequest = new AddObligated
+                var obligatedWeeeRequest = new AddObligatedReceived
                 {
                     ReturnId = @return.Id,
                     OrganisationId = organisation.Id,

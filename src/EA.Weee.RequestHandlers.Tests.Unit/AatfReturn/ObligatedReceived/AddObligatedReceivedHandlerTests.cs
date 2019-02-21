@@ -9,7 +9,7 @@
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
@@ -34,7 +34,7 @@
 
             var handler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligated>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedReceived>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -59,7 +59,7 @@
                 categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
             }
 
-            var obligatedWeeeRequest = new AddObligated
+            var obligatedWeeeRequest = new AddObligatedReceived
             {
                 ReturnId = aatfReturn.Id,
                 OrganisationId = organisation.Id,

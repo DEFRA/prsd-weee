@@ -17,11 +17,11 @@
     public class ObligatedReusedController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
+        private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ObligatedReusedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator)
+        public ObligatedReusedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReusedWeeeRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;

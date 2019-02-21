@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Obligated
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
     using System;
     using System.Collections.Generic;
@@ -7,8 +7,7 @@
 
     public interface IAddObligatedReusedDataAccess
     {
-        Task Submit(IEnumerable<WeeeReusedAmount> aatfWeeeReceivedAmount);
-        Task<Guid> GetSchemeId(Guid organisationId);
+        Task Submit(IEnumerable<WeeeReusedAmount> aatfWeeeReusedAmount);
         Task<Guid> GetAatfId(Guid organisationId);
     }
 }

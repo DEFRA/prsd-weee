@@ -3,11 +3,11 @@
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class AatfWeeeReceivedAmountMapping : EntityTypeConfiguration<WeeeReceivedAmount>
+    internal class AatfWeeeReusedAmount : EntityTypeConfiguration<WeeeReusedAmount>
     {
-        public AatfWeeeReceivedAmountMapping()
+        public AatfWeeeReusedAmount()
         {
-            ToTable("WeeeReceivedAmount", "AATF");
+            ToTable("WeeeReusedAmount", "AATF");
 
             Property(x => x.CategoryId).HasColumnName("CategoryId").IsRequired();
             Property(x => x.HouseholdTonnage).HasColumnName("HouseholdTonnage").HasPrecision(28, 3);

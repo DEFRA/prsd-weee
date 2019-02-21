@@ -4,11 +4,10 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Obligated;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class AddObligatedReusedHandler
+    internal class AddObligatedReusedHandler : IRequestHandler<AddObligatedReused, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddObligatedReusedDataAccess obligatedReusedDataAccess;
@@ -20,12 +19,11 @@
             this.obligatedReusedDataAccess = obligatedReusedDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddObligated message)
+        public async Task<bool> HandleAsync(AddObligatedReused message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfWeeReceived = new WeeeReused(
-                await obligatedReusedDataAccess.GetSchemeId(message.OrganisationId),
+            var aatfWeeeReused = new WeeeReused(
                 await obligatedReusedDataAccess.GetAatfId(message.OrganisationId),
                 message.ReturnId);
 
@@ -33,7 +31,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeReusedAmount.Add(new WeeeReusedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeReusedAmount.Add(new WeeeReusedAmount(aatfWeeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
             await obligatedReusedDataAccess.Submit(aatfWeeeReusedAmount);
