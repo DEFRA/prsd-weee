@@ -7,24 +7,22 @@
 }
 
 <table class="govuk-table" id="obligated-weee-table">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col" style="width:40%"></th>
+            <th class="govuk-table__header govuk-!-margin-bottom-0" scope="col" style="width:30%">
+                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
+                    B2C in tonnes
+                </div>
+            </th>
+            <th class="govuk-table__header govuk-!-margin-bottom-0" scope="col" style="width:30%">
+                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
+                    B2B in tonnes
+                </div>
+            </th>
+        </tr>
+    </thead>
     <tbody class="govuk-table__body">
-
-    <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
-
-    <tr class="govuk-table__row">
-        <td class="govuk-table__cell"></td>
-        <td class="govuk-table__cell govuk-!-margin-bottom-0">
-            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
-                B2C in tonnes
-            </div>
-        </td>
-        <td class="govuk-table__cell govuk-!-margin-bottom-0">
-
-            <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
-                B2B in tonnes
-            </div>
-        </td>
-    </tr>
 
     @for (var i = 0; i < Model.CategoryValues.Count; i++)
     {
