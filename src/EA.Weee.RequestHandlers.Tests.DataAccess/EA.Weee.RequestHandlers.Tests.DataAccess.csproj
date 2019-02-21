@@ -102,6 +102,7 @@
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetSchemesExternalDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
