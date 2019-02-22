@@ -52,6 +52,7 @@
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\P2BetaSprint3\UpdateSRockChanges.sql" />
     <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
