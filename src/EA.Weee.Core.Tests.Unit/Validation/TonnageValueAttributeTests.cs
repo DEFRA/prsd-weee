@@ -215,6 +215,16 @@
             ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 3 decimal places or less");
         }
 
+        [Theory]
+        [InlineData("1,00")]
+        [InlineData("1,000,00")]
+        public void ValidationResult_GivenTypeMessageIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
+        {
+            var result = Validate(input);
+
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be entered correctly.  E.g. 1,000 or 100");
+        }
+
         private void ValidationWithTypeMessage(object value)
         {
             var tonnageValueModel = new TestTonnageValueWithTypeMessage()
