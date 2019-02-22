@@ -24,6 +24,11 @@ var countDecimals = function (value) {
     return 0;
 };
 
+
+function numberWithoutCommas(x) {
+    return x.replace(/(\d+),(?=\d{3}(\D|$))/g, "$1");
+}
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -50,7 +55,7 @@ function TonnageTotals(controlId) {
                 var totalTonnage = 0.00;
                 for (var elementCount = 0; elementCount < e.detail.tonnageElements.length; elementCount++) {
                     var element = e.detail.tonnageElements[elementCount];
-                    var value = element.value.trim();
+                    var value = numberWithoutCommas(element.value).trim();
 
                     if (!isNaN(value) && value && value.indexOf("+") === -1) {
                         var convertedValue = parseFloat(value);
