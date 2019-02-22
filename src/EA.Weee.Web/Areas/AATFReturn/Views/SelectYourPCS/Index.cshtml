@@ -14,13 +14,13 @@
     <h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
     <div class="govuk-!-padding-bottom-5"></div>
     <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset" aria-describedby="pcs-hint">
+        <fieldset class="govuk-fieldset">
             <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
                 @for (var i = 0; i < Model.SchemeList.Count; i++)
                 {
                     <div class="govuk-checkboxes__item">
                         <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
-                        <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name#@Model.SchemeList[i].Id">
+                        <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id">
                             @Model.SchemeList[i].SchemeName  - @Model.SchemeList[i].ApprovalName
                         </label>
                     </div>
