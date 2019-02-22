@@ -5,7 +5,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Api.Client;
-    using EA.Weee.Requests.AatfReturn.ObligatedReceived;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -37,15 +37,15 @@
         }
 
         [Fact]
-        public void CheckNonObligatedControllerInheritsExternalSiteController()
+        public void CheckObligatedReceivedControllerInheritsExternalSiteController()
         {
-            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ObligatedReceivedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new ObligatedReceivedViewModel();
+            var model = new ObligatedViewModel();
             var request = new AddObligatedReceived();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -60,7 +60,7 @@
         {
             controller.ModelState.AddModelError("error", "error");
 
-            await controller.Index(A.Dummy<ObligatedReceivedViewModel>());
+            await controller.Index(A.Dummy<ObligatedViewModel>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReceived>._)).MustNotHaveHappened();
         }
@@ -78,7 +78,7 @@
         [Fact]
         public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
-            var model = new ObligatedReceivedViewModel();
+            var model = new ObligatedViewModel();
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -110,7 +110,7 @@
 
             var result = await controller.Index(organisationId, returnId, aatfId, schemeId) as ViewResult;
 
-            var receivedModel = result.Model as ObligatedReceivedViewModel;
+            var receivedModel = result.Model as ObligatedViewModel;
 
             receivedModel.AatfName.Should().Be(aatfname);
             receivedModel.SchemeName.Should().BeEquivalentTo(scheme);

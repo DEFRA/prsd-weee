@@ -26,7 +26,7 @@
     <div class="govuk-!-margin-bottom-4"></div>
 
     foreach (var item in Model.AatfsData)
-    {        
+    {
         <table class="govuk-table" style="width: 70%;">
             <tbody>
                 <tr class="govuk-table__row">
@@ -94,7 +94,7 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })                    
+                    @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
             </tr>

@@ -12,8 +12,6 @@
             Property(x => x.CategoryId).HasColumnName("CategoryId").IsRequired();
             Property(x => x.HouseholdTonnage).HasColumnName("HouseholdTonnage").HasPrecision(28, 3);
             Property(x => x.NonHouseholdTonnage).HasColumnName("NonHouseholdTonnage").HasPrecision(28, 3);
-
-            //HasRequired(x => x.WeeeReceived).WithRequiredPrincipal();
         }
     }
 }
