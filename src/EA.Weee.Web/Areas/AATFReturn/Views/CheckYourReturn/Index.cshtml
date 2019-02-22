@@ -4,7 +4,12 @@
 @{
     ViewBag.Title = "CheckYourReturnView";
 }
-<h2 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h2>
+<header class="hgroup">
+    <div>
+        <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
+    </div>
+</header>
+
 <p style="display: inline">Check and review your AATF return before you proceed to submit</p>
 <div class="govuk-!-padding-bottom-9"></div>
 <div class="govuk-grid-row">
@@ -32,13 +37,11 @@
             <th class="govuk-table__header" scope="col">
                 WEEE received (t)
             </th>
-            <td class="govuk-table__header" scope="col">
-            </td>
+            <td class="govuk-table__header" scope="col"></td>
             <th class="govuk-table__header" scope="col">
                 WEEE retained by a DCF (t)
             </th>
-            <td class="govuk-table__header" scope="col">
-            </td>
+            <td class="govuk-table__header" scope="col"></td>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
