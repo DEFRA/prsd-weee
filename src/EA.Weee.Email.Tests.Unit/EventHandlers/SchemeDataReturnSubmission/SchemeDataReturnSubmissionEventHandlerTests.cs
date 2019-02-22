@@ -17,7 +17,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -48,7 +48,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -81,7 +81,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -112,7 +112,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -143,7 +143,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -176,7 +176,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)
@@ -210,7 +210,7 @@
         {
             // Arrange
             string emailAddress = "test@sfwltd.co.uk";
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), "Name", "Abbreviation", A.Dummy<Country>(), emailAddress, 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority)

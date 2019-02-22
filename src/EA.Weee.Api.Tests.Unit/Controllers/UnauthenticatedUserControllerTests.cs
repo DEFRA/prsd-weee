@@ -221,7 +221,8 @@
                 "EA",
                 "EA",
                 A.Dummy<Country>(),
-                emailAddress);
+                emailAddress,
+                0);
 
             var competentAuthorityUser = A.Fake<CompetentAuthorityUser>();
             A.CallTo(() => competentAuthorityUser.CompetentAuthority)
@@ -268,7 +269,8 @@
                 "EA",
                 "EA",
                 A.Dummy<Country>(),
-                emailAddress);
+                emailAddress,
+                0);
 
             var competentAuthorityUser = A.Fake<CompetentAuthorityUser>();
             A.CallTo(() => competentAuthorityUser.CompetentAuthority)

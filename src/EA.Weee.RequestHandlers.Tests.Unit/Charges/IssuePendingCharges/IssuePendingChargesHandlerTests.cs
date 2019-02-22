@@ -144,7 +144,7 @@
         {
             // Arrange
             UKCompetentAuthority authority = 
-                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>(), "test@sfwltd.co.uk");
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>(), "test@sfwltd.co.uk", 0);
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);

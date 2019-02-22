@@ -32,6 +32,7 @@
                 databaseAuthority1.Abbreviation = "T1";
                 databaseAuthority1.Country = country;
                 databaseAuthority1.Email = "TestEmailAddress";
+                databaseAuthority1.AnnualChargeAmount = 0;
                 database.Model.CompetentAuthorities.Add(databaseAuthority1);
 
                 InvoiceRun invoiceRunForAuthority1 = new InvoiceRun();
@@ -86,6 +87,7 @@
                 competentAuthority.Abbreviation = "T1";
                 competentAuthority.Country = country;
                 competentAuthority.Email = "TestEmailAddress";
+                competentAuthority.AnnualChargeAmount = 0;
                 database.Model.CompetentAuthorities.Add(competentAuthority);
 
                 InvoiceRun invoiceRunForAuthority = new InvoiceRun();
