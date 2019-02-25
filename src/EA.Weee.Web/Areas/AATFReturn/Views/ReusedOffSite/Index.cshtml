@@ -1,0 +1,45 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteViewModel
+@{
+    ViewBag.Title = "Reused WEEE";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Has any of this WEEE gone directly to another site to be reused?</h1>
+
+    <p>This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first</p>
+
+    @using (Html.BeginForm("Index", "ObligatedReused", FormMethod.Post))
+    {
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-!-padding-bottom-5"></div>
+
+        <div class="govuk-radios govuk-radios--inline">
+            <div class="govuk-radios__item">
+                @Html.RadioButtonFor(Model => Model.IsReusedOffSite, true, new { @class = "govuk-radios__input", @id = "reusing-weee-sent-to-another-site-yes" })
+                <label class="govuk-label govuk-radios__label" for="reusing-weee-sent-to-another-site-yes">
+                    Yes
+                </label>
+            </div>
+            <div class="govuk-radios__item">
+                @Html.RadioButtonFor(Model => Model.IsReusedOffSite, false, new { @class="govuk-radios__input", @id = "reusing-weee-sent-to-another-site-no" })
+                <label class="govuk-label govuk-radios__label" for="reusing-weee-sent-to-another-site-no">
+                    No
+                </label>
+            </div>
+        </div>
+
+        <div class="govuk-!-padding-bottom-5"></div>
+
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.AntiForgeryToken()
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="continue" class="govuk-button" id="reused-off-site">
+                Continue
+            </button>
+        </form>
+    }
+</section>

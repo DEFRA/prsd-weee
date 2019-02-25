@@ -287,6 +287,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
@@ -311,6 +312,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
@@ -761,6 +763,7 @@
     <Content Include="Content\govuk_frontend\fonts\bold-f38c792ac2-v1.woff" />
     <Content Include="Content\govuk_frontend\fonts\bold-a2452cb66f-v1.woff2" />
     <Content Include="Areas\AatfReturn\Views\ObligatedReused\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ReusedOffSite\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
