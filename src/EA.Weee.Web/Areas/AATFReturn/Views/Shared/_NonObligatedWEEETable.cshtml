@@ -35,7 +35,7 @@
             var category = Model.CategoryValues[i];
 
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-padding-bottom-0">
+                <td class="govuk-table__cell govuk-!-padding-bottom-0" id=@category.CategoryId>
                     @(@category.CategoryId). @category.CategoryDisplay
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
@@ -43,7 +43,7 @@
                 <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
-                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input weee-input", @style = "float:right; text-align: right", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                     </div>
                 </td>
             </tr>
