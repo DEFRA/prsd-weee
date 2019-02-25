@@ -54,8 +54,8 @@
                             @Html.RouteLink("Received on behalf of PCS(s)", "aatf-received", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2B</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReceived.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReceived.B2B</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
@@ -64,8 +64,8 @@
                             @Html.ActionLink("Sent to another AATF / ATF", "Index", "Holding")
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2B</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeSentOn.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeSentOn.B2B</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
@@ -74,8 +74,8 @@
                             @Html.RouteLink("Reused as a whole appliance", "aatf-reused", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
                         </a>
                     </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2B</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReused.B2C</strong></td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReused.B2B</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -87,21 +87,24 @@
                 <td class="govuk-table__cell govuk-!-font-weight-bold" style="width: 60%;">
                     Non-obligated WEEE
                 </td>
-                <td class="govuk-table__cell" style="width: 30%;"></td>
+                <td class="govuk-table__cell" style="width: 15%;"></td>
+                <td class="govuk-table__cell" style="width: 15%;"></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
                     @Html.RouteLink("Received", "aatf-non-obligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotal</strong></td>
+                <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotal</strong></td>
+                <td class="govuk-table__cell"><strong style="float:right"></strong></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
                     @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
+                <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotalDcf</strong></td>
+                <td class="govuk-table__cell"><strong style="float:right"></strong></td>
             </tr>
         </tbody>
     </table>
