@@ -51,15 +51,9 @@
         {
             using (var client = apiClient())
             {
-                @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
-            }
-            var result = await validator.Validate(viewModel, @return);
+                ValidateResult(viewModel, client);
 
-            ValidateResult(result);
-
-            if (ModelState.IsValid)
-            {
-                using (var client = apiClient())
+                if (ModelState.IsValid)
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -67,9 +61,11 @@
 
                     return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
+
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
             }
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -79,8 +75,12 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private void ValidateResult(ValidationResult result)
+        private async void ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
         {
+            @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
+
+            var result = await validator.Validate(model, @return);
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)

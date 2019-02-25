@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
     using Api.Client;
@@ -121,35 +122,28 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ValidatorShouldReturnAValidResult()
         {
-            var model = new NonObligatedValuesViewModel();
-            var returnData = new ReturnData();
             var result = new ValidationResult();
-            result.Errors.Add(new ValidationFailure("property", "error"));
 
-            A.CallTo(() => validator.Validate(model, returnData)).Returns(result);
+            A.CallTo(() => validator.Validate(A<NonObligatedValuesViewModel>._, A<ReturnData>._)).Returns(result);
 
-            await controller.Index(model);
+            await controller.Index(A.Fake<NonObligatedValuesViewModel>());
 
-            result.Should().NotBeNull();
-            result.IsValid.Should().BeFalse();
-            var temp = controller;
-            //controller.ModelState.Should().ContainKey("property");
+            controller.ModelState.IsValid.Should().BeTrue();
         }
 
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_ValidatorShouldReturnAnInvalidResult()
         {
-            var model = new NonObligatedValuesViewModel();
-            var returnData = new ReturnData();
+            var result = new ValidationResult();
+            result.Errors.Add(new ValidationFailure("property", "error"));
 
-            for (var count = 0; count < model.CategoryValues.Count; count++)
-            {
-                model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
-                model.CategoryValues.ElementAt(count).Dcf = true;
-            }
+            A.CallTo(() => validator.Validate(A<NonObligatedValuesViewModel>._, A<ReturnData>._)).Returns(result);
 
-            var result = await controller.Index(model);
-            result.Should().NotBeNull();
+            await controller.Index(A.Fake<NonObligatedValuesViewModel>());
+
+            controller.ModelState.IsValid.Should().BeFalse();
+            controller.ModelState.Should().ContainKey("property");
+            controller.ModelState.Count(c => c.Value.Errors.Any(d => d.ErrorMessage == "error")).Should().Be(1);
         }
 
         [Fact]
