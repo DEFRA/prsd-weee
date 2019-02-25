@@ -42,6 +42,8 @@
 
         public virtual DateTime? SubmittedDate { get; private set; }
 
+        public virtual bool HasAnnualCharge { get; set; }
+
         public MemberUpload(
             Guid organisationId,
             string data,
@@ -50,7 +52,8 @@
             int? complianceYear,
             Scheme scheme,
             string fileName,
-            string userId = null)
+            string userId = null,
+            bool hasAnnualCharge = false)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
 
@@ -63,6 +66,7 @@
             RawData = new MemberUploadRawData() { Data = data };
             CreatedById = userId;
             FileName = fileName;
+            HasAnnualCharge = hasAnnualCharge;
             ProducerSubmissions = new List<ProducerSubmission>();
         }
 
