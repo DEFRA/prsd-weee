@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;

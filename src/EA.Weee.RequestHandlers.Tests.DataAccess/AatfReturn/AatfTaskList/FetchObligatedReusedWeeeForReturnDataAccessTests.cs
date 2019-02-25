@@ -62,7 +62,7 @@
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
+                    categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
                 }
 
                 var obligatedReusedRequest = new AddObligatedReused()

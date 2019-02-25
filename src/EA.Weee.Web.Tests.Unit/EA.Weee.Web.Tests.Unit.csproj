@@ -178,6 +178,7 @@
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToAatfTaskListViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreatorTests.cs" />
