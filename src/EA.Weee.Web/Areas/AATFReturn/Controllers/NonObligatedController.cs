@@ -51,7 +51,7 @@
         {
             using (var client = apiClient())
             {
-                ValidateResult(viewModel, client);
+                await ValidateResult(viewModel, client);
 
                 if (ModelState.IsValid)
                 {
@@ -75,19 +75,21 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private async void ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
+        private async Task<bool> ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
         {
             @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
-
+            var output = true;
             var result = await validator.Validate(model, @return);
 
             if (!result.IsValid)
             {
+                output = false;
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
             }
+            return output;
         }
     }
 }

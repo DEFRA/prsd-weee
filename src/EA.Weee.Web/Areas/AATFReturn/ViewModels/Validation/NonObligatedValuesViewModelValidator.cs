@@ -25,16 +25,18 @@
                     List<NonObligatedData> orderedReturnWeee = returnData.NonObligatedData.OrderBy(r => r.CategoryId).ToList();
                     var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId).Select(r => r.Tonnage).FirstOrDefault();
                     var value = 0.000m;
-
-                    if (o.Tonnage != null)
+                    if (o.Dcf == true)
                     {
-                        value = decimal.Parse(o.Tonnage);
-                    }
+                        if (o.Tonnage != null)
+                        {
+                            value = decimal.Parse(o.Tonnage);
+                        }
 
-                    if (value > returnTonnage)
-                    {
-                        context.AddFailure(new ValidationFailure($"o.Tonnage",
-                            $"Category {o.CategoryId} tonnage must be less or equal to {returnTonnage}"));
+                        if (value > returnTonnage)
+                        {
+                            context.AddFailure(new ValidationFailure($"o.Tonnage",
+                                $"Category {o.CategoryId} tonnage must be less or equal to {returnTonnage}"));
+                        }
                     }
                 });
         }
