@@ -13,7 +13,7 @@
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
         
-        private readonly Regex validThousandRegex = new Regex(@"(^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$)|(^[0-9]{1,3}(,[0-9]{3})*$)|(^([0-9])*\.[0-9]*$)|(^[0-9]*$)");
+        private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
         public TonnageValueAttribute(string category)
         {
