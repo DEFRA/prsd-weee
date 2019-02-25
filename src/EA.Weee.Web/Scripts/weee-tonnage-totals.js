@@ -58,7 +58,7 @@ function TonnageTotals(controlId) {
                             totalTonnage += parseFloat(convertedValue);
                         }
                     }
-                    tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3)) + ' tonnes';
+                    tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3));
                 }
             });
     }
