@@ -43,17 +43,17 @@
                 <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
-                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input govuk-input--width-10 weee-input", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input weee-input", @style = "float:right; text-align: right", autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                     </div>
                 </td>
             </tr>
         }
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-                <h3 class="govuk-heading-m">Total</h3>
+                <h3 class="govuk-heading-m">Total (tonnes)</h3>
             </td>
             <td class="govuk-table__cell govuk-!-margin-bottom-0">
-                <h3 class="govuk-heading-m" style="float: left;" id="TonnageTotal" name="TonnageTotal">@Model.Total tonnes</h3>
+                <h3 class="govuk-heading-m" style="text-align: right" id="TonnageTotal" name="TonnageTotal">@Model.Total</h3>
             </td>
         </tr>
     </tbody>
