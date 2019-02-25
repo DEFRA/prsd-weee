@@ -5,35 +5,37 @@
     ViewBag.Title = "Reused WEE";
 }
 
-<header class="hgroup">
-    <div>
-        <h1 class="govuk-heading-l">WEEE that has been reused as a whole appliance</h1>
-    </div>
-</header>
-<p class="govuk-body">
-    This is WEEE that has been refurbished or repaired to the point it is no longer waste.
-</p>
-<p class="govuk-body">
-    Provide tonnage to 3 decimal places. For example 1.238
-</p>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">WEEE that has been reused as a whole appliance</h1>
+        </div>
+    </header>
+    <p class="govuk-body">
+        This is WEEE that has been refurbished or repaired to the point it is no longer waste.
+    </p>
+    <p class="govuk-body">
+        Provide tonnage to 3 decimal places. For example 1.238
+    </p>
 
-@using (Html.BeginForm("Index", "ObligatedReused", FormMethod.Post))
-{
-    @Html.Gds().ValidationSummary()
+    @using (Html.BeginForm("Index", "ObligatedReused", FormMethod.Post))
+    {
+        @Html.Gds().ValidationSummary()
 
-    Html.RenderPartial("_ObligatedWeeeTable", Model);
-    @Html.HiddenFor(m => m.AatfId)
+        Html.RenderPartial("_ObligatedWeeeTable", Model);
+        @Html.HiddenFor(m => m.AatfId)
 
-    @Html.AntiForgeryToken()
-    <form method="post" class="form" style="display: inline">
-        <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
-            Save and continue
-        </button>
-    </form>
-}
+        @Html.AntiForgeryToken()
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+                Save and continue
+            </button>
+        </form>
+    }
 
-@Scripts.Render("~/bundles/weee_tonnage_totals")
-<script>
-    TonnageTotals('B2C');
-    TonnageTotals('B2B');
-</script>
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    <script>
+        TonnageTotals('B2C');
+        TonnageTotals('B2B');
+    </script>
+</section>
