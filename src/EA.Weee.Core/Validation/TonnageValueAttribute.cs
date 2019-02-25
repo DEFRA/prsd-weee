@@ -13,7 +13,6 @@
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
         
-
         /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
         private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
