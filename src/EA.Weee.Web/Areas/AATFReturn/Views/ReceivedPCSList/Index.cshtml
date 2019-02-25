@@ -5,61 +5,63 @@
     ViewBag.Title = "Received PCS List";
 }
 
-<header class="hgroup">
-    <div>
-        <h1 class="govuk-heading-l">
-            WEEE received for treatment at @Model.AatfName
-        </h1>
-    </div>
-</header>
-<div class="govuk-!-padding-bottom-3"></div>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">
+                WEEE received for treatment at @Model.AatfName
+            </h1>
+        </div>
+    </header>
+    <div class="govuk-!-padding-bottom-3"></div>
 
-<table class="govuk-table">
-    <thead>
-        <tr class="govuk-table__header gov-uk-no-bottom-border">
-            <th class="govuk-table__cell gov-uk-no-bottom-border"></th>
-            <th class="govuk-table__cell gov-uk-no-bottom-border"></th>
-            <th class="govuk-table__cell gov-uk-no-bottom-border" colspan="2">
-                Received for treatment (t)
-            </th>
-        </tr>
-        <tr class="govuk-table__header">
-            <th class="govuk-table__cell" style="width:40%">PCS name</th>
-            <th class="govuk-table__cell">Approval number</th>
-            <th class="govuk-table__cell govuk-!-font-weight-regular">B2C</th>
-            <th class="govuk-table__cell govuk-!-font-weight-regular">B2B</th>
-            <th class="govuk-table__cell"></th>
-        </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-        @foreach (var item in Model.SchemeList)
-        {
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="width:40%">
-                    @item.SchemeName
-                </td>
-                <td class="govuk-table__cell">
-                    @item.ApprovalName
-                </td>
-                <td class="govuk-table__cell">
-                    <strong></strong>
-                </td>
-                <td class="govuk-table__cell">
-                    <strong></strong>
-                </td>
-                <td class="govuk-table__cell">
-                    @Html.RouteLink("Add data", "aatf-received-scheme", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
-                </td>
+    <table class="govuk-table">
+        <thead>
+            <tr class="govuk-table__header gov-uk-no-bottom-border">
+                <td class="govuk-table__cell gov-uk-no-bottom-border"></td>
+                <td class="govuk-table__cell gov-uk-no-bottom-border"></td>
+                <th class="govuk-table__cell gov-uk-no-bottom-border" colspan="2">
+                    Received for treatment (t)
+                </th>
             </tr>
-        }
-    </tbody>
+            <tr class="govuk-table__header">
+                <th class="govuk-table__cell" style="width:40%">PCS name</th>
+                <th class="govuk-table__cell">Approval number</th>
+                <th class="govuk-table__cell govuk-!-font-weight-regular">B2C</th>
+                <th class="govuk-table__cell govuk-!-font-weight-regular">B2B</th>
+                <td class="govuk-table__cell"></td>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var item in Model.SchemeList)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="width:40%">
+                        @item.SchemeName
+                    </td>
+                    <td class="govuk-table__cell">
+                        @item.ApprovalName
+                    </td>
+                    <td class="govuk-table__cell">
+                        <strong></strong>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <strong></strong>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Html.RouteLink("Add data", "aatf-received-scheme", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-</table>
+    </table>
 
-@using (Html.BeginForm("Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <button type="submit" class="govuk-button">
-        AATF Task List
-    </button>
-}
+    @using (Html.BeginForm("Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="govuk-button">
+            AATF Task List
+        </button>
+    }
+</section>
