@@ -206,6 +206,7 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\TotalChargeCalculator.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />

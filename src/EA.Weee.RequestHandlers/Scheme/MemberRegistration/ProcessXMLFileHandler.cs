@@ -16,6 +16,7 @@
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
+    using ErrorLevel = Domain.Error.ErrorLevel;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXmlFile, Guid>
     {
@@ -54,13 +55,15 @@
             bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == UploadErrorType.Schema);
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
-            //calculate charge band for producers if no schema errors
-            Dictionary<string, ProducerCharge> producerCharges = null;
+            TotalChargeCalculator totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator);
+            Dictionary<string, ProducerCharge> totalCalculatedCharges = null;
+
             decimal totalCharges = 0;
-            
-            if (!containsSchemaErrors)
+            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+
+            if (!(containsSchemaErrors && containsErrorOrFatal))
             {
-                producerCharges = ProducerCharges(message, ref totalCharges);
+                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, ref totalCharges);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
@@ -70,14 +73,18 @@
                 }
             }
 
-            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme);
             IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.
             if (!containsErrorOrFatal)
             {
-                producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
+                producers = await generateFromXml.GenerateProducers(message, upload, totalCalculatedCharges);
+            }
+
+            if (scheme.CompetentAuthority.Abbreviation == "EA" && !upload.HasAnnualCharge)
+            {
+                upload.HasAnnualCharge = true;
             }
 
             // record XML processing end time
@@ -89,16 +96,6 @@
 
             await context.SaveChangesAsync();
             return upload.Id;
-        }
-
-        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
-        {
-            var producerCharges = xmlChargeBandCalculator.Calculate(message);
-
-            totalCharges = producerCharges
-                .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
-
-            return producerCharges;
         }
     }
 }
