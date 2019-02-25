@@ -4,10 +4,8 @@
     using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
 
-    public class AddObligatedReceived : IRequest<bool>
+    public class AddObligatedReceived : ObligatedReceived
     {
-        public IList<ObligatedValue> CategoryValues { get; set; }
-
         public Guid ReturnId { get; set; }
 
         public Guid OrganisationId { get; set; }

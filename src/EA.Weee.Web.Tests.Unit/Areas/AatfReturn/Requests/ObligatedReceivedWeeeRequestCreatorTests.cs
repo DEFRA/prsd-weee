@@ -6,6 +6,7 @@
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
+    using Weee.Requests.AatfReturn.Obligated;
     using Xunit;
 
     public class ObligatedReceivedWeeeRequestCreatorTests
@@ -117,7 +118,7 @@
                 ReturnId = Guid.NewGuid()
             };
 
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddObligatedReceived;
 
             request.OrganisationId.Should().Be(model.OrganisationId);
             request.ReturnId.Should().Be(model.ReturnId);
