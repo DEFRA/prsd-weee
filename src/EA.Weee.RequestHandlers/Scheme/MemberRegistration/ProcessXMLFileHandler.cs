@@ -61,7 +61,7 @@
             decimal totalCharges = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
 
-            if (!(containsSchemaErrors && containsErrorOrFatal))
+            if ((!containsSchemaErrors && !containsErrorOrFatal))
             {
                 totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, ref totalCharges);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
@@ -80,11 +80,11 @@
             if (!containsErrorOrFatal)
             {
                 producers = await generateFromXml.GenerateProducers(message, upload, totalCalculatedCharges);
-            }
 
-            if (scheme.CompetentAuthority.Abbreviation == "EA" && !upload.HasAnnualCharge)
-            {
-                upload.HasAnnualCharge = true;
+                if (scheme.CompetentAuthority.Abbreviation == "EA" && !upload.HasAnnualCharge)
+                {
+                    upload.HasAnnualCharge = true;
+                }
             }
 
             // record XML processing end time
