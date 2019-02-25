@@ -5,48 +5,50 @@
     ViewBag.Title = "Select Your PCS";
 }
 
-@using (Html.BeginForm("Index", "SelectYourPcs", FormMethod.Post))
-{
-    <div class="govuk-!-padding-bottom-2"></div>
-    @Html.AntiForgeryToken()
-    @Html.Gds().ValidationSummary()
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h1>
-        </div>
-    </header>
-    <h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
-    <div class="govuk-!-padding-bottom-5"></div>
-    <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-            <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
-                @for (var i = 0; i < Model.SchemeList.Count; i++)
-                {
-                    <div class="govuk-checkboxes__item">
-                        <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
-                        <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id">
-                            @Model.SchemeList[i].SchemeName  - @Model.SchemeList[i].ApprovalName
-                        </label>
-                    </div>
-                    @Html.HiddenFor(m => Model.SchemeList[i].ApprovalName)
-                    @Html.HiddenFor(m => Model.SchemeList[i].Id)
-                    @Html.HiddenFor(m => Model.SchemeList[i].OrganisationId)
-                    @Html.HiddenFor(m => Model.SchemeList[i].Name)
-                    @Html.HiddenFor(m => Model.SchemeList[i].CanEdit)
-                    @Html.HiddenFor(m => Model.SchemeList[i].CompetentAuthorityId)
-                    @Html.HiddenFor(m => Model.SchemeList[i].IbisCustomerReference)
-                    @Html.HiddenFor(m => Model.SchemeList[i].ObligationType)
-                    @Html.HiddenFor(m => Model.SchemeList[i].SchemeDataAvailability)
-                    @Html.HiddenFor(m => Model.SchemeList[i].SchemeName)
-                    @Html.HiddenFor(m => Model.SchemeList[i].SchemeStatus)
-                    @Html.HiddenFor(m => Model.SchemeList[i].Selected)
-                }
+<section id="main-content">
+    @using (Html.BeginForm("Index", "SelectYourPcs", FormMethod.Post))
+    {
+        <div class="govuk-!-padding-bottom-2"></div>
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">Select all the PCSs that you received WEEE from</h1>
             </div>
-        </fieldset>
-    </div>
-    @Html.HiddenFor(m => m.OrganisationId)
-    @Html.HiddenFor(m => m.ReturnId)
-    <button type="submit" class="govuk-button">
-        Add PCSs
-    </button>
-}
+        </header>
+        <h3 class="govuk-heading-m">These PCSs will be added to all of your AATFs</h3>
+        <div class="govuk-!-padding-bottom-5"></div>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-checkboxes" style="overflow-y: auto; max-height: 500px;">
+                    @for (var i = 0; i < Model.SchemeList.Count; i++)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
+                            <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id">
+                                @Model.SchemeList[i].SchemeName  - @Model.SchemeList[i].ApprovalName
+                            </label>
+                        </div>
+                        @Html.HiddenFor(m => Model.SchemeList[i].ApprovalName)
+                        @Html.HiddenFor(m => Model.SchemeList[i].Id)
+                        @Html.HiddenFor(m => Model.SchemeList[i].OrganisationId)
+                        @Html.HiddenFor(m => Model.SchemeList[i].Name)
+                        @Html.HiddenFor(m => Model.SchemeList[i].CanEdit)
+                        @Html.HiddenFor(m => Model.SchemeList[i].CompetentAuthorityId)
+                        @Html.HiddenFor(m => Model.SchemeList[i].IbisCustomerReference)
+                        @Html.HiddenFor(m => Model.SchemeList[i].ObligationType)
+                        @Html.HiddenFor(m => Model.SchemeList[i].SchemeDataAvailability)
+                        @Html.HiddenFor(m => Model.SchemeList[i].SchemeName)
+                        @Html.HiddenFor(m => Model.SchemeList[i].SchemeStatus)
+                        @Html.HiddenFor(m => Model.SchemeList[i].Selected)
+                    }
+                </div>
+            </fieldset>
+        </div>
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        <button type="submit" class="govuk-button">
+            Add PCSs
+        </button>
+    }
+</section>
