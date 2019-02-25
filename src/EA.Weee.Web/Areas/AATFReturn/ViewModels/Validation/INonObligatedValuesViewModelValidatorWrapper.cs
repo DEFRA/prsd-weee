@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation
 {
     using System;
+    using System.Threading.Tasks;
     using Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using FluentValidation.Results;
 
     public interface INonObligatedValuesViewModelValidatorWrapper
     {
-        ValidationResult Validate(NonObligatedValuesViewModel instance, string token, Func<IWeeeClient> apiClient);
+        Task<ValidationResult> Validate(NonObligatedValuesViewModel instance, ReturnData returnData);
     }
 }

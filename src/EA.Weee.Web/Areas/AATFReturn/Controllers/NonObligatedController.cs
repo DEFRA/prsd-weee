@@ -6,7 +6,9 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using FluentValidation;
+    using FluentValidation.Results;
     using Infrastructure;
     using Requests;
     using Services;
@@ -22,6 +24,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
+        private ReturnData @return;
 
         public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator)
         {
@@ -46,16 +49,13 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(NonObligatedValuesViewModel viewModel)
         {
-            var result = validator.Validate(viewModel, User.GetAccessToken(), apiClient);
-
-            // CREATE FUNCTION TO DO THIS
-            if (!result.IsValid)
+            using (var client = apiClient())
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
             }
+            var result = await validator.Validate(viewModel, @return);
+
+            ValidateResult(result);
 
             if (ModelState.IsValid)
             {
@@ -77,6 +77,17 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private void ValidateResult(ValidationResult result)
+        {
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+            }
         }
     }
 }

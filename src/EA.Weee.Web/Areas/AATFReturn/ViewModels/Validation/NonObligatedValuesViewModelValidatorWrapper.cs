@@ -1,16 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation
 {
     using Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using FluentValidation.Results;
     using System;
+    using System.Threading.Tasks;
 
     public class NonObligatedValuesViewModelValidatorWrapper : INonObligatedValuesViewModelValidatorWrapper
     {
-        // MAKE THIS ASYNC
-        public ValidationResult Validate(NonObligatedValuesViewModel instance, string token, Func<IWeeeClient> apiClient)
+        public async virtual Task<ValidationResult> Validate(NonObligatedValuesViewModel instance, ReturnData returnData)
         {
-            var validator = new NonObligatedValuesViewModelValidator(apiClient, token);
-            return validator.Validate(instance);
+            var validator = new NonObligatedValuesViewModelValidator(returnData);
+            return await validator.ValidateAsync(instance);
         }
     }
 }

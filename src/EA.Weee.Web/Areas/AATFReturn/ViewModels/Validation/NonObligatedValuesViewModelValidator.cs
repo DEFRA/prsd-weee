@@ -3,53 +3,40 @@
     using Api.Client;
     using Core.AatfReturn;
     using FluentValidation;
+    using FluentValidation.Results;
+    using FluentValidation.Validators;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Weee.Requests.AatfReturn;
 
     public class NonObligatedValuesViewModelValidator : AbstractValidator<NonObligatedValuesViewModel>
     {
-        private readonly Func<IWeeeClient> apiClient;
-        private readonly string token;
+        private ReturnData returnData;
 
-        public NonObligatedValuesViewModelValidator(Func<IWeeeClient> apiClient, string token)
+        public NonObligatedValuesViewModelValidator(ReturnData returnData)
         {
-            this.apiClient = apiClient;
-            this.token = token;
+            this.returnData = returnData;
 
-            RuleFor(o => o)
-                .MustAsync((o, cancellation) => ValidateValues(o.CategoryValues, o.Dcf, o.ReturnId))
-                .WithMessage("my error");
-
-            //RuleForEach(o => o.CategoryValues).MustAsync((o, cancellation) => ValidateValues(o.CategoryId, o.Dcf, o.Tonnage)).WithMessage("Error Test");
-        }
-
-        private async Task<bool> ValidateValues(IList<NonObligatedCategoryValue> values, bool dcf, Guid returnId)
-        {
-            using (var client = apiClient())
-            {
-                if (!dcf)
+            RuleForEach(o => o.CategoryValues)
+                .Custom((o, context) => 
                 {
-                    var result = await client.SendAsync(this.token, new GetReturn(returnId));
-                }
-                else
-                {
-                    /*
-                    var result = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                    for (var i = 0; i < values.Count; i++)
+                    List<NonObligatedData> orderedReturnWeee = returnData.NonObligatedData.OrderBy(r => r.CategoryId).ToList();
+                    var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId).Select(r => r.Tonnage).FirstOrDefault();
+                    var value = 0.000m;
+
+                    if (o.Tonnage != null)
                     {
-                        var value = decimal.Parse(values[i].Tonnage);
-                        if (value > result.NonObligatedData[i].Tonnage)
-                        {
-                            var yes = "yes";
-                        }
-                    }*/
-                }
-                // retrieve the non obligated values
-                // compare the totals and return result
-                return await Task.FromResult(true);
-            }
+                        value = decimal.Parse(o.Tonnage);
+                    }
+
+                    if (value > returnTonnage)
+                    {
+                        context.AddFailure(new ValidationFailure($"o.Tonnage",
+                            $"Category {o.CategoryId} tonnage must be less or equal to {returnTonnage}"));
+                    }
+                });
         }
     }
 }
