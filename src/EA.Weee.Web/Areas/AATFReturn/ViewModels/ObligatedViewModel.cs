@@ -51,7 +51,7 @@
 
         public bool Edit
         {
-            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+            get { return CategoryValues.All(c => c.Id != Guid.Empty); }
         }
     }
 }
