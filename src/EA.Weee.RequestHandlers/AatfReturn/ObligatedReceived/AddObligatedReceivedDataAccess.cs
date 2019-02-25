@@ -17,10 +17,7 @@
 
         public Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeeReceivedAmounts)
         {
-            foreach (var aatfWeeeReceived in aatfWeeeReceivedAmounts)
-            {
-                context.WeeeReceivedAmount.Add(aatfWeeeReceived);
-            }
+            context.WeeeReceivedAmount.AddRange(aatfWeeeReceivedAmounts);
 
             return context.SaveChangesAsync();
         }

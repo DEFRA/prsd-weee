@@ -7,9 +7,9 @@
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.Obligated;
 
-    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, AddObligatedReceived>, IObligatedReceivedWeeeRequestCreator
+    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedReceived>, IObligatedReceivedWeeeRequestCreator
     {
-        public override AddObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
+        public override ObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
             var obligatedRequestValues = new List<ObligatedValue>();
@@ -24,6 +24,14 @@
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));
+            }
+
+            if (viewModel.Edit)
+            {
+                return new EditObligatedReceived()
+                {
+                    CategoryValues = obligatedRequestValues
+                };
             }
 
             return new AddObligatedReceived()
