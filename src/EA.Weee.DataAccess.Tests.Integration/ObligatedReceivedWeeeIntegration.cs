@@ -28,7 +28,7 @@
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var addObligatedReceivedDataAccess = new AddObligatedReceivedDataAccess(context);
+                var addObligatedReceivedDataAccess = new ObligatedReceivedDataAccess(context);
 
                 var companyName = "Test Name" + Guid.NewGuid();
                 var tradingName = "Test Trading Name" + Guid.NewGuid();

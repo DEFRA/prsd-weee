@@ -26,5 +26,11 @@
         protected WeeeReceivedAmount()
         {
         }
+
+        public void UpdateTonnages(decimal? houseHold, decimal? nonHouseHold)
+        {
+            HouseholdTonnage = houseHold;
+            NonHouseholdTonnage = nonHouseHold;
+        }
     }
 }

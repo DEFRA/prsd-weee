@@ -1,18 +1,18 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.ObligatedReceived
 {
     using System;
     using System.Collections.Generic;
     using Domain.AatfReturn;
-    using EA.Weee.DataAccess;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn.ObligatedReceived;
+    using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
 
     public class AddObligatedReceivedDataAccessTests
     {
-        private readonly AddObligatedReceivedDataAccess dataAccess;
+        private readonly RequestHandlers.AatfReturn.ObligatedReceived.ObligatedReceivedDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
         private readonly Guid schemeId;
@@ -22,7 +22,7 @@
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new AddObligatedReceivedDataAccess(context);
+            dataAccess = new RequestHandlers.AatfReturn.ObligatedReceived.ObligatedReceivedDataAccess(context);
             schemeId = Guid.NewGuid();
             aatfId = Guid.NewGuid();
         }
@@ -32,8 +32,8 @@
         {
             var weeReceived = new WeeeReceived(schemeId, aatfId, Guid.NewGuid());
 
-            decimal houseHoldTonnage = 1.000m;
-            decimal nonHouseHoldTonnage = 2.000m;
+            var houseHoldTonnage = 1.000m;
+            var nonHouseHoldTonnage = 2.000m;
 
             var obligatedReceivedWeee = new List<WeeeReceivedAmount> { new WeeeReceivedAmount(weeReceived, 1, houseHoldTonnage, nonHouseHoldTonnage), new WeeeReceivedAmount(weeReceived, 2, houseHoldTonnage, nonHouseHoldTonnage) };
 

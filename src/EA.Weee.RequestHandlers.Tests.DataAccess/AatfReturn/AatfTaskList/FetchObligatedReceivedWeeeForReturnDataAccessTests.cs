@@ -58,7 +58,7 @@
                 database.WeeeContext.Returns.Add(@return);
                 await database.WeeeContext.SaveChangesAsync();
 
-                var addObligatedReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
+                var addObligatedReceivedDataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
                 var categoryValues = new List<ObligatedValue>();
                 var weeeReceived = new WeeeReceived(scheme.Id, aatf.Id, @return.Id);
@@ -84,7 +84,7 @@
                     weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
                 
-                var obligateReceivedDataAccess = new AddObligatedReceivedDataAccess(database.WeeeContext);
+                var obligateReceivedDataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
                 await obligateReceivedDataAccess.Submit(weeeReceivedAmount);
 
                 var fetchDataAccess = new FetchObligatedWeeeForReturnDataAccess(database.WeeeContext);

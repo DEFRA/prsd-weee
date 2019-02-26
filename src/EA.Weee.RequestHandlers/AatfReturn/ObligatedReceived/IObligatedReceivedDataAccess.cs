@@ -4,8 +4,10 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
 
-    public interface IAddObligatedReceivedDataAccess
+    public interface IObligatedReceivedDataAccess
     {
         Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmount);
+
+        Task UpdateAmounts(WeeeReceivedAmount receivedAmount, decimal? houseHoldTonnage, decimal? nonHouseHoldTonnage);
     }
 }
