@@ -6,112 +6,122 @@
     ViewBag.Title = "AATF Task List";
 }
 
-<h2 class="govuk-heading-l">AATF return task list for @Model.OrganisationName</h2>
-@using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <table class="govuk-table" style="width: 30%;" id="compliance-information-table">
-        <tbody>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Year)</td>
-                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Year</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Period)</td>
-                <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Period</td>
-            </tr>
-        </tbody>
-    </table>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">AATF return task list for @Model.OrganisationName</h1>
+        </div>
+    </header>
 
-    <div class="govuk-!-margin-bottom-4"></div>
-
-    foreach (var item in Model.AatfsData)
+    @using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
     {
-        <table class="govuk-table" style="width: 70%;">
+        @Html.AntiForgeryToken()
+        <table class="govuk-table" style="width: 30%;" id="compliance-information-table">
             <tbody>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
-                        @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name)
-                        {
-                            <b>1.</b>
-                        }
-                    </td>
-                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
-                        Obligated WEEE - @item.Aatf.Name
-                    </td>
-                    <td class="govuk-table__cell" style="width:15%">B2C</td>
-                    <td class="govuk-table__cell" style="width:15%">B2B</td>
+                    <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Year)</td>
+                    <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Year</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" style="border: 0px;"></td>
-                    <td class="govuk-table__cell">
-                        <a class="govuk-link govuk-link--no-visited-state">
-                            @Html.RouteLink("Received on behalf of PCS(s)", "aatf-received", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
-                        </a>
-                    </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReceived.B2B</strong></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" style="border: 0px;"></td>
-                    <td class="govuk-table__cell">
-                        <a class="govuk-link govuk-link--no-visited-state">
-                            @Html.ActionLink(@Html.DisplayNameFor(model => model.AatfsData[0].WeeeSentOn).ToHtmlString(), "Index", "Holding")
-                        </a>
-                    </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeSentOn.B2B</strong></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" style="border: 0px;"></td>
-                    <td class="govuk-table__cell">
-                        <a class="govuk-link govuk-link--no-visited-state">
-                            @Html.RouteLink("Reused as a whole appliance", "aatf-reused", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
-                        </a>
-                    </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2C</strong></td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag">@item.WeeeReused.B2B</strong></td>
+                    <td class="govuk-table__cell" style="border: 0px;">@Html.DisplayNameFor(model => model.Period)</td>
+                    <td id="compliance-insert" class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px;">@Model.Period</td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="govuk-!-margin-bottom-4"></div>
+
+        foreach (var item in Model.AatfsData)
+        {
+            <table class="govuk-table" style="width: 70%;">
+                <tbody>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
+                            @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name)
+                            {
+                                <b>1.</b>
+                            }
+                        </td>
+                        <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
+                            Obligated WEEE - @item.Aatf.Name
+                        </td>
+                        <td class="govuk-table__cell" style="width:15%">B2C(t)</td>
+                        <td class="govuk-table__cell" style="width:15%">B2B(t)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="border: 0px;"></td>
+                        <td class="govuk-table__cell">
+                            <a class="govuk-link govuk-link--no-visited-state">
+                                @Html.RouteLink("Received on behalf of PCS(s)", "aatf-received", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReceived.B2C</strong></td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReceived.B2B</strong></td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="border: 0px;"></td>
+                        <td class="govuk-table__cell">
+                            <a class="govuk-link govuk-link--no-visited-state">
+                                @Html.ActionLink("Sent to another AATF / ATF", "Index", "Holding")
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeSentOn.B2C</strong></td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeSentOn.B2B</strong></td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="border: 0px;"></td>
+                        <td class="govuk-table__cell">
+                            <a class="govuk-link govuk-link--no-visited-state">
+                                @Html.RouteLink("Reused as a whole appliance", "aatf-reused", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReused.B2C</strong></td>
+                        <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReused.B2B</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        <table class="govuk-table" style="width: 70%;">
+            <tbody>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">2.</td>
+                    <td class="govuk-table__cell govuk-!-font-weight-bold" style="width: 60%;">
+                        Non-obligated WEEE
+                    </td>
+                    <td class="govuk-table__cell" style="width: 15%;"></td>
+                    <td class="govuk-table__cell" style="width: 15%;"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        @Html.RouteLink("Received", "aatf-non-obligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotal</strong></td>
+                    <td class="govuk-table__cell"><strong style="float:right"></strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="border: 0px;"></td>
+                    <td class="govuk-table__cell">
+                        @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotalDcf</strong></td>
+                    <td class="govuk-table__cell"><strong style="float:right"></strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="govuk-!-padding-bottom-7"></div>
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
+                Check my return
+            </button>
+        </form>
+        <details class="govuk-details govuk-!-font-size-16" role="group">
+            <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                <span class="govuk-details__summary-text">
+                    Some of my AATFs are missing
+                </span>
+            </summary>
+            @Html.Partial("_ContactProgressiveDisclosure")
+        </details>
     }
-    <table class="govuk-table" style="width: 70%;">
-        <tbody>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">2.</td>
-                <td class="govuk-table__cell govuk-!-font-weight-bold" style="width: 60%;">
-                    Non-obligated WEEE
-                </td>
-                <td class="govuk-table__cell" style="width: 30%;"></td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;"></td>
-                <td class="govuk-table__cell">
-                    @Html.RouteLink("Received", "aatf-non-obligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
-                </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotal</strong></td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="border: 0px;"></td>
-                <td class="govuk-table__cell">
-                    @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
-                </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag">@Model.NonObligatedTonnageTotalDcf</strong></td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="govuk-!-padding-bottom-7"></div>
-    <form method="post" class="form" style="display: inline">
-        <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
-            Check my return
-        </button>
-    </form>
-    <details class="govuk-details govuk-!-font-size-16" role="group">
-        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-            <span class="govuk-details__summary-text">
-                Some of my AATFs are missing
-            </span>
-        </summary>
-        @Html.Partial("_ContactProgressiveDisclosure")
-    </details>
-}
+</section>
