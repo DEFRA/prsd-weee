@@ -1,36 +1,43 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedReceivedViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Received WEE";
+    ViewBag.Title = "Received WEEE";
 }
 
-<h2 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h2>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+        </div>
+    </header>
+    <p class="govuk-body">
+        This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
+    </p>
+    <p class="govuk-body">
+        Provide tonnage to 3 decimal places. For example 1.238
+    </p>
 
-<p class="govuk-body">
-    This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
-</p>
-<p class="govuk-body">
-    Provide tonnage to 3 decimal places. For example 1.238
-</p>
+    @using (Html.BeginForm("Index", "ObligatedReceived", FormMethod.Post))
+    {
+        @Html.Gds().ValidationSummary()
 
-@using (Html.BeginForm("Index", "ObligatedReceived", FormMethod.Post))
-{
-    @Html.Gds().ValidationSummary()
+        Html.RenderPartial("_ObligatedWeeeTable", Model);
+        @Html.HiddenFor(m => m.AatfName)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.SchemeName)
+        @Html.HiddenFor(m => m.SchemeId)
+        @Html.AntiForgeryToken()
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+                Save and continue
+            </button>
+        </form>
+    }
 
-    Html.RenderPartial("_ObligatedWeeeTable", Model);
-    @Html.HiddenFor(m => m.AatfName)
-    @Html.HiddenFor(m => m.SchemeName)
-    @Html.AntiForgeryToken()
-    <form method="post" class="form" style="display: inline">
-        <button type="submit" name="save" class="govuk-button" id="pcs-check-return">
-            Save and continue
-        </button>
-    </form>
-}
-
-@Scripts.Render("~/bundles/weee_tonnage_totals")
-<script>
-    TonnageTotals('B2C');
-    TonnageTotals('B2B');
-</script>
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    <script>
+        TonnageTotals('B2C');
+        TonnageTotals('B2B');
+    </script>
+</section>

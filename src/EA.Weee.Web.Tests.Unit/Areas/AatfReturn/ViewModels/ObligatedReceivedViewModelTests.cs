@@ -10,11 +10,11 @@
 
     public class ObligatedReceivedViewModelTests
     {
-        private readonly ObligatedReceivedViewModel viewModel;
+        private readonly ObligatedViewModel viewModel;
 
         public ObligatedReceivedViewModelTests()
         {
-            viewModel = new ObligatedReceivedViewModel();
+            viewModel = new ObligatedViewModel();
         }
 
         [Fact]

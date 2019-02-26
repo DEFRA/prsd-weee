@@ -1,14 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
     using AatfReturn.ViewModels;
     using Core.AatfReturn;
     using Core.Shared;
-    using Web.ViewModels.Shared;
 
     public class CopyValuesController : Controller
     {
@@ -26,12 +21,12 @@
 
             if (pastValues != null)
             {
-                var model = new ObligatedReceivedViewModel(pastValues);
+                var model = new ObligatedViewModel(pastValues);
 
                 return View(model);
             }
 
-            return View(new ObligatedReceivedViewModel(new ObligatedCategoryValues()));
+            return View(new ObligatedViewModel(new ObligatedCategoryValues()));
         }
 
         [HttpPost]
