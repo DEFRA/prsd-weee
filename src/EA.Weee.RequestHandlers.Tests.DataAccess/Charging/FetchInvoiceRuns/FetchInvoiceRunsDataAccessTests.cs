@@ -34,6 +34,7 @@
                 databaseAuthority1.Abbreviation = "T1";
                 databaseAuthority1.Country = country;
                 databaseAuthority1.Email = "TestEmailAddress";
+                databaseAuthority1.AnnualChargeAmount = 0;
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority1);
 
                 CompetentAuthority databaseAuthority2 = new CompetentAuthority();
@@ -42,6 +43,7 @@
                 databaseAuthority2.Abbreviation = "T2";
                 databaseAuthority2.Country = country;
                 databaseAuthority2.Email = "TestEmailAddress2";
+                databaseAuthority2.AnnualChargeAmount = 0;
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority2);
 
                 InvoiceRun invoiceRunForAuthority1 = new InvoiceRun();
@@ -98,6 +100,7 @@
                 databaseAuthority.Abbreviation = "T1";
                 databaseAuthority.Country = country;
                 databaseAuthority.Email = "TestEmailAddress";
+                databaseAuthority.AnnualChargeAmount = 0;
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority);
 
                 InvoiceRun invoiceRun1 = new InvoiceRun();
@@ -164,6 +167,7 @@
                 databaseAuthority.Abbreviation = "T1";
                 databaseAuthority.Country = country;
                 databaseAuthority.Email = "TestEmailAddress";
+                databaseAuthority.AnnualChargeAmount = 0;
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority);
 
                 InvoiceRun invoiceRun = new InvoiceRun();
