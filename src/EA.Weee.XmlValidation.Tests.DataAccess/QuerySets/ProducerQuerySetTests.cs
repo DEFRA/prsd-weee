@@ -256,12 +256,14 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = false;
+                memberUpload1.HasAnnualCharge = false;
 
                 Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
+                memberUpload2.HasAnnualCharge = false;
 
                 Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
 
