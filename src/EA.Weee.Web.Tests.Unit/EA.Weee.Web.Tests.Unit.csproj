@@ -170,6 +170,7 @@
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SubmittedReturnControllerTests.cs" />

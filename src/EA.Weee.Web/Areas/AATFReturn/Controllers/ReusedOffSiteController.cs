@@ -34,7 +34,7 @@
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-            return View("Index", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -43,7 +43,8 @@
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.IsReusedOffSite){
+                if (viewModel.SelectedValue == "Yes")
+                {
                     return await Task.Run(() => RedirectToAction("Index", "Holding"));
                 }
                 else
