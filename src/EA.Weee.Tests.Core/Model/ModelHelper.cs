@@ -223,7 +223,8 @@
                 CreatedById = GetOrCreateUser("Testuser").Id,
                 CreatedDate = DateTime.UtcNow,
                 ProcessTime = new TimeSpan(0),
-                ComplianceYear = 2016
+                ComplianceYear = 2016,
+                HasAnnualCharge = false
             };
 
             model.MemberUploads.Add(memberUpload);
