@@ -37,17 +37,17 @@
             return producers;
         }
 
-        public MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
+        public MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme, bool hasAnnualCharge)
         {
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName, null, hasAnnualCharge);
             }
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
                 var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(messageXmlFile.Data));
-                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName, null, hasAnnualCharge);
             }
         }
 
