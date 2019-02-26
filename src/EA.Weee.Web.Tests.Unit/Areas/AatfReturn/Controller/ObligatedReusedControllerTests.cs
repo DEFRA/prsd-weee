@@ -77,7 +77,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["controller"].Should().Be("ReusedOffSite");
             result.RouteValues["area"].Should().Be("AatfReturn");
         }
 
