@@ -560,7 +560,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             RegisteredProducer registeredProducer1 = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
 
@@ -594,7 +596,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             RegisteredProducer registeredProducer2 = new RegisteredProducer("WEE/22BBBB22", complianceYear, scheme);
 
@@ -674,7 +678,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             RegisteredProducer registeredProducer = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
 

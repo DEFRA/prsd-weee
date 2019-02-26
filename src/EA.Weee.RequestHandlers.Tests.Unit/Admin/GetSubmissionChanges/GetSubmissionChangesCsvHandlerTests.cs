@@ -146,6 +146,9 @@
             A.CallTo(() => memberUpload.SubmittedDate)
                 .Returns(new DateTime(2016, 2, 1, 4, 5, 0));
 
+            A.CallTo(() => memberUpload.HasAnnualCharge)
+                .Returns(false);
+
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.ApprovalNumber)
                 .Returns("ABC");

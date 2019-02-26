@@ -113,7 +113,9 @@
                 10,
                 2017,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -122,7 +124,9 @@
                 20,
                 2017,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload3 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -131,7 +135,9 @@
                 40,
                 2016,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload4 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -140,7 +146,9 @@
                 80,
                 2017,
                 scheme2,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);

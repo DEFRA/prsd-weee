@@ -101,7 +101,8 @@
                 "Environment Agency",
                 "EA",
                 A.Dummy<Country>(),
-                "test@sfwltd.co.uk");
+                "test@sfwltd.co.uk",
+                0);
 
             Scheme scheme = A.Dummy<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
