@@ -14,15 +14,16 @@
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
         }
 
-        internal Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, ref decimal totalCharges)
+        internal Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (scheme.CompetentAuthority.Abbreviation == "EA")
+            if (scheme.CompetentAuthority.Abbreviation == "EA" && complianceYear == 2019)
             {
+                hasAnnualCharge = true;
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
             }
 
