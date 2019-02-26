@@ -60,10 +60,13 @@
 
             decimal totalCharges = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+            var complianceYear = await context.RegisteredProducers.FirstOrDefaultAsync(c => c.Scheme.Id == scheme.Id);
+
+            var hasAnnualCharge = false;
 
             if ((!containsSchemaErrors && !containsErrorOrFatal))
             {
-                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, ref totalCharges);
+                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, complianceYear.ComplianceYear, ref hasAnnualCharge, ref totalCharges);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
@@ -73,18 +76,13 @@
                 }
             }
 
-            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme);
+            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme, hasAnnualCharge);
             IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.
             if (!containsErrorOrFatal)
             {
                 producers = await generateFromXml.GenerateProducers(message, upload, totalCalculatedCharges);
-
-                if (scheme.CompetentAuthority.Abbreviation == "EA" && !upload.HasAnnualCharge)
-                {
-                    upload.HasAnnualCharge = true;
-                }
             }
 
             // record XML processing end time
