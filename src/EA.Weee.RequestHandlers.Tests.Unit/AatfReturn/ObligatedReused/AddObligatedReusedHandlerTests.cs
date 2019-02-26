@@ -21,12 +21,12 @@
     public class AddObligatedReusedHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReusedDataAccess addObligatedReusedDataAccess;
+        private readonly IObligatedReusedDataAccess addObligatedReusedDataAccess;
 
         public AddObligatedReusedHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            addObligatedReusedDataAccess = A.Dummy<IAddObligatedReusedDataAccess>();
+            addObligatedReusedDataAccess = A.Dummy<IObligatedReusedDataAccess>();
         }
 
         [Fact]
