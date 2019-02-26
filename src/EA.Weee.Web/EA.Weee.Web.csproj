@@ -285,6 +285,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteController.cs" />
@@ -298,7 +299,9 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToCheckReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\AddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IAddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
@@ -312,6 +315,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
