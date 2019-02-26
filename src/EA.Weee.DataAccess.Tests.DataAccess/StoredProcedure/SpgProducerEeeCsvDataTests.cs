@@ -132,7 +132,9 @@
                     0,
                     2099,
                     scheme1,
-                    "file name");
+                    "file name",
+                    null,
+                    false);
 
                 Domain.Producer.ProducerSubmission submission1 = new Domain.Producer.ProducerSubmission(registeredProducer1, memberUpload1,
                     new Domain.Producer.ProducerBusiness(),
@@ -192,7 +194,9 @@
                     0,
                     2099,
                     scheme2,
-                    "file name");
+                    "file name",
+                    null,
+                    false);
 
                 Domain.Producer.ProducerSubmission submission2 = new Domain.Producer.ProducerSubmission(registeredProducer2, memberUpload2,
                     new Domain.Producer.ProducerBusiness(),
@@ -284,7 +288,9 @@
                     0,
                     2099,
                     scheme1,
-                    "file name");
+                    "file name",
+                    null,
+                    false);
 
                 Domain.Producer.ProducerSubmission submission1 = new Domain.Producer.ProducerSubmission(registeredProducer1, memberUpload1,
                     new Domain.Producer.ProducerBusiness(),
@@ -344,7 +350,9 @@
                     0,
                     2099,
                     scheme2,
-                    "file name");
+                    "file name",
+                    null,
+                    false);
 
                 Domain.Producer.ProducerSubmission submission2 = new Domain.Producer.ProducerSubmission(registeredProducer2, memberUpload2,
                     new Domain.Producer.ProducerBusiness(),
