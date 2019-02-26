@@ -13,16 +13,13 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IObligatedReceivedDataAccess obligatedReceivedDataAccess;
-        private readonly WeeeContext context;
 
         public EditObligatedReceivedHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, 
-            WeeeContext context, 
-            IObligatedReceivedDataAccess obligatedReceivedDataAccess)
+            IObligatedReceivedDataAccess obligatedReceivedDataAccess,
+            IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
-            this.context = context;
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
         }
 

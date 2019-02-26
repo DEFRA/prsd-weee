@@ -43,7 +43,6 @@
             {
                 new object[] { null, 1.00m },
                 new object[] { 1.00m, null },
-                new object[] { 0, 0 }
             };
 
             return allData;
@@ -51,14 +50,25 @@
 
         [Theory]
         [MemberData(nameof(GetData))]
-        public void UpdateTonnages_GivenTonnages_TonnageValuesShouldBeUpdated(decimal? value1, decimal? value2)
+        public void UpdateTonnages_GivenTonnages_TonnageValuesShouldBeUpdated(decimal value1, decimal value2)
         {
-            var amount = new WeeeReceivedAmount(A.Fake<WeeeReceived>(), A.Dummy<int>(), 999, 1000);
+            var amount = new WeeeReceivedAmount(A.Fake<WeeeReceived>(), A.Dummy<int>(), 4.00m, 5.00m);
 
             amount.UpdateTonnages(value1, value2);
 
             amount.HouseholdTonnage.Should().Be(value1);
             amount.NonHouseholdTonnage.Should().Be(value2);
+        }
+
+        [Fact]
+        public void UpdateTonnages_GivenTonnagesZero_TonnageValuesShouldBeUpdated()
+        {
+            var amount = new WeeeReceivedAmount(A.Fake<WeeeReceived>(), A.Dummy<int>(), 4.00m, 5.00m);
+
+            amount.UpdateTonnages(0m, 0m);
+
+            amount.HouseholdTonnage.Should().Be(0m);
+            amount.NonHouseholdTonnage.Should().Be(0m);
         }
     }
 }

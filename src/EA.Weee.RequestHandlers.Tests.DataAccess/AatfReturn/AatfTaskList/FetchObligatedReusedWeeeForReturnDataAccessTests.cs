@@ -55,7 +55,7 @@
                 database.WeeeContext.Returns.Add(@return);
                 await database.WeeeContext.SaveChangesAsync();
                 
-                var addObligatedReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
+                var addObligatedReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
                 var categoryValues = new List<ObligatedValue>();
                 var weeeReused = new WeeeReused(aatf.Id, @return.Id);
@@ -80,7 +80,7 @@
                     weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
                 
-                var obligateReusedDataAccess = new AddObligatedReusedDataAccess(database.WeeeContext);
+                var obligateReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
                 await obligateReusedDataAccess.Submit(weeeReusedAmount);
 
                 var fetchDataAccess = new FetchObligatedWeeeForReturnDataAccess(database.WeeeContext);

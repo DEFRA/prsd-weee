@@ -5,6 +5,7 @@
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn.ObligatedGeneric;
     using RequestHandlers.AatfReturn.ObligatedReceived;
     using Weee.DataAccess;
     using Weee.Tests.Core;
@@ -12,7 +13,7 @@
 
     public class AddObligatedReceivedDataAccessTests
     {
-        private readonly RequestHandlers.AatfReturn.ObligatedReceived.ObligatedReceivedDataAccess dataAccess;
+        private readonly ObligatedDataAccess<WeeeReceivedAmount> dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
         private readonly Guid schemeId;
@@ -22,7 +23,7 @@
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new RequestHandlers.AatfReturn.ObligatedReceived.ObligatedReceivedDataAccess(context);
+            dataAccess = new ObligatedReceivedDataAccess(context);
             schemeId = Guid.NewGuid();
             aatfId = Guid.NewGuid();
         }

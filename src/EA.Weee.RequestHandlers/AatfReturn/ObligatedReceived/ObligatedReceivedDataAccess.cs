@@ -1,32 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
+    using DataAccess;
+    using Domain.AatfReturn;
+    using ObligatedGeneric;
 
-    public class ObligatedReceivedDataAccess : IObligatedReceivedDataAccess
+    public class ObligatedReceivedDataAccess : ObligatedDataAccess<WeeeReceivedAmount>, IObligatedReceivedDataAccess
     {
-        private readonly WeeeContext context;
-        
-        public ObligatedReceivedDataAccess(WeeeContext context)
+        public ObligatedReceivedDataAccess(WeeeContext context) : base(context)
         {
-            this.context = context;
-        }
-
-        public Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeeReceivedAmounts)
-        {
-            context.WeeeReceivedAmount.AddRange(aatfWeeeReceivedAmounts);
-
-            return context.SaveChangesAsync();
-        }
-
-        public Task UpdateAmounts(WeeeReceivedAmount receivedAmount, decimal? houseHoldTonnage, decimal? nonHouseHoldTonnage)
-        {
-            receivedAmount.UpdateTonnages(houseHoldTonnage, nonHouseHoldTonnage);
-
-            return context.SaveChangesAsync();
         }
     }
 }

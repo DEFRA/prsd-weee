@@ -3,11 +3,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using ObligatedGeneric;
 
-    public interface IObligatedReceivedDataAccess
+    public interface IObligatedReceivedDataAccess : IObligatedDataAccess<WeeeReceivedAmount>
     {
-        Task Submit(IEnumerable<WeeeReceivedAmount> aatfWeeReceivedAmount);
-
-        Task UpdateAmounts(WeeeReceivedAmount receivedAmount, decimal? houseHoldTonnage, decimal? nonHouseHoldTonnage);
     }
 }

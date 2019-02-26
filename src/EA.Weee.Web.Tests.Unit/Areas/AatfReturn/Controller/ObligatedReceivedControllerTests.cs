@@ -88,7 +88,7 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel();
-            var request = new AddObligatedReceived();
+            var request = A.Fake<ObligatedReceived>();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
