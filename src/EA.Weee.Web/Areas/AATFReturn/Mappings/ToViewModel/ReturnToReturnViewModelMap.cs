@@ -40,35 +40,42 @@
             {
                 foreach (var aatf in source.Aatfs)
                 {
-                    var aatfDataSet = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
+                    var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
+                    var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var obligatedData = new AatfObligatedData(aatf);
-                    decimal? obligatedTonnageTotalB2b = null;
-                    decimal? obligatedTonnageTotalB2c = null;
 
-                    if (aatfDataSet.Count != 0)
-                    {
-                        obligatedData.Aatf = (aatfDataSet.FirstOrDefault().Aatf);
-                        foreach (var category in aatfDataSet)
-                        {
-                            if (category.B2B != null)
-                            {
-                                obligatedTonnageTotalB2b = InitialiseTotalDecimal(obligatedTonnageTotalB2b);
-                                obligatedTonnageTotalB2b += category.B2B;
-                            }
-                            if (category.B2C != null)
-                            {
-                                obligatedTonnageTotalB2c = InitialiseTotalDecimal(obligatedTonnageTotalB2c);
-                                obligatedTonnageTotalB2c += category.B2C;
-                            }
-                        }
-                    }
-
-                    obligatedData.WeeeReceived = new ObligatedCategoryValue(CheckIfTonnageIsNull(obligatedTonnageTotalB2b), CheckIfTonnageIsNull(obligatedTonnageTotalB2c));
+                    obligatedData.WeeeReceived = SumObligatedValues(weeeReceivedData);
+                    obligatedData.WeeeReused = SumObligatedValues(weeeReusedData);
                     AatfObligatedData.Add(obligatedData);
                 }
             }
 
             return new ReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year, CheckIfTonnageIsNull(NonObligatedTonnageTotal), CheckIfTonnageIsNull(NonObligatedTonnageTotalDcf), AatfObligatedData, source.ReturnOperatorData);
+        }
+
+        private ObligatedCategoryValue SumObligatedValues(List<WeeeObligatedData> dataSet)
+        {
+            decimal? b2bTotal = null;
+            decimal? b2cTotal = null;
+
+            if (dataSet.Count != 0)
+            {
+                foreach (var category in dataSet)
+                {
+                    if (category.B2B != null)
+                    {
+                        b2bTotal = InitialiseTotalDecimal(b2bTotal);
+                        b2bTotal += category.B2B;
+                    }
+                    if (category.B2C != null)
+                    {
+                        b2cTotal = InitialiseTotalDecimal(b2cTotal);
+                        b2cTotal += category.B2C;
+                    }
+                }
+            }
+
+            return new ObligatedCategoryValue(CheckIfTonnageIsNull(b2bTotal), CheckIfTonnageIsNull(b2cTotal));
         }
 
         private decimal? InitialiseTotalDecimal(decimal? tonnage)

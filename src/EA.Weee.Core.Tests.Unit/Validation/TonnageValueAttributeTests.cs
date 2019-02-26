@@ -4,11 +4,8 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.Validation;
     using DataReturns;
-    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
@@ -213,6 +210,16 @@
             ValidationWithTypeMessage(1.1111M);
 
             ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 3 decimal places or less");
+        }
+
+        [Theory]
+        [InlineData("1,00")]
+        [InlineData("1,000,00")]
+        public void ValidationResult_GivenTypeMessageIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
+        {
+            var result = Validate(input);
+
+            ValidateErrorMessage($"Category {(int)Category} tonnage value must be entered correctly.  E.g. 1,000 or 100");
         }
 
         private void ValidationWithTypeMessage(object value)

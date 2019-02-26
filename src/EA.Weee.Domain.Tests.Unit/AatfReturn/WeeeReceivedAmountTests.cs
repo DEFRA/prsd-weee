@@ -9,7 +9,7 @@
     public class WeeeReceivedAmountTests
     {
         [Fact]
-        public void WeeeReceivedAmount_WeeeReceivedNotDefined_ThrowsArugmentNullException()
+        public void WeeeReceivedAmount_WeeeReceivedNotDefined_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {
