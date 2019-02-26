@@ -38,6 +38,7 @@
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 model.CategoryValues.ElementAt(count).Dcf = true;
             }
+            model.Dcf = true;
 
             validator = new NonObligatedValuesViewModelValidator(returnData);
             ValidationResult validationResult = validator.Validate(model);
