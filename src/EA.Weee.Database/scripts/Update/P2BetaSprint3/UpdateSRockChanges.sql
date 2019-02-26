@@ -1,8 +1,8 @@
 ﻿ALTER TABLE [PCS].[MemberUpload]
-ADD HasAnnualCharge bit NULL
+ADD HasAnnualCharge bit NOT NULL DEFAULT 0
 
 ALTER TABLE [Lookup].[CompetentAuthority]
-ADD AnnualChargeAmount [decimal](18, 2) NULL
+ADD AnnualChargeAmount [decimal](18, 2)
 
 UPDATE [Lookup].[CompetentAuthority]
 SET AnnualChargeAmount = 12500.00
