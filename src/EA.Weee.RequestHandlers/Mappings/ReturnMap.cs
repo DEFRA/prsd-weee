@@ -15,7 +15,7 @@
         public ReturnData Map(ReturnQuarterWindow source)
         {
             Guard.ArgumentNotNull(() => source, source);
-            
+
             var returnData = new ReturnData()
             {
                 Id = source.Return.Id,
@@ -43,14 +43,22 @@
 
             if (source.ObligatedWeeeReceivedList != null)
             {
-                var aatf = new Aatf(
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Id).FirstOrDefault(),
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.Name).FirstOrDefault(),
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Aatf.ApprovalNumber).FirstOrDefault());
-                var scheme = new Scheme(
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.Id).FirstOrDefault(),
-                    source.ObligatedWeeeReceivedList.Select(s => s.WeeeReceived.Scheme.SchemeName).FirstOrDefault());
-                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeReceivedObligatedData(scheme, aatf, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeObligatedData(
+                    new Scheme(n.WeeeReceived.Scheme.Id, n.WeeeReceived.Scheme.SchemeName),
+                    new Aatf(n.WeeeReceived.Aatf.Id, n.WeeeReceived.Aatf.Name, n.WeeeReceived.Aatf.ApprovalNumber),
+                    n.CategoryId,
+                    n.NonHouseholdTonnage,
+                    n.HouseholdTonnage)).ToList();
+            }
+
+            if (source.ObligatedWeeeReusedList != null)
+            {
+                returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(
+                    null,
+                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber),
+                    n.CategoryId,
+                    n.NonHouseholdTonnage,
+                    n.HouseholdTonnage)).ToList();
             }
 
             return returnData;
