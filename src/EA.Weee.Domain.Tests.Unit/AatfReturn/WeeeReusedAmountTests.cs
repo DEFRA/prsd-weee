@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
@@ -24,8 +26,8 @@
         {
             var weeeReused = A.Fake<WeeeReused>();
             const int categoryId = 1;
-            decimal household = 1.000m;
-            decimal nonHousehold = 2.000m;
+            var household = 1.000m;
+            var nonHousehold = 2.000m;
 
             var weeeReceivedAmount = new WeeeReusedAmount(weeeReused, categoryId, household, nonHousehold);
 
@@ -33,6 +35,30 @@
             weeeReceivedAmount.CategoryId.Should().Be(categoryId);
             weeeReceivedAmount.HouseholdTonnage.Should().Be(household);
             weeeReceivedAmount.NonHouseholdTonnage.Should().Be(nonHousehold);
+        }
+
+        public static IEnumerable<object[]> GetData()
+        {
+            var allData = new List<object[]>
+            {
+                new object[] { null, 1.00m },
+                new object[] { 1.00m, null },
+                new object[] { 0, 0 }
+            };
+
+            return allData;
+        }
+
+        [Theory]
+        [MemberData(nameof(GetData))]
+        public void UpdateTonnages_GivenTonnages_TonnageValuesShouldBeUpdated(decimal? value1, decimal? value2)
+        {
+            var amount = new WeeeReceivedAmount(A.Fake<WeeeReceived>(), A.Dummy<int>(), 999, 1000);
+
+            amount.UpdateTonnages(value1, value2);
+
+            amount.HouseholdTonnage.Should().Be(value1);
+            amount.NonHouseholdTonnage.Should().Be(value2);
         }
     }
 }

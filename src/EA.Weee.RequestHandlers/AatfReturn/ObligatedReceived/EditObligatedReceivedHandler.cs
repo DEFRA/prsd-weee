@@ -12,15 +12,18 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IObligatedReceivedDataAccess obligatedReceivedDataAccess;
         private readonly WeeeContext context;
 
         public EditObligatedReceivedHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
-            WeeeContext context)
+            WeeeContext context, 
+            IObligatedReceivedDataAccess obligatedReceivedDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.context = context;
+            this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditObligatedReceived message)
@@ -31,11 +34,8 @@
             {
                 var value = await genericDataAccess.GetById<WeeeReceivedAmount>(obligatedValue.Id);
 
-                value.HouseholdTonnage = obligatedValue.HouseholdTonnage;
-                value.NonHouseholdTonnage = obligatedValue.NonHouseholdTonnage;
+                await obligatedReceivedDataAccess.UpdateAmounts(value, obligatedValue.HouseholdTonnage, obligatedValue.NonHouseholdTonnage);
             }
-
-            await context.SaveChangesAsync();
 
             return true;
         }

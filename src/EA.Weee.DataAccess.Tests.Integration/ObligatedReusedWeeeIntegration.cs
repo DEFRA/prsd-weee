@@ -11,6 +11,7 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn.ObligatedReceived;
     using Xunit;
     using Aatf = Domain.AatfReturn.Aatf;
     using Operator = Domain.AatfReturn.Operator;
@@ -88,6 +89,18 @@
                     Assert.Equal(foundCategory.NonHouseholdTonnage, weeeReusedAmount[indexNum].NonHouseholdTonnage);
                     Assert.Equal(foundCategory.WeeeReused.ReturnId, weeeReusedAmount[indexNum].WeeeReused.ReturnId);
                 }
+            }
+        }
+
+        [Fact]
+        public void UpdateAmounts_GivenAmountToUpdate_ContextShouldContainUpdatedAmounts()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
+
+                //var receivedAmount = new WeeeReceivedAmount()
             }
         }
     }
