@@ -12,6 +12,7 @@
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Xml.MemberRegistration;
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
@@ -58,15 +59,17 @@
             TotalChargeCalculator totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator);
             Dictionary<string, ProducerCharge> totalCalculatedCharges = null;
 
-            decimal totalCharges = 0;
+            decimal? totalChargesCalculated = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var complianceYear = await context.RegisteredProducers.FirstOrDefaultAsync(c => c.Scheme.Id == scheme.Id);
+            //var complianceYear = await context.RegisteredProducers.FirstOrDefaultAsync(c => c.Scheme.Id == scheme.Id);
+
+            var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var hasAnnualCharge = false;
 
             if ((!containsSchemaErrors && !containsErrorOrFatal))
             {
-                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, complianceYear.ComplianceYear, ref hasAnnualCharge, ref totalCharges);
+                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
@@ -76,6 +79,7 @@
                 }
             }
 
+            var totalCharges = totalChargesCalculated ?? 0;
             var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme, hasAnnualCharge);
             IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 

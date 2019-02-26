@@ -14,7 +14,7 @@
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
         }
 
-        internal Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal totalCharges)
+        internal Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
