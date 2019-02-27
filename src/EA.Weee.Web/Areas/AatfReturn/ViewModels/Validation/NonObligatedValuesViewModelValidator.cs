@@ -26,8 +26,7 @@
 
                     if (instance != null && instance.Dcf)
                     {
-                        var orderedReturnWeee = returnData.NonObligatedData.OrderBy(r => r.CategoryId).ToList();
-                        var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId).Select(r => r.Tonnage).FirstOrDefault();
+                        var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId && r.Dcf == false).Select(r => r.Tonnage).FirstOrDefault();
                         var value = 0.000m;
 
                         if (o.Tonnage != null)
@@ -39,6 +38,22 @@
                         {
                             context.AddFailure(new ValidationFailure($"o.Tonnage",
                                 $"Category {o.CategoryId} tonnage must be less or equal to {returnTonnage}"));
+                        }
+                    } 
+                    else if (instance != null && !instance.Dcf)
+                    {
+                        var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId && r.Dcf == true).Select(r => r.Tonnage).FirstOrDefault();
+                        var value = 0.000m;
+
+                        if (o.Tonnage != null)
+                        {
+                            value = decimal.Parse(o.Tonnage);
+                        }
+
+                        if (value < returnTonnage)
+                        {
+                            context.AddFailure(new ValidationFailure($"o.Tonnage",
+                                $"Category {o.CategoryId} tonnage must be more than or equal to {returnTonnage}"));
                         }
                     }
                 });
