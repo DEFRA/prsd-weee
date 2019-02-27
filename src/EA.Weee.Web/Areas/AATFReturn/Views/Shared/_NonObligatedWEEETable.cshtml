@@ -39,6 +39,7 @@
                     @(@category.CategoryId). @category.CategoryDisplay
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                    @Html.HiddenFor(m => m.CategoryValues[i].Dcf)
                 </td>
                 <td class="govuk-table__cell">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
