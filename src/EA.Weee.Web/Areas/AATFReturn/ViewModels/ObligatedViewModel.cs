@@ -48,5 +48,10 @@
         public string B2CTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.B2C).ToList());
 
         public string B2BTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.B2B).ToList());
+
+        public bool Edit
+        {
+            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
     }
 }

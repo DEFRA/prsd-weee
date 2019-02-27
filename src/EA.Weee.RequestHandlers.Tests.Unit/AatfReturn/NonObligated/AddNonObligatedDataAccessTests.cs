@@ -1,13 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.NonObligated
 {
+    using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using DataAccess;
     using Domain.AatfReturn;
+    using EA.Prsd.Core.Domain;
+    using EA.Weee.RequestHandlers.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.NonObligated;
     using Weee.Tests.Core;
     using Xunit;
+    using DatabaseWrapper = EA.Weee.Tests.Core.Model.DatabaseWrapper;
 
     public class AddNonObligatedDataAccessTests
     {

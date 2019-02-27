@@ -606,12 +606,9 @@ input[type="file"].form-control {
 .warning-details-summary {
     width: 96%;
     color: govuk-colour('black');
-    //background-color: govuk-colour('yellow')-50;
     background-color: #FFD990; 
-    //border-left: 3px solid govuk-colour('yellow');
     padding-top: 5px;
     padding-bottom: 5px;
-    //padding-left: 3px;
 }
 
 .warning-details-summary:focus {
