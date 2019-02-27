@@ -33,7 +33,7 @@
 
         foreach (var item in Model.AatfsData)
         {
-            <table class="govuk-table" style="width: 70%;">
+            <table class="govuk-table">
                 <tbody>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">
@@ -45,8 +45,8 @@
                         <td class="govuk-table__cell govuk-!-font-weight-bold" style="width:60%">
                             Obligated WEEE - @item.Aatf.Name
                         </td>
-                        <td class="govuk-table__cell" style="width:15%">B2C(t)</td>
-                        <td class="govuk-table__cell" style="width:15%">B2B(t)</td>
+                        <td class="govuk-table__cell" style="width:15%; text-align:right">B2C(t)</td>
+                        <td class="govuk-table__cell" style="width:15%; text-align:right">B2B(t)</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" style="border: 0px;"></td>
@@ -81,14 +81,14 @@
                 </tbody>
             </table>
         }
-        <table class="govuk-table" style="width: 70%;">
+        <table class="govuk-table">
             <tbody>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="border: 0px; width:10%;">2.</td>
                     <td class="govuk-table__cell govuk-!-font-weight-bold" style="width: 60%;">
                         Non-obligated WEEE
                     </td>
-                    <td class="govuk-table__cell" style="width: 15%;">Total(t)</td>
+                    <td class="govuk-table__cell" style="width: 15%; text-align:right">Total(t)</td>
                     <td class="govuk-table__cell" style="width: 15%;"></td>
                 </tr>
                 <tr class="govuk-table__row">
