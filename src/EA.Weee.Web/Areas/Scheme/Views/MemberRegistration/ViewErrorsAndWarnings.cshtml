@@ -4,69 +4,75 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
-	ViewBag.Title = "View errors and warnings";
+    ViewBag.Title = "View errors and warnings";
 }
 
 @section main_content {
+    <!--<script src="~/Scripts/details-element-polyfill.js" async></script>-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
 
-	<header class="hgroup">
-		<div>
-		    @{  
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer
+            {
+                $('#warning-container').css('display', 'none');
+                $('#warning-container-ie').css('display', 'hidden');
+
+                $('#error-container').css('display', 'none');
+                $('#error-container-ie').css('display', 'hidden');
+            } else {
+
+            }
+        });
+    </script>
+    <header class="hgroup">
+        <div>
+            @{
                 int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
                 int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
                 string errorText = (numOfErrors > 1 ? "errors" : "error");
                 string warningText = (numWarnings > 1 ? "warnings" : "warning");
                 // Check for compliance year distinguishes schema errors from business errors
                 string fileDescriptionText = Model.ComplianceYear.HasValue ? Model.ComplianceYear.Value + " member registration file" : "XML file";
-			}
+            }
 
-			@if (numWarnings > 0)
-			{
-				<h1 class="govuk-heading-l">
-					Your @fileDescriptionText contains @numOfErrors @errorText and @numWarnings @warningText
-				</h1>
-			}
-			else
-			{
-				<h1 class="govuk-heading-l">
-					Your @fileDescriptionText contains @numOfErrors @errorText
-				</h1>
-			}
-		</div>
-	</header>
-	<h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
-	<p class="govuk-body">
-		Errors are problems with the XML file structure and content, which prevent our system from validating your file. You must rectify all errors before we can continue our validation process. You may see several error messages before your file is ready to be submitted.
-	</p>
+            @if (numWarnings > 0)
+            {
+                <h1 class="govuk-heading-l">
+                    Your @fileDescriptionText contains @numOfErrors @errorText and @numWarnings @warningText
+                </h1>
+            }
+            else
+            {
+                <h1 class="govuk-heading-l">
+                    Your @fileDescriptionText contains @numOfErrors @errorText
+                </h1>
+            }
+        </div>
+    </header>
+    <h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
+    <p class="govuk-body">
+        Errors are problems with the XML file structure and content, which prevent our system from validating your file. You must rectify all errors before we can continue our validation process. You may see several error messages before your file is ready to be submitted.
+    </p>
 
-	@if (numWarnings > 0)
-	{
-		<p class="govuk-body">
-			Warnings are displayed when members details are changed or when your file contains an inconsistent value. You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. Or, if you are happy with its content, you can submit your file with warnings.
-		</p>
-	}
+    @if (numWarnings > 0)
+    {
+        <p class="govuk-body">
+            Warnings are displayed when members details are changed or when your file contains an inconsistent value. You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. Or, if you are happy with its content, you can submit your file with warnings.
+        </p>
+    }
 
         <details class="govuk-details" style="background-color: #ef9998 ; padding-top: 5px; color: #0b0c0c;">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
             }
-            <!--
-    <div class="error-list-container">
-        <ul>
-            @foreach (var uploadError in Model.ErrorData)
-            {
-                if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
-                {
-                    <li class="error-list-item font-xsmall">
-                        @uploadError.Description
-                    </li>
-                }
-            }
-        </ul>
-    </div>
-        -->
-            <table class="govuk-table" style="background-color:#FDE3E6; table-layout: fixed; word-wrap: break-word">
+
+            <table class="govuk-table" id="error-container" style="background-color:#FDE3E6; table-layout: fixed; word-wrap: break-word">
                 @foreach (var uploadError in Model.ErrorData)
                 {
                     if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
@@ -77,51 +83,80 @@
                     }
                 }
             </table>
+
+            <div class="error-list-container" id="error-container-ie" style="background-color:#FDE3E6; border: none; display: none;">
+                <ul>
+                    @foreach (var uploadError in Model.ErrorData)
+                    {
+                        if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+                        {
+                            <li class="warning-list-item font-xsmall">
+                                @uploadError.Description
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
         </details>
 
-	@if (numWarnings > 0)
-	{
-		<details class="govuk-details" style="padding-top: 5px; color: black;">
-			@{
-				string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
-				this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings");
-			}
-			<div class="warning-list-container">
-				<ul>
-					@foreach (var uploadError in Model.ErrorData)
-					{
-						if (uploadError.ErrorLevel == ErrorLevel.Warning)
-						{
-					<li class="warning-list-item font-xsmall">
-						@uploadError.Description
-					</li>
-						}
-					}
-				</ul>
-			</div>
-		</details>
-	}
+    @if (numWarnings > 0)
+    {
+        <details class="govuk-details" style="padding-top: 5px; color: black;">
+            @{
+                string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
+                this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings");
+            }
 
-	<p>
-	    To see your XML file’s full list,
+            <table class="govuk-table" id="warning-container" style="background-color: #FFD990; table-layout: fixed; word-wrap: break-word">
+                @foreach (var uploadError in Model.ErrorData)
+                {
+                    if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" style="padding-left: 5px"> @uploadError.Description</td>
+                        </tr>
+                    }
+                }
+            </table>
 
-        @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)", 
-            Url.UrlFor<MemberRegistrationController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.MemberUploadId)),
-            "Downloads",
-            "Errors and warnings"))
-	</p>
+            <div class="warning-list-container" id="warning-container-ie" style="display: none; border: none;">
+                <ul style="margin-top: 0px;">
+                    @foreach (var uploadError in Model.ErrorData)
+                    {
+                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                        {
+                            <li class="warning-list-item font-xsmall">
+                                @uploadError.Description
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+        </details>
+    }
+
+    <p>
+        To see your XML file’s full list,
+
+        @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
+                                    Url.UrlFor<MemberRegistrationController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.MemberUploadId)),
+                                    "Downloads",
+                                    "Errors and warnings"))
+    </p>
 
     <p>
         @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
-            Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
-            "Member registration loop",
-            "Upload a new file",
-            "Validation failed",
-            new Dictionary<string, object> { { "class", "button" } }
-            ))
+                                    Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
+                                    "Member registration loop",
+                                    "Upload a new file",
+                                    "Validation failed",
+                                    new Dictionary<string, object> { { "class", "button" } }
+                                    ))
     </p>
 
-	<div>
-		@Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-	</div>
+    <div>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </div>
 }
