@@ -83,7 +83,7 @@
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
-    <Compile Include="Mappings\AatfAddressMapping.cs" />
+    <Compile Include="Mappings\AatfSiteAddressMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedMapping.cs" />
     <Compile Include="Mappings\AatfReturnMapping.cs" />

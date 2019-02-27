@@ -47,7 +47,7 @@
 
         public virtual DbSet<Operator> Operators { get; set; }
 
-        public virtual DbSet<Domain.AatfReturn.Address> Address { get; set; }
+        public virtual DbSet<Domain.AatfReturn.AatfSiteAddress> AatfSiteAddress { get; set; }
 
         public virtual DbSet<WeeeReusedSite> WeeeReusedSite { get; set; }
 

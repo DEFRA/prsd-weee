@@ -23,7 +23,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var address = new Address(
+            var address = new AatfSiteAddress(
                 message.AddressData.Name,
                 message.AddressData.Address1,
                 message.AddressData.Address2,

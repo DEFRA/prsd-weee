@@ -5,15 +5,17 @@
 
     public class WeeeReusedSite
     {
-        public virtual Guid WeeeReusedId { get; private set; }
+        public Guid Id { get; private set; }
 
-        public virtual Address Address { get; private set; }
+        public Guid WeeeReusedId { get; private set; }
+
+        public virtual AatfSiteAddress Address { get; private set; }
 
         protected WeeeReusedSite()
         {
         }
 
-        public WeeeReusedSite(Guid weeeReusedId, Address address)
+        public WeeeReusedSite(Guid weeeReusedId, AatfSiteAddress address)
         {
             Guard.ArgumentNotNull(() => address, address);
 

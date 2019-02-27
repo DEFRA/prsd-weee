@@ -3,9 +3,9 @@
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class AatfAddressMapping : EntityTypeConfiguration<Address>
+    internal class AatfSiteAddressMapping : EntityTypeConfiguration<AatfSiteAddress>
     {
-        public AatfAddressMapping()
+        public AatfSiteAddressMapping()
         {
             ToTable("Address", "AATF");
 

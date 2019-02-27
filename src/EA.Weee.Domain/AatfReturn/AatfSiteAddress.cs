@@ -4,7 +4,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class Address : Entity
+    public class AatfSiteAddress : Entity
     {
         public virtual string Name { get; private set; }
 
@@ -20,11 +20,11 @@
 
         public virtual Guid CountryId { get; private set; }
 
-        protected Address()
+        protected AatfSiteAddress()
         {
         }
 
-        public Address(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId)
+        public AatfSiteAddress(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => address1, address1);
