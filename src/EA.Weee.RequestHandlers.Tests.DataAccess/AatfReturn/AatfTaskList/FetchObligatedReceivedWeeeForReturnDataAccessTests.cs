@@ -22,6 +22,8 @@
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
+    using WeeeReused = Domain.AatfReturn.WeeeReused;
+    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
 
     public class FetchObligatedReceivedWeeeForReturnDataAccessTests
     {
@@ -77,7 +79,16 @@
                     CategoryValues = categoryValues
                 };
 
+                var obligatedReusedRequest = new AddObligatedReused()
+                {
+                    AatfId = aatf.Id,
+                    ReturnId = @return.Id,
+                    OrganisationId = organisation.Id,
+                    CategoryValues = categoryValues
+                };
+
                 var weeeReceivedAmount = new List<WeeeReceivedAmount>();
+                var weeeReusedAmount = new List<WeeeReusedAmount>();
 
                 foreach (var categoryValue in obligatedReceivedRequest.CategoryValues)
                 {

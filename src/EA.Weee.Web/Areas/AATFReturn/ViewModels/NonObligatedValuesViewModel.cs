@@ -8,7 +8,6 @@
     using System.Linq;
     using Validation;
 
-    [Validator(typeof(NonObligatedValuesViewModelValidator))]
     public class NonObligatedValuesViewModel
     {
         public IList<NonObligatedCategoryValue> CategoryValues { get; set; }
