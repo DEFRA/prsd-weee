@@ -3,7 +3,7 @@
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class AatfSiteAddressMapping : EntityTypeConfiguration<AatfSiteAddress>
+    internal class AatfSiteAddressMapping : EntityTypeConfiguration<AatfAddress>
     {
         public AatfSiteAddressMapping()
         {

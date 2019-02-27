@@ -9,13 +9,13 @@
 
         public Guid WeeeReusedId { get; private set; }
 
-        public virtual AatfSiteAddress Address { get; private set; }
+        public virtual AatfAddress Address { get; private set; }
 
         protected WeeeReusedSite()
         {
         }
 
-        public WeeeReusedSite(Guid weeeReusedId, AatfSiteAddress address)
+        public WeeeReusedSite(Guid weeeReusedId, AatfAddress address)
         {
             Guard.ArgumentNotNull(() => address, address);
 
