@@ -43,7 +43,7 @@
 
             if (source.ObligatedWeeeReceivedList != null)
             {
-                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeObligatedData(
+                returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeObligatedData(n.Id,
                     new Scheme(n.WeeeReceived.Scheme.Id, n.WeeeReceived.Scheme.SchemeName),
                     new Aatf(n.WeeeReceived.Aatf.Id, n.WeeeReceived.Aatf.Name, n.WeeeReceived.Aatf.ApprovalNumber),
                     n.CategoryId,
@@ -54,6 +54,7 @@
             if (source.ObligatedWeeeReusedList != null)
             {
                 returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(
+                    n.Id,
                     null,
                     new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber),
                     n.CategoryId,

@@ -10,10 +10,10 @@
     internal class AddObligatedReusedHandler : IRequestHandler<AddObligatedReused, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReusedDataAccess obligatedReusedDataAccess;
+        private readonly IObligatedReusedDataAccess obligatedReusedDataAccess;
 
         public AddObligatedReusedHandler(IWeeeAuthorization authorization,
-            IAddObligatedReusedDataAccess obligatedReusedDataAccess)
+            IObligatedReusedDataAccess obligatedReusedDataAccess)
         {
             this.authorization = authorization;
             this.obligatedReusedDataAccess = obligatedReusedDataAccess;
