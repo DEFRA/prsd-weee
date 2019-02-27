@@ -1,0 +1,25 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteCreateSiteViewModel
+@{
+    ViewBag.Title = "Reused WEEE";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Which site received the WEEE for reuse?</h1>
+
+    @using (Html.BeginForm("Index", "ReusedOffSiteCreateSite", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.EditorFor(m => m.AddressData)
+
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="save" class="govuk-button" id="site-details">
+                Save and continue
+            </button>
+        </form>
+    }
+</section>

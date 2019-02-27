@@ -6,7 +6,7 @@
 
     public class AddObligatedReusedSiteRequestCreator : IAddObligatedReusedSiteRequestCreator
     {
-        public AddOffSite ViewModelToRequest(ReusedOffSiteCreateViewModel viewModel)
+        public AddOffSite ViewModelToRequest(ReusedOffSiteCreateSiteViewModel viewModel)
         {
             throw new NotImplementedException();
         }

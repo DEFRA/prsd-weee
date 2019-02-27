@@ -9,6 +9,11 @@
     public class AddressData
     {
         [Required]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [Display(Name = "Site Name")]
+        public string Name { get; set; }
+
+        [Required]
         [StringLength(CommonMaxFieldLengths.AddressLine)]
         [Display(Name = "Address line 1")]
         public string Address1 { get; set; }
@@ -37,13 +42,5 @@
         public string CountryName { get; set; }
 
         public IEnumerable<CountryData> Countries { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (CountryId == Guid.Empty)
-            {
-                yield return new ValidationResult("Please select a country");
-            }
-        }
     }
 }

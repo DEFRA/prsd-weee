@@ -83,12 +83,14 @@
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
+    <Compile Include="Mappings\AatfAddressMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedMapping.cs" />
     <Compile Include="Mappings\AatfReturnMapping.cs" />
     <Compile Include="Mappings\AatfMapping.cs" />
-    <Compile Include="Mappings\AatfWeeeReusedAmount.cs" />
+    <Compile Include="Mappings\AatfWeeeReusedAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReusedMapping.cs" />
+    <Compile Include="Mappings\AatfWeeeReusedSiteMapping.cs" />
     <Compile Include="Mappings\EeeOutputAmountMapping.cs" />
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />

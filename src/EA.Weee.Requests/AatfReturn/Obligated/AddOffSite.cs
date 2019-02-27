@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.Obligated
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.AatfReturn;
 
     public class AddOffSite
     {
+        public Guid OrganisationId { get; set; }
+
+        public Guid ReturnId { get; set; }
+
+        public AddressData AddressData { get; set; }
     }
 }

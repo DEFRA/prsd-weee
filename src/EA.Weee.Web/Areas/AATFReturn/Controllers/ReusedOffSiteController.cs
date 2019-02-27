@@ -45,7 +45,8 @@
             {
                 if (viewModel.SelectedValue == "Yes")
                 {
-                    return await Task.Run(() => RedirectToAction("Index", "Holding"));
+                    return RedirectToAction("Index", "ReusedOffSiteCreateSite",
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
                 else
                 {

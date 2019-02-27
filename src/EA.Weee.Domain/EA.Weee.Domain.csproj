@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\Address.cs" />
     <Compile Include="AatfReturn\IOperatorEntity.cs" />
     <Compile Include="AatfReturn\WeeeReused.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmount.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="AatfReturn\ReturnScheme.cs" />
     <Compile Include="AatfReturn\ReturnStatus.cs" />
     <Compile Include="AatfReturn\WeeeReusedAmount.cs" />
+    <Compile Include="AatfReturn\WeeeReusedSite.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
