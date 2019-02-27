@@ -69,7 +69,7 @@
 
             var hasAnnualCharge = false;
 
-            if ((!containsSchemaErrors && !containsErrorOrFatal))
+            if (!containsSchemaErrors)
             {
                 producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
