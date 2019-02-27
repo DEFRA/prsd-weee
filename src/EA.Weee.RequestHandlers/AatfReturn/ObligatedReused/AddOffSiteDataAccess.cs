@@ -14,12 +14,9 @@
             this.context = context;
         }
 
-        public Task Submit(IEnumerable<Address> addresses)
+        public Task Submit(Address address)
         {
-            foreach (var address in addresses)
-            {
-                context.Address.Add(address);
-            }
+            context.Address.Add(address);
 
             return context.SaveChangesAsync();
         }

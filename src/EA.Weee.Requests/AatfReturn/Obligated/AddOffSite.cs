@@ -9,6 +9,8 @@
 
         public Guid ReturnId { get; set; }
 
+        public WeeeReused WeeeReused { get; set;}
+    
         public AddressData AddressData { get; set; }
     }
 }
