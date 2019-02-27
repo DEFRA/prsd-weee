@@ -25,7 +25,8 @@
             return str.Replace("  ", "&nbsp;&nbsp;").Replace("&nbsp; ", "&nbsp;&nbsp;");
         }
 
-        public static string ToTonnageDisplay(this decimal? tonnage)
+
+        public static string ToTonnageDisplay(this decimal? tonnage, bool displayEmpty = false)
         {
             return tonnage.HasValue ? ToTonnageDisplay(tonnage.Value) : "0.000";
         }
