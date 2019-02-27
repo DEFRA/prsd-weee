@@ -46,7 +46,7 @@
 		</p>
 	}
 
-        <details class="govuk-details" style="background-color: #B10E1E ; padding-top: 5px; color: black;">
+        <details class="govuk-details" style="background-color: #ef9998 ; padding-top: 5px; color: #0b0c0c;">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
@@ -66,7 +66,7 @@
         </ul>
     </div>
         -->
-            <table class="govuk-table" style="background-color:#FDE3E6;">
+            <table class="govuk-table" style="background-color:#FDE3E6; table-layout: fixed; word-wrap: break-word">
                 @foreach (var uploadError in Model.ErrorData)
                 {
                     if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
@@ -81,10 +81,10 @@
 
 	@if (numWarnings > 0)
 	{
-		<details>
+		<details class="govuk-details" style="padding-top: 5px; color: black;">
 			@{
 				string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
-				this.WeeeGds().SummaryExpansion(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings");
+				this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings");
 			}
 			<div class="warning-list-container">
 				<ul>
