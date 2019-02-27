@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using ObligatedGeneric;
 
-    public interface IAddObligatedReusedDataAccess
-    {
-        Task Submit(IEnumerable<WeeeReusedAmount> aatfWeeeReusedAmount);
+    public interface IObligatedReusedDataAccess : IObligatedDataAccess<WeeeReusedAmount>
+    {        
     }
 }
