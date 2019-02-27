@@ -163,6 +163,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\ITotalChargeCalculator.cs" />
     <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
     <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdHandler.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />

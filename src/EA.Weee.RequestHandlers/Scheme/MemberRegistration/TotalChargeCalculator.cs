@@ -3,18 +3,23 @@
     using System.Collections.Generic;
     using System.Linq;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    internal class TotalChargeCalculator
+    public class TotalChargeCalculator : ITotalChargeCalculator
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        
+
+        public TotalChargeCalculator()
+        {
+        }
+
         public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
         }
 
-        internal Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
+        public Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 

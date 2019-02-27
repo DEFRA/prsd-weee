@@ -17,6 +17,7 @@
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Prsd.Core;
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
@@ -41,6 +42,7 @@
         private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
+        private readonly ITotalChargeCalculator totalChargeCalculator;
 
         public ProcessXMLFileHandlerTests()
         {
@@ -63,6 +65,7 @@
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXMLValidator>();
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
+            totalChargeCalculator = A.Fake<ITotalChargeCalculator>();
             handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess);
         }
 
@@ -80,10 +83,20 @@
         public async void ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
             IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
+            var producerCharges = new Dictionary<string, ProducerCharge>();
+            var anyAmount = 30;
+            var testproducer = "Test Producer";
+            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
+            producerCharges.Add(testproducer, new ProducerCharge{ Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
 
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
+                .Returns(producerCharges);
+   
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
-
+            
             await handler.HandleAsync(Message);
 
             A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
@@ -187,7 +200,7 @@
                 Message,
                 errors as List<MemberUploadError>,
                 0,
-                A.Dummy<Scheme>()))
+                A.Dummy<Scheme>(), false))
                 .WithAnyArguments()
                 .Returns(upload);
 

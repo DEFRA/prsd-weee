@@ -57,7 +57,7 @@
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
             TotalChargeCalculator totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator);
-            Dictionary<string, ProducerCharge> totalCalculatedCharges = null;
+            Dictionary<string, ProducerCharge> producerCharges = null;
 
             decimal? totalChargesCalculated = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
@@ -69,7 +69,7 @@
 
             if ((!containsSchemaErrors && !containsErrorOrFatal))
             {
-                totalCalculatedCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), ref hasAnnualCharge, ref totalChargesCalculated);
+                producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
@@ -86,7 +86,7 @@
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.
             if (!containsErrorOrFatal)
             {
-                producers = await generateFromXml.GenerateProducers(message, upload, totalCalculatedCharges);
+                producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
             }
 
             // record XML processing end time
