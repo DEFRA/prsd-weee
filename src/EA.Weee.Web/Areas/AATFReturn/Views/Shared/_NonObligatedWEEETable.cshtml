@@ -7,9 +7,9 @@
 }
 
 <table class="govuk-table" id="non-obligated-weee-table">
-    <tbody class="govuk-table__body">
+    <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <td class="govuk-table__cell" style="border-bottom: 0px;"></td>
+            <td class="govuk-table__cell govuk-!-width-one-half" style="border-bottom: 0px;"></td>
             <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
         </tr>
         <tr class="govuk-table__row">
@@ -17,36 +17,39 @@
             <td class="govuk-table__cell govuk-!-margin-bottom-0">
                 @if (Model.Dcf == true)
                 {
-                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
+                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-one-quarter">
                         DCF data in tonnes
                     </div>
                 }
                 else
                 {
-                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-two-thirds">
+                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-one-quarter">
                         WEEE in tonnes
                     </div>
                 }
             </td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0 govuk-!-width-one-quarter"></td>
         </tr>
-
+    </thead>
+    <tbody class="govuk-table__body">
         @for (var i = 0; i < Model.CategoryValues.Count; i++)
         {
             var category = Model.CategoryValues[i];
 
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-padding-bottom-0" id=@category.CategoryId>
-                    @(@category.CategoryId). @category.CategoryDisplay
-                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
-                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
-                </td>
-                <td class="govuk-table__cell">
-                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
-                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
-                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                    </div>
-                </td>
-            </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-padding-bottom-0" id=@category.CategoryId>
+                @(@category.CategoryId). @category.CategoryDisplay
+                @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+            </td>
+            <td class="govuk-table__cell">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
+                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
+                    @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                </div>
+            </td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0 govuk-!-width-one-quarter">
+        </tr>
         }
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
@@ -55,6 +58,7 @@
             <td class="govuk-table__cell govuk-!-margin-bottom-0">
                 <h3 class="govuk-heading-m" style="text-align: right" id="TonnageTotal" name="TonnageTotal">@Model.Total</h3>
             </td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0">
         </tr>
     </tbody>
 </table>
