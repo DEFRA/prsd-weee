@@ -262,8 +262,8 @@
 
         private void SetupSchemeTypeComplianceYear()
         {
-            A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<System.Xml.Linq.XDocument>._)).Returns(schemeType);
             var schemeType = new schemeType() { complianceYear = "2019" };
+            A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<System.Xml.Linq.XDocument>._)).Returns(schemeType);
         }
 
     }
