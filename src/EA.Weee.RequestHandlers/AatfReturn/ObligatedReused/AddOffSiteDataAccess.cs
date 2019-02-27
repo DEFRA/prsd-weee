@@ -14,9 +14,9 @@
             this.context = context;
         }
 
-        public Task Submit(Address address)
+        public Task Submit(WeeeReusedSite weeeReusedSite)
         {
-            context.Address.Add(address);
+            context.WeeeReusedSite.Add(weeeReusedSite);
 
             return context.SaveChangesAsync();
         }

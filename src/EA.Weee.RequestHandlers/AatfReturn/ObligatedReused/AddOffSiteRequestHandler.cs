@@ -32,11 +32,11 @@
                 message.AddressData.Postcode,
                 message.AddressData.CountryId);
 
-            var aatfWeeeReused = new WeeeReusedSite(
-                message.WeeeReused,
+            var weeeReusedSite = new WeeeReusedSite(
+                message.WeeeReusedId,
                 address);
 
-            await offSiteDataAccess.Submit(address);
+            await offSiteDataAccess.Submit(weeeReusedSite);
 
             return true;
         }

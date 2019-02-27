@@ -5,6 +5,6 @@
 
     public interface IAddOffSiteDataAccess
     {
-        Task Submit(Address address);
+        Task Submit(WeeeReusedSite weeeReusedSite);
     }
 }
