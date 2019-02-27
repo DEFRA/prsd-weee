@@ -84,18 +84,7 @@
         public async void ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
             IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
-            var producerCharges = new Dictionary<string, ProducerCharge>();
-            var anyAmount = 30;
-            var testproducer = "Test Producer";
-            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
-            producerCharges.Add(testproducer, new ProducerCharge{ Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
 
-            var hasAnnualCharge = false;
-            decimal? totalCharges = 0;
-            
-
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
-                .Returns(producerCharges);
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
             SetupSchemeTypeComplianceYear();
@@ -106,26 +95,53 @@
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
         }
 
-        [Fact]
-        public async void ProcessXmlfile_ParsesXMLFile_CalculateXMLChargeBand()
+        private void MakesCallToTotalChargeCalculator()
         {
-            await handler.HandleAsync(Message);
+            var producerCharges = new Dictionary<string, ProducerCharge>();
+            var anyAmount = 30;
+            var testproducer = "Test Producer";
+            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
+            producerCharges.Add(testproducer, new ProducerCharge { Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
 
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
+                .Returns(producerCharges);
         }
 
         [Fact]
-        public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateChargesOrConvertXml()
+        public async void ProcessXmlfile_ParsesXMLFile_CalculateTotalCharges()
+        {
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+
+            SetupSchemeTypeComplianceYear();
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+                ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateCharges()
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description")
             };
+
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            SetupSchemeTypeComplianceYear();
+
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustNotHaveHappened();
-            A.CallTo(() => xmlConverter.Convert(Message.Data)).MustNotHaveHappened();
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+                ref hasAnnualCharge, ref totalCharges)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -133,22 +149,36 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description"),
             };
+
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+
+            SetupSchemeTypeComplianceYear();
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+                ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void ProcessXmlfile_NoErrors_TriesToCalculateCharges()
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
+
+            var hasAnnualCharge = false;
+            decimal? totalCharges = 0;
+
+            SetupSchemeTypeComplianceYear();
+
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored,
+                ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -173,6 +203,7 @@
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
+            SetupSchemeTypeComplianceYear();
             await handler.HandleAsync(Message);
 
             A.CallTo(generator).Where(g => g.Method.Name == "GenerateProducers").MustNotHaveHappened();
@@ -185,8 +216,10 @@
             {
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
 
+            SetupSchemeTypeComplianceYear();
+
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
             await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
         }
 
@@ -207,6 +240,8 @@
                 .WithAnyArguments()
                 .Returns(upload);
 
+            SetupSchemeTypeComplianceYear();
+
             await handler.HandleAsync(Message);
 
             A.CallTo(() => upload.SetProcessTime(new TimeSpan()))
@@ -217,6 +252,7 @@
         [Fact]
         public async void ProcessXmlfile_SavesMemberUpload()
         {
+            SetupSchemeTypeComplianceYear();
             var id = await handler.HandleAsync(Message);
             Assert.NotNull(id);
         }
@@ -265,6 +301,5 @@
             var schemeType = new schemeType() { complianceYear = "2019" };
             A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<System.Xml.Linq.XDocument>._)).Returns(schemeType);
         }
-
     }
 }
