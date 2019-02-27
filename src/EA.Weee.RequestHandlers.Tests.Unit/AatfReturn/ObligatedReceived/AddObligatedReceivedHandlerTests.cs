@@ -21,12 +21,12 @@
     public class AddObligatedReceivedHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReceivedDataAccess addObligatedReceivedDataAccess;
+        private readonly IObligatedReceivedDataAccess addObligatedReceivedDataAccess;
 
         public AddObligatedReceivedHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            addObligatedReceivedDataAccess = A.Dummy<IAddObligatedReceivedDataAccess>();
+            addObligatedReceivedDataAccess = A.Dummy<IObligatedReceivedDataAccess>();
         }
 
         [Fact]
@@ -60,7 +60,7 @@
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
+                categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
             }
 
             var obligatedWeeeRequest = new AddObligatedReceived

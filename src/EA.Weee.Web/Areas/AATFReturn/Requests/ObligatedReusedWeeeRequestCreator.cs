@@ -20,7 +20,7 @@
                 var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
 
                 obligatedRequestValues.Add(
-                    new ObligatedValue(
+                    new ObligatedValue(Guid.NewGuid(),
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));
