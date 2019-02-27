@@ -12,6 +12,9 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Mappings.ToViewModel;
+    using Prsd.Core.Mapper;
+    using Weee.Requests.AatfReturn;
 
     public class ObligatedReceivedController : ExternalSiteController
     {
@@ -19,11 +22,13 @@
         private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper;
 
-        public ObligatedReceivedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator)
+        public ObligatedReceivedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReceivedWeeeRequestCreator requestCreator, IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
+            this.mapper = mapper;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
         }
@@ -31,19 +36,16 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
         {
-            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+            using (var client = apiClient())
             {
-                OrganisationId = organisationId,
-                ReturnId = returnId,
-                AatfId = aatfId,
-                SchemeId = schemeId,
-                SchemeName = (await cache.FetchSchemePublicInfo(organisationId)).Name,
-                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name,
-            };
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var model = mapper.Map(new ReturnToObligatedViewModelTransfer() { AatfId = aatfId, OrganisationId = organisationId, ReturnId = returnId, SchemeId = schemeId, ReturnData = @return });
 
-            return View(viewModel);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -61,7 +63,9 @@
                     return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
             }
+
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
             return View(viewModel);
         }
 

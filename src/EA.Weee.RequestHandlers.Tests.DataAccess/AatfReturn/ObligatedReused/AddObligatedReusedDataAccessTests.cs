@@ -12,7 +12,7 @@
 
     public class AddObligatedReusedDataAccessTests
     {
-        private readonly AddObligatedReusedDataAccess dataAccess;
+        private readonly ObligatedReusedDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
         private readonly Guid aatfId;
@@ -21,7 +21,7 @@
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new AddObligatedReusedDataAccess(context);
+            dataAccess = new ObligatedReusedDataAccess(context);
             aatfId = Guid.NewGuid();
         }
 

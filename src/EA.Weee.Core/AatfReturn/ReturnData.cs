@@ -21,5 +21,12 @@
         public List<WeeeObligatedData> ObligatedWeeeReusedData { get; set; }
 
         public OperatorData ReturnOperatorData { get; set; }
+
+        public ReturnData()
+        {
+            ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
+            ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
+            NonObligatedData = new List<NonObligatedData>();
+        }
     }
 }

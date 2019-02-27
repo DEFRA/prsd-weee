@@ -55,6 +55,8 @@
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
+    <Compile Include="AatfReturn\Obligated\ObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReused.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />

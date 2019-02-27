@@ -21,7 +21,7 @@
 
     public class FetchAatfByOrganisationIdDataAccessTests
     {
-        private readonly AddObligatedReceivedDataAccess dataAccess;
+        private readonly ObligatedReceivedDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
         private readonly Organisation organisation;
@@ -31,7 +31,7 @@
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new AddObligatedReceivedDataAccess(context);
+            dataAccess = new ObligatedReceivedDataAccess(context);
             organisation = Organisation.CreatePartnership("Dummy");
             @operator = new Operator(organisation);
         }
