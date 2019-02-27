@@ -24,7 +24,26 @@
 }
 
 @section main_content {
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
 
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer
+            {
+                $('#warning-container').css('display', 'none');
+                $('#warning-container-ie').css('display', 'hidden');
+
+                $('#error-container').css('display', 'none');
+                $('#error-container-ie').css('display', 'hidden');
+            } else {
+
+            }
+        });
+    </script>
     <header class="hgroup">
         @if (hasErrors)
         {
@@ -52,11 +71,11 @@
     @if (hasErrors)
     {
         <h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
-            <p class="govuk-body">
-                Errors are problems with the XML file structure and content, which prevent our system from validating your file.
-                All errors must be rectified before we can continue our validation process. You may see several error messages
-                before you can submit your file.
-            </p>
+        <p class="govuk-body">
+            Errors are problems with the XML file structure and content, which prevent our system from validating your file.
+            All errors must be rectified before we can continue our validation process. You may see several error messages
+            before you can submit your file.
+        </p>
     }
     else
     {
@@ -88,16 +107,27 @@
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Data return errors", "View data return errors");
             }
 
-            <table class="govuk-table" style="background-color:#FDE3E6;">
+            <table class="govuk-table" id="error-container" style="background-color:#FDE3E6;">
                 @foreach (DataReturnError error in Model.DataReturn.Errors)
                 {
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" style="padding-left: 5px">@Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())</td>
                     </tr>
                 }
-               </table>
-            </details>
-                }
+            </table>
+
+            <div class="error-list-container" id="error-container-ie" style="background-color:#FDE3E6; border: none; display: none;">
+                <ul style="margin-top: 0px;">
+                    @foreach (DataReturnError error in Model.DataReturn.Errors)
+                    {
+                        <li class="warning-list-item font-xsmall">
+                            @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
+                        </li>
+                    }
+                </ul>
+            </div>
+        </details>
+    }
 
     @if (hasWarnings)
     {
@@ -155,30 +185,30 @@
 
             </div>
         </p>
-                        }
+    }
 
     @if (hasErrors)
     {
         <p class="govuk-body">
             To see your XML file’s full list,
             @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
-                      Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
-                      "DataReturns",
-                      "Data return downloads",
-                      "Data return errors and warnings")).
+                              Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
+                              "DataReturns",
+                              "Data return downloads",
+                              "Data return errors and warnings")).
         </p>
-            <p class="govuk-body">
-                @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
-                      Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                      "Data return loop",
-                      "Upload a new data return file",
-                      "Data return validation failed",
-                      new Dictionary<string, object> { { "class", "button" } }))
-            </p>
+        <p class="govuk-body">
+            @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
+                          Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                          "Data return loop",
+                          "Upload a new data return file",
+                          "Data return validation failed",
+                          new Dictionary<string, object> { { "class", "button" } }))
+        </p>
 
-            <div>
-                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-            </div>
+        <div>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        </div>
     }
     else
     {
@@ -200,10 +230,10 @@
 
         <p class="govuk-body">
             Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
-                                    Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                                    "Data return loop",
-                                    "Upload a new data return file",
-                                    "Data return validation successful")).
+                           Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                           "Data return loop",
+                           "Upload a new data return file",
+                           "Data return validation successful")).
         </p>
     }
 }

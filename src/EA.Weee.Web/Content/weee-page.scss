@@ -616,7 +616,7 @@ input[type="file"].form-control {
 
 .warning-details-summary:focus {
     background: #FFD990;
-    outline: 4px solid #FFD990;
+    outline: none;
 }
 
 .warning-details-summary:hover {
@@ -653,6 +653,9 @@ input[type="file"].form-control {
     color: black !important;
 }
 
+details summary::-ms-details-marker {
+    display: none;
+}
 
 .summary_error:focus {
     background: none !important;
