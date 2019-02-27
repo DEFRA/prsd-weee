@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
+    using DataReturns.ProcessDataReturnXmlFile;
     using Domain.Error;
     using Domain.Producer;
     using Domain.Scheme;
@@ -28,10 +29,11 @@
         private readonly IGenerateFromXml generateFromXml;
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
+        private readonly ITotalChargeCalculator totalChargeCalculator;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
             IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess)
+            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator)
         {
             this.context = context;
             this.authorization = authorization;
@@ -40,6 +42,7 @@
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.generateFromXml = generateFromXml;
             this.producerSubmissionDataAccess = producerSubmissionDataAccess;
+            this.totalChargeCalculator = totalChargeCalculator;
         }
 
         public async Task<Guid> HandleAsync(ProcessXmlFile message)
@@ -56,7 +59,6 @@
             bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == UploadErrorType.Schema);
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
-            TotalChargeCalculator totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator);
             Dictionary<string, ProducerCharge> producerCharges = null;
 
             decimal? totalChargesCalculated = 0;

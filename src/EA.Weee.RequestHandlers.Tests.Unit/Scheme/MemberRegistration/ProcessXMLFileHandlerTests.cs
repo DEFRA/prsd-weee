@@ -23,6 +23,7 @@
     using Requests.Scheme.MemberRegistration;
     using Weee.Tests.Core;
     using Xml.Converter;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class ProcessXMLFileHandlerTests
@@ -66,13 +67,13 @@
             xmlValidator = A.Fake<IXMLValidator>();
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             totalChargeCalculator = A.Fake<ITotalChargeCalculator>();
-            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess);
+            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
         }
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess);
+            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -91,12 +92,14 @@
 
             var hasAnnualCharge = false;
             decimal? totalCharges = 0;
+            
+
             A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
                 .Returns(producerCharges);
-   
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
-            
+            SetupSchemeTypeComplianceYear();
+
             await handler.HandleAsync(Message);
 
             A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
@@ -256,5 +259,12 @@
         {
             return new Scheme(organisationId);
         }
+
+        private void SetupSchemeTypeComplianceYear()
+        {
+            A.CallTo(() => xmlConverter.Deserialize<schemeType>(A<System.Xml.Linq.XDocument>._)).Returns(schemeType);
+            var schemeType = new schemeType() { complianceYear = "2019" };
+        }
+
     }
 }

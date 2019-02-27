@@ -6,13 +6,10 @@
     using EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+
     public class TotalChargeCalculator : ITotalChargeCalculator
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-
-        public TotalChargeCalculator()
-        {
-        }
 
         public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator)
         {
