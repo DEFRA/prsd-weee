@@ -8,7 +8,5 @@
     internal interface IAddNonObligatedDataAccess
     {
         Task Submit(IEnumerable<NonObligatedWeee> nonObligated);
-
-        Task<List<NonObligatedWeee>> GetNonObligatedByWeee(Guid returnId, bool dcf);
     }
 }

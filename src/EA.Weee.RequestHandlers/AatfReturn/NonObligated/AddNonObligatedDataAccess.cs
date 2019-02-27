@@ -27,10 +27,5 @@
 
             return context.SaveChangesAsync();
         }
-
-        public async Task<List<NonObligatedWeee>> GetNonObligatedByWeee(Guid returnId, bool dcf)
-        {
-            return await context.NonObligatedWeee.Include(s => s.Tonnage).Where(s => s.ReturnId == returnId && s.Dcf == dcf).ToListAsync();
-        }
     }
 }

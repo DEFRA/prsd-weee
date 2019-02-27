@@ -24,7 +24,6 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
-        private ReturnData @return;
 
         public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator)
         {
@@ -51,7 +50,7 @@
         {
             using (var client = apiClient())
             {
-                await ValidateResult(viewModel, client);
+                ValidateResult(viewModel, client);
 
                 if (ModelState.IsValid)
                 {
@@ -75,21 +74,19 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private async Task<bool> ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
+        private async void ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
         {
+            ReturnData @return;
             @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
-            var output = true;
             var result = await validator.Validate(model, @return);
 
             if (!result.IsValid)
             {
-                output = false;
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
             }
-            return output;
         }
     }
 }

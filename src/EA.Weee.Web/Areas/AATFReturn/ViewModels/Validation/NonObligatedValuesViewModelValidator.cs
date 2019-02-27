@@ -26,8 +26,6 @@
 
                     if (instance != null && instance.Dcf)
                     {
-                        //var nonDcfOnly = returnData.NonObligatedData.Where(r => r.Dcf == false).OrderBy(r => r.CategoryId).ToList();
-                        //var orderedReturnWeee = returnData.NonObligatedData.OrderBy(r => r.CategoryId).ToList();
                         var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId && r.Dcf == false).Select(r => r.Tonnage).FirstOrDefault();
                         var value = 0.000m;
 
