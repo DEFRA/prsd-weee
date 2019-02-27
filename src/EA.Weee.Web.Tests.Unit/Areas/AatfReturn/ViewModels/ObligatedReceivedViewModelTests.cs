@@ -84,5 +84,22 @@
             viewModel.B2CTotal.Should().Be("0.000");
             viewModel.B2BTotal.Should().Be("0.000");
         }
+
+        [Fact]
+        public void Edit_GivenSavedCategoryValuesDontExist_EditShouldBeFalse()
+        {
+            viewModel.Edit.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Edit_GivenSavedCategoryValuesExist_EditShouldBeTrue()
+        {
+            for (var count = 0; count <= viewModel.CategoryValues.Count; count++)
+            {
+                var local = new ObligatedViewModel();
+                local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+                local.Edit.Should().BeTrue();
+            }
+        }
     }
 }

@@ -170,5 +170,13 @@
 
             value.ToTonnageDisplay().Should().Be("10,000.000");
         }
+
+        [Fact]
+        public void ToTonnageDisplay_GivenValueIsNullAndDisplayEmpty_EmptyStringShouldBeReturned()
+        {
+            var value = (decimal?)null;
+
+            value.ToTonnageDisplay(true).Should().Be(string.Empty);
+        }
     }
 }

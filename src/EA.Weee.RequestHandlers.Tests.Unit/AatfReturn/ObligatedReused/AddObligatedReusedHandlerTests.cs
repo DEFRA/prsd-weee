@@ -21,12 +21,12 @@
     public class AddObligatedReusedHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReusedDataAccess addObligatedReusedDataAccess;
+        private readonly IObligatedReusedDataAccess addObligatedReusedDataAccess;
 
         public AddObligatedReusedHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            addObligatedReusedDataAccess = A.Dummy<IAddObligatedReusedDataAccess>();
+            addObligatedReusedDataAccess = A.Dummy<IObligatedReusedDataAccess>();
         }
 
         [Fact]
@@ -58,7 +58,7 @@
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedValue((int)category, (int)category, (int)category));
+                categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
             }
 
             var obligatedWeeeRequest = new AddObligatedReused

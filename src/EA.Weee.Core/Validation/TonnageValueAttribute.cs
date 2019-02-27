@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Core.Validation
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
@@ -13,6 +12,9 @@
     {
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
+        
+        /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
+        private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
         public TonnageValueAttribute(string category)
         {
@@ -81,6 +83,11 @@
                 {
                     return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
                 }
+            }
+
+            if (!validThousandRegex.IsMatch(value?.ToString()))
+            {
+                return new ValidationResult(GenerateMessage("entered correctly.  E.g. 1,000 or 100", (int)propertyValue));
             }
 
             return ValidationResult.Success;

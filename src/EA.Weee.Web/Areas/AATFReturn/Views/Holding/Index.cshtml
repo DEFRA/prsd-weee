@@ -2,10 +2,12 @@
 @{
     ViewBag.Title = "This page isn't built yet";
 }
-
-<h1 class="govuk-heading-l">This page isn't built yet</h1>
-
+<header class="hgroup">
+    <div>
+        <h1 class="govuk-heading-l">This page isn't built yet</h1>
+    </div>
+</header>
+            
 <p>
     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model }, new { @class = "govuk-button" })
 </p>
-

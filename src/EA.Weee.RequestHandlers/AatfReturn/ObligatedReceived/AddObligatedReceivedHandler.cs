@@ -10,10 +10,10 @@
     internal class AddObligatedReceivedHandler : IRequestHandler<AddObligatedReceived, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddObligatedReceivedDataAccess obligatedReceivedDataAccess;
+        private readonly IObligatedReceivedDataAccess obligatedReceivedDataAccess;
 
         public AddObligatedReceivedHandler(IWeeeAuthorization authorization,
-            IAddObligatedReceivedDataAccess obligatedReceivedDataAccess)
+            IObligatedReceivedDataAccess obligatedReceivedDataAccess)
         {
             this.authorization = authorization;
             this.obligatedReceivedDataAccess = obligatedReceivedDataAccess;
@@ -23,7 +23,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfWeeReceived = new WeeeReceived(
+            var aatfWeeeReceived = new WeeeReceived(
                 message.SchemeId,
                 message.AatfId,
                 message.ReturnId);
@@ -32,7 +32,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
             await obligatedReceivedDataAccess.Submit(aatfWeeeReceivedAmount);

@@ -96,11 +96,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccessTests.cs" />
-    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccessTests.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReusedWeeeForReturnDataAccessTests.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReceivedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetSchemesExternalDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
