@@ -11,7 +11,6 @@
     public class AddNonObligatedDataAccess : IAddNonObligatedDataAccess
     {
         private readonly WeeeContext context;
-        private readonly List<NonObligatedWeee> weeeList;
 
         public AddNonObligatedDataAccess(WeeeContext context)
         {

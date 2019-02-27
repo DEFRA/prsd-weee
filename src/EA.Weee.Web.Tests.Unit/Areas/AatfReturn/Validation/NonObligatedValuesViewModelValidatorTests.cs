@@ -44,6 +44,12 @@
             ValidationResult validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
+            validationResult.Errors.Count.Should().Be(14);
+            for (var i = 0; i < validationResult.Errors.Count; i++)
+            {
+                var categoryId = i + 1;
+                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be less or equal to " + returnData.NonObligatedData[i].Tonnage);
+            }
         }
 
         [Fact]
@@ -100,6 +106,12 @@
             ValidationResult validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
+            validationResult.Errors.Count.Should().Be(14);
+            for (var i = 0; i < validationResult.Errors.Count; i++)
+            {
+                var categoryId = i + 1;
+                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be more than or equal to " + returnData.NonObligatedData[i].Tonnage);
+            }
         }
 
         [Fact]

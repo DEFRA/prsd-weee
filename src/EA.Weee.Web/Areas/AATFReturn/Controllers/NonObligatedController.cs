@@ -76,8 +76,7 @@
 
         private async void ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
         {
-            ReturnData @return;
-            @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
+            var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
             var result = await validator.Validate(model, @return);
 
             if (!result.IsValid)
