@@ -9,7 +9,7 @@
 <table class="govuk-table" id="non-obligated-weee-table">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-width-one-half" style="border-bottom: 0px;"></td>
+            <td class="govuk-table__cell govuk-!-width-two-thirds" style="border-bottom: 0px;"></td>
             <td class="govuk-table__cell govuk-!-margin-bottom-0" style="border-bottom: 0px;"></td>
         </tr>
         <tr class="govuk-table__row">
@@ -17,18 +17,18 @@
             <td class="govuk-table__cell govuk-!-margin-bottom-0">
                 @if (Model.Dcf == true)
                 {
-                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-one-quarter">
+                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
                         DCF data in tonnes
                     </div>
                 }
                 else
                 {
-                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-one-quarter">
+                    <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
                         WEEE in tonnes
                     </div>
                 }
             </td>
-            <td class="govuk-table__cell govuk-!-margin-bottom-0 govuk-!-width-one-quarter"></td>
+            <td class="govuk-table__cell govuk-!-margin-bottom-0"></td>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -42,13 +42,13 @@
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
             </td>
-            <td class="govuk-table__cell">
+            <td class="govuk-table__cell govuk-!-width-one-quarter">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                     @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
                     @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                 </div>
             </td>
-            <td class="govuk-table__cell govuk-!-margin-bottom-0 govuk-!-width-one-quarter">
+            <td class="govuk-table__cell govuk-!-margin-bottom-0">
         </tr>
         }
         <tr class="govuk-table__row">
