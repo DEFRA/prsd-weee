@@ -114,6 +114,11 @@
             TotalCharges -= amount;
         }
 
+        public void UpdateTotalCharges(decimal amount)
+        {
+            TotalCharges = amount;
+        }
+
         protected MemberUpload()
         {
         }
