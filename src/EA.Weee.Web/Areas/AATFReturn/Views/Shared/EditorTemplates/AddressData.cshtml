@@ -2,6 +2,13 @@
 @using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.AatfReturn.AddressData
 
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+    @Html.Gds().LabelFor(m => m.Name)
+    @Html.Gds().ValidationMessageFor(m => m.Name)
+    @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+</div>
+
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address1)">
     @Html.Gds().LabelFor(m => m.Address1)
     @Html.Gds().ValidationMessageFor(m => m.Address1)

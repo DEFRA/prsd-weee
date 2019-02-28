@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
 
-    public class AddOffSiteDataAccess : IAddOffSiteDataAccess
+    public class AddAatfSiteDataAccess : IAddAatfSiteDataAccess
     {
         private readonly WeeeContext context;
 
-        public AddOffSiteDataAccess(WeeeContext context)
+        public AddAatfSiteDataAccess(WeeeContext context)
         {
             this.context = context;
         }

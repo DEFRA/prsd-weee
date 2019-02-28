@@ -7,19 +7,19 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class AddOffSiteRequestHandler : IRequestHandler<AddOffSite, bool>
+    internal class AddAatfSiteRequestHandler : IRequestHandler<AddAatfSite, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddOffSiteDataAccess offSiteDataAccess;
+        private readonly IAddAatfSiteDataAccess offSiteDataAccess;
 
-        public AddOffSiteRequestHandler(IWeeeAuthorization authorization,
-            IAddOffSiteDataAccess offSiteDataAccess)
+        public AddAatfSiteRequestHandler(IWeeeAuthorization authorization,
+            IAddAatfSiteDataAccess offSiteDataAccess)
         {
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddOffSite message)
+        public async Task<bool> HandleAsync(AddAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
 

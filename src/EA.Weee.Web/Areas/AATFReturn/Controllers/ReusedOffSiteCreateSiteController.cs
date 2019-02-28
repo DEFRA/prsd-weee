@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -30,17 +31,20 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid weeeReusedId)
         {
             var viewModel = new ReusedOffSiteCreateSiteViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
+                WeeeReusedId = weeeReusedId,
                 AddressData = new AddressData()
             };
 
             using (var client = apiClient())
             {
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                viewModel.WeeeReusedId = @return.ObligatedWeeeReusedData.
                 viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 

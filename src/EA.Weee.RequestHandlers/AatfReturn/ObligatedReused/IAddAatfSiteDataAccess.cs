@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
 
-    public interface IAddOffSiteDataAccess
+    public interface IAddAatfSiteDataAccess
     {
         Task Submit(WeeeReusedSite weeeReusedSite);
     }

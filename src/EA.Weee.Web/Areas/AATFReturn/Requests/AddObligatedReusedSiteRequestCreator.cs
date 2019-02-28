@@ -6,9 +6,14 @@
 
     public class AddObligatedReusedSiteRequestCreator : IAddObligatedReusedSiteRequestCreator
     {
-        public AddOffSite ViewModelToRequest(ReusedOffSiteCreateSiteViewModel viewModel)
+        public override AddAatfSite ViewModelToRequest(ReusedOffSiteCreateSiteViewModel viewModel)
         {
-            throw new NotImplementedException();
+            var addAatfSite = new AddAatfSite()
+            {
+                OrganisationId = viewModel.OrganisationId,
+                ReturnId = viewModel.ReturnId,
+                WeeeReusedId = viewModel.
+            };
         }
     }
 }
