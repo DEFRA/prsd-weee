@@ -12,10 +12,11 @@
 
     @using (Html.BeginForm("Index", "ReusedOffSite", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
-        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.AatfId)
 
         <div class="govuk-!-padding-bottom-5"></div>
 

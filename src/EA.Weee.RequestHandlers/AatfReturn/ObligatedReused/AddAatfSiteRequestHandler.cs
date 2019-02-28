@@ -1,20 +1,23 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
     internal class AddAatfSiteRequestHandler : IRequestHandler<AddAatfSite, bool>
     {
+        private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly IAddAatfSiteDataAccess offSiteDataAccess;
 
-        public AddAatfSiteRequestHandler(IWeeeAuthorization authorization,
+        public AddAatfSiteRequestHandler(WeeeContext context, IWeeeAuthorization authorization,
             IAddAatfSiteDataAccess offSiteDataAccess)
         {
+            this.context = context;
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
         }
@@ -31,9 +34,11 @@
                 message.AddressData.CountyOrRegion,
                 message.AddressData.Postcode,
                 message.AddressData.CountryId);
+                        
+            var weeeReused = context.WeeeReused.Where(w => w.ReturnId == message.ReturnId && w.AatfId == message.AatfId).FirstOrDefault();
 
             var weeeReusedSite = new WeeeReusedSite(
-                message.WeeeReusedId,
+                weeeReused,
                 address);
 
             await offSiteDataAccess.Submit(weeeReusedSite);

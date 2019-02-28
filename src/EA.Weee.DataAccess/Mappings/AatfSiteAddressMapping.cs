@@ -14,7 +14,7 @@
             Property(x => x.Address2).HasColumnName("Address2").HasMaxLength(35);
             Property(x => x.TownOrCity).HasColumnName("TownOrCity").IsRequired().HasMaxLength(35);
             Property(x => x.CountyOrRegion).HasColumnName("CountyOrRegion").HasMaxLength(35);
-            Property(x => x.CountyOrRegion).HasColumnName("Postcode").HasMaxLength(10);
+            Property(x => x.Postcode).HasColumnName("Postcode").HasMaxLength(10);
             Property(x => x.CountryId).HasColumnName("CountryId").IsRequired();
         }
     }

@@ -13,6 +13,9 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
 
         @Html.EditorFor(m => m.AddressData)
 

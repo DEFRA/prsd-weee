@@ -31,20 +31,18 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid weeeReusedId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
             var viewModel = new ReusedOffSiteCreateSiteViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
-                WeeeReusedId = weeeReusedId,
+                AatfId = aatfId,
                 AddressData = new AddressData()
             };
 
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                viewModel.WeeeReusedId = @return.ObligatedWeeeReusedData.
                 viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
@@ -54,6 +52,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReusedOffSiteCreateSiteViewModel viewModel)
         {
             if (ModelState.IsValid)

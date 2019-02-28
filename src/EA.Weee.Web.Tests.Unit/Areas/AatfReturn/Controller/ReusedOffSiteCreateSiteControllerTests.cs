@@ -3,7 +3,9 @@
     using System;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -13,26 +15,28 @@
     using FluentAssertions;
     using Xunit;
 
-    public class ReusedOffSiteControllerTests
+    public class ReusedOffSiteCreateSiteControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly ReusedOffSiteController controller;
+        private readonly ReusedOffSiteCreateSiteController controller;
+        private readonly IAddObligatedReusedSiteRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ReusedOffSiteControllerTests()
+        public ReusedOffSiteCreateSiteControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            requestCreator = A.Fake<IAddObligatedReusedSiteRequestCreator>();
 
-            controller = new ReusedOffSiteController(() => weeeClient, breadcrumb, cache);
+            controller = new ReusedOffSiteCreateSiteController(() => weeeClient, breadcrumb, cache, requestCreator);
         }
 
         [Fact]
-        public void CheckReusedOffSiteControllerInheritsExternalSiteController()
+        public void CheckReuseOffSiteCreateSiteControllerInheritsExternalSiteController()
         {
-            typeof(ReusedOffSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ReusedOffSiteCreateSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
@@ -54,7 +58,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ReusedOffSiteViewModelShouldBeReturned()
+        public async void IndexGet_GivenActionAndParameters_ReusedOffSiteCreateSiteViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -62,7 +66,7 @@
             
             var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
 
-            var receivedModel = result.Model as ReusedOffSiteViewModel;
+            var receivedModel = result.Model as ReusedOffSiteCreateSiteViewModel;
 
             receivedModel.OrganisationId.Should().Be(organisationId);
             receivedModel.ReturnId.Should().Be(returnId);
@@ -70,10 +74,9 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitNo_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
         {
-            var model = new ReusedOffSiteViewModel();
-            model.SelectedValue = "No";
+            var model = new ReusedOffSiteCreateSiteViewModel();
             var returnId = new Guid();
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -84,17 +87,26 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitYes_PageRedirectsToCreateSite()
+        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new ReusedOffSiteViewModel();
-            model.SelectedValue = "Yes";
-            var returnId = new Guid();
-            var result = await controller.Index(model) as RedirectToRouteResult;
+            var model = new ReusedOffSiteCreateSiteViewModel();
+            var request = new AddAatfSite();
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ReusedOffSiteCreateSite");
-            result.RouteValues["area"].Should().Be("AatfReturn");
-            result.RouteValues["returnId"].Should().Be(returnId);
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        {
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.Index(A.Dummy<ReusedOffSiteCreateSiteViewModel>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReused>._)).MustNotHaveHappened();
         }
     }
 }

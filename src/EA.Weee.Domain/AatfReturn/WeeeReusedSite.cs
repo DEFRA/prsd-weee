@@ -1,25 +1,24 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
 
-    public class WeeeReusedSite
+    public class WeeeReusedSite : Entity
     {
-        public Guid Id { get; private set; }
-
-        public Guid WeeeReusedId { get; private set; }
+        public virtual WeeeReused WeeeReused { get; private set; }
 
         public virtual AatfAddress Address { get; private set; }
 
-        protected WeeeReusedSite()
+        public WeeeReusedSite()
         {
         }
 
-        public WeeeReusedSite(Guid weeeReusedId, AatfAddress address)
+        public WeeeReusedSite(WeeeReused weeeReused, AatfAddress address)
         {
+            Guard.ArgumentNotNull(() => weeeReused, weeeReused);
             Guard.ArgumentNotNull(() => address, address);
 
-            WeeeReusedId = weeeReusedId;
+            WeeeReused = weeeReused;
             Address = address;
         }
     }

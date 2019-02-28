@@ -39,8 +39,8 @@
     @Html.Gds().TextBoxFor(m => m.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
 </div>
 
-<div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)">
+<div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list" >
     @Html.Gds().LabelFor(m => m.CountryId)
     @Html.Gds().ValidationMessageFor(m => m.CountryId)
-    @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+    @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false", aria_labelledby = "country-dropdown-list" })
 </div>

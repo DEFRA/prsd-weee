@@ -24,12 +24,13 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
             var viewModel = new ReusedOffSiteViewModel()
             {
                 OrganisationId = organisationId,
-                ReturnId = returnId
+                ReturnId = returnId,
+                AatfId = aatfId
             };
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
@@ -46,7 +47,7 @@
                 if (viewModel.SelectedValue == "Yes")
                 {
                     return RedirectToAction("Index", "ReusedOffSiteCreateSite",
-                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
                 }
                 else
                 {
