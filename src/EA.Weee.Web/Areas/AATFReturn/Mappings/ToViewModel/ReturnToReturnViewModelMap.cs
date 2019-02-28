@@ -42,10 +42,12 @@
                 {
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
-                    var obligatedData = new AatfObligatedData(aatf);
+                    var obligatedData = new AatfObligatedData(aatf)
+                    {
+                        WeeeReceived = SumObligatedValues(weeeReceivedData),
+                        WeeeReused = SumObligatedValues(weeeReusedData)
+                    };
 
-                    obligatedData.WeeeReceived = SumObligatedValues(weeeReceivedData);
-                    obligatedData.WeeeReused = SumObligatedValues(weeeReusedData);
                     AatfObligatedData.Add(obligatedData);
                 }
             }

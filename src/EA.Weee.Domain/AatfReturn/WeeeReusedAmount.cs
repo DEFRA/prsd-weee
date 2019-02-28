@@ -3,15 +3,11 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class WeeeReusedAmount : Entity
+    public class WeeeReusedAmount : ObligatedAmount, IObligatedAmount
     {
         public virtual WeeeReused WeeeReused { get; private set; }
 
         public int CategoryId { get; set; }
-
-        public decimal? HouseholdTonnage { get; set; }
-
-        public decimal? NonHouseholdTonnage { get; set; }
 
         public WeeeReusedAmount(WeeeReused aatfWeeeReused, int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
         {
