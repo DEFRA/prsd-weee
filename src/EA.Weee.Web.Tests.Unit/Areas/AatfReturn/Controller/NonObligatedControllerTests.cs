@@ -7,7 +7,9 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using FakeItEasy;
     using FluentAssertions;
@@ -28,6 +30,7 @@
         private readonly NonObligatedController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
+        private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
 
         public NonObligatedControllerTests()
         {
@@ -35,7 +38,8 @@
             requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
-            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator, validator);
+            mapper = A.Fake<IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel>>();
+            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator, validator, mapper);
         }
 
         [Fact]
