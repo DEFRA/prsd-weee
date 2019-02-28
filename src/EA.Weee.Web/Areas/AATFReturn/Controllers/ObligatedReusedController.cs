@@ -35,7 +35,8 @@
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
-                AatfId = aatfId
+                AatfId = aatfId,
+                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name
             };
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);

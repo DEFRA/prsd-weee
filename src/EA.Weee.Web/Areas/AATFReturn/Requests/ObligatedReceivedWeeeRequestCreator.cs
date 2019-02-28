@@ -7,9 +7,9 @@
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.Obligated;
 
-    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, AddObligatedReceived>, IObligatedReceivedWeeeRequestCreator
+    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedReceived>, IObligatedReceivedWeeeRequestCreator
     {
-        public override AddObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
+        public override ObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
             var obligatedRequestValues = new List<ObligatedValue>();
@@ -20,10 +20,18 @@
                 var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
 
                 obligatedRequestValues.Add(
-                    new ObligatedValue(
+                    new ObligatedValue(categoryValue.Id,
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));
+            }
+
+            if (viewModel.Edit)
+            {
+                return new EditObligatedReceived()
+                {
+                    CategoryValues = obligatedRequestValues
+                };
             }
 
             return new AddObligatedReceived()
