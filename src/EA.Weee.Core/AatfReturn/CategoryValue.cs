@@ -10,6 +10,8 @@
 
     public class CategoryValue
     {
+        public Guid Id { get; set; }
+
         public string CategoryDisplay { get; set; }
 
         public int CategoryId { get; set; }
