@@ -63,7 +63,7 @@
                     nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, categoryValue.Dcf, categoryValue.Tonnage));
                 }
 
-                var dataAccess = new AddNonObligatedDataAccess(database.WeeeContext);
+                var dataAccess = new NonObligatedDataAccess(database.WeeeContext);
 
                 await dataAccess.Submit(nonObligatedWee);
 
