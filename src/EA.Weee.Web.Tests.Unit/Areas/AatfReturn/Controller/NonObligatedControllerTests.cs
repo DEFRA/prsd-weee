@@ -1,12 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Services;
     using Services.Caching;
     using Web.Areas.AatfReturn.Controllers;
@@ -22,13 +27,15 @@
         private readonly INonObligatedWeeRequestCreator requestCreator;
         private readonly NonObligatedController controller;
         private readonly BreadcrumbService breadcrumb;
+        private readonly INonObligatedValuesViewModelValidatorWrapper validator;
 
         public NonObligatedControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator);
+            validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
+            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator, validator);
         }
 
         [Fact]
@@ -110,6 +117,62 @@
             var result = await controller.Index(model.OrganisationId, model.ReturnId, model.Dcf) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(model);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModel_ValidatorShouldReturnAValidResult()
+        {
+            var result = new ValidationResult();
+
+            A.CallTo(() => validator.Validate(A<NonObligatedValuesViewModel>._, A<ReturnData>._)).Returns(result);
+
+            await controller.Index(A.Fake<NonObligatedValuesViewModel>());
+
+            controller.ModelState.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_ValidatorShouldReturnAnInvalidResult()
+        {
+            var result = new ValidationResult();
+            result.Errors.Add(new ValidationFailure("property", "error"));
+
+            A.CallTo(() => validator.Validate(A<NonObligatedValuesViewModel>._, A<ReturnData>._)).Returns(result);
+
+            await controller.Index(A.Fake<NonObligatedValuesViewModel>());
+
+            controller.ModelState.IsValid.Should().BeFalse();
+            controller.ModelState.Should().ContainKey("property");
+            controller.ModelState.Count(c => c.Value.Errors.Any(d => d.ErrorMessage == "error")).Should().Be(1);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModel_ValidatorShouldBeCalled()
+        {
+            var model = new NonObligatedValuesViewModel();
+            var returnData = new ReturnData();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+
+            await controller.Index(model);
+
+            A.CallTo(() => validator.Validate(model, returnData)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
+        {
+            var model = new NonObligatedValuesViewModel();
+            var returnData = new ReturnData();
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.Index(model);
+
+            A.CallTo(() => validator.Validate(model, returnData)).MustNotHaveHappened();
         }
     }
 }

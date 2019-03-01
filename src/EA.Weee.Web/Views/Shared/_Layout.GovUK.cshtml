@@ -35,12 +35,13 @@
     </script>
 
     @RenderSection("body_start", required: false)
-
+    <!--
     <div id="skiplink-container">
         <div>
             <a href="#main-content" class="govuk-skip-link">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
         </div>
     </div>
+        -->
     <div id="global-cookie-message">
         @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
     </div>

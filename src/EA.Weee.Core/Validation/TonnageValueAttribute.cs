@@ -10,6 +10,8 @@
 
     public class TonnageValueAttribute : ValidationAttribute
     {
+        public const int MaxTonnageLength = 14;
+
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
         
@@ -51,9 +53,9 @@
                 return ValidationResult.Success;
             }
 
-            if (value.ToString().Length > CommonMaxFieldLengths.Tonnage)
+            if (value.ToString().Replace(",", string.Empty).Length > MaxTonnageLength)
             {
-                return new ValidationResult(GenerateMessage("a numerical value with 14 digits or less", (int)propertyValue));
+                return new ValidationResult(GenerateMessage($"a numerical value with {MaxTonnageLength} digits or less", (int)propertyValue));
             }
 
             if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
