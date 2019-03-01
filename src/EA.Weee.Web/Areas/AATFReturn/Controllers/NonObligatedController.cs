@@ -50,7 +50,10 @@
         {
             using (var client = apiClient())
             {
-                await ValidateResult(viewModel, client);
+                if (ModelState.IsValid)
+                {
+                    await ValidateResult(viewModel, client);
+                }
 
                 if (ModelState.IsValid)
                 {
