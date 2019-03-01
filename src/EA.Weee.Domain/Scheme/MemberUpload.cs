@@ -171,5 +171,10 @@
                 0 :
                 Errors.Count(w => w.ErrorLevel == Error.ErrorLevel.Warning);
         }
+
+        public void SetSubmittedDate(DateTime dateTime)
+        {
+            this.SubmittedDate = dateTime;
+        }
     }
 }
