@@ -180,6 +180,15 @@
             ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 14 digits or less");
         }
 
+        [Theory]
+        [InlineData("1,000,000,000.000")]
+        public void IsValid_GivenValueContainsCommasAndIsThanFourteenCharactors_ReturnsTrue(object input)
+        {
+            var result = Validate(input);
+
+            result.Should().BeTrue();
+        }
+
         [Fact]
         public void ValidationResult_GivenTypeMessageIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
         {
