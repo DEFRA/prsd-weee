@@ -16,7 +16,7 @@
     using Prsd.Core.Mapper;
     using Weee.Requests.AatfReturn;
 
-    public class ObligatedReceivedController : ExternalSiteController
+    public class ObligatedReceivedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
