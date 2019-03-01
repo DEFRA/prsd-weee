@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain.Producer;
     using Domain.Scheme;
     using Domain.User;
 
@@ -18,9 +19,11 @@
             this.context = context;
         }
 
-        public async Task<List<MemberUpload>> Fetch()
+        public async Task<IList<MemberUpload>> Fetch()
         {
-            var memberUploads = context.MemberUploads.Where(m => m.IsSubmitted);
+            var memberUploads = context.MemberUploads
+                    .Include(m => m.ProducerSubmissions)
+                .Where(m => m.IsSubmitted);
 
             return await memberUploads.ToListAsync();
         }
@@ -30,6 +33,11 @@
             var memberUpload = context.MemberUploads.First(m => m.Id == id);
 
             await Task.Run(() => memberUpload.UpdateTotalCharges(amount));
+        }
+
+        public async Task<IList<ProducerSubmission>> FetchProducerSubmissionsByUpload(Guid id)
+        {
+            return await Task.Run(() => new List<ProducerSubmission>());
         }
     }
 }

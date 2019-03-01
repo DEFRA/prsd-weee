@@ -11,20 +11,30 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Transactions;
+    using Domain.Error;
+    using Domain.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
+    using Xml.Converter;
+    using Xml.MemberRegistration;
 
     public class UpdateProducerCharges : IUpdateProducerCharges
-    {       
+    {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IMigrationDataAccess memberUploadDataAccess;
         private readonly WeeeContext context;
+        private readonly IXmlConverter xmlConverter;
+        private readonly IProducerChargeCalculator producerChargeCalculator;
 
-        public UpdateProducerCharges(WeeeContext context, 
-            IXMLChargeBandCalculator xmlChargeBandCalculator, 
-            IMigrationDataAccess memberUploadDataAccess)
+        public UpdateProducerCharges(WeeeContext context,
+            IXMLChargeBandCalculator xmlChargeBandCalculator,
+            IMigrationDataAccess memberUploadDataAccess,
+            IXmlConverter xmlConverter,
+            IProducerChargeCalculator producerChargeCalculator)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.memberUploadDataAccess = memberUploadDataAccess;
+            this.xmlConverter = xmlConverter;
+            this.producerChargeCalculator = producerChargeCalculator;
             this.context = context;
         }
 
@@ -37,7 +47,13 @@
                 var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
 
                 decimal totalCharges = 0;
-                var producerCharges = ProducerCharges(message, ref totalCharges);
+
+                var producerCharges = Calculate(message, ref totalCharges);
+
+                //foreach (var producerCharge in producerCharges)
+                //{
+                //    var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
+                //}
 
                 await memberUploadDataAccess.Update(memberUpload.Id, totalCharges);
             }
@@ -47,9 +63,52 @@
             // what about uploads that have errors assume these ones would not have been submitted
         }
 
-        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
+        //private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
+        //{
+        //    var producerCharges = xmlChargeBandCalculator.Calculate(message);
+
+        //    if (xmlChargeBandCalculator.ErrorsAndWarnings.Any())
+        //    {
+        //        throw new Exception(string.Join(", ", xmlChargeBandCalculator.ErrorsAndWarnings));
+        //    }
+
+        //    totalCharges = producerCharges
+        //        .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+
+        //    return producerCharges;
+        //}
+
+        public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message, ref decimal totalCharges)
         {
-            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+            var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
+
+            var producerCharges = new Dictionary<string, ProducerCharge>();
+            var complianceYear = Int32.Parse(schemeType.complianceYear);
+
+            foreach (var producer in schemeType.producerList)
+            {
+                var producerName = producer.GetProducerName();
+
+                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
+                if (producerCharge != null)
+                {
+                    if (!producerCharges.ContainsKey(producerName))
+                    {
+                        producerCharges.Add(producerName, producerCharge);
+                    }
+                    else
+                    {
+                        throw new Exception();
+                        //ErrorsAndWarnings.Add(
+                        //    new MemberUploadError(
+                        //        ErrorLevel.Error,
+                        //        UploadErrorType.Business,
+                        //        string.Format(
+                        //            "We are unable to check for warnings associated with the charge band of the producer {0} until the duplicate name has been fixed.",
+                        //            producerName)));
+                    }
+                }
+            }
 
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
