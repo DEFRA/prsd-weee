@@ -13,6 +13,7 @@
     using Domain.Producer;
     using Domain.Producer.Classfication;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Prsd.Core;
@@ -43,7 +44,7 @@
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
         private readonly ITotalChargeCalculator totalChargeCalculator;
-
+        private readonly IGetOrganisationOverviewDataAccess getOrganisationOverviewDataAccess;
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
@@ -66,13 +67,14 @@
             xmlValidator = A.Fake<IXMLValidator>();
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             totalChargeCalculator = A.Fake<ITotalChargeCalculator>();
-            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
+            getOrganisationOverviewDataAccess = A.Fake<IGetOrganisationOverviewDataAccess>();
+            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator, getOrganisationOverviewDataAccess);
         }
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
+            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator, getOrganisationOverviewDataAccess);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -110,7 +112,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
                 .Returns(producerCharges);
         }
 
@@ -124,7 +126,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>.Ignored, A<int>.Ignored,
                 ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -144,7 +146,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>.Ignored, A<int>.Ignored,
                 ref hasAnnualCharge, ref totalCharges)).MustNotHaveHappened();
         }
 
@@ -164,7 +166,7 @@
             
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, 
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>.Ignored, A<int>.Ignored,
                 ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -181,7 +183,7 @@
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored,
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>.Ignored, A<int>.Ignored,
                 ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 

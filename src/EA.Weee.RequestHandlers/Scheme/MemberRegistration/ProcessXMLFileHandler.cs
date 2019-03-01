@@ -12,6 +12,7 @@
     using Domain.Error;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Xml.MemberRegistration;
     using Interfaces;
@@ -30,10 +31,12 @@
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
         private readonly ITotalChargeCalculator totalChargeCalculator;
+        private readonly IGetOrganisationOverviewDataAccess getOrganisationOverviewDataAccess;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
             IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator)
+            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator, 
+            IGetOrganisationOverviewDataAccess getOrganisationOverviewDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
@@ -43,6 +46,7 @@
             this.generateFromXml = generateFromXml;
             this.producerSubmissionDataAccess = producerSubmissionDataAccess;
             this.totalChargeCalculator = totalChargeCalculator;
+            this.getOrganisationOverviewDataAccess = getOrganisationOverviewDataAccess;
         }
 
         public async Task<Guid> HandleAsync(ProcessXmlFile message)
@@ -63,14 +67,25 @@
 
             decimal? totalChargesCalculated = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+            var hasSubmission = await getOrganisationOverviewDataAccess.HasMemberSubmissions(message.OrganisationId);
+            var existingAnnualCharge = false;
+            int? existingComplianceYear = 0;
 
+            if (hasSubmission)
+            {
+                var memberUpload = await context.MemberUploads.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+                existingAnnualCharge = memberUpload.HasAnnualCharge;
+                existingComplianceYear = memberUpload.ComplianceYear;
+            }
+            
             var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var hasAnnualCharge = false;
 
             if (!containsSchemaErrors)
             {
-                producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), ref hasAnnualCharge, ref totalChargesCalculated);
+                producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, int.Parse(deserializedXml.complianceYear), existingAnnualCharge, existingComplianceYear,
+                    ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
