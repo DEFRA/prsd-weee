@@ -53,7 +53,7 @@
                 return ValidationResult.Success;
             }
 
-            if (value.ToString().Length > MaxTonnageLength)
+            if (value.ToString().Replace(",", string.Empty).Length > MaxTonnageLength)
             {
                 return new ValidationResult(GenerateMessage($"a numerical value with {MaxTonnageLength} digits or less", (int)propertyValue));
             }
