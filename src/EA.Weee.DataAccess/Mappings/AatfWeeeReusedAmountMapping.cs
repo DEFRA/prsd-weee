@@ -3,9 +3,9 @@
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class AatfWeeeReusedAmount : EntityTypeConfiguration<WeeeReusedAmount>
+    internal class AatfWeeeReusedAmountMapping : EntityTypeConfiguration<WeeeReusedAmount>
     {
-        public AatfWeeeReusedAmount()
+        public AatfWeeeReusedAmountMapping()
         {
             ToTable("WeeeReusedAmount", "AATF");
 
