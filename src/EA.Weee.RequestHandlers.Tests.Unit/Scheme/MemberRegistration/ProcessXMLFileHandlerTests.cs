@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
-    using Domain;
     using Domain.Error;
     using Domain.Lookup;
     using Domain.Obligation;
@@ -94,8 +93,9 @@
             A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
         }
-
-        private void MakesCallToTotalChargeCalculator()
+        
+        [Fact]
+        public async void TotalChargeCalculator_Returns_ProducerCharges()
         {
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
@@ -103,8 +103,12 @@
             var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
             producerCharges.Add(testproducer, new ProducerCharge { Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
 
+            SetupSchemeTypeComplianceYear();
+
             var hasAnnualCharge = false;
             decimal? totalCharges = 0;
+
+            await handler.HandleAsync(Message);
 
             A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
                 .Returns(producerCharges);
@@ -216,7 +220,7 @@
             {
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
-
+         
             SetupSchemeTypeComplianceYear();
 
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
@@ -259,10 +263,10 @@
 
         public static ProducerSubmission TestProducer(string tradingName)
         {
-            var scheme = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
+            var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
 
-            var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
+            var memberUpload = A.Fake<MemberUpload>();
             A.CallTo(() => memberUpload.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload.Scheme).Returns(scheme);
 
