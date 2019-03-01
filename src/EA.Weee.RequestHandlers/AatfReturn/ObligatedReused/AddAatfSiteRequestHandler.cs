@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
@@ -13,13 +14,15 @@
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly IAddAatfSiteDataAccess offSiteDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public AddAatfSiteRequestHandler(WeeeContext context, IWeeeAuthorization authorization,
-            IAddAatfSiteDataAccess offSiteDataAccess)
+            IAddAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddAatfSite message)
@@ -34,11 +37,11 @@
                 message.AddressData.CountyOrRegion,
                 message.AddressData.Postcode,
                 message.AddressData.CountryId);
-                        
-            var weeeReused = context.WeeeReused.Where(w => w.ReturnId == message.ReturnId && w.AatfId == message.AatfId).FirstOrDefault();
 
+            var weeeReused = await genericDataAccess.GetManyByExpression<WeeeReused>(new WeeeReusedByAatfIdAndReturnIdSpecification(message.AatfId, message.ReturnId));
+            
             var weeeReusedSite = new WeeeReusedSite(
-                weeeReused,
+                weeeReused.Last(),
                 address);
 
             await offSiteDataAccess.Submit(weeeReusedSite);

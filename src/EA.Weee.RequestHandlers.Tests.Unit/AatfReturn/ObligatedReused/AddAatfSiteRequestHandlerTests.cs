@@ -2,17 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
+    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
@@ -23,16 +22,21 @@
     public class AddAatfSiteRequestHandlerTests
     {
         private readonly IWeeeAuthorization authorisation;
-        private readonly AddAatfSiteDataAccess addAatfSiteDataAccess;
+        private readonly IAddAatfSiteDataAccess addAatfSiteDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
         private readonly ObligatedReusedDataAccess obligatedReusedDataAccess; 
         private readonly WeeeContext weeeContext;
+        private readonly AddAatfSiteRequestHandler handler;
 
         public AddAatfSiteRequestHandlerTests()
         {
             authorisation = A.Fake<IWeeeAuthorization>();
-            addAatfSiteDataAccess = A.Dummy<AddAatfSiteDataAccess>();
-            obligatedReusedDataAccess = A.Dummy<ObligatedReusedDataAccess>();
+            addAatfSiteDataAccess = A.Fake<IAddAatfSiteDataAccess>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
+            obligatedReusedDataAccess = A.Fake<ObligatedReusedDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+
+            handler = new AddAatfSiteRequestHandler(weeeContext, authorisation, addAatfSiteDataAccess, genericDataAccess);
         }
 
         [Fact]
@@ -40,7 +44,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddAatfSiteRequestHandler(weeeContext, authorization, addAatfSiteDataAccess);
+            var handler = new AddAatfSiteRequestHandler(weeeContext, authorization, addAatfSiteDataAccess, genericDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddAatfSite>());
 
@@ -48,57 +52,45 @@
         }
 
         [Fact]
-        //public async Task HandleAsync_WithValidInput_SubmitIsCalledCorrectly()
-        //{
-        //    var aatf = A.Fake<Aatf>();
-        //    var organisation = A.Fake<Organisation>();
-        //    var @operator = new Operator(organisation);
-        //    var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
-        //    var aatfAddress = new AatfAddress(
-        //        "Name",
-        //        "Address",
-        //        A.Dummy<string>(),
-        //        "TownOrCity",
-        //        A.Dummy<string>(),
-        //        A.Dummy<string>(),
-        //        A.Dummy<Guid>());
+        public async Task HandleAsync_WithValidInput_SubmitIsCalledCorrectly()
+        {
+            var aatf = A.Fake<Aatf>();
+            var organisation = A.Fake<Organisation>();
+            var @operator = new Operator(organisation);
+            var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+            var aatfAddress = new AatfAddress(
+                "Name",
+                "Address",
+                A.Dummy<string>(),
+                "TownOrCity",
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                A.Dummy<Guid>());
 
-        //    var weeeReused = new WeeeReused(aatf.Id, aatfReturn.Id);
+            var weeeReused = new WeeeReused(aatf.Id, aatfReturn.Id);
 
-        //    var reusedHandler = new AddObligatedReusedHandler(authorisation, obligatedReusedDataAccess);
+            A.CallTo(() => genericDataAccess.GetManyByExpression(A<WeeeReusedByAatfIdAndReturnIdSpecification>._)).Returns(new List<WeeeReused>() { weeeReused });
 
-        //    var reusedRequest = new AddObligatedReused()
-        //    {
-        //        AatfId = aatf.Id,
-        //        OrganisationId = organisation.Id,
-        //        ReturnId = aatfReturn.Id,
-        //        CategoryValues = A.Fake<IList<ObligatedValue>>()
-        //    };
+            var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
 
-        //    await reusedHandler.HandleAsync(reusedRequest);
+            var addressData = A.Fake<AddressData>();
 
-        //    var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
+            addressData.Name = "Name";
+            addressData.Address1 = "Address1";
+            addressData.TownOrCity = "TownOrCity";
+            addressData.CountryId = Guid.NewGuid();
 
-        //    var addressData = A.Fake<AddressData>();
+            var addAatfSiteRequest = new AddAatfSite
+            {
+                OrganisationId = organisation.Id,
+                ReturnId = aatfReturn.Id,
+                AatfId = aatf.Id,
+                AddressData = addressData
+            };
 
-        //    addressData.Name = "Name";
-        //    addressData.Address1 = "Address1";
-        //    addressData.TownOrCity = "TownOrCity";
-        //    addressData.CountryId = Guid.NewGuid();
+            await handler.HandleAsync(addAatfSiteRequest);
 
-        //    var addAatfSiteRequest = new AddAatfSite
-        //    {
-        //        OrganisationId = organisation.Id,
-        //        ReturnId = aatfReturn.Id,
-        //        AatfId = aatf.Id,
-        //        AddressData = addressData
-        //    };
-
-        //    var handler = new AddAatfSiteRequestHandler(weeeContext, authorisation, addAatfSiteDataAccess);
-
-        //    await handler.HandleAsync(addAatfSiteRequest);
-
-        //    A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.IsSameAs(weeeReusedSite)));
-        //}
+            A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.IsSameAs(weeeReusedSite)));
+        }
     }
 }
