@@ -25,8 +25,9 @@
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA && complianceYear == 2019 && (existingComplianceYear != 2019 && !hasExistingAnnualCharge))
+            if (scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA && complianceYear > 2018 && (existingComplianceYear == 0 || existingComplianceYear > 2018)  && !hasExistingAnnualCharge)
             {
+                var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount;
                 hasAnnualCharge = true;
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
             }

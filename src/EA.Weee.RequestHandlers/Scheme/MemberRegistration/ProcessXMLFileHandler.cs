@@ -71,14 +71,16 @@
             var existingAnnualCharge = false;
             int? existingComplianceYear = 0;
 
+            var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
+            var deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
+
             if (hasSubmission)
             {
-                var memberUpload = await context.MemberUploads.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+                var memberUpload = await context.MemberUploads.SingleAsync(c => c.OrganisationId == message.OrganisationId && 
+                    c.ComplianceYear == deserializedcomplianceYear);
                 existingAnnualCharge = memberUpload.HasAnnualCharge;
                 existingComplianceYear = memberUpload.ComplianceYear;
             }
-            
-            var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var hasAnnualCharge = false;
 
