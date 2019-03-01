@@ -37,7 +37,7 @@
 
         @if (Model.PendingCharges.Count > 0)
         {
-            <table width="100%" class="" cellspacing="15">
+            <table width="100%" class="" cellspacing="20">
                 <thead>
                     <tr>
                         <th>PCS name</th>
@@ -55,7 +55,7 @@
                             <td>@pendingCharge.SchemeApprovalNumber</td>
                             <td>@pendingCharge.ComplianceYear</td>
                             <td class="numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
-                            <td>@pendingCharge.SubmittedDate.ToString("dd-MMM-yyyy HH:mm")</td>
+                            <td style="width:100%">@pendingCharge.SubmittedDate.ToString("dd-MMM-yyyy HH:mm")</td>
                         </tr>
                     }
                 </tbody>
