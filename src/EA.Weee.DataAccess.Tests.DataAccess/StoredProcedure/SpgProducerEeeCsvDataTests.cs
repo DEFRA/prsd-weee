@@ -7,6 +7,7 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
@@ -110,7 +111,7 @@
             {
                 // Arrange
                 Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
-                Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
+                Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == UKCompetentAuthorityAbbreviationType.EA);
                 Domain.Lookup.ChargeBandAmount chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);
 
@@ -120,7 +121,7 @@
                 // Arrange - Scheme 1
 
                 Domain.Scheme.Scheme scheme1 = new Domain.Scheme.Scheme(organisation);
-                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846", ObligationType.B2C, authority);
+                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846", Domain.Obligation.ObligationType.B2C, authority);
                 scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
                 Domain.Producer.RegisteredProducer registeredProducer1 = new Domain.Producer.RegisteredProducer("WEE/AG48365JN", 2099, scheme1);
@@ -166,7 +167,7 @@
                 Domain.DataReturns.DataReturnVersion version1 = new Domain.DataReturns.DataReturnVersion(dataReturn1);
 
                 Domain.DataReturns.EeeOutputAmount amount1 = new Domain.DataReturns.EeeOutputAmount(
-                    ObligationType.B2C,
+                    Domain.Obligation.ObligationType.B2C,
                     WeeeCategory.LargeHouseholdAppliances,
                     123.456m,
                     registeredProducer1);
@@ -182,7 +183,7 @@
                 // Arrange - Scheme 2
 
                 Domain.Scheme.Scheme scheme2 = new Domain.Scheme.Scheme(organisation);
-                scheme2.UpdateScheme("Test Scheme 2", "WEE/ZU6355HV/SCH", "WEE5746395", ObligationType.B2C, authority);
+                scheme2.UpdateScheme("Test Scheme 2", "WEE/ZU6355HV/SCH", "WEE5746395", Domain.Obligation.ObligationType.B2C, authority);
                 scheme2.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
                 Domain.Producer.RegisteredProducer registeredProducer2 = new Domain.Producer.RegisteredProducer("WEE/HT7483HD", 2099, scheme2);
@@ -228,7 +229,7 @@
                 Domain.DataReturns.DataReturnVersion version2 = new Domain.DataReturns.DataReturnVersion(dataReturn2);
 
                 Domain.DataReturns.EeeOutputAmount amount2 = new Domain.DataReturns.EeeOutputAmount(
-                    ObligationType.B2C,
+                    Domain.Obligation.ObligationType.B2C,
                     WeeeCategory.LargeHouseholdAppliances,
                     123.456m,
                     registeredProducer2);
@@ -266,7 +267,7 @@
             {
                 // Arrange
                 Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
-                Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
+                Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == UKCompetentAuthorityAbbreviationType.EA);
                 Domain.Lookup.ChargeBandAmount chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);
 
@@ -276,7 +277,7 @@
                 // Arrange - Scheme 1
 
                 Domain.Scheme.Scheme scheme1 = new Domain.Scheme.Scheme(organisation);
-                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846", ObligationType.B2C, authority);
+                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846", Domain.Obligation.ObligationType.B2C, authority);
                 scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
                 Domain.Producer.RegisteredProducer registeredProducer1 = new Domain.Producer.RegisteredProducer("WEE/AG48365JN", 2099, scheme1);
@@ -322,7 +323,7 @@
                 Domain.DataReturns.DataReturnVersion version1 = new Domain.DataReturns.DataReturnVersion(dataReturn1);
 
                 Domain.DataReturns.EeeOutputAmount amount1 = new Domain.DataReturns.EeeOutputAmount(
-                    ObligationType.B2C,
+                    Domain.Obligation.ObligationType.B2C,
                     WeeeCategory.LargeHouseholdAppliances,
                     123.456m,
                     registeredProducer1);
@@ -338,7 +339,7 @@
                 // Arrange - Scheme 2
 
                 Domain.Scheme.Scheme scheme2 = new Domain.Scheme.Scheme(organisation);
-                scheme2.UpdateScheme("Test Scheme 2", "WEE/ZU6355HV/SCH", "WEE5746395", ObligationType.B2C, authority);
+                scheme2.UpdateScheme("Test Scheme 2", "WEE/ZU6355HV/SCH", "WEE5746395", Domain.Obligation.ObligationType.B2C, authority);
                 scheme2.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
                 Domain.Producer.RegisteredProducer registeredProducer2 = new Domain.Producer.RegisteredProducer("WEE/HT7483HD", 2099, scheme2);
@@ -384,7 +385,7 @@
                 Domain.DataReturns.DataReturnVersion version2 = new Domain.DataReturns.DataReturnVersion(dataReturn2);
 
                 Domain.DataReturns.EeeOutputAmount amount2 = new Domain.DataReturns.EeeOutputAmount(
-                    ObligationType.B2C,
+                    Domain.Obligation.ObligationType.B2C,
                     WeeeCategory.LargeHouseholdAppliances,
                     123.456m,
                     registeredProducer2);
