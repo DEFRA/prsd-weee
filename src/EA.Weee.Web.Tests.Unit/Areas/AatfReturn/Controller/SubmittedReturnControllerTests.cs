@@ -36,7 +36,7 @@
         [Fact]
         public void CheckSubmittedReturnControllerInheritsExternalSiteController()
         {
-            typeof(SubmittedReturnController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(SubmittedReturnController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]

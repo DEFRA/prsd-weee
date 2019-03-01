@@ -4,7 +4,7 @@
     using System.Web.Mvc;
     using Web.Controllers.Base;
 
-    public class HoldingController : ExternalSiteController
+    public class HoldingController : AatfReturnBaseController
     {
         // GET: AatfReturn/Holding
         public ActionResult Index(Guid organisationId)

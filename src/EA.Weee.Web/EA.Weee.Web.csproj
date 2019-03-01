@@ -284,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
@@ -1174,6 +1175,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\AatfReturn\Views\AatfReturnBase\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
   </ItemGroup>
   <PropertyGroup>
