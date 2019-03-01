@@ -66,6 +66,12 @@
                     return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
             }
+
+            using (var client = apiClient())
+            {
+                viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+            }
+
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
