@@ -48,7 +48,8 @@
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
-                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be less or equal to " + returnData.NonObligatedData[i].Tonnage);
+                validationResult.Errors[i].PropertyName.Should().Be("CategoryValues_" + i + "__Tonnage");
+                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be less than or equal to " + returnData.NonObligatedData[i].Tonnage);
             }
         }
 
@@ -111,6 +112,7 @@
             {
                 var categoryId = i + 1;
                 validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be more than or equal to " + returnData.NonObligatedData[i].Tonnage);
+                validationResult.Errors[i].PropertyName.Should().Be("CategoryValues_" + i + "__Tonnage");
             }
         }
 
