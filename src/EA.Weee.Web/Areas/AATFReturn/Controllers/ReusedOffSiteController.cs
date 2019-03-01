@@ -4,26 +4,21 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
-    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class ObligatedReusedController : ExternalSiteController
+    public class ReusedOffSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ObligatedReusedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReusedWeeeRequestCreator requestCreator)
+        public ReusedOffSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
             this.apiClient = apiClient;
-            this.requestCreator = requestCreator;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
         }
@@ -31,12 +26,11 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+            var viewModel = new ReusedOffSiteViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
-                AatfId = aatfId,
-                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name
+                AatfId = aatfId
             };
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
@@ -46,21 +40,26 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ObligatedViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ReusedOffSiteViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                using (var client = apiClient())
+                if (viewModel.SelectedValue == "Yes")
                 {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
-
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    return RedirectToAction("Index", "ReusedOffSite", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
+                    return RedirectToAction("Index", "ReusedOffSiteCreateSite",
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "AatfTaskList",
+                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
             }
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
+            else
+            {
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+                return View(viewModel);
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
