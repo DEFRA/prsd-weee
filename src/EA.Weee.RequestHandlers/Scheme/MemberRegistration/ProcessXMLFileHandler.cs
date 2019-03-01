@@ -63,7 +63,6 @@
 
             decimal? totalChargesCalculated = 0;
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            //var complianceYear = await context.RegisteredProducers.FirstOrDefaultAsync(c => c.Scheme.Id == scheme.Id);
 
             var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
