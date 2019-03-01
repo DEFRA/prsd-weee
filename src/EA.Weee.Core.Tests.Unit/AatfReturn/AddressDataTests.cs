@@ -21,5 +21,21 @@
 
             hasAttribute.Should().Be(true);
         }
+
+        [Theory]
+        [InlineData("Name")]
+        [InlineData("Address1")]
+        [InlineData("Address2")]
+        [InlineData("TownOrCity")]
+        [InlineData("CountyOrRegion")]
+        [InlineData("Postcode")]
+        public void AddressData_VariablesShouldHaveMaxLengthAttribute(string variable)
+        {
+            var t = typeof(AddressData);
+            var pi = t.GetProperty(variable);
+            var hasAttribute = Attribute.IsDefined(pi, typeof(StringLengthAttribute));
+
+            hasAttribute.Should().Be(true);
+        }
     }
 }

@@ -98,15 +98,5 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
         }
-
-        [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
-        {
-            controller.ModelState.AddModelError("error", "error");
-
-            await controller.Index(A.Dummy<ReusedOffSiteCreateSiteViewModel>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddObligatedReused>._)).MustNotHaveHappened();
-        }
     }
 }
