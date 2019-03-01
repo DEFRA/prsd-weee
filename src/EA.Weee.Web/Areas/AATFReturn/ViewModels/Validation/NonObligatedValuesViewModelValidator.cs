@@ -31,15 +31,16 @@
 
                         if (o.Tonnage != null)
                         {
-                            value = decimal.Parse(o.Tonnage);
-                        }
+                            decimal.TryParse(o.Tonnage, out value);
 
-                        if (value > returnTonnage)
-                        {
-                            context.AddFailure(new ValidationFailure($"o.Tonnage",
-                                $"Category {o.CategoryId} tonnage must be less or equal to {returnTonnage}"));
+                            if (value > returnTonnage)
+                            {
+                                var categoryFocus = o.CategoryId - 1;
+                                context.AddFailure(new ValidationFailure($"CategoryValues_{categoryFocus}__Tonnage",
+                                    $"Category {o.CategoryId} tonnage must be less than or equal to {returnTonnage}"));
+                            }
                         }
-                    } 
+                    }
                     else if (instance != null && !instance.Dcf)
                     {
                         var returnTonnage = returnData.NonObligatedData.Where(r => r.CategoryId == o.CategoryId && r.Dcf == true).Select(r => r.Tonnage).FirstOrDefault();
@@ -47,13 +48,14 @@
 
                         if (o.Tonnage != null)
                         {
-                            value = decimal.Parse(o.Tonnage);
-                        }
+                            decimal.TryParse(o.Tonnage, out value);
 
-                        if (value < returnTonnage)
-                        {
-                            context.AddFailure(new ValidationFailure($"o.Tonnage",
-                                $"Category {o.CategoryId} tonnage must be more than or equal to {returnTonnage}"));
+                            if (value < returnTonnage)
+                            {
+                                var categoryFocus = o.CategoryId - 1;
+                                context.AddFailure(new ValidationFailure($"CategoryValues_{categoryFocus}__Tonnage",
+                                    $"Category {o.CategoryId} tonnage must be more than or equal to {returnTonnage}"));
+                            }
                         }
                     }
                 });
