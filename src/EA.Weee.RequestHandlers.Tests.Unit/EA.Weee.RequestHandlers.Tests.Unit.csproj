@@ -162,6 +162,7 @@
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlGenerateProducerDataTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Shared\GetApiDateHandlerTests.cs" />
