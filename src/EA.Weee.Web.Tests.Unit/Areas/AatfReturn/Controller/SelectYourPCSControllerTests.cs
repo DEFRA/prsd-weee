@@ -39,7 +39,7 @@
         [Fact]
         public void CheckCheckYourReturnControllerInheritsExternalSiteController()
         {
-            typeof(SelectYourPcsController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(SelectYourPcsController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]

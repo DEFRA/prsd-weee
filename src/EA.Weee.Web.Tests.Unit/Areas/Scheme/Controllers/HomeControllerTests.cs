@@ -1049,7 +1049,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("SelectYourPCS", routeValues["controller"]);
+            Assert.Equal("SelectYourPcs", routeValues["controller"]);
         }
     }
 }

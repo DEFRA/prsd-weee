@@ -13,7 +13,7 @@
     using ViewModels;
     using Web.Controllers.Base;
 
-    public class SubmittedReturnController : ExternalSiteController
+    public class SubmittedReturnController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
