@@ -33,7 +33,7 @@
         [Fact]
         public void CheckObligatedReusedControllerInheritsExternalSiteController()
         {
-            typeof(ObligatedReusedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ObligatedReusedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]

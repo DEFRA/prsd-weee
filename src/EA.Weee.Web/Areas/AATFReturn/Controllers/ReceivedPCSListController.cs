@@ -14,7 +14,7 @@
     using Services.Caching;
     using Web.Controllers.Base;
 
-    public class ReceivedPcsListController : ExternalSiteController
+    public class ReceivedPcsListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;

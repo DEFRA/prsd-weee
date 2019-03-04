@@ -17,7 +17,7 @@
     using ViewModels.Validation;
     using Web.Controllers.Base;
 
-    public class NonObligatedController : ExternalSiteController
+    public class NonObligatedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly INonObligatedWeeRequestCreator requestCreator;

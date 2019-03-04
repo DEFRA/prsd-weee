@@ -284,12 +284,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPCSListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\SelectYourPCSController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SelectYourPcsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
@@ -1183,6 +1184,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\AatfReturn\Views\AatfReturnBase\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
   </ItemGroup>
   <PropertyGroup>

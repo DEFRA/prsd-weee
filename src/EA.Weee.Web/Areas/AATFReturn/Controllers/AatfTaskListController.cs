@@ -14,7 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class AatfTaskListController : ExternalSiteController
+    public class AatfTaskListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;

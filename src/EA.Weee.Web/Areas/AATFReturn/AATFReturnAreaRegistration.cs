@@ -38,19 +38,19 @@
 
             context.MapLowercaseDashedRoute(
                 name: "aatf-received",
-                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/received/{controller}/{action}",
+                url: "AatfReturn/received/{organisationId}/{returnId}/{aatfId}/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ReceivedPcsList" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "aatf-received-scheme",
-                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/{schemeId}/received/{controller}/{action}",
+                url: "AatfReturn/received-scheme/{organisationId}/{returnId}/{aatfId}/{schemeId}/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ObligatedReceived" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "aatf-reused",
-                url: "AatfReturn/{organisationId}/{returnId}/{aatfId}/reused/{controller}/{action}",
+                url: "AatfReturn/reused/{organisationId}/{returnId}/{aatfId}/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ObligatedReused" },
                 namespaces: new[] { typeof(ObligatedReusedController).Namespace });
         }
