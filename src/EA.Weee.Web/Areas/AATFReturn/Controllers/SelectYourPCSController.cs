@@ -13,7 +13,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class SelectYourPcsController : ExternalSiteController
+    public class SelectYourPcsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;

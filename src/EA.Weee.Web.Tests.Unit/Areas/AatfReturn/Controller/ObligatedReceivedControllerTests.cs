@@ -42,7 +42,7 @@
         [Fact]
         public void CheckObligatedReceivedControllerInheritsExternalSiteController()
         {
-            typeof(ObligatedReceivedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ObligatedReceivedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]

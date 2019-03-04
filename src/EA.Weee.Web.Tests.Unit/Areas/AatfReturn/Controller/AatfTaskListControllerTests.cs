@@ -34,7 +34,7 @@
         [Fact]
         public void CheckAatfTaskListControllerInheritsExternalSiteController()
         {
-            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
         
         [Fact]

@@ -13,7 +13,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class ObligatedReusedController : ExternalSiteController
+    public class ObligatedReusedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IObligatedReusedWeeeRequestCreator requestCreator;
