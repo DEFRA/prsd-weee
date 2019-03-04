@@ -6,12 +6,14 @@
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
@@ -24,7 +26,8 @@
         private readonly IWeeeAuthorization authorisation;
         private readonly IAddAatfSiteDataAccess addAatfSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly ObligatedReusedDataAccess obligatedReusedDataAccess; 
+        private readonly IObligatedReusedDataAccess obligatedReusedDataAccess; 
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess; 
         private readonly WeeeContext weeeContext;
         private readonly AddAatfSiteRequestHandler handler;
 
@@ -33,10 +36,11 @@
             authorisation = A.Fake<IWeeeAuthorization>();
             addAatfSiteDataAccess = A.Fake<IAddAatfSiteDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            obligatedReusedDataAccess = A.Fake<ObligatedReusedDataAccess>();
+            obligatedReusedDataAccess = A.Fake<IObligatedReusedDataAccess>();
+            organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
 
-            handler = new AddAatfSiteRequestHandler(weeeContext, authorisation, addAatfSiteDataAccess, genericDataAccess);
+            handler = new AddAatfSiteRequestHandler(weeeContext, authorisation, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -44,7 +48,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddAatfSiteRequestHandler(weeeContext, authorization, addAatfSiteDataAccess, genericDataAccess);
+            var handler = new AddAatfSiteRequestHandler(weeeContext, authorization, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddAatfSite>());
 
@@ -65,7 +69,7 @@
                 "TownOrCity",
                 A.Dummy<string>(),
                 A.Dummy<string>(),
-                A.Dummy<Guid>());
+                A.Dummy<Country>());
 
             var weeeReused = new WeeeReused(aatf.Id, aatfReturn.Id);
 

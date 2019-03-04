@@ -20,6 +20,8 @@
 
         public virtual Guid CountryId { get; private set; }
 
+        public virtual Country Country { get; private set; }
+
         protected AatfAddress()
         {
         }
@@ -37,6 +39,21 @@
             CountyOrRegion = countyOrRegion;
             Postcode = postcode;
             CountryId = countryId;
+        }
+
+        public AatfAddress(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Country country)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => name, name);
+            Guard.ArgumentNotNullOrEmpty(() => address1, address1);
+            Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
+
+            Name = name;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
+            Postcode = postcode;
+            Country = country;
         }
     }
 }

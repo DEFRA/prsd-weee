@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Core.DataReturns;
@@ -10,20 +11,13 @@
     using RequestHandlers.AatfReturn.ObligatedReused;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
+    using Country = Domain.Country;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
     using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
     using WeeeReusedSite = Domain.AatfReturn.WeeeReusedSite;
 
     public class AddAatfSiteIntegration
     {
-        private readonly AatfAddress aatfAddress;
-        private readonly Guid countryId;
-
-        public AddAatfSiteIntegration()
-        {
-            countryId = Guid.NewGuid();
-            aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countryId);
-        }
 
         [Fact]
         public async Task CanCreateAatfAddressEntry()
@@ -31,9 +25,14 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
+
+                var country = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
+
                 var dataAccess = new AddAatfSiteDataAccess(context);
 
-                var returnData = await CreateWeeeReusedSite(context, dataAccess);
+                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress);
 
                 var testWeeeReusedSite = context.WeeeReusedSite
                                             .Where(t => t.WeeeReused.ReturnId == returnData.Item1
@@ -52,12 +51,12 @@
                 testAddress.CountyOrRegion.Should().Be("County");
                 testAddress.Postcode.Should().Be("PO12ST34");
                 testAddress.CountryId.Should().NotBeEmpty();
-                testAddress.CountryId.Should().Be(countryId);
+                testAddress.CountryId.Should().Be(country.Id);
             }
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeReusedSite(WeeeContext context,
-            AddAatfSiteDataAccess dataAccess)
+            AddAatfSiteDataAccess dataAccess, AatfAddress aatfAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
