@@ -76,7 +76,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be numerical");
         }
 
         [Theory]
@@ -88,7 +88,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 0 or greater");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be 0 or greater");
         }
 
         [Fact]
@@ -104,7 +104,7 @@
         {
             var result = Validate(-1);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 0 or greater");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be 0 or greater");
         }
 
         [Theory]
@@ -126,7 +126,7 @@
             var decimalValue = decimal.Parse(value);
             var result = Validate(decimalValue);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be 3 decimal places or less");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be 3 decimal places or less");
         }
 
         [Theory]
@@ -177,7 +177,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be a numerical value with 14 digits or less");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be numerical with 14 digits or less");
         }
 
         [Theory]
@@ -194,7 +194,7 @@
         {
             ValidationWithTypeMessage(-1);
 
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 0 or greater");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} B2C must be 0 or greater");
         }
 
         [Fact]
@@ -202,7 +202,7 @@
         {
             ValidationWithTypeMessage("A");
 
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} B2C must be numerical");
         }
 
         [Fact]
@@ -210,7 +210,7 @@
         {
             ValidationWithTypeMessage("000000000000.000");
 
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be a numerical value with 14 digits or less");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} B2C must be numerical with 14 digits or less");
         }
 
         [Fact]
@@ -218,7 +218,7 @@
         {
             ValidationWithTypeMessage(1.1111M);
 
-            ValidateErrorMessage($"Category {(int)Category} B2C tonnage value must be 3 decimal places or less");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} B2C must be 3 decimal places or less");
         }
 
         [Theory]
@@ -228,7 +228,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"Category {(int)Category} tonnage value must be entered correctly.  E.g. 1,000 or 100");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be entered correctly.  E.g. 1,000 or 100");
         }
 
         private void ValidationWithTypeMessage(object value)
