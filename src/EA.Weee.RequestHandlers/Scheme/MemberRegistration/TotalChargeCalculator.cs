@@ -51,8 +51,7 @@
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (!checkNotSubmittedNotHasAnnualCharge && checkIsSubmittedAndHasAnnualCharge || !checkNotSubmittedNotHasAnnualCharge &&
-                !checkIsSubmittedAndHasAnnualCharge || checkNotSubmittedNotHasAnnualCharge && !checkIsSubmittedAndHasAnnualCharge)
+            if (!checkNotSubmittedNotHasAnnualCharge && checkIsSubmittedAndHasAnnualCharge || checkNotSubmittedNotHasAnnualCharge && !checkIsSubmittedAndHasAnnualCharge)
             {
                 hasAnnualCharge = true;
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
