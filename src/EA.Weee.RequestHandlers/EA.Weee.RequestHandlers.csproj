@@ -87,6 +87,9 @@
     <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\ObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteRequestHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\IAddAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="AatfReturn\Specification\OrganisationByOrganisationIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\OperatorByOrganisationIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\Specification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
