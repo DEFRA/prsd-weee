@@ -16,10 +16,16 @@
     font-weight: bold;
 }
 
-.validation-summary{
-    background-color:#FEF7F7;
+.validation-summary {
+    background-color: #FEF7F7;
 
-    ul li{
+    ul li {
         margin-bottom: 7px;
+    }
+}
+
+#weee-data-entry-table {
+    .govuk-form-group--error {
+        float: right;
     }
 }
