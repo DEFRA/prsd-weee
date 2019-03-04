@@ -15,13 +15,12 @@
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
-        private readonly WeeeContext context;
+        //private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private const int EAComplianceYearCheck = 2018;
-        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, WeeeContext context, IWeeeAuthorization authorization, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
+        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, IWeeeAuthorization authorization, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
-            this.context = context;
             this.authorization = authorization;
             this.totalChargeCalculatorDataAccess = totalChargeCalculatorDataAccess;
         }
@@ -32,22 +31,21 @@
 
             decimal annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
 
-            var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, false, false, deserializedcomplianceYear));
+            //var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, false, false, deserializedcomplianceYear));
 
-            bool checkNotSubmittedNotHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForNotSubmitted(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
+            //bool checkNotSubmittedNotHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForNotSubmitted(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
 
-            var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, true, false, deserializedcomplianceYear));
+            //var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, true, false, deserializedcomplianceYear));
 
-            bool checkIsSubmittedAndHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForIsSubmittedHasAnnualChargeFlagSet(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
+            hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
 
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (!checkNotSubmittedNotHasAnnualCharge || checkIsSubmittedAndHasAnnualCharge)
+            if (!hasAnnualCharge)
             {
-                hasAnnualCharge = true;
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
             }
 

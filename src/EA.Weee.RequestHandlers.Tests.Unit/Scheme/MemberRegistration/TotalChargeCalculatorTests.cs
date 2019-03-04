@@ -12,81 +12,84 @@
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using Domain;
+    using RequestHandlers.Security;
     using Xml.Converter;
     using Xunit;
 
     public class TotalChargeCalculatorTests
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        private readonly IXmlConverter xmlConverter;
-        private readonly IProducerChargeCalculator producerChargerCalculator;
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
+        private readonly TotalChargeCalculator totalChargeCalculator;
+        private readonly IWeeeAuthorization authorization;
+        private bool hasAnnualCharge;
+        private decimal? totalCharge;
+        private readonly ProcessXmlFile file;
 
         public TotalChargeCalculatorTests()
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
-            producerChargerCalculator = A.Fake<IProducerChargeCalculator>();
-            xmlConverter = A.Fake<IXmlConverter>();
             totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
+            authorization = A.Fake<IWeeeAuthorization>();
+            file = ProcessTestXmlFile();
+
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, authorization, totalChargeCalculatorDataAccess);
         }
 
         [Fact]
-        public void ProcessXmlfile_ParsesXmlFileCalculateXmlChargeBand()
+        public void TotalCalculatedCharges_GivenXMLFile_CalculateXMLChargeBand()
         {
-            var request = ProcessTestXmlFile();
+            totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
 
-            var producerCharges = xmlChargeBandCalculator.Calculate(request);
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public void ProcessXmlfile_ParsesXmlFileCalculateXmlChargeBandWithBusinessErrors()
+        public void TotalCalculatedCharges_GivenSchemeHasAnnualChargeForComplianceYear_TotalShouldNotContainAnnualCharge()
         {
-            var request = ProcessTestXmlFile();
+            var scheme = Scheme();
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2019)).Returns(true);
+            hasAnnualCharge = false;
+            totalCharge = 0;
 
-            var errors = new List<MemberUploadError>
-            {
-                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description"),
-            };
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
 
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(request)).MustNotHaveHappened();
+            Assert.Equal(totalCharge, 0);
+            Assert.Equal(hasAnnualCharge, true);
         }
 
         [Fact]
-        public void ProcessXmlfile_ParsesXmlFile_SchemaErrors_DoesntTryToCalculateChargesOrConvertXml()
+        public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYear_TotalShouldContainAnnualCharge()
         {
-            var request = ProcessTestXmlFile();
+            var scheme = Scheme();
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2019)).Returns(false);
+            hasAnnualCharge = true;
+            totalCharge = 0;
 
-            var errors = new List<MemberUploadError>
-            {
-                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description"),
-            };
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
 
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
-
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(request)).MustNotHaveHappened();
-            A.CallTo(() => xmlConverter.Convert(request.Data)).MustNotHaveHappened();
+            Assert.Equal(totalCharge, 100);
+            Assert.Equal(hasAnnualCharge, false);
         }
 
         [Fact]
-        public void CheckForNotSubmittedForAnnualChargeCalculation()
+        public void TotalCalculatedCharges_GivenProducerCharges_TotalShouldBeCalculated()
         {
-            var request = ProcessTestXmlFile();
-            var complianceYear = 2019;
-
-            var getMemberUploads = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(request, false, false, complianceYear));
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckForNotSubmitted(request, A<Scheme>.Ignored, complianceYear, getMemberUploads)).Returns(true);
         }
 
         [Fact]
-        public void CheckIsSubmittedAndHasAnnualChargeFlagSet()
+        public void TotalCalculatedCharges_GivenProducerCharges_ProducerChargesShouldBeReturned()
         {
-            var request = ProcessTestXmlFile();
-            var complianceYear = 2019;
+        }
 
-            var getMemberUploads = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(request, true, false, complianceYear));
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckForIsSubmittedHasAnnualChargeFlagSet(request, A<Scheme>.Ignored, complianceYear, getMemberUploads)).Returns(false);
+        private Scheme Scheme()
+        {
+            var scheme = A.Fake<Scheme>();
+            var competantAuthority = A.Fake<UKCompetentAuthority>();
+            A.CallTo(() => competantAuthority.AnnualChargeAmount).Returns(100);
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competantAuthority);
+            return scheme;
         }
 
         private static ProcessXmlFile ProcessTestXmlFile()

@@ -31,12 +31,14 @@
                             memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
         }
 
-        public bool CheckForIsSubmittedHasAnnualChargeFlagSet(ProcessXmlFile message, Scheme scheme, int deserializedcomplianceYear, List<MemberUpload> memberUploadsCheckAgainstNotSubmitted)
+        public bool CheckSchemeHasAnnualCharge(Scheme scheme, int deserializedcomplianceYear)
         {
-            return scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
-                deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => m.HasAnnualCharge) &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
+            //return scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
+            //    deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
+            //    memberUploadsCheckAgainstNotSubmitted.Any(m => m.HasAnnualCharge) &&
+            //    memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
+
+            return context.MemberUploads.Any(m => m.HasAnnualCharge && m.Scheme.OrganisationId == scheme.OrganisationId && m.ComplianceYear == deserializedcomplianceYear);
         }
 
         public List<MemberUpload> GetMemberUploads(ProcessXmlFile message, bool hasAnnualCharge, bool isSubmitted, int deserializedcomplianceYear)
