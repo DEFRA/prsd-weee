@@ -8,5 +8,7 @@
         public IList<NonObligatedData> NonObligatedDataValues { get; set; }
 
         public IList<NonObligatedCategoryValue> NonObligatedCategoryValues { get; set; }
+
+        public bool Dcf { get; set; }
     }
 }

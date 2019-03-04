@@ -15,10 +15,10 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly FetchNonObligatedWeeeForReturnDataAccess fetchDataAccess;
-        private readonly NonObligatedDataAccess dataAccess;
+        private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchDataAccess;
+        private readonly INonObligatedDataAccess dataAccess;
 
-        public EditNonObligatedHandler(IWeeeAuthorization authorization, NonObligatedDataAccess dataAccess, FetchNonObligatedWeeeForReturnDataAccess fetchDataAccess, IGenericDataAccess genericDataAccess)
+        public EditNonObligatedHandler(IWeeeAuthorization authorization, INonObligatedDataAccess dataAccess, IFetchNonObligatedWeeeForReturnDataAccess fetchDataAccess, IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;

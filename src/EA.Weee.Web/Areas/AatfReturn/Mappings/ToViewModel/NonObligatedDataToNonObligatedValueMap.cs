@@ -22,12 +22,14 @@
             foreach (var weeeNonObligatedData in source.NonObligatedDataValues)
             {
                 var category = nonObligatedList.FirstOrDefault(c => c.CategoryId == weeeNonObligatedData.CategoryId);
-
-                if (category != null)
+                if(source.Dcf == weeeNonObligatedData.Dcf)
                 {
-                    category.Tonnage = weeeNonObligatedData.Tonnage.ToString();
-                    category.Dcf = weeeNonObligatedData.Dcf;
-                    category.Id = weeeNonObligatedData.Id;
+                    if (category != null)
+                    {
+                        category.Tonnage = weeeNonObligatedData.Tonnage.ToString();
+                        category.Dcf = weeeNonObligatedData.Dcf;
+                        category.Id = weeeNonObligatedData.Id;
+                    }
                 }
             }
 

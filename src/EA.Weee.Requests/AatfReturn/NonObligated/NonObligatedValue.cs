@@ -12,11 +12,12 @@
 
         public bool Dcf { get; private set; }
 
-        public NonObligatedValue(int categoryId, decimal? tonnage, bool dcf)
+        public NonObligatedValue(int categoryId, decimal? tonnage, bool dcf, Guid id)
         {
             CategoryId = categoryId;
             Tonnage = tonnage;
             Dcf = dcf;
+            Id = id;
         }
     }
 }

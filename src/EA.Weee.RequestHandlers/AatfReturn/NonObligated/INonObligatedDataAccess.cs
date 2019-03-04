@@ -8,5 +8,7 @@
     internal interface INonObligatedDataAccess
     {
         Task Submit(IEnumerable<NonObligatedWeee> nonObligated);
+
+        Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage);
     }
 }

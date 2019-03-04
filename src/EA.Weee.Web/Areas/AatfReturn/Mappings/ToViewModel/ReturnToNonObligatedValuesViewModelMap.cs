@@ -32,7 +32,7 @@
                 Dcf = source.Dcf
             };
 
-            viewModel.CategoryValues = nonObligatedMap.Map(new NonObligatedDataToNonObligatedValueMapTransfer() { NonObligatedDataValues = source.ReturnData.NonObligatedData.ToList(), NonObligatedCategoryValues = viewModel.CategoryValues });
+            viewModel.CategoryValues = nonObligatedMap.Map(new NonObligatedDataToNonObligatedValueMapTransfer() { NonObligatedDataValues = source.ReturnData.NonObligatedData.ToList(), NonObligatedCategoryValues = viewModel.CategoryValues, Dcf = source.Dcf });
 
             return viewModel;
         }

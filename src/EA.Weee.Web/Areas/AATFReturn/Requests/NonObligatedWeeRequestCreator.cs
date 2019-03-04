@@ -24,7 +24,8 @@
                     new NonObligatedValue(
                         nonObligatedCategoryValue.CategoryId,
                         value,
-                        false));
+                        false,
+                        nonObligatedCategoryValue.Id));
             }
 
             if (viewModel.Edit)

@@ -46,7 +46,7 @@
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf));
+                    categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf, Guid.NewGuid()));
                 }
 
                 var nonObligatedRequest = new AddNonObligated
