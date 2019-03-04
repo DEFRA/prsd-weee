@@ -30,8 +30,6 @@
 
             decimal annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
 
-            CheckPreviousAnnualChargeAndReset(message, annualcharge, deserializedcomplianceYear);
-
             var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(GetMemberUploads(message, false, false, deserializedcomplianceYear));
 
             var checkNotSubmittedNotHasAnnualCharge = scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
@@ -39,46 +37,25 @@
                 memberUploadsCheckAgainstNotSubmitted.Any(m => !m.HasAnnualCharge) &&
                 memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted); 
                 
-            var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(GetMemberUploads(message, true, true, deserializedcomplianceYear));
+            var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(GetMemberUploads(message, true, false, deserializedcomplianceYear));
 
             var checkIsSubmittedAndHasAnnualCharge = scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
                 deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
                 memberUploadsCheckAgainstNotSubmitted.Any(m => m.HasAnnualCharge) &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => m.IsSubmitted);
+                memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
 
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             totalCharges = producerCharges
                 .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (checkNotSubmittedNotHasAnnualCharge)
+            if (!checkNotSubmittedNotHasAnnualCharge || checkIsSubmittedAndHasAnnualCharge)
             {
-                if (!checkIsSubmittedAndHasAnnualCharge && !checkNotSubmittedNotHasAnnualCharge || !checkNotSubmittedNotHasAnnualCharge && checkIsSubmittedAndHasAnnualCharge || checkNotSubmittedNotHasAnnualCharge && !checkIsSubmittedAndHasAnnualCharge)
-                {
-                    hasAnnualCharge = true;
-                    totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
-                }
+                hasAnnualCharge = true;
+                totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
             }
 
             return producerCharges;
-        }
-
-        private void CheckPreviousAnnualChargeAndReset(ProcessXmlFile message, decimal annualCharge, int deserializedcomplianceYear)
-        {
-            var resetMemberUploads = new List<MemberUpload>(GetMemberUploads(message, true, false, deserializedcomplianceYear));
-
-            if (resetMemberUploads.Count > 0)
-            {
-                foreach (var item in resetMemberUploads)
-                {   
-                    if (!item.IsSubmitted)
-                    { 
-                        item.HasAnnualCharge = false;
-                        item.DeductFromTotalCharges(annualCharge);
-                    }
-                }
-                context.SaveChanges();
-            }
         }
 
         private List<MemberUpload> GetMemberUploads(ProcessXmlFile message, bool hasAnnualCharge, bool isSubmitted, int deserializedcomplianceYear)
