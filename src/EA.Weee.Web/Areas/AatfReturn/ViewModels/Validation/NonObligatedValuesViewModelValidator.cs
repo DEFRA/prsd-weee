@@ -36,7 +36,7 @@
                             if (value > returnTonnage)
                             {
                                 var categoryFocus = o.CategoryId - 1;
-                                context.AddFailure(new ValidationFailure($"CategoryValues_{categoryFocus}__Tonnage",
+                                context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
                                     $"Category {o.CategoryId} tonnage must be less than or equal to {returnTonnage}"));
                             }
                         }
@@ -53,7 +53,7 @@
                             if (value < returnTonnage)
                             {
                                 var categoryFocus = o.CategoryId - 1;
-                                context.AddFailure(new ValidationFailure($"CategoryValues_{categoryFocus}__Tonnage",
+                                context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
                                     $"Category {o.CategoryId} tonnage must be more than or equal to {returnTonnage}"));
                             }
                         }
