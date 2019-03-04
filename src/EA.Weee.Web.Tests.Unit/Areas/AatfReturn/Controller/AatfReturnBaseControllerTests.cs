@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using System.Linq;
+    using System.Reflection;
     using System.Web.Mvc;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Controllers;
@@ -17,9 +19,11 @@
         [Fact]
         public void AatfReturnBaseController_ShouldHaveNoCache()
         {
-            var attributes = typeof(AatfReturnBaseController).GetCustomAttributes(typeof(OutputCacheAttribute), false);
+            var attribute = typeof(AatfReturnBaseController).GetCustomAttribute<OutputCacheAttribute>();
 
-            attributes
+            attribute.NoStore.Should().BeTrue();
+            attribute.Duration.Should().Be(0);
+            attribute.VaryByParam.Should().Be("None");
         }
     }
 }

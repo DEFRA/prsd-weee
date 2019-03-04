@@ -40,7 +40,7 @@
         [Fact]
         public void CheckReceivedPcsListControllerInheritsExternalSiteController()
         {
-            typeof(ReceivedPcsListController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ReceivedPcsListController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]
