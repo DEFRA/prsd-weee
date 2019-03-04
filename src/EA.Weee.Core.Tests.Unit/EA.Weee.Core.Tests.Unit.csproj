@@ -102,6 +102,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AatfReturn\AddressDataTests.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValueTests.cs" />
     <Compile Include="AatfReturn\NonObligatedCategoryValueTests.cs" />
     <Compile Include="AatfReturn\NonObligatedDataTests.cs" />

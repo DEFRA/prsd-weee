@@ -3,15 +3,14 @@
     using System;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using Scheme;
 
     public class WeeeReused : Entity
     {
-        public Guid AatfId { get; private set; }
+        public virtual Guid AatfId { get; private set; }
 
         public virtual Aatf Aatf { get; private set; }
         
-        public Guid ReturnId { get; private set; }
+        public virtual Guid ReturnId { get; private set; }
 
         public WeeeReused(Guid aatfId, Guid returnId)
         {
