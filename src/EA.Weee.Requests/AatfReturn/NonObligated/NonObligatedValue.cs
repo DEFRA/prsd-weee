@@ -1,7 +1,11 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
+    using System;
+
     public class NonObligatedValue
     {
+        public Guid Id { get; set; }
+
         public int CategoryId { get; private set; }
 
         public decimal? Tonnage { get; private set; }

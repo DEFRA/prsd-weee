@@ -27,9 +27,7 @@
         public async Task<bool> HandleAsync(EditNonObligated message)
         {
             authorization.EnsureCanAccessExternalArea();
-
-            var values = fetchDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId);
-
+           
             return true;
         }
     }
