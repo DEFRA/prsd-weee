@@ -6,9 +6,9 @@
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.NonObligated;
 
-    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, AddNonObligated>, INonObligatedWeeRequestCreator
+    public class NonObligatedWeeRequestCreator : RequestCreator<NonObligatedValuesViewModel, NonObligated>, INonObligatedWeeRequestCreator
     {
-        public override AddNonObligated ViewModelToRequest(NonObligatedValuesViewModel viewModel)
+        public override NonObligated ViewModelToRequest(NonObligatedValuesViewModel viewModel)
         {
             var nonObligatedRequestValues = new List<NonObligatedValue>();
 

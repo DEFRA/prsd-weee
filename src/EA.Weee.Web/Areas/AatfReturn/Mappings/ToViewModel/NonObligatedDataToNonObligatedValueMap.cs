@@ -27,6 +27,7 @@
                 {
                     category.Tonnage = weeeNonObligatedData.Tonnage.ToString();
                     category.Dcf = weeeNonObligatedData.Dcf;
+                    category.Id = weeeNonObligatedData.Id;
                 }
             }
 

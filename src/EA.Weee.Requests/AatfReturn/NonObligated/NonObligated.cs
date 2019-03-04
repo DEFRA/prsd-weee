@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
+    using EA.Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Mediator;
 
-    public class EditNonObligated : NonObligated
+    public abstract class NonObligated : IRequest<bool>
     {
+        public IList<NonObligatedValue> CategoryValues { get; set; }
     }
 }

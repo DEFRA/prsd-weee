@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
@@ -117,7 +118,7 @@
             {
                 Dcf = dcf
             };
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddNonObligated;
 
             request.Dcf.Should().Be(model.Dcf);
         }
@@ -132,7 +133,7 @@
                 ReturnId = Guid.NewGuid()
             };
 
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddNonObligated;
 
             request.OrganisationId.Should().Be(model.OrganisationId);
             request.ReturnId.Should().Be(model.ReturnId);

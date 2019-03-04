@@ -27,7 +27,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -61,7 +61,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -89,7 +89,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -124,7 +124,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();

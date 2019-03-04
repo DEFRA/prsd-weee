@@ -27,7 +27,7 @@
             return context.SaveChangesAsync();
         }
 
-        public Task UpdateAmount(NonObligatedAmount amount, decimal? tonnage)
+        public Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage)
         {
             amount.UpdateTonnage(tonnage);
 

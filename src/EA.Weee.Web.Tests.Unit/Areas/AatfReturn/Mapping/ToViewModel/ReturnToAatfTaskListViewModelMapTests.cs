@@ -51,8 +51,8 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false));
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true, Guid.NewGuid()));
 
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
@@ -120,8 +120,8 @@
         [Fact]
         public void Map_GivenNullNonObligatedTonnage_ReturnsNullTonnageDisplay()
         {
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, null, false));
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, null, true));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, null, false, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, null, true, Guid.NewGuid()));
 
             var returnData = new ReturnData()
             {

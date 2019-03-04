@@ -16,6 +16,8 @@
 
         public bool Dcf { get; set; }
 
+        public Guid Id { get; set; }
+
         public ReturnToNonObligatedValuesViewModelMapTransfer()
         {
             ReturnData = new ReturnData();
