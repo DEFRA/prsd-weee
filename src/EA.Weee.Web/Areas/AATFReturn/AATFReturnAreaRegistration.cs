@@ -44,7 +44,7 @@
 
             context.MapLowercaseDashedRoute(
                 name: "aatf-received-scheme",
-                url: "AatfReturn/received/{organisationId}/{returnId}/{aatfId}/{schemeId}/{controller}/{action}",
+                url: "AatfReturn/received-scheme/{organisationId}/{returnId}/{aatfId}/{schemeId}/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ObligatedReceived" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
