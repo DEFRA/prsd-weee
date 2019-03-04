@@ -6,7 +6,7 @@
     using Core.Configuration;
     using DataAccess;
     using Domain.Admin;
-    using Domain.User;
+    using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Weee.Security;
@@ -48,7 +48,7 @@
                 throw new InvalidOperationException(string.Format("Could not find the role name with: {0}", Roles.InternalUser));
             }
 
-            CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, UserStatus.Pending, standardRole);
+            CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, Domain.User.UserStatus.Pending, standardRole);
             context.CompetentAuthorityUsers.Add(competentAuthorityUser);
 
             await context.SaveChangesAsync();
@@ -62,27 +62,27 @@
             switch (domain)
             {
                 case "environment-agency.gov.uk":
-                    authorityName = "EA";
+                    authorityName = UKCompetentAuthorityAbbreviationType.EA;
                     break;
 
                 case "cyfoethnaturiolcymru.gov.uk":
                 case "naturalresourceswales.gov.uk":
-                    authorityName = "NRW";
+                    authorityName = UKCompetentAuthorityAbbreviationType.NRW;
                     break;
 
                 case "sepa.org.uk":
-                    authorityName = "SEPA";
+                    authorityName = UKCompetentAuthorityAbbreviationType.SEPA;
                     break;
 
                 case "daera-ni.gov.uk":
-                    authorityName = "NIEA";
+                    authorityName = UKCompetentAuthorityAbbreviationType.NIEA;
                     break;
 
                 default:
                     {
                         if (testInternalUserEmailDomains.UserTestModeEnabled && IsDomainAllowedForTestUser(domain))
                         {
-                            authorityName = "EA";
+                            authorityName = UKCompetentAuthorityAbbreviationType.EA;
                             break;
                         }
 
