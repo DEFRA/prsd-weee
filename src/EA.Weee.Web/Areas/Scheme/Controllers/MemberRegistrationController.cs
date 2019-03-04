@@ -187,7 +187,8 @@
                          TotalCharges = memberUpload.TotalCharges,
                          ComplianceYear = memberUpload.ComplianceYear,
                          MemberUploadId = memberUploadId,
-                         PcsId = pcsId
+                         PcsId = pcsId,
+                         HasAnnualCharge = memberUpload.HasAnnualCharge
                      });
             }
         }

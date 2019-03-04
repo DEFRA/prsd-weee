@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     public interface ITotalChargeCalculator
     {
-        Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, bool hasExistingAnnualCharge, int? existingComplianceYear, 
-            ref bool hasAnnualCharge, ref decimal? totalCharges);
+        Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges);
     }
 }
