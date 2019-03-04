@@ -20,12 +20,14 @@
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargerCalculator;
+        private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
 
         public TotalChargeCalculatorTests()
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             producerChargerCalculator = A.Fake<IProducerChargeCalculator>();
             xmlConverter = A.Fake<IXmlConverter>();
+            totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
         }
 
         [Fact]
@@ -66,7 +68,27 @@
             A.CallTo(() => xmlChargeBandCalculator.Calculate(request)).MustNotHaveHappened();
             A.CallTo(() => xmlConverter.Convert(request.Data)).MustNotHaveHappened();
         }
-   
+
+        [Fact]
+        public void CheckForNotSubmittedForAnnualChargeCalculation()
+        {
+            var request = ProcessTestXmlFile();
+            var complianceYear = 2019;
+
+            var getMemberUploads = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(request, false, false, complianceYear));
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckForNotSubmitted(request, A<Scheme>.Ignored, complianceYear, getMemberUploads)).Returns(true);
+        }
+
+        [Fact]
+        public void CheckIsSubmittedAndHasAnnualChargeFlagSet()
+        {
+            var request = ProcessTestXmlFile();
+            var complianceYear = 2019;
+
+            var getMemberUploads = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(request, true, false, complianceYear));
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckForIsSubmittedHasAnnualChargeFlagSet(request, A<Scheme>.Ignored, complianceYear, getMemberUploads)).Returns(false);
+        }
+
         private static ProcessXmlFile ProcessTestXmlFile()
         {
             string absoluteFilePath = Path.Combine(

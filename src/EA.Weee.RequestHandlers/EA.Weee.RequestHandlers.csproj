@@ -163,6 +163,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\CheckForAnnualCharge.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ITotalChargeCalculator.cs" />
     <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
     <Compile Include="DataReturns\Upload\GetUploadInfoByDataReturnUploadIdHandler.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculator.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />

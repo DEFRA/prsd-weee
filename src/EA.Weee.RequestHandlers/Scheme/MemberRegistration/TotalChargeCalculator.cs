@@ -14,14 +14,16 @@
     public class TotalChargeCalculator : ITotalChargeCalculator
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
+        private ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private const int EAComplianceYearCheck = 2018;
-        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, WeeeContext context, IWeeeAuthorization authorization)
+        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, WeeeContext context, IWeeeAuthorization authorization, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.context = context;
             this.authorization = authorization;
+            this.totalChargeCalculatorDataAccess = totalChargeCalculatorDataAccess;
         }
 
         public Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int deserializedcomplianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
@@ -30,19 +32,13 @@
 
             decimal annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
 
-            var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(GetMemberUploads(message, false, false, deserializedcomplianceYear));
+            var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, false, false, deserializedcomplianceYear));
 
-            var checkNotSubmittedNotHasAnnualCharge = scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
-                deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => !m.HasAnnualCharge) &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted); 
-                
-            var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(GetMemberUploads(message, true, false, deserializedcomplianceYear));
+            bool checkNotSubmittedNotHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForNotSubmitted(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
 
-            var checkIsSubmittedAndHasAnnualCharge = scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
-                deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => m.HasAnnualCharge) &&
-                memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
+            var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, true, false, deserializedcomplianceYear));
+
+            bool checkIsSubmittedAndHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForIsSubmittedHasAnnualChargeFlagSet(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
 
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
@@ -57,17 +53,5 @@
 
             return producerCharges;
         }
-
-        private List<MemberUpload> GetMemberUploads(ProcessXmlFile message, bool hasAnnualCharge, bool isSubmitted, int deserializedcomplianceYear)
-        {
-            return context.MemberUploads
-                    .Where(c => c.OrganisationId == message.OrganisationId)
-                    .Where(c => c.ComplianceYear == deserializedcomplianceYear)
-                    .Where(c => c.ComplianceYear > EAComplianceYearCheck)
-                    .Where(c => c.Scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
-                    .Where(c => c.HasAnnualCharge == hasAnnualCharge)
-                    .Where(c => c.IsSubmitted == isSubmitted)
-                    .ToList();
-        }  
     }
 }
