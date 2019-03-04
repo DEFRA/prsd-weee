@@ -22,7 +22,7 @@
             foreach (var weeeNonObligatedData in source.NonObligatedDataValues)
             {
                 var category = nonObligatedList.FirstOrDefault(c => c.CategoryId == weeeNonObligatedData.CategoryId);
-                if(source.Dcf == weeeNonObligatedData.Dcf)
+                if (source.Dcf == weeeNonObligatedData.Dcf)
                 {
                     if (category != null)
                     {
