@@ -140,6 +140,5 @@
                 amount.Tonnage.Should().Be(i);
             }
         }
-
     }
 }
