@@ -16,6 +16,13 @@
         private readonly IGetAatfSiteDataAccess getAatfSiteDataAccess;
         private readonly IMap<AatfAddress, AddressData> mapper;
 
+        public GetAatfSiteRequestHandler(IWeeeAuthorization authorization, IGetAatfSiteDataAccess getAatfSiteDataAccess, IMap<AatfAddress, AddressData> mapper)
+        {
+            this.authorization = authorization;
+            this.getAatfSiteDataAccess = getAatfSiteDataAccess;
+            this.mapper = mapper;
+        }
+
         public async Task<List<AddressData>> HandleAsync(GetAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();

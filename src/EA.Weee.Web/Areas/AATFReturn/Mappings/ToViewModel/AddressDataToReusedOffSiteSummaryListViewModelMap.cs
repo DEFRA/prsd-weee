@@ -9,20 +9,24 @@
 
     public class AddressDataToReusedOffSiteSummaryListViewModelMap : IMap<List<AddressData>, ReusedOffSiteSummaryListViewModel>
     {
+        public ReusedOffSiteSummaryListViewModel ViewModel = new ReusedOffSiteSummaryListViewModel();
         public List<AddressDataSummary> AddressDataSummaries = new List<AddressDataSummary>();
 
         public ReusedOffSiteSummaryListViewModel Map(List<AddressData> source)
         {
             Guard.ArgumentNotNull(() => source, source);
-
+             
             foreach (var address in source)
             {
                 var addressDataSummary = new AddressDataSummary();
                 addressDataSummary.Name = address.Name;
                 addressDataSummary.Address = AddressConcatenate(address);
+                AddressDataSummaries.Add(addressDataSummary);
             }
 
-            return new ReusedOffSiteSummaryListViewModel(AddressDataSummaries);
+            ViewModel.Addresses = AddressDataSummaries;
+
+            return ViewModel;
         }
 
         private string AddressConcatenate(AddressData addressData)

@@ -11,6 +11,7 @@
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -76,14 +77,30 @@
         [Fact]
         public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
         {
-            var model = new ReusedOffSiteCreateSiteViewModel();
-            var returnId = new Guid();
-            var result = await controller.Index(model) as RedirectToRouteResult;
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var viewModel = new ReusedOffSiteCreateSiteViewModel();
+            viewModel.OrganisationId = organisationId;
+            viewModel.ReturnId = returnId;
+            viewModel.AatfId = aatfId;
+
+            httpContext.RouteData.Values.Add("organisationId", organisationId);
+            httpContext.RouteData.Values.Add("returnId", returnId);
+            httpContext.RouteData.Values.Add("aatfId", aatfId);
+
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
             result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
         }
 
         [Fact]

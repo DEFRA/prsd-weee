@@ -10,16 +10,16 @@
     <table class="govuk-table govuk-!-font-size-16" id="reuse-table-sites" style="width:50%; display:inline-table;">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Household (B2C) (t)</th>
-                <th class="govuk-table__header" scope="col">Non-household (B2B) (t)</th>
+                <th class="govuk-table__header" scope="col">B2C(t)</th>
+                <th class="govuk-table__header" scope="col">B2B(t)</th>
                 <th class="govuk-table__header" scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="govuk-table__cell">1111.000</td>
-                <td class="govuk-table__cell">0.000</td>
-                <td class="govuk-table__cell" style="color: gray;">Change</td>
+                <td class="govuk-table__cell">@Model.B2cTotal</td>
+                <td class="govuk-table__cell">@Model.B2bTotal</td>
+                <td class="govuk-table__cell"></td>
             </tr>
         </tbody>
     </table>
@@ -27,24 +27,24 @@
     <table class="govuk-table govuk-!-font-size-16" id="reuse-table-summary" style="margin-bottom: 0px;">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Site name</th>
-                <th class="govuk-table__header" scope="col">Address</th>
-                <th class="govuk-table__header" scope="col">Actions</th>
+                <th class="govuk-table__header" style="width:20%" scope="col">Site name</th>
+                <th class="govuk-table__header" style="width:60%" scope="col">Address</th>
+                <th class="govuk-table__header" style="width:20%" scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" scope="col"></td>
-                <td class="govuk-table__cell" scope="col"></td>
-                <td class="govuk-table__cell" scope="col">Remove</td>
-            </tr>
-
+            @foreach (var address in Model.Addresses)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" scope="col">@address.Name</td>
+                    <td class="govuk-table__cell" scope="col">@address.Address</td>
+                    <td class="govuk-table__cell" scope="col"></td>
+                </tr>
+            }
         </tbody>
     </table>
     <div class="govuk-!-padding-bottom-2"></div>
-    <a href="/version1-9/AATF-Returns/SC008_5-Which-site-is-this-WEEE-being-sent-to-for-reuse-as-a-whole-appliance" class="govuk-link--no-visited-state govuk-link">
-        Add another site
-    </a>
+    @Html.RouteLink("Add another site", "aatf-reused", new { organisationId = @Model.OrganisationId, returnId = @Model.ReturnId, aatfId = @Model.AatfId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
     <div class="govuk-!-padding-bottom-8"></div>
     <form action="/version1-9/AATF-Returns/reuse-treatment-save" method="post" class="form" style="display: block">
         <button type="submit" class="govuk-button" id="reuse-treatment-save">

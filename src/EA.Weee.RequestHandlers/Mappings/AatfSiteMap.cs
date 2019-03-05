@@ -12,6 +12,7 @@
             {
                 return new AddressData
                 {
+                    Name = source.Name,
                     Address1 = source.Address1,
                     Address2 = source.Address2,
                     TownOrCity = source.TownOrCity,
