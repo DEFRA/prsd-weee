@@ -32,7 +32,7 @@
                 var name = "Test Name" + Guid.NewGuid();
                 var tradingName = "Test Trading Name" + Guid.NewGuid();
                 const string crn = "ABC12345";
-                
+
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
 
                 context.Organisations.Add(organisation);
@@ -84,5 +84,62 @@
                 }
             }
         }
+
+        [Fact]
+        public async void UpdateAmounts_GivenAmountToUpdate_ContextShouldContainUpdatedAmounts()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new NonObligatedDataAccess(database.WeeeContext);
+
+                var companyName = "Test Name" + Guid.NewGuid();
+                var tradingName = "Test Trading Name" + Guid.NewGuid();
+                const string companyRegistrationNumber = "ABC12345";
+
+                var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
+                var @operator = new Operator(organisation);
+                var @return = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+
+                context.Organisations.Add(organisation);
+                context.Operators.Add(@operator);
+                context.Returns.Add(@return);
+
+                await context.SaveChangesAsync();
+
+                var nonObligatedWee = new List<NonObligatedWeee>();
+
+                foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
+                {
+                    nonObligatedWee.Add(new NonObligatedWeee(@return, (int)category, false, (int)category));
+                }
+
+                await dataAccess.Submit(nonObligatedWee);
+
+                AssertValues(context, @return.Id);
+
+                for (var i = 1; i <= Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>().Count(); i++)
+                {
+                    var amount = context.NonObligatedWeee.First(c => c.ReturnId == @return.Id && c.CategoryId == i);
+                    await dataAccess.UpdateAmount(amount, i + 1);
+                }
+
+                for (var i = 1; i <= Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>().Count(); i++)
+                {
+                    var amount = context.NonObligatedWeee.First(c => c.ReturnId == @return.Id && c.CategoryId == i);
+                    amount.Tonnage.Should().Be(i + 1);
+                }
+            }
+        }
+
+        private void AssertValues(WeeeContext context, Guid returnId)
+        {
+            for (var i = 1; i <= Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>().Count(); i++)
+            {
+                var amount = context.NonObligatedWeee.First(c => c.ReturnId == returnId && c.CategoryId == i);
+                amount.Tonnage.Should().Be(i);
+            }
+        }
+
     }
 }
