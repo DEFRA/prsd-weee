@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
+﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
-    using EA.Weee.Requests.Scheme.MemberRegistration;
     using System.Collections.Generic;
+    using Domain.Scheme;
+    using Requests.Scheme.MemberRegistration;
+
     public interface ITotalChargeCalculator
     {
         Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int complianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges);

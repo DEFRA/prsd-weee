@@ -14,7 +14,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Security;
     using System.Text;
+    using Weee.Tests.Core;
     using Xml.Converter;
     using Xunit;
 
@@ -24,28 +26,20 @@
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         private readonly TotalChargeCalculator totalChargeCalculator;
-        private readonly IWeeeAuthorization authorization;
         private bool hasAnnualCharge;
         private decimal? totalCharge;
         private readonly ProcessXmlFile file;
-        private readonly IXmlConverter xmlConverter;
-        private readonly IProducerChargeCalculatorDataAccess producerChargeCalculatorDataAccess;
-        private readonly IProducerChargeBandCalculator producerChargeBandCalculator;
 
         public TotalChargeCalculatorTests()
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
             producerChargeCalculator = A.Fake<IProducerChargeCalculator>();
-            producerChargeCalculatorDataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
-            producerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
 
             totalCharge = 0;
-            authorization = A.Fake<IWeeeAuthorization>();
             file = ProcessTestXmlFile();
 
-            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, authorization, totalChargeCalculatorDataAccess);
-            producerChargeCalculator = new ProducerChargeCalculator(producerChargeCalculatorDataAccess, producerChargeBandCalculator);
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, totalChargeCalculatorDataAccess);
         }
 
         [Fact]
@@ -120,6 +114,20 @@
             var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
             
             Assert.Equal(producerCharges, result);
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYearAndBefore2019_TotalShouldNotContainAnnualCharge()
+        {
+            var scheme = Scheme();
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2018)).Returns(false);
+            hasAnnualCharge = false;
+            totalCharge = 0;
+
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2018, ref hasAnnualCharge, ref totalCharge);
+
+            Assert.Equal(totalCharge, 0);
+            Assert.Equal(hasAnnualCharge, false);
         }
 
         private Scheme Scheme()

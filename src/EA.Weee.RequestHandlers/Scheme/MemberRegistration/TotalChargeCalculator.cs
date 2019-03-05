@@ -15,21 +15,16 @@
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
-        //private readonly WeeeContext context;
-        private readonly IWeeeAuthorization authorization;
-        private const int EAComplianceYearCheck = 2018;
+        private const int EaComplianceYearCheck = 2018;
 
-        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, IWeeeAuthorization authorization, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
+        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
-            this.authorization = authorization;
             this.totalChargeCalculatorDataAccess = totalChargeCalculatorDataAccess;
         }
 
         public Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int deserializedcomplianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
         {
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
-
             var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
 
             hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
@@ -38,7 +33,7 @@
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (!hasAnnualCharge)
+            if (!hasAnnualCharge && deserializedcomplianceYear > 2018)
             {
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
                 hasAnnualCharge = true;
