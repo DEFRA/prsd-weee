@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
 
-    internal interface INonObligatedDataAccess
+    public interface INonObligatedDataAccess
     {
         Task Submit(IEnumerable<NonObligatedWeee> nonObligated);
 
