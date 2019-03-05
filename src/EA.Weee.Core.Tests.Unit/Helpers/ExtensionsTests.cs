@@ -156,7 +156,7 @@
             };
 
         [Fact]
-        public void ToTonnageDisplay_GivenThousandsValue_DisplayValueShouldBeFomrattedWithCommas()
+        public void ToTonnageDisplay_GivenThousandsValue_DisplayValueShouldBeFormattedWithCommas()
         {
             const decimal value = 1000m;
 
@@ -164,7 +164,7 @@
         }
 
         [Fact]
-        public void ToTonnageDisplay_GivenMultipleThousandsValue_DisplayValueShouldBeFomrattedWithCommas()
+        public void ToTonnageDisplay_GivenMultipleThousandsValue_DisplayValueShouldBeFormattedWithCommas()
         {
             const decimal value = 10000m;
 
@@ -172,11 +172,18 @@
         }
 
         [Fact]
-        public void ToTonnageDisplay_GivenValueIsNullAndDisplayEmpty_EmptyStringShouldBeReturned()
+        public void ToTonnageEditDisplay_GivenValueIsNull_EmptyStringShouldBeReturned()
         {
             var value = (decimal?)null;
 
-            value.ToTonnageDisplay(true).Should().Be(string.Empty);
+            value.ToTonnageEditDisplay().Should().Be(string.Empty);
+        }
+
+        [Theory]
+        [MemberData(nameof(ThousandData))]
+        public void ToTonnageDisplay_GivenNullOrZeroValue_DisplayShouldBeCorrect(decimal? value)
+        {
+            value.ToTonnageDisplay().Should().Be("0.000");
         }
     }
 }
