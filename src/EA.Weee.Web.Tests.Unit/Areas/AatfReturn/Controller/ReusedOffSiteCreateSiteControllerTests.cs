@@ -74,16 +74,16 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmit_PageRedirectsToHolding()
         {
-            var model = new ReusedOffSiteCreateSiteViewModel();
-            var returnId = new Guid();
+            var organisationId = Guid.NewGuid();
+            var model = new ReusedOffSiteCreateSiteViewModel() { OrganisationId = organisationId};
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["controller"].Should().Be("Holding");
             result.RouteValues["area"].Should().Be("AatfReturn");
-            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
         }
 
         [Fact]
