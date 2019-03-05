@@ -18,7 +18,6 @@
 
     public class AddAatfSiteIntegration
     {
-
         [Fact]
         public async Task CanCreateAatfAddressEntry()
         {

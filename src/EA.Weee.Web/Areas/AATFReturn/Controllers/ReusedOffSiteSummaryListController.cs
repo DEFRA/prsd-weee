@@ -3,10 +3,13 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using AutoMapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
@@ -15,12 +18,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMapper mapper;
 
-        public ReusedOffSiteSummaryListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public ReusedOffSiteSummaryListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMapper mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -32,6 +37,12 @@
                 ReturnId = returnId,
                 AatfId = aatfId
             };
+
+            using (var client = apiClient())
+            {
+                var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
+                viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
+            }
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
