@@ -15,6 +15,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.NonObligatedCategoryValues, source.NonObligatedCategoryValues);
+            Guard.ArgumentNotNull(() => source.NonObligatedDataValues, source.NonObligatedDataValues);
 
             var nonObligatedList = new List<NonObligatedCategoryValue>();
             source.NonObligatedCategoryValues.CopyItemsTo(nonObligatedList);
