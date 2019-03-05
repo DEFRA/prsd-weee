@@ -75,7 +75,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmit_PageRedirectsToSiteList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);

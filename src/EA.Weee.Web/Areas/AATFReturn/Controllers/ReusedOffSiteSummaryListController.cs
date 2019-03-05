@@ -34,17 +34,25 @@
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
             var viewModel = new ReusedOffSiteSummaryListViewModel();
-
+            var returnViewModel = new ReturnViewModel();
             using (var client = apiClient())
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var mappedReturn = mapper.Map<ReturnViewModel>(@return);
+                returnViewModel = mapper.Map<ReturnViewModel>(@return);
 
-                viewModel.B2bTotal = mappedReturn.AatfsData.First().WeeeReused.B2B;
-                viewModel.B2cTotal = mappedReturn.AatfsData.First().WeeeReused.B2C;
+                if (returnViewModel.AatfsData != null && returnViewModel.AatfsData.Select(a => a.Aatf.Id).Contains(aatfId))
+                {
+                    viewModel.B2bTotal = returnViewModel.AatfsData.Where(a => a.Aatf.Id == aatfId).FirstOrDefault().WeeeReused.B2B;
+                    viewModel.B2cTotal = returnViewModel.AatfsData.Where(a => a.Aatf.Id == aatfId).FirstOrDefault().WeeeReused.B2C;
+                }
+                else
+                {
+                    viewModel.B2bTotal = "-";
+                    viewModel.B2cTotal = "-";
+                }
             }
 
             viewModel.OrganisationId = organisationId;
@@ -54,6 +62,14 @@
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(ReusedOffSiteSummaryListViewModel viewModel)
+        {
+            return await Task.Run<ActionResult>(() =>
+                RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

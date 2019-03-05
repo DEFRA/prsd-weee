@@ -7,6 +7,6 @@
 
     public interface IGetAatfSiteDataAccess
     {
-        Task<List<AatfAddress>> FetchAddresses(Guid aatfId, Guid returnId);
+        Task<List<AatfAddress>> GetAddresses(Guid aatfId, Guid returnId);
     }
 }

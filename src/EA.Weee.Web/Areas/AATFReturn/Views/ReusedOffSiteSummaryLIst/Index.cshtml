@@ -46,9 +46,13 @@
     <div class="govuk-!-padding-bottom-2"></div>
     @Html.RouteLink("Add another site", "aatf-reused", new { organisationId = @Model.OrganisationId, returnId = @Model.ReturnId, aatfId = @Model.AatfId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
     <div class="govuk-!-padding-bottom-8"></div>
-    <form action="/version1-9/AATF-Returns/reuse-treatment-save" method="post" class="form" style="display: block">
-        <button type="submit" class="govuk-button" id="reuse-treatment-save">
-            AATF task list
-        </button>
-    </form>
+    @using (Html.BeginForm("Index", "SubmittedReturn", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <form method="post" class="form" style="display: block">
+            <button type="submit" class="govuk-button" id="aatf-task-list">
+                AATF task list
+            </button>
+        </form>
+    }
 </section>

@@ -27,7 +27,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var data = await getAatfSiteDataAccess.FetchAddresses(message.AatfId, message.ReturnId);
+            var data = await getAatfSiteDataAccess.GetAddresses(message.AatfId, message.ReturnId);
 
             var result = new List<AddressData>();
 

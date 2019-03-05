@@ -21,7 +21,7 @@
             this.genericDataAccess = genericDataAccess;
         }
 
-        public async Task<List<AatfAddress>> FetchAddresses(Guid aatfId, Guid returnId)
+        public async Task<List<AatfAddress>> GetAddresses(Guid aatfId, Guid returnId)
         {
             var weeeReusedId = (await genericDataAccess.GetManyByExpression<WeeeReused>(new WeeeReusedByAatfIdAndReturnIdSpecification(aatfId, returnId))).Last().Id;
 
