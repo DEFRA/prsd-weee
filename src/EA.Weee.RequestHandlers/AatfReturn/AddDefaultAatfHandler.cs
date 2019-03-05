@@ -58,7 +58,7 @@
         {
             var aatfs = new List<Aatf>()
             {
-                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston ", competentAuthority, "123456789", AatfStatus.Approved, @operator),
+                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator),
                 new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator),
                 new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator)
             };
