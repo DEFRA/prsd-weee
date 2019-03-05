@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoMapper;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -42,6 +44,12 @@
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
+
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var mappedReturn = mapper.Map<ReturnViewModel>(@return);
+
+                viewModel.B2bTotal = mappedReturn.AatfsData.First().WeeeReused.B2B;
+                viewModel.B2cTotal = mappedReturn.AatfsData.First().WeeeReused.B2C;
             }
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
