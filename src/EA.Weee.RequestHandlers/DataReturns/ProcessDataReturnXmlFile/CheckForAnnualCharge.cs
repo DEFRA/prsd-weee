@@ -33,12 +33,10 @@
 
         public bool CheckSchemeHasAnnualCharge(Scheme scheme, int deserializedcomplianceYear)
         {
-            //return scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA &&
-            //    deserializedcomplianceYear > EAComplianceYearCheck && scheme.OrganisationId == message.OrganisationId &&
-            //    memberUploadsCheckAgainstNotSubmitted.Any(m => m.HasAnnualCharge) &&
-            //    memberUploadsCheckAgainstNotSubmitted.Any(m => !m.IsSubmitted);
-
-            return context.MemberUploads.Any(m => m.HasAnnualCharge && m.Scheme.OrganisationId == scheme.OrganisationId && m.ComplianceYear == deserializedcomplianceYear);
+            return context.MemberUploads.Any(m => m.HasAnnualCharge 
+                                                  && m.Scheme.OrganisationId == scheme.OrganisationId 
+                                                  && m.ComplianceYear == deserializedcomplianceYear
+                                                  && m.IsSubmitted);
         }
 
         public List<MemberUpload> GetMemberUploads(ProcessXmlFile message, bool hasAnnualCharge, bool isSubmitted, int deserializedcomplianceYear)

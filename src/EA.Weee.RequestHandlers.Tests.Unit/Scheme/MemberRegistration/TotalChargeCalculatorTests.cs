@@ -40,6 +40,7 @@
             producerChargeCalculatorDataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
             producerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
 
+            totalCharge = 0;
             authorization = A.Fake<IWeeeAuthorization>();
             file = ProcessTestXmlFile();
 
@@ -80,44 +81,45 @@
             var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
 
             Assert.Equal(totalCharge, 100);
-            Assert.Equal(hasAnnualCharge, false);
+            Assert.Equal(hasAnnualCharge, true);
         }
 
         [Fact]
-        public void TotalCalculatedCharges_GivenProducerCharges_TotalShouldBeCalculated()
+        public void TotalCalculatedCharges_GivenProducerChargesAndNoAnnualCharge_TotalShouldBeCalculated()
         {
-            var scheme = Scheme();
-            var producerCharges = A.Fake<Dictionary<string, ProducerCharge>>();
-            var producerCharge = A.Fake<ProducerCharge>();
-            var anyAmount = 700;
-
-            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
-
-            hasAnnualCharge = true;
-            totalCharge = 0;
-
-            producerCharge.Amount = anyAmount;
-            producerCharge.ChargeBandAmount = anyChargeBandAmount;
-
-            producerType producer = new producerType
-            {
-                status = statusType.A,
-                registrationNo = "WEE/AB1234CD"
-            };
-
-            A.CallTo(() => producerChargeCalculator.CalculateCharge(string.Empty, producer, 2019)).Returns(producerCharge);
+            var producerCharges = ProducerCharges();
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(true);
 
-           producerCharges = xmlChargeBandCalculator.Calculate(file);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
-            Assert.Equal(125, totalCharge);
+            Assert.Equal(300, totalCharge);
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_GivenProducerChargesAndAnnualCharge_TotalShouldBeCalculated()
+        {
+            var producerCharges = ProducerCharges();
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(false);
+
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+
+            Assert.Equal(400, totalCharge);
         }
 
         [Fact]
         public void TotalCalculatedCharges_GivenProducerCharges_ProducerChargesShouldBeReturned()
         {
+            var producerCharges = ProducerCharges();
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+            
+            Assert.Equal(producerCharges, result);
         }
 
         private Scheme Scheme()
@@ -145,6 +147,16 @@
 
             IProducerChargeCalculator producerChargerCalculator = null;
             return new XMLChargeBandCalculator(xmlConverter, producerChargerCalculator);
+        }
+
+        private Dictionary<string, ProducerCharge> ProducerCharges()
+        {
+            var producerCharges = new Dictionary<string, ProducerCharge>
+            {
+                { "1", new ProducerCharge() { Amount = 100 } },
+                { "2", new ProducerCharge() { Amount = 200 } }
+            };
+            return producerCharges;   
         }
     }
 }

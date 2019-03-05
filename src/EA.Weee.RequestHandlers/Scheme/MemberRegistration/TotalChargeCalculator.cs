@@ -14,10 +14,11 @@
     public class TotalChargeCalculator : ITotalChargeCalculator
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        private ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
+        private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
         //private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private const int EAComplianceYearCheck = 2018;
+
         public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, IWeeeAuthorization authorization, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
@@ -29,24 +30,18 @@
         {
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            decimal annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
-
-            //var memberUploadsCheckAgainstNotSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, false, false, deserializedcomplianceYear));
-
-            //bool checkNotSubmittedNotHasAnnualCharge = totalChargeCalculatorDataAccess.CheckForNotSubmitted(message, scheme, deserializedcomplianceYear, memberUploadsCheckAgainstNotSubmitted);
-
-            //var memberUploadsCheckAgainstSubmitted = new List<MemberUpload>(totalChargeCalculatorDataAccess.GetMemberUploads(message, true, false, deserializedcomplianceYear));
+            var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
 
             hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
 
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
-            totalCharges = producerCharges
-                .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+            totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
             if (!hasAnnualCharge)
             {
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
+                hasAnnualCharge = true;
             }
 
             return producerCharges;
