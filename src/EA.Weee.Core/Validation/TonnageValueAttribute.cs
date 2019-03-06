@@ -53,7 +53,7 @@
                 return ValidationResult.Success;
             }
 
-            if (value.ToString().Replace(",", string.Empty).Length > MaxTonnageLength)
+            if (Length(value) > MaxTonnageLength)
             {
                 return new ValidationResult(GenerateMessage($"numerical with {MaxTonnageLength} digits or less", (int)propertyValue));
             }
@@ -93,6 +93,19 @@
             }
 
             return ValidationResult.Success;
+        }
+
+        private int Length(object value)
+        {
+            var decimalPlaces = value.ToString().DecimalPlaces();
+            var lengthTrimmed = value.ToString().Replace(",", string.Empty).Length;
+
+            if (decimalPlaces > 0)
+            {
+                return lengthTrimmed - (decimalPlaces + 1);
+            }
+
+            return lengthTrimmed;
         }
 
         private string GenerateMessage(string message, int categoryId)

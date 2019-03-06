@@ -147,14 +147,6 @@
             value.ToTonnageDisplay().Should().Be("1.111");
         }
 
-        public static IEnumerable<object[]> ThousandData =>
-            new List<object[]>
-            {
-                new object[] { 1000M },
-                new object[] { 10000M },
-                new object[] { 100000M },
-            };
-
         [Fact]
         public void ToTonnageDisplay_GivenThousandsValue_DisplayValueShouldBeFormattedWithCommas()
         {
@@ -179,11 +171,20 @@
             value.ToTonnageEditDisplay().Should().Be(string.Empty);
         }
 
-        [Theory]
-        [MemberData(nameof(ThousandData))]
-        public void ToTonnageDisplay_GivenNullOrZeroValue_DisplayShouldBeCorrect(decimal? value)
+        [Fact]
+        public void ToEditTonnageDisplay_GivenThousandsValue_DisplayValueShouldNotBeFormattedWithCommas()
         {
-            value.ToTonnageDisplay().Should().Be("0.000");
+            const decimal value = 1000m;
+
+            value.ToTonnageEditDisplay().Should().Be("1000.000");
+        }
+
+        [Fact]
+        public void ToEditTonnageDisplay_GivenMultipleThousandsValue_DisplayValueShouldNotBeFormattedWithCommas()
+        {
+            const decimal value = 10000m;
+
+            value.ToTonnageEditDisplay().Should().Be("10000.000");
         }
     }
 }
