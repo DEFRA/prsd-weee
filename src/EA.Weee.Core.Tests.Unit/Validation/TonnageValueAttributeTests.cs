@@ -146,10 +146,10 @@
 
         [Theory]
         [InlineData("00000000000000")]
-        [InlineData("000000000000.0")]
-        [InlineData("00000000000.00")]
-        [InlineData("0000000000.000")]
-        public void IsValid_GivenValueIsFourteenOrLessCharactors_ReturnsTrue(object input)
+        [InlineData("00000000000000.0")]
+        [InlineData("00000000000000.00")]
+        [InlineData("00000000000000.000")]
+        public void IsValid_GivenValuehasFourteenOrLessIntegerParts_ReturnsTrue(object input)
         {
             var result = Validate(input);
 
@@ -158,10 +158,10 @@
 
         [Theory]
         [InlineData("000000000000000")]
-        [InlineData("0000000000000.0")]
-        [InlineData("000000000000.00")]
-        [InlineData("00000000000.000")]
-        public void IsValid_GivenValueIsMoreThanFourteenCharactors_ReturnsFalse(object input)
+        [InlineData("000000000000000.00")]
+        [InlineData("000000000000000.000")]
+        [InlineData("000000000000000.0")]
+        public void IsValid_GivenValueHasMoreThanFourteenIntegerParts_ReturnsFalse(object input)
         {
             var result = Validate(input);
 
@@ -169,11 +169,11 @@
         }
 
         [Theory]
-        [InlineData("0000000000000000")]
-        [InlineData("00000000000000.0")]
-        [InlineData("0000000000000.00")]
-        [InlineData("000000000000.000")]
-        public void IsValid_GivenValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect(object input)
+        [InlineData("000000000000000")]
+        [InlineData("000000000000000.00")]
+        [InlineData("000000000000000.000")]
+        [InlineData("000000000000000.0")]
+        public void IsValid_GivenValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect(object input)
         {
             var result = Validate(input);
 
@@ -206,9 +206,9 @@
         }
 
         [Fact]
-        public void ValidationResult_GivenTypeMessageIsProvidedAndValueIsMoreThanFifteenCharactors_ErrorMessageShouldBeCorrect()
+        public void ValidationResult_GivenTypeMessageIsProvidedAndValueHasMoreThanFourteeenIntegerParts_ErrorMessageShouldBeCorrect()
         {
-            ValidationWithTypeMessage("000000000000.000");
+            ValidationWithTypeMessage("0000000000000000.000");
 
             ValidateErrorMessage($"The tonnage value for Category {(int)Category} B2C must be numerical with 14 digits or less");
         }
