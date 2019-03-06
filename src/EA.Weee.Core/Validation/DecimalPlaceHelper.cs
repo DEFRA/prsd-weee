@@ -12,10 +12,24 @@
                 return 0;
             }
 
-            var converted = value.ToString(CultureInfo.InvariantCulture);
-            var indexDecimal = converted.IndexOf(".", StringComparison.Ordinal);
+            return NumberOfPlaces(value.ToString(CultureInfo.InvariantCulture));
+        }
 
-            return indexDecimal > 0 ? converted.Substring(indexDecimal + 1).Length : 0;
+        public static int DecimalPlaces(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return 0;
+            }
+
+            return NumberOfPlaces(value);
+        }
+
+        private static int NumberOfPlaces(string value)
+        {
+            var indexDecimal = value.IndexOf(".", StringComparison.Ordinal);
+
+            return indexDecimal > 0 ? value.Substring(indexDecimal + 1).Length : 0;
         }
     }
 }
