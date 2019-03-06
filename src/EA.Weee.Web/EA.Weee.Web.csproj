@@ -322,7 +322,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
@@ -1184,7 +1184,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AatfReturn\Views\AatfReturnBase\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
   </ItemGroup>
   <PropertyGroup>
