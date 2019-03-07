@@ -26,8 +26,8 @@
 
                 if (category != null)
                 {
-                    category.B2B = weeeObligatedData.B2B.ToTonnageDisplay(true);
-                    category.B2C = weeeObligatedData.B2C.ToTonnageDisplay(true);
+                    category.B2B = weeeObligatedData.B2B.ToTonnageEditDisplay();
+                    category.B2C = weeeObligatedData.B2C.ToTonnageEditDisplay();
                     category.Id = weeeObligatedData.Id;
                 }
             }
