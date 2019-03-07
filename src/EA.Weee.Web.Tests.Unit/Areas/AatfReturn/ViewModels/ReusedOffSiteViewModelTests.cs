@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
@@ -12,7 +13,7 @@
         [Fact]
         public void ReusedOffSiteViewModel_GivenSelectedValueIsNull_IsInvalid()
         {
-            var viewModel = new ReusedOffSiteViewModel(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), null);
+            var viewModel = new ReusedOffSiteViewModel(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), A.Dummy<String>(), null);
 
             var context = new ValidationContext(viewModel, null, null);
             var results = new List<ValidationResult>();
@@ -26,7 +27,7 @@
         [InlineData("No")]
         public void ReusedOffSiteViewModel_GivenSelectedValueIsYesOrNo_IsValid(string selectedValue)
         {
-            var viewModel = new ReusedOffSiteViewModel(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), selectedValue);
+            var viewModel = new ReusedOffSiteViewModel(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), A.Dummy<String>(), selectedValue);
 
             var context = new ValidationContext(viewModel, null, null);
             var results = new List<ValidationResult>();

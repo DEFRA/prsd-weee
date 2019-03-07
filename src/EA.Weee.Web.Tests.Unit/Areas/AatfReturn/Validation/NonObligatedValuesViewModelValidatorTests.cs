@@ -27,7 +27,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -62,7 +62,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -90,7 +90,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
@@ -111,7 +111,7 @@
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
-                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be greater than or equal to " + returnData.NonObligatedData[i].Tonnage);
+                validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be more than or equal to " + returnData.NonObligatedData[i].Tonnage);
                 validationResult.Errors[i].PropertyName.Should().Be("CategoryValues[" + i + "].Tonnage");
             }
         }
@@ -126,7 +126,7 @@
             {
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
                 var @decimal = decimal.Parse(model.CategoryValues.ElementAt(count).Tonnage);
-                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true);
+                var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
             var returnData = new ReturnData();
