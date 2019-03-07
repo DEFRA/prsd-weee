@@ -24,7 +24,7 @@
         [MemberData(nameof(Data))]
         public void NonObligatedData_PropertiesShouldBeSet(int categoryId, decimal? value, bool dcf)
         {
-            var result = new NonObligatedData(categoryId, value, dcf);
+            var result = new NonObligatedData(categoryId, value, dcf, Guid.NewGuid());
 
             result.Tonnage.Should().Be(value);
             result.CategoryId.Should().Be(categoryId);

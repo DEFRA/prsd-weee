@@ -14,17 +14,17 @@
     using Xunit;
     using DatabaseWrapper = EA.Weee.Tests.Core.Model.DatabaseWrapper;
 
-    public class AddNonObligatedDataAccessTests
+    public class NonObligatedDataAccessTests
     {
-        private readonly AddNonObligatedDataAccess dataAccess;
+        private readonly NonObligatedDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
 
-        public AddNonObligatedDataAccessTests()
+        public NonObligatedDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new AddNonObligatedDataAccess(context);
+            dataAccess = new NonObligatedDataAccess(context);
         }
 
         [Fact]

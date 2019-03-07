@@ -20,6 +20,11 @@
         {
         }
 
+        public virtual void UpdateTonnage(decimal? tonnage)
+        {
+            Tonnage = tonnage;
+        }
+
         public Guid ReturnId { get; set; }
 
         public int CategoryId { get; set; }

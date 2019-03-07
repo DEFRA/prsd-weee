@@ -38,7 +38,7 @@
 
             if (source.NonObligatedWeeeList != null)
             {
-                returnData.NonObligatedData = source.NonObligatedWeeeList.Select(n => new NonObligatedData(n.CategoryId, n.Tonnage, n.Dcf)).ToList();
+                returnData.NonObligatedData = source.NonObligatedWeeeList.Select(n => new NonObligatedData(n.CategoryId, n.Tonnage, n.Dcf, n.Id)).ToList();
             }
 
             if (source.ObligatedWeeeReceivedList != null)

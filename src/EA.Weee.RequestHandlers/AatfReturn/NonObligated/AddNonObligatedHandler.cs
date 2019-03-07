@@ -10,11 +10,11 @@
     internal class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddNonObligatedDataAccess nonObligatedDataAccess;
+        private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
 
         public AddNonObligatedHandler(IWeeeAuthorization authorization, 
-            IAddNonObligatedDataAccess nonObligatedDataAccess, 
+            INonObligatedDataAccess nonObligatedDataAccess, 
             IReturnDataAccess returnDataAccess)
         {
             this.authorization = authorization;
