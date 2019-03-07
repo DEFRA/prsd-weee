@@ -114,16 +114,6 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_NonObligatedViewModelShouldBeReturned()
-        {
-            var model = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { Dcf = true, OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid() };
-
-            var result = await controller.Index(model.OrganisationId, model.ReturnId, model.Dcf) as ViewResult;
-
-            result.Model.Should().BeEquivalentTo(model);
-        }
-
-        [Fact]
         public async void IndexPost_GivenValidViewModel_ValidatorShouldReturnAValidResult()
         {
             var result = new ValidationResult();
@@ -177,6 +167,44 @@
             await controller.Index(model);
 
             A.CallTo(() => validator.Validate(model, returnData)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        {
+            var returnId = Guid.NewGuid();
+
+            await controller.Index(A.Dummy<Guid>(), returnId, true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        {
+            var returnId = Guid.NewGuid();
+            var @return = new ReturnData();
+            var organisationId = Guid.NewGuid();
+            const bool dcf = true;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
+
+            await controller.Index(organisationId, returnId, dcf);
+
+            A.CallTo(() => mapper.Map(A<ReturnToNonObligatedValuesViewModelMapTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.OrganisationId.Equals(organisationId) && r.Dcf.Equals(dcf) && r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
+        {
+            var model = A.Fake<NonObligatedValuesViewModel>();
+
+            A.CallTo(() => mapper.Map(A<ReturnToNonObligatedValuesViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
+
+            result.Model.Should().Be(model);
         }
     }
 }

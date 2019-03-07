@@ -48,8 +48,6 @@
 
                 var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer() { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf, ReturnData = @return });
 
-                //var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf };
-
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(model);

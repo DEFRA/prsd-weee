@@ -5,10 +5,6 @@
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     internal class EditNonObligatedHandler : IRequestHandler<EditNonObligated, bool>
@@ -24,7 +20,7 @@
             this.dataAccess = dataAccess;
             this.fetchDataAccess = fetchDataAccess;
             this.genericDataAccess = genericDataAccess;
-    }
+        }
 
         public async Task<bool> HandleAsync(EditNonObligated message)
         {
@@ -35,7 +31,6 @@
                 var value = await genericDataAccess.GetById<NonObligatedWeee>(nonObligatedValue.Id);
 
                 await dataAccess.UpdateAmount(value, nonObligatedValue.Tonnage);
-                //await obligatedReceivedDataAccess.UpdateAmounts(value, obligatedValue.HouseholdTonnage, obligatedValue.NonHouseholdTonnage);
             }
 
             return true;
