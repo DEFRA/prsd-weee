@@ -2,20 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using Domain.Error;
     using Domain.Scheme;
+    using EA.Weee.DataAccess;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
     using Xml.MemberRegistration;
 
-    public class XMLChargeBandCalculator : IXMLChargeBandCalculator
+    public class XMLChargeBandCalculatorByYear : IXMLChargeBandCalculator
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XMLChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XMLChargeBandCalculatorByYear(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;
@@ -23,12 +25,12 @@
         }
 
         public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
-        { 
+        {
             var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
-
+            
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();

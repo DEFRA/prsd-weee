@@ -210,6 +210,9 @@
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorByYear.cs" />
+    <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorContext.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />

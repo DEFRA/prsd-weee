@@ -5,6 +5,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Xml.Converter;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using System;
@@ -15,12 +16,17 @@
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
+        private readonly IProducerChargeCalculator producerChargerCalculator;
+        private readonly IXmlConverter xmlConverter;
         private const int EaComplianceYearCheck = 2018;
 
-        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
+        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess, 
+            IProducerChargeCalculator producerChargerCalculator, IXmlConverter xmlConverter)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.totalChargeCalculatorDataAccess = totalChargeCalculatorDataAccess;
+            this.producerChargerCalculator = producerChargerCalculator;
+            this.xmlConverter = xmlConverter;
         }
 
         public Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int deserializedcomplianceYear, ref bool hasAnnualCharge, ref decimal? totalCharges)
@@ -29,7 +35,18 @@
 
             hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
 
-            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+            var producerCharges = new Dictionary<string, ProducerCharge>();
+            var xmlChargeBandCalculatorContext = new XMLChargeBandCalculatorContext();
+
+            if (scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA && deserializedcomplianceYear > 2018)
+            {
+                xmlChargeBandCalculatorContext.SetChargeBandCalculatorContext(new XMLChargeBandCalculatorByYear(xmlConverter, producerChargerCalculator));
+                xmlChargeBandCalculatorContext.SetChargeBandCalculator(message);
+            }
+            else
+            {
+                producerCharges = xmlChargeBandCalculator.Calculate(message);
+            }
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
