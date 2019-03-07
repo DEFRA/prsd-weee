@@ -1,4 +1,6 @@
-﻿@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SubmittedReturnViewModel
+﻿@using System.Web.Mvc.Html
+@using EA.Weee.Web.Infrastructure
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SubmittedReturnViewModel
 @{
     ViewBag.Title = "Submitted Return";
 }
@@ -30,7 +32,7 @@
 
     </div>
 
-    @using (Html.BeginForm("Index", "SubmittedReturn", FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.Default))
     {
         @Html.AntiForgeryToken()
         <button type="submit" class="govuk-button">
