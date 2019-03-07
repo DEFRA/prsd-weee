@@ -45,7 +45,7 @@
         [Fact]
         public void CheckNonObligatedControllerInheritsExternalSiteController()
         {
-            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]
@@ -161,6 +161,22 @@
             await controller.Index(model);
 
             A.CallTo(() => validator.Validate(model, returnData)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
+        {
+            var model = new NonObligatedValuesViewModel();
+            var returnData = new ReturnData();
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.Index(model);
+
+            A.CallTo(() => validator.Validate(model, returnData)).MustNotHaveHappened();
         }
     }
 }

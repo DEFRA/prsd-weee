@@ -10,6 +10,8 @@
 
     public class TonnageValueAttribute : ValidationAttribute
     {
+        public const int MaxTonnageLength = 14;
+
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
         
@@ -51,14 +53,14 @@
                 return ValidationResult.Success;
             }
 
-            if (value.ToString().Length > CommonMaxFieldLengths.Tonnage)
+            if (Length(value) > MaxTonnageLength)
             {
-                return new ValidationResult(GenerateMessage("a numerical value with 14 digits or less", (int)propertyValue));
+                return new ValidationResult(GenerateMessage($"numerical with {MaxTonnageLength} digits or less", (int)propertyValue));
             }
 
             if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
             {
-                return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
             }
             else
             {
@@ -76,7 +78,7 @@
                     CultureInfo.InvariantCulture,
                     out decimalResult))
                 {
-                    return new ValidationResult(GenerateMessage("a numerical value", (int)propertyValue));
+                    return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
                 }
 
                 if (decimalResult.DecimalPlaces() > 3)
@@ -93,11 +95,24 @@
             return ValidationResult.Success;
         }
 
+        private int Length(object value)
+        {
+            var decimalPlaces = value.ToString().DecimalPlaces();
+            var lengthTrimmed = value.ToString().Replace(",", string.Empty).Length;
+
+            if (decimalPlaces > 0)
+            {
+                return lengthTrimmed - (decimalPlaces + 1);
+            }
+
+            return lengthTrimmed;
+        }
+
         private string GenerateMessage(string message, int categoryId)
         {
             var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
             
-            return $"Category {categoryId}{additionalMessage} tonnage value must be {message}";
+            return $"The tonnage value for Category {categoryId}{additionalMessage} must be {message}";
         }
     }
 }

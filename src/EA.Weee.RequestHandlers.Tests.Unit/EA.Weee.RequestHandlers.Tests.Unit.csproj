@@ -100,6 +100,7 @@
     <Compile Include="AatfReturn\ObligatedReceived\EditObligatedReceivedHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandlerTests.cs" />
     <Compile Include="AatfReturn\GetSchemeRequestHandlerTests.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandlerTests.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTestAccess.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTests.cs" />
