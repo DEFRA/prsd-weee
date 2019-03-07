@@ -10,5 +10,7 @@
         Task<Guid> Submit(ReturnScheme scheme);
 
         Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId);
+
+        Task<Operator> GetOperatorByReturnId(Guid returnId);
     }
 }

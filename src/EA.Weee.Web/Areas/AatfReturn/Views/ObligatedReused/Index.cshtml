@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
     ViewBag.Title = "Reused WEEE";
@@ -22,12 +23,13 @@
         Provide tonnage to 3 decimal places. For example 1.238
     </p>
 
-    @using (Html.BeginForm("Index", "ObligatedReused", FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
         @Html.Gds().ValidationSummary()
 
         Html.RenderPartial("_ObligatedWeeeTable", Model);
         @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         @Html.AntiForgeryToken()
         <form method="post" class="form" style="display: inline">

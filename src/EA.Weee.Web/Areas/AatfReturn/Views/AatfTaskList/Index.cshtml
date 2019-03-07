@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
     ViewBag.Title = "AATF Task List";
@@ -28,7 +29,7 @@
                             <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Period)</td>
                             <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Period</td>
                         </tr>
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -56,7 +57,7 @@
                         <td class="govuk-table__cell" style="border: 0px;"></td>
                         <td class="govuk-table__cell">
                             <a class="govuk-link govuk-link--no-visited-state">
-                                @Html.RouteLink("Received on behalf of PCS(s)", "aatf-received", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
+                                @Html.RouteLink("Received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
                             </a>
                         </td>
                         <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReceived.B2C</strong></td>
@@ -76,7 +77,7 @@
                         <td class="govuk-table__cell" style="border: 0px;"></td>
                         <td class="govuk-table__cell">
                             <a class="govuk-link govuk-link--no-visited-state">
-                                @Html.RouteLink("Reused as a whole appliance", "aatf-reused", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
+                                @Html.RouteLink("Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
                             </a>
                         </td>
                         <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@item.WeeeReused.B2C</strong></td>
@@ -98,7 +99,7 @@
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
-                        @Html.RouteLink("Received", "aatf-non-obligated", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                        @Html.RouteLink("Received", AatfRedirect.NonObligated, new { returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
                     </td>
                     <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotal</strong></td>
                     <td class="govuk-table__cell"><strong style="float:right"></strong></td>
@@ -106,7 +107,7 @@
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" style="border: 0px;"></td>
                     <td class="govuk-table__cell">
-                        @Html.RouteLink("Retained by a DCF", "aatf-non-obligated-dcf", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                        @Html.RouteLink("Retained by a DCF", AatfRedirect.NonObligatedDcf, new { returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                     </td>
                     <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotalDcf</strong></td>
                     <td class="govuk-table__cell"><strong style="float:right"></strong></td>
@@ -114,11 +115,13 @@
             </tbody>
         </table>
         <div class="govuk-!-padding-bottom-7"></div>
-        <form method="post" class="form" style="display: inline">
+        using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Post, new { style = "display: inline" }))
+        {
+            @Html.HiddenFor(m => m.OrganisationId)
             <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
                 Check my return
             </button>
-        </form>
+        }
         <details class="govuk-details govuk-!-font-size-16" role="group">
             <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
                 <span class="govuk-details__summary-text">
