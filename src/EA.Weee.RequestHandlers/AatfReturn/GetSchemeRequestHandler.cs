@@ -6,25 +6,29 @@
     using EA.Weee.Requests.AatfReturn;
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
+    using Specification;
     using Scheme = Domain.Scheme.Scheme;
 
-    public class GetSchemeRequestHandler : IRequestHandler<GetReturnScheme, List<SchemeData>>
+    public class GetSchemeRequestHandler : IRequestHandler<GetReturnScheme, SchemeDataList>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
-        private readonly RequestHandlers.Scheme.IGetSchemesDataAccess schemeDataAccess;
         private readonly IMapper mapper;
   
-        public GetSchemeRequestHandler(IWeeeAuthorization authorization, IReturnSchemeDataAccess returnSchemeDataAccess, RequestHandlers.Scheme.IGetSchemesDataAccess schemeDataAccess, IMapper mapper)
+        public GetSchemeRequestHandler(IWeeeAuthorization authorization, 
+            IReturnSchemeDataAccess returnSchemeDataAccess, 
+            IMapper mapper)
         {
             this.authorization = authorization;
             this.returnSchemeDataAccess = returnSchemeDataAccess;
-            this.schemeDataAccess = schemeDataAccess;
             this.mapper = mapper;
         }
 
-        public async Task<List<SchemeData>> HandleAsync(GetReturnScheme message)
+        public async Task<SchemeDataList> HandleAsync(GetReturnScheme message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -32,13 +36,11 @@
 
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
-            foreach (var scheme in returnSchemeList)
-            {
-                SchemeData data = mapper.Map<Scheme, SchemeData>(scheme.Scheme);
-                schemeListData.Add(data);
-            }
+            var schemeDataList = returnSchemeList.Select(s => mapper.Map<Scheme, SchemeData>(s.Scheme)).ToList();
 
-            return schemeListData;           
+            var @operator = await returnSchemeDataAccess.GetOperatorByReturnId(message.ReturnId);
+
+            return new SchemeDataList(schemeDataList, mapper.Map<Operator, OperatorData>(@operator));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
     ViewBag.Title = "CheckYourReturnView";
@@ -57,10 +58,11 @@
     </table>
     <div class="govuk-!-padding-bottom-6"></div>
 
-    @using (Html.BeginForm("Index", "CheckYourReturn", FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="govuk-form-group">
             <button class="govuk-button" type="submit">Submit</button>
