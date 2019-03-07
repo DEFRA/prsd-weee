@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
@@ -117,7 +120,7 @@
             {
                 Dcf = dcf
             };
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddNonObligated;
 
             request.Dcf.Should().Be(model.Dcf);
         }
@@ -132,11 +135,38 @@
                 ReturnId = Guid.NewGuid()
             };
 
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddNonObligated;
 
             request.OrganisationId.Should().Be(model.OrganisationId);
             request.ReturnId.Should().Be(model.ReturnId);
             request.Dcf.Should().Be(model.Dcf);
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
+        {
+            var model = new NonObligatedValuesViewModel();
+            model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<EditNonObligated>();
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
+        {
+            var model = new NonObligatedValuesViewModel()
+            {
+                CategoryValues = new List<NonObligatedCategoryValue>() { new NonObligatedCategoryValue() }
+            };
+
+            model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.CategoryValues.Should().NotBeNull();
+            request.CategoryValues.Count().Should().Be(1);
         }
     }
 }
