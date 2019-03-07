@@ -9,6 +9,7 @@
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Infrastructure;
 
     public class ReusedOffSiteController : ExternalSiteController
     {
@@ -47,13 +48,11 @@
             {
                 if (viewModel.SelectedValue == "Yes")
                 {
-                    return RedirectToAction("Index", "ReusedOffSiteCreateSite",
-                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
+                    return AatfRedirect.ReusedOffSiteCreate(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
                 }
                 else
                 {
-                    return RedirectToAction("Index", "AatfTaskList",
-                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+                    return AatfRedirect.TaskList(viewModel.ReturnId);
                 }
             }
             else

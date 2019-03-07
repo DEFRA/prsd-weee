@@ -1,10 +1,18 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
     ViewBag.Title = "Non-obligated WEEE";
 }
 
+@{
+    var formName = AatfRedirect.NonObligated;
+    if (Model.Dcf)
+    {
+        formName = AatfRedirect.NonObligatedDcf;
+    }
+}
 <section id="main-content">
     <header class="hgroup">
         <div>
@@ -25,12 +33,14 @@
     </header>
     <br />
     <p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
-    @using (Html.BeginForm("Index", "NonObligated", FormMethod.Post))
+
+    @using (Html.BeginRouteForm(formName, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.Dcf)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         Html.RenderPartial("_NonObligatedWEEETable", Model);
 

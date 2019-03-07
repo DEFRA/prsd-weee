@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteCreateSiteViewModel
 @{
@@ -9,7 +10,7 @@
 <section id="main-content">
     <h1 class="govuk-heading-l">Which site received the WEEE for reuse?</h1>
 
-    @using (Html.BeginForm("Index", "ReusedOffSiteCreateSite", FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
