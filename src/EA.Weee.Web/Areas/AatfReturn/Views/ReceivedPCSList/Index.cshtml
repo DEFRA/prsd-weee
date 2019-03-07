@@ -15,7 +15,7 @@
     </header>
     <div class="govuk-!-padding-bottom-3"></div>
 
-    <table class="govuk-table">
+    <table class="govuk-table prsd-table-collapse">
         <thead>
             <tr class="govuk-table__header gov-uk-no-bottom-border">
                 <td class="govuk-table__cell gov-uk-no-bottom-border"></td>
@@ -25,7 +25,7 @@
                 </th>
             </tr>
             <tr class="govuk-table__header">
-                <th class="govuk-table__cell" style="width:40%">PCS name</th>
+                <th class="govuk-table__cell">PCS name</th>
                 <th class="govuk-table__cell">Approval number</th>
                 <th class="govuk-table__cell govuk-!-font-weight-regular">B2C</th>
                 <th class="govuk-table__cell govuk-!-font-weight-regular">B2B</th>
@@ -36,7 +36,7 @@
             @foreach (var item in Model.SchemeList)
             {
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" style="width:40%">
+                    <td class="govuk-table__cell">
                         @item.SchemeName
                     </td>
                     <td class="govuk-table__cell">
