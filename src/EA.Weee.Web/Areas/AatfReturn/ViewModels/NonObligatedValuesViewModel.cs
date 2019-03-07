@@ -43,5 +43,10 @@
         }
 
         public string Total => categoryValueCalculator.Total(CategoryValues.Select(c => c.Tonnage).ToList());
+
+        public bool Edit
+        {
+            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
     }
 }

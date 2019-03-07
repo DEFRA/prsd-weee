@@ -6,7 +6,10 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.NonObligated;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using FluentValidation;
     using FluentValidation.Results;
     using Infrastructure;
@@ -24,24 +27,31 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
+        private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
 
-        public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator)
+        public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator, IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
             this.validator = validator;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool dcf)
         {
-            var viewModel = new NonObligatedValuesViewModel(new NonObligatedCategoryValues()) { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf };
+            using (var client = apiClient())
+            {
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer() { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf, ReturnData = @return });
 
-            return View(viewModel);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(model);
+            }
         }
 
         [HttpPost]
