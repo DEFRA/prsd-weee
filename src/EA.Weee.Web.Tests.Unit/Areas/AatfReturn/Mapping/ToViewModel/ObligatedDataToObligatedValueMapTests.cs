@@ -133,8 +133,8 @@
             result.ElementAt(0).B2C.Should().Be(string.Empty);
             result.ElementAt(1).B2B.Should().Be("1.000");
             result.ElementAt(1).B2C.Should().Be("1.000");
-            result.ElementAt(2).B2B.Should().Be("1,000.000");
-            result.ElementAt(2).B2C.Should().Be("1,000.000");
+            result.ElementAt(2).B2B.Should().Be("1000.000");
+            result.ElementAt(2).B2C.Should().Be("1000.000");
             result.ElementAt(3).B2B.Should().Be("0.000");
             result.ElementAt(3).B2C.Should().Be("0.000");
             result.ElementAt(4).B2B.Should().Be("1.000");
