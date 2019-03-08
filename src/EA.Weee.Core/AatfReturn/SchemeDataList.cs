@@ -19,8 +19,8 @@
             OperatorData = operatorData;
         }
 
-        public IList<SchemeData> SchemeDataItems { get; set; }
+        public virtual IList<SchemeData> SchemeDataItems { get; set; }
 
-        public OperatorData OperatorData { get; set; }
+        public virtual OperatorData OperatorData { get; set; }
     }
 }

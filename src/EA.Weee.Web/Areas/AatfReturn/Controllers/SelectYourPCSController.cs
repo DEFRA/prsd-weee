@@ -50,7 +50,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
@@ -60,7 +60,7 @@
                     {
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
-                 }
+                }
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
             }

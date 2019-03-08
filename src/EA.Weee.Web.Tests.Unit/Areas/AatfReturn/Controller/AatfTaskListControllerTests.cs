@@ -40,9 +40,10 @@
         [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
-            var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
 
-            await controller.Index(organisationId, A.Dummy<Guid>());
+            await controller.Index(A.Dummy<Guid>());
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
@@ -50,19 +51,22 @@
         [Fact]
         public async void IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
         {
-            var model = new ReturnViewModel();
+            var model = new ReturnViewModel() { ReturnId = Guid.NewGuid() };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("CheckYourReturn");
-            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(model.ReturnId);
         }
 
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+
+            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -70,23 +74,26 @@
         [Fact]
         public async void IndexGet_GivenReturn_AatfTaskListViewModelShouldBeBuilt()
         {
-            var returnData = new ReturnData();
+            var @return = A.Fake<ReturnData>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void IndexGet_GivenActionAndParameters_AatfTaskListViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
+            var @return = A.Fake<ReturnData>();
 
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(model);
         }
