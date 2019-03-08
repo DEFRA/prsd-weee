@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -31,26 +32,25 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
+        public async Task<ActionResult> Index(Guid returnId, Guid aatfId)
         {
-            var viewModel = new ReceivedPcsListViewModel
-            {
-                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name,
-                OrganisationId = organisationId,
-                ReturnId = returnId,
-                AatfId = aatfId
-            };
-
             using (var client = apiClient())
             {
-                var schemeIdList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                viewModel.SchemeList = schemeIdList;
+                var viewModel = new ReceivedPcsListViewModel
+                {
+                    AatfName = (await cache.FetchAatfData(schemeList.OperatorData.OrganisationId, aatfId)).Name,
+                    OrganisationId = schemeList.OperatorData.OrganisationId,
+                    ReturnId = returnId,
+                    AatfId = aatfId,
+                    SchemeList = schemeList.SchemeDataItems.ToList()
+                };
+
+                await SetBreadcrumb(schemeList.OperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
             }
-
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
-            return View(viewModel);
         }
 
         [HttpPost]

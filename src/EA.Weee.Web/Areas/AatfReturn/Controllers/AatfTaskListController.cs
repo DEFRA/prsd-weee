@@ -30,29 +30,28 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid returnId)
         {
-            var viewModel = new ReturnViewModel();
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                viewModel = mapper.Map<ReturnViewModel>(@return);
 
-                viewModel.OrganisationId = organisationId;
+                var viewModel = mapper.Map<ReturnViewModel>(@return);
+                viewModel.OrganisationId = @return.ReturnOperatorData.OrganisationId;
                 viewModel.ReturnId = returnId;
-                var organisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-                viewModel.OrganisationName = organisationName;
-            }
+                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(@return.ReturnOperatorData.OrganisationId))).OrganisationName;
 
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReturnViewModel viewModel)
         {
-            return await Task.Run(() => RedirectToAction("Index", "CheckYourReturn", new { area = "AatfReturn", returnid = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
+            return await Task.Run(() => AatfRedirect.CheckReturn(viewModel.ReturnId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
