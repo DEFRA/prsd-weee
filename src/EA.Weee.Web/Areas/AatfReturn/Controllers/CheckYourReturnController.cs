@@ -32,15 +32,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid returnId)
         { 
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
                 var mappedView = mapper.Map<ReturnViewModel>(@return);
+
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
                 return View("Index", mappedView);
             }
@@ -50,8 +50,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
         {
-            return await Task.Run<ActionResult>(() => 
-                RedirectToAction("Index", "SubmittedReturn", new { area  = "AatfReturn", organisationId = RouteData.Values["organisationId"], returnId = RouteData.Values["returnId"] }));
+            return await Task.Run<ActionResult>(() => AatfRedirect.Submittedeturn(viewModel.ReturnId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

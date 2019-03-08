@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPcsListViewModel
 @{
     ViewBag.Title = "Received PCS List";
@@ -49,7 +50,7 @@
                         <strong></strong>
                     </td>
                     <td class="govuk-table__cell">
-                        @Html.RouteLink("Add data", "aatf-received-scheme", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                        @Html.RouteLink("Add data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.Id, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
                     </td>
                 </tr>
             }
@@ -57,7 +58,7 @@
 
     </table>
 
-    @using (Html.BeginForm("Index", "ReceivedPCSList", new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <button type="submit" class="govuk-button">

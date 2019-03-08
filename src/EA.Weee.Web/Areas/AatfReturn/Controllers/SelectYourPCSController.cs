@@ -31,26 +31,26 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
         {
-            var viewModel = new SelectYourPCSViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
-
             using (var client = apiClient())
             {
-                viewModel.SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal());
-            }
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var viewModel = new SelectYourPCSViewModel
+                {
+                    OrganisationId = organisationId,
+                    ReturnId = returnId,
+                    SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal())
+                };
 
-            return View("Index", viewModel);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View("Index", viewModel);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
@@ -60,9 +60,9 @@
                     {
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
-                 }
-                return RedirectToAction("Index", "AatfTaskList",
-                                            new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+                }
+
+                return AatfRedirect.TaskList(viewModel.ReturnId);
             }
             else
             {
