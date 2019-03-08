@@ -17,22 +17,20 @@
     @using (Html.BeginForm("Index", "AatfTaskList", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-third">
-                <table class="govuk-table">
-                    <tbody>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Year)</td>
-                            <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Year</td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Period)</td>
-                            <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Period</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
+        <table class="govuk-table govuk-!-width-one-half">
+            <caption class="govuk-table__caption govuk-visually-hidden">Compliance month and year</caption>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell gov-uk-no-bottom-border" scope="row">@Html.DisplayNameFor(model => model.Year)</td>
+                    <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Year</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell gov-uk-no-bottom-border" scope="row">@Html.DisplayNameFor(model => model.Period)</td>
+                    <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Period</td>
+                </tr>
+            </tbody>
+        </table>
 
         <div class="govuk-!-margin-bottom-4"></div>
 
