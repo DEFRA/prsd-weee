@@ -47,16 +47,35 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
+            var schemeData = A.Fake<SchemeDataList>();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            var operatorData = A.Fake<OperatorData>();
+            const string orgName = "orgName";
 
-            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeData);
+            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => schemeData.OperatorData).Returns(operatorData);
+            A.CallTo(() => schemeData.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
-            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
         }
 
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var schemeList = A.Fake<SchemeDataList>();
+            var returnId = Guid.NewGuid();
+
+            A.CallTo(() => schemeList.OperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => schemeList.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -64,9 +83,13 @@
         [Fact]
         public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
+            var schemeList = A.Fake<SchemeDataList>();
             var returnId = Guid.NewGuid();
 
-            await controller.Index(Guid.NewGuid(), returnId, A.Dummy<Guid>());
+            A.CallTo(() => schemeList.OperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => schemeList.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
+
+            await controller.Index(returnId, A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(g => g.ReturnId.Equals(returnId))))
             .MustHaveHappened(Repeated.Exactly.Once);
@@ -78,21 +101,23 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-
-            var returnData = new List<SchemeData>();
-            var model = A.Fake<ReceivedPcsListViewModel>();
-            var schemeList = new List<SchemeData>();
+            var schemeList = A.Fake<SchemeDataList>();
             const string aatfname = "aatfName";
+            var operatorData = A.Fake<OperatorData>();
+            var schemeListItems = A.Fake<List<SchemeData>>();
 
-            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetReturnScheme>())).Returns(schemeList);
+            A.CallTo(() => schemeList.OperatorData).Returns(operatorData);
+            A.CallTo(() => schemeList.SchemeDataItems).Returns(schemeListItems);
+            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeList);
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(new AatfData(A.Dummy<Guid>(), aatfname, A.Dummy<string>()));
 
-            var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
+            var result = await controller.Index(returnId, aatfId) as ViewResult;
 
             var receivedModel = result.Model as ReceivedPcsListViewModel;
 
             receivedModel.AatfName.Should().Be(aatfname);
-            receivedModel.SchemeList.Should().BeEquivalentTo(schemeList);
+            receivedModel.SchemeList.Should().BeEquivalentTo(schemeListItems);
             receivedModel.ReturnId.Should().Be(returnId);
             receivedModel.AatfId.Should().Be(aatfId);
         }
