@@ -18,7 +18,7 @@
 
         public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests()
         {
-            map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap();
+            map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities(), new AddressUtilities());
             testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
             testAddressDataList = new List<AddressData>();
             testObligatedDataList = new List<WeeeObligatedData>();

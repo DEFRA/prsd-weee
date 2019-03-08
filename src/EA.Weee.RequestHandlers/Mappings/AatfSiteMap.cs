@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
@@ -11,6 +12,8 @@
     {
         public AddressTonnageSummary Map(AatfAddressObligatedAmount source)
         {
+            Guard.ArgumentNotNull(() => source, source);
+
             var summaryData = new AddressTonnageSummary();
 
             if (source.AatfAddresses != null)

@@ -299,6 +299,8 @@
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IAddressUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />

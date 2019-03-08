@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -14,7 +13,12 @@
         public decimal? NonObligatedTonnageTotalDcf = null;
 
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
-        private TonnageUtilities tonnageUtilities = new TonnageUtilities();
+        private ITonnageUtilities tonnageUtilities;
+
+        public ReturnToReturnViewModelMap(ITonnageUtilities tonnageUtilities)
+        {
+            this.tonnageUtilities = tonnageUtilities;
+        }
 
         public ReturnViewModel Map(ReturnData source)
         {

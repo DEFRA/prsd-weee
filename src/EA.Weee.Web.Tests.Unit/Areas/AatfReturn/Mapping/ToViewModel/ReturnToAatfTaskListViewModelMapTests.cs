@@ -26,7 +26,7 @@
 
         public ReturnToAatfTaskListViewModelMapTests()
         {
-            map = new ReturnToReturnViewModelMap();
+            map = new ReturnToReturnViewModelMap(new TonnageUtilities());
             mapperTestId = new Guid();
             mapperTestYear = 2019;
             mapperTestQuarter = new Quarter(mapperTestYear, QuarterType.Q1);

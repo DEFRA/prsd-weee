@@ -165,6 +165,7 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
+    <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />

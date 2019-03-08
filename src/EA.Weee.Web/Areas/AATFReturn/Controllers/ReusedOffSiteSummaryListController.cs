@@ -33,21 +33,19 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            var viewModel = new ReusedOffSiteSummaryListViewModel();
-            var returnViewModel = new ReturnViewModel();
             using (var client = apiClient())
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
-                viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
+                var viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
+
+                viewModel.OrganisationId = organisationId;
+                viewModel.ReturnId = returnId;
+                viewModel.AatfId = aatfId;
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
             }
-
-            viewModel.OrganisationId = organisationId;
-            viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
-            return View(viewModel);
         }
 
         [HttpPost]

@@ -2,7 +2,7 @@
 {
     using EA.Weee.Core.AatfReturn;
 
-    public class AddressUtilities
+    public class AddressUtilities : IAddressUtilities
     {
         public string AddressConcatenate(AddressData addressData)
         {

@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
-
-    public class TonnageUtilities
+    
+    public class TonnageUtilities : ITonnageUtilities
     {
         public ObligatedCategoryValue SumObligatedValues(List<WeeeObligatedData> dataSet)
         {
