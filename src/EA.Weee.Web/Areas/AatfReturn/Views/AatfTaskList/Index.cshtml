@@ -109,6 +109,7 @@
     <div class="govuk-!-padding-bottom-7"></div>
     @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Post, new { style = "display: inline" }))
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
         <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
             Check my return
