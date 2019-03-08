@@ -1,3 +1,5 @@
+@import "../govuk_frontend/package/helpers/media-queries";
+
 .gov-uk-no-bottom-border {
     border-bottom: none;
 }
@@ -57,3 +59,21 @@
         }
     }
 }
+
+.prsd-table-collapse tr {
+}
+
+@media screen and (max-width:360px) {
+    .prsd-table-collapse tr {
+        display: block;
+    }
+
+    .govuk-table__cell {
+        padding: 2px;
+    }
+}
+
+
+
+
+

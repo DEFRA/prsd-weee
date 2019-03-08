@@ -8,11 +8,11 @@
     using DataAccess;
     using Domain.AatfReturn;
 
-    public class AddNonObligatedDataAccess : IAddNonObligatedDataAccess
+    public class NonObligatedDataAccess : INonObligatedDataAccess
     {
         private readonly WeeeContext context;
 
-        public AddNonObligatedDataAccess(WeeeContext context)
+        public NonObligatedDataAccess(WeeeContext context)
         {
             this.context = context;
         }
@@ -23,6 +23,13 @@
             {
                 context.NonObligatedWeee.Add(nonObligatedWeee);
             }
+
+            return context.SaveChangesAsync();
+        }
+
+        public Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage)
+        {
+            amount.UpdateTonnage(tonnage);
 
             return context.SaveChangesAsync();
         }

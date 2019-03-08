@@ -5,8 +5,10 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
 
-    internal interface IAddNonObligatedDataAccess
+    public interface INonObligatedDataAccess
     {
         Task Submit(IEnumerable<NonObligatedWeee> nonObligated);
+
+        Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage);
     }
 }
