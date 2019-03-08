@@ -60,15 +60,19 @@
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
             Dictionary<string, ProducerCharge> producerCharges = null;
-
-            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
-            var deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
-
+            int deserializedcomplianceYear = 0;
             var hasAnnualCharge = false;
             decimal? totalChargesCalculated = 0;
 
-            if (!containsSchemaErrors)
+            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+
+            if (!containsSchemaErrors || !containsErrorOrFatal)
+            { 
+                var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
+                deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
+            }
+
+            if (!containsSchemaErrors || !containsErrorOrFatal)
             {
                 producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, deserializedcomplianceYear, ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
