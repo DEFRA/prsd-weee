@@ -11,7 +11,12 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            return new SubmittedReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year);
+            var model = new SubmittedReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year)
+            {
+                OrgansationId = source.ReturnOperatorData.OrganisationId
+            };
+
+            return model;
         }
     }
 }

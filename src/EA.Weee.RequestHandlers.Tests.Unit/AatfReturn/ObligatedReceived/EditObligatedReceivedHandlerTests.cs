@@ -1,23 +1,19 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReused
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Tests.Core;
+    using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.ObligatedReceived;
+    using RequestHandlers.Security;
+    using Requests.AatfReturn.Obligated;
+    using Weee.Tests.Core;
     using Xunit;
-    using Scheme = Domain.Scheme.Scheme;
 
     public class EditObligatedReceivedHandlerTests
     {

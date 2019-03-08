@@ -20,16 +20,16 @@
 
             this.Scheme = scheme;
             this.Return = @return;
-            this.ReturnId = Return.Id;
-            this.SchemeId = Scheme.Id;
+            this.ReturnId = @return.Id;
+            this.SchemeId = scheme.Id;
         }
 
         public virtual Scheme Scheme { get; private set; }
 
         public virtual Return Return { get; private set; }
 
-        public Guid ReturnId { get; private set; }
+        public virtual Guid ReturnId { get; private set; }
 
-        public Guid SchemeId { get; private set; }
+        public virtual Guid SchemeId { get; private set; }
     }
 }

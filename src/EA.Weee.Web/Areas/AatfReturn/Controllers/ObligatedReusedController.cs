@@ -12,6 +12,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Weee.Requests.AatfReturn;
 
     public class ObligatedReusedController : AatfReturnBaseController
     {
@@ -29,19 +30,24 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId)
         {
-            var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+            using (var client = apiClient())
             {
-                OrganisationId = organisationId,
-                ReturnId = returnId,
-                AatfId = aatfId,
-                AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name
-            };
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+                {
+                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    ReturnId = returnId,
+                    AatfId = aatfId,
+                    AatfName = (await cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Name
+                };
 
-            return View(viewModel);
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
+            }
         }
 
         [HttpPost]
@@ -56,9 +62,10 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "ReusedOffSite", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
+                    return AatfRedirect.ReusedOffSite(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
                 }
             }
+
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
