@@ -65,15 +65,12 @@
             decimal? totalChargesCalculated = 0;
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-
-            if (!containsSchemaErrors || !containsErrorOrFatal)
-            { 
-                var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
-                deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
-            }
-
+            
             if (!containsSchemaErrors || !containsErrorOrFatal)
             {
+                var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
+                deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
+
                 producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, deserializedcomplianceYear, ref hasAnnualCharge, ref totalChargesCalculated);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
