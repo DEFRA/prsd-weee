@@ -20,7 +20,7 @@
 
         public List<WeeeObligatedData> ObligatedWeeeReusedData { get; set; }
 
-        public OperatorData ReturnOperatorData { get; set; }
+        public virtual OperatorData ReturnOperatorData { get; set; }
 
         public ReturnData()
         {

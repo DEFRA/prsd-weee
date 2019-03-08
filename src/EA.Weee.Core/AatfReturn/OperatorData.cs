@@ -14,9 +14,9 @@
             this.OperatorName = operatorName;
             this.OrganisationId = organisationid;
         }
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
-        public Guid OrganisationId { get; set; }
+        public virtual Guid OrganisationId { get; set; }
 
         public string OperatorName { get; set; }
     }

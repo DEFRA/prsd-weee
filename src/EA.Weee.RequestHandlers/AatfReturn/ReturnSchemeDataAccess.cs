@@ -28,7 +28,14 @@
 
         public async Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId)
         {
-            return await context.ReturnScheme.Include(r => r.Scheme).Where(now => now.ReturnId == returnId).ToListAsync();
+            return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Include(s => s.Scheme).ToListAsync();
+        }
+
+        public async Task<Operator> GetOperatorByReturnId(Guid returnId)
+        {
+            var @return = await context.Returns.FirstOrDefaultAsync(r => r.Id == returnId);
+
+            return @return?.Operator;
         }
     }
 }

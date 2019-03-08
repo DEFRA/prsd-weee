@@ -34,15 +34,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid schemeId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid schemeId)
         {
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var model = mapper.Map(new ReturnToObligatedViewModelTransfer() { AatfId = aatfId, OrganisationId = organisationId, ReturnId = returnId, SchemeId = schemeId, ReturnData = @return });
+                var model = mapper.Map(new ReturnToObligatedViewModelTransfer() { AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, ReturnId = returnId, SchemeId = schemeId, ReturnData = @return });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(model);
             }
@@ -60,7 +60,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
+                    return AatfRedirect.TaskList(viewModel.ReturnId);
                 }
             }
 

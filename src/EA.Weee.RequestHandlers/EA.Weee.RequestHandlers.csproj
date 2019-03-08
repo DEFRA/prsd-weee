@@ -233,6 +233,7 @@
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
+    <Compile Include="Mappings\OperatorMap.cs" />
     <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />

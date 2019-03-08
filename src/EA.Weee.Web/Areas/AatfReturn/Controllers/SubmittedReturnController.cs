@@ -32,14 +32,14 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid returnId)
         {
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                
+
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+
                 return View("Index", mapper.Map<SubmittedReturnViewModel>(@return));
             }
         }
@@ -49,7 +49,7 @@
         public virtual async Task<ActionResult> Index(SubmittedReturnViewModel model)
         {
             return await Task.Run<ActionResult>(() =>
-                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = RouteData.Values["organisationId"] }));
+                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.OrgansationId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

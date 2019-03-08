@@ -1,54 +1,54 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
+    using Core.Scheme;
+    using DataAccess.DataAccess;
+    using Domain.AatfReturn;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.AatfReturn;
+    using RequestHandlers.Security;
+    using Requests.AatfReturn;
+    using Weee.Tests.Core;
     using Xunit;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class GetSchemeRequestHandlerTests
     {
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
-        private readonly RequestHandlers.Scheme.IGetSchemesDataAccess getSchemesDataAccess;
         private readonly IReturnDataAccess returnDataAccess; 
-        private readonly ISchemeDataAccess schemeDataAccess;
-        private GetSchemeRequestHandler handler;
+        private readonly GetSchemeRequestHandler handler;
         private readonly IMapper mapper;
    
         public GetSchemeRequestHandlerTests()
         {
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
-            getSchemesDataAccess = A.Fake<RequestHandlers.Scheme.IGetSchemesDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
             mapper = A.Fake<IMapper>();
-            handler = new GetSchemeRequestHandler(weeeAuthorization, returnSchemeDataAccess, getSchemesDataAccess, mapper);
+
+            handler = new GetSchemeRequestHandler(weeeAuthorization, returnSchemeDataAccess, mapper);
         }
 
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            var handler = new GetSchemeRequestHandler(authorization, returnSchemeDataAccess, getSchemesDataAccess, mapper);
+            var handlerLocal = new GetSchemeRequestHandler(authorization, returnSchemeDataAccess, mapper);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturnScheme>());
+            Func<Task> action = async () => await handlerLocal.HandleAsync(A.Dummy<GetReturnScheme>());
             
             await action.Should().ThrowAsync<SecurityException>();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenGetReturnSchemeRequest_SchemeShouldBeRetrieved()
+        public async Task HandleAsync_GivenGetReturnSchemeRequest_SelectedSchemeShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
             var request = new GetReturnScheme(returnId);
@@ -59,25 +59,55 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenGetReturnSchemeRequest_ReturnSchemeDataAccessIsCalled()
+        public async Task HandleAsync_GivenGetReturnSchemeRequest_OperatorShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
-            List<Guid> schemeIdList = new List<Guid>();
-
-            var returnSchemeList = new List<ReturnScheme>();
-
             var request = new GetReturnScheme(returnId);
 
-            Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
+            await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(request.ReturnId)).Returns(returnSchemeList);
+            A.CallTo(() => returnSchemeDataAccess.GetOperatorByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
 
-            var mapper = A.Fake<IMapper>();
-            SchemeData schemeData = A.Fake<SchemeData>();
-            A.CallTo(() => mapper.Map<Domain.Scheme.Scheme, SchemeData>(scheme))
-                .Returns(schemeData);
+        [Fact]
+        public async Task HandleAsync_GivenSchemeList_SchemeListShouldBeMapped()
+        {
+            var schemeList = new List<ReturnScheme>() { A.Fake<ReturnScheme>(), A.Fake<ReturnScheme>() };
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(schemeList);
 
-            var result = await handler.HandleAsync(request);
+            await handler.HandleAsync(A.Dummy<GetReturnScheme>());
+
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(0).Scheme)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(1).Scheme)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOperator_OperatorShouldBeMapped()
+        {
+            var @operator = A.Fake<Operator>();
+
+            A.CallTo(() => returnSchemeDataAccess.GetOperatorByReturnId(A<Guid>._)).Returns(@operator);
+
+            await handler.HandleAsync(A.Dummy<GetReturnScheme>());
+
+            A.CallTo(() => mapper.Map<Operator, OperatorData>(@operator)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenSchemeListAndOperator_SchemeDataListShouldBeReturned()
+        {
+            var @operator = A.Fake<OperatorData>();
+            var schemeList = A.Fake<SchemeData>();
+
+            A.CallTo(() => mapper.Map<Operator, OperatorData>(A<Operator>._)).Returns(@operator);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).Returns(schemeList);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._))
+                .Returns(new List<ReturnScheme>() { A.Fake<ReturnScheme>() });
+            var result = await handler.HandleAsync(A.Dummy<GetReturnScheme>());
+
+            result.OperatorData.Should().Be(@operator);
+            result.SchemeDataItems.Should().Contain(schemeList);
+            result.SchemeDataItems.Count().Should().Be(1);
         }
     }
 }

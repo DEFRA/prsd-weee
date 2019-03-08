@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteViewModel
 @{
@@ -15,7 +16,7 @@
 
     <p>This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first</p>
 
-    @using (Html.BeginForm("Index", "ReusedOffSite", FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()

@@ -40,15 +40,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool dcf)
+        public virtual async Task<ActionResult> Index(Guid returnId, bool dcf)
         {
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer() { OrganisationId = organisationId, ReturnId = returnId, Dcf = dcf, ReturnData = @return });
+                var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer() { ReturnId = returnId, Dcf = dcf, ReturnData = @return, OrganisationId = @return.ReturnOperatorData.OrganisationId });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(model);
             }
