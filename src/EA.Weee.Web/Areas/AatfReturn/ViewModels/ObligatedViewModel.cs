@@ -24,16 +24,16 @@
 
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
-        public ObligatedViewModel()
+        public ObligatedViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(new ObligatedCategoryValues());
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            this.categoryValueCalculator = categoryValueCalculator;
         }
 
-        public ObligatedViewModel(ObligatedCategoryValues values)
+        public ObligatedViewModel(ObligatedCategoryValues values, ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(values);
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            this.categoryValueCalculator = categoryValueCalculator;
         }
 
         private void AddCategoryValues(ObligatedCategoryValues obligatedCategories)

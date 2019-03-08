@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
+    using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class ReturnToNonObligatedViewModelMapTests
@@ -19,13 +17,15 @@
         private readonly ReturnToNonObligatedValuesViewModelMap mapper;
         private readonly IWeeeCache cache;
         private readonly IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>> categoryMap;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ReturnToNonObligatedViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>>>();
+            calculator = A.Fake<ICategoryValueTotalCalculator>();
 
-            mapper = new ReturnToNonObligatedValuesViewModelMap(cache, categoryMap);
+            mapper = new ReturnToNonObligatedValuesViewModelMap(cache, categoryMap, calculator);
         }
 
         [Fact]

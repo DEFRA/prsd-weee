@@ -20,16 +20,16 @@
 
         private ICategoryValueTotalCalculator categoryValueCalculator;
 
-        public NonObligatedValuesViewModel()
+        public NonObligatedValuesViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(new NonObligatedCategoryValues());
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            this.categoryValueCalculator = categoryValueCalculator;
         }
 
-        public NonObligatedValuesViewModel(NonObligatedCategoryValues values)
+        public NonObligatedValuesViewModel(NonObligatedCategoryValues values, ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(values);
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            this.categoryValueCalculator = categoryValueCalculator;
         }
 
         private void AddCategoryValues(NonObligatedCategoryValues nonObligatedCategories)

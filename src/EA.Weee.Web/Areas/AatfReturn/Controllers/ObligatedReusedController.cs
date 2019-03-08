@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -20,13 +21,19 @@
         private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly ICategoryValueTotalCalculator calculator;
 
-        public ObligatedReusedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IObligatedReusedWeeeRequestCreator requestCreator)
+        public ObligatedReusedController(IWeeeCache cache,
+            BreadcrumbService breadcrumb,
+            Func<IWeeeClient> apiClient,
+            IObligatedReusedWeeeRequestCreator requestCreator,
+            ICategoryValueTotalCalculator calculator)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.calculator = calculator;
         }
 
         [HttpGet]
@@ -36,7 +43,7 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var viewModel = new ObligatedViewModel(new ObligatedCategoryValues())
+                var viewModel = new ObligatedViewModel(new ObligatedCategoryValues(), calculator)
                 {
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     ReturnId = returnId,

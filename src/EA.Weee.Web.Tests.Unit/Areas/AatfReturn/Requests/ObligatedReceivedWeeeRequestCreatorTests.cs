@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
@@ -14,6 +15,7 @@
     public class ObligatedReceivedWeeeRequestCreatorTests
     {
         private readonly IObligatedReceivedWeeeRequestCreator requestCreator;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReceivedWeeeRequestCreatorTests()
         {
@@ -25,7 +27,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -45,7 +47,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -69,7 +71,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -94,7 +96,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             foreach (var c in categoryValues)
             {
@@ -114,7 +116,7 @@
         [Fact]
         public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
-            var model = new ObligatedViewModel()
+            var model = new ObligatedViewModel(calculator)
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid()
@@ -129,7 +131,7 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
         {
-            var model = new ObligatedViewModel();
+            var model = new ObligatedViewModel(calculator);
             model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
 
             var request = requestCreator.ViewModelToRequest(model);
@@ -140,7 +142,7 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
         {
-            var model = new ObligatedViewModel()
+            var model = new ObligatedViewModel(calculator)
             {
                 CategoryValues = new List<ObligatedCategoryValue>() {new ObligatedCategoryValue() }
             };
@@ -156,7 +158,7 @@
         [Fact]
         public void ViewModelToRequest_GivenAddViewModel_RequestTypeShouldBeAdd()
         {
-            var model = new ObligatedViewModel();
+            var model = new ObligatedViewModel(calculator);
 
             var request = requestCreator.ViewModelToRequest(model);
 

@@ -13,7 +13,7 @@
         public decimal? NonObligatedTonnageTotalDcf = null;
 
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
-        private ITonnageUtilities tonnageUtilities;
+        private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnToReturnViewModelMap(ITonnageUtilities tonnageUtilities)
         {
