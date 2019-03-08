@@ -38,15 +38,9 @@
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var xmlChargeBandCalculatorContext = new XMLChargeBandCalculatorContext();
 
-            if (scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA && deserializedcomplianceYear > 2018)
-            {
-                xmlChargeBandCalculatorContext.SetChargeBandCalculatorContext(new XMLChargeBandCalculatorByYear(xmlConverter, producerChargerCalculator));
-                xmlChargeBandCalculatorContext.SetChargeBandCalculator(message);
-            }
-            else
-            {
-                producerCharges = xmlChargeBandCalculator.Calculate(message);
-            }
+            var calculatorOptionStrategy = new XmlChargeBandCalculatorStrategy(xmlConverter, producerChargerCalculator);
+            var calculatorOption = calculatorOptionStrategy.GetCalculatorOption(scheme, deserializedcomplianceYear);
+            producerCharges = calculatorOption.Calculate(message);
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 

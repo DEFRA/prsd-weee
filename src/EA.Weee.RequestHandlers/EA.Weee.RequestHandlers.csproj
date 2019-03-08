@@ -163,6 +163,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />
     <Compile Include="DataReturns\Upload\FetchDataReturnUploadDataAccess.cs" />
@@ -210,7 +211,7 @@
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorByYear.cs" />
+    <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorByYearAndScheme.cs" />
     <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorContext.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
