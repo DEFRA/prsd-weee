@@ -20,6 +20,10 @@
 
         private ICategoryValueTotalCalculator categoryValueCalculator;
 
+        public NonObligatedValuesViewModel()
+        {
+        }
+        
         public NonObligatedValuesViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(new NonObligatedCategoryValues());

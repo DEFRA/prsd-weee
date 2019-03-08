@@ -56,8 +56,10 @@
             var transfer = new ReturnToNonObligatedValuesViewModelMapTransfer() { OrganisationId = orgId, ReturnId = returnId };
 
             var returnData = new ReturnData();
-            var nonObDataList = new List<NonObligatedData>();
-            nonObDataList.Add(new NonObligatedData(1, 10, false, nonObligatedDataId));
+            var nonObDataList = new List<NonObligatedData>
+            {
+                new NonObligatedData(1, 10, false, nonObligatedDataId)
+            };
             returnData.NonObligatedData = nonObDataList;
             transfer.ReturnData = returnData;
 

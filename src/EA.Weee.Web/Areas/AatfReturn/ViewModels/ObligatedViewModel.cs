@@ -24,6 +24,10 @@
 
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
+        public ObligatedViewModel()
+        {
+        }
+
         public ObligatedViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(new ObligatedCategoryValues());

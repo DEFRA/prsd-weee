@@ -14,7 +14,7 @@
     public class NonObligatedValuesViewModelValidatorTests
     {
         private NonObligatedValuesViewModelValidator validator;
-        private ICategoryValueTotalCalculator calculator;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public NonObligatedValuesViewModelValidatorTests()
         {
@@ -33,8 +33,10 @@
                 var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
-            var returnData = new ReturnData();
-            returnData.NonObligatedData = nonObligatedList;
+            var returnData = new ReturnData
+            {
+                NonObligatedData = nonObligatedList
+            };
 
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
@@ -68,8 +70,10 @@
                 var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, model.CategoryValues.ElementAt(count).Dcf, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
-            var returnData = new ReturnData();
-            returnData.NonObligatedData = nonObligatedList;
+            var returnData = new ReturnData
+            {
+                NonObligatedData = nonObligatedList
+            };
 
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
@@ -86,8 +90,10 @@
         [Fact]
         public void RuleForEach_ErrorShouldOccurWhenNonObligatedValueIsLowerThanDcfValueOfSameCategoryType()
         {
-            var model = new NonObligatedValuesViewModel(calculator);
-            model.Dcf = true;
+            var model = new NonObligatedValuesViewModel(calculator)
+            {
+                Dcf = true
+            };
             List<NonObligatedData> nonObligatedList = new List<NonObligatedData>();
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
@@ -96,8 +102,10 @@
                 var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
-            var returnData = new ReturnData();
-            returnData.NonObligatedData = nonObligatedList;
+            var returnData = new ReturnData
+            {
+                NonObligatedData = nonObligatedList
+            };
 
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
@@ -122,8 +130,10 @@
         [Fact]
         public void RuleForEach_NoErrorShouldOccurWhenNonObligatedValueIsHigherThanDcfValueOfSameCategoryType()
         {
-            var model = new NonObligatedValuesViewModel(calculator);
-            model.Dcf = true;
+            var model = new NonObligatedValuesViewModel(calculator)
+            {
+                Dcf = true
+            };
             List<NonObligatedData> nonObligatedList = new List<NonObligatedData>();
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
@@ -132,8 +142,10 @@
                 var nonObligatedData = new NonObligatedData(model.CategoryValues.ElementAt(count).CategoryId, @decimal, true, Guid.NewGuid());
                 nonObligatedList.Add(nonObligatedData);
             }
-            var returnData = new ReturnData();
-            returnData.NonObligatedData = nonObligatedList;
+            var returnData = new ReturnData
+            {
+                NonObligatedData = nonObligatedList
+            };
 
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {

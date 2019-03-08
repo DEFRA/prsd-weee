@@ -7,6 +7,7 @@
     using Constant;
     using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -28,8 +29,16 @@
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
+        private readonly ICategoryValueTotalCalculator calculator;
 
-        public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator, IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper)
+        public NonObligatedController(IWeeeCache cache,
+            BreadcrumbService breadcrumb,
+            Func<IWeeeClient> apiClient,
+            INonObligatedWeeRequestCreator requestCreator,
+            INonObligatedValuesViewModelValidatorWrapper validator,
+            IMap<ReturnToNonObligatedValuesViewModelMapTransfer,
+            NonObligatedValuesViewModel> mapper,
+            ICategoryValueTotalCalculator calculator)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
@@ -37,6 +46,7 @@
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.calculator = calculator;
         }
 
         [HttpGet]
