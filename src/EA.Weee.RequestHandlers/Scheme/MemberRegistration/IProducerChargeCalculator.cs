@@ -4,6 +4,6 @@
 
     public interface IProducerChargeCalculator
     {
-        ProducerCharge CalculateCharge(string schemeApprovalNumber, producerType producer, int complianceYear);
+        ProducerCharge CalculateCharge(schemeType scheme, producerType producer, int complianceYear);
     }
 }

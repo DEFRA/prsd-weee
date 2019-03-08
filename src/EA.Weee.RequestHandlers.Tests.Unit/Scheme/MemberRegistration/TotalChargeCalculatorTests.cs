@@ -26,6 +26,8 @@
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         private readonly TotalChargeCalculator totalChargeCalculator;
+        private readonly IXmlConverter xmlConverter;
+
         private bool hasAnnualCharge;
         private decimal? totalCharge;
         private readonly ProcessXmlFile file;
@@ -35,11 +37,12 @@
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
             producerChargeCalculator = A.Fake<IProducerChargeCalculator>();
+            xmlConverter = A.Fake<IXmlConverter>();
 
             totalCharge = 0;
             file = ProcessTestXmlFile();
 
-            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, totalChargeCalculatorDataAccess);
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, totalChargeCalculatorDataAccess, producerChargeCalculator, xmlConverter);
         }
 
         [Fact]
@@ -149,12 +152,12 @@
             return request;
         }
 
-        private XMLChargeBandCalculator XmlChargeBandCalculator()
+        private XmlChargeBandCalculator XmlChargeBandCalculator()
         {
             var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
 
             IProducerChargeCalculator producerChargerCalculator = null;
-            return new XMLChargeBandCalculator(xmlConverter, producerChargerCalculator);
+            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
 
         private Dictionary<string, ProducerCharge> ProducerCharges()

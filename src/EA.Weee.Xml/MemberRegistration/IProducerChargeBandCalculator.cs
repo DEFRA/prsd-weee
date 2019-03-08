@@ -4,6 +4,6 @@
    
     public interface IProducerChargeBandCalculator
     {
-        ChargeBand GetProducerChargeBand(annualTurnoverBandType annualTurnoverBand, bool vatRegistered, eeePlacedOnMarketBandType eeePlacedOnMarketBand);
+        ChargeBand GetProducerChargeBand(producerType producerType);
     }
 }

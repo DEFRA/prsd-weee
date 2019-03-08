@@ -35,12 +35,7 @@
 
             hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
 
-            var producerCharges = new Dictionary<string, ProducerCharge>();
-            var xmlChargeBandCalculatorContext = new XMLChargeBandCalculatorContext();
-
-            var calculatorOptionStrategy = new XmlChargeBandCalculatorStrategy(xmlConverter, producerChargerCalculator);
-            var calculatorOption = calculatorOptionStrategy.GetCalculatorOption(scheme, deserializedcomplianceYear);
-            producerCharges = calculatorOption.Calculate(message);
+            var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 

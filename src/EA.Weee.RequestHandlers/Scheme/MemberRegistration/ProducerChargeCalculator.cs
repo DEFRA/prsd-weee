@@ -7,21 +7,22 @@
     public class ProducerChargeCalculator : IProducerChargeCalculator
     {
         private readonly IProducerChargeCalculatorDataAccess dataAccess;
-        private readonly IProducerChargeBandCalculator producerChargeBandCalculator;
-
-        public ProducerChargeCalculator(IProducerChargeCalculatorDataAccess dataAccess, IProducerChargeBandCalculator producerChargeBandCalculator)
+        private readonly IProducerChargeBandCalculatorChooser producerChargeBandCalculatorChooser;
+        public ProducerChargeCalculator(IProducerChargeCalculatorDataAccess dataAccess, 
+            IProducerChargeBandCalculator producerChargeBandCalculator, 
+            IProducerChargeBandCalculatorChooser producerChargeBandCalculatorChooser)
         {
             this.dataAccess = dataAccess;
-            this.producerChargeBandCalculator = producerChargeBandCalculator;
+            this.producerChargeBandCalculatorChooser = producerChargeBandCalculatorChooser;
         }
 
-        public ProducerCharge CalculateCharge(string schemeApprovalNumber, producerType producer, int complianceYear)
+        public ProducerCharge CalculateCharge(schemeType scheme, producerType producer, int complianceYear)
         {
-            ProducerCharge producerCharge = GetProducerCharge(producer);
+            ProducerCharge producerCharge = GetProducerCharge(scheme, producer, complianceYear);
 
             if (producer.status == statusType.A)
             {
-                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(schemeApprovalNumber, producer.registrationNo, complianceYear);
+                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(scheme.approvalNo, producer.registrationNo, complianceYear);
 
                 producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
             }
@@ -29,12 +30,11 @@
             return producerCharge;
         }
 
-        private ProducerCharge GetProducerCharge(producerType producer)
+        private ProducerCharge GetProducerCharge(schemeType scheme, producerType producer, int complianceYear)
         {
-            ChargeBand chargeBandType = producerChargeBandCalculator.GetProducerChargeBand(
-                producer.annualTurnoverBand,
-                producer.VATRegistered,
-                producer.eeePlacedOnMarketBand);
+            var calculator = producerChargeBandCalculatorChooser.GetCalculator(scheme, producer, complianceYear);
+
+            ChargeBand chargeBandType = calculator.GetProducerChargeBand(producer);
 
             ChargeBandAmount currentChargeBandAmount =
                 dataAccess.FetchCurrentChargeBandAmount(chargeBandType);

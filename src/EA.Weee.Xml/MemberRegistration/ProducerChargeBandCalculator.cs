@@ -4,29 +4,29 @@
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
-        public ChargeBand GetProducerChargeBand(annualTurnoverBandType annualTurnoverBand, bool vatRegistered, eeePlacedOnMarketBandType eeePlacedOnMarketBand)
+        public ChargeBand GetProducerChargeBand(producerType producerType)
         {
-            if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
                 return ChargeBand.E;
             }
             else
             {
-                if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                    && vatRegistered
-                    && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                if (producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                    && producerType.VATRegistered
+                    && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
                     return ChargeBand.A;
                 }
-                else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && vatRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (producerType.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                         && producerType.VATRegistered
+                         && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
                     return ChargeBand.B;
                 }
-                else if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                         && !vatRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                         && !producerType.VATRegistered
+                         && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
                     return ChargeBand.D;
                 }
