@@ -41,7 +41,10 @@
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+
+            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().Be("Index");
         }
@@ -50,8 +53,10 @@
         public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
 
-            await controller.Index(returnId, Guid.NewGuid());
+            await controller.Index(returnId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(g => g.ReturnId.Equals(returnId))))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -60,22 +65,24 @@
         [Fact]
         public async void IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeBuilt()
         {
-            var returnData = new ReturnData();
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
-            var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
 
-            await controller.Index(organisationId, returnId);
+            await controller.Index(returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
@@ -84,10 +91,12 @@
         public async void IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
+            var @return = A.Fake<ReturnData>();
 
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().Be(model);
         }

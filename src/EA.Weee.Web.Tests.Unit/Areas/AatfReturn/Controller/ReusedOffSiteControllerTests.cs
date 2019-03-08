@@ -72,28 +72,24 @@
         [Fact]
         public async void IndexPost_OnSubmitNo_PageRedirectsToAatfTaskList()
         {
-            var model = new ReusedOffSiteViewModel();
-            model.SelectedValue = "No";
+            var model = new ReusedOffSiteViewModel { SelectedValue = "No" };
             var returnId = new Guid();
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("AatfTaskList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
         }
 
         [Fact]
         public async void IndexPost_OnSubmitYes_PageRedirectsToCreateSite()
         {
-            var model = new ReusedOffSiteViewModel();
-            model.SelectedValue = "Yes";
+            var model = new ReusedOffSiteViewModel { SelectedValue = "Yes" };
             var returnId = new Guid();
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ReusedOffSiteCreateSite");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
         }
     }

@@ -35,6 +35,7 @@
     @using (Html.BeginRouteForm(AatfRedirect.Default))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrgansationId)
         <button type="submit" class="govuk-button">
             Perform another activity
         </button>

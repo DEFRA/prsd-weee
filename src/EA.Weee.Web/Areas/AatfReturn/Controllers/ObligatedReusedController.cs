@@ -65,6 +65,7 @@
                     return AatfRedirect.ReusedOffSite(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
                 }
             }
+
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }

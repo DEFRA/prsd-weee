@@ -7,6 +7,7 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using Core.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -31,6 +32,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
+        private readonly IWeeeCache cache;
 
         public NonObligatedControllerTests()
         {
@@ -38,8 +40,10 @@
             requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
+            cache = A.Fake<IWeeeCache>();
+
             mapper = A.Fake<IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel>>();
-            controller = new NonObligatedController(A.Fake<IWeeeCache>(), breadcrumb, () => weeeClient, requestCreator, validator, mapper);
+            controller = new NonObligatedController(cache, breadcrumb, () => weeeClient, requestCreator, validator, mapper);
         }
 
         [Fact]
@@ -75,10 +79,22 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            var operatorData = A.Fake<OperatorData>();
+            const string orgName = "orgName";
 
-            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<bool>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
-            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<bool>());
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
         }
 
         [Fact]
@@ -108,7 +124,10 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -173,8 +192,10 @@
         public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
 
-            await controller.Index(A.Dummy<Guid>(), returnId, true);
+            await controller.Index(returnId, true);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId))))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -184,13 +205,14 @@
         public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
-            var @return = new ReturnData();
             var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
             const bool dcf = true;
 
+            A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
-            await controller.Index(organisationId, returnId, dcf);
+            await controller.Index(returnId, dcf);
 
             A.CallTo(() => mapper.Map(A<ReturnToNonObligatedValuesViewModelMapTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.OrganisationId.Equals(organisationId) && r.Dcf.Equals(dcf) && r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -199,10 +221,12 @@
         public async void IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
         {
             var model = A.Fake<NonObligatedValuesViewModel>();
+            var @return = A.Fake<ReturnData>();
 
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
             A.CallTo(() => mapper.Map(A<ReturnToNonObligatedValuesViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
 
             result.Model.Should().Be(model);
         }
