@@ -7,9 +7,6 @@
     public static class AatfRedirect
     {
         public static string SelectPcsRouteName = "aatf-select-pcs";
-        //public static string TaskListRouteName = "aatf";
-        //public static string ReceivedRouteName = "aatf";
-        //public static string ReUsedRouteName = "aatf-reused";
         public static string NonObligatedDcf = "aatf-non-obligated";
         public static string NonObligated = "aatf-non-obligated-dcf";
         public static string CheckReturnRouteName = "aatf-check";
