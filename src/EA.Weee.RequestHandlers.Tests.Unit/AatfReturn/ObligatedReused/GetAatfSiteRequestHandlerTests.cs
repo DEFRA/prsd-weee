@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedGeneric;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.Security;
@@ -16,18 +14,19 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentAssertions.Common;
     using Xunit;
 
     public class GetAatfSiteRequestHandlerTests
     {
-        private readonly IMap<AatfAddress, AddressData> mapper;
+        private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
         private readonly IGetAatfSiteDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly GetAatfSiteRequestHandler handler;
 
         public GetAatfSiteRequestHandlerTests()
         {
-            mapper = A.Fake<IMap<AatfAddress, AddressData>>();
+            mapper = A.Fake<IMap<AatfAddressObligatedAmount, AddressTonnageSummary>>();
             dataAccess = A.Fake<IGetAatfSiteDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
             handler = new GetAatfSiteRequestHandler(authorization, dataAccess, mapper);
@@ -68,18 +67,30 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfAddressData_AatfAddressDataShouldBeMapped()
+        public async Task HandleAsync_GivenAatfIdAndReturnId_WeeeReusedAmountShouldBeRetrieved()
+        {
+            var weeeReusedAmounts = WeeeReusedAmounts();
+
+            A.CallTo(() => dataAccess.GetObligatedWeeeForReturnAndAatf(A<Guid>._, A<Guid>._)).Returns(weeeReusedAmounts);
+
+            var result = await handler.HandleAsync(A.Dummy<GetAatfSite>());
+
+            A.CallTo(() => dataAccess.GetObligatedWeeeForReturnAndAatf(A<Guid>._, A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenAddressesAndWeeReusedAmounts_SummaryDataShouldBeMapped()
         {
             var aatfAddresses = AatfAddresses();
+            var weeeReusedAmounts = WeeeReusedAmounts();
 
             A.CallTo(() => dataAccess.GetAddresses(A<Guid>._, A<Guid>._)).Returns(aatfAddresses);
+            A.CallTo(() => dataAccess.GetObligatedWeeeForReturnAndAatf(A<Guid>._, A<Guid>._)).Returns(weeeReusedAmounts);
 
             await handler.HandleAsync(A.Dummy<GetAatfSite>());
 
-            for (var i = 0; i < aatfAddresses.Count; i++)
-            {
-                A.CallTo(() => mapper.Map(aatfAddresses.ElementAt(i))).MustHaveHappened(Repeated.Exactly.Once);
-            }
+            A.CallTo(() => mapper.Map(A<AatfAddressObligatedAmount>.That.Matches(a => a.AatfAddresses.IsSameOrEqualTo(aatfAddresses)
+                                                                                        && a.WeeeReusedAmounts.IsSameOrEqualTo(weeeReusedAmounts)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private List<AatfAddress> AatfAddresses()
@@ -88,6 +99,16 @@
             {
                 A.Fake<AatfAddress>(),
                 A.Fake<AatfAddress>()
+            };
+            return addresses;
+        }
+
+        private List<WeeeReusedAmount> WeeeReusedAmounts()
+        {
+            var addresses = new List<WeeeReusedAmount>()
+            {
+                A.Fake<WeeeReusedAmount>(),
+                A.Fake<WeeeReusedAmount>()
             };
             return addresses;
         }

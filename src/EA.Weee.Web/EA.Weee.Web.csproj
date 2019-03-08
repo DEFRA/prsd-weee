@@ -310,6 +310,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToObligatedViewModelTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddObligatedReusedSiteRequestCreator.cs" />

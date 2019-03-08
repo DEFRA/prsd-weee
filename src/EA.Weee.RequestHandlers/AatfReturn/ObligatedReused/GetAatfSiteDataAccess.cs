@@ -27,5 +27,12 @@
 
             return await context.WeeeReusedSite.Where(w => w.WeeeReused.Id == weeeReusedId).Select(w => w.Address).ToListAsync();
         }
+
+        public async Task<List<WeeeReusedAmount>> GetObligatedWeeeForReturnAndAatf(Guid aatfId, Guid returnId)
+        {
+            return await context.WeeeReusedAmount.Where(a => a.WeeeReused.ReturnId == returnId && a.WeeeReused.Aatf.Id == aatfId)
+                .Include(a => a.WeeeReused.Aatf)
+                .Select(a => a).ToListAsync();
+        }
     }
 }

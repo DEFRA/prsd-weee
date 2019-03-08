@@ -39,20 +39,6 @@
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 viewModel = mapper.Map<ReusedOffSiteSummaryListViewModel>(sites);
-
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                returnViewModel = mapper.Map<ReturnViewModel>(@return);
-
-                if (returnViewModel.AatfsData != null && returnViewModel.AatfsData.Select(a => a.Aatf.Id).Contains(aatfId))
-                {
-                    viewModel.B2bTotal = returnViewModel.AatfsData.Where(a => a.Aatf.Id == aatfId).FirstOrDefault().WeeeReused.B2B;
-                    viewModel.B2cTotal = returnViewModel.AatfsData.Where(a => a.Aatf.Id == aatfId).FirstOrDefault().WeeeReused.B2C;
-                }
-                else
-                {
-                    viewModel.B2bTotal = "-";
-                    viewModel.B2cTotal = "-";
-                }
             }
 
             viewModel.OrganisationId = organisationId;

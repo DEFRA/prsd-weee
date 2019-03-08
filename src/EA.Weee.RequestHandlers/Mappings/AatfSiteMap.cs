@@ -1,31 +1,47 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using Aatf = Core.AatfReturn.AatfData;
 
-    public class AatfSiteMap : IMap<AatfAddress, AddressData>
+    public class AatfSiteMap : IMap<AatfAddressObligatedAmount, AddressTonnageSummary>
     {
-        public AddressData Map(AatfAddress source)
+        public AddressTonnageSummary Map(AatfAddressObligatedAmount source)
         {
-            if (source != null)
+            var summaryData = new AddressTonnageSummary();
+
+            if (source.AatfAddresses != null)
             {
-                return new AddressData
-                {
-                    Name = source.Name,
-                    Address1 = source.Address1,
-                    Address2 = source.Address2,
-                    TownOrCity = source.TownOrCity,
-                    CountyOrRegion = source.CountyOrRegion,
-                    Postcode = source.Postcode,
-                    CountryId = source.Country.Id,
-                    CountryName = source.Country.Name
-                };
+                summaryData.AddressData = source.AatfAddresses.Select(n => new AddressData(
+                    n.Name,
+                    n.Address1,
+                    n.Address2,
+                    n.TownOrCity,
+                    n.CountyOrRegion,
+                    n.Postcode,
+                    n.Country.Id,
+                    n.Country.Name)).ToList();
             }
             else
             {
-                return new AddressData();
+                summaryData.AddressData = new List<AddressData>();
             }
+            
+            if (source.WeeeReusedAmounts != null)
+            {
+                summaryData.ObligatedData = source.WeeeReusedAmounts.Select(n => new WeeeObligatedData(
+                    n.Id,
+                    null,
+                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber),
+                    n.CategoryId,
+                    n.NonHouseholdTonnage,
+                    n.HouseholdTonnage)).ToList();
+            }
+
+            return summaryData;
         }
     }
 }

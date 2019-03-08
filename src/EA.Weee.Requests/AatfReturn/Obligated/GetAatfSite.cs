@@ -5,7 +5,7 @@
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
 
-    public class GetAatfSite : IRequest<List<AddressData>>
+    public class GetAatfSite : IRequest<AddressTonnageSummary>
     {
         public Guid AatfId { get; private set; }
 

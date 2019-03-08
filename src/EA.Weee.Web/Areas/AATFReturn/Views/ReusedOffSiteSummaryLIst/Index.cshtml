@@ -7,49 +7,55 @@
 }
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">WEEE reused as a whole appliance</h1>
-    <table class="govuk-table govuk-!-font-size-16" id="reuse-table-sites" style="width:50%; display:inline-table;">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">B2C(t)</th>
-                <th class="govuk-table__header" scope="col">B2B(t)</th>
-                <th class="govuk-table__header" scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="govuk-table__cell">@Model.B2cTotal</td>
-                <td class="govuk-table__cell">@Model.B2bTotal</td>
-                <td class="govuk-table__cell"></td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="govuk-!-padding-bottom-4"></div>
-    <table class="govuk-table govuk-!-font-size-16" id="reuse-table-summary" style="margin-bottom: 0px;">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" style="width:20%" scope="col">Site name</th>
-                <th class="govuk-table__header" style="width:60%" scope="col">Address</th>
-                <th class="govuk-table__header" style="width:20%" scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var address in Model.Addresses)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" scope="col">@address.Name</td>
-                    <td class="govuk-table__cell" scope="col">@address.Address</td>
-                    <td class="govuk-table__cell" scope="col"></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class="govuk-!-padding-bottom-2"></div>
-    @Html.RouteLink("Add another site", "aatf-reused", new { organisationId = @Model.OrganisationId, returnId = @Model.ReturnId, aatfId = @Model.AatfId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
-    <div class="govuk-!-padding-bottom-8"></div>
-    @using (Html.BeginForm("Index", "SubmittedReturn", FormMethod.Post))
+
+    @using (Html.BeginForm("Index", "ReusedOffSiteSummaryList", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <form method="post" class="form" style="display: block">
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+
+        <table class="govuk-table govuk-!-font-size-16" id="reuse-table-sites" style="width:50%; display:inline-table;">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">B2C(t)</th>
+                    <th class="govuk-table__header" scope="col">B2B(t)</th>
+                    <th class="govuk-table__header" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="govuk-table__cell">@Model.B2cTotal</td>
+                    <td class="govuk-table__cell">@Model.B2bTotal</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="govuk-!-padding-bottom-4"></div>
+        <table class="govuk-table govuk-!-font-size-16" id="reuse-table-summary" style="margin-bottom: 0px;">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" style="width:20%" scope="col">Site name</th>
+                    <th class="govuk-table__header" style="width:60%" scope="col">Address</th>
+                    <th class="govuk-table__header" style="width:20%" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var address in Model.Addresses)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" scope="col">@address.Name</td>
+                        <td class="govuk-table__cell" scope="col">@address.Address</td>
+                        <td class="govuk-table__cell" scope="col"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="govuk-!-padding-bottom-2"></div>
+        @Html.RouteLink("Add another site", "aatf-reused", new { organisationId = @Model.OrganisationId, returnId = @Model.ReturnId, aatfId = @Model.AatfId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+        <div class="govuk-!-padding-bottom-8"></div>
+
+        <form method="post" class="form" style="display: inline">
             <button type="submit" class="govuk-button" id="aatf-task-list">
                 AATF task list
             </button>

@@ -7,16 +7,18 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
-    public class AddressDataToReusedOffSiteSummaryListViewModelMap : IMap<List<AddressData>, ReusedOffSiteSummaryListViewModel>
+    public class AddressDataToReusedOffSiteSummaryListViewModelMap : IMap<AddressTonnageSummary, ReusedOffSiteSummaryListViewModel>
     {
         public ReusedOffSiteSummaryListViewModel ViewModel = new ReusedOffSiteSummaryListViewModel();
         public List<AddressDataSummary> AddressDataSummaries = new List<AddressDataSummary>();
 
-        public ReusedOffSiteSummaryListViewModel Map(List<AddressData> source)
+        private TonnageUtilities tonnageUtilities = new TonnageUtilities();
+
+        public ReusedOffSiteSummaryListViewModel Map(AddressTonnageSummary source)
         {
             Guard.ArgumentNotNull(() => source, source);
              
-            foreach (var address in source)
+            foreach (var address in source.AddressData)
             {
                 var addressDataSummary = new AddressDataSummary();
                 addressDataSummary.Name = address.Name;
@@ -25,6 +27,11 @@
             }
 
             ViewModel.Addresses = AddressDataSummaries;
+
+            var tonnageTotals = tonnageUtilities.SumObligatedValues(source.ObligatedData);
+
+            ViewModel.B2bTotal = tonnageTotals.B2B;
+            ViewModel.B2cTotal = tonnageTotals.B2C;
 
             return ViewModel;
         }
