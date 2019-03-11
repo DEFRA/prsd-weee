@@ -42,5 +42,21 @@
         public string CountryName { get; set; }
 
         public IEnumerable<CountryData> Countries { get; set; }
+
+        public AddressData()
+        {
+        }
+
+        public AddressData(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)
+        {
+            Name = name;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
+            Postcode = postcode;
+            CountryId = countryId;
+            CountryName = countryName;
+        }
     }
 }

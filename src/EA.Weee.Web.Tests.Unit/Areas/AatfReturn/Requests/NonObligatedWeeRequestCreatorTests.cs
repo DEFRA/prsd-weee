@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using FluentAssertions;
@@ -14,10 +15,12 @@
     public class NonObligatedWeeRequestCreatorTests
     {
         private readonly INonObligatedWeeRequestCreator requestCreator;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public NonObligatedWeeRequestCreatorTests()
         {
             requestCreator = new NonObligatedWeeRequestCreator();
+            calculator = new CategoryValueTotalCalculator();
         }
 
         [Fact]
@@ -25,7 +28,7 @@
         {
             var categoryValues = new NonObligatedCategoryValues();
 
-            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+            var viewModel = new NonObligatedValuesViewModel(categoryValues, calculator);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -37,7 +40,7 @@
         {
             var categoryValues = new NonObligatedCategoryValues();
 
-            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+            var viewModel = new NonObligatedValuesViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -58,7 +61,7 @@
         {
             var categoryValues = new NonObligatedCategoryValues();
 
-            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+            var viewModel = new NonObligatedValuesViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -81,7 +84,7 @@
         {
             var categoryValues = new NonObligatedCategoryValues();
 
-            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+            var viewModel = new NonObligatedValuesViewModel(categoryValues, calculator);
 
             foreach (var t in categoryValues)
             {
@@ -101,7 +104,7 @@
         {
             var categoryValues = new NonObligatedCategoryValues();
 
-            var viewModel = new NonObligatedValuesViewModel(categoryValues);
+            var viewModel = new NonObligatedValuesViewModel(categoryValues, calculator);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -116,7 +119,7 @@
         [InlineData(false)]
         public void ViewModelToRequested_GivenValidViewModel_CategoryValuesDcfShouldBeMapped(bool dcf)
         {
-            var model = new NonObligatedValuesViewModel()
+            var model = new NonObligatedValuesViewModel(calculator)
             {
                 Dcf = dcf
             };
@@ -128,7 +131,7 @@
         [Fact]
         public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
-            var model = new NonObligatedValuesViewModel()
+            var model = new NonObligatedValuesViewModel(calculator)
             {
                 Dcf = true,
                 OrganisationId = Guid.NewGuid(),
@@ -145,7 +148,7 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
         {
-            var model = new NonObligatedValuesViewModel();
+            var model = new NonObligatedValuesViewModel(calculator);
             model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
 
             var request = requestCreator.ViewModelToRequest(model);
@@ -156,7 +159,7 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
         {
-            var model = new NonObligatedValuesViewModel()
+            var model = new NonObligatedValuesViewModel(calculator)
             {
                 CategoryValues = new List<NonObligatedCategoryValue>() { new NonObligatedCategoryValue() }
             };

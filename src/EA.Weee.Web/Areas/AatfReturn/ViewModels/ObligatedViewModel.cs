@@ -26,14 +26,18 @@
 
         public ObligatedViewModel()
         {
-            AddCategoryValues(new ObligatedCategoryValues());
-            categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
-        public ObligatedViewModel(ObligatedCategoryValues values)
+        public ObligatedViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
+        {
+            AddCategoryValues(new ObligatedCategoryValues());
+            this.categoryValueCalculator = categoryValueCalculator;
+        }
+
+        public ObligatedViewModel(ObligatedCategoryValues values, ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(values);
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            this.categoryValueCalculator = categoryValueCalculator;
         }
 
         private void AddCategoryValues(ObligatedCategoryValues obligatedCategories)

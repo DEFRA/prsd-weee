@@ -4,6 +4,7 @@
     using System.Globalization;
     using System.Linq;
     using Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
@@ -11,10 +12,12 @@
     public class ObligatedReceivedViewModelTests
     {
         private readonly ObligatedViewModel viewModel;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReceivedViewModelTests()
         {
-            viewModel = new ObligatedViewModel();
+            calculator = new CategoryValueTotalCalculator();
+            viewModel = new ObligatedViewModel(calculator);
         }
 
         [Fact]
@@ -96,7 +99,7 @@
         {
             for (var count = 0; count <= viewModel.CategoryValues.Count; count++)
             {
-                var local = new ObligatedViewModel();
+                var local = new ObligatedViewModel(calculator);
                 local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
                 local.Edit.Should().BeTrue();
             }

@@ -45,7 +45,6 @@
 
                 var dataAccess = new FetchAatfByOrganisationIdDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                var countryId = new Guid("B5EBE1D1-8349-43CD-9E87-0081EA0A8463");
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 

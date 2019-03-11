@@ -5,6 +5,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -24,6 +25,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligatedReusedController controller;
         private readonly IWeeeCache cache;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReusedControllerTests()
         {
@@ -31,8 +33,9 @@
             requestCreator = A.Fake<IObligatedReusedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            calculator = A.Fake<ICategoryValueTotalCalculator>();
 
-            controller = new ObligatedReusedController(cache, breadcrumb, () => weeeClient, requestCreator);
+            controller = new ObligatedReusedController(cache, breadcrumb, () => weeeClient, requestCreator, calculator);
         }
 
         [Fact]
@@ -44,7 +47,7 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new ObligatedViewModel();
+            var model = new ObligatedViewModel(calculator);
             var request = new AddObligatedReused();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -90,7 +93,7 @@
         [Fact]
         public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
-            var model = new ObligatedViewModel() { ReturnId = Guid.NewGuid() };
+            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid() };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 

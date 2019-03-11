@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -11,6 +12,7 @@
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -43,10 +45,17 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
         }
 
         [Fact]
@@ -74,16 +83,32 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToHolding()
+        public async void IndexPost_OnSubmit_PageRedirectsToSiteList()
         {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
             var organisationId = Guid.NewGuid();
-            var model = new ReusedOffSiteCreateSiteViewModel() { OrganisationId = organisationId};
-            var result = await controller.Index(model) as RedirectToRouteResult;
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var viewModel = new ReusedOffSiteCreateSiteViewModel();
+            viewModel.OrganisationId = organisationId;
+            viewModel.ReturnId = returnId;
+            viewModel.AatfId = aatfId;
+
+            httpContext.RouteData.Values.Add("organisationId", organisationId);
+            httpContext.RouteData.Values.Add("returnId", returnId);
+            httpContext.RouteData.Values.Add("aatfId", aatfId);
+
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
             result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
         }
 
         [Fact]
