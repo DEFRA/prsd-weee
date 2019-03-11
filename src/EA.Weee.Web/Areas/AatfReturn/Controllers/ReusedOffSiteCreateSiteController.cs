@@ -63,8 +63,8 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "Holding",
-                                        new { area = "AatfReturn", organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "ReusedOffSiteSummaryList",
+                                        new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId });
                 }
             }
 
