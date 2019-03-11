@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteSummaryListViewModel
 @{
@@ -52,7 +53,7 @@
             </tbody>
         </table>
         <div class="govuk-!-padding-bottom-2"></div>
-        @Html.RouteLink("Add another site", "aatf-reused", new { organisationId = @Model.OrganisationId, returnId = @Model.ReturnId, aatfId = @Model.AatfId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+        @Html.RouteLink("Add another site", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
         <div class="govuk-!-padding-bottom-8"></div>
 
         <form method="post" class="form" style="display: inline">
