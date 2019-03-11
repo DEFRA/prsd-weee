@@ -29,7 +29,6 @@
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
-        private readonly ICategoryValueTotalCalculator calculator;
 
         public NonObligatedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
@@ -37,8 +36,7 @@
             INonObligatedWeeRequestCreator requestCreator,
             INonObligatedValuesViewModelValidatorWrapper validator,
             IMap<ReturnToNonObligatedValuesViewModelMapTransfer,
-            NonObligatedValuesViewModel> mapper,
-            ICategoryValueTotalCalculator calculator)
+            NonObligatedValuesViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
@@ -46,7 +44,6 @@
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
-            this.calculator = calculator;
         }
 
         [HttpGet]
