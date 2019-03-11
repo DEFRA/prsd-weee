@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\AatfAddressObligatedAmount.cs" />
     <Compile Include="AatfReturn\INonObligatedAmount.cs" />
     <Compile Include="AatfReturn\IObligatedAmount.cs" />
     <Compile Include="AatfReturn\AatfAddress.cs" />

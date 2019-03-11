@@ -23,7 +23,6 @@
         {
             mapper = A.Fake<IMap<Aatf, AatfData>>();
             dataAccess = A.Fake<IGenericDataAccess>();
-
             handler = new GetAatfInfoByOrganisationRequestHandler(mapper, dataAccess);
         }
 

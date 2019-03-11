@@ -5,13 +5,13 @@
     using System.Linq;
     using Core.AatfReturn;
     using Core.Scheme;
+    using EA.Weee.Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
     using Prsd.Core.Mapper;
     using Services.Caching;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 
     public class ReturnToObligatedViewModelMapTests
@@ -19,13 +19,15 @@
         private readonly ReturnToObligatedViewModelMap mapper;
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> categoryMap;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ReturnToObligatedViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>>>();
+            calculator = A.Fake<ICategoryValueTotalCalculator>();
 
-            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap);
+            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap, calculator);
         }
 
         [Fact]

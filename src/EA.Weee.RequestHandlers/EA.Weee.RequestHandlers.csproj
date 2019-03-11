@@ -80,12 +80,15 @@
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedGeneric\IGetAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\IObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\ObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\EditObligatedReceivedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\IObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteRequestHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\ObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteDataAccess.cs" />
@@ -230,6 +233,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
     <Compile Include="Mappings\AatfMap.cs" />
+    <Compile Include="Mappings\AatfSiteMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
