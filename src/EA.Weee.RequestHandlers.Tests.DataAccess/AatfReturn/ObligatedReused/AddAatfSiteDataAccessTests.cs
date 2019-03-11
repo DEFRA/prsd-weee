@@ -52,9 +52,12 @@
         [Fact]
         public void Submit_GivenReusedSiteData_SaveChangesAsyncShouldBeCalled()
         {
-            dataAccess.Submit(new WeeeReusedSite());
+            var site = new WeeeReusedSite();
 
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            dataAccess.Submit(site);
+
+            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }
