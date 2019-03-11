@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
@@ -41,6 +42,11 @@
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
                 var model = mapper.Map(new ReturnToObligatedViewModelTransfer() { AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, ReturnId = returnId, SchemeId = schemeId, ReturnData = @return });
+
+                if (TempData["pastedValues"] != null)
+                {
+                    model.CategoryValues = TempData["pastedValues"] as IList<ObligatedCategoryValue>;
+                }
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 

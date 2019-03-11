@@ -1,16 +1,11 @@
 ﻿namespace EA.Weee.Core.Shared
 {
-    using Core.AatfReturn;
-    using DataReturns;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Prsd.Core;
-    using Prsd.Core.Extensions;
+    using Core.AatfReturn;
 
-    public class PasteProcesser : IPasteProcesser
+    public class PasteProcessor : IPasteProcessor
     {
         private static readonly List<string> AllowedCharactors = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\r", "\n" };
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };

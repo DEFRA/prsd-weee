@@ -8,10 +8,10 @@
 
     public class CopyValuesController : Controller
     {
-        private readonly IPasteProcesser pasteProcesser;
+        private readonly IPasteProcessor pasteProcesser;
         private readonly ICategoryValueTotalCalculator calculator;
 
-        public CopyValuesController(IPasteProcesser pasteProcesser, ICategoryValueTotalCalculator calculator)
+        public CopyValuesController(IPasteProcessor pasteProcesser, ICategoryValueTotalCalculator calculator)
         {
             this.pasteProcesser = pasteProcesser;
             this.calculator = calculator;

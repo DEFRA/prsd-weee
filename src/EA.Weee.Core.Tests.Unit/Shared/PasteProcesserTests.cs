@@ -13,11 +13,11 @@
 
     public class PasteProcesserTests
     {
-        private readonly PasteProcesser pasteProcesser;
+        private readonly PasteProcessor pasteProcesser;
 
         public PasteProcesserTests()
         {
-            pasteProcesser = new PasteProcesser();
+            pasteProcesser = new PasteProcessor();
         }
 
         [Theory]

@@ -185,10 +185,10 @@
     <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\ICsvWriter.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
-    <Compile Include="Shared\IPasteProcesser.cs" />
+    <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
-    <Compile Include="Shared\PasteProcesser.cs" />
+    <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />
     <Compile Include="Admin\UserSearchData.cs" />
