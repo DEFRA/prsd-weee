@@ -7,9 +7,11 @@
     using Autofac;
     using Autofac.Integration.Mvc;
     using EA.Weee.Core;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FluentValidation;
@@ -87,6 +89,11 @@
                 .AsImplementedInterfaces().InstancePerRequest();
 
             builder.RegisterType<NonObligatedValuesViewModelValidatorWrapper>().As<INonObligatedValuesViewModelValidatorWrapper>();
+
+            // AATF View Model Mapping Utilties
+            builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
+            builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
+            builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
 
             return builder.Build();
         }

@@ -4,6 +4,7 @@
     using System.Globalization;
     using System.Linq;
     using Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
@@ -11,10 +12,12 @@
     public class ObligatedReusedViewModelTests
     {
         private readonly ObligatedViewModel viewModel;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReusedViewModelTests()
         {
-            viewModel = new ObligatedViewModel();
+            calculator = new CategoryValueTotalCalculator();
+            viewModel = new ObligatedViewModel(calculator);
         }
 
         [Fact]

@@ -175,6 +175,7 @@
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
@@ -184,12 +185,15 @@
     <Compile Include="App_Start\ReturnUrlMappingTests.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\NonObligatedDataToNonObligatedValueMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ObligatedDataToObligatedValueMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToAatfTaskListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\TonnageUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreatorTests.cs" />

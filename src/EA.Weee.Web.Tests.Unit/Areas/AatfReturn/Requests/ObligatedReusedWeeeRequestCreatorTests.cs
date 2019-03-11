@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
@@ -11,10 +12,12 @@
     public class ObligatedReusedWeeeRequestCreatorTests
     {
         private readonly IObligatedReusedWeeeRequestCreator requestCreator;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReusedWeeeRequestCreatorTests()
         {
             requestCreator = new ObligatedReusedWeeeRequestCreator();
+            calculator = new CategoryValueTotalCalculator();
         }
 
         [Fact]
@@ -22,7 +25,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -42,7 +45,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -66,7 +69,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
@@ -91,7 +94,7 @@
         {
             var categoryValues = new ObligatedCategoryValues();
 
-            var viewModel = new ObligatedViewModel(categoryValues);
+            var viewModel = new ObligatedViewModel(categoryValues, calculator);
 
             foreach (var c in categoryValues)
             {
@@ -111,7 +114,7 @@
         [Fact]
         public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
-            var model = new ObligatedViewModel()
+            var model = new ObligatedViewModel(calculator)
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid()
