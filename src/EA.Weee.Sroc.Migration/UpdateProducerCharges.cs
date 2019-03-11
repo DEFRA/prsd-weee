@@ -1,18 +1,12 @@
 ﻿namespace EA.Weee.Sroc.Migration
 {
-    using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Domain.Error;
-    using Domain.Scheme;
+    using OverrideImplementations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Xml.Converter;
     using Xml.MemberRegistration;
@@ -38,49 +32,55 @@
             this.context = context;
         }
 
-        public async void Test()
+        public async void UpdateCharges()
         {
-            var memberUploads = await memberUploadDataAccess.Fetch();
-
-            foreach (var memberUpload in memberUploads)
+            try
             {
-                var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
-                var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
+                var memberUploads = await memberUploadDataAccess.FetchMemberUploadsToProcess();
 
-                decimal totalCharges = 0;
+                foreach (var memberUpload in memberUploads)
+                {
+                    var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data),
+                        memberUpload.FileName);
+                    var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
-                var producerCharges = Calculate(message, ref totalCharges);
+                    decimal totalCharges = 0;
 
-                //foreach (var producerCharge in producerCharges)
-                //{
-                //    // set the producer charge status here based on if update or not?
-                //    //producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
-                //}
+                    var producerCharges = Calculate(memberUpload.Id, message, ref totalCharges);
 
-                await memberUploadDataAccess.UpdateMemberUpload(memberUpload.Id, totalCharges);
+                    await memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, totalCharges);
+                }
+
+                await context.SaveChangesAsync();
             }
-
-            //await context.SaveChangesAsync();
-
-            // what about uploads that have errors assume these ones would not have been submitted
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        //private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
-        //{
-        //    var producerCharges = xmlChargeBandCalculator.Calculate(message);
+        public async void RollbackCharges()
+        {
+            try
+            {
+                var memberUploads = await memberUploadDataAccess.FetchMemberUploadsToRollback();
 
-        //    if (xmlChargeBandCalculator.ErrorsAndWarnings.Any())
-        //    {
-        //        throw new Exception(string.Join(", ", xmlChargeBandCalculator.ErrorsAndWarnings));
-        //    }
+                foreach (var memberUpload in memberUploads)
+                {
+                    await memberUploadDataAccess.ResetProducerSubmissionInvoice(memberUpload.ProducerSubmissions);
 
-        //    totalCharges = producerCharges
-        //        .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+                    await memberUploadDataAccess.ResetMemberUploadInvoice(memberUpload);
+                }
 
-        //    return producerCharges;
-        //}
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message, ref decimal totalCharges)
+        public Dictionary<string, ProducerCharge> Calculate(Guid memberUploadId, ProcessXmlFile message, ref decimal totalCharges)
         {
             var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
@@ -94,7 +94,8 @@
                 // if the producer has a PRN and the trading name exists in the database for the member upload set the status to A?
                 var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
 
-                //producer.tradingName`   
+                memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUploadId, producerName, producerCharge.Amount);
+
                 // match of trading name 
                 if (producerCharge != null)
                 {
@@ -102,17 +103,10 @@
                     {
                         producerCharges.Add(producerName, producerCharge);
                     }
-                    else
-                    {
-                        throw new Exception();
-                        //ErrorsAndWarnings.Add(
-                        //    new MemberUploadError(
-                        //        ErrorLevel.Error,
-                        //        UploadErrorType.Business,
-                        //        string.Format(
-                        //            "We are unable to check for warnings associated with the charge band of the producer {0} until the duplicate name has been fixed.",
-                        //            producerName)));
-                    }
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("Producer charge for producer {0} is null", producerName));
                 }
             }
 

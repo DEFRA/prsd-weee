@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Sroc.Migration
+﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
-    using EA.Weee.Xml.Deserialization;
     using System;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using Xml.Deserialization;
 
     public class Deserializer : IDeserializer
     {

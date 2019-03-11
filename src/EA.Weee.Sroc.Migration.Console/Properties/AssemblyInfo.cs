@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EA.Weee.Sroc.Migration.UI")]
+[assembly: AssemblyTitle("EA.Weee.Sroc.Migration.Console")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EA.Weee.Sroc.Migration.UI")]
+[assembly: AssemblyProduct("EA.Weee.Sroc.Migration.Console")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ba21a32c-4d1f-4666-a0ca-03085b209288")]
+[assembly: Guid("dc00627c-38db-4ec2-9cf0-595596211490")]
 
 // Version information for an assembly consists of the following four values:
 //

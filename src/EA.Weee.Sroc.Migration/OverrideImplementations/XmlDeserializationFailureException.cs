@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Sroc.Migration
+﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
     using System;
 

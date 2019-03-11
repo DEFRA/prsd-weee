@@ -2,6 +2,8 @@
 {
     public interface IUpdateProducerCharges
     {
-        void Test();
+        void UpdateCharges();
+
+        void RollbackCharges();
     }
 }
