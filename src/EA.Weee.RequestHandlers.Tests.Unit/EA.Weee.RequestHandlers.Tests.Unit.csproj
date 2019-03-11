@@ -102,6 +102,7 @@
     <Compile Include="AatfReturn\GetSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandlerTests.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTestAccess.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
+    <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />

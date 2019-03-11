@@ -7,6 +7,7 @@
     using Constant;
     using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -29,7 +30,13 @@
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
 
-        public NonObligatedController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, INonObligatedWeeRequestCreator requestCreator, INonObligatedValuesViewModelValidatorWrapper validator, IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper)
+        public NonObligatedController(IWeeeCache cache,
+            BreadcrumbService breadcrumb,
+            Func<IWeeeClient> apiClient,
+            INonObligatedWeeRequestCreator requestCreator,
+            INonObligatedValuesViewModelValidatorWrapper validator,
+            IMap<ReturnToNonObligatedValuesViewModelMapTransfer,
+            NonObligatedValuesViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;

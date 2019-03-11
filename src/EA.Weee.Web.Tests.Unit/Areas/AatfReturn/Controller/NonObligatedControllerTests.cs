@@ -9,6 +9,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
@@ -33,6 +34,7 @@
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
         private readonly IWeeeCache cache;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public NonObligatedControllerTests()
         {
@@ -41,6 +43,7 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
             cache = A.Fake<IWeeeCache>();
+            calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             mapper = A.Fake<IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel>>();
             controller = new NonObligatedController(cache, breadcrumb, () => weeeClient, requestCreator, validator, mapper);
@@ -55,7 +58,7 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new NonObligatedValuesViewModel();
+            var model = new NonObligatedValuesViewModel(calculator);
             var request = new AddNonObligated();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -100,7 +103,7 @@
         [Fact]
         public async void IndexPost_GivenNonObligatedValuesAreSubmitted_PageRedirectShouldBeCorrect()
         {
-            var model = new NonObligatedValuesViewModel() { Dcf = false };
+            var model = new NonObligatedValuesViewModel(calculator) { Dcf = false };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -112,7 +115,7 @@
         [Fact]
         public async void IndexPost_GivenNonObligatedDcfValuesAreSubmitted_PageRedirectShouldBeCorrect()
         {
-            var model = new NonObligatedValuesViewModel() { Dcf = true };
+            var model = new NonObligatedValuesViewModel(calculator) { Dcf = true };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -162,7 +165,7 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ValidatorShouldBeCalled()
         {
-            var model = new NonObligatedValuesViewModel();
+            var model = new NonObligatedValuesViewModel(calculator);
             var returnData = new ReturnData();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
@@ -175,7 +178,7 @@
         [Fact]
         public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
         {
-            var model = new NonObligatedValuesViewModel();
+            var model = new NonObligatedValuesViewModel(calculator);
             var returnData = new ReturnData();
             controller.ModelState.AddModelError("error", "error");
 

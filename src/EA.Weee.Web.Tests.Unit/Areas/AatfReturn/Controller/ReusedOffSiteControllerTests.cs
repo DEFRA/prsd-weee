@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -39,10 +40,17 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
         }
 
         [Fact]

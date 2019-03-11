@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Domain.AatfReturn;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using FakeItEasy;
     using FluentAssertions;
@@ -35,7 +36,7 @@
                 "TownOrCity",
                 A.Dummy<string>(),
                 A.Dummy<string>(),
-                A.Dummy<Guid>());
+                A.Dummy<Country>());
             var weeeReused = new WeeeReused(aatfId, A.Dummy<Guid>());
             var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
 
@@ -51,9 +52,12 @@
         [Fact]
         public void Submit_GivenReusedSiteData_SaveChangesAsyncShouldBeCalled()
         {
-            dataAccess.Submit(new WeeeReusedSite());
+            var site = new WeeeReusedSite();
 
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            dataAccess.Submit(site);
+
+            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }
