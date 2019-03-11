@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
@@ -56,20 +57,37 @@
         }
 
         [Fact]
+        public async Task HandleAsync_WithValidInput_CountryIsRetrieved()
+        {
+            var country = new Country(A.Dummy<Guid>(), "Test");
+
+            var addressData = CreateAddressData();
+            var aatfAddress = CreateAatfAddress(country);
+
+            var addAatfSiteRequest = A.Fake<AddAatfSite>();
+            addAatfSiteRequest.AddressData = addressData;
+
+            var weeeReusedList = new List<WeeeReused>() { A.Fake<WeeeReused>() };
+            var weeeReusedSite = new WeeeReusedSite(weeeReusedList.Last(), aatfAddress);
+
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(A<Guid>._)).Returns(country);
+            A.CallTo(() => genericDataAccess.GetManyByExpression(A<WeeeReusedByAatfIdAndReturnIdSpecification>._)).Returns(weeeReusedList);
+
+            await handler.HandleAsync(addAatfSiteRequest);
+
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.IsSameAs(weeeReusedSite)));
+        }
+
+        [Fact]
         public async Task HandleAsync_WithValidInput_SubmitIsCalledCorrectly()
         {
             var aatf = A.Fake<Aatf>();
             var organisation = A.Fake<Organisation>();
             var @operator = new Operator(organisation);
             var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
-            var aatfAddress = new AatfAddress(
-                "Name",
-                "Address",
-                A.Dummy<string>(),
-                "TownOrCity",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<Country>());
+
+            var aatfAddress = CreateAatfAddress(A.Dummy<Country>());
 
             var weeeReused = new WeeeReused(aatf.Id, aatfReturn.Id);
 
@@ -77,12 +95,7 @@
 
             var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
 
-            var addressData = A.Fake<AddressData>();
-
-            addressData.Name = "Name";
-            addressData.Address1 = "Address1";
-            addressData.TownOrCity = "TownOrCity";
-            addressData.CountryId = Guid.NewGuid();
+            var addressData = CreateAddressData();
 
             var addAatfSiteRequest = new AddAatfSite
             {
@@ -95,6 +108,29 @@
             await handler.HandleAsync(addAatfSiteRequest);
 
             A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.IsSameAs(weeeReusedSite)));
+        }
+
+        private static AatfAddress CreateAatfAddress(Country country)
+        {
+            return new AatfAddress(
+                            "Name",
+                            "Address",
+                            A.Dummy<string>(),
+                            "TownOrCity",
+                            A.Dummy<string>(),
+                            A.Dummy<string>(),
+                            country);
+        }
+
+        private static AddressData CreateAddressData()
+        {
+            var addressData = A.Fake<AddressData>();
+
+            addressData.Name = "Name";
+            addressData.Address1 = "Address1";
+            addressData.TownOrCity = "TownOrCity";
+            addressData.CountryId = Guid.NewGuid();
+            return addressData;
         }
     }
 }

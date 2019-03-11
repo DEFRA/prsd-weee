@@ -10,7 +10,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedGeneric;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
 
-    internal class GetAatfSiteDataAccess : IGetAatfSiteDataAccess
+    public class GetAatfSiteDataAccess : IGetAatfSiteDataAccess
     {
         private readonly WeeeContext context;
         private readonly IGenericDataAccess genericDataAccess;

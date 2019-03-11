@@ -20,6 +20,7 @@
         public ObligatedReceivedWeeeRequestCreatorTests()
         {
             requestCreator = new ObligatedReceivedWeeeRequestCreator();
+            calculator = new CategoryValueTotalCalculator();
         }
 
         [Fact]
