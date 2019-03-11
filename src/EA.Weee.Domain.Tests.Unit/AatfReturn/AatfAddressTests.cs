@@ -14,7 +14,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -25,7 +25,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -37,7 +37,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -48,7 +48,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -60,7 +60,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -71,7 +71,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Guid>());
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();

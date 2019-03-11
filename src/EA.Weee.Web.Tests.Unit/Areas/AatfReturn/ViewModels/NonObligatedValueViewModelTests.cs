@@ -5,6 +5,7 @@
     using System.Linq;
     using Core.DataReturns;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using FakeItEasy;
     using FluentAssertions;
@@ -14,10 +15,12 @@
     public class NonObligatedValueViewModelTests
     {
         private readonly NonObligatedValuesViewModel model;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public NonObligatedValueViewModelTests()
         {
-            model = new NonObligatedValuesViewModel();
+            calculator = new CategoryValueTotalCalculator();
+            model = new NonObligatedValuesViewModel(calculator);
         }
 
         [Fact]
