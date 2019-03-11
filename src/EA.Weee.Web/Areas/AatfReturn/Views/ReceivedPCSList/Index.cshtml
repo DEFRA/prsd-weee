@@ -58,11 +58,8 @@
 
     </table>
 
-    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <button type="submit" class="govuk-button">
-            AATF Task List
-        </button>
+    @{
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
     }
+
 </section>
