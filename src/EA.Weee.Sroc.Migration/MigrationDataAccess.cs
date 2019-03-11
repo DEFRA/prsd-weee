@@ -12,9 +12,9 @@
 
     public class MigrationDataAccess : IMigrationDataAccess
     {
-        private readonly WeeeContext context;
+        private readonly WeeeMigrationContext context;
 
-        public MigrationDataAccess(WeeeContext context)
+        public MigrationDataAccess(WeeeMigrationContext context)
         {
             this.context = context;
         }
@@ -23,12 +23,13 @@
         {
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                .Where(m => m.IsSubmitted);
+                .Where(m => m.IsSubmitted)
+                .OrderBy(m => m.SubmittedDate);
 
             return await memberUploads.ToListAsync();
         }
 
-        public async Task Update(Guid id, decimal amount)
+        public async Task UpdateMemberUpload(Guid id, decimal amount)
         {
             var memberUpload = context.MemberUploads.First(m => m.Id == id);
 

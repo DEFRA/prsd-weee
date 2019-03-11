@@ -21,11 +21,11 @@
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IMigrationDataAccess memberUploadDataAccess;
-        private readonly WeeeContext context;
+        private readonly WeeeMigrationContext context;
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
 
-        public UpdateProducerCharges(WeeeContext context,
+        public UpdateProducerCharges(WeeeMigrationContext context,
             IXMLChargeBandCalculator xmlChargeBandCalculator,
             IMigrationDataAccess memberUploadDataAccess,
             IXmlConverter xmlConverter,
@@ -45,6 +45,7 @@
             foreach (var memberUpload in memberUploads)
             {
                 var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
+                var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
                 decimal totalCharges = 0;
 
@@ -52,13 +53,14 @@
 
                 //foreach (var producerCharge in producerCharges)
                 //{
-                //    var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
+                //    // set the producer charge status here based on if update or not?
+                //    //producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
                 //}
 
-                await memberUploadDataAccess.Update(memberUpload.Id, totalCharges);
+                await memberUploadDataAccess.UpdateMemberUpload(memberUpload.Id, totalCharges);
             }
 
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
 
             // what about uploads that have errors assume these ones would not have been submitted
         }
@@ -89,7 +91,11 @@
             {
                 var producerName = producer.GetProducerName();
 
+                // if the producer has a PRN and the trading name exists in the database for the member upload set the status to A?
                 var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
+
+                //producer.tradingName`   
+                // match of trading name 
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))

@@ -10,7 +10,7 @@
     {
         Task<IList<MemberUpload>> Fetch();
 
-        Task Update(Guid id, decimal amount);
+        Task UpdateMemberUpload(Guid id, decimal amount);
 
         Task<IList<ProducerSubmission>> FetchProducerSubmissionsByUpload(Guid id);
     }

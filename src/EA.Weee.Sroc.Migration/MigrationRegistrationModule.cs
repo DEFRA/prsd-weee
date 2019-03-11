@@ -23,12 +23,9 @@
 
             // Register data access types
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
-                //.Where(t => t.Name.Contains("DataAccess"))
                 .AsImplementedInterfaces();
 
-            //builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
-
-            // Register the DomainUserContext which may be used by all request handlers to get the current domain user.
+            builder.RegisterType<WeeeMigrationContext>().AsSelf().SingleInstance();
         }
     }
 }
