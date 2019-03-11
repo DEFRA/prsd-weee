@@ -14,19 +14,23 @@
     {
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> obligatedMap;
+        private readonly ICategoryValueTotalCalculator calculator;
 
         public ReturnToObligatedViewModelMap(IWeeeCache cache,
-            IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> obligatedMap)
+            IMap<ObligatedDataToObligatedValueMapTransfer,
+            IList<ObligatedCategoryValue>> obligatedMap,
+            ICategoryValueTotalCalculator calculator)
         {
             this.cache = cache;
             this.obligatedMap = obligatedMap;
+            this.calculator = calculator;
         }
 
         public ObligatedViewModel Map(ReturnToObligatedViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new ObligatedViewModel(new ObligatedCategoryValues())
+            var model = new ObligatedViewModel(new ObligatedCategoryValues(), calculator)
             {
                 SchemeName = cache.FetchSchemePublicInfo(source.OrganisationId).Result.Name,
                 AatfName = cache.FetchAatfData(source.OrganisationId, source.AatfId).Result.Name,

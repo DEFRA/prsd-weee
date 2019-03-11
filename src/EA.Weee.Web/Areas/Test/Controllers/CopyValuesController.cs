@@ -4,14 +4,17 @@
     using AatfReturn.ViewModels;
     using Core.AatfReturn;
     using Core.Shared;
+    using EA.Weee.Core.Helpers;
 
     public class CopyValuesController : Controller
     {
         private readonly IPasteProcesser pasteProcesser;
+        private readonly ICategoryValueTotalCalculator calculator;
 
-        public CopyValuesController(IPasteProcesser pasteProcesser)
+        public CopyValuesController(IPasteProcesser pasteProcesser, ICategoryValueTotalCalculator calculator)
         {
             this.pasteProcesser = pasteProcesser;
+            this.calculator = calculator;
         }
 
         // GET: Test/CopyValues
@@ -21,12 +24,12 @@
 
             if (pastValues != null)
             {
-                var model = new ObligatedViewModel(pastValues);
+                var model = new ObligatedViewModel(pastValues, calculator);
 
                 return View(model);
             }
 
-            return View(new ObligatedViewModel(new ObligatedCategoryValues()));
+            return View(new ObligatedViewModel(new ObligatedCategoryValues(), calculator));
         }
 
         [HttpPost]

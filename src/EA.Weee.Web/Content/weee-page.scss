@@ -741,6 +741,10 @@ details summary::-ms-details-marker {
     text-overflow: ellipsis;
 }
 
+.ui-menu-item {
+    font-family: $NTA-Light;
+}
+
 .grey-text {
     word-wrap: break-word;
     font-size: 16px;

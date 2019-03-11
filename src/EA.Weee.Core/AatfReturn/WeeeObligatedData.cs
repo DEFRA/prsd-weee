@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
-    
+
     public sealed class WeeeObligatedData
     {
         public Guid Id { get; set; }
