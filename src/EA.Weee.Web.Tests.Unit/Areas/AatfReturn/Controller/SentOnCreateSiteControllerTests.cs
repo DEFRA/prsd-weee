@@ -73,11 +73,6 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var model = new SentOnCreateSiteViewModel();
-
-            A.CallTo(() => mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { ReturnId = Guid.NewGuid(), AatfId = Guid.NewGuid(), OrganisationId = Guid.NewGuid() })).Returns(model);
-            model.SiteAddressData = new AddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();

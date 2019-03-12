@@ -40,10 +40,8 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId });
-
-                viewModel.SiteAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                var siteAddress = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(siteAddress) { ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
