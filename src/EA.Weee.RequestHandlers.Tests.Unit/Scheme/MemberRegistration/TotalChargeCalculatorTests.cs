@@ -3,9 +3,11 @@
     using System;
     using Domain;
     using Domain.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
     using EA.Weee.Requests.Scheme.MemberRegistration;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Xml.Deserialization;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
@@ -16,7 +18,6 @@
     using System.Reflection;
     using System.Security;
     using System.Text;
-    using Weee.Tests.Core;
     using Xml.Converter;
     using Xunit;
 
@@ -104,7 +105,7 @@
 
             var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
 
-            Assert.Equal(400, totalCharge);
+            Assert.Equal(300, totalCharge);
         }
 
         [Fact]
