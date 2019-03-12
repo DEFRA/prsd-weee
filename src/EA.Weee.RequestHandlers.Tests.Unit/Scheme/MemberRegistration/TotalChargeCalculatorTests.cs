@@ -71,7 +71,12 @@
         [Fact]
         public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYear_TotalShouldContainAnnualCharge()
         {
-            var scheme = Scheme();
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
+
+            Scheme scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority)
+                .Returns(competentAuthority);
+
             A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2019)).Returns(false);
             hasAnnualCharge = true;
             totalCharge = 0;
