@@ -24,32 +24,29 @@
     public class TotalChargeCalculatorTests
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         private readonly TotalChargeCalculator totalChargeCalculator;
         private readonly IXmlConverter xmlConverter;
 
-        private bool hasAnnualCharge;
         private decimal? totalCharge;
         private readonly ProcessXmlFile file;
 
         public TotalChargeCalculatorTests()
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
-            totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
             producerChargeCalculator = A.Fake<IProducerChargeCalculator>();
             xmlConverter = A.Fake<IXmlConverter>();
 
             totalCharge = 0;
             file = ProcessTestXmlFile();
 
-            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, totalChargeCalculatorDataAccess, producerChargeCalculator, xmlConverter);
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, producerChargeCalculator, xmlConverter);
         }
 
         [Fact]
         public void TotalCalculatedCharges_GivenXMLFile_CalculateXMLChargeBand()
         {
-            totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+            totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, A.Dummy<bool>(), ref totalCharge);
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -58,14 +55,11 @@
         public void TotalCalculatedCharges_GivenSchemeHasAnnualChargeForComplianceYear_TotalShouldNotContainAnnualCharge()
         {
             var scheme = Scheme();
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2019)).Returns(true);
-            hasAnnualCharge = false;
             totalCharge = 0;
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, A.Dummy<bool>(), ref totalCharge);
 
             Assert.Equal(totalCharge, 0);
-            Assert.Equal(hasAnnualCharge, true);
         }
 
         [Fact]
@@ -73,18 +67,14 @@
         {
             var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
 
-            Scheme scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.CompetentAuthority)
-                .Returns(competentAuthority);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
 
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2019)).Returns(false);
-            hasAnnualCharge = true;
             totalCharge = 0;
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, true, ref totalCharge);
 
             Assert.Equal(totalCharge, 100);
-            Assert.Equal(hasAnnualCharge, true);
         }
 
         [Fact]
@@ -93,9 +83,8 @@
             var producerCharges = ProducerCharges();
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(true);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, true, ref totalCharge);
 
             Assert.Equal(300, totalCharge);
         }
@@ -106,9 +95,8 @@
             var producerCharges = ProducerCharges();
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(false);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, true, ref totalCharge);
 
             Assert.Equal(300, totalCharge);
         }
@@ -120,7 +108,7 @@
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, A.Dummy<bool>(), ref totalCharge);
             
             Assert.Equal(producerCharges, result);
         }
@@ -129,14 +117,11 @@
         public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYearAndBefore2019_TotalShouldNotContainAnnualCharge()
         {
             var scheme = Scheme();
-            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, 2018)).Returns(false);
-            hasAnnualCharge = false;
             totalCharge = 0;
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2018, ref hasAnnualCharge, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2018, false, ref totalCharge);
 
             Assert.Equal(totalCharge, 0);
-            Assert.Equal(hasAnnualCharge, false);
         }
 
         private Scheme Scheme()

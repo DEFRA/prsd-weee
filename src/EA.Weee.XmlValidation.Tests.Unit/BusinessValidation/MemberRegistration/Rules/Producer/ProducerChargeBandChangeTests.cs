@@ -119,7 +119,10 @@
             {
                 QuerySet = A.Fake<IProducerQuerySet>();
                 ProducerChargeBandCalculatorChooser = A.Fake<IProducerChargeBandCalculatorChooser>();
+                ProducerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
 
+                A.CallTo(() => ProducerChargeBandCalculatorChooser.GetCalculator(A<schemeType>._, A<producerType>._, A<int>._))
+                    .Returns(ProducerChargeBandCalculator);
                 producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculatorChooser);
             }
 

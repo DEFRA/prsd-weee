@@ -44,6 +44,8 @@
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
         private readonly ITotalChargeCalculator totalChargeCalculator;
+        private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
+
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
@@ -66,13 +68,15 @@
             xmlValidator = A.Fake<IXMLValidator>();
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             totalChargeCalculator = A.Fake<ITotalChargeCalculator>();
-            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
+            totalChargeCalculatorDataAccess = A.Fake<ITotalChargeCalculatorDataAccess>();
+
+            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator, totalChargeCalculatorDataAccess);
         }
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator);
+            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator, totalChargeCalculatorDataAccess);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -110,21 +114,36 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges))
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, hasAnnualCharge, ref totalCharges))
                 .Returns(producerCharges);
         }
 
         [Fact]
         public async void ProcessXmlfile_ParsesXMLFile_CalculateTotalCharges()
         {
-            var hasAnnualCharge = false;
             decimal? totalCharges = 0;
 
             SetupSchemeTypeComplianceYear();
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void ProcessXmlfile_GivenSchemeNeedsAnnualCharges_CalculateTotalCharges(bool annualCharge)
+        {
+            decimal? totalCharges = 0;
+
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(annualCharge);
+
+            SetupSchemeTypeComplianceYear();
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, !annualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -143,7 +162,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges)).MustNotHaveHappened();
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, hasAnnualCharge, ref totalCharges)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -154,7 +173,6 @@
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description"),
             };
 
-            var hasAnnualCharge = false;
             decimal? totalCharges = 0;
 
             SetupSchemeTypeComplianceYear();
@@ -162,7 +180,7 @@
             
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -170,7 +188,6 @@
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
 
-            var hasAnnualCharge = false;
             decimal? totalCharges = 0;
 
             SetupSchemeTypeComplianceYear();
@@ -178,7 +195,7 @@
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, ref hasAnnualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -256,6 +273,30 @@
             SetupSchemeTypeComplianceYear();
             var id = await handler.HandleAsync(Message);
             Assert.NotNull(id);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_GivenSchemeDoesNotHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        {
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(false);
+            SetupSchemeTypeComplianceYear();
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => generator.GenerateMemberUpload(A<ProcessXmlFile>._, A<List<MemberUploadError>>._, A<decimal>._, A<Scheme>._, true))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_GivenSchemeDoesHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        {
+            A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(true);
+            SetupSchemeTypeComplianceYear();
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => generator.GenerateMemberUpload(A<ProcessXmlFile>._, A<List<MemberUploadError>>._, A<decimal>._, A<Scheme>._, false))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         public static ProducerSubmission TestProducer(string tradingName)
