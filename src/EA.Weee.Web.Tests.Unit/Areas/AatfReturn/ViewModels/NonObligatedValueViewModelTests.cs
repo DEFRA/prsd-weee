@@ -31,6 +31,13 @@
         }
 
         [Fact]
+        public void GivenNonObligatedValuesViewModel_CalculatorShouldBeTypeCategoryValuesTotalCalculator()
+        {
+            var newModel = new NonObligatedValuesViewModel();
+            newModel.GetCalculator().GetType().Should().Be(typeof(CategoryValueTotalCalculator));
+        }
+
+        [Fact]
         public void Total_GivenNonObligatedValuesViewModel_TotalShouldBeZero()
         {
             model.Total.Should().Be("0.000");
