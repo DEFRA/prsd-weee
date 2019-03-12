@@ -20,40 +20,36 @@
             this.context = context;
         }
 
-        public async Task<IList<MemberUpload>> FetchMemberUploadsToProcess()
+        public IList<MemberUpload> FetchMemberUploadsToProcess()
         {
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
                     .Where(m => m.IsSubmitted && m.InvoiceRun == null)
                     .OrderBy(m => m.SubmittedDate);
 
-            return await memberUploads.ToListAsync();
+            return memberUploads.ToList();
         }
 
-        public async Task<IList<MemberUpload>> FetchMemberUploadsToRollback()
+        public IList<MemberUpload> FetchMemberUploadsToRollback()
         {
             var memberUploads = context.MemberUploads
                 .Where(m => m.IsSubmitted && m.InvoiceRun != null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
                 .Include(m => m.ProducerSubmissions);
 
-            return await memberUploads.ToListAsync();
+            return memberUploads.ToList();
         }
 
-        public async Task UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount)
+        public void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount)
         {
-            //var memberUpload = context.MemberUploads.First(m => m.Id == id);
-
-            await Task.Run(() => memberUpload.UpdateTotalCharges(amount));
+            memberUpload.UpdateTotalCharges(amount);
         }
 
-        public async Task ResetMemberUploadInvoice(MemberUpload memberUpload)
+        public void ResetMemberUploadInvoice(MemberUpload memberUpload)
         {
-            //var memberUpload = context.MemberUploads.First(m => m.Id == id);
-
-            await Task.Run(() => memberUpload.InvoiceRun == null);
+            memberUpload.ResetInvoice();
         }
 
-        public async Task UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount)
+        public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount)
         {
             var producer = context.ProducerSubmissions
                 .Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
@@ -65,16 +61,15 @@
                 throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
             }
 
-            await Task.Run(() => producer.First().UpdateCharge(amount)); 
+            producer.First().UpdateCharge(amount); 
         }
 
-        public async Task ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)
+        public void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)
         {
-            await Task.Run(() => context.ProducerSubmissions.Where(c => producerSubmissions.Select(p => p.Id).Contains(c.Id))
-                .ForEachAsync((c) => 
+            context.ProducerSubmissions.Where(c => producerSubmissions.Select(p => p.Id).Contains(c.Id)).ForEachAsync((c) => 
                 {
                     c.SetAsNotInvoiced();
-                }));
+                });
         }
     }
 }

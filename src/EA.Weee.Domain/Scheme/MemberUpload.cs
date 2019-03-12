@@ -119,6 +119,11 @@
             TotalCharges = amount;
         }
 
+        public void ResetInvoice()
+        {
+            InvoiceRun = null;
+        }
+
         protected MemberUpload()
         {
         }

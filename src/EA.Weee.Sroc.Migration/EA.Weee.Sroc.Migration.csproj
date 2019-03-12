@@ -76,6 +76,7 @@
     <Compile Include="OverrideImplementations\EventDispatcher.cs" />
     <Compile Include="MigrationDataAccess.cs" />
     <Compile Include="Autofac\MigrationRegistrationModule.cs" />
+    <Compile Include="OverrideImplementations\MigrationProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateProducerCharges.cs" />

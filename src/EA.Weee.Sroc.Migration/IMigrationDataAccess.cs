@@ -8,16 +8,16 @@
 
     public interface IMigrationDataAccess
     {
-        Task<IList<MemberUpload>> FetchMemberUploadsToProcess();
+        IList<MemberUpload> FetchMemberUploadsToProcess();
 
-        Task<IList<MemberUpload>> FetchMemberUploadsToRollback();
+        IList<MemberUpload> FetchMemberUploadsToRollback();
 
-        Task UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount);
+        void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount);
 
-        Task ResetMemberUploadInvoice(MemberUpload memberUpload);
+        void ResetMemberUploadInvoice(MemberUpload memberUpload);
 
-        Task UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount);
+        void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount);
 
-        Task ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions);
+        void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions);
     }
 }

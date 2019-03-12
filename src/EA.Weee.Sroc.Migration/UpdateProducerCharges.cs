@@ -32,47 +32,46 @@
             this.context = context;
         }
 
-        public async void UpdateCharges()
+        public void UpdateCharges()
         {
             try
             {
-                var memberUploads = await memberUploadDataAccess.FetchMemberUploadsToProcess();
+                var memberUploads = memberUploadDataAccess.FetchMemberUploadsToProcess();
 
                 foreach (var memberUpload in memberUploads)
                 {
-                    var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data),
-                        memberUpload.FileName);
+                    var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
                     var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
                     decimal totalCharges = 0;
 
                     var producerCharges = Calculate(memberUpload.Id, message, ref totalCharges);
 
-                    await memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, totalCharges);
+                    memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, totalCharges);
                 }
 
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
         }
 
-        public async void RollbackCharges()
+        public void RollbackCharges()
         {
             try
             {
-                var memberUploads = await memberUploadDataAccess.FetchMemberUploadsToRollback();
+                var memberUploads = memberUploadDataAccess.FetchMemberUploadsToRollback();
 
                 foreach (var memberUpload in memberUploads)
                 {
-                    await memberUploadDataAccess.ResetProducerSubmissionInvoice(memberUpload.ProducerSubmissions);
+                    memberUploadDataAccess.ResetProducerSubmissionInvoice(memberUpload.ProducerSubmissions);
 
-                    await memberUploadDataAccess.ResetMemberUploadInvoice(memberUpload);
+                    memberUploadDataAccess.ResetMemberUploadInvoice(memberUpload);
                 }
 
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
             catch (Exception)
             {
@@ -96,22 +95,13 @@
 
                 memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUploadId, producerName, producerCharge.Amount);
 
-                // match of trading name 
-                if (producerCharge != null)
+                if (!producerCharges.ContainsKey(producerName))
                 {
-                    if (!producerCharges.ContainsKey(producerName))
-                    {
-                        producerCharges.Add(producerName, producerCharge);
-                    }
-                }
-                else
-                {
-                    throw new ApplicationException(string.Format("Producer charge for producer {0} is null", producerName));
-                }
+                    producerCharges.Add(producerName, producerCharge);
+                }                
             }
 
-            totalCharges = producerCharges
-                .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+            totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
             return producerCharges;
         }

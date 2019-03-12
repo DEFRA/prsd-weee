@@ -35,6 +35,7 @@
             builder.RegisterType<WhiteSpaceCollapser>().As<IWhiteSpaceCollapser>().InstancePerLifetimeScope();
             builder.RegisterType<Deserializer>().As<IDeserializer>().InstancePerLifetimeScope();
             builder.RegisterType<ProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();            
         }
     }
 }
