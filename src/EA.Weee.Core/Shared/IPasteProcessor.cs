@@ -4,6 +4,8 @@
 
     public interface IPasteProcessor
     {
-        ObligatedCategoryValues BuildModel(ObligatedCategoryValue pasteValues);
+        PastedValues BuildModel(string pasteValues);
+
+        ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues);
     }
 }

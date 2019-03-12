@@ -4,32 +4,31 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfReturn;
+    using EA.Prsd.Core;
 
     public class PasteProcessor : IPasteProcessor
     {
-        private static readonly List<string> AllowedCharactors = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\r", "\n" };
+        private static readonly List<string> AllowedCharacters = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\r", "\n" };
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
         private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
 
-        public ObligatedCategoryValues BuildModel(ObligatedCategoryValue pasteValues)
+        public PastedValues BuildModel(string pasteValues)
         {
-            var categoryValues = new ObligatedCategoryValues();
+            var categoryValues = new PastedValues();
 
             if (pasteValues == null || string.IsNullOrWhiteSpace(pasteValues.ToString()))
             {
                 return categoryValues;
             }
 
-            var B2clines = pasteValues.B2C.ToString().Split(NewLineCharactors, StringSplitOptions.None).ToList();
-            var B2blines = pasteValues.B2B.ToString().Split(NewLineCharactors, StringSplitOptions.None).ToList();
+            var lines = pasteValues.ToString().Split(NewLineCharactors, StringSplitOptions.None).Take(categoryValues.Count).ToList();
 
-            placeholderName(categoryValues, B2clines, true);
-            placeholderName(categoryValues, B2blines, false);
+            ParseTonnageValues(categoryValues, lines);
 
             return categoryValues;
         }
 
-        private static void placeholderName(ObligatedCategoryValues categoryValues, List<string> lines, bool isB2c)
+        private static void ParseTonnageValues(PastedValues categoryValues, List<string> lines)
         {
             if (lines.Any() && lines.ElementAt(lines.Count() - 1).Equals(string.Empty))
             {
@@ -46,29 +45,23 @@
                 {
                     if (splitLine.Length > 0 && !string.IsNullOrWhiteSpace(splitLine[0]))
                     {
-                        if (isB2c)
-                        {
-                            category.B2C = splitLine[0];
-                        }
-                        else
-                        {
-                            category.B2B = splitLine[0];
-                        }
+                        category.Tonnage = splitLine[0];
                     }
                 }
             }
         }
 
-        private decimal? TryCastToDecimal(string value)
+        public ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues)
         {
-            decimal output;
+            var obligatedCategoryValues = new ObligatedCategoryValues();
 
-            if (decimal.TryParse(value, out output))
+            foreach (var category in obligatedCategoryValues)
             {
-                return output;
+                category.B2B = obligatedPastedValues.B2B.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+                category.B2C = obligatedPastedValues.B2C.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
             }
 
-            return null;
+            return obligatedCategoryValues;
         }
     }
 }

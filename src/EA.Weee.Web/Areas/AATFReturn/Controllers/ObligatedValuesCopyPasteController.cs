@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
@@ -48,21 +49,25 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel, string cancel)
         {
-            var modelValues = new ObligatedCategoryValue();
-
-            if (viewModel.B2cPastedValues != null)
+            if (string.IsNullOrEmpty(cancel))
             {
-                modelValues.B2C = viewModel.B2cPastedValues[0];
-            }
+                var b2bContent = viewModel.B2bPastedValues.First();
+                var b2cContent = viewModel.B2cPastedValues.First();
 
-            if (viewModel.B2bPastedValues != null)
-            {
-                modelValues.B2B = viewModel.B2bPastedValues[0];
-            }
+                if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
+                {
+                    var obligatedPastedValues = new ObligatedPastedValues();
 
-            TempData["pastedValues"] =  pasteProcessor.BuildModel(modelValues);
+                    obligatedPastedValues.B2B = pasteProcessor.BuildModel(b2bContent);
+                    obligatedPastedValues.B2C = pasteProcessor.BuildModel(b2cContent);
+                    
+                    var categoryValues = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues);
+
+                    TempData["pastedValues"] = categoryValues;
+                }
+            }
 
             return await Task.Run<ActionResult>(() => RedirectToAction("Index", "ObligatedReceived",
                     new { area = "AatfReturn", schemeId = viewModel.SchemeId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
