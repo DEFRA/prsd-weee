@@ -11,7 +11,7 @@
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
         private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
 
-        public ObligatedCategoryValues BuildModel(object pasteValues)
+        public ObligatedCategoryValues BuildModel(ObligatedCategoryValue pasteValues)
         {
             var categoryValues = new ObligatedCategoryValues();
 
@@ -20,12 +20,21 @@
                 return categoryValues;
             }
 
-            var lines = pasteValues.ToString().Split(NewLineCharactors, StringSplitOptions.None).ToList();
+            var B2clines = pasteValues.B2C.ToString().Split(NewLineCharactors, StringSplitOptions.None).ToList();
+            var B2blines = pasteValues.B2B.ToString().Split(NewLineCharactors, StringSplitOptions.None).ToList();
 
+            placeholderName(categoryValues, B2clines, true);
+            placeholderName(categoryValues, B2blines, false);
+
+            return categoryValues;
+        }
+
+        private static void placeholderName(ObligatedCategoryValues categoryValues, List<string> lines, bool isB2c)
+        {
             if (lines.Any() && lines.ElementAt(lines.Count() - 1).Equals(string.Empty))
             {
                 lines.RemoveAt(lines.Count() - 1);
-            } 
+            }
 
             for (var lineCount = 0; lineCount < lines.Count; lineCount++)
             {
@@ -37,17 +46,17 @@
                 {
                     if (splitLine.Length > 0 && !string.IsNullOrWhiteSpace(splitLine[0]))
                     {
-                        category.B2C = splitLine[0];
-                    }
-
-                    if (splitLine.Length > 1 && !string.IsNullOrWhiteSpace(splitLine[1]))
-                    {
-                        category.B2B = splitLine[1];
+                        if (isB2c)
+                        {
+                            category.B2C = splitLine[0];
+                        }
+                        else
+                        {
+                            category.B2B = splitLine[0];
+                        }
                     }
                 }
             }
-
-            return categoryValues;
         }
 
         private decimal? TryCastToDecimal(string value)

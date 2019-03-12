@@ -4,6 +4,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -16,12 +18,14 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IPasteProcessor pasteProcessor;
 
-        public ObligatedValuesCopyPasteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public ObligatedValuesCopyPasteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IPasteProcessor pasteProcessor)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.pasteProcessor = pasteProcessor;
         }
 
         [HttpGet]
@@ -46,10 +50,19 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel)
         {
-            if (viewModel.B2bPastedValues != null || viewModel.B2cPastedValues != null)
+            var modelValues = new ObligatedCategoryValue();
+
+            if (viewModel.B2cPastedValues != null)
             {
-                TempData["pastedValues"] = viewModel.B2bPastedValues;
+                modelValues.B2C = viewModel.B2cPastedValues[0];
             }
+
+            if (viewModel.B2bPastedValues != null)
+            {
+                modelValues.B2B = viewModel.B2bPastedValues[0];
+            }
+
+            TempData["pastedValues"] =  pasteProcessor.BuildModel(modelValues);
 
             return await Task.Run<ActionResult>(() => RedirectToAction("Index", "ObligatedReceived",
                     new { area = "AatfReturn", schemeId = viewModel.SchemeId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));

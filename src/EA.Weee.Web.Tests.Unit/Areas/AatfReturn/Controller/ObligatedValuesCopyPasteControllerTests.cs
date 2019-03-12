@@ -5,6 +5,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -22,14 +23,16 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IWeeeClient weeeClient;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ObligatedValuesCopyPasteControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             weeeClient = weeeClient = A.Fake<IWeeeClient>();
+            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            controller = new ObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache);
+            controller = new ObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache, pasteProcessor);
         }
 
         [Fact]

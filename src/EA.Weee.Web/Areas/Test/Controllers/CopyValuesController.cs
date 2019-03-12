@@ -44,13 +44,13 @@
             return View("Paste", null, returnUrl);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Paste(string pasteValues, string returnUrl)
-        {
-            TempData["pasteValues"] = pasteProcesser.BuildModel(pasteValues);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Paste(string[] pasteValues, string returnUrl)
+        //{
+        //    TempData["pasteValues"] = pasteProcesser.BuildModel(pasteValues);
 
-            return Redirect(returnUrl);
-        }
+        //    return Redirect(returnUrl);
+        //}
     }
 }
