@@ -12,12 +12,14 @@
 
         IList<MemberUpload> FetchMemberUploadsToRollback();
 
-        void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount);
+        void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount, bool hasAnnualCharge);
 
         void ResetMemberUploadInvoice(MemberUpload memberUpload);
 
         void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount);
 
         void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions);
+
+        void ResetMemberUploadsAnnualCharge(IEnumerable<MemberUpload> memberUploads);
     }
 }

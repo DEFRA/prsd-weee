@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using DataAccess;
     using Domain.Lookup;
+    using RequestHandlers.Factories;
     using RequestHandlers.Scheme.MemberRegistration;
 
-    public class MigrationProducerChargeCalculatorDataAccess : IProducerChargeCalculatorDataAccess
+    public class MigrationProducerChargeCalculatorDataAccess : IMigrationProducerChargeCalculatorDataAccess
     {
         private readonly WeeeMigrationContext context;
 
@@ -38,12 +40,17 @@
 
         public decimal FetchSumOfExistingCharges(string schemeApprovalNumber, string registrationNumber, int complianceYear)
         {
+            throw new NotImplementedException();
+        }
+
+        public decimal FetchSumOfExistingChargesByDate(string schemeApprovalNumber, string registrationNumber, int complianceYear, DateTime submittedDate)
+        {
             Dictionary<SchemeProducerYear, decimal> schemeProducerYear;
             if (!sumOfExistingChargesLookup.TryGetValue(schemeApprovalNumber, out schemeProducerYear))
             {
                 schemeProducerYear = context
                     .ProducerSubmissions
-                    .Where(p => p.MemberUpload.IsSubmitted)
+                    .Where(p => p.MemberUpload.IsSubmitted && p.MemberUpload.CreatedDate < submittedDate)
                     .Where(p => p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber)
                     .GroupBy(p => new
                     {
@@ -56,8 +63,8 @@
                         Total = g.Sum(i => i.ChargeThisUpdate)
                     })
                     .ToDictionary(
-                    g => new SchemeProducerYear(g.Key.RegistrationNumber, g.Key.ComplianceYear),
-                    g => g.Total);
+                        g => new SchemeProducerYear(g.Key.RegistrationNumber, g.Key.ComplianceYear),
+                        g => g.Total);
 
                 sumOfExistingChargesLookup.Add(schemeApprovalNumber, schemeProducerYear);
             }

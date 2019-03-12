@@ -39,8 +39,9 @@
             return memberUploads.ToList();
         }
 
-        public void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount)
+        public void UpdateMemberUploadAmount(MemberUpload memberUpload, decimal amount, bool hasAnnualCharge)
         {
+            memberUpload.HasAnnualCharge = hasAnnualCharge;
             memberUpload.UpdateTotalCharges(amount);
         }
 
@@ -66,10 +67,18 @@
 
         public void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)
         {
-            context.ProducerSubmissions.Where(c => producerSubmissions.Select(p => p.Id).Contains(c.Id)).ForEachAsync((c) => 
-                {
-                    c.SetAsNotInvoiced();
-                });
+            foreach (var producerSubmission in producerSubmissions)
+            {
+                producerSubmission.SetAsNotInvoiced();
+            }
+        }
+
+        public void ResetMemberUploadsAnnualCharge(IEnumerable<MemberUpload> memberUploads)
+        {
+            foreach (var memberUpload in memberUploads)
+            {
+                context.MemberUploads.Find(memberUpload.Id).HasAnnualCharge = false;
+            }
         }
     }
 }
