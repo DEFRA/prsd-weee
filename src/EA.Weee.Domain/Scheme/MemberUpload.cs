@@ -118,6 +118,16 @@
             TotalCharges -= amount;
         }
 
+        public void UpdateTotalCharges(decimal amount)
+        {
+            TotalCharges = amount;
+        }
+
+        public void ResetInvoice()
+        {
+            InvoiceRun = null;
+        }
+
         protected MemberUpload()
         {
         }

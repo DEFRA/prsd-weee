@@ -1,0 +1,2 @@
+﻿INSERT INTO [Identity].AspNetUsers (Id, Email, PasswordHash, SecurityStamp, Surname, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, UserName, FirstName)
+VALUES ('0311F8F5-6E14-490C-99CF-635D4E992C3A', 'SrocMigration', NULL, NULL, 'SrocMigration', 0, 0, 0, 0, 0, 'SrocMigration', 'SrocMigration')
