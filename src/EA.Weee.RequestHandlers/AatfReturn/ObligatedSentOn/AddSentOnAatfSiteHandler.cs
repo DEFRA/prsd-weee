@@ -37,9 +37,13 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
+            var weeeSentOn = new WeeeSentOn();
+
             Country siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
 
-            Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
+            var @return = await returnDataAccess.GetById(message.ReturnId);
+
+            var aatf = await genericDataAccess.GetById<Aatf>(message.AatfId);
 
             var siteAddress = new AatfAddress(
                 message.SiteAddressData.Name,
@@ -50,23 +54,46 @@
                 message.SiteAddressData.Postcode,
                 siteCountry);
 
+            Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
+
             var operatorAddress = new AatfAddress(
-                message.OperatorAddressData.Name,
-                message.OperatorAddressData.Address1,
-                message.OperatorAddressData.Address2,
-                message.OperatorAddressData.TownOrCity,
-                message.OperatorAddressData.CountyOrRegion,
-                message.OperatorAddressData.Postcode,
+                "OPERATOR TEST",
+                message.SiteAddressData.Address1,
+                message.SiteAddressData.Address2,
+                message.SiteAddressData.TownOrCity,
+                message.SiteAddressData.CountyOrRegion,
+                message.SiteAddressData.Postcode,
                 operatorCountry);
 
-            var @return = await returnDataAccess.GetById(message.ReturnId);
+            if (message.OperatorAddressData != null)
+            {
+                /*
+                Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
 
-            var aatf = await genericDataAccess.GetById<Aatf>(message.AatfId);
+                var operatorAddress = new AatfAddress(
+                    message.OperatorAddressData.Name,
+                    message.OperatorAddressData.Address1,
+                    message.OperatorAddressData.Address2,
+                    message.OperatorAddressData.TownOrCity,
+                    message.OperatorAddressData.CountyOrRegion,
+                    message.OperatorAddressData.Postcode,
+                    operatorCountry);
 
-            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
-
-            await sentOnDataAccess.Submit(weeeSentOn);
-
+                weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
+                */
+            }
+            else
+            {
+                weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
+            }
+            try
+            {
+                await sentOnDataAccess.Submit(weeeSentOn);
+            }
+            catch (Exception e)
+            {
+                var result = e;
+            }
             return true;
         }
     }
