@@ -130,13 +130,14 @@
             var schemeId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var pastedValues = A.Dummy<String>();
+            var pastedValues = A.Dummy<String[]>();
 
             var viewModel = new ObligatedValuesCopyPasteViewModel();
             viewModel.SchemeId = schemeId;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
-            viewModel.PastedValues = pastedValues;
+            viewModel.B2bPastedValues = pastedValues;
+            viewModel.B2cPastedValues = pastedValues;
             
             var result = await controller.Index(viewModel) as RedirectToRouteResult;
 

@@ -1,0 +1,60 @@
+﻿@using EA.Weee.Web.Infrastructure
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedValuesCopyPasteViewModel
+
+@{
+    ViewBag.Title = "Copy and Paste Obligated WEEE";
+}
+
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+        </div>
+    </header>
+    <p class="govuk-body">
+        Provide tonnage to 3 decimal places. For example 1.238
+    </p>
+    <p class="govuk-body">
+        You can copy the WEEE in tonnes from an Excel spreadsheet.
+    </p>
+    <p class="govuk-body">
+        Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom.
+    </p>
+    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <table class="govuk-table" id="weee-data-paste-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-half" scope="col" style="border-bottom: 0px;">
+                        B2C
+                    </th>
+                    <th class="govuk-table__header govuk-!-width-one-half" scope="col" style="border-bottom: 0px;">
+                        B2B
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste values here" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;"></textarea>
+                    </td>
+                    <td>
+                        <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste values here" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+                Save and continue
+            </button>
+
+            <button type="submit" class="govuk-button" style="background-color: #bfc1c3; color: #0b0c0c">
+                Cancel
+            </button>
+        </form>
+    }
+</section>

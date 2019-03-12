@@ -46,9 +46,9 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel)
         {
-            if (viewModel.PastedValues != null)
+            if (viewModel.B2bPastedValues != null || viewModel.B2cPastedValues != null)
             {
-                TempData["pastedValues"] = viewModel.PastedValues;
+                TempData["pastedValues"] = viewModel.B2bPastedValues;
             }
 
             return await Task.Run<ActionResult>(() => RedirectToAction("Index", "ObligatedReceived",
