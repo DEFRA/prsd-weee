@@ -19,10 +19,11 @@
         public AddressData SiteAddressData;
 
         public AddressData OperatorAddressData;
-
-        public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
+        
+        public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(IList<Core.Shared.CountryData> countryData)
         {
             this.SiteAddressData = new AddressData();
+            SiteAddressData.Countries = countryData;
             this.OperatorAddressData = new AddressData();
         }
     }
