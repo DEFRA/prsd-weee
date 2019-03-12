@@ -19,12 +19,23 @@
 
         public WeeeSentOn(AatfAddress operatorAddress, AatfAddress siteAddress, Aatf aatf, Return @return)
         {
+            Guard.ArgumentNotNull(() => siteAddress, siteAddress);
             Guard.ArgumentNotNull(() => operatorAddress, operatorAddress);
+            Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => @return, @return);
+
+            this.SiteAddress = siteAddress;
+            this.OperatorAddress = operatorAddress;
+            this.Aatf = aatf;
+            this.Return = @return;
+        }
+
+        public WeeeSentOn(AatfAddress siteAddress, Aatf aatf, Return @return)
+        {
             Guard.ArgumentNotNull(() => siteAddress, siteAddress);
             Guard.ArgumentNotNull(() => aatf, aatf);
             Guard.ArgumentNotNull(() => @return, @return);
 
-            this.OperatorAddress = operatorAddress;
             this.SiteAddress = siteAddress;
             this.Aatf = aatf;
             this.Return = @return;
