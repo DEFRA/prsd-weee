@@ -2,13 +2,9 @@
 {
     using Domain.Scheme;
     using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
-    using EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Xml.Converter;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -39,7 +35,7 @@
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
 
-            if (!hasAnnualCharge && deserializedcomplianceYear > 2018)
+            if (!hasAnnualCharge && deserializedcomplianceYear > 2018 && scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
             {
                 totalCharges = totalCharges + scheme.CompetentAuthority.AnnualChargeAmount;
                 hasAnnualCharge = true;
