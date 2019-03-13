@@ -51,7 +51,7 @@
             }
         }
 
-        public ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues)
+        public ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData)
         {
             var obligatedCategoryValues = new ObligatedCategoryValues();
 

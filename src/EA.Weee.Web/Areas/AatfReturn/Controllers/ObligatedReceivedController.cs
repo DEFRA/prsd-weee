@@ -40,12 +40,15 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var model = mapper.Map(new ReturnToObligatedViewModelTransfer() { AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, ReturnId = returnId, SchemeId = schemeId, ReturnData = @return });
-
-                if (TempData["pastedValues"] != null)
+                var model = mapper.Map(new ReturnToObligatedViewModelTransfer()
                 {
-                    model.CategoryValues = TempData["pastedValues"] as IList<ObligatedCategoryValue>;
-                }
+                    AatfId = aatfId,
+                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    ReturnId = returnId,
+                    SchemeId = schemeId,
+                    ReturnData = @return,
+                    PastedData = TempData["pastedValues"] as ObligatedCategoryValue
+                });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 

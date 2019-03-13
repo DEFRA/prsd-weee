@@ -58,14 +58,7 @@
 
                 if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
                 {
-                    var obligatedPastedValues = new ObligatedPastedValues();
-
-                    obligatedPastedValues.B2B = pasteProcessor.BuildModel(b2bContent);
-                    obligatedPastedValues.B2C = pasteProcessor.BuildModel(b2cContent);
-                    
-                    var categoryValues = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues);
-
-                    TempData["pastedValues"] = categoryValues;
+                    TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
                 }
             }
 

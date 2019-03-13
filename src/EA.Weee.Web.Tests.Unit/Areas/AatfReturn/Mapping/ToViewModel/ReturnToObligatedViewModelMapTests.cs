@@ -6,6 +6,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
@@ -20,14 +21,16 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> categoryMap;
         private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ReturnToObligatedViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
+            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap, calculator);
+            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap, calculator, pasteProcessor);
         }
 
         [Fact]
