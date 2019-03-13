@@ -26,6 +26,7 @@
 
         public ObligatedViewModel()
         {
+            this.categoryValueCalculator = new CategoryValueTotalCalculator();
         }
 
         public ObligatedViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
