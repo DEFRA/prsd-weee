@@ -22,9 +22,10 @@
                 }
                 else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
                 producerType.VATRegistered && 
-                (producerCountry != countryType.UKSCOTLAND ||
-                         producerCountry != countryType.UKWALES ||
-                         producerCountry != countryType.UKNORTHERNIRELAND))
+                (producerCountry != countryType.UKENGLAND && 
+                 producerCountry != countryType.UKSCOTLAND &&
+                 producerCountry != countryType.UKWALES &&
+                 producerCountry != countryType.UKNORTHERNIRELAND))
                 {
                     return ChargeBand.D3;
                 }
@@ -54,9 +55,10 @@
                 }
                 else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                 !producerType.VATRegistered &&
-                (producerCountry != countryType.UKSCOTLAND ||
-                         producerCountry != countryType.UKWALES ||
-                         producerCountry != countryType.UKNORTHERNIRELAND))
+                (producerCountry != countryType.UKENGLAND && 
+                 producerCountry != countryType.UKSCOTLAND &&
+                 producerCountry != countryType.UKWALES &&
+                 producerCountry != countryType.UKNORTHERNIRELAND))
                 {
                     return ChargeBand.D2;
                 }
