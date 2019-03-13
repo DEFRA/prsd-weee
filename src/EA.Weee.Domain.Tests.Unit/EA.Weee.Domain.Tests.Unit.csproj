@@ -89,6 +89,7 @@
     <Compile Include="AatfReturn\WeeeReusedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmountTests.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnTests.cs" />
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>
     </Compile>
