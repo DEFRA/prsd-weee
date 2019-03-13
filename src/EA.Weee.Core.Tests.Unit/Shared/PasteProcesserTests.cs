@@ -54,6 +54,42 @@
         }
 
         [Theory]
+        [InlineData("1,000\r\n2,000\r\n")]
+        [InlineData("1,000\r2,000\r")]
+        [InlineData("1,000\n2,000\n")]
+        public void BuildModel_GivenStringContainsCommaThousandsSeparators_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1,000");
+            result.ElementAt(1).Tonnage.Should().Be("2,000");
+        }
+
+        [Theory]
+        [InlineData("1,000.000\r\n2,000.000\r\n")]
+        [InlineData("1,000.000\r2,000.000\r")]
+        [InlineData("1,000.000\n2,000.000\n")]
+        public void BuildModel_GivenStringContainsCommaThousandsSeparatorsAndDecimals_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1,000.000");
+            result.ElementAt(1).Tonnage.Should().Be("2,000.000");
+        }
+
+        [Theory]
+        [InlineData("1.000\r\n2.000\r\n")]
+        [InlineData("1.000\r2.000\r")]
+        [InlineData("1.000\n2.000\n")]
+        public void BuildModel_GivenStringContainsDecimals_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1.000");
+            result.ElementAt(1).Tonnage.Should().Be("2.000");
+        }
+
+        [Theory]
         [InlineData("\r\n")]
         [InlineData("\r")]
         [InlineData("\n")]

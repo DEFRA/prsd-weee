@@ -4,13 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfReturn;
-    using EA.Prsd.Core;
 
     public class PasteProcessor : IPasteProcessor
     {
-        private static readonly List<string> AllowedCharacters = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\r", "\n" };
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
-        private static readonly char[] LineSplitCharactors = { '\t', ':', ',' };
+        private static readonly char[] LineSplitCharactors = { '\t', ':' };
 
         public PastedValues BuildModel(string pasteValues)
         {
