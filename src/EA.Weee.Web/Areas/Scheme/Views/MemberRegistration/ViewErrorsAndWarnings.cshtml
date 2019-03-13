@@ -66,13 +66,27 @@
         </p>
     }
 
-        <details class="govuk-details" style="background-color: #ef9998 ; padding-top: 5px; color: #0b0c0c;">
-            @{
-                string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
-                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary summary_error govuk-!-font-weight-bold bold-small", "Member registration errors", "View member registration errors");
-            }
+    <details role="group" class="govuk-details weee-upload-error">
+        @{
+            string errorSummaryText = string.Format("View {0} {1}", numOfErrors, errorText);
+            this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary error-details-summary bold-small ", "Member registration errors", "View member registration errors");
+        }
+        
+        <div class="error-list-container">
+            <ul>
+                @foreach (var uploadError in Model.ErrorData)
+                {
+                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+                    {
+                        <li class="error-list-item govuk-body-s">
+                            @uploadError.Description
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
 
-            <table class="govuk-table" id="error-container" style="background-color:#FDE3E6; table-layout: fixed; word-wrap: break-word">
+        @*<table class="govuk-table" id="error-container" style="background-color:#FDE3E6; table-layout: fixed; word-wrap: break-word">
                 @foreach (var uploadError in Model.ErrorData)
                 {
                     if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
@@ -82,23 +96,23 @@
                         </tr>
                     }
                 }
-            </table>
+            </table>*@
 
-            <div class="error-list-container" id="error-container-ie" style="background-color:#FDE3E6; border: none; display: none;">
-                <ul>
-                    @foreach (var uploadError in Model.ErrorData)
+        <div class="error-list-container" id="error-container-ie" style="background-color: #FDE3E6; border: none; display: none;">
+            <ul>
+                @foreach (var uploadError in Model.ErrorData)
+                {
+                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
                     {
-                        if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
-                        {
-                            <li class="warning-list-item font-xsmall">
-                                @uploadError.Description
-                            </li>
-                        }
+                        <li class="warning-list-item font-xsmall">
+                            @uploadError.Description
+                        </li>
                     }
-                </ul>
-            </div>
+                }
+            </ul>
+        </div>
 
-        </details>
+    </details>
 
     @if (numWarnings > 0)
     {

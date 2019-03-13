@@ -20,8 +20,7 @@
             summary = "<h2 class='error-summary-heading heading-medium govuk-error-summary__title' id=\"error-summary-title\">You have " + headerErrorCount + " on this page</h2>";
             summary += '<div class="govuk-error-summary__body">';
             summary += '<ul class="govuk-list govuk-error-summary__list"';
-            
-            
+
             for (error in errorList) {
                 summary += '<li><a href="#' + errorList[error].element.id + '">' + errorList[error].message + '</a></li>';
 
