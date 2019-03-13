@@ -54,46 +54,10 @@
                 message.SiteAddressData.Postcode,
                 siteCountry);
 
-            Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
+            weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
 
-            var operatorAddress = new AatfAddress(
-                "OPERATOR TEST",
-                message.SiteAddressData.Address1,
-                message.SiteAddressData.Address2,
-                message.SiteAddressData.TownOrCity,
-                message.SiteAddressData.CountyOrRegion,
-                message.SiteAddressData.Postcode,
-                operatorCountry);
+            await sentOnDataAccess.Submit(weeeSentOn);
 
-            if (message.OperatorAddressData != null)
-            {
-                /*
-                Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
-
-                var operatorAddress = new AatfAddress(
-                    message.OperatorAddressData.Name,
-                    message.OperatorAddressData.Address1,
-                    message.OperatorAddressData.Address2,
-                    message.OperatorAddressData.TownOrCity,
-                    message.OperatorAddressData.CountyOrRegion,
-                    message.OperatorAddressData.Postcode,
-                    operatorCountry);
-
-                weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
-                */
-            }
-            else
-            {
-                weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
-            }
-            try
-            {
-                await sentOnDataAccess.Submit(weeeSentOn);
-            }
-            catch (Exception e)
-            {
-                var result = e;
-            }
             return true;
         }
     }
