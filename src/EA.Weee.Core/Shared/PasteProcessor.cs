@@ -53,13 +53,15 @@
 
         public IList<ObligatedCategoryValue> ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData)
         {
-            foreach (var category in existingData)
+            var categoryValues = (existingData != null) ? existingData : new ObligatedCategoryValues();
+
+            foreach (var category in categoryValues)
             {
                 category.B2B = obligatedPastedValues.B2B.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
                 category.B2C = obligatedPastedValues.B2C.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
             }
 
-            return existingData;
+            return categoryValues;
         }
     }
 }

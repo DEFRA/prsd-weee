@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
+    using System;
     using System.Linq;
     using Core.AatfReturn;
     using Core.Shared;
@@ -130,9 +131,42 @@
         }
 
         [Fact]
-        public void ParseObligatedPastedValues_GivenPopulatedInput_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        public void ParseObligatedPastedValues_GivenPastedDataButNoExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
         {
-            var obligatedPastedValues = A.Fake<ObligatedPastedValues>();
+            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+
+            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
+
+            for (var i = 0; i < result.Count; i++)
+            {
+                result[i].B2B.Should().Be(i.ToString());
+                result[i].B2C.Should().Be((i + 1).ToString());
+            }
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenPastedDataAndExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+
+            var something = A.Fake<ObligatedCategoryValues>();
+
+            foreach (var thing in something)
+            {
+                thing.Id = Guid.NewGuid();
+            }
+
+            var results = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, something);
+
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(something.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+            }
+        }
+
+        private static ObligatedPastedValues CreatePastedData()
+        {
+            var obligatedPastedValues = new ObligatedPastedValues();
             var pastedB2bValues = new PastedValues();
             var pastedB2cValues = new PastedValues();
 
@@ -148,16 +182,7 @@
 
             obligatedPastedValues.B2B = pastedB2bValues;
             obligatedPastedValues.B2C = pastedB2cValues;
-
-            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
-
-            for (var i = 0; i < result.Count; i++)
-            {
-                result[i].B2B.Should().Be(i.ToString());
-                result[i].B2C.Should().Be((i + 1).ToString());
-            }
-
-            result.Count().Should().Be(14);
+            return obligatedPastedValues;
         }
 
         private static void AssertEmptyValues(PastedValues result)

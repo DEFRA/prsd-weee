@@ -89,6 +89,27 @@
         }
 
         [Fact]
+        public void Map_GivenPastedData_PasteProcessorShouldBeCalled()
+        {
+            var pastedList = new List<ObligatedCategoryValue>();
+            for (var i = 0; i < pastedList.Count; i++)
+            {
+                pastedList[i].B2B = i.ToString();
+                pastedList[i].B2C = i.ToString();
+            }
+
+            var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
+            var obligatedValues = new ObligatedCategoryValues();
+            var returnList = new List<ObligatedCategoryValue>();
+
+            A.CallTo(() => pasteProcessor.ParseObligatedPastedValues(A<ObligatedPastedValues>._, A<IList<ObligatedCategoryValue>>._)).Returns(pastedList);
+
+            var result = mapper.Map(transfer);
+
+            result.CategoryValues.Should().BeEquivalentTo(pastedList);
+        }
+
+        [Fact]
         public void Map_GivenObligatedAndCategoryValues_ObligatedMapperShouldBeCalled()
         {
             var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
