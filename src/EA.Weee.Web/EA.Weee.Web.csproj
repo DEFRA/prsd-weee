@@ -294,6 +294,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteSummaryListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPcsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
@@ -307,6 +308,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToCheckReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMapTransfer.cs" />
@@ -317,8 +320,10 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
@@ -335,6 +340,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
@@ -793,6 +799,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryLIst\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfTaskListButton.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -54,8 +54,14 @@
                             {
                                 var categoryFocus = o.CategoryId - 1;
                                 context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
-                                    $"Category {o.CategoryId} tonnage must be more than or equal to {returnTonnage}"));
+                                    $"Category {o.CategoryId} tonnage must be greater than or equal to {returnTonnage}"));
                             }
+                        }
+                        else if (o.Tonnage == null && returnTonnage != null)
+                        {
+                            var categoryFocus = o.CategoryId - 1;
+                            context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
+                                $"Category {o.CategoryId} tonnage must be greater than or equal to {returnTonnage}"));
                         }
                     }
                 });
