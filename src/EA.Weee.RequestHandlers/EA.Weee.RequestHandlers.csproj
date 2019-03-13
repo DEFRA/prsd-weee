@@ -95,6 +95,9 @@
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteRequestHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IAddAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\IAddSentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
