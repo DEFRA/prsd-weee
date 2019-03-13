@@ -22,6 +22,7 @@
 
         public NonObligatedValuesViewModel()
         {
+            this.categoryValueCalculator = new CategoryValueTotalCalculator();
         }
         
         public NonObligatedValuesViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
@@ -51,6 +52,11 @@
         public bool Edit
         {
             get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
+
+        public ICategoryValueTotalCalculator GetCalculator()
+        {
+            return categoryValueCalculator;
         }
     }
 }
