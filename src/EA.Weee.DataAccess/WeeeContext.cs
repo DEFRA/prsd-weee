@@ -41,6 +41,8 @@
 
         public virtual DbSet<WeeeReused> WeeeReused { get; set; }
 
+        public virtual DbSet<WeeeSentOn> WeeeSentOn { get; set; }
+
         public virtual DbSet<Return> Returns { get; set; }
 
         public virtual DbSet<ReturnScheme> ReturnScheme { get; set; }
