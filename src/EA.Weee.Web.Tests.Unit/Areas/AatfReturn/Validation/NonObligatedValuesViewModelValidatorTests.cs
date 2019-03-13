@@ -149,7 +149,7 @@
 
             for (var count = 0; count < model.CategoryValues.Count; count++)
             {
-                model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
+                model.CategoryValues.ElementAt(count).Tonnage = null;
                 model.CategoryValues.ElementAt(count).Dcf = false;
             }
             model.Dcf = false;
