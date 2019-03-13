@@ -51,17 +51,15 @@
             }
         }
 
-        public ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData)
+        public IList<ObligatedCategoryValue> ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData)
         {
-            var obligatedCategoryValues = new ObligatedCategoryValues();
-
-            foreach (var category in obligatedCategoryValues)
+            foreach (var category in existingData)
             {
                 category.B2B = obligatedPastedValues.B2B.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
                 category.B2C = obligatedPastedValues.B2C.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
             }
 
-            return obligatedCategoryValues;
+            return existingData;
         }
     }
 }

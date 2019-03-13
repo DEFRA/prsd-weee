@@ -7,6 +7,6 @@
     {
         PastedValues BuildModel(string pasteValues);
 
-        ObligatedCategoryValues ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData);
+        IList<ObligatedCategoryValue> ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData);
     }
 }

@@ -149,7 +149,7 @@
             obligatedPastedValues.B2B = pastedB2bValues;
             obligatedPastedValues.B2C = pastedB2cValues;
 
-            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues);
+            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
 
             for (var i = 0; i < result.Count; i++)
             {
