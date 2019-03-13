@@ -25,28 +25,17 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
-        <table class="govuk-table" id="weee-data-paste-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-half" scope="col" style="border-bottom: 0px;">
-                        B2C
-                    </th>
-                    <th class="govuk-table__header govuk-!-width-one-half" scope="col" style="border-bottom: 0px;">
-                        B2B
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values here" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;"></textarea>
-                    </td>
-                    <td>
-                        <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values here" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-s" id="b2c-entry">B2C</h2>
+                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values here" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-s" id="b2b-entry">B2B</h2>
+                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values here" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
+            </div>
+        </div>
 
         <form method="post" class="form" style="display: inline">
             <button type="submit" class="govuk-button" id="aatf-task-list">
