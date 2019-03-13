@@ -1,6 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedSentOn
 {
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.Organisations;
@@ -49,6 +52,45 @@
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddSentOnAatfSite>());
 
             await action.Should().ThrowAsync<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithValidInput_SubmitIsCalledCorrectly()
+        {
+            var siteRequest = AddSentOnAatfSiteRequest();
+            var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
+
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(siteRequest.SiteAddressData.CountryId)).Returns(country);
+
+            await handler.HandleAsync(siteRequest);
+
+            A.CallTo(() => sentOnDataAccess.Submit(A<WeeeSentOn>.That.Matches(w => w.SiteAddress.Address1.Equals(siteRequest.SiteAddressData.Address1)
+            && w.SiteAddress.Address2.Equals(siteRequest.SiteAddressData.Address2)
+            && w.SiteAddress.CountyOrRegion.Equals(siteRequest.SiteAddressData.CountyOrRegion)
+            && w.SiteAddress.Postcode.Equals(siteRequest.SiteAddressData.Postcode)
+            && w.SiteAddress.TownOrCity.Equals(siteRequest.SiteAddressData.TownOrCity)
+            && w.SiteAddress.Country.Equals(country)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        private AddSentOnAatfSite AddSentOnAatfSiteRequest()
+        {
+            var siteRequest = new AddSentOnAatfSite()
+            {
+                AatfId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                SiteAddressData = new AddressData()
+                {
+                    CountryId = Guid.NewGuid(),
+                    Address1 = "address1",
+                    Address2 = "address2",
+                    CountyOrRegion = "county",
+                    Name = "name",
+                    Postcode = "postcode",
+                    TownOrCity = "town"
+                }
+            };
+            return siteRequest;
         }
     }
 }
