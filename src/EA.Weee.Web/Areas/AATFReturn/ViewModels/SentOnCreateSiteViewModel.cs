@@ -12,7 +12,5 @@
         public Guid AatfId { get; set; }
 
         public AddressData SiteAddressData { get; set; }
-
-        public AddressData OperatorAddressData { get; set; }
     }
 }

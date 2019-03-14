@@ -1,0 +1,27 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnCreateSiteOperatorViewModel
+@{
+    ViewBag.Title = "Sent On WEEE";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Which AATF/ATF was the WEEE sent to for treatment?</h1>
+
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.WeeeSentOnId)
+
+        @Html.EditorFor(m => m.OperatorAddressData)
+
+        <div class="govuk-!-padding-bottom-3"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+
+    }
+</section>
