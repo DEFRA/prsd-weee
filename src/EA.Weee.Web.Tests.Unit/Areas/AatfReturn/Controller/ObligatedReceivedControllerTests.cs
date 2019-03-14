@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
     using Core.AatfReturn;
     using Core.Scheme;
@@ -75,6 +76,26 @@
             await controller.Index(returnId, aatfId, schemeId);
 
             A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.SchemeId.Equals(schemeId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+        
+        [Fact]
+        public async void IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
+        {
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            var pastedValue = A.Fake<List<ObligatedCategoryValue>>();
+
+            A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
+
+            var result = await controller.Index(returnId, aatfId, schemeId) as ViewResult;
+
+            var viewModel = result.Model as ObligatedViewModel;
+
+            viewModel.CategoryValues.Should().NotBeSameAs(pastedValue);
         }
 
         [Fact]

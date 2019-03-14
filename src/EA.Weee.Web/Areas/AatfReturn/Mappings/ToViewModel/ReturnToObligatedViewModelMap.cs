@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.Helpers;
+    using EA.Weee.Core.Shared;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services.Caching;
@@ -15,15 +16,18 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> obligatedMap;
         private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ReturnToObligatedViewModelMap(IWeeeCache cache,
             IMap<ObligatedDataToObligatedValueMapTransfer,
             IList<ObligatedCategoryValue>> obligatedMap,
-            ICategoryValueTotalCalculator calculator)
+            ICategoryValueTotalCalculator calculator,
+            IPasteProcessor pasteProcessor)
         {
             this.cache = cache;
             this.obligatedMap = obligatedMap;
             this.calculator = calculator;
+            this.pasteProcessor = pasteProcessor;
         }
 
         public ObligatedViewModel Map(ReturnToObligatedViewModelTransfer source)
@@ -40,7 +44,21 @@
                 SchemeId = source.SchemeId
             };
 
-            model.CategoryValues = obligatedMap.Map(new ObligatedDataToObligatedValueMapTransfer() { WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList(), ObligatedCategoryValues = model.CategoryValues });
+            var existingData = obligatedMap.Map(new ObligatedDataToObligatedValueMapTransfer() { WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList(), ObligatedCategoryValues = model.CategoryValues });
+
+            if (source.PastedData != null)
+            {
+                var obligatedPastedValues = new ObligatedPastedValues();
+
+                obligatedPastedValues.B2B = pasteProcessor.BuildModel(source.PastedData.B2B);
+                obligatedPastedValues.B2C = pasteProcessor.BuildModel(source.PastedData.B2C);
+
+                model.CategoryValues = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
+            }
+            else
+            {
+                model.CategoryValues = existingData;
+            }
 
             return model;
         }

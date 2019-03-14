@@ -27,6 +27,7 @@
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
         public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
+        public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
 
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
