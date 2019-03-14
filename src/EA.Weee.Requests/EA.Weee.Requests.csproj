@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
