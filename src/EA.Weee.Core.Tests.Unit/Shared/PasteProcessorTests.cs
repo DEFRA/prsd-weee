@@ -8,11 +8,11 @@
     using FluentAssertions;
     using Xunit;
 
-    public class PasteProcesserTests
+    public class PasteProcessorTests
     {
         private readonly PasteProcessor pasteProcesser;
 
-        public PasteProcesserTests()
+        public PasteProcessorTests()
         {
             pasteProcesser = new PasteProcessor();
         }
