@@ -9,7 +9,5 @@
     public class SentOnCreateSiteOperatorViewModel : SentOnCreateSiteViewModel
     {
         public AddressData OperatorAddressData;
-
-        public Guid WeeeSentOnId;
     }
 }
