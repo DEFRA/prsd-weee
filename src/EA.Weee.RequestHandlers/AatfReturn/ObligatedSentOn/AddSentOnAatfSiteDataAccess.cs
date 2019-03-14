@@ -23,9 +23,9 @@
             return context.SaveChangesAsync();
         }
 
-        public async Task<WeeeSentOn> GetWeeeSentOn(Guid id)
+        public async Task<AatfAddress> GetWeeeSentOnAddress(Guid id)
         {
-            return await context.WeeeSentOn.Where(w => w.Id == id).SingleOrDefaultAsync();
+            return await context.WeeeSentOn.Where(w => w.Id == id).Select(w => w.SiteAddress).SingleOrDefaultAsync();
         }
     }
 }
