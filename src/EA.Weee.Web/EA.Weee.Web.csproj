@@ -383,7 +383,6 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
-    <Compile Include="Areas\Test\Controllers\CopyValuesController.cs" />
     <Compile Include="Constant\BreadCrumbConstant.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
@@ -528,8 +527,6 @@
     <Content Include="Content\weee\_conditional.scss" />
     <Content Include="Content\weee\_css3.scss" />
     <Content Include="Content\weee\_font_stack.scss" />
-    <Content Include="Areas\Test\Views\CopyValues\Index.cshtml" />
-    <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />

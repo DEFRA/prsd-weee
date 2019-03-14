@@ -35,15 +35,14 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var organisationId = @return.ReturnOperatorData.OrganisationId;
                 var viewModel = new ObligatedValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
                     ReturnId = returnId,
-                    OrganisationId = organisationId,
+                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     SchemeId = schemeId,
-                    SchemeName = cache.FetchSchemePublicInfo(organisationId).Result.Name,
-                    AatfName = cache.FetchAatfData(organisationId, aatfId).Result.Name
+                    SchemeName = cache.FetchSchemePublicInfo(@return.ReturnOperatorData.OrganisationId).Result.Name,
+                    AatfName = cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId).Result.Name
                 };
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
