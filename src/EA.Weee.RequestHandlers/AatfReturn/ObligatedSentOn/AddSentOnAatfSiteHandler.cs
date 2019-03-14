@@ -13,7 +13,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    internal class AddSentOnAatfSiteHandler : IRequestHandler<AddSentOnAatfSite, bool>
+    internal class AddSentOnAatfSiteHandler : IRequestHandler<AddSentOnAatfSite, Guid>
     {
         private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
@@ -33,7 +33,7 @@
             this.organisationDetailsDataAccess = orgDataAccess;
         }
 
-        public async Task<bool> HandleAsync(AddSentOnAatfSite message)
+        public async Task<Guid> HandleAsync(AddSentOnAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -58,7 +58,7 @@
 
             await sentOnDataAccess.Submit(weeeSentOn);
 
-            return true;
+            return weeeSentOn.Id;
         }
     }
 }

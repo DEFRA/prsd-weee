@@ -4,7 +4,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
 
-    public class AddSentOnAatfSite : IRequest<bool>
+    public class AddSentOnAatfSite : IRequest<Guid>
     {
         public Guid OrganisationId { get; set; }
 
