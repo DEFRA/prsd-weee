@@ -610,12 +610,13 @@ input[type="file"].form-control {
 
 .error-details-summary {
     color: govuk-colour('black');
-    width: calc(100% - 25px);
+    width: calc(100% - 25px);   
 }
 
 .warning-details-summary:focus {
     background: #FFD990;
     /*outline: none;*/
+    outline-width: 5px;
 }
 
 .warning-details-summary:hover {
@@ -624,14 +625,14 @@ input[type="file"].form-control {
 
 .warning-list-container {
     background-color: #FFD990;
-    border-left: 3px;
-    padding-left: 3px;
+    margin-left: -5px;
+    /*    border-left: 3px;*/
 }
 
 .error-list-container {
     background-color: #FDE3E6;
-    padding-left: 3px;
-    border-left: 3px;
+    margin-left: -5px;
+    /*border-left: 3px;*/
 }
 
 .warning-list-container > ul {
@@ -657,12 +658,14 @@ input[type="file"].form-control {
 .weee-upload-error {
     width: 100%;
     background-color: #ef9998;
-    margin-bottom:10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
 }
 .weee-upload-warning {
     width: 100%;
     background-color: #FFD990;
     margin-bottom: 10px;
+    padding-left: 5px;
 }
 
 .error-details-summary-title {
@@ -684,7 +687,7 @@ details summary::-ms-details-marker {
 
 .error-details-summary:focus {
     background: none !important;
-    /*outline: none;*/
+    outline-width: 5px;
 }
 
 .error-details-summary:hover {
