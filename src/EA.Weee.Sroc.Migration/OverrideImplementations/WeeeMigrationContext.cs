@@ -12,17 +12,7 @@
 
     public class WeeeMigrationContext : DbContext
     {
-        //public virtual DbSet<AuditLog> AuditLogs { get; set; }
-
-        //public virtual DbSet<Organisation> Organisations { get; set; }
-
         public virtual DbSet<User> Users { get; set; }
-
-        //public virtual DbSet<Country> Countries { get; set; }
-
-        //public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }
-
-        //public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
 
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
 
@@ -89,41 +79,9 @@
             }
         }
 
-        //public virtual DbSet<SystemData> SystemData { get; set; }
-
-        //public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
-
         public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
 
-        //public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
-
-        //public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }
-
-        //public virtual DbSet<DataReturnUploadError> DataReturnsUploadErrors { get; set; }
-
-        //public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
-
-        //public virtual DbSet<DataReturn> DataReturns { get; set; }
-
-        //public virtual DbSet<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
-
-        //public virtual DbSet<AatfDeliveryLocation> AatfDeliveryLocations { get; set; }
-
-        //public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
-
-        //public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
-
-        //public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
-
-        //public virtual DbSet<EeeOutputAmount> EeeOutputAmounts { get; set; }
-
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
-
-        //public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
-
-        //public virtual DbSet<Role> Roles { get; set; }
-
-        //public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeMigrationContext()
             : base("name=Weee.DefaultConnection")

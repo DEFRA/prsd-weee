@@ -15,7 +15,6 @@
         {
             if (complianceYear > 2018) 
             {
-                // also country != UK-Scotland, UK-Northern Ireland, UK-Wales
                 return environmentAgencyProducerChargeBandCalculator;
             }
 
