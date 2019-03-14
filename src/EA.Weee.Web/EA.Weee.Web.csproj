@@ -286,6 +286,7 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
@@ -382,7 +383,6 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
-    <Compile Include="Areas\Test\Controllers\CopyValuesController.cs" />
     <Compile Include="Constant\BreadCrumbConstant.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
@@ -400,6 +400,7 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\CannotSubmitDataReturnViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
@@ -526,8 +527,6 @@
     <Content Include="Content\weee\_conditional.scss" />
     <Content Include="Content\weee\_css3.scss" />
     <Content Include="Content\weee\_font_stack.scss" />
-    <Content Include="Areas\Test\Views\CopyValues\Index.cshtml" />
-    <Content Include="Areas\Test\Views\CopyValues\Paste.cshtml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />
@@ -798,6 +797,7 @@
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryLIst\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfTaskListButton.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

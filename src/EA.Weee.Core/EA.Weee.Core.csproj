@@ -88,6 +88,9 @@
     <Compile Include="AatfReturn\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedPastedValues.cs" />
+    <Compile Include="AatfReturn\PastedValue.cs" />
+    <Compile Include="AatfReturn\PastedValues.cs" />
     <Compile Include="AatfReturn\SchemeDataList.cs" />
     <Compile Include="AatfReturn\WeeeObligatedData.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
@@ -185,10 +188,10 @@
     <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\ICsvWriter.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
-    <Compile Include="Shared\IPasteProcesser.cs" />
+    <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
-    <Compile Include="Shared\PasteProcesser.cs" />
+    <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />
     <Compile Include="Admin\UserSearchData.cs" />
