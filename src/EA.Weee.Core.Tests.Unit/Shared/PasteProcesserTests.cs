@@ -1,23 +1,20 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.Shared;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
     public class PasteProcesserTests
     {
-        private readonly PasteProcesser pasteProcesser;
+        private readonly PasteProcessor pasteProcesser;
 
         public PasteProcesserTests()
         {
-            pasteProcesser = new PasteProcesser();
+            pasteProcesser = new PasteProcessor();
         }
 
         [Theory]
@@ -28,7 +25,7 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.Should().BeOfType<ObligatedCategoryValues>();
+            result.Should().BeOfType<PastedValues>();
             AssertEmptyValues(result);
         }
 
@@ -41,7 +38,7 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).B2C.Should().Be("1");
+            result.ElementAt(0).Tonnage.Should().Be("1");
         }
 
         [Theory]
@@ -52,8 +49,44 @@
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).B2C.Should().Be("1");
-            result.ElementAt(1).B2C.Should().Be("2");
+            result.ElementAt(0).Tonnage.Should().Be("1");
+            result.ElementAt(1).Tonnage.Should().Be("2");
+        }
+
+        [Theory]
+        [InlineData("1,000\r\n2,000\r\n")]
+        [InlineData("1,000\r2,000\r")]
+        [InlineData("1,000\n2,000\n")]
+        public void BuildModel_GivenStringContainsCommaThousandsSeparators_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1,000");
+            result.ElementAt(1).Tonnage.Should().Be("2,000");
+        }
+
+        [Theory]
+        [InlineData("1,000.000\r\n2,000.000\r\n")]
+        [InlineData("1,000.000\r2,000.000\r")]
+        [InlineData("1,000.000\n2,000.000\n")]
+        public void BuildModel_GivenStringContainsCommaThousandsSeparatorsAndDecimals_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1,000.000");
+            result.ElementAt(1).Tonnage.Should().Be("2,000.000");
+        }
+
+        [Theory]
+        [InlineData("1.000\r\n2.000\r\n")]
+        [InlineData("1.000\r2.000\r")]
+        [InlineData("1.000\n2.000\n")]
+        public void BuildModel_GivenStringContainsDecimals_CategoryValuesShouldBePopulation(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            result.ElementAt(0).Tonnage.Should().Be("1.000");
+            result.ElementAt(1).Tonnage.Should().Be("2.000");
         }
 
         [Theory]
@@ -79,34 +112,10 @@
         }
 
         [Theory]
-        [InlineData("1\t2\r\n")]
-        [InlineData("1\t2\r")]
-        [InlineData("1\t2\n")]
-        [InlineData("1:2\r\n")]
-        [InlineData("1:2\r")]
-        [InlineData("1:2\n")]
-        [InlineData("1,2\r\n")]
-        [InlineData("1,2\r")]
-        [InlineData("1,2\n")]
-        public void BuildModel_GivenStringContainsTwoColumnsAndOneRow_CategoryValuesShouldPopulated(string value)
-        {
-            var result = pasteProcesser.BuildModel(value);
-
-            result.ElementAt(0).B2C.Should().Be("1");
-            result.ElementAt(0).B2B.Should().Be("2");
-        }
-
-        [Theory]
-        [InlineData("1\t2\r\n3\t4\r\n5\t6\r\n7\t8\r\n9\t10\r\n11\t12\r\n13\t14\r\n15\t16\r\n17\t18\r\n19\t20\r\n21\t22\r\n23\t24\r\n25\t26\r\n27\t28\r\n")]
-        [InlineData("1\t2\r3\t4\r5\t6\r7\t8\r9\t10\r11\t12\r13\t14\r15\t16\r17\t18\r19\t20\r21\t22\r23\t24\r25\t26\r27\t28\r")]
-        [InlineData("1\t2\n3\t4\n5\t6\n7\t8\n9\t10\n11\t12\n13\t14\n15\t16\n17\t18\n19\t20\n21\t22\n23\t24\n25\t26\n27\t28\n")]
-        [InlineData("1:2\r\n3:4\r\n5:6\r\n7:8\r\n9:10\r\n11:12\r\n13:14\r\n15:16\r\n17:18\r\n19:20\r\n21:22\r\n23:24\r\n25:26\r\n27:28\r\n")]
-        [InlineData("1:2\r3:4\r5:6\r7:8\r9:10\r11:12\r13:14\r15:16\r17:18\r19:20\r21:22\r23:24\r25:26\r27:28\r")]
-        [InlineData("1:2\n3:4\n5:6\n7:8\n9:10\n11:12\n13:14\n15:16\n17:18\n19:20\n21:22\n23:24\n25:26\n27:28\n")]
-        [InlineData("1,2\r\n3,4\r\n5,6\r\n7,8\r\n9,10\r\n11,12\r\n13,14\r\n15,16\r\n17,18\r\n19,20\r\n21,22\r\n23,24\r\n25,26\r\n27,28\r\n")]
-        [InlineData("1,2\r3,4\r5,6\r7,8\r9,10\r11,12\r13,14\r15,16\r17,18\r19,20\r21,22\r23,24\r25,26\r27,28\r")]
-        [InlineData("1,2\n3,4\n5,6\n7,8\n9,10\n11,12\n13,14\n15,16\n17,18\n19,20\n21,22\n23,24\n25,26\n27,28\n")]
-        public void BuildModel_GivenStringContainsTwoColumnsAndFourteenRows_CategoryValuesShouldPopulated(string value)
+        [InlineData("1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n10\r\n11\r\n12\r\n13\r\n14")]
+        [InlineData("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14")]
+        [InlineData("1\r2\r3\r4\r5\r6\r7\r8\r9\r10\r11\r12\r13\r14")]
+        public void BuildModel_GivenStringContainsOneColumnAndFourteenRows_CategoryValuesShouldPopulated(string value)
         {
             var result = pasteProcesser.BuildModel(value);
 
@@ -114,119 +123,144 @@
         }
 
         [Theory]
-        [InlineData("1\t2\r\n3\t4\r\n\r\n5\t6\r\n7\t8\r\n9\t10\r\n11\t12\r\n13\t14\r\n\r\n15\t16\r\n17\t18\r\n19\t20\r\n21\t22\r\n23\t24\r\n25\t26\r\n27\t28\r\n\r\n\r\n\r\n")]
-        [InlineData("1\t2\r3\t4\r\r5\t6\r7\t8\r9\t10\r11\t12\r13\t14\r\r15\t16\r17\t18\r19\t20\r21\t22\r23\t24\r25\t26\r27\t28\r\r\r\r")]
-        [InlineData("1\t2\n3\t4\n\n5\t6\n7\t8\n9\t10\n11\t12\n13\t14\n\n15\t16\n17\t18\n19\t20\n21\t22\n23\t24\n25\t26\n27\t28\n\n\n\n")]
-        [InlineData("1:2\r\n3:4\r\n\r\n5:6\r\n7:8\r\n9:10\r\n11:12\r\n13:14\r\n\r\n15:16\r\n17:18\r\n19:20\r\n21:22\r\n23:24\r\n25:26\r\n27:28\r\n\r\n\r\n\r\n")]
-        [InlineData("1:2\r3:4\r\r5:6\r7:8\r9:10\r11:12\r13:14\r\r15:16\r17:18\r19:20\r21:22\r23:24\r25:26\r27:28\r\r\r\r")]
-        [InlineData("1:2\n3:4\n\n5:6\n7:8\n9:10\n11:12\n13:14\n\n15:16\n17:18\n19:20\n21:22\n23:24\n25:26\n27:28\n\n\n\n")]
-        [InlineData("1,2\r\n3,4\r\n\r\n5,6\r\n7,8\r\n9,10\r\n11,12\r\n13,14\r\n\r\n15,16\r\n17,18\r\n19,20\r\n21,22\r\n23,24\r\n25,26\r\n27,28\r\n\r\n\r\n\r\n")]
-        [InlineData("1,2\r3,4\r\r5,6\r7,8\r9,10\r11,12\r13,14\r\r15,16\r17,18\r19,20\r21,22\r23,24\r25,26\r27,28\r\r\r\r")]
-        [InlineData("1,2\n3,4\n\n5,6\n7,8\n9,10\n11,12\n13,14\n\n15,16\n17,18\n19,20\n21,22\n23,24\n25,26\n27,28\n\n\n\n")]
-        public void BuildModel_GivenStringContainsTwoColumnsAndFourteenRowsWithSpuriousNewlines_CategoryValuesShouldPopulated(string value)
+        [InlineData("1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n10\r\n11\r\n12\r\n13\r\n14\r\n15\r\n16")]
+        [InlineData("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16")]
+        [InlineData("1\r2\r3\r4\r5\r6\r7\r8\r9\r10\r11\r12\r13\r14\r15\r16")]
+        public void BuildModel_GivenStringContainsOneColumnAndMoreThanFourteenRows_CategoryValuesShouldPopulated(string value)
         {
             var result = pasteProcesser.BuildModel(value);
 
-            result.ElementAt(0).B2C.Should().Be("1");
-            result.ElementAt(0).B2B.Should().Be("2");
-            result.ElementAt(1).B2C.Should().Be("3");
-            result.ElementAt(1).B2B.Should().Be("4");
-            result.ElementAt(2).B2C.Should().BeNull();
-            result.ElementAt(2).B2B.Should().BeNull();
-            result.ElementAt(3).B2C.Should().Be("5");
-            result.ElementAt(3).B2B.Should().Be("6");
-            result.ElementAt(4).B2C.Should().Be("7");
-            result.ElementAt(4).B2B.Should().Be("8");
-            result.ElementAt(5).B2C.Should().Be("9");
-            result.ElementAt(5).B2B.Should().Be("10");
-            result.ElementAt(6).B2C.Should().Be("11");
-            result.ElementAt(6).B2B.Should().Be("12");
-            result.ElementAt(7).B2C.Should().Be("13");
-            result.ElementAt(7).B2B.Should().Be("14");
-            result.ElementAt(8).B2C.Should().BeNull();
-            result.ElementAt(8).B2B.Should().BeNull();
-            result.ElementAt(9).B2C.Should().Be("15");
-            result.ElementAt(9).B2B.Should().Be("16");
-            result.ElementAt(10).B2C.Should().Be("17");
-            result.ElementAt(10).B2B.Should().Be("18");
-            result.ElementAt(11).B2C.Should().Be("19");
-            result.ElementAt(11).B2B.Should().Be("20");
-            result.ElementAt(12).B2C.Should().Be("21");
-            result.ElementAt(12).B2B.Should().Be("22");
-            result.ElementAt(13).B2C.Should().Be("23");
-            result.ElementAt(13).B2B.Should().Be("24");
+            AssertPopulatedValues(result);
+        }
+
+        [Theory]
+        [InlineData("1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7")]
+        [InlineData("1\n2\n3\n4\n5\n6\n7")]
+        [InlineData("1\r2\r3\r4\r5\r6\r7")]
+        public void BuildModel_GivenStringContainsOneColumnAndLessThanFourteenRows_CategoryValuesShouldPopulated(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            AssertHalfPopulatedValues(result);
+        }
+
+        [Theory]
+        [InlineData("1\t15\r\n2\t16\r\n3\t17\r\n4\t18\r\n5\t19\r\n6\t20\r\n7\t21\r\n8\t22\r\n9\t23\r\n10\t24\r\n11\t25\r\n12\t26\r\n13\t27\r\n14\t28")]
+        [InlineData("1\t15\r2\t16\r3\t17\r4\t18\r5\t19\r6\t20\r7\t21\r8\t22\r9\t23\r10\t24\r11\t25\r12\t26\r13\t27\r14\t28")]
+        [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21\n8\t22\n9\t23\n10\t24\n11\t25\n12\t26\n13\t27\n14\t28")]
+        public void BuildModel_GivenStringContainsTwoColumns_CategoryValuesShouldBePopulatedOnlyForFirstColumn(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            AssertPopulatedValues(result);
+        }
+
+        [Theory]
+        [InlineData("1\t15\r\n2\t16\r\n3\t17\r\n4\t18\r\n5\t19\r\n6\t20\r\n7\t21")]
+        [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21")]
+        [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21")]
+        public void BuildModel_GivenStringContainsTwoColumnsAndLessThanFourteenRows_CategoryValuesShouldBePopulatedOnlyForFirstColumn(string value)
+        {
+            var result = pasteProcesser.BuildModel(value);
+
+            AssertHalfPopulatedValues(result);
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenPastedDataButNoExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+
+            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
+
+            for (var i = 0; i < result.Count; i++)
+            {
+                result[i].B2B.Should().Be(i.ToString());
+                result[i].B2C.Should().Be((i + 1).ToString());
+            }
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenPastedDataAndExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+
+            var something = A.Fake<ObligatedCategoryValues>();
+
+            foreach (var thing in something)
+            {
+                thing.Id = Guid.NewGuid();
+            }
+
+            var results = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, something);
+
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(something.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+            }
+        }
+
+        private static ObligatedPastedValues CreatePastedData()
+        {
+            var obligatedPastedValues = new ObligatedPastedValues();
+            var pastedB2bValues = new PastedValues();
+            var pastedB2cValues = new PastedValues();
+
+            for (var i = 0; i < pastedB2bValues.Count; i++)
+            {
+                pastedB2bValues[i].Tonnage = i.ToString();
+            }
+
+            for (var i = 0; i < pastedB2cValues.Count; i++)
+            {
+                pastedB2cValues[i].Tonnage = (i + 1).ToString();
+            }
+
+            obligatedPastedValues.B2B = pastedB2bValues;
+            obligatedPastedValues.B2C = pastedB2cValues;
+            return obligatedPastedValues;
+        }
+
+        private static void AssertEmptyValues(PastedValues result)
+        {
+            result.Count(c => c.Tonnage != null).Should().Be(0);
+        }
+
+        private static void AssertPopulatedValues(PastedValues result)
+        {
+            result.ElementAt(0).Tonnage.Should().Be("1");
+            result.ElementAt(1).Tonnage.Should().Be("2");
+            result.ElementAt(2).Tonnage.Should().Be("3");
+            result.ElementAt(3).Tonnage.Should().Be("4");
+            result.ElementAt(4).Tonnage.Should().Be("5");
+            result.ElementAt(5).Tonnage.Should().Be("6");
+            result.ElementAt(6).Tonnage.Should().Be("7");
+            result.ElementAt(7).Tonnage.Should().Be("8");
+            result.ElementAt(8).Tonnage.Should().Be("9");
+            result.ElementAt(9).Tonnage.Should().Be("10");
+            result.ElementAt(10).Tonnage.Should().Be("11");
+            result.ElementAt(11).Tonnage.Should().Be("12");
+            result.ElementAt(12).Tonnage.Should().Be("13");
+            result.ElementAt(13).Tonnage.Should().Be("14");
             result.Count.Should().Be(14);
         }
 
-        [Theory]
-        [InlineData("1\t2\r\n3\t4\r\n5\t6\r\n7\t8\r\n9\t10\r\n11\t12\r\n13\t14\r\n15\t16\r\n17\t18\r\n19\t20\r\n21\t22\r\n23\t24\r\n25\t26\r\n27\t28\r\n29\t30\r\n")]
-        [InlineData("1\t2\r3\t4\r5\t6\r7\t8\r9\t10\r11\t12\r13\t14\r15\t16\r17\t18\r19\t20\r21\t22\r23\t24\r25\t26\r27\t28\r29\t30\r")]
-        [InlineData("1\t2\n3\t4\n5\t6\n7\t8\n9\t10\n11\t12\n13\t14\n15\t16\n17\t18\n19\t20\n21\t22\n23\t24\n25\t26\n27\t28\n29\t30\n")]
-        [InlineData("1:2\r\n3:4\r\n5:6\r\n7:8\r\n9:10\r\n11:12\r\n13:14\r\n15:16\r\n17:18\r\n19:20\r\n21:22\r\n23:24\r\n25:26\r\n27:28\r\n29:30\r\n")]
-        [InlineData("1:2\r3:4\r5:6\r7:8\r9:10\r11:12\r13:14\r15:16\r17:18\r19:20\r21:22\r23:24\r25:26\r27:28\r29:30\r")]
-        [InlineData("1:2\n3:4\n5:6\n7:8\n9:10\n11:12\n13:14\n15:16\n17:18\n19:20\n21:22\n23:24\n25:26\n27:28\n29:30\n")]
-        [InlineData("1,2\r\n3,4\r\n5,6\r\n7,8\r\n9,10\r\n11,12\r\n13,14\r\n15,16\r\n17,18\r\n19,20\r\n21,22\r\n23,24\r\n25,26\r\n27,28\r\n29,30\r\n")]
-        [InlineData("1,2\r3,4\r5,6\r7,8\r9,10\r11,12\r13,14\r15,16\r17,18\r19,20\r21,22\r23,24\r25,26\r27,28\r29,30\r")]
-        [InlineData("1,2\n3,4\n5,6\n7,8\n9,10\n11,12\n13,14\n15,16\n17,18\n19,20\n21,22\n23,24\n25,26\n27,28\n29,30\n")]
-        public void BuildModel_GivenStringContainsTwoColumnsAndMoreThanFourteenRows_CategoryValuesShouldPopulated(string value)
+        private static void AssertHalfPopulatedValues(PastedValues result)
         {
-            var result = pasteProcesser.BuildModel(value);
-
-            AssertPopulatedValues(result);
-        }
-
-        [Theory]
-        [InlineData("1\t2\t3\t4\r\n5\t6\t7\r\n")]
-        [InlineData("1:2:3:4\r\n5:6:7\r\n")]
-        [InlineData("1,2,3,4\r\n5,6,7\r\n")]
-        public void BuildModel_GivenStringContainsRowsWithMoreThenTwoColumns_CategoryValueShouldBePopulated(string value)
-        {
-            var result = pasteProcesser.BuildModel(value);
-
-            result.ElementAt(0).B2C.Should().Be("1");
-            result.ElementAt(0).B2B.Should().Be("2");
-            result.ElementAt(1).B2C.Should().Be("5");
-            result.ElementAt(1).B2B.Should().Be("6");
-            result.Count(c => c.B2C != null).Should().Be(2);
-            result.Count(c => c.B2B != null).Should().Be(2);
-        }
-
-        private static void AssertEmptyValues(ObligatedCategoryValues result)
-        {
-            result.Count(c => c.B2C != null).Should().Be(0);
-            result.Count(c => c.B2B != null).Should().Be(0);
-        }
-
-        private static void AssertPopulatedValues(ObligatedCategoryValues result)
-        {
-            result.ElementAt(0).B2C.Should().Be("1");
-            result.ElementAt(0).B2B.Should().Be("2");
-            result.ElementAt(1).B2C.Should().Be("3");
-            result.ElementAt(1).B2B.Should().Be("4");
-            result.ElementAt(2).B2C.Should().Be("5");
-            result.ElementAt(2).B2B.Should().Be("6");
-            result.ElementAt(3).B2C.Should().Be("7");
-            result.ElementAt(3).B2B.Should().Be("8");
-            result.ElementAt(4).B2C.Should().Be("9");
-            result.ElementAt(4).B2B.Should().Be("10");
-            result.ElementAt(5).B2C.Should().Be("11");
-            result.ElementAt(5).B2B.Should().Be("12");
-            result.ElementAt(6).B2C.Should().Be("13");
-            result.ElementAt(6).B2B.Should().Be("14");
-            result.ElementAt(7).B2C.Should().Be("15");
-            result.ElementAt(7).B2B.Should().Be("16");
-            result.ElementAt(8).B2C.Should().Be("17");
-            result.ElementAt(8).B2B.Should().Be("18");
-            result.ElementAt(9).B2C.Should().Be("19");
-            result.ElementAt(9).B2B.Should().Be("20");
-            result.ElementAt(10).B2C.Should().Be("21");
-            result.ElementAt(10).B2B.Should().Be("22");
-            result.ElementAt(11).B2C.Should().Be("23");
-            result.ElementAt(11).B2B.Should().Be("24");
-            result.ElementAt(12).B2C.Should().Be("25");
-            result.ElementAt(12).B2B.Should().Be("26");
-            result.ElementAt(13).B2C.Should().Be("27");
-            result.ElementAt(13).B2B.Should().Be("28");
+            result.ElementAt(0).Tonnage.Should().Be("1");
+            result.ElementAt(1).Tonnage.Should().Be("2");
+            result.ElementAt(2).Tonnage.Should().Be("3");
+            result.ElementAt(3).Tonnage.Should().Be("4");
+            result.ElementAt(4).Tonnage.Should().Be("5");
+            result.ElementAt(5).Tonnage.Should().Be("6");
+            result.ElementAt(6).Tonnage.Should().Be("7");
+            result.ElementAt(7).Tonnage.Should().Be(null);
+            result.ElementAt(8).Tonnage.Should().Be(null);
+            result.ElementAt(9).Tonnage.Should().Be(null);
+            result.ElementAt(10).Tonnage.Should().Be(null);
+            result.ElementAt(11).Tonnage.Should().Be(null);
+            result.ElementAt(12).Tonnage.Should().Be(null);
+            result.ElementAt(13).Tonnage.Should().Be(null);
             result.Count.Should().Be(14);
         }
     }

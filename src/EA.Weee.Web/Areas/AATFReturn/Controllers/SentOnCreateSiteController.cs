@@ -61,8 +61,13 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    viewModel.SiteAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
                 }
+            }
+
+            using (var client = apiClient())
+            {
+                viewModel.SiteAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);

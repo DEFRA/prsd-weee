@@ -15,6 +15,8 @@
 
         public Guid ReturnId { get; set; }
 
+        public ObligatedCategoryValue PastedData { get; set; }
+
         public ReturnToObligatedViewModelTransfer()
         {
             ReturnData = new ReturnData();
