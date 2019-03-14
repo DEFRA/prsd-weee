@@ -1,10 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -16,6 +19,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using AddressData = Core.AatfReturn.AddressData;
 
     public class ReusedOffSiteCreateSiteControllerTests
     {
@@ -122,6 +126,36 @@
             await controller.Index(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_ApiShouldBeCalled()
+        {
+            var model = new ReusedOffSiteCreateSiteViewModel() { AddressData = new AddressData() };
+            controller.ModelState.AddModelError("error", "error");
+            
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+            var model = new ReusedOffSiteCreateSiteViewModel() { OrganisationId = organisationId, AddressData = new AddressData() };
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            await controller.Index(model);
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
         }
     }
 }

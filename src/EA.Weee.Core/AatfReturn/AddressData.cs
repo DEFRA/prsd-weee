@@ -10,7 +10,7 @@
     {
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [Display(Name = "Site Name")]
+        [Display(Name = "Site name")]
         public string Name { get; set; }
 
         [Required]

@@ -175,6 +175,7 @@
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ObligatedValuesCopyPasteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
@@ -230,12 +231,12 @@
     <Compile Include="Extensions\ProducerEeeDetailsExtensionsTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controllers\NewUserControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValueViewModelTests.cs" />
     <Compile Include="TestHelpers\ActionExecutingContextHelper.cs" />
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />
-    <Compile Include="Controllers\NewUserControllerTests.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValueViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
