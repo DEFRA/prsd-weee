@@ -539,10 +539,4 @@ BEGIN
 END
 GO
 
-UPDATE Lookup.CompetentAuthority
-SET AnnualChargeAmount = 0
-WHERE Abbreviation != 'EA'
-GO
-
-
 COMMIT TRANSACTION
