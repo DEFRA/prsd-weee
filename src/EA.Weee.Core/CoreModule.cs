@@ -26,7 +26,7 @@
             builder.Register(c => c.Resolve<IConfigurationManagerWrapper>().TestInternalUserEmailDomains)
                 .As<ITestUserEmailDomains>();
 
-            builder.RegisterType<PasteProcesser>().As<IPasteProcesser>();
+            builder.RegisterType<PasteProcessor>().As<IPasteProcessor>();
         }
     }
 }

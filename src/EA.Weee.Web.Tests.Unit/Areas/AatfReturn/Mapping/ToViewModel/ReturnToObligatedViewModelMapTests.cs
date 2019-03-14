@@ -6,6 +6,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
@@ -20,14 +21,16 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> categoryMap;
         private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ReturnToObligatedViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
+            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap, calculator);
+            mapper = new ReturnToObligatedViewModelMap(cache, categoryMap, calculator, pasteProcessor);
         }
 
         [Fact]
@@ -83,6 +86,27 @@
             result.OrganisationId.Should().Be(transfer.OrganisationId);
             result.ReturnId.Should().Be(transfer.ReturnId);
             result.SchemeId.Should().Be(transfer.SchemeId);
+        }
+
+        [Fact]
+        public void Map_GivenPastedData_PasteProcessorShouldBeCalled()
+        {
+            var pastedList = new List<ObligatedCategoryValue>();
+            for (var i = 0; i < pastedList.Count; i++)
+            {
+                pastedList[i].B2B = i.ToString();
+                pastedList[i].B2C = i.ToString();
+            }
+
+            var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
+            var obligatedValues = new ObligatedCategoryValues();
+            var returnList = new List<ObligatedCategoryValue>();
+
+            A.CallTo(() => pasteProcessor.ParseObligatedPastedValues(A<ObligatedPastedValues>._, A<IList<ObligatedCategoryValue>>._)).Returns(pastedList);
+
+            var result = mapper.Map(transfer);
+
+            result.CategoryValues.Should().BeEquivalentTo(pastedList);
         }
 
         [Fact]
