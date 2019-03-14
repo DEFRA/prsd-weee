@@ -20,12 +20,13 @@
         {
             ProducerCharge producerCharge = GetProducerCharge(scheme, producer, complianceYear);
 
-            if (producer.status == statusType.A)
-            {
-                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(scheme.approvalNo, producer.registrationNo, complianceYear);
+            // commented out as per Acceptance criteria PBI: 68472:SROC: Update EA charge bands * BUSINESS Q
+            //if (producer.status == statusType.A)
+            //{
+            //    decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(scheme.approvalNo, producer.registrationNo, complianceYear);
 
-                producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
-            }
+            //    producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
+            //}
 
             return producerCharge;
         }
