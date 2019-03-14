@@ -1,4 +1,4 @@
-﻿BEGIN TRANSACTION
+﻿
 
 IF NOT EXISTS(SELECT 1 FROM sys.columns 
           WHERE Name = N'HasAnnualCharge'
@@ -17,5 +17,3 @@ BEGIN
 	ADD AnnualChargeAmount [decimal](18, 2)
 END
 GO
-
-COMMIT TRANSACTION
