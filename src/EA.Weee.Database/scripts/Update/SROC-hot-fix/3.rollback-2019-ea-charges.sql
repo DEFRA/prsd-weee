@@ -1,10 +1,9 @@
 ﻿
 BEGIN TRANSACTION
-DECLARE @MemberUploadsId TABLE(Id UNIQUEIDENTIFIER NOT NULL)
 SELECT
 	 m.Id
 INTO 
-	MemberUploadsId
+	#MemberUploadsId
 FROM
 	[PCS].[MemberUpload] m
 	INNER JOIN [Organisation].Organisation o ON o.Id = m.OrganisationId
@@ -15,8 +14,8 @@ WHERE
 	AND m.ComplianceYear = 2019
 	AND m.IsSubmitted = 1
 
-UPDATE [Producer].ProducerSubmission SET Invoiced = 0 WHERE MemberUploadId IN (SELECT * FROM MemberUploadsId)
-UPDATE [PCS].[MemberUpload] SET InvoiceRunId = NULL WHERE Id IN (SELECT * FROM MemberUploadsId)
+UPDATE [Producer].ProducerSubmission SET Invoiced = 0 WHERE MemberUploadId IN (SELECT * FROM #MemberUploadsId)
+UPDATE [PCS].[MemberUpload] SET InvoiceRunId = NULL WHERE Id IN (SELECT * FROM #MemberUploadsId)
 
 UPDATE [Charging].IbisFileData
 SET 
@@ -24,5 +23,7 @@ SET
 	TransactionFileData = ''
 WHERE
 	FileId = ''
-	
+
+DROP TABLE #MemberUploadsId
+
 COMMIT TRANSACTION
