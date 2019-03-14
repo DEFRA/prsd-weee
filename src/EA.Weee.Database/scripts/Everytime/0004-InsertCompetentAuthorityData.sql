@@ -6,8 +6,8 @@ DECLARE @tblTempCompetentAuthorityTable TABLE (
 [Name]          NVARCHAR(1023) NOT NULL,
 [Abbreviation]  NVARCHAR(65) NOT NULL,
 [CountryId]     UNIQUEIDENTIFIER NOT NULL,
-[Email]     NVARCHAR(255) NOT NULL
-)
+[Email]     NVARCHAR(255) NOT NULL,
+AnnualChargeAmount DECIMAL(18,2) NOT NULL)
 
 INSERT INTO @tblTempCompetentAuthorityTable([Id], [Name], [Abbreviation], [CountryId], [Email], AnnualChargeAmount)
 VALUES
