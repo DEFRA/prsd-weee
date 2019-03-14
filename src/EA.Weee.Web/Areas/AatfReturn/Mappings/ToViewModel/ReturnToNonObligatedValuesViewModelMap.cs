@@ -6,6 +6,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
 
@@ -14,15 +15,18 @@
         private readonly IWeeeCache cache;
         private readonly IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>> nonObligatedMap;
         private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ReturnToNonObligatedValuesViewModelMap(IWeeeCache cache,
             IMap<NonObligatedDataToNonObligatedValueMapTransfer,
             IList<NonObligatedCategoryValue>> nonObligatedMap,
-            ICategoryValueTotalCalculator calculator)
+            ICategoryValueTotalCalculator calculator,
+            IPasteProcessor pasteProcessor)
         {
             this.cache = cache;
             this.nonObligatedMap = nonObligatedMap;
             this.calculator = calculator;
+            this.pasteProcessor = pasteProcessor;
         }
 
         public NonObligatedValuesViewModel Map(ReturnToNonObligatedValuesViewModelMapTransfer source)
@@ -36,7 +40,18 @@
                 Dcf = source.Dcf
             };
 
-            viewModel.CategoryValues = nonObligatedMap.Map(new NonObligatedDataToNonObligatedValueMapTransfer() { NonObligatedDataValues = source.ReturnData.NonObligatedData.ToList(), NonObligatedCategoryValues = viewModel.CategoryValues, Dcf = source.Dcf });
+            var existingData = nonObligatedMap.Map(new NonObligatedDataToNonObligatedValueMapTransfer() { NonObligatedDataValues = source.ReturnData.NonObligatedData.ToList(), NonObligatedCategoryValues = viewModel.CategoryValues, Dcf = source.Dcf });
+
+            if (source.PastedData != null)
+            {
+                var pastedValues = pasteProcessor.BuildModel(source.PastedData);
+
+                viewModel.CategoryValues = pasteProcessor.ParseNonObligatedPastedValues(pastedValues, existingData);
+            }
+            else
+            {
+                viewModel.CategoryValues = existingData;
+            }
 
             return viewModel;
         }
