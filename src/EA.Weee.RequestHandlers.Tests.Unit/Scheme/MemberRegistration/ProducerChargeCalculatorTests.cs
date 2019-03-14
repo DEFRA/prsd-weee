@@ -20,7 +20,7 @@
         /// the sum of charges that already existing for the year will result in a charge with an amount that is the
         /// amount of the new charge band minus the amount from existing charges.
         /// </summary>
-        [Fact]
+        [Fact(Skip = "Skipping this test as per acceptance criteria PBI:68472:SROC: Update EA charge bands * BUSINESS Q")]
         public void CalculateCharge_ProducerIsAmendmentInChargeBandCosting25WithPreviousTotalChargesOf1_ReturnsChargeAmountOf24()
         {
             // Arrange
@@ -55,7 +55,7 @@
         /// This test ensures that the calculation for an "A" producer record in a charge band with an amount that is
         /// less that the sum of charges that already existing for the year will result in a charge with an amount of 0.
         /// </summary>
-        [Fact]
+        [Fact(Skip = "Skipping this test as per acceptance criteria PBI:68472:SROC: Update EA charge bands * BUSINESS Q")]
         public void CalculateCharge_ProducerIsAmendmentInChargeBandCosting1WithPreviousTotalChargesOf25_ReturnsChargeAmountOf0()
         {
             // Arrange
