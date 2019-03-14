@@ -21,7 +21,6 @@
                 {
                     <h1 class="govuk-heading-l">Non-obligated WEEE retained by a DCF</h1>
                     <p class="govuk-body">This is how much of the total non-obligated WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.</p>
-
                 }
                 else
                 {
@@ -33,6 +32,18 @@
     </header>
     <br />
     <p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
+
+    <table class="govuk-table govuk-!-margin-bottom-0">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" style="border-bottom: 0px;">
+                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">
+                    <div class="govuk-body govuk-!-font-size-19" style="float:right">
+                        @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, dcf = Model.Dcf, action = "Index", controller = "NonObligatedValuesCopyPaste" }, null)
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     @using (Html.BeginRouteForm(formName, FormMethod.Post))
     {

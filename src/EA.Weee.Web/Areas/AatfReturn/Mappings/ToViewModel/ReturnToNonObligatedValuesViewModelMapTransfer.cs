@@ -16,7 +16,7 @@
 
         public bool Dcf { get; set; }
 
-        public Guid Id { get; set; }
+        public string PastedData { get; set; }
 
         public ReturnToNonObligatedValuesViewModelMapTransfer()
         {

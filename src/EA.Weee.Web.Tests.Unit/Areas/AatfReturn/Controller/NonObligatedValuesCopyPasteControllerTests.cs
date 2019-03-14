@@ -17,22 +17,22 @@
     using FluentAssertions;
     using Xunit;
 
-    public class ObligatedValuesCopyPasteControllerTests
+    public class NonObligatedValuesCopyPasteControllerTests
     {
-        private readonly ObligatedValuesCopyPasteController controller;
+        private readonly NonObligatedValuesCopyPasteController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IWeeeClient weeeClient;
         private readonly IPasteProcessor pasteProcessor;
 
-        public ObligatedValuesCopyPasteControllerTests()
+        public NonObligatedValuesCopyPasteControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             weeeClient = weeeClient = A.Fake<IWeeeClient>();
             pasteProcessor = A.Fake<IPasteProcessor>();
 
-            controller = new ObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache, pasteProcessor);
+            controller = new NonObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache, pasteProcessor);
         }
 
         [Fact]
@@ -46,7 +46,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(returnId, false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId))))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -64,13 +64,11 @@
             A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
-            var result = await controller.Index(returnId, aatfId, schemeId) as ViewResult;
+            var result = await controller.Index(returnId, A.Dummy<bool>()) as ViewResult;
 
-            var viewModel = result.Model as ObligatedValuesCopyPasteViewModel;
-            viewModel.AatfId.Should().Be(aatfId);
+            var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
             viewModel.OrganisationId.Should().Be(organisationId);
             viewModel.ReturnId.Should().Be(returnId);
-            viewModel.SchemeId.Should().Be(schemeId);
         }
 
         [Fact]
@@ -88,7 +86,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<bool>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -96,7 +94,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
+        public async void IndexPost_OnSubmit_PageRedirectsToNonObligated()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -105,29 +103,50 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
-            viewModel.SchemeId = schemeId;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel();
             viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-            viewModel.B2bPastedValues = new String[1];
-            viewModel.B2cPastedValues = new String[1];
+            viewModel.PastedValues = new String[1];
+            viewModel.Dcf = false;
 
-            httpContext.RouteData.Values.Add("schemeId", schemeId);
             httpContext.RouteData.Values.Add("returnId", returnId);
-            httpContext.RouteData.Values.Add("aatfId", aatfId);
 
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ObligatedReceived");
+            result.RouteValues["controller"].Should().Be("NonObligated");
             result.RouteValues["area"].Should().Be("AatfReturn");
-            result.RouteValues["schemeId"].Should().Be(schemeId);
             result.RouteValues["returnId"].Should().Be(returnId);
-            result.RouteValues["aatfId"].Should().Be(aatfId);
+            result.RouteValues["dcf"].Should().Be(false);
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithBothPastedValues_TempDataShouldBeAttached()
+        public async void IndexPost_OnSubmitDcf_PageRedirectsToNonObligatedDcf()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var schemeId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var viewModel = new NonObligatedValuesCopyPasteViewModel();
+            viewModel.ReturnId = returnId;
+            viewModel.PastedValues = new String[1];
+            viewModel.Dcf = true;
+
+            httpContext.RouteData.Values.Add("returnId", returnId);
+
+            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("NonObligated");
+            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["dcf"].Should().Be(true);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmitWithPastedValues_TempDataShouldBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -137,40 +156,15 @@
             var aatfId = Guid.NewGuid();
             var pastedValues = new String[1] { "2\n" };
 
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
-            viewModel.SchemeId = schemeId;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel();
             viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-            viewModel.B2bPastedValues = pastedValues;
-            viewModel.B2cPastedValues = pastedValues;
+            viewModel.PastedValues = pastedValues;
             
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
-
-        [Fact]
-        public async void IndexPost_OnSubmitWithOnePastedValues_TempDataShouldBeAttached()
-        {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            var schemeId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
-            viewModel.SchemeId = schemeId;
-            viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-            viewModel.B2bPastedValues = new String[1] { "2\n" };
-            viewModel.B2cPastedValues = new String[1];
-
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
-
-            controller.TempData["pastedValues"].Should().NotBeNull();
-        }
-
+        
         [Fact]
         public async void IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
         {
@@ -181,12 +175,9 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
-            viewModel.SchemeId = schemeId;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel();
             viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-            viewModel.B2bPastedValues = new String[1];
-            viewModel.B2cPastedValues = new String[1];
+            viewModel.PastedValues = new String[1];
 
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
@@ -194,7 +185,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnCancelWithBothPastedValues_TempDataShouldNotBeAttached()
+        public async void IndexPost_OnCancelWithPastedValues_TempDataShouldNotBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -204,12 +195,9 @@
             var aatfId = Guid.NewGuid();
             var pastedValues = new String[1] { "2\n" };
 
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
-            viewModel.SchemeId = schemeId;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel();
             viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
-            viewModel.B2bPastedValues = pastedValues;
-            viewModel.B2cPastedValues = pastedValues;
+            viewModel.PastedValues = pastedValues;
 
             var result = await controller.Index(viewModel, "cancel") as RedirectToRouteResult;
 
