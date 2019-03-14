@@ -27,12 +27,12 @@
         {
             ProducerCharge producerCharge = GetProducerCharge(scheme, producer, complianceYear);
 
-            if (producer.status == statusType.A)
-            {
-                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingChargesByDate(scheme.approvalNo, producer.registrationNo, complianceYear, submittedDate);
+            //if (producer.status == statusType.A)
+            //{
+            //    decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingChargesByDate(scheme.approvalNo, producer.registrationNo, complianceYear, submittedDate);
 
-                producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
-            }
+            //    producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
+            //}
 
             return producerCharge;
         }
