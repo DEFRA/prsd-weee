@@ -2,6 +2,9 @@
 {
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class AddSentOnAatfSiteDataAccess : IAddSentOnAatfSiteDataAccess
@@ -18,6 +21,11 @@
             context.WeeeSentOn.Add(weeeSentOn);
 
             return context.SaveChangesAsync();
+        }
+
+        public async Task<WeeeSentOn> GetWeeeSentOn(Guid id)
+        {
+            return await context.WeeeSentOn.Where(w => w.Id == id).SingleOrDefaultAsync();
         }
     }
 }

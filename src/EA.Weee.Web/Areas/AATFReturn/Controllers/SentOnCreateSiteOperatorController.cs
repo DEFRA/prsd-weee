@@ -17,41 +17,43 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    public class SentOnCreateSiteController : ExternalSiteController
+    public class SentOnCreateSiteOperatorController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSentOnAatfSiteRequestCreator requestCreator;
-        private readonly IMap<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer, SentOnCreateSiteViewModel> mapper;
 
-        public SentOnCreateSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer, SentOnCreateSiteViewModel> mapper)
+        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSentOnAatfSiteRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
-            this.mapper = mapper;
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid weeeSentOnId)
         {
             using (var client = apiClient())
             {
+                var viewModel = new SentOnCreateSiteOperatorViewModel();
+
+                //var result =
+                /*
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
                 var siteAddress = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(siteAddress) { ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
-
+                */
                 return View(viewModel);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SentOnCreateSiteOperatorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -59,15 +61,15 @@
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                    await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "SentOnCreateSiteOperator", new { returnId = viewModel.ReturnId, aatfId = viewModel.AatfId, weeeSentOnId = result});
+                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
                 }
             }
 
             using (var client = apiClient())
             {
-                viewModel.SiteAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                viewModel.OperatorAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);

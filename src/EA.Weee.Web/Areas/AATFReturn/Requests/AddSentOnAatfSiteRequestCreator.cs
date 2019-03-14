@@ -12,8 +12,7 @@
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,
                 AatfId = viewModel.AatfId,
-                SiteAddressData = viewModel.SiteAddressData,
-                OperatorAddressData = viewModel.OperatorAddressData
+                SiteAddressData = viewModel.SiteAddressData
             };
 
             return aatfSite;
