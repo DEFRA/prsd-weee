@@ -12,6 +12,13 @@
 
     public class ProducerChargeBandChangeTests
     {
+        private readonly IProducerChargeBandCalculatorChooser producerChargeBandCalculatorChooser;
+
+        public ProducerChargeBandChangeTests()
+        {
+            producerChargeBandCalculatorChooser = A.Fake<IProducerChargeBandCalculatorChooser>();
+        }
+
         [Fact]
         public void Evaluate_Insert_ReturnsPass()
         {
@@ -106,13 +113,17 @@
             public IProducerQuerySet QuerySet { get; private set; }
             public IProducerChargeBandCalculator ProducerChargeBandCalculator { get; private set; }
             private ProducerChargeBandChange producerChargeBandChange;
+            public IProducerChargeBandCalculatorChooser ProducerChargeBandCalculatorChooser { get; private set; }
 
             public ProducerChargeBandChangeEvaluator()
             {
                 QuerySet = A.Fake<IProducerQuerySet>();
+                ProducerChargeBandCalculatorChooser = A.Fake<IProducerChargeBandCalculatorChooser>();
                 ProducerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
 
-                producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculator);
+                A.CallTo(() => ProducerChargeBandCalculatorChooser.GetCalculator(A<schemeType>._, A<producerType>._, A<int>._))
+                    .Returns(ProducerChargeBandCalculator);
+                producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculatorChooser);
             }
 
             public RuleResult Evaluate(ChargeBand producerChargeBand, statusType producerStatus = statusType.A)
@@ -127,8 +138,7 @@
                     complianceYear = "2016"
                 };
 
-                A.CallTo(() => ProducerChargeBandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
-                    .Returns(producerChargeBand);
+                A.CallTo(() => ProducerChargeBandCalculator.GetProducerChargeBand(A<producerType>._)).Returns(producerChargeBand);
 
                 return producerChargeBandChange.Evaluate(scheme, producer, A.Dummy<Guid>());
             }

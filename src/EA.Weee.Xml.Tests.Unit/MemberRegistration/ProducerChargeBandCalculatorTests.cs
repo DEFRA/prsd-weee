@@ -2,6 +2,7 @@
 {
     using Domain.Lookup;
     using EA.Weee.Xml.MemberRegistration;
+    using FakeItEasy;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests
@@ -14,15 +15,15 @@
         public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ReturnsChargeBandA()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(producer);
 
             // Assert
             Assert.Equal(ChargeBand.A, result);
@@ -36,15 +37,15 @@
         public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ReturnsChargeBandB()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(producer);
 
             // Assert
             Assert.Equal(ChargeBand.B, result);
@@ -58,15 +59,15 @@
         public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ReturnsChargeBandC()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(producer);
 
             // Assert
             Assert.Equal(ChargeBand.C, result);
@@ -80,15 +81,15 @@
         public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ReturnsChargeBandD()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(producer);
 
             // Assert
             Assert.Equal(ChargeBand.D, result);
@@ -101,16 +102,16 @@
         [Fact]
         public void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ReturnsChargeBandE()
         {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
-
+            //arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket
+            };
+            
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(producer);
 
             // Assert
             Assert.Equal(ChargeBand.E, result);

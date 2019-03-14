@@ -30,10 +30,11 @@
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
         private readonly ITotalChargeCalculator totalChargeCalculator;
+        private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
             IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator)
+            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
@@ -43,6 +44,7 @@
             this.generateFromXml = generateFromXml;
             this.producerSubmissionDataAccess = producerSubmissionDataAccess;
             this.totalChargeCalculator = totalChargeCalculator;
+            this.totalChargeCalculatorDataAccess = totalChargeCalculatorDataAccess;
         }
 
         public async Task<Guid> HandleAsync(ProcessXmlFile message)
@@ -61,17 +63,26 @@
 
             Dictionary<string, ProducerCharge> producerCharges = null;
             int deserializedcomplianceYear = 0;
-            var hasAnnualCharge = false;
+            
             decimal? totalChargesCalculated = 0;
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            
+            var annualChargeToBeAdded = false;
+
             if (!containsSchemaErrors || !containsErrorOrFatal)
             {
                 var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
                 deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
 
-                producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, deserializedcomplianceYear, ref hasAnnualCharge, ref totalChargesCalculated);
+                var hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
+                
+                if (!hasAnnualCharge)
+                {
+                    annualChargeToBeAdded = true;
+                }
+
+                producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, deserializedcomplianceYear, annualChargeToBeAdded, ref totalChargesCalculated);
+
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
                     && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
                 {
@@ -82,7 +93,8 @@
             }
 
             var totalCharges = totalChargesCalculated ?? 0;
-            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme, hasAnnualCharge);
+
+            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme, annualChargeToBeAdded);
             IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.

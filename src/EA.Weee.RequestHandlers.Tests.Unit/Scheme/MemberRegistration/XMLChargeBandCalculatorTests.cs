@@ -83,7 +83,7 @@
             ProducerCharge producerCharge4 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge5 = A.Dummy<ProducerCharge>();
 
-            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<string>._, A<producerType>._, A<int>._))
+            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<schemeType>._, A<producerType>._, A<int>._))
                 .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
@@ -107,11 +107,11 @@
             Assert.Equal(producerCharge5, producerCharges["The Empire 3"]);
         }
 
-        private XMLChargeBandCalculator XmlChargeBandCalculator()
+        private XmlChargeBandCalculator XmlChargeBandCalculator()
         {
             var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
 
-            return new XMLChargeBandCalculator(xmlConverter, producerChargerCalculator);
+            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
     }
 }

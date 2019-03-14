@@ -191,5 +191,15 @@
 
             Invoiced = true;
         }
+
+        public void UpdateCharge(decimal value)
+        {
+            this.ChargeThisUpdate = value;
+        }
+
+        public void SetAsNotInvoiced()
+        {
+            Invoiced = false;
+        }
     }
 }

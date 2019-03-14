@@ -9,13 +9,13 @@
     using Xml.Converter;
     using Xml.MemberRegistration;
 
-    public class XMLChargeBandCalculator : IXMLChargeBandCalculator
+    public class XmlChargeBandCalculator : IXMLChargeBandCalculator
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XMLChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;
@@ -23,16 +23,17 @@
         }
 
         public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
-        {
+        { 
             var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
-            var complianceYear = Int32.Parse(schemeType.complianceYear);
+            var complianceYear = int.Parse(schemeType.complianceYear);
 
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
+                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType, producer, complianceYear);
+
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))
