@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -131,7 +132,7 @@
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_ApiShouldBeCalled()
         {
-            var model = new ReusedOffSiteCreateSiteViewModel() { AddressData = new AddressData() };
+            var model = new ReusedOffSiteCreateSiteViewModel() { AddressData = new SiteAddressData() };
             controller.ModelState.AddModelError("error", "error");
             
             await controller.Index(model);
@@ -145,7 +146,7 @@
             var organisationId = Guid.NewGuid();
             var schemeInfo = A.Fake<SchemePublicInfo>();
             const string orgName = "orgName";
-            var model = new ReusedOffSiteCreateSiteViewModel() { OrganisationId = organisationId, AddressData = new AddressData() };
+            var model = new ReusedOffSiteCreateSiteViewModel() { OrganisationId = organisationId, AddressData = new SiteAddressData() };
             controller.ModelState.AddModelError("error", "error");
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
