@@ -1,0 +1,15 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.AatfReturn.SiteAddressData
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+            @Html.Gds().LabelFor(m => m.Name)
+            @Html.Gds().ValidationMessageFor(m => m.Name)
+            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        @Html.Partial("_AddressPartial", Model)
+    </div>
+</div>

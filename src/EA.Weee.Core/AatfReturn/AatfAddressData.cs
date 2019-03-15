@@ -10,19 +10,12 @@
     {
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [Display(Name = "AATF/ATF site name")]
-        public string AatfName { get; set; }
+        [Display(Name = "MY AAA Site name")]
+        public override string Name { get; set; }
 
         public AatfAddressData(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)
+        : base(name, address1, address2, townOrCity, countyOrRegion, postcode, countryId, countryName)
         {
-            AatfName = name;
-            Address1 = address1;
-            Address2 = address2;
-            TownOrCity = townOrCity;
-            CountyOrRegion = countyOrRegion;
-            Postcode = postcode;
-            CountryId = countryId;
-            CountryName = countryName;
         }
 
         public AatfAddressData()

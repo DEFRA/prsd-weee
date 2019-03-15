@@ -793,11 +793,13 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedReused\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteCreateSite\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AddressData.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\SiteAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryLIst\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfTaskListButton.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

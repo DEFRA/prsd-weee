@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
     using System;
-    using AddressData = Core.AatfReturn.AddressData;
-
+    using Core.AatfReturn;
+    
     public class ReusedOffSiteCreateSiteViewModel
     {
         public Guid OrganisationId { get; set; }
@@ -11,6 +11,6 @@
 
         public Guid AatfId { get; set; }
 
-        public AddressData AddressData { get; set; }
+        public SiteAddressData AddressData { get; set; }
     }
 }

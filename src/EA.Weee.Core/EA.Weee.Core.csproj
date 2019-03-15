@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\SiteAddressData.cs" />
     <Compile Include="AatfReturn\AatfAddressData.cs" />
     <Compile Include="AatfReturn\AatfData.cs" />
     <Compile Include="AatfReturn\AatfObligatedData.cs" />
