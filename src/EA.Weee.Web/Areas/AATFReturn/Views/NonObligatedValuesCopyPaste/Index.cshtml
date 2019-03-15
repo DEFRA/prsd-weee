@@ -1,14 +1,14 @@
 ﻿@using EA.Weee.Web.Infrastructure
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedValuesCopyPasteViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesCopyPasteViewModel
 
 @{
-    ViewBag.Title = "Copy and Paste Obligated WEEE";
+    ViewBag.Title = "Copy and Paste Non-Obligated WEEE";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+            <h1 id="data-entry-label" class="govuk-heading-l">Non-obligated WEEE</h1>
         </div>
     </header>
     <p class="govuk-body">
@@ -20,20 +20,16 @@
     <p class="govuk-body">
         Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom.
     </p>
-    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.Dcf)
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2c-entry">B2C</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values here" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
-            </div>
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2b-entry">B2B</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values here" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
+                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste non-obligated values here" id="PastedValues" name="PastedValues" style="height: 400px;" aria-labelledby="data-entry-label"></textarea>
             </div>
         </div>
 
