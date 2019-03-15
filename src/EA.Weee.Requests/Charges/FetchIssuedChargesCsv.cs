@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
+    using System;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
 
@@ -13,13 +14,13 @@
 
         public int ComplianceYear { get; private set; }
 
-        public string SchemeName { get; private set; }
+        public Guid? SchemeId { get; private set; }
         
-        public FetchIssuedChargesCsv(CompetentAuthority authority, int complianceYear, string schemeName)
+        public FetchIssuedChargesCsv(CompetentAuthority authority, int complianceYear, Guid? schemeId)
         {
             Authority = authority;
             ComplianceYear = complianceYear;
-            SchemeName = schemeName;
+            SchemeId = schemeId;
         }
     }
 }

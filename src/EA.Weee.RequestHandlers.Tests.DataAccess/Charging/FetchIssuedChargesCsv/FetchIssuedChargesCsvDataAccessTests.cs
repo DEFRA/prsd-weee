@@ -55,7 +55,7 @@
                 FetchIssuedChargesCsvDataAccess dataAccess = new FetchIssuedChargesCsvDataAccess(database.WeeeContext);
 
                 // Act
-                IEnumerable<Domain.Producer.ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(domainAuthority1, 2016, scheme.SchemeName);
+                IEnumerable<Domain.Producer.ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(domainAuthority1, 2016, scheme.Id);
                 List<Domain.Producer.ProducerSubmission> producerSubmissionList = results.ToList();
 
                 Domain.Producer.ProducerSubmission producer = results.FirstOrDefault(p => p.RegisteredProducer.ProducerRegistrationNumber == registrationNumber);
@@ -113,7 +113,7 @@
                 FetchIssuedChargesCsvDataAccess dataAccess = new FetchIssuedChargesCsvDataAccess(database.WeeeContext);
 
                 // Act
-                var results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(domainAuthority, 2000, scheme.SchemeName);
+                var results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(domainAuthority, 2000, scheme.Id);
 
                 // Assert
                 Assert.Equal(1, results.Count());

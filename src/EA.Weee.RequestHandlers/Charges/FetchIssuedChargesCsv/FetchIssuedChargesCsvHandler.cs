@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
+    using System;
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
@@ -33,7 +34,7 @@
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthority(message.Authority);
 
-            IEnumerable<ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(authority, message.ComplianceYear, message.SchemeName);
+            IEnumerable<ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(authority, message.ComplianceYear, message.SchemeId);
 
             CsvWriter<ProducerSubmission> csvWriter = csvWriterFactory.Create<ProducerSubmission>();
 
@@ -52,10 +53,10 @@
             string schemeApprovalNumber = string.Empty;            
             string fileName = string.Empty;
 
-            if (!string.IsNullOrEmpty(message.SchemeName))
+            if (message.SchemeId.HasValue)
             {
                 //get approval number for scheme to display in the filename.
-                Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeName);
+                Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeId);
                 schemeApprovalNumber = scheme.ApprovalNumber.Replace("/", string.Empty);
                 fileName = string.Format(
                     "{0}_{1}_issuedcharges_{2:ddMMyyyy_HHmm}.csv",

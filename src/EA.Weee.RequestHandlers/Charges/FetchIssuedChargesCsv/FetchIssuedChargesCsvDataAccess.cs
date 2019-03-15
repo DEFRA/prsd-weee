@@ -27,9 +27,9 @@
         /// </summary>
         /// <param name="authority"></param>
         /// <param name="complianceYear"></param>
-        /// <param name="schemeName"></param>
+        /// <param name="schemeId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, string schemeName)
+        public async Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, Guid? schemeId)
         {
             return await Context.AllProducerSubmissions
                 .Include(ps => ps.MemberUpload)
@@ -42,7 +42,7 @@
                 .Include(ps => ps.RegisteredProducer.Scheme)
                 .Where(ps => ps.RegisteredProducer.Scheme.CompetentAuthority.Id == authority.Id)
                 .Where(ps => ps.RegisteredProducer.ComplianceYear == complianceYear)
-                .Where(ps => ps.RegisteredProducer.Scheme.SchemeName == schemeName || schemeName == null)
+                .Where(ps => ps.RegisteredProducer.Scheme.Id == schemeId || schemeId == null)
                 .Where(ps => ps.Invoiced)
                 .Where(ps => ps.ChargeThisUpdate > 0)
                 .OrderBy(ps => ps.RegisteredProducer.Scheme.SchemeName)
@@ -51,15 +51,15 @@
                 .ToListAsync();
         }
 
-        public async Task<Domain.Scheme.Scheme> FetchSchemeAsync(string schemeName)
+        public async Task<Domain.Scheme.Scheme> FetchSchemeAsync(Guid? schemeId)
         {
-            var scheme = await Context.Schemes.SingleOrDefaultAsync(s => s.SchemeName == schemeName);
+            var scheme = await Context.Schemes.SingleOrDefaultAsync(s => s.Id == schemeId);
 
             if (scheme != null)
             {
                 return scheme;
             }
-            throw new InvalidOperationException(string.Format("Scheme with name '{0}' does not exist", schemeName));
+            throw new InvalidOperationException(string.Format("Scheme with id '{0}' does not exist", schemeId));
         }
     }
 }
