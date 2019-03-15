@@ -21,7 +21,7 @@
 
         public ReturnAndSchemeDataToReceivedPcsViewModelMapTests()
         {
-            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), A.Fake<ITonnageUtilities>());
+            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), new TonnageUtilities());
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
             mapperTestAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
         }
@@ -56,7 +56,7 @@
 
             var schemeDataItems = new List<SchemeData>()
             {
-                new SchemeData() { Id = mapperTestScheme.Id, Name = mapperTestScheme.Name }
+                new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = mapperTestAatf.ApprovalNumber }
             };
                         
             var transfer = new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
@@ -76,7 +76,7 @@
             result.AatfId.Should().Be(aatfId);
             result.AatfName.Should().Be(aatfName);
             result.SchemeList.First().SchemeId.Should().Be(mapperTestScheme.Id);
-            //result.SchemeList.First().SchemeName.Should().Be(mapperTestScheme.Name);
+            result.SchemeList.First().SchemeName.Should().Be(mapperTestScheme.Name);
             result.SchemeList.First().Tonnages.B2B.Should().Be("2.468");
             result.SchemeList.First().Tonnages.B2C.Should().Be("2.468");
         }
