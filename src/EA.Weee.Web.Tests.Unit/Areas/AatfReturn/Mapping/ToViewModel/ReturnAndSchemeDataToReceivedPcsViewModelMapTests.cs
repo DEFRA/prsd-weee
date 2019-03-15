@@ -16,14 +16,10 @@
     public class ReturnAndSchemeDataToReceivedPcsViewModelMapTests
     {
         private ReturnAndSchemeDataToReceivedPcsViewModelMap mapper;
-        private readonly Scheme mapperTestScheme;
-        private readonly AatfData mapperTestAatf;
 
         public ReturnAndSchemeDataToReceivedPcsViewModelMapTests()
         {
             mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), new TonnageUtilities());
-            mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
-            mapperTestAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
         }
 
         [Fact]
@@ -41,11 +37,16 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             const string aatfName = "aatfName";
+            var mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
+            var mapperTestScheme2 = new Scheme(Guid.NewGuid(), "Test Scheme2");
+            var mapperTestAatf = new AatfData(aatfId, aatfName, "Aatf approval");
 
             var obligatedReceivedData = new List<WeeeObligatedData>
             {
                 new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m),
                 new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m),
+                new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme2, mapperTestAatf, 0, 0.234m, 2.234m),
+                new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme2, mapperTestAatf, 0, 0.234m, 2.234m)
             };
 
             var returnData = new ReturnData()
@@ -56,7 +57,8 @@
 
             var schemeDataItems = new List<SchemeData>()
             {
-                new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = mapperTestAatf.ApprovalNumber }
+                new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = mapperTestAatf.ApprovalNumber },
+                new SchemeData() { Id = mapperTestScheme2.Id, SchemeName = mapperTestScheme2.Name, ApprovalName = mapperTestAatf.ApprovalNumber }
             };
                         
             var transfer = new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
@@ -75,10 +77,15 @@
             result.ReturnId.Should().Be(returnId);
             result.AatfId.Should().Be(aatfId);
             result.AatfName.Should().Be(aatfName);
-            result.SchemeList.First().SchemeId.Should().Be(mapperTestScheme.Id);
-            result.SchemeList.First().SchemeName.Should().Be(mapperTestScheme.Name);
-            result.SchemeList.First().Tonnages.B2B.Should().Be("2.468");
-            result.SchemeList.First().Tonnages.B2C.Should().Be("2.468");
+            result.SchemeList.Count.Should().Be(2);
+            result.SchemeList.ElementAt(0).SchemeId.Should().Be(mapperTestScheme.Id);
+            result.SchemeList.ElementAt(0).SchemeName.Should().Be(mapperTestScheme.Name);
+            result.SchemeList.ElementAt(0).Tonnages.B2B.Should().Be("2.468");
+            result.SchemeList.ElementAt(0).Tonnages.B2C.Should().Be("2.468");
+            result.SchemeList.ElementAt(1).SchemeId.Should().Be(mapperTestScheme2.Id);
+            result.SchemeList.ElementAt(1).SchemeName.Should().Be(mapperTestScheme2.Name);
+            result.SchemeList.ElementAt(1).Tonnages.B2B.Should().Be("0.468");
+            result.SchemeList.ElementAt(1).Tonnages.B2C.Should().Be("4.468");
         }
     }
 }
