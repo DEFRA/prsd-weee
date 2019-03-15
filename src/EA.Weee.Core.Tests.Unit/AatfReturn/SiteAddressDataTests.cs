@@ -6,7 +6,7 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AddressDataTests
+    public class SiteAddressDataTests
     {
         [Theory]
         [InlineData("Name")]
