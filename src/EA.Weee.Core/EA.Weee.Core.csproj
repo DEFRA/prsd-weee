@@ -94,7 +94,7 @@
     <Compile Include="AatfReturn\SchemeDataList.cs" />
     <Compile Include="AatfReturn\WeeeObligatedData.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
-    <Compile Include="AatfReturn\PCSData.cs" />
+    <Compile Include="AatfReturn\ReceivedPcsData.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
