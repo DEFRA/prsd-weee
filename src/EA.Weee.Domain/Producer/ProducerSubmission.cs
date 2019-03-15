@@ -117,6 +117,8 @@
 
         private string organisationName;
 
+        private string regOfficeOrPPoBCountry;
+
         public virtual string OrganisationName
         {
             get
@@ -136,6 +138,26 @@
                         organisationName = ProducerBusiness.Partnership.Name;
                     }
                     return organisationName;
+                }
+                return null;
+            }
+        }
+
+        public virtual string RegOfficeOrPBoBCountry
+        {
+            get
+            {
+                if (ProducerBusiness != null)
+                {
+                    if (ProducerBusiness.CompanyDetails != null && ProducerBusiness.CompanyDetails.RegisteredOfficeContact.Address.Country != null)
+                    {
+                        regOfficeOrPPoBCountry = ProducerBusiness.CompanyDetails.RegisteredOfficeContact.Address.Country.Name;
+                    }
+                    else if (ProducerBusiness.Partnership != null && ProducerBusiness.Partnership.PrincipalPlaceOfBusiness.Address.Country != null)
+                    {
+                        regOfficeOrPPoBCountry = ProducerBusiness.Partnership.PrincipalPlaceOfBusiness.Address.Country.Name;
+                    }
+                    return regOfficeOrPPoBCountry;
                 }
                 return null;
             }
