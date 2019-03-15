@@ -61,5 +61,17 @@
 
             return categoryValues;
         }
+
+        public IList<NonObligatedCategoryValue> ParseNonObligatedPastedValues(PastedValues nonObligatedPastedValues, IList<NonObligatedCategoryValue> existingData)
+        {
+            var categoryValues = (existingData != null) ? existingData : new NonObligatedCategoryValues();
+
+            foreach (var category in categoryValues)
+            {
+                category.Tonnage = nonObligatedPastedValues.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+            }
+
+            return categoryValues;
+        }
     }
 }

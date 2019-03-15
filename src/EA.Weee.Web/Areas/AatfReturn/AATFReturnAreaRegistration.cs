@@ -19,13 +19,13 @@
                 namespaces: new[] { typeof(HoldingController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: AatfRedirect.NonObligatedDcf,
+                name: AatfRedirect.NonObligatedDcfRouteName,
                 url: "aatf-return/{returnId}/non-obligated-dcf/{action}",
                 defaults: new { action = "Index", controller = "NonObligated", dcf = true },
                 namespaces: new[] { typeof(NonObligatedController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: AatfRedirect.NonObligated,
+                name: AatfRedirect.NonObligatedRouteName,
                 url: "aatf-return/{returnId}/non-obligated/{action}",
                 defaults: new { action = "Index", controller = "NonObligated", dcf = false },
                 namespaces: new[] { typeof(NonObligatedController).Namespace });

@@ -1,1 +1,6 @@
 $govuk-button-colour: #00823b;
+
+.grey-cancel-button, .grey-cancel-button:hover, .grey-cancel-button:active, .grey-cancel-button:focus {
+    background-color: #bfc1c3;
+    color: #0b0c0c;
+}

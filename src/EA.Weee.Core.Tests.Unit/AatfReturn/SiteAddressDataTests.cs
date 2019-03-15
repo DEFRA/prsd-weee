@@ -6,16 +6,16 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AddressDataTests
+    public class SiteAddressDataTests
     {
         [Theory]
         [InlineData("Name")]
         [InlineData("Address1")]
         [InlineData("TownOrCity")]
         [InlineData("CountryId")]
-        public void AddressData_RequiredVariablesShouldHaveRequiredAttribute(string variable)
+        public void SiteAddressData_RequiredVariablesShouldHaveRequiredAttribute(string variable)
         {
-            var t = typeof(AddressData);
+            var t = typeof(SiteAddressData);
             var pi = t.GetProperty(variable);
             var hasAttribute = Attribute.IsDefined(pi, typeof(RequiredAttribute));
 
@@ -29,9 +29,9 @@
         [InlineData("TownOrCity")]
         [InlineData("CountyOrRegion")]
         [InlineData("Postcode")]
-        public void AddressData_VariablesShouldHaveMaxLengthAttribute(string variable)
+        public void SiteAddressData_VariablesShouldHaveMaxLengthAttribute(string variable)
         {
-            var t = typeof(AddressData);
+            var t = typeof(SiteAddressData);
             var pi = t.GetProperty(variable);
             var hasAttribute = Attribute.IsDefined(pi, typeof(StringLengthAttribute));
 
