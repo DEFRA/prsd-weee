@@ -16,15 +16,15 @@
 
         public Guid AatfId;
 
-        public AddressData SiteAddressData;
+        public AatfAddressData SiteAddressData;
 
-        public AddressData OperatorAddressData;
+        public AatfAddressData OperatorAddressData;
         
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(IList<Core.Shared.CountryData> countryData)
         {
-            this.SiteAddressData = new AddressData();
+            this.SiteAddressData = new AatfAddressData();
             SiteAddressData.Countries = countryData;
-            this.OperatorAddressData = new AddressData();
+            this.OperatorAddressData = new AatfAddressData();
         }
     }
 }

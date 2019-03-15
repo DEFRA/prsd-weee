@@ -18,7 +18,7 @@
 
             if (source.AatfAddresses != null)
             {
-                summaryData.AddressData = source.AatfAddresses.Select(n => new AddressData(
+                summaryData.AddressData = source.AatfAddresses.Select(n => new SiteAddressData(
                     n.Name,
                     n.Address1,
                     n.Address2,
@@ -30,7 +30,7 @@
             }
             else
             {
-                summaryData.AddressData = new List<AddressData>();
+                summaryData.AddressData = new List<SiteAddressData>();
             }
             
             if (source.WeeeReusedAmounts != null)
