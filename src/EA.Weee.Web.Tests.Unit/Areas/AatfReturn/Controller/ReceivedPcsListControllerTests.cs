@@ -100,25 +100,36 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var schemeList = A.Fake<SchemeDataList>();
             const string aatfname = "aatfName";
-            var operatorData = A.Fake<OperatorData>();
-            var schemeListItems = A.Fake<List<SchemeData>>();
+            var receivedPcsData = A.Fake<List<ReceivedPcsData>>();
 
-            A.CallTo(() => schemeList.OperatorData).Returns(operatorData);
-            A.CallTo(() => schemeList.SchemeDataItems).Returns(schemeListItems);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeList);
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(new AatfData(A.Dummy<Guid>(), aatfname, A.Dummy<string>()));
+            var model = new ReceivedPcsListViewModel()
+            {
+                AatfId = aatfId,
+                AatfName = aatfname,
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                SchemeList = receivedPcsData
+            };
+
+            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(returnId, aatfId) as ViewResult;
 
-            var receivedModel = result.Model as ReceivedPcsListViewModel;
+            result.Model.Should().BeEquivalentTo(model);
+        }
 
-            receivedModel.AatfName.Should().Be(aatfname);
-            receivedModel.SchemeList.Should().BeEquivalentTo(schemeListItems);
-            receivedModel.ReturnId.Should().Be(returnId);
-            receivedModel.AatfId.Should().Be(aatfId);
+        [Fact]
+        public async void IndexGet_GivenReturn_ReceivedPcsListViewModelShouldBeBuilt()
+        {
+            var @return = A.Fake<ReturnData>();
+
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
