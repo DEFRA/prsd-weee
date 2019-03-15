@@ -8,5 +8,7 @@
         PastedValues BuildModel(string pasteValues);
 
         IList<ObligatedCategoryValue> ParseObligatedPastedValues(ObligatedPastedValues obligatedPastedValues, IList<ObligatedCategoryValue> existingData);
+
+        IList<NonObligatedCategoryValue> ParseNonObligatedPastedValues(PastedValues nonObligatedPastedValues, IList<NonObligatedCategoryValue> existingData);
     }
 }
