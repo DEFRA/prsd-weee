@@ -74,6 +74,10 @@
     <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Email.1.0.19029-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
     </Reference>
@@ -1186,10 +1190,6 @@
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\prsd\src\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
-      <Project>{212C8803-BFE2-4091-81B0-B25BE91C1C04}</Project>
-      <Name>EA.Prsd.Core.Web.Mvc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
