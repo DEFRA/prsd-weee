@@ -114,7 +114,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("NonObligated");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["dcf"].Should().Be(false);
         }
@@ -140,7 +139,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("NonObligated");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["dcf"].Should().Be(true);
         }

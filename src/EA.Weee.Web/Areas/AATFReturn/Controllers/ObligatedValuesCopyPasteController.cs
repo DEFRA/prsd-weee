@@ -64,8 +64,7 @@
                 }
             }
 
-            return await Task.Run<ActionResult>(() => RedirectToAction("Index", "ObligatedReceived",
-                    new { area = "AatfReturn", schemeId = viewModel.SchemeId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedReceived(viewModel.ReturnId, viewModel.AatfId, viewModel.SchemeId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
