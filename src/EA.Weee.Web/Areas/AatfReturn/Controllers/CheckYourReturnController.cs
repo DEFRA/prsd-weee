@@ -50,7 +50,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
         {
-            return await Task.Run<ActionResult>(() => AatfRedirect.Submittedeturn(viewModel.ReturnId));
+            return await Task.Run<ActionResult>(() => AatfRedirect.SubmittedReturn(viewModel.ReturnId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

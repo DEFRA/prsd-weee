@@ -91,7 +91,7 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Received", AatfRedirect.NonObligated, new { returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.RouteLink("Received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotal</strong></td>
                 <td class="govuk-table__cell"><strong style="float:right"></strong></td>
@@ -99,7 +99,7 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="border: 0px;"></td>
                 <td class="govuk-table__cell">
-                    @Html.RouteLink("Retained by a DCF", AatfRedirect.NonObligatedDcf, new { returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.RouteLink("Retained by a DCF", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag" style="float:right">@Model.NonObligatedTonnageTotalDcf</strong></td>
                 <td class="govuk-table__cell"><strong style="float:right"></strong></td>
