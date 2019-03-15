@@ -604,16 +604,19 @@ input[type="file"].form-control {
 }
 
 .warning-details-summary {
-    width: 96%;
     color: govuk-colour('black');
-    background-color: #FFD990; 
-    padding-top: 5px;
-    padding-bottom: 5px;
+    width: calc(100% - 25px);
+}
+
+.error-details-summary {
+    color: govuk-colour('black');
+    width: calc(100% - 25px);   
 }
 
 .warning-details-summary:focus {
     background: #FFD990;
-    outline: none;
+    /*outline: none;*/
+    outline-width: 5px;
 }
 
 .warning-details-summary:hover {
@@ -621,29 +624,52 @@ input[type="file"].form-control {
 }
 
 .warning-list-container {
+    background-color: #FFD990;
+    margin-left: -5px;
+    /*    border-left: 3px;*/
+}
+
+.error-list-container {
+    background-color: #FDE3E6;
+    margin-left: -5px;
+    /*border-left: 3px;*/
+}
+
+.warning-list-container > ul {
     width: 100%;
-    background-color: #FFD990; 
-    padding-bottom: 10px;
-    border-left: 3px solid govuk-colour('yellow')-25;
-    padding-left: 3px;
-    margin-bottom: 5px;
+    padding-left: 5px;
+    margin: 0;
+}
+
+.error-list-container > ul {
+    width: 100%;
+    padding-left: 5px;
+    margin: 0;
 }
 
 .warning-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
     word-wrap: break-word;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-top: 5px;
+    list-style: none;
 }
 
-.error-details-summary {
+.weee-upload-error {
     width: 100%;
+    background-color: #ef9998;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+.weee-upload-warning {
+    width: 100%;
+    background-color: #FFD990;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+.error-details-summary-title {
     color: govuk-colour('black');
-    background-color: govuk-colour('bright-red')-50;
-    border-left: 3px solid govuk-colour('bright-red');
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
 }
 
 .summary_error {
@@ -659,20 +685,34 @@ details summary::-ms-details-marker {
     outline: none;
 }
 
-.error-list-container {
-    width: 100%;
-    background-color: govuk-colour('bright-red')-25;
-    padding-bottom: 10px;
-    border-left: 3px solid govuk-colour('bright-red')-25;
-    padding-left: 3px;
-    margin-bottom:5px;
+.error-details-summary:focus {
+    background: none !important;
+    outline-width: 5px;
 }
 
+.error-details-summary:hover {
+    color: govuk-colour('black');
+    font-weight: bold;
+}
+
+.error-list-container {
+    background-color: #FDE3E6;
+    //padding-bottom: 10px;
+    padding-left: 3px;
+    //margin-bottom: 5px;
+    /*margin-top: -20px;*/
+}
+
+.error-list-container > ul{
+    width: 100%;
+    padding-left: 5px;
+}
 .error-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
     word-wrap: break-word;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
+    list-style: none;
 }
 
 .highlight-section {
