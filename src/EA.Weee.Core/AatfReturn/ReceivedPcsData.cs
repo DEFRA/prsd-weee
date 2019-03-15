@@ -9,8 +9,6 @@
 
         public string ApprovalNumber { get; set; }
 
-        public string B2bTotal { get; set; }
-
-        public string B2cTotal { get; set; }
+        public ObligatedCategoryValue Tonnages { get; set; }
     }
 }

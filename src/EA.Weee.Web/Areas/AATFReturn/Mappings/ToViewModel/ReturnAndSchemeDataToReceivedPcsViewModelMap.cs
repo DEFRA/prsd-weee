@@ -1,18 +1,25 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
     using System.Collections.Generic;
+    using System.Linq;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
 
     public class ReturnAndSchemeDataToReceivedPcsViewModelMap : IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel>
     {
         private readonly IWeeeCache cache;
-        private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> obligatedMap;
-        private readonly ICategoryValueTotalCalculator calculator;
+        private readonly ITonnageUtilities tonnageUtilities;
+
+        public ReturnAndSchemeDataToReceivedPcsViewModelMap(
+            IWeeeCache cache,
+            ITonnageUtilities tonnageUtilities)
+        {
+            this.cache = cache;
+            this.tonnageUtilities = tonnageUtilities;
+        }
 
         public ReceivedPcsListViewModel Map(ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer source)
         {
@@ -28,15 +35,16 @@
 
             var schemeList = new List<ReceivedPcsData>();
 
-            calculator.Total(source.ReturnData.ObligatedWeeeReceivedData)
-
             foreach (var scheme in source.SchemeDataItems)
             {
+                var weeeReceivedData = source.ReturnData.ObligatedWeeeReceivedData.Where(s => s.Scheme.Id == scheme.Id).ToList();
+
                 var receivedPcsData = new ReceivedPcsData()
                 {
                     ApprovalNumber = scheme.ApprovalName,
                     SchemeId = scheme.Id,
-                    SchemeName = scheme.SchemeName
+                    SchemeName = scheme.SchemeName,
+                    Tonnages = tonnageUtilities.SumObligatedValues(weeeReceivedData)
                 };
 
                 schemeList.Add(receivedPcsData);

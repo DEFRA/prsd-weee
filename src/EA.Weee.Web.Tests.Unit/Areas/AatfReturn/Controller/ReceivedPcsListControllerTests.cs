@@ -8,11 +8,10 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -24,14 +23,14 @@
         private readonly IWeeeClient weeeClient;
         private readonly ReceivedPcsListController controller;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IMapper mapper;
+        private readonly IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel> mapper;
         private readonly IWeeeCache cache;
 
         public ReceivedPcsListControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            mapper = A.Fake<IMapper>();
+            mapper = A.Fake<IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel>>();
             cache = A.Fake<IWeeeCache>();
 
             controller = new ReceivedPcsListController(() => weeeClient, cache, breadcrumb, mapper);
