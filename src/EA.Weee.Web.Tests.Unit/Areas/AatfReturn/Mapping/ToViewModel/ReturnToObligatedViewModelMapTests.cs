@@ -99,7 +99,6 @@
             }
 
             var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
-            var obligatedValues = new ObligatedCategoryValues();
             var returnList = new List<ObligatedCategoryValue>();
 
             A.CallTo(() => pasteProcessor.ParseObligatedPastedValues(A<ObligatedPastedValues>._, A<IList<ObligatedCategoryValue>>._)).Returns(pastedList);

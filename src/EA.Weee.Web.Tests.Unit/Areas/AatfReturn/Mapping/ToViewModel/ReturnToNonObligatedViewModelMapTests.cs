@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -18,14 +19,16 @@
         private readonly IWeeeCache cache;
         private readonly IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>> categoryMap;
         private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IPasteProcessor pasteProcessor;
 
         public ReturnToNonObligatedViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
+            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            mapper = new ReturnToNonObligatedValuesViewModelMap(cache, categoryMap, calculator);
+            mapper = new ReturnToNonObligatedValuesViewModelMap(cache, categoryMap, calculator, pasteProcessor);
         }
 
         [Fact]
@@ -48,7 +51,27 @@
         }
 
         [Fact]
-        public void Map_GivenObligatedAndCategoryValues_ObligatedMapperShouldBeCalled()
+        public void Map_GivenPastedData_PasteProcessorShouldBeCalled()
+        {
+            var pastedList = new List<NonObligatedCategoryValue>();
+            for (var i = 0; i < pastedList.Count; i++)
+            {
+                pastedList[i].Tonnage = i.ToString();
+            }
+
+            var transfer = new ReturnToNonObligatedValuesViewModelMapTransfer() { PastedData = A.Dummy<String>() };
+
+            var returnList = new List<ObligatedCategoryValue>();
+
+            A.CallTo(() => pasteProcessor.ParseNonObligatedPastedValues(A<PastedValues>._, A<IList<NonObligatedCategoryValue>>._)).Returns(pastedList);
+
+            var result = mapper.Map(transfer);
+
+            result.CategoryValues.Should().BeEquivalentTo(pastedList);
+        }
+
+        [Fact]
+        public void Map_GivenNonObligatedAndCategoryValues_NonObligatedMapperShouldBeCalled()
         {
             var orgId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
