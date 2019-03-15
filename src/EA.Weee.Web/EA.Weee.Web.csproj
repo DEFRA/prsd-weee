@@ -75,6 +75,7 @@
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
@@ -286,6 +287,7 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\NonObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
@@ -330,6 +332,7 @@
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedViewModel.cs" />
@@ -793,11 +796,14 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedReused\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteCreateSite\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AddressData.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\SiteAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryLIst\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfTaskListButton.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
