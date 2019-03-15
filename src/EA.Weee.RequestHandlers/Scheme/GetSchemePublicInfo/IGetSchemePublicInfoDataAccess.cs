@@ -6,5 +6,7 @@
     public interface IGetSchemePublicInfoDataAccess
     {
         Task<Domain.Scheme.Scheme> FetchSchemeByOrganisationId(Guid organisationId);
+
+        Task<Domain.Scheme.Scheme> FetchSchemeBySchemeId(Guid schemeId);
     }
 }

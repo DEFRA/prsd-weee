@@ -36,8 +36,8 @@
 
             var model = new ObligatedViewModel(new ObligatedCategoryValues(), calculator)
             {
-                SchemeName = cache.FetchSchemePublicInfo(source.OrganisationId).Result.Name,
-                AatfName = cache.FetchAatfData(source.OrganisationId, source.AatfId).Result.Name,
+                SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(source.SchemeId)).Result.Name,
+                AatfName = Task.Run(() => cache.FetchAatfData(source.OrganisationId, source.AatfId)).Result.Name,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
                 ReturnId = source.ReturnId,
