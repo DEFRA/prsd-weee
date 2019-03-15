@@ -210,6 +210,7 @@
     <Content Include="scripts\Update\Sprint28\20161123-1030-UpdateSpgSubmissionChangesCsvData.sql" />
     <Content Include="scripts\Update\SROC-hot-fix\201903143.rollback-2019-ea-charges.sql" />
     <Content Include="scripts\Update\SROC-hot-fix\201903142.charge-bands.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\20190314v1.updates-reg-ppob-country.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
