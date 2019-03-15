@@ -120,7 +120,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedReceived");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["schemeId"].Should().Be(schemeId);
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
