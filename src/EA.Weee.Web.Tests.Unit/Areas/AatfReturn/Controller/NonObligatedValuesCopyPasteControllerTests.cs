@@ -112,8 +112,7 @@
 
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("NonObligated");
+            result.RouteName.Should().Be("aatf-non-obligated");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["dcf"].Should().Be(false);
         }
@@ -137,8 +136,7 @@
 
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("NonObligated");
+            result.RouteName.Should().Be("aatf-non-obligated-dcf");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["dcf"].Should().Be(true);
         }

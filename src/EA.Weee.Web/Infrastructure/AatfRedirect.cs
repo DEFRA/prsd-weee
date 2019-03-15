@@ -52,7 +52,7 @@
 
         public static RedirectToRouteResult NonObligated(Guid returnId, bool dcf)
         {
-            return new RedirectToRouteResult(NonObligatedRouteName, new RouteValueDictionary(new { controller = "NonObligated", action = "Index", returnId = returnId, dcf = dcf}));
+            return new RedirectToRouteResult((dcf) ? NonObligatedDcfRouteName : NonObligatedRouteName, new RouteValueDictionary(new { returnId = returnId, dcf = dcf }));
         }
     }
 }
