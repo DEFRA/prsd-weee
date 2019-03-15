@@ -10,7 +10,7 @@
     {
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [Display(Name = "MY AAA Site name")]
+        [Display(Name = "AATF/ATF site name")]
         public override string Name { get; set; }
 
         public AatfAddressData(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)
