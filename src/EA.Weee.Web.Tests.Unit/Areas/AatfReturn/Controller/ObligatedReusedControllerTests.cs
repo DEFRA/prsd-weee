@@ -1,13 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
     using Core.AatfReturn;
     using Core.Scheme;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -25,6 +28,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligatedReusedController controller;
         private readonly IWeeeCache cache;
+        private readonly IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper;
         private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReusedControllerTests()
@@ -33,9 +37,10 @@
             requestCreator = A.Fake<IObligatedReusedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
-            controller = new ObligatedReusedController(cache, breadcrumb, () => weeeClient, requestCreator, calculator);
+            controller = new ObligatedReusedController(cache, breadcrumb, () => weeeClient, requestCreator, mapper);
         }
 
         [Fact]
@@ -91,7 +96,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
+        public async void IndexPost_GivenNewObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid() };
 
@@ -99,6 +104,19 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ReusedOffSite");
+            result.RouteValues["returnId"].Should().Be(model.ReturnId);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenEditedObligatedReceivedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
+        {
+            var categoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() { Id = Guid.NewGuid() } };
+            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), CategoryValues = categoryValues};
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
             result.RouteValues["returnId"].Should().Be(model.ReturnId);
         }
 

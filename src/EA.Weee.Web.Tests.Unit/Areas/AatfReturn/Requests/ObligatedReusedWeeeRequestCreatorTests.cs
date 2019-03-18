@@ -4,6 +4,7 @@
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
@@ -120,7 +121,7 @@
                 ReturnId = Guid.NewGuid()
             };
 
-            var request = requestCreator.ViewModelToRequest(model);
+            var request = requestCreator.ViewModelToRequest(model) as AddObligatedReused;
 
             request.OrganisationId.Should().Be(model.OrganisationId);
             request.ReturnId.Should().Be(model.ReturnId);
