@@ -6,9 +6,9 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Validation;
 
-    public class SelectYourPCSViewModel
+    public class SelectYourPcsViewModel
     {
-        public SelectYourPCSViewModel(List<SchemeData> schemeList, List<Guid> selectedSchemes)
+        public SelectYourPcsViewModel(List<SchemeData> schemeList, List<Guid> selectedSchemes)
         {
             Guard.ArgumentNotNull(() => schemeList, schemeList);
             Guard.ArgumentNotNull(() => selectedSchemes, selectedSchemes);
@@ -17,7 +17,7 @@
             this.SelectedSchemes = selectedSchemes;
         }
 
-        public SelectYourPCSViewModel()
+        public SelectYourPcsViewModel()
         {
         }
 
