@@ -98,6 +98,8 @@
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetSchemeById.cs" />
+    <Compile Include="Scheme\GetSchemeExternalById.cs" />
     <Compile Include="Scheme\GetSchemesExternal.cs" />
     <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
@@ -122,7 +124,7 @@
     <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
-    <Compile Include="Scheme\GetSchemeById.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfoBySchemeId.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
     <Compile Include="Admin\GetRoles.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
