@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
 
     public class ReceivedPcsListViewModel : ReturnViewModelBase
@@ -14,7 +15,7 @@
 
         public string AatfName { get; set; }
 
-        public List<SchemeData> SchemeList { get; set; }
+        public List<ReceivedPcsData> SchemeList { get; set; }
 
         public ReceivedPcsListViewModel()
         {
