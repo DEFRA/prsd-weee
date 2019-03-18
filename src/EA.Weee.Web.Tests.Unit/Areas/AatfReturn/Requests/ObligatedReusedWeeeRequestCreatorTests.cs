@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -22,7 +24,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenValidViewModel_RequestShouldNotBeNull()
+        public void ViewModelToRequest_GivenValidViewModel_RequestShouldNotBeNull()
         {
             var categoryValues = new ObligatedCategoryValues();
 
@@ -34,7 +36,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenViewModelIsNull_ArgumentNullExceptionExpected()
+        public void ViewModelToRequest_GivenViewModelIsNull_ArgumentNullExceptionExpected()
         {
             Action action = () => requestCreator.ViewModelToRequest(null);
 
@@ -42,7 +44,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenValidViewModel_CategoryValuesRequestPropertiesShouldBeMapped()
+        public void ViewModelToRequest_GivenValidViewModel_CategoryValuesRequestPropertiesShouldBeMapped()
         {
             var categoryValues = new ObligatedCategoryValues();
 
@@ -66,7 +68,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenValidViewModelWithDecimalValues_CategoryValuesRequestPropertiesShouldBeMapped()
+        public void ViewModelToRequest_GivenValidViewModelWithDecimalValues_CategoryValuesRequestPropertiesShouldBeMapped()
         {
             var categoryValues = new ObligatedCategoryValues();
 
@@ -91,7 +93,7 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void ViewModelToRequested_GivenValidViewModelWithEmptyValues_CategoryValuesRequestPropertiesShouldBeMapped(string value)
+        public void ViewModelToRequest_GivenValidViewModelWithEmptyValues_CategoryValuesRequestPropertiesShouldBeMapped(string value)
         {
             var categoryValues = new ObligatedCategoryValues();
 
@@ -113,7 +115,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
+        public void ViewModelToRequest_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
             var model = new ObligatedViewModel(calculator)
             {
@@ -125,6 +127,43 @@
 
             request.OrganisationId.Should().Be(model.OrganisationId);
             request.ReturnId.Should().Be(model.ReturnId);
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenAddViewModel_RequestTypeShouldBeAdd()
+        {
+            var model = new ObligatedViewModel(calculator);
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<AddObligatedReused>();
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
+        {
+            var model = new ObligatedViewModel(calculator);
+            model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<EditObligatedReused>();
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
+        {
+            var model = new ObligatedViewModel(calculator)
+            {
+                CategoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() }
+            };
+
+            model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.CategoryValues.Should().NotBeNull();
+            request.CategoryValues.Count().Should().Be(1);
         }
     }
 }

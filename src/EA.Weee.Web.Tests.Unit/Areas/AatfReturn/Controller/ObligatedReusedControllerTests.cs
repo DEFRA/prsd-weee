@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNewObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
+        public async void IndexPost_GivenNewObligatedReusedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid() };
 
@@ -108,7 +108,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenEditedObligatedReceivedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
+        public async void IndexPost_GivenEditedObligatedReusedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
         {
             var categoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() { Id = Guid.NewGuid() } };
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), CategoryValues = categoryValues};

@@ -18,7 +18,7 @@
     public class NonObligatedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly INonObligatedWeeRequestCreator requestCreator;
+        private readonly INonObligatedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
@@ -27,7 +27,7 @@
         public NonObligatedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
-            INonObligatedWeeRequestCreator requestCreator,
+            INonObligatedWeeeRequestCreator requestCreator,
             INonObligatedValuesViewModelValidatorWrapper validator,
             IMap<ReturnToNonObligatedValuesViewModelMapTransfer,
             NonObligatedValuesViewModel> mapper)
