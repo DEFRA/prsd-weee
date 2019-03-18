@@ -16,10 +16,12 @@
     public class ReturnAndSchemeDataToReceivedPcsViewModelMapTests
     {
         private ReturnAndSchemeDataToReceivedPcsViewModelMap mapper;
+        private ITonnageUtilities tonnageUtilities;
 
         public ReturnAndSchemeDataToReceivedPcsViewModelMapTests()
         {
-            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), new TonnageUtilities());
+            tonnageUtilities = A.Fake<ITonnageUtilities>();
+            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), tonnageUtilities);
         }
 
         [Fact]
@@ -70,6 +72,10 @@
                 ReturnData = returnData,
                 SchemeDataItems = schemeDataItems
             };
+
+            var what = new List<WeeeObligatedData>() { obligatedReceivedData.ElementAt(0), obligatedReceivedData.ElementAt(1) };
+
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(what)).Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468"});
 
             var result = mapper.Map(transfer);
 
