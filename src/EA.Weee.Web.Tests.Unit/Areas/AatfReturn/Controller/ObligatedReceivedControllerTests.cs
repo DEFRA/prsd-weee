@@ -155,15 +155,16 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToAatfTaskList()
+        public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToReceivedPcsList()
         {
-            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid() };
+            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), AatfId = Guid.NewGuid() };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["controller"].Should().Be("ReceivedPcsList");
             result.RouteValues["returnId"].Should().Be(model.ReturnId);
+            result.RouteValues["aatfId"].Should().Be(model.AatfId);
         }
 
         [Fact]
