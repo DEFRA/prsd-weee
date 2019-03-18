@@ -41,7 +41,7 @@
                     ReturnId = returnId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     SchemeId = schemeId,
-                    SchemeName = cache.FetchSchemePublicInfo(@return.ReturnOperatorData.OrganisationId).Result.Name,
+                    SchemeName = cache.FetchSchemePublicInfoBySchemeId(schemeId).Result.Name,
                     AatfName = cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId).Result.Name
                 };
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
