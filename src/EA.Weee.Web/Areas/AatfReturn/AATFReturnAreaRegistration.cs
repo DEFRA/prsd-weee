@@ -65,36 +65,6 @@
                 url: "aatf-return/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "AatfTaskList" },
                 namespaces: new[] { typeof(AatfTaskListController).Namespace });
-
-            //context.MapLowercaseDashedRoute(
-            //    name: "aatf-default",
-            //    url: "aatf-return/{returnId}/{controller}/{action}",
-            //    defaults: new { action = "Index", controller = "AatfTaskList" },
-            //    namespaces: new[] { typeof(AatfTaskListController).Namespace });
-
-            //context.MapLowercaseDashedRoute(
-            //    name: "aatf-default",
-            //    url: "AatfReturn/{organisationId}/{returnId}/{controller}/{action}",
-            //    defaults: new { action = "Index", controller = "AatfTaskList" },
-            //    namespaces: new[] { typeof(AatfTaskListController).Namespace });
-
-            //context.MapLowercaseDashedRoute(
-            //    name: "aatf-received",
-            //    url: "AatfReturn/received/{organisationId}/{returnId}/{aatfId}/{controller}/{action}",
-            //    defaults: new { action = "Index", controller = "ReceivedPcsList" },
-            //    namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
-
-            //context.MapLowercaseDashedRoute(
-            //    name: "aatf-received-scheme",
-            //    url: "AatfReturn/received-scheme/{organisationId}/{returnId}/{aatfId}/{schemeId}/{controller}/{action}",
-            //    defaults: new { action = "Index", controller = "ObligatedReceived" },
-            //    namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
-
-            //context.MapLowercaseDashedRoute(
-            //    name: "aatf-reused",
-            //    url: "AatfReturn/reused/{organisationId}/{returnId}/{aatfId}/{controller}/{action}",
-            //    defaults: new { action = "Index", controller = "ObligatedReused" },
-            //    namespaces: new[] { typeof(ObligatedReusedController).Namespace });
         }
     }
 }
