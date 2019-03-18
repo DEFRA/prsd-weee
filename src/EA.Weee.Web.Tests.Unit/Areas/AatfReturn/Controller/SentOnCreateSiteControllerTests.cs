@@ -83,7 +83,7 @@
         {
             controller.ModelState.AddModelError("error", "error");
             var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             await controller.Index(model);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddSentOnAatfSite>._)).MustNotHaveHappened();
@@ -93,7 +93,7 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             var request = new AddSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);

@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Core.AatfReturn.AddressData
+@model EA.Weee.Core.AatfReturn.SiteAddressData
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -10,6 +10,7 @@
             @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
+        <!--@Html.Partial("_AddressPartial", Model)-->
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address1)">
             @Html.Gds().LabelFor(m => m.Address1)
             @Html.Gds().ValidationMessageFor(m => m.Address1)
@@ -40,7 +41,7 @@
             @Html.Gds().TextBoxFor(m => m.Postcode, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
 
-        <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list" >
+        <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list">
             @Html.Gds().LabelFor(m => m.CountryId)
             @Html.Gds().ValidationMessageFor(m => m.CountryId)
             @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-full", autocomplete = "false", aria_labelledby = "country-dropdown-list" })

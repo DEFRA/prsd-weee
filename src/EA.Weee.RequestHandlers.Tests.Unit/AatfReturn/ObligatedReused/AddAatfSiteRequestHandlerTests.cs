@@ -87,7 +87,7 @@
             {
                 AatfId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid(),
-                AddressData = new AddressData()
+                AddressData = new SiteAddressData()
                 {
                     CountryId = Guid.NewGuid(),
                     Address1 = "address1",

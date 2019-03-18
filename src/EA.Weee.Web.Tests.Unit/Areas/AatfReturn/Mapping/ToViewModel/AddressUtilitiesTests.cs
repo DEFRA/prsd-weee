@@ -19,7 +19,7 @@
         [Fact]
         public void AddressConcatenate_OnAddressData_ReturnsCorrectlyFormattedAddress()
         {
-            var addressData = new AddressData(
+            var addressData = new SiteAddressData(
                 "Name",
                 "Address1",
                 "Address2",
@@ -37,7 +37,7 @@
         [Fact]
         public void AddressConcatenate_OnAddressDataWithAllowedNulls_ReturnsCorrectlyFormattedAddress()
         {
-            var addressData = new AddressData(
+            var addressData = new SiteAddressData(
                 "Name",
                 "Address1",
                 null,
