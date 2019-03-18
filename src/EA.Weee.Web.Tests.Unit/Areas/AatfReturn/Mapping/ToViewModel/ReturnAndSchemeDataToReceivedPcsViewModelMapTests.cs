@@ -73,9 +73,13 @@
                 SchemeDataItems = schemeDataItems
             };
 
-            var what = new List<WeeeObligatedData>() { obligatedReceivedData.ElementAt(0), obligatedReceivedData.ElementAt(1) };
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
+                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme.Id))))
+                                                .Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468"});
 
-            A.CallTo(() => tonnageUtilities.SumObligatedValues(what)).Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468"});
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
+                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme2.Id))))
+                                                .Returns(new ObligatedCategoryValue() { B2B = "0.468", B2C = "4.468" });
 
             var result = mapper.Map(transfer);
 
