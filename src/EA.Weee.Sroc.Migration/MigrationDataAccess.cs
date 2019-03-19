@@ -10,6 +10,7 @@
     using Domain.Scheme;
     using Domain.User;
     using OverrideImplementations;
+    using Serilog;
 
     public class MigrationDataAccess : IMigrationDataAccess
     {
@@ -61,6 +62,8 @@
             {
                 throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
             }
+
+            Log.Information(string.Format("Producer charges for {0} updated from {1} to {2}", name, producer.First().ChargeThisUpdate, amount));
 
             producer.First().UpdateCharge(amount); 
         }

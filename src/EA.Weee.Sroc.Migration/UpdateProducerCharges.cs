@@ -10,6 +10,7 @@
     using Core.Shared;
     using Domain.Scheme;
     using OverrideImplementations;
+    using Serilog;
     using Weee.Requests.Scheme.MemberRegistration;
     using Xml.Converter;
     using Xml.MemberRegistration;
@@ -49,6 +50,8 @@
 
                     foreach (var memberUpload in memberUploads)
                     {
+                        Log.Information(string.Format("Process member upload {0}", memberUpload.Id));
+
                         var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data),
                             memberUpload.FileName);
 
@@ -63,13 +66,16 @@
 
                         memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, total, annualChargedToBeAdded);
 
-                        context.SaveChanges();   
+                        context.SaveChanges();
+
+                        Log.Information(string.Format("Member upload {0} updated from {1} to {2}", memberUpload.Id, memberUpload.TotalCharges, total));
                     }
 
                     dbContextTransaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log.Error(ex.Message + (ex.InnerException != null ? ex.InnerException.Message : string.Empty));
                     dbContextTransaction.Rollback();
                     throw;
                 }
