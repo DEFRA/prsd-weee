@@ -23,30 +23,27 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSentOnAatfSiteRequestCreator requestCreator;
+        private readonly IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper;
 
-        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSentOnAatfSiteRequestCreator requestCreator)
+        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid weeeSentOnId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid aatfId, Guid weeeSentOnId)
         {
             using (var client = apiClient())
             {
-                var viewModel = new SentOnCreateSiteOperatorViewModel();
+                var operatorAddress = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorAddress) { ReturnId = returnId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
 
-                //var result =
-                /*
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var siteAddress = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(siteAddress) { ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId });
-
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
-                */
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                
                 return View(viewModel);
             }
         }
