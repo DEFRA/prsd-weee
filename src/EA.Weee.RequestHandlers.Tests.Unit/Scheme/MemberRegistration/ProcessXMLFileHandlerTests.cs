@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
@@ -178,9 +179,7 @@
 
             var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
 
-            Organisation organisation = Organisation.CreateRegisteredCompany("Test organisation", "1234567AAA");
-
-            Scheme scheme = new Scheme(organisation.Id);
+            var scheme = schemesDbSet.ElementAt(0);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
@@ -192,8 +191,7 @@
 
             SetupSchemeTypeComplianceYear();
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
-            A.CallTo(() => schemesDbSet.SingleAsync<Scheme>(A<System.Linq.Expressions.Expression<Func<Scheme, bool>>>.Ignored)).Returns(scheme);
-
+            
             await handler.HandleAsync(Message);
 
             A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, scheme, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
@@ -356,7 +354,16 @@
 
         public static Scheme FakeSchemeData()
         {
-            return new Scheme(organisationId);
+            var scheme = new Scheme(organisationId);
+
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 0));
+
+            return scheme;
         }
 
         private void SetupSchemeTypeComplianceYear()
