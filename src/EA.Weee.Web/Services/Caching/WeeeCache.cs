@@ -27,6 +27,9 @@
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
         public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
+
+        public Cache<Guid, SchemePublicInfo> SchemePublicInfosBySchemeId { get; private set; }
+
         public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
 
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
@@ -80,6 +83,13 @@
                 (key) => key.ToString(),
                 (key) => FetchSchemePublicInfoFromApi(key));
 
+            SchemePublicInfosBySchemeId = new Cache<Guid, SchemePublicInfo>(
+                provider,
+                "SchemeInfos",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                (key) => FetchSchemePublicInfoByIdFromApi(key));
+
             ProducerSearchResultList = new SingleItemCache<IList<ProducerSearchResult>>(
                 provider,
                 "ProducerPublicInfoList",
@@ -126,7 +136,7 @@
         {
             using (var client = apiClient())
             {
-                var request = new GetSchemeById(schemeId);
+                var request = new GetSchemePublicInfoBySchemeId(schemeId);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result.Name;
@@ -157,6 +167,18 @@
                 return result;
             }
         }
+
+        private async Task<SchemePublicInfo> FetchSchemePublicInfoByIdFromApi(Guid schemeId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemePublicInfoBySchemeId(schemeId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         private async Task<IList<AatfData>> FetchAatfInfoFromApi(Guid organisationId)
         {
             using (var client = apiClient())
@@ -208,6 +230,11 @@
         public Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId)
         {
             return SchemePublicInfos.Fetch(organisationId);
+        }
+
+        public Task<SchemePublicInfo> FetchSchemePublicInfoBySchemeId(Guid schemeId)
+        {
+            return SchemePublicInfosBySchemeId.Fetch(schemeId);
         }
 
         public Task<IList<ProducerSearchResult>> FetchProducerSearchResultList()
