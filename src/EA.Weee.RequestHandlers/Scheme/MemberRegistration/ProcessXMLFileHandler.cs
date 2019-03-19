@@ -12,6 +12,7 @@
     using Domain.Error;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Xml.MemberRegistration;
     using Interfaces;
@@ -75,10 +76,14 @@
                 deserializedcomplianceYear = int.Parse(deserializedXml.complianceYear);
 
                 var hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, deserializedcomplianceYear);
-                
+
                 if (!hasAnnualCharge)
                 {
-                    annualChargeToBeAdded = true;
+                    var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
+                    if (annualcharge > 0 || scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
+                    {
+                        annualChargeToBeAdded = true;
+                    }
                 }
 
                 producerCharges = totalChargeCalculator.TotalCalculatedCharges(message, scheme, deserializedcomplianceYear, annualChargeToBeAdded, ref totalChargesCalculated);

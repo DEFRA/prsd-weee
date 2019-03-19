@@ -24,8 +24,6 @@
 
         public Dictionary<string, ProducerCharge> TotalCalculatedCharges(ProcessXmlFile message, Scheme scheme, int deserializedcomplianceYear, bool annualChargeToBeAdded, ref decimal? totalCharges)
         {
-            var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
-
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
