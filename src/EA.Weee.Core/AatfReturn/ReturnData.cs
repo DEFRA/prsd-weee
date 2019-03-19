@@ -25,7 +25,7 @@
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
-            ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
+            ObligatedWeeeReusedData = new List<WeeeObligatedData>();
             NonObligatedData = new List<NonObligatedData>();
         }
     }

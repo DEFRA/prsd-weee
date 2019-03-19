@@ -37,7 +37,7 @@
 
             foreach (var scheme in source.SchemeDataItems)
             {
-                var weeeReceivedData = source.ReturnData.ObligatedWeeeReceivedData.Where(s => s.Scheme.Id == scheme.Id).ToList();
+                var weeeReceivedData = source.ReturnData.ObligatedWeeeReceivedData.Where(s => s.Scheme.Id == scheme.Id && s.Aatf.Id == source.AatfId).ToList();
 
                 var receivedPcsData = new ReceivedPcsData()
                 {
