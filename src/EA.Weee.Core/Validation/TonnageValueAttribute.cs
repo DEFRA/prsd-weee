@@ -112,7 +112,7 @@
         {
             var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
             
-            return $"The tonnage value for Category {categoryId}{additionalMessage} must be {message}";
+            return $"The tonnage value for category {categoryId}{additionalMessage} must be {message}";
         }
     }
 }
