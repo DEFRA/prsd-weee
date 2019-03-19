@@ -80,7 +80,7 @@
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedGeneric\IGetAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\IGetAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\IObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\ObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\EditObligatedReceivedHandler.cs" />
