@@ -41,16 +41,6 @@
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var transfer = new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
-                {
-                    AatfId = aatfId,
-                    ReturnId = returnId,
-                    OrganisationId = schemeList.OperatorData.OrganisationId,
-                    AatfName = (await cache.FetchAatfData(schemeList.OperatorData.OrganisationId, aatfId)).Name,
-                    ReturnData = @return,
-                    SchemeDataItems = schemeList.SchemeDataItems.ToList()
-                };
-
                 var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
                 {
                     AatfId = aatfId,
