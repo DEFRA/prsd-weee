@@ -223,12 +223,13 @@
 
         [Theory]
         [InlineData("1,00")]
+        [InlineData("10,00")]
         [InlineData("1,000,00")]
         public void ValidationResult_GivenTypeMessageIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be entered correctly.  E.g. 1,000 or 100");
+            ValidateErrorMessage($"The tonnage value for Category {(int)Category} must be entered in its correct format. E.g. 1, 10, 100, 1000 or 1,000");
         }
 
         private void ValidationWithTypeMessage(object value)
