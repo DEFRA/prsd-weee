@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -36,7 +37,7 @@
 
             var model = new ObligatedViewModel(new ObligatedCategoryValues(), calculator)
             {
-                SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(source.SchemeId)).Result.Name,
+                SchemeName = (source.SchemeId != new Guid()) ? Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(source.SchemeId)).Result.Name : null,
                 AatfName = Task.Run(() => cache.FetchAatfData(source.OrganisationId, source.AatfId)).Result.Name,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
@@ -44,7 +45,19 @@
                 SchemeId = source.SchemeId
             };
 
-            var existingData = obligatedMap.Map(new ObligatedDataToObligatedValueMapTransfer() { WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList(), ObligatedCategoryValues = model.CategoryValues });
+            var transfer = new ObligatedDataToObligatedValueMapTransfer() { ObligatedCategoryValues = model.CategoryValues };
+            var existingData = new List<ObligatedCategoryValue>();
+
+            if (source.SchemeId != new Guid())
+            {
+                transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList();
+                existingData = obligatedMap.Map(transfer).ToList();
+            }
+            else
+            {
+                transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReusedData.Where(w => w.Aatf.Id == source.AatfId).ToList();
+                existingData = obligatedMap.Map(transfer).ToList();
+            }
 
             if (source.PastedData != null)
             {
