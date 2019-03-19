@@ -5,7 +5,9 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
 
@@ -41,9 +43,16 @@
                 .Select(a => a).ToListAsync();
         }
 
-        public Task Update(AatfAddress aatfAddress)
+        public Task Update(AatfAddress oldAddress, SiteAddressData newAddress, Country country)
         {
-            context.AatfAddress.
+            oldAddress.UpdateAddress(
+                newAddress.Name,
+                newAddress.Address1,
+                newAddress.Address2,
+                newAddress.TownOrCity,
+                newAddress.CountyOrRegion,
+                newAddress.Postcode,
+                country);
 
             return context.SaveChangesAsync();
         }

@@ -6,6 +6,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -43,6 +44,7 @@
 
             using (var client = apiClient())
             {
+                var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 

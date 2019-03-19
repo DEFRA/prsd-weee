@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain;
 
     public interface IAatfSiteDataAccess
     {
@@ -13,6 +15,6 @@
 
         Task<List<WeeeReusedAmount>> GetObligatedWeeeForReturnAndAatf(Guid aatfId, Guid returnId);
 
-        Task Update(AatfAddress aatfAddress);
+        Task Update(AatfAddress oldAddress, SiteAddressData newAddress, Country country);
     }
 }

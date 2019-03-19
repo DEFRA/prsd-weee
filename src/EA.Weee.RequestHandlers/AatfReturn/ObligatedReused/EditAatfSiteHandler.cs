@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -34,9 +32,11 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
+            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.AddressData.CountryId);
+
             var value = await genericDataAccess.GetById<AatfAddress>(message.AddressData.Id);
 
-            await offSiteDataAccess.Update(value, message.AddressData);
+            await offSiteDataAccess.Update(value, message.AddressData, country);
 
             return true;
         }
