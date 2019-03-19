@@ -15,6 +15,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class SelectYourPcsControllerTests
@@ -37,9 +38,15 @@
         }
 
         [Fact]
-        public void CheckCheckYourReturnControllerInheritsExternalSiteController()
+        public void SelectYourPcsControllerInheritsExternalSiteController()
         {
             typeof(SelectYourPcsController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void SelectYourPcsController_ShouldHaveValidateOrganisationActionFilterAttribute()
+        {
+            typeof(SelectYourPcsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
         }
 
         [Fact]
@@ -66,7 +73,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            var viewModel = new SelectYourPCSViewModel(A.Fake<List<SchemeData>>(), A.Fake<List<Guid>>())
+            var viewModel = new SelectYourPcsViewModel(A.Fake<List<SchemeData>>(), A.Fake<List<Guid>>())
             {
                 ReturnId = returnId
             };

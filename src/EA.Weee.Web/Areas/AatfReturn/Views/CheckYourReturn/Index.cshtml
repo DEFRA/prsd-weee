@@ -32,7 +32,64 @@
         </div>
     </div>
     <div class="govuk-!-padding-bottom-6"></div>
-    <h4 class="govuk-heading-s" style="margin-bottom: 0px;">Non-obligated WEEE</h4>
+
+    <h2 class="govuk-heading-m" style="margin-bottom: 0px;">Obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-6"></div>
+
+    @foreach (var aatf in Model.AatfsData)
+    {
+        <table class="govuk-table govuk-!-font-size-16">
+            <thead class="govuk-table__head">
+                <tr class="gov-uk-no-bottom-border">
+                    <td class="govuk-table__header" style="width:20%" scope="col" rowspan="2">
+                        @aatf.Aatf.Name
+                    </td>
+                    <td class="govuk-table__header" style="width:20%" scope="col" rowspan="2">
+                        @aatf.Aatf.ApprovalNumber
+                    </td>
+                    <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
+                        Received for treatment (t)
+                    </th>
+                    <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
+                    <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
+                        Sent to another AATF/ATF (t)
+                    </th>
+                    <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
+                    <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
+                        Reused as an appliance (t)
+                    </th>
+                    <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2C</th>
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2B</th>
+                    <td class="govuk-table__header" scope="col"></td>
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2C</th>
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2B</th>
+                    <td class="govuk-table__header" scope="col"></td>
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2C</th>
+                    <th class="govuk-table__cell govuk-!-font-weight-regular" style="text-align: right" scope="col">B2B</th>
+                    <td class="govuk-table__header" scope="col"></td>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">Total</td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReceived.B2C</td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReceived.B2B</td>
+                    <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeSentOn.B2C</td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeSentOn.B2B</td>
+                    <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReused.B2B</td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReused.B2B</td>
+                    <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    <h2 class="govuk-heading-m" style="margin-bottom: 0px;">Non-obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
     <table class="govuk-table govuk-!-font-size-16" style="width: 60%;">
         <thead class="govuk-table__head">

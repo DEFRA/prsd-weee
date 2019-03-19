@@ -11,11 +11,11 @@
 
     public class SelectYourPCSViewModelTests
     {
-        private readonly SelectYourPCSViewModel model;
+        private readonly SelectYourPcsViewModel model;
 
         public SelectYourPCSViewModelTests()
         {
-            model = new SelectYourPCSViewModel();
+            model = new SelectYourPcsViewModel();
         }
 
         [Fact]
@@ -23,7 +23,7 @@
         {
             Action action = () =>
             {
-                var selectYourPCSModel = new SelectYourPCSViewModel(null, A.Fake<List<Guid>>());
+                var selectYourPCSModel = new SelectYourPcsViewModel(null, A.Fake<List<Guid>>());
             };
 
             action.Should().Throw<ArgumentNullException>();
@@ -34,7 +34,7 @@
         {
             Action action = () =>
             {
-                var selectYourPCSModel = new SelectYourPCSViewModel(A.Fake<List<SchemeData>>(), null);
+                var selectYourPCSModel = new SelectYourPcsViewModel(A.Fake<List<SchemeData>>(), null);
             };
 
             action.Should().Throw<ArgumentNullException>();
@@ -43,7 +43,7 @@
         [Fact]
         public void SelectYourPCSViewModel_SelectedSchemesVariableShouldHaveMinimumElementsAttribute()
         {
-            var t = typeof(SelectYourPCSViewModel);
+            var t = typeof(SelectYourPcsViewModel);
             var pi = t.GetProperty("SelectedSchemes");
             var hasAttribute = Attribute.IsDefined(pi, typeof(MinimumElementsAttribute));
 
