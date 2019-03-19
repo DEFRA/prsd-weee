@@ -89,7 +89,7 @@
 
             if (!validThousandRegex.IsMatch(value?.ToString()))
             {
-                return new ValidationResult(GenerateMessage("entered correctly.  E.g. 1,000 or 100", (int)propertyValue));
+                return new ValidationResult(GenerateMessage("entered in its correct format. E.g. 1, 10, 100, 1000 or 1,000", (int)propertyValue));
             }
 
             return ValidationResult.Success;
