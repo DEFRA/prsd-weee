@@ -87,6 +87,7 @@
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\IObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\EditObligatedReusedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteRequestHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\ObligatedReusedDataAccess.cs" />

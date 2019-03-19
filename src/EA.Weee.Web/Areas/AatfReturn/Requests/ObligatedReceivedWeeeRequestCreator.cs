@@ -7,9 +7,9 @@
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.Obligated;
 
-    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedReceived>, IObligatedReceivedWeeeRequestCreator
+    public class ObligatedReceivedWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedBaseRequest>, IObligatedReceivedWeeeRequestCreator
     {
-        public override ObligatedReceived ViewModelToRequest(ObligatedViewModel viewModel)
+        public override ObligatedBaseRequest ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
             var obligatedRequestValues = new List<ObligatedValue>();
