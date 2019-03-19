@@ -8,7 +8,7 @@
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
 
-    public class ReturnToAatfTaskListViewModelMapTests
+    public class ReturnToReturnViewModelMapTests
     {
         private readonly ReturnToReturnViewModelMap map;
         private readonly string nullTonnageDisplay = "-";
@@ -24,7 +24,7 @@
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
 
-        public ReturnToAatfTaskListViewModelMapTests()
+        public ReturnToReturnViewModelMapTests()
         {
             map = new ReturnToReturnViewModelMap(new TonnageUtilities());
             mapperTestId = new Guid();
@@ -72,6 +72,7 @@
 
             var result = map.Map(returnData);
 
+            result.ReturnId.Should().Be(mapperTestId);
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
@@ -105,10 +106,7 @@
 
             var result = map.Map(returnData);
 
-            result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
-            result.Year.Should().Be(mapperTestYear.ToString());
-            result.Period.Should().Be(mapperTestPeriod);
-
+            ReturnViewModelMapCommonAsserts(result);
             result.AatfsData[0].WeeeReceived.B2B.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeReceived.B2C.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeReused.B2B.Should().Be(nullTonnageDisplay);
@@ -132,10 +130,7 @@
             };
 
             var result = map.Map(returnData);
-
-            result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
-            result.Year.Should().Be(mapperTestYear.ToString());
-            result.Period.Should().Be(mapperTestPeriod);
+            ReturnViewModelMapCommonAsserts(result);
             result.NonObligatedTonnageTotal.Should().Be(nullTonnageDisplay);
             result.NonObligatedTonnageTotalDcf.Should().Be(nullTonnageDisplay);
             result.AatfsData.Count.Should().Be(0);
@@ -160,9 +155,7 @@
 
             var result = map.Map(returnData);
 
-            result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
-            result.Year.Should().Be(mapperTestYear.ToString());
-            result.Period.Should().Be(mapperTestPeriod);
+            ReturnViewModelMapCommonAsserts(result);
             result.NonObligatedTonnageTotal.Should().Be(nullTonnageDisplay);
             result.NonObligatedTonnageTotalDcf.Should().Be(nullTonnageDisplay);
             result.AatfsData.Count.Should().Be(0);
@@ -187,10 +180,8 @@
             };
 
             var result = map.Map(returnData);
-
-            result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
-            result.Year.Should().Be(mapperTestYear.ToString());
-            result.Period.Should().Be(mapperTestPeriod);
+            
+            ReturnViewModelMapCommonAsserts(result);
             result.NonObligatedTonnageTotal.Should().Be(nullTonnageDisplay);
             result.NonObligatedTonnageTotalDcf.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeReceived.B2B.Should().Be(nullTonnageDisplay);
@@ -199,6 +190,14 @@
             result.AatfsData[0].WeeeReused.B2C.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeSentOn.B2B.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be(nullTonnageDisplay);
+        }
+
+        private void ReturnViewModelMapCommonAsserts(Web.Areas.AatfReturn.ViewModels.ReturnViewModel result)
+        {
+            result.ReturnId.Should().Be(mapperTestId);
+            result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
+            result.Year.Should().Be(mapperTestYear.ToString());
+            result.Period.Should().Be(mapperTestPeriod);
         }
     }
 }
