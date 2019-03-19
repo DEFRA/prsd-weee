@@ -24,7 +24,7 @@
         {
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019)
+                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
                     .OrderBy(m => m.SubmittedDate);
 
             return memberUploads.ToList();
