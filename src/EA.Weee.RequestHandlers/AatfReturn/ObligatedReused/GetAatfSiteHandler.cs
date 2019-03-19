@@ -9,13 +9,13 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class GetAatfSiteRequestHandler : IRequestHandler<GetAatfSite, AddressTonnageSummary>
+    internal class GetAatfSiteHandler : IRequestHandler<GetAatfSite, AddressTonnageSummary>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetAatfSiteDataAccess getAatfSiteDataAccess;
         private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
 
-        public GetAatfSiteRequestHandler(IWeeeAuthorization authorization,
+        public GetAatfSiteHandler(IWeeeAuthorization authorization,
             IGetAatfSiteDataAccess getAatfSiteDataAccess,
             IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper)
         {

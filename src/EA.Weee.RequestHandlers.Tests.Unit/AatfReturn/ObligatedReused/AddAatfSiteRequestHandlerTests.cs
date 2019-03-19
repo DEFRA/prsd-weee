@@ -31,7 +31,7 @@
         private readonly IObligatedReusedDataAccess obligatedReusedDataAccess; 
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess; 
         private readonly WeeeContext weeeContext;
-        private readonly AddAatfSiteRequestHandler handler;
+        private readonly AddAatfSiteHandler handler;
 
         public AddAatfSiteRequestHandlerTests()
         {
@@ -42,7 +42,7 @@
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
 
-            handler = new AddAatfSiteRequestHandler(weeeContext, authorisation, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
+            handler = new AddAatfSiteHandler(weeeContext, authorisation, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -50,7 +50,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddAatfSiteRequestHandler(weeeContext, authorization, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
+            var handler = new AddAatfSiteHandler(weeeContext, authorization, addAatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddAatfSite>());
 

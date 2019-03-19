@@ -1,0 +1,59 @@
+﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
+    using EA.Weee.RequestHandlers.Organisations;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.AatfReturn.Obligated;
+
+    internal class EditAatfSiteHandler : IRequestHandler<EditAatfSite, bool>
+    {
+        private readonly WeeeContext context;
+        private readonly IWeeeAuthorization authorization;
+        private readonly IAddAatfSiteDataAccess offSiteDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
+
+        public EditAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
+            IAddAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
+            IOrganisationDetailsDataAccess organisationDetailsDataAccess)
+        {
+            this.context = context;
+            this.authorization = authorization;
+            this.offSiteDataAccess = offSiteDataAccess;
+            this.genericDataAccess = genericDataAccess;
+            this.organisationDetailsDataAccess = organisationDetailsDataAccess;
+        }
+
+        public async Task<bool> HandleAsync(EditAatfSite message)
+        {
+            authorization.EnsureCanAccessExternalArea();
+
+            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.AddressData.CountryId);
+
+            var address = new AatfAddress(
+                message.AddressData.Name,
+                message.AddressData.Address1,
+                message.AddressData.Address2,
+                message.AddressData.TownOrCity,
+                message.AddressData.CountyOrRegion,
+                message.AddressData.Postcode,
+                country);
+
+            var weeeReused = await genericDataAccess.GetManyByExpression<WeeeReused>(new WeeeReusedByAatfIdAndReturnIdSpecification(message.AatfId, message.ReturnId));
+            
+            var weeeReusedSite = new WeeeReusedSite(
+                weeeReused.Last(),
+                address);
+
+            await offSiteDataAccess.Submit(weeeReusedSite);
+
+            return true;
+        }
+    }
+}

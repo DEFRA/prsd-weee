@@ -11,7 +11,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class AddAatfSiteRequestHandler : IRequestHandler<AddAatfSite, bool>
+    internal class AddAatfSiteHandler : IRequestHandler<AddAatfSite, bool>
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
@@ -19,7 +19,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public AddAatfSiteRequestHandler(WeeeContext context, IWeeeAuthorization authorization,
+        public AddAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
             IAddAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
             IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {

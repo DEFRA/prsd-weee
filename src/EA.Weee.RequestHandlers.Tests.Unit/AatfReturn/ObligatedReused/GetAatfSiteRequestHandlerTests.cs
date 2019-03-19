@@ -22,14 +22,14 @@
         private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
         private readonly IGetAatfSiteDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
-        private readonly GetAatfSiteRequestHandler handler;
+        private readonly GetAatfSiteHandler handler;
 
         public GetAatfSiteRequestHandlerTests()
         {
             mapper = A.Fake<IMap<AatfAddressObligatedAmount, AddressTonnageSummary>>();
             dataAccess = A.Fake<IGetAatfSiteDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
-            handler = new GetAatfSiteRequestHandler(authorization, dataAccess, mapper);
+            handler = new GetAatfSiteHandler(authorization, dataAccess, mapper);
         }
 
         [Fact]
@@ -37,7 +37,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new GetAatfSiteRequestHandler(authorization, dataAccess, mapper);
+            var handler = new GetAatfSiteHandler(authorization, dataAccess, mapper);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfSite>());
 

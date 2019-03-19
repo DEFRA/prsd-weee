@@ -87,12 +87,13 @@
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\IObligatedReceivedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\EditAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteDataAccess.cs" />
-    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteRequestHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\ObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteDataAccess.cs" />
-    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteRequestHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IAddAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteDataAccess.cs" />
