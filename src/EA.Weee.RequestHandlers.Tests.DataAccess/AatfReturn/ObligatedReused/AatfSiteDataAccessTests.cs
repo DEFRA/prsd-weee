@@ -1,42 +1,68 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.ObligatedReused
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using EA.Weee.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedGeneric;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
-    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
-    using Operator = Domain.AatfReturn.Operator;
-    using Organisation = Domain.Organisation.Organisation;
-    using WeeeReused = Domain.AatfReturn.WeeeReused;
-    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
-    using WeeeReusedSite = Domain.AatfReturn.WeeeReusedSite;
 
-    public class GetAatfSiteDataAccessTests
+    public class AatfSiteDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly DbContextHelper dbContextHelper;
-        private readonly Organisation organisation;
-        private readonly Operator @operator;
-        private readonly IGetAatfSiteDataAccess dataAccess;
+        private readonly AatfSiteDataAccess dataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly DbContextHelper dbContextHelper;
+        private readonly Guid aatfId;
 
-        public GetAatfSiteDataAccessTests()
+        public AatfSiteDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            dbContextHelper = new DbContextHelper();
-            organisation = Organisation.CreatePartnership("Dummy");
-            @operator = new Operator(organisation);
-
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            dataAccess = new GetAatfSiteDataAccess(context, genericDataAccess);
+            dataAccess = new AatfSiteDataAccess(context, genericDataAccess);
+            dbContextHelper = new DbContextHelper();
+            aatfId = A.Dummy<Guid>();
+        }
+
+        [Fact]
+        public void Submit_GivenReusedSiteData_ValuesShouldBeAddedToContext()
+        {
+            var aatfAddress = new AatfAddress(
+                "Name",
+                "Address",
+                A.Dummy<string>(),
+                "TownOrCity",
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                A.Dummy<Country>());
+            var weeeReused = new WeeeReused(aatfId, A.Dummy<Guid>());
+            var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
+
+            var weeeReusedSiteDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReusedSite>());
+
+            A.CallTo(() => context.WeeeReusedSite).Returns(weeeReusedSiteDbSet);
+
+            dataAccess.Submit(weeeReusedSite);
+
+            context.WeeeReusedSite.Should().AllBeEquivalentTo(weeeReusedSite);
+        }
+
+        [Fact]
+        public void Submit_GivenReusedSiteData_SaveChangesAsyncShouldBeCalled()
+        {
+            var site = new WeeeReusedSite();
+
+            dataAccess.Submit(site);
+
+            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
         [Fact]

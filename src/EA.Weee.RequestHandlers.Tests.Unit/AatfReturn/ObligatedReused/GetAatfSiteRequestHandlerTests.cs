@@ -20,14 +20,14 @@
     public class GetAatfSiteRequestHandlerTests
     {
         private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
-        private readonly IGetAatfSiteDataAccess dataAccess;
+        private readonly IAatfSiteDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly GetAatfSiteHandler handler;
 
         public GetAatfSiteRequestHandlerTests()
         {
             mapper = A.Fake<IMap<AatfAddressObligatedAmount, AddressTonnageSummary>>();
-            dataAccess = A.Fake<IGetAatfSiteDataAccess>();
+            dataAccess = A.Fake<IAatfSiteDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
             handler = new GetAatfSiteHandler(authorization, dataAccess, mapper);
         }

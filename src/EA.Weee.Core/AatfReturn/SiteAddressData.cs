@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
 
     public class SiteAddressData : AddressData
     {

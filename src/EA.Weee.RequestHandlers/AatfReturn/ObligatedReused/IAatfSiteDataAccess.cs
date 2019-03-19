@@ -12,5 +12,7 @@
         Task<List<AatfAddress>> GetAddresses(Guid aatfId, Guid returnId);
 
         Task<List<WeeeReusedAmount>> GetObligatedWeeeForReturnAndAatf(Guid aatfId, Guid returnId);
+
+        Task Update(AatfAddress aatfAddress);
     }
 }

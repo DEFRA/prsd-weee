@@ -6,6 +6,8 @@
 
     public class AatfAddress : Entity
     {
+        public virtual Guid Id { get; private set; }
+
         public virtual string Name { get; private set; }
 
         public virtual string Address1 { get; private set; }

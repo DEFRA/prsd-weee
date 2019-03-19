@@ -6,7 +6,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
+    using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
     using Xunit;
@@ -29,7 +31,7 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var dataAccess = new AatfSiteDataAccess(context);
+                var dataAccess = new AatfSiteDataAccess(context, A.Fake<IGenericDataAccess>());
 
                 var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress);
 

@@ -40,5 +40,12 @@
                 .Include(a => a.WeeeReused.Aatf)
                 .Select(a => a).ToListAsync();
         }
+
+        public Task Update(AatfAddress aatfAddress)
+        {
+            context.AatfAddress.
+
+            return context.SaveChangesAsync();
+        }
     }
 }

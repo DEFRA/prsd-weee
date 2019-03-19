@@ -34,24 +34,9 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.AddressData.CountryId);
+            var value = await genericDataAccess.GetById<AatfAddress>(message.AddressData.Id);
 
-            var address = new AatfAddress(
-                message.AddressData.Name,
-                message.AddressData.Address1,
-                message.AddressData.Address2,
-                message.AddressData.TownOrCity,
-                message.AddressData.CountyOrRegion,
-                message.AddressData.Postcode,
-                country);
-
-            var weeeReused = await genericDataAccess.GetManyByExpression<WeeeReused>(new WeeeReusedByAatfIdAndReturnIdSpecification(message.AatfId, message.ReturnId));
-            
-            var weeeReusedSite = new WeeeReusedSite(
-                weeeReused.Last(),
-                address);
-
-            await offSiteDataAccess.Submit(weeeReusedSite);
+            await offSiteDataAccess.Update(value, message.AddressData);
 
             return true;
         }
