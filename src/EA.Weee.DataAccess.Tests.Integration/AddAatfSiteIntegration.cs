@@ -29,7 +29,7 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var dataAccess = new AddAatfSiteDataAccess(context);
+                var dataAccess = new AatfSiteDataAccess(context);
 
                 var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress);
 
@@ -55,7 +55,7 @@
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeReusedSite(WeeeContext context,
-            AddAatfSiteDataAccess dataAccess, AatfAddress aatfAddress)
+            AatfSiteDataAccess dataAccess, AatfAddress aatfAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);

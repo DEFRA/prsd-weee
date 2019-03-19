@@ -14,14 +14,14 @@
     public class AddAatfSiteDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly AddAatfSiteDataAccess dataAccess;
+        private readonly AatfSiteDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
         private readonly Guid aatfId;
 
         public AddAatfSiteDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            dataAccess = new AddAatfSiteDataAccess(context);
+            dataAccess = new AatfSiteDataAccess(context);
             dbContextHelper = new DbContextHelper();
             aatfId = A.Dummy<Guid>();
         }

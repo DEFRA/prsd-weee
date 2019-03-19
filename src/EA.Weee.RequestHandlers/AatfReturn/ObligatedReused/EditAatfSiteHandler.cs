@@ -15,12 +15,12 @@
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddAatfSiteDataAccess offSiteDataAccess;
+        private readonly IAatfSiteDataAccess offSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
         public EditAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
-            IAddAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
+            IAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
             IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {
             this.context = context;

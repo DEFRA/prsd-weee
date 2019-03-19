@@ -26,7 +26,7 @@
     public class AddAatfSiteRequestHandlerTests
     {
         private readonly IWeeeAuthorization authorisation;
-        private readonly IAddAatfSiteDataAccess addAatfSiteDataAccess;
+        private readonly IAatfSiteDataAccess addAatfSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IObligatedReusedDataAccess obligatedReusedDataAccess; 
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess; 
@@ -36,7 +36,7 @@
         public AddAatfSiteRequestHandlerTests()
         {
             authorisation = A.Fake<IWeeeAuthorization>();
-            addAatfSiteDataAccess = A.Fake<IAddAatfSiteDataAccess>();
+            addAatfSiteDataAccess = A.Fake<IAatfSiteDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             obligatedReusedDataAccess = A.Fake<IObligatedReusedDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
