@@ -2,12 +2,21 @@
 {
     using EA.Weee.Core.AatfReturn;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
+    using System.ComponentModel;
 
     public class SentOnCreateSiteOperatorViewModel : SentOnCreateSiteViewModel
     {
-        public AddressData OperatorAddressData;
+        public OperatorAddressData OperatorAddressData { get; set; }
+
+        [DisplayName("The operator address is the same as the AATF/ATF address")]
+        public bool IsOperatorTheSameAsAATF { get; set; }
+
+        public Guid WeeeSentOnId { get; set; }
+
+        public Guid AatfId { get; set; }
+        
+        public Guid ReturnId { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }

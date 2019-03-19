@@ -312,6 +312,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
@@ -810,6 +812,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

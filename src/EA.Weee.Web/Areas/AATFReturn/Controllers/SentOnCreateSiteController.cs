@@ -61,7 +61,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "SentOnCreateSiteOperator", new { returnId = viewModel.ReturnId, aatfId = viewModel.AatfId, weeeSentOnId = result});
+                    return RedirectToAction("Index", "SentOnCreateSiteOperator", new { returnId = viewModel.ReturnId, organisationId = viewModel.OrganisationId, aatfId = viewModel.AatfId, weeeSentOnId = result});
                 }
             }
 
