@@ -74,11 +74,11 @@
             };
 
             A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
-                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme.Id))))
+                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme.Id && w.Aatf.Id == mapperTestAatf.Id))))
                                                 .Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468"});
 
             A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
-                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme2.Id))))
+                                                .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme2.Id && w.Aatf.Id == mapperTestAatf.Id))))
                                                 .Returns(new ObligatedCategoryValue() { B2B = "0.468", B2C = "4.468" });
 
             var result = mapper.Map(transfer);
