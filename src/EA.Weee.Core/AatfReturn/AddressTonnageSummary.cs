@@ -4,7 +4,7 @@
 
     public class AddressTonnageSummary
     {
-        public List<AddressData> AddressData { get; set; }
+        public List<SiteAddressData> AddressData { get; set; }
 
         public List<WeeeObligatedData> ObligatedData { get; set; }
     }

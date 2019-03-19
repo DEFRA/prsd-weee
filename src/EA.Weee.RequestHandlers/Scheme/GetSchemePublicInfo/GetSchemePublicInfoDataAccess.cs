@@ -33,5 +33,18 @@
 
             return results[0];
         }
+
+        public async Task<Domain.Scheme.Scheme> FetchSchemeBySchemeId(Guid schemeId)
+        {
+            var results = await context.Schemes.Where(s => s.Id == schemeId).ToListAsync();
+
+            if (results.Count == 0)
+            {
+                string errorMessage = string.Format("No scheme was found in the database with an ID of \"{0}\".", schemeId);
+                throw new Exception(errorMessage);
+            }
+
+            return results[0];
+        }
     }
 }

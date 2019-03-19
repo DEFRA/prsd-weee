@@ -25,7 +25,7 @@
             var selectedSchemeList = new List<Guid>();
             selectedSchemeList.Add(Guid.NewGuid());
 
-            var viewModel = new SelectYourPCSViewModel(schemeList, selectedSchemeList);
+            var viewModel = new SelectYourPcsViewModel(schemeList, selectedSchemeList);
 
             var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -41,7 +41,7 @@
             var returnId = Guid.NewGuid();
             selectedSchemeList.Add(selectedSchemeId);
 
-            var viewModel = new SelectYourPCSViewModel(schemeList, selectedSchemeList);
+            var viewModel = new SelectYourPcsViewModel(schemeList, selectedSchemeList);
             viewModel.ReturnId = returnId;
 
             var requests = requestCreator.ViewModelToRequest(viewModel);

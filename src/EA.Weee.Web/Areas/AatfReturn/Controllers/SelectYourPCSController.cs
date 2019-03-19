@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -13,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateOrganisationActionFilter]
     public class SelectYourPcsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -33,7 +35,7 @@
         {
             using (var client = apiClient())
             {
-                var viewModel = new SelectYourPCSViewModel
+                var viewModel = new SelectYourPcsViewModel
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
@@ -48,7 +50,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SelectYourPCSViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

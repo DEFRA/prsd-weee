@@ -68,7 +68,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return AatfRedirect.TaskList(viewModel.ReturnId);
+                    return AatfRedirect.ReceivedPcsList(viewModel.ReturnId, viewModel.AatfId);
                 }
             }
 

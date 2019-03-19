@@ -6,12 +6,9 @@
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
 
-    public class AddressData
+    public abstract class AddressData
     {
-        [Required]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [Display(Name = "Site name")]
-        public string Name { get; set; }
+        public abstract string Name { get; set; }
 
         [Required]
         [StringLength(CommonMaxFieldLengths.AddressLine)]
@@ -43,11 +40,11 @@
 
         public IEnumerable<CountryData> Countries { get; set; }
 
-        public AddressData()
+        protected AddressData()
         {
         }
 
-        public AddressData(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)
+        protected AddressData(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)
         {
             Name = name;
             Address1 = address1;

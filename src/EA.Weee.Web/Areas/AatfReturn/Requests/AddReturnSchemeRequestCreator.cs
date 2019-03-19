@@ -5,9 +5,9 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Requests.Base;
 
-    public class AddReturnSchemeRequestCreator : RequestCreator<SelectYourPCSViewModel, List<AddReturnScheme>>, IAddReturnSchemeRequestCreator
+    public class AddReturnSchemeRequestCreator : RequestCreator<SelectYourPcsViewModel, List<AddReturnScheme>>, IAddReturnSchemeRequestCreator
     {
-        public override List<AddReturnScheme> ViewModelToRequest(SelectYourPCSViewModel viewModel)
+        public override List<AddReturnScheme> ViewModelToRequest(SelectYourPcsViewModel viewModel)
         {
             List<AddReturnScheme> requestList = new List<AddReturnScheme>();
 
