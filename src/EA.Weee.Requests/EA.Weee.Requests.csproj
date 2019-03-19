@@ -58,6 +58,7 @@
     <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
     <Compile Include="AatfReturn\Obligated\AddSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
+    <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedReceived.cs" />

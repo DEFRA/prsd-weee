@@ -23,6 +23,13 @@
             return context.SaveChangesAsync();
         }
 
+        public Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator)
+        {
+            weeeSentOn.UpdateWithOperatorAddress(@operator);
+
+            return context.SaveChangesAsync();
+        }
+
         public async Task<AatfAddress> GetWeeeSentOnAddress(Guid id)
         {
             return await context.WeeeSentOn.Where(w => w.Id == id).Select(w => w.SiteAddress).SingleOrDefaultAsync();
