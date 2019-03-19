@@ -5,7 +5,7 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Requests.Base;
 
-    public interface IAddReturnSchemeRequestCreator : IRequestCreator<SelectYourPCSViewModel, List<AddReturnScheme>>
+    public interface IAddReturnSchemeRequestCreator : IRequestCreator<SelectYourPcsViewModel, List<AddReturnScheme>>
     {
     }
 }

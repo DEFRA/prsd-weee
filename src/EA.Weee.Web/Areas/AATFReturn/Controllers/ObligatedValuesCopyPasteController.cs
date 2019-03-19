@@ -41,8 +41,8 @@
                     ReturnId = returnId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     SchemeId = schemeId,
-                    SchemeName = cache.FetchSchemePublicInfo(@return.ReturnOperatorData.OrganisationId).Result.Name,
-                    AatfName = cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId).Result.Name
+                    SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name,
+                    AatfName = Task.Run(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Result.Name
                 };
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
@@ -64,8 +64,7 @@
                 }
             }
 
-            return await Task.Run<ActionResult>(() => RedirectToAction("Index", "ObligatedReceived",
-                    new { area = "AatfReturn", schemeId = viewModel.SchemeId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedReceived(viewModel.ReturnId, viewModel.AatfId, viewModel.SchemeId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

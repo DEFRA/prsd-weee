@@ -12,7 +12,7 @@
     {
         private readonly AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap map;
         private readonly AatfData testAatf;
-        private readonly List<AddressData> testAddressDataList;
+        private readonly List<SiteAddressData> testAddressDataList;
         private readonly List<WeeeObligatedData> testObligatedDataList;
         private readonly string nullTonnageDisplay = "-";
 
@@ -20,7 +20,7 @@
         {
             map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities(), new AddressUtilities());
             testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
-            testAddressDataList = new List<AddressData>();
+            testAddressDataList = new List<SiteAddressData>();
             testObligatedDataList = new List<WeeeObligatedData>();
         }
 
@@ -35,7 +35,7 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            testAddressDataList.Add(new AddressData(
+            testAddressDataList.Add(new SiteAddressData(
                 "Name",
                 "Address1",
                 "Address2",
@@ -64,7 +64,7 @@
         [Fact]
         public void Map_GivenNullObligatedData_ReturnsNullTonnageDisplay()
         {
-            testAddressDataList.Add(A.Fake<AddressData>());
+            testAddressDataList.Add(A.Fake<SiteAddressData>());
 
             testObligatedDataList.Add(new WeeeObligatedData(Guid.NewGuid(), null, testAatf, 0, null, null));
 
@@ -83,7 +83,7 @@
         [Fact]
         public void Map_GivenZeroValuelObligatedData_ReturnsZero()
         {
-            testAddressDataList.Add(A.Fake<AddressData>());
+            testAddressDataList.Add(A.Fake<SiteAddressData>());
 
             testObligatedDataList.Add(new WeeeObligatedData(Guid.NewGuid(), null, testAatf, 0, 0, 0));
 

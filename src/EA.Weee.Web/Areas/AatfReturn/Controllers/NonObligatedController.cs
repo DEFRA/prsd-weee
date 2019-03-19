@@ -5,21 +5,15 @@
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
-    using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using FluentValidation;
-    using FluentValidation.Results;
     using Infrastructure;
     using Requests;
     using Services;
     using Services.Caching;
     using ViewModels;
     using ViewModels.Validation;
-    using Web.Controllers.Base;
 
     public class NonObligatedController : AatfReturnBaseController
     {
@@ -53,7 +47,14 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer() { ReturnId = returnId, Dcf = dcf, ReturnData = @return, OrganisationId = @return.ReturnOperatorData.OrganisationId });
+                var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer()
+                {
+                    ReturnId = returnId,
+                    Dcf = dcf,
+                    ReturnData = @return,
+                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    PastedData = TempData["pastedValues"] as String
+                });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 

@@ -38,7 +38,7 @@
                 OrganisationId = organisationId,
                 ReturnId = returnId,
                 AatfId = aatfId,
-                AddressData = new AddressData()
+                AddressData = new SiteAddressData()
             };
 
             using (var client = apiClient())

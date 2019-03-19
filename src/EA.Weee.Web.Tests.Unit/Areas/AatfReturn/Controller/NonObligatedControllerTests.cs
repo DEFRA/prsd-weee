@@ -233,5 +233,23 @@
 
             result.Model.Should().Be(model);
         }
+
+        [Fact]
+        public async void IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
+        {
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            var pastedValue = A.Fake<List<NonObligatedCategoryValue>>();
+
+            A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
+
+            var result = await controller.Index(returnId, A.Dummy<bool>()) as ViewResult;
+
+            var viewModel = result.Model as NonObligatedValuesViewModel;
+
+            viewModel.CategoryValues.Should().NotBeSameAs(pastedValue);
+        }
     }
 }
