@@ -79,7 +79,7 @@
                 AatfId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
-                SiteAddressData = new AddressData()
+                SiteAddressData = new AatfAddressData()
                 {
                     CountryId = Guid.NewGuid(),
                     Address1 = "address1",

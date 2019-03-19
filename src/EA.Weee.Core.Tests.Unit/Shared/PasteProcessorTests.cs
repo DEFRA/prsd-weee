@@ -8,11 +8,11 @@
     using FluentAssertions;
     using Xunit;
 
-    public class PasteProcesserTests
+    public class PasteProcessorTests
     {
         private readonly PasteProcessor pasteProcesser;
 
-        public PasteProcesserTests()
+        public PasteProcessorTests()
         {
             pasteProcesser = new PasteProcessor();
         }
@@ -169,7 +169,7 @@
         [Fact]
         public void ParseObligatedPastedValues_GivenPastedDataButNoExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
         {
-            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+            ObligatedPastedValues obligatedPastedValues = CreateObligatedPastedData();
 
             var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
 
@@ -183,24 +183,57 @@
         [Fact]
         public void ParseObligatedPastedValues_GivenPastedDataAndExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
         {
-            ObligatedPastedValues obligatedPastedValues = CreatePastedData();
+            ObligatedPastedValues obligatedPastedValues = CreateObligatedPastedData();
 
-            var something = A.Fake<ObligatedCategoryValues>();
+            var existingData = A.Fake<ObligatedCategoryValues>();
 
-            foreach (var thing in something)
+            foreach (var item in existingData)
             {
-                thing.Id = Guid.NewGuid();
+                item.Id = Guid.NewGuid();
             }
 
-            var results = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, something);
+            var results = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, existingData);
 
             foreach (var result in results)
             {
-                result.Id.Should().Be(something.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+                result.Id.Should().Be(existingData.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
             }
         }
 
-        private static ObligatedPastedValues CreatePastedData()
+        [Fact]
+        public void ParseNonObligatedPastedValues_GivenPastedDataButNoExistingData_NonObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            PastedValues pastedValues = CreateNonObligatedPastedData();
+
+            var result = pasteProcesser.ParseNonObligatedPastedValues(pastedValues, null);
+
+            for (var i = 0; i < result.Count; i++)
+            {
+                result[i].Tonnage.Should().Be(i.ToString());
+            }
+        }
+
+        [Fact]
+        public void ParseNonObligatedPastedValues_GivenPastedDataAndExistingData_NonObligatedCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            PastedValues pastedValues = CreateNonObligatedPastedData();
+
+            var existingData = A.Fake<NonObligatedCategoryValues>();
+
+            foreach (var item in existingData)
+            {
+                item.Id = Guid.NewGuid();
+            }
+
+            var results = pasteProcesser.ParseNonObligatedPastedValues(pastedValues, existingData);
+
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(existingData.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+            }
+        }
+
+        private static ObligatedPastedValues CreateObligatedPastedData()
         {
             var obligatedPastedValues = new ObligatedPastedValues();
             var pastedB2bValues = new PastedValues();
@@ -219,6 +252,18 @@
             obligatedPastedValues.B2B = pastedB2bValues;
             obligatedPastedValues.B2C = pastedB2cValues;
             return obligatedPastedValues;
+        }
+
+        private static PastedValues CreateNonObligatedPastedData()
+        {
+            var pastedValues = new PastedValues();
+
+            for (var i = 0; i < pastedValues.Count; i++)
+            {
+                pastedValues[i].Tonnage = i.ToString();
+            }
+
+            return pastedValues;
         }
 
         private static void AssertEmptyValues(PastedValues result)

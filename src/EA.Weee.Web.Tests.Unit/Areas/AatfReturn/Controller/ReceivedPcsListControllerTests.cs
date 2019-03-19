@@ -8,11 +8,10 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -24,14 +23,14 @@
         private readonly IWeeeClient weeeClient;
         private readonly ReceivedPcsListController controller;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IMapper mapper;
+        private readonly IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel> mapper;
         private readonly IWeeeCache cache;
 
         public ReceivedPcsListControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            mapper = A.Fake<IMapper>();
+            mapper = A.Fake<IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel>>();
             cache = A.Fake<IWeeeCache>();
 
             controller = new ReceivedPcsListController(() => weeeClient, cache, breadcrumb, mapper);
@@ -101,25 +100,36 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var schemeList = A.Fake<SchemeDataList>();
             const string aatfname = "aatfName";
-            var operatorData = A.Fake<OperatorData>();
-            var schemeListItems = A.Fake<List<SchemeData>>();
+            var receivedPcsData = A.Fake<List<ReceivedPcsData>>();
 
-            A.CallTo(() => schemeList.OperatorData).Returns(operatorData);
-            A.CallTo(() => schemeList.SchemeDataItems).Returns(schemeListItems);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeList);
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(new AatfData(A.Dummy<Guid>(), aatfname, A.Dummy<string>()));
+            var model = new ReceivedPcsListViewModel()
+            {
+                AatfId = aatfId,
+                AatfName = aatfname,
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                SchemeList = receivedPcsData
+            };
+
+            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(returnId, aatfId) as ViewResult;
 
-            var receivedModel = result.Model as ReceivedPcsListViewModel;
+            result.Model.Should().BeEquivalentTo(model);
+        }
 
-            receivedModel.AatfName.Should().Be(aatfname);
-            receivedModel.SchemeList.Should().BeEquivalentTo(schemeListItems);
-            receivedModel.ReturnId.Should().Be(returnId);
-            receivedModel.AatfId.Should().Be(aatfId);
+        [Fact]
+        public async void IndexGet_GivenReturn_ReceivedPcsListViewModelShouldBeBuilt()
+        {
+            var @return = A.Fake<ReturnData>();
+
+            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

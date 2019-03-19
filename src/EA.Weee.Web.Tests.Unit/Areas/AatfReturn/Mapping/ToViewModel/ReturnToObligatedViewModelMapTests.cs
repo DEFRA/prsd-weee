@@ -49,9 +49,9 @@
 
             A.CallTo(() => schemeData.Name).Returns(expected);
 
-            var transfer = new ReturnToObligatedViewModelTransfer() { OrganisationId = Guid.NewGuid() };
+            var transfer = new ReturnToObligatedViewModelTransfer() { SchemeId = Guid.NewGuid() };
 
-            A.CallTo(() => cache.FetchSchemePublicInfo(transfer.OrganisationId)).Returns(schemeData);
+            A.CallTo(() => cache.FetchSchemePublicInfoBySchemeId(transfer.SchemeId)).Returns(schemeData);
 
             var result = mapper.Map(transfer);
 
@@ -99,7 +99,6 @@
             }
 
             var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
-            var obligatedValues = new ObligatedCategoryValues();
             var returnList = new List<ObligatedCategoryValue>();
 
             A.CallTo(() => pasteProcessor.ParseObligatedPastedValues(A<ObligatedPastedValues>._, A<IList<ObligatedCategoryValue>>._)).Returns(pastedList);
