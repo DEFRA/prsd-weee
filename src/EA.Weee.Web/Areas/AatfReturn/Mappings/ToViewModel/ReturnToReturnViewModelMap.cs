@@ -64,7 +64,8 @@
                 tonnageUtilities.CheckIfTonnageIsNull(NonObligatedTonnageTotal),
                 tonnageUtilities.CheckIfTonnageIsNull(NonObligatedTonnageTotalDcf),
                 AatfObligatedData,
-                source.ReturnOperatorData);
+                source.ReturnOperatorData,
+                source.Id);
         }
     }
 }

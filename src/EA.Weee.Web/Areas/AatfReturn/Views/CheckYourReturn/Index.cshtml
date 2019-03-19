@@ -56,7 +56,7 @@
                     </th>
                     <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
                     <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
-                        Reused as an appliance (t)
+                        Reused as a whole appliance (t)
                     </th>
                     <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
                 </tr>
@@ -82,7 +82,7 @@
                     <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeSentOn.B2C</td>
                     <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeSentOn.B2B</td>
                     <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
-                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReused.B2B</td>
+                    <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReused.B2C</td>
                     <td class="govuk-table__cell" style="text-align: right">@aatf.WeeeReused.B2B</td>
                     <td class="govuk-table__cell"><a class="govuk-link govuk-link--no-visited-state">Change</a></td>
                 </tr>
@@ -118,6 +118,7 @@
     @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+
         @Html.HiddenFor(m => m.ReturnId)
         @Html.HiddenFor(m => m.OrganisationId)
 
@@ -125,4 +126,10 @@
             <button class="govuk-button" type="submit">Submit</button>
         </div>
     }
+
+    <div class="govuk-body govuk-!-font-size-19">
+        <a class="govuk-link govuk-link--no-visited-state">
+            @Html.RouteLink("AATF Task List", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+        </a>
+    </div>
 </section>
