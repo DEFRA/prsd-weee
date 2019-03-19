@@ -6,7 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class EditSentOnAatfSite
+    public class EditSentOnAatfSite : AddSentOnAatfSite
     {
+        public Guid WeeeSentOnId { get; private set; }
     }
 }
