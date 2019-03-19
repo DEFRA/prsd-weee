@@ -61,12 +61,7 @@
         /// </summary>
         public virtual IQueryable<ProducerSubmission> ProducerSubmissions
         {
-            get
-            {
-                return AllProducerSubmissions
-                    .AsQueryable()
-                    .Where(ps => !ps.RegisteredProducer.Removed);
-            }
+            get { return AllProducerSubmissions.AsQueryable(); }
         }
 
         public virtual IQueryable<ProducerSubmission> RemovedProducerSubmissions

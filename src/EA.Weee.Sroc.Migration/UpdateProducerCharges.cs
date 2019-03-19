@@ -63,7 +63,7 @@
 
                         memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, total, annualChargedToBeAdded);
 
-                        context.SaveChanges();
+                        context.SaveChanges();   
                     }
 
                     dbContextTransaction.Commit();
@@ -111,7 +111,10 @@
 
                 var producerCharge = producerChargeCalculator.CalculateCharge(schemeType, producer, complianceYear, submittedDate);
 
-                memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge.Amount);
+                if (memberUpload.ProducerSubmissions.Any())
+                {
+                    memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge.Amount);
+                }
 
                 if (!producerCharges.ContainsKey(producerName))
                 {

@@ -24,7 +24,7 @@
         {
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                    .Where(m => m.IsSubmitted && m.InvoiceRun == null)
+                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019)
                     .OrderBy(m => m.SubmittedDate);
 
             return memberUploads.ToList();
@@ -53,8 +53,8 @@
         public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount)
         {
             var producer = context.ProducerSubmissions
-                .Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
-                            || p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name)
+                .Where(p => (p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name))
+                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))
                             && p.MemberUploadId == memberUploadId);
 
             if (producer.Count() != 1)
