@@ -12,8 +12,8 @@
 
         public Guid AatfId { get; set; }
 
-        public AddressData OperatorAddressData { get; set; }
+        public AatfAddressData OperatorAddressData { get; set; }
 
-        public AddressData SiteAddressData { get; set; }
+        public AatfAddressData SiteAddressData { get; set; }
     }
 }

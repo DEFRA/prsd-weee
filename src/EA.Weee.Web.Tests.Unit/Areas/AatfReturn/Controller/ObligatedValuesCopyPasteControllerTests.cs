@@ -57,20 +57,30 @@
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
+            var aatfName = "Test Aatf";
+            var aatfData = A.Fake<AatfData>();
             var schemeId = Guid.NewGuid();
+            var schemeName = "Test Scheme";
+            var schemeInfo = A.Fake<SchemePublicInfo>();
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
 
             A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => schemeInfo.Name).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Returns(schemeInfo);
+            A.CallTo(() => aatfData.Name).Returns(aatfName);
+            A.CallTo(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
             var result = await controller.Index(returnId, aatfId, schemeId) as ViewResult;
 
             var viewModel = result.Model as ObligatedValuesCopyPasteViewModel;
             viewModel.AatfId.Should().Be(aatfId);
+            viewModel.AatfName.Should().Be(aatfName);
             viewModel.OrganisationId.Should().Be(organisationId);
             viewModel.ReturnId.Should().Be(returnId);
             viewModel.SchemeId.Should().Be(schemeId);
+            viewModel.SchemeName.Should().Be(schemeName);
         }
 
         [Fact]
@@ -120,7 +130,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedReceived");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["schemeId"].Should().Be(schemeId);
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
@@ -189,6 +198,29 @@
             viewModel.B2cPastedValues = new String[1];
 
             var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+
+            controller.TempData["pastedValues"].Should().BeNull();
+        }
+
+        [Fact]
+        public async void IndexPost_OnCancelWithBothPastedValues_TempDataShouldNotBeAttached()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var schemeId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var pastedValues = new String[1] { "2\n" };
+
+            var viewModel = new ObligatedValuesCopyPasteViewModel();
+            viewModel.SchemeId = schemeId;
+            viewModel.ReturnId = returnId;
+            viewModel.AatfId = aatfId;
+            viewModel.B2bPastedValues = pastedValues;
+            viewModel.B2cPastedValues = pastedValues;
+
+            var result = await controller.Index(viewModel, "cancel") as RedirectToRouteResult;
 
             controller.TempData["pastedValues"].Should().BeNull();
         }

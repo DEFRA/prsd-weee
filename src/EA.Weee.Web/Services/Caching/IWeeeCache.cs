@@ -17,6 +17,8 @@
 
         Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId);
 
+        Task<SchemePublicInfo> FetchSchemePublicInfoBySchemeId(Guid schemeId);
+
         Task<IList<ProducerSearchResult>> FetchProducerSearchResultList();
 
         Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultList();

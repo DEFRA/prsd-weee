@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using System.Web;
+    using Areas.AatfReturn.Attributes;
     using Areas.AatfReturn.ViewModels.Validation;
     using Authorization;
     using Autofac;
@@ -94,6 +95,8 @@
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
+
+            builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
 
             return builder.Build();
         }

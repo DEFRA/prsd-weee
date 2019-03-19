@@ -7,8 +7,8 @@
     public static class AatfRedirect
     {
         public static string SelectPcsRouteName = "aatf-select-pcs";
-        public static string NonObligatedDcf = "aatf-non-obligated";
-        public static string NonObligated = "aatf-non-obligated-dcf";
+        public static string NonObligatedRouteName = "aatf-non-obligated";
+        public static string NonObligatedDcfRouteName = "aatf-non-obligated-dcf";
         public static string CheckReturnRouteName = "aatf-check";
         public static string Default = "aatf-default";
         public static string AatfSelectedRoute = "aatf-selected";
@@ -29,9 +29,15 @@
         {
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ReusedOffSite", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId }));
         }
+
         public static RedirectToRouteResult ReusedOffSiteCreate(Guid returnId, Guid aatfId, Guid organisationId)
         {
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ReusedOffSiteCreateSite", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId }));
+        }
+
+        public static RedirectToRouteResult ReceivedPcsList(Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(AatfSelectedRoute, new RouteValueDictionary(new { controller = "ReceivedPcsList", action = "Index", returnId = returnId, aatfId = aatfId }));
         }
 
         public static RedirectToRouteResult CheckReturn(Guid returnId)
@@ -39,9 +45,19 @@
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "CheckYourReturn", action = "Index", returnId = returnId }));
         }
 
-        public static RedirectToRouteResult Submittedeturn(Guid returnId)
+        public static RedirectToRouteResult SubmittedReturn(Guid returnId)
         {
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "SubmittedReturn", action = "Index", returnId = returnId }));
+        }
+
+        public static RedirectToRouteResult ObligatedReceived(Guid returnId, Guid aatfId, Guid schemeId)
+        {
+            return new RedirectToRouteResult(AatfSchemeSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedReceived", action = "Index", schemeId = schemeId, returnId = returnId, aatfId = aatfId }));
+        }
+
+        public static RedirectToRouteResult NonObligated(Guid returnId, bool dcf)
+        {
+            return new RedirectToRouteResult((dcf) ? NonObligatedDcfRouteName : NonObligatedRouteName, new RouteValueDictionary(new { returnId = returnId, dcf = dcf }));
         }
     }
 }
