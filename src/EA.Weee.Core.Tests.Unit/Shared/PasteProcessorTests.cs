@@ -10,11 +10,11 @@
 
     public class PasteProcessorTests
     {
-        private readonly PasteProcessor pasteProcesser;
+        private readonly PasteProcessor pasteProcessor;
 
         public PasteProcessorTests()
         {
-            pasteProcesser = new PasteProcessor();
+            pasteProcessor = new PasteProcessor();
         }
 
         [Theory]
@@ -23,7 +23,7 @@
         [InlineData(" ")]
         public void BuildModel_GivenNullString_EmptyCategoriesModelExpected(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.Should().BeOfType<PastedValues>();
             AssertEmptyValues(result);
@@ -36,7 +36,7 @@
         [InlineData("1\n")]
         public void BuildModel_GivenStringContainsSingleNumericValue_CategoryValuesShouldBeOne(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.ElementAt(0).Tonnage.Should().Be("1");
         }
@@ -47,7 +47,7 @@
         [InlineData("1\n2\n")]
         public void BuildModel_GivenStringContainsOneColumnsAndTwoRows_CategoryValuesShouldBePopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.ElementAt(0).Tonnage.Should().Be("1");
             result.ElementAt(1).Tonnage.Should().Be("2");
@@ -59,7 +59,7 @@
         [InlineData("1,000\n2,000\n")]
         public void BuildModel_GivenStringContainsCommaThousandsSeparators_CategoryValuesShouldBePopulation(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.ElementAt(0).Tonnage.Should().Be("1,000");
             result.ElementAt(1).Tonnage.Should().Be("2,000");
@@ -71,7 +71,7 @@
         [InlineData("1,000.000\n2,000.000\n")]
         public void BuildModel_GivenStringContainsCommaThousandsSeparatorsAndDecimals_CategoryValuesShouldBePopulation(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.ElementAt(0).Tonnage.Should().Be("1,000.000");
             result.ElementAt(1).Tonnage.Should().Be("2,000.000");
@@ -83,7 +83,7 @@
         [InlineData("1.000\n2.000\n")]
         public void BuildModel_GivenStringContainsDecimals_CategoryValuesShouldBePopulation(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             result.ElementAt(0).Tonnage.Should().Be("1.000");
             result.ElementAt(1).Tonnage.Should().Be("2.000");
@@ -95,7 +95,7 @@
         [InlineData("\n")]
         public void BuildModel_GivenStringContainsSingleNewlines_CategoryValuesShouldNotBePopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertEmptyValues(result);
         }
@@ -106,7 +106,7 @@
         [InlineData("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")]
         public void BuildModel_GivenStringContainsAllNewlines_CategoryValuesShouldNotBePopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertEmptyValues(result);
         }
@@ -117,7 +117,7 @@
         [InlineData("1\r2\r3\r4\r5\r6\r7\r8\r9\r10\r11\r12\r13\r14")]
         public void BuildModel_GivenStringContainsOneColumnAndFourteenRows_CategoryValuesShouldPopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertPopulatedValues(result);
         }
@@ -128,7 +128,7 @@
         [InlineData("1\r2\r3\r4\r5\r6\r7\r8\r9\r10\r11\r12\r13\r14\r15\r16")]
         public void BuildModel_GivenStringContainsOneColumnAndMoreThanFourteenRows_CategoryValuesShouldPopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertPopulatedValues(result);
         }
@@ -139,7 +139,7 @@
         [InlineData("1\r2\r3\r4\r5\r6\r7")]
         public void BuildModel_GivenStringContainsOneColumnAndLessThanFourteenRows_CategoryValuesShouldPopulated(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertHalfPopulatedValues(result);
         }
@@ -150,7 +150,7 @@
         [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21\n8\t22\n9\t23\n10\t24\n11\t25\n12\t26\n13\t27\n14\t28")]
         public void BuildModel_GivenStringContainsTwoColumns_CategoryValuesShouldBePopulatedOnlyForFirstColumn(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertPopulatedValues(result);
         }
@@ -161,7 +161,7 @@
         [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21")]
         public void BuildModel_GivenStringContainsTwoColumnsAndLessThanFourteenRows_CategoryValuesShouldBePopulatedOnlyForFirstColumn(string value)
         {
-            var result = pasteProcesser.BuildModel(value);
+            var result = pasteProcessor.BuildModel(value);
 
             AssertHalfPopulatedValues(result);
         }
@@ -171,7 +171,7 @@
         {
             ObligatedPastedValues obligatedPastedValues = CreateObligatedPastedData();
 
-            var result = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, null);
+            var result = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, null);
 
             for (var i = 0; i < result.Count; i++)
             {
@@ -192,7 +192,7 @@
                 item.Id = Guid.NewGuid();
             }
 
-            var results = pasteProcesser.ParseObligatedPastedValues(obligatedPastedValues, existingData);
+            var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
 
             foreach (var result in results)
             {
@@ -205,7 +205,7 @@
         {
             PastedValues pastedValues = CreateNonObligatedPastedData();
 
-            var result = pasteProcesser.ParseNonObligatedPastedValues(pastedValues, null);
+            var result = pasteProcessor.ParseNonObligatedPastedValues(pastedValues, null);
 
             for (var i = 0; i < result.Count; i++)
             {
@@ -225,7 +225,7 @@
                 item.Id = Guid.NewGuid();
             }
 
-            var results = pasteProcesser.ParseNonObligatedPastedValues(pastedValues, existingData);
+            var results = pasteProcessor.ParseNonObligatedPastedValues(pastedValues, existingData);
 
             foreach (var result in results)
             {
