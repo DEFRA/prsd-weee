@@ -8,7 +8,7 @@
     public class PasteProcessor : IPasteProcessor
     {
         private static readonly string[] NewLineCharactors = { "\r\n", "\r", "\n" };
-        private static readonly char[] LineSplitCharactors = { '\t', ':' };
+        private static readonly char[] LineSplitCharactors = { '\t' };
 
         public PastedValues BuildModel(string pasteValues)
         {
