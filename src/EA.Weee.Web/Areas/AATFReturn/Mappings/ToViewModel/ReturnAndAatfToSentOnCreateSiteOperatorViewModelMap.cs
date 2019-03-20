@@ -23,7 +23,8 @@
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
-                OperatorAddressData = source.OperatorAddressData
+                OperatorAddressData = source.OperatorAddressData,
+                WeeeSentOnId = source.WeeeSentOnId
             };
 
             return viewModel;
