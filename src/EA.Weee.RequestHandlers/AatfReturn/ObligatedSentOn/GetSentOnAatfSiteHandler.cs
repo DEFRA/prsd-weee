@@ -12,10 +12,10 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
-        private readonly IMap<AatfAddress, AddressData> mapper;
+        private readonly IMap<AatfAddress, AatfAddressData> mapper;
 
         public GetSentOnAatfSiteHandler(IWeeeAuthorization authorization,
-            IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AddressData> mapper)
+            IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AatfAddressData> mapper)
         {
             this.authorization = authorization;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
@@ -30,20 +30,7 @@
 
             var addressData = mapper.Map(aatfAddress);
 
-            var aatfAddressData = new AatfAddressData()
-            {
-                Address1 = addressData.Address1,
-                Address2 = addressData.Address2,
-                TownOrCity = addressData.TownOrCity,
-                CountryId = addressData.CountryId,
-                CountryName = addressData.CountryName,
-                Countries = addressData.Countries,
-                CountyOrRegion = addressData.CountyOrRegion,
-                Name = addressData.Name,
-                Postcode = addressData.Postcode
-            };
-
-            return aatfAddressData;
+            return addressData;
         }
     }
 }
