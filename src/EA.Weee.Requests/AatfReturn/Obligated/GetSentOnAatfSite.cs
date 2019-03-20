@@ -4,9 +4,9 @@
     using EA.Weee.Core.AatfReturn;
     using System;
 
-    public class GetSentOnAatfSite : IRequest<AddressData>
+    public class GetSentOnAatfSite : IRequest<AatfAddressData>
     {
-        public Guid WeeeSentOnId { get; private set; }
+        public Guid WeeeSentOnId { get; set; }
 
         public GetSentOnAatfSite(Guid id)
         {
