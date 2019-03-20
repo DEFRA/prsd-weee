@@ -49,6 +49,8 @@
 
                 var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
+                viewModel.SiteAddressData = siteAddressData;
+
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 
                 return View(viewModel);

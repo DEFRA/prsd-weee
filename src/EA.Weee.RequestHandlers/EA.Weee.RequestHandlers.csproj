@@ -238,6 +238,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
     <Compile Include="Mappings\AatfMap.cs" />
+    <Compile Include="Mappings\AatfSentOnSiteMap.cs" />
     <Compile Include="Mappings\AatfSiteMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
