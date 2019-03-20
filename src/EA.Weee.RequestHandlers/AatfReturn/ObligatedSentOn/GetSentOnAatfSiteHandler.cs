@@ -6,26 +6,23 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
-    public class GetSentOnAatfSiteHandler : IRequestHandler<GetSentOnAatfSite, AddressData>
+    public class GetSentOnAatfSiteHandler : IRequestHandler<GetSentOnAatfSite, AatfAddressData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IMap<AatfAddress, AddressData> mapper;
 
         public GetSentOnAatfSiteHandler(IWeeeAuthorization authorization,
-            IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess)
+            IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AddressData> mapper)
         {
             this.authorization = authorization;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
+            this.mapper = mapper;
         }
 
-        public async Task<AddressData> HandleAsync(GetSentOnAatfSite message)
+        public async Task<AatfAddressData> HandleAsync(GetSentOnAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -33,7 +30,20 @@
 
             var addressData = mapper.Map(aatfAddress);
 
-            return addressData;
+            var aatfAddressData = new AatfAddressData()
+            {
+                Address1 = addressData.Address1,
+                Address2 = addressData.Address2,
+                TownOrCity = addressData.TownOrCity,
+                CountryId = addressData.CountryId,
+                CountryName = addressData.CountryName,
+                Countries = addressData.Countries,
+                CountyOrRegion = addressData.CountyOrRegion,
+                Name = addressData.Name,
+                Postcode = addressData.Postcode
+            };
+
+            return aatfAddressData;
         }
     }
 }

@@ -3,7 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -22,15 +22,17 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IAddSentOnAatfSiteRequestCreator requestCreator;
+        private readonly IEditSentOnAatfSiteRequestCreator requestCreator;
+        private readonly IGetSentOnAatfSiteRequestCreator getRequestCreator;
         private readonly IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper;
 
-        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper)
+        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IEditSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper, IGetSentOnAatfSiteRequestCreator getRequestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
+            this.getRequestCreator = getRequestCreator;
             this.mapper = mapper;
         }
 
@@ -39,8 +41,13 @@
         {
             using (var client = apiClient())
             {
-                var operatorAddress = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorAddress) { ReturnId = returnId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
+                var operatorCountryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
+
+                var request = getRequestCreator.ViewModelToRequest(viewModel);
+
+                var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 
