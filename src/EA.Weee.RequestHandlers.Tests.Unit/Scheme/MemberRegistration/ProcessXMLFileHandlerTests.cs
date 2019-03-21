@@ -177,15 +177,20 @@
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description"),
             };
 
+            //var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
+
+            //var scheme = schemesDbSet.ElementAt(0);
+            //scheme.UpdateScheme(
+            //    "Test scheme",
+            //    "WEE/AA1111AA/SCH",
+            //    "WEE00000001",
+            //    A.Dummy<ObligationType>(),
+            //    competentAuthority);
+
             var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
 
-            var scheme = schemesDbSet.ElementAt(0);
-            scheme.UpdateScheme(
-                "Test scheme",
-                "WEE/AA1111AA/SCH",
-                "WEE00000001",
-                A.Dummy<ObligationType>(),
-                competentAuthority);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
 
             decimal? totalCharges = 0;
 
@@ -194,7 +199,7 @@
             
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, scheme, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

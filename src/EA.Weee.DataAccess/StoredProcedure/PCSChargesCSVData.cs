@@ -22,5 +22,7 @@
         public string ChargeBandType { get; set; }
 
         public string RegOfficeOrPBoBCountry { get; set; }
+
+        public string HasAnnualCharge { get; set; }
     }
 }

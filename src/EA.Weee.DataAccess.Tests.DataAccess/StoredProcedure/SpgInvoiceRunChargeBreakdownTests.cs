@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using EA.Weee.Domain;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -317,6 +319,34 @@
                 Assert.Single(result);
                 Assert.Equal("UK - England", result.Single().RegOfficeOrPBoBCountry);
             }
-        } 
+        }
+
+        [Fact]
+        public async Task Execute_ReturnsProducer_HasAnnualCharge_ReturnsNo()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme = helper.CreateScheme();
+                
+                var invoiceRun = helper.CreateInvoiceRun();
+
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRun);
+                memberUpload.ComplianceYear = 2019;
+
+                var producer = helper.CreateProducerAsCompany(memberUpload, "PRN567");
+                producer.ChargeThisUpdate = 10;
+               
+                producer.Invoiced = true;
+
+                db.Model.SaveChanges();
+
+                var result = await db.StoredProcedures.SpgInvoiceRunChargeBreakdown(invoiceRun.Id);
+
+                Assert.Single(result);
+                Assert.Equal("No", result.Single().HasAnnualCharge);
+            }
+        }
     }
 }

@@ -47,6 +47,7 @@
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
+            csvWriter.DefineColumn(@"Includes Annual Charge", ps => ps.HasAnnualCharge);
 
             string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
@@ -58,7 +59,7 @@
             {
                 //get approval number for scheme to display in the filename.
                 Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeId);
-                schemeApprovalNumber = scheme.ApprovalNumber.Replace("/", string.Empty);
+                schemeApprovalNumber = scheme.ApprovalNumber.Replace(" / ", string.Empty);
                 fileName = string.Format(
                     "{0}_{1}_issuedcharges_{2:ddMMyyyy_HHmm}.csv",
                     message.ComplianceYear,                    
