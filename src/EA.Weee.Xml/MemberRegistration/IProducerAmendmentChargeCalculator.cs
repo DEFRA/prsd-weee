@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System.Threading.Tasks;
     using Domain.Lookup;
 
     public interface IProducerAmendmentChargeCalculator
     {
-        ChargeBand? GetChargeAmount(schemeType schmemeType, producerType producerType);
+        Task<ChargeBand?> GetChargeAmount(schemeType schmemeType, producerType producerType);
     }
 }

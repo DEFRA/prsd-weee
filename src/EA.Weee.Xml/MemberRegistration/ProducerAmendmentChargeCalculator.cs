@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Weee.DataAccess.DataAccess;
 
@@ -14,12 +15,18 @@
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public ChargeBand? GetChargeAmount(schemeType schmemeType, producerType producerType)
+        public async Task<ChargeBand?> GetChargeAmount(schemeType schmemeType, producerType producerType)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 
             var previousProducerSubmission =
-                registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
+                await registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
+
+            if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            {
+                return environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(producerType);
+            }
 
             return null;
         }
