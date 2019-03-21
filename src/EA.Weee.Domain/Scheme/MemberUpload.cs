@@ -44,6 +44,8 @@
 
         public virtual bool HasAnnualCharge { get; set; }
 
+        public virtual Guid? InvoiceRunId { get; set; }
+
         public MemberUpload(
             Guid organisationId,
             string data,
@@ -126,6 +128,7 @@
         public void ResetInvoice()
         {
             InvoiceRun = null;
+            InvoiceRunId = null;
         }
 
         protected MemberUpload()

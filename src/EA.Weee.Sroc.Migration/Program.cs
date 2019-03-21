@@ -8,11 +8,12 @@
     using System.IO;
     using Autofac;
     using global::Autofac;
+    using Serilog;
 
     internal class Program
     {
         private static IContainer Container { get; set; }
-
+       
         private const string RollbackCommand = "Rollback";
         private const string RunCommand = "Run";
         private const string ExitCommand = "Exit";
@@ -20,10 +21,13 @@
         private static void Main(string[] args)
         {
             Bootstrap();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("logs\\charge-migrator.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
             try
             {
-                args = new string[] { "Run" };
+                //args = new string[] { "Run" };
                 if (args.Length != 1)
                 {
                     Exit(0);
@@ -37,11 +41,15 @@
                 switch (command)
                 {
                     case RollbackCommand:
+                        Log.Information("Begin rollback charges");
                         producerChargesUpdater.RollbackCharges();
+                        Log.Information("End rollback charges");
                         break;
                         
                     case RunCommand:
+                        Log.Information("Begin update charges");
                         producerChargesUpdater.UpdateCharges();
+                        Log.Information("End rollback charges");
                         break;
 
                     case ExitCommand:

@@ -10,6 +10,7 @@
     using Domain.Scheme;
     using Domain.User;
     using OverrideImplementations;
+    using Serilog;
 
     public class MigrationDataAccess : IMigrationDataAccess
     {
@@ -24,7 +25,7 @@
         {
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                    .Where(m => m.IsSubmitted && m.InvoiceRun == null)
+                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
                     .OrderBy(m => m.SubmittedDate);
 
             return memberUploads.ToList();
@@ -53,14 +54,16 @@
         public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount)
         {
             var producer = context.ProducerSubmissions
-                .Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
-                            || p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name)
+                .Where(p => (p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name))
+                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))
                             && p.MemberUploadId == memberUploadId);
 
             if (producer.Count() != 1)
             {
                 throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
             }
+
+            Log.Information(string.Format("Producer charges for {0} updated from {1} to {2}", name, producer.First().ChargeThisUpdate, amount));
 
             producer.First().UpdateCharge(amount); 
         }

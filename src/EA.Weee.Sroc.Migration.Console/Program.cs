@@ -22,6 +22,7 @@
                     {
                         System.Console.WriteLine();
 
+                        Console.WriteLine("Processing command");
                         var cmdArguments = string.Format("{0}", keySelection);
                         p.StartInfo.FileName = string.Format(@"{0}\chargesMigrator.exe", currentDirectory);
                         p.StartInfo.Arguments = cmdArguments;
@@ -30,6 +31,7 @@
                         p.Start();
 
                         Console.WriteLine(p.StandardOutput.ReadToEnd());
+                        Console.WriteLine("Finishing command");
 
                         System.Console.WriteLine("Press Any Key to Continue");
                     }
