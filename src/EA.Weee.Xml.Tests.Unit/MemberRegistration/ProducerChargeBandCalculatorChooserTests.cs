@@ -13,11 +13,12 @@
         {
             environmentAgencyProducerChargeBandCalculator = A.Fake<IEnvironmentAgencyProducerChargeBandCalculator>();
             producerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
+
             producerChargeBandCalculatorChooser = new ProducerChargeBandCalculatorChooser(environmentAgencyProducerChargeBandCalculator, producerChargeBandCalculator);
         }
 
         [Fact]
-        public void ChoosePost2018_CalculatorForCalculatingChargeBands_Returns_EnvironmentAgencyProducerChargeBandCalculator()
+        public void GetCalculator_ChoosePost2018_CalculatorForCalculatingChargeBands_Returns_EnvironmentAgencyProducerChargeBandCalculator()
         {
             var producerType = A.Fake<producerType>();
             var schemeType = A.Fake<schemeType>();
@@ -28,7 +29,7 @@
         }
 
         [Fact]
-        public void ChoosePre2018_CalculatorForCalculatingChargeBands_Returns_ProducerChargeBandCalculator()
+        public void GetCalculator_ChoosePre2018_CalculatorForCalculatingChargeBands_Returns_ProducerChargeBandCalculator()
         {
             var producerType = A.Fake<producerType>();
             var schemeType = A.Fake<schemeType>();

@@ -40,5 +40,26 @@
                     && p.ComplianceYear == complianceYear)
                 .ToListAsync();
         }
+
+        public async Task<RegisteredProducer> GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        {
+            var result = await context.RegisteredProducers
+                .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
+                            && p.ComplianceYear == complianceYear
+                            && p.Scheme.ApprovalNumber == schemeApprovalNumber)
+                .ToListAsync();
+
+            if (result.Count() > 1)
+            {
+                throw new ArgumentException(string.Format("Producer with registration number '{0}' for compliance year '{1}' and scheme '{2}' has more than one record", producerRegistrationNumber, complianceYear, schemeApprovalNumber));
+            }
+
+            if (result.Any())
+            {
+                return result.ElementAt(0);
+            }
+
+            return null;
+        }
     }
 }

@@ -28,6 +28,10 @@
                 .As<IEnvironmentAgencyProducerChargeBandCalculator>()
                 .InstancePerRequest();
 
+            builder.RegisterType<ProducerAmendmentChargeCalculator>()
+                .As<IProducerAmendmentChargeCalculator>()
+                .InstancePerRequest();
+
             builder.RegisterType<ProducerChargeBandCalculatorChooser>()
                 .As<IProducerChargeBandCalculatorChooser>()
                 .InstancePerRequest();

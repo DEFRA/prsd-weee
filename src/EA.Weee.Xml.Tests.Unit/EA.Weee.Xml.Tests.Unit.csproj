@@ -81,12 +81,17 @@
     <Compile Include="Converter\XmlConverterTests.cs" />
     <Compile Include="Deserializer\DeserializerTests.cs" />
     <Compile Include="MemberRegistration\ExtensionsTests.cs" />
+    <Compile Include="MemberRegistration\ProducerAmendmentChargeAmountCalculatorTests.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculatorChooserTests.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MemberRegistration\EnvironmentAgencyProducerChargeBandCalculatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
+      <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
+      <Name>EA.Weee.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
