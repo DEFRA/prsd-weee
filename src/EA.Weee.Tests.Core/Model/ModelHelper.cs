@@ -240,13 +240,14 @@
         /// <param name="scheme"></param>
         /// <param name="invoiceRun"></param>
         /// <returns></returns>
-        public MemberUpload CreateSubmittedMemberUpload(Scheme scheme, InvoiceRun invoiceRun = null)
+        public MemberUpload CreateSubmittedMemberUpload(Scheme scheme, InvoiceRun invoiceRun = null, bool hasAnnualCharge = false)
         {
             var memberUpload = CreateMemberUpload(scheme);
 
             memberUpload.IsSubmitted = true;
             memberUpload.SubmittedDate = DateTime.UtcNow;
             memberUpload.TotalCharges = 30;
+            memberUpload.HasAnnualCharge = hasAnnualCharge;
 
             if (invoiceRun != null)
             {
