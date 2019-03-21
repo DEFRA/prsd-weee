@@ -59,7 +59,7 @@
             {
                 //get approval number for scheme to display in the filename.
                 Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeId);
-                schemeApprovalNumber = scheme.ApprovalNumber.Replace(" / ", string.Empty);
+                schemeApprovalNumber = scheme.ApprovalNumber.Replace("/", string.Empty);
                 fileName = string.Format(
                     "{0}_{1}_issuedcharges_{2:ddMMyyyy_HHmm}.csv",
                     message.ComplianceYear,                    
