@@ -383,6 +383,51 @@
             Assert.Equal("Yes", producer.HasAnnualCharge);
         }
 
+        [Fact]
+        public void Producer_SetProducerMemberUpload_HasAnnualCharge_Returns_No()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(
+               A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+               "WEE/AA1111AA",
+               2019,
+               scheme);
+
+            var producer = new ProducerSubmission(
+               registeredProducer,
+               memberUpload,
+               A.Dummy<ProducerBusiness>(),
+               null,
+               new DateTime(2019, 3, 21),
+               0,
+               false,
+               null,
+               "Trading Name 1",
+               EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+               SellingTechniqueType.Both,
+               Domain.Obligation.ObligationType.Both,
+               AnnualTurnOverBandType.Greaterthanonemillionpounds,
+               new List<Domain.Producer.BrandName>(),
+               new List<Domain.Producer.SICCode>(),
+               A.Dummy<ChargeBandAmount>(),
+               0);
+
+            Assert.Equal("No", producer.HasAnnualCharge);
+        }
+
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative
         {
             public override bool Equals(AuthorisedRepresentative other)
