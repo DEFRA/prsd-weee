@@ -36,7 +36,7 @@
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
 
-            handler = new EditAatfSiteHandler(weeeContext, authorisation, aatfSiteDataAccess, genericDataAccess);
+            handler = new EditAatfSiteHandler(weeeContext, authorisation, aatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -44,7 +44,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new EditAatfSiteHandler(weeeContext, authorization, aatfSiteDataAccess, genericDataAccess);
+            var handler = new EditAatfSiteHandler(weeeContext, authorization, aatfSiteDataAccess, genericDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfSite>());
 

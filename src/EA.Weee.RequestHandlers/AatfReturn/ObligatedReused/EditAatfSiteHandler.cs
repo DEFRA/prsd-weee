@@ -20,12 +20,14 @@
         public EditAatfSiteHandler(WeeeContext context,
             IWeeeAuthorization authorization,
             IAatfSiteDataAccess offSiteDataAccess,
-            IGenericDataAccess genericDataAccess)
+            IGenericDataAccess genericDataAccess,
+            IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
             this.genericDataAccess = genericDataAccess;
+            this.organisationDetailsDataAccess = organisationDetailsDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditAatfSite message)
