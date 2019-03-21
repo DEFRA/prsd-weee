@@ -2,19 +2,20 @@
 {
     using System;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
-    public class AddObligatedReusedSiteRequestCreatorTests
+    public class ObligatedReusedSiteRequestCreatorTests
     {
-        private readonly IAddObligatedReusedSiteRequestCreator requestCreator;
+        private readonly IObligatedReusedSiteRequestCreator requestCreator;
 
-        public AddObligatedReusedSiteRequestCreatorTests()
+        public ObligatedReusedSiteRequestCreatorTests()
         {
-            requestCreator = new AddObligatedReusedSiteRequestCreator();
+            requestCreator = new ObligatedReusedSiteRequestCreator();
         }
 
         [Fact]
@@ -38,7 +39,7 @@
                 AddressData = A.Fake<SiteAddressData>(),
             };
 
-            var request = requestCreator.ViewModelToRequest(viewModel);
+            var request = requestCreator.ViewModelToRequest(viewModel) as AddAatfSite;
 
             request.AatfId.Should().Be(viewModel.AatfId);
             request.OrganisationId.Should().Be(viewModel.OrganisationId);

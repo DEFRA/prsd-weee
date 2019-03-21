@@ -17,5 +17,15 @@
         {
             get { return (AddressData.Id != Guid.Empty); }
         }
+
+        public ReusedOffSiteCreateSiteViewModel()
+        {
+            this.AddressData = new SiteAddressData();
+        }
+
+        public ReusedOffSiteCreateSiteViewModel(SiteAddressData siteAddressData)
+        {
+            this.AddressData = siteAddressData;
+        }
     }
 }

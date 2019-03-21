@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
@@ -10,6 +11,7 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -26,18 +28,19 @@
     {
         private readonly IWeeeClient weeeClient;
         private readonly ReusedOffSiteCreateSiteController controller;
-        private readonly IAddObligatedReusedSiteRequestCreator requestCreator;
+        private readonly IObligatedReusedSiteRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMap<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer, ReusedOffSiteCreateSiteViewModel> mapper;
 
         public ReusedOffSiteCreateSiteControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            requestCreator = A.Fake<IAddObligatedReusedSiteRequestCreator>();
-
-            controller = new ReusedOffSiteCreateSiteController(() => weeeClient, breadcrumb, cache, requestCreator);
+            requestCreator = A.Fake<IObligatedReusedSiteRequestCreator>();
+            mapper = A.Fake<IMap<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer, ReusedOffSiteCreateSiteViewModel>>();
+            controller = new ReusedOffSiteCreateSiteController(() => weeeClient, breadcrumb, cache, requestCreator, mapper);
         }
 
         [Fact]

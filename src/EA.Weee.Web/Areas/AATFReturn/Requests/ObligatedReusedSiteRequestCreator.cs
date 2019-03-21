@@ -3,19 +3,25 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
-    public class AddObligatedReusedSiteRequestCreator : IAddObligatedReusedSiteRequestCreator
+    public class ObligatedReusedSiteRequestCreator : IObligatedReusedSiteRequestCreator
     {
-        public AddAatfSite ViewModelToRequest(ReusedOffSiteCreateSiteViewModel viewModel)
+        public AatfSite ViewModelToRequest(ReusedOffSiteCreateSiteViewModel viewModel)
         {
-            var addAatfSite = new AddAatfSite()
+            if (viewModel.Edit)
+            {
+                return new EditAatfSite()
+                {
+                    AddressData = viewModel.AddressData
+                };
+            }
+
+            return new AddAatfSite()
             {
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,
                 AatfId = viewModel.AatfId,
                 AddressData = viewModel.AddressData
             };
-
-            return addAatfSite;
         }
     }
 }
