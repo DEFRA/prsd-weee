@@ -15,11 +15,24 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.WeeeSentOnId)
+        @Html.HiddenFor(m => m.SiteAddressData.Address1)
+        @Html.HiddenFor(m => m.SiteAddressData.Address2)
+        @Html.HiddenFor(m => m.SiteAddressData.CountyOrRegion)
+        @Html.HiddenFor(m => m.SiteAddressData.TownOrCity)
+        @Html.HiddenFor(m => m.SiteAddressData.Postcode)
+        @Html.HiddenFor(m => m.SiteAddressData.CountryId)
+        @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
-    <div class="govuk-form-group">
-        @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input" })
-        <!--<p class="govuk-body" style="color: grey">If the operator address associated with this AATF/ATF is different please uncheck this box</p>-->
-    </div>
+        <div class="govuk-form-group" id="operatorCheckBox">
+            @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input" })
+            <!--<p class="govuk-body" style="color: grey">If the operator address associated with this AATF/ATF is different please uncheck this box</p>-->
+        </div>
+
+        <div class="govuk-form-group" id="operatorButton" style="display: none">
+            <button type="submit" class="govuk-button" formmethod="get" name="operatorButtonName">
+                The operator address is the same as the AATF/ATF address
+            </button>
+        </div>
 
         @Html.EditorFor(m => m.OperatorAddressData)
 
@@ -30,3 +43,63 @@
 
     }
 </section>
+
+@section scripts {
+    <script>
+        $('#IsOperatorTheSameAsAATF').click(function () {
+            if (this.checked) {
+                var address1 = $('#SiteAddressData_Address1').val();
+                var address2 = $('#SiteAddressData_Address2').val();
+                var townorcity = $('#SiteAddressData_TownOrCity').val();
+                var postcode = $('#SiteAddressData_Postcode').val();
+                var countyorregion = $('#SiteAddressData_CountyOrRegion').val();
+                var countryId = $('#SiteAddressData_CountryId').val();
+                var countryName = $('#SiteAddressData_CountryName').val();
+
+                if (address1 != '') {
+                    $('#OperatorAddressData_Address1').val(address1);
+                }
+
+                if (address2 != '') {
+                    $('#OperatorAddressData_Address2').val(address2);
+                }
+
+                if (townorcity != '') {
+                    $('#OperatorAddressData_TownOrCity').val(townorcity);
+                }
+
+                if (postcode != '') {
+                    $('#OperatorAddressData_Postcode').val(postcode);
+                }
+
+                if (countyorregion != '') {
+                    $('#OperatorAddressData_CountyOrRegion').val(countyorregion);
+                }
+
+                if (countryId != '') {
+                    $('#OperatorAddressData_CountryId').val(countryId);
+                    $('#country-dropdown-list input').val(countryName);
+                }
+            } else {
+                $('#OperatorAddressData_Address1').val('');
+                $('#OperatorAddressData_Address2').val('');
+                $('#OperatorAddressData_CountyOrRegion').val('');
+                $('#OperatorAddressData_Postcode').val('');
+                $('#OperatorAddressData_TownOrCity').val('');
+                $('#OperatorAddressData_CountryId').val('');
+                $('#country-dropdown-list input').val('');
+            }
+        });
+    </script>
+    <noscript>
+        <style type="text/css">
+            #operatorCheckBox {
+                display: none;
+            }
+
+            #operatorButton {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+}
