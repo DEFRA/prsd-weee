@@ -37,7 +37,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid aatfId, Guid weeeSentOnId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid aatfId, Guid weeeSentOnId, bool? test)
         {
             using (var client = apiClient())
             {
