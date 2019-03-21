@@ -1,13 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
-    using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -22,7 +20,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
-    using AddressData = Core.AatfReturn.AddressData;
 
     public class ReusedOffSiteCreateSiteControllerTests
     {
@@ -159,6 +156,56 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
+        public async void EditGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            await controller.Edit(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
+        public async void EditGet_GivenAction_IndexViewShouldBeReturned()
+        {
+            var result = await controller.Edit(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+
+            result.ViewName.Should().Be("Index");
+        }
+
+        [Fact]
+        public async void EditGet_GivenActionAndParameters_ViewModelShouldBeBuilt()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var siteId = Guid.NewGuid();
+            
+            await controller.Edit(organisationId, returnId, aatfId, siteId);
+            
+            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>.That.Matches(r => r.AatfId.Equals(aatfId) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.OrganisationId.Equals(organisationId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void EditGet_GivenActionAndParameters_ViewModelShouldBeReturned()
+        {
+            var model = A.Fake<ReusedOffSiteCreateSiteViewModel>();
+
+            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Edit(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+
+            result.Model.Should().Be(model);
         }
     }
 }

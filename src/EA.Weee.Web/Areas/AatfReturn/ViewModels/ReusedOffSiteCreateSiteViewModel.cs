@@ -22,10 +22,5 @@
         {
             this.AddressData = new SiteAddressData();
         }
-
-        public ReusedOffSiteCreateSiteViewModel(SiteAddressData siteAddressData)
-        {
-            this.AddressData = siteAddressData;
-        }
     }
 }

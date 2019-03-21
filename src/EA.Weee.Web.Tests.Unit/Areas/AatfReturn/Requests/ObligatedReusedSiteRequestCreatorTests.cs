@@ -46,5 +46,44 @@
             request.ReturnId.Should().Be(viewModel.ReturnId);
             request.AddressData.Should().Be(viewModel.AddressData);
         }
+
+        [Fact]
+        public void ViewModelToRequest_GivenAddViewModel_RequestTypeShouldBeAdd()
+        {
+            var model = new ReusedOffSiteCreateSiteViewModel();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<AddAatfSite>();
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
+        {
+            var model = new ReusedOffSiteCreateSiteViewModel();
+            model.AddressData.Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<EditAatfSite>();
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
+        {
+            var viewModel = new ReusedOffSiteCreateSiteViewModel()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                AddressData = A.Fake<SiteAddressData>(),
+            };
+
+            viewModel.AddressData.Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(viewModel) as EditAatfSite;
+
+            request.AddressData.Should().Be(viewModel.AddressData);
+        }
     }
 }

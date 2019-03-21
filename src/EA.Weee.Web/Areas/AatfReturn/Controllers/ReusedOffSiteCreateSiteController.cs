@@ -6,7 +6,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -89,30 +88,17 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReusedOffSiteCreateSiteViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
-
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    return AatfRedirect.ReusedOffSiteSummaryList(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
-                }
-            }
-
-            using (var client = apiClient())
-            {
-                viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-            }
-
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-            return View(viewModel);
+            return await AatfSitePostAction(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Edit(ReusedOffSiteCreateSiteViewModel viewModel)
+        {
+            return await AatfSitePostAction(viewModel);
+        }
+
+        private async Task<ActionResult> AatfSitePostAction(ReusedOffSiteCreateSiteViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
