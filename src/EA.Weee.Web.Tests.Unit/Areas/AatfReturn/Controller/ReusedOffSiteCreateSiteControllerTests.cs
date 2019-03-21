@@ -110,7 +110,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
