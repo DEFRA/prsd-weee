@@ -22,7 +22,7 @@
 
         public virtual Country Country { get; private set; }
 
-        protected AatfAddress()
+        public AatfAddress()
         {
         }
 

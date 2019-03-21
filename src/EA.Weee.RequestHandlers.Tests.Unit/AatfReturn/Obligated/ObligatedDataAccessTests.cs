@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Obligated
 {
     using System.Collections.Generic;
-    using System.Linq;
     using DataAccess;
     using Domain.AatfReturn;
     using FakeItEasy;
-    using FluentAssertions.Common;
-    using Prsd.Core.Extensions;
-    using RequestHandlers.AatfReturn.ObligatedGeneric;
     using Weee.Tests.Core;
     using Xunit;
 

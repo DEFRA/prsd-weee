@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -112,6 +113,26 @@
 
             result.Count.Should().Be(1);
             result[0].Should().BeEquivalentTo(weeeReusedAmountMatch);
+        }
+
+        [Fact]
+        public void Update_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
+        {
+            var oldSite = A.Fake<AatfAddress>();
+            var newSite = new SiteAddressData();
+            var country = A.Fake<Country>();
+
+            dataAccess.Update(oldSite, newSite, country);
+
+            A.CallTo(() => oldSite.UpdateAddress(
+                newSite.Name,
+                newSite.Address1,
+                newSite.Address2,
+                newSite.TownOrCity,
+                newSite.CountyOrRegion,
+                newSite.Postcode,
+                country)).MustHaveHappened(Repeated.Exactly.Once)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }

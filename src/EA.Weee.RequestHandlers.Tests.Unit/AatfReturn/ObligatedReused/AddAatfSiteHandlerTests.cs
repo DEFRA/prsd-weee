@@ -2,15 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
@@ -20,10 +17,9 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using Xunit;
 
-    public class AddAatfSiteRequestHandlerTests
+    public class AddAatfSiteHandlerTests
     {
         private readonly IWeeeAuthorization authorisation;
         private readonly IAatfSiteDataAccess addAatfSiteDataAccess;
@@ -33,7 +29,7 @@
         private readonly WeeeContext weeeContext;
         private readonly AddAatfSiteHandler handler;
 
-        public AddAatfSiteRequestHandlerTests()
+        public AddAatfSiteHandlerTests()
         {
             authorisation = A.Fake<IWeeeAuthorization>();
             addAatfSiteDataAccess = A.Fake<IAatfSiteDataAccess>();

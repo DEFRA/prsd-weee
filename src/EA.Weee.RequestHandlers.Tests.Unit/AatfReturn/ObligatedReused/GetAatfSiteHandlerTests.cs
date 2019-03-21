@@ -17,14 +17,14 @@
     using FluentAssertions.Common;
     using Xunit;
 
-    public class GetAatfSiteRequestHandlerTests
+    public class GetAatfSiteHandlerTests
     {
         private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
         private readonly IAatfSiteDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly GetAatfSiteHandler handler;
 
-        public GetAatfSiteRequestHandlerTests()
+        public GetAatfSiteHandlerTests()
         {
             mapper = A.Fake<IMap<AatfAddressObligatedAmount, AddressTonnageSummary>>();
             dataAccess = A.Fake<IAatfSiteDataAccess>();

@@ -17,15 +17,15 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public EditAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
-            IAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
-            IOrganisationDetailsDataAccess organisationDetailsDataAccess)
+        public EditAatfSiteHandler(WeeeContext context,
+            IWeeeAuthorization authorization,
+            IAatfSiteDataAccess offSiteDataAccess,
+            IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
             this.genericDataAccess = genericDataAccess;
-            this.organisationDetailsDataAccess = organisationDetailsDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditAatfSite message)
@@ -33,7 +33,7 @@
             authorization.EnsureCanAccessExternalArea();
 
             Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.AddressData.CountryId);
-
+            
             var value = await genericDataAccess.GetById<AatfAddress>(message.AddressData.Id);
 
             await offSiteDataAccess.Update(value, message.AddressData, country);
