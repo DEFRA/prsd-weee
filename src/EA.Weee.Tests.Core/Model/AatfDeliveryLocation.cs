@@ -23,6 +23,7 @@ namespace EA.Weee.Tests.Core.Model
         public string ApprovalNumber { get; set; }
         public string FacilityName { get; set; }
         public byte[] RowVersion { get; set; }
+        public Nullable<int> FacilityNameDataLength { get; set; }
     
         public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
     }

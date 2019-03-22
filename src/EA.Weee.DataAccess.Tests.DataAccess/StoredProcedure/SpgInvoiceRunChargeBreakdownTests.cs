@@ -17,9 +17,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_ForSpecifiedInvoiceRunOnly()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -53,9 +53,9 @@
         [Fact]
         public async Task Execute_ReturnsInvoicedProducers_Only()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -84,9 +84,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_WithNonZeroChargesOnly()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -115,9 +115,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -165,9 +165,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending_ThenByComplianceYearDescending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -212,9 +212,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending_ThenByComplianceYearDescending_ThenBySubmittedDateAscending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -271,9 +271,9 @@
         [Fact]
         public async Task Execute_ReturnsProducer_CountryForPartnerShip()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -299,9 +299,9 @@
         [Fact]
         public async Task Execute_ReturnsProducer_CountryForCompany()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -323,74 +323,35 @@
             }
         }
 
-        [Fact]
-        public async Task Execute_ReturnsProducer_HasAnnualCharge_ReturnsNo()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Execute_ReturnsProducer_HasAnnualCharge_ReturnsCorrectValue(bool value)
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme = helper.CreateScheme();
-                
+                var scheme = helper.CreateScheme();
+
                 var invoiceRun = helper.CreateInvoiceRun();
+                invoiceRun.Id = Guid.NewGuid();
 
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRun);
-                memberUpload.ComplianceYear = 2019;
-
-                var producer = helper.CreateProducerAsCompany(memberUpload, "PRN567");
-                producer.ChargeThisUpdate = 10;
-               
-                producer.Invoiced = true;
-
-                db.Model.SaveChanges();
-
-                var result = await db.StoredProcedures.SpgInvoiceRunChargeBreakdown(invoiceRun.Id);
-
-                Assert.Single(result);
-                Assert.Equal("No", result.Single().HasAnnualCharge);
-            }
-        }
-
-        [Fact]
-        public async Task Execute_ReturnsProducer_HasAnnualCharge_ReturnsYes()
-        {
-            using (DatabaseWrapper db = new DatabaseWrapper())
-            {
-                ModelHelper helper = new ModelHelper(db.Model);
-
-                var organisation = helper.CreateOrganisation();
-               
-                Scheme scheme = helper.CreateScheme();
-
-                scheme.Organisation.Id = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
-                scheme.SchemeName = "SchemeName";
-
-                scheme.Organisation.Name = "Org Annual Charge Test";
-                scheme.CompetentAuthorityId = new Guid("a3c2d0dd-53a1-4f6a-99d0-1ccfc87611a8");
-                scheme.Organisation.BusinessAddressId = new Guid("b58e9cb2-b97e-4141-ad32-73c70284fc77");
-                scheme.Organisation.Address = helper.CreateOrganisationAddress();
-                scheme.Organisation.Address.Id = new Guid("b58e9cb2-b97e-4141-ad32-73c70284fc77");
-                scheme.Organisation.Address.CountryId = new Guid("a3c2d0dd-53a1-4f6a-99d0-1ccfc87611a8");
-
-                var eascheme = scheme.Organisation.Address.Country.CompetentAuthorities.FirstOrDefault(c => c.Abbreviation == "EA");
-                eascheme.AnnualChargeAmount = 100;
-
-                var invoiceRun = helper.CreateInvoiceRun();
-
-                var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRun, true);
+                memberUpload.HasAnnualCharge = value;
                 memberUpload.ComplianceYear = 2019;
 
                 var producer = helper.CreateProducerAsCompany(memberUpload, "PRN567");
                 producer.ChargeBandAmount = helper.FetchChargeBandAmount(Domain.Lookup.ChargeBand.E);
                 producer.ChargeThisUpdate = 10;
                 producer.Invoiced = true;
-
+                
                 db.Model.SaveChanges();
 
                 var result = await db.StoredProcedures.SpgInvoiceRunChargeBreakdown(invoiceRun.Id);
 
                 Assert.Single(result);
-                Assert.Equal("Yes", result.Single().HasAnnualCharge);
+                Assert.Equal(value ? "Yes" : "No", result.Single().HasAnnualCharge);
             }
         }
     }
