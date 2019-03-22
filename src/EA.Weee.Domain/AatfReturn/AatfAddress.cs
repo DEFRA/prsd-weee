@@ -22,7 +22,7 @@
 
         public virtual Country Country { get; private set; }
 
-        protected AatfAddress()
+        public AatfAddress()
         {
         }
 
@@ -32,6 +32,17 @@
             Guard.ArgumentNotNullOrEmpty(() => address1, address1);
             Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
 
+            Name = name;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
+            Postcode = postcode;
+            Country = country;
+        }
+
+        public virtual void UpdateAddress(string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Country country)
+        {
             Name = name;
             Address1 = address1;
             Address2 = address2;

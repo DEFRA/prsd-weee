@@ -12,7 +12,7 @@
     using Services.Caching;
     using ViewModels;
 
-    public class ReturnToObligatedViewModelMap : IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel>
+    public class ReturnToObligatedViewModelMap : IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel>
     {
         private readonly IWeeeCache cache;
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> obligatedMap;
@@ -31,7 +31,7 @@
             this.pasteProcessor = pasteProcessor;
         }
 
-        public ObligatedViewModel Map(ReturnToObligatedViewModelTransfer source)
+        public ObligatedViewModel Map(ReturnToObligatedViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 

@@ -28,7 +28,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligatedReusedController controller;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper;
+        private readonly IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper;
         private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReusedControllerTests()
@@ -37,7 +37,7 @@
             requestCreator = A.Fake<IObligatedReusedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            mapper = A.Fake<IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel>>();
+            mapper = A.Fake<IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             controller = new ObligatedReusedController(cache, breadcrumb, () => weeeClient, requestCreator, mapper);

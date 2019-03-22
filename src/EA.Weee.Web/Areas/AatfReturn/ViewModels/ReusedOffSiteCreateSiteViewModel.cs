@@ -12,5 +12,15 @@
         public Guid AatfId { get; set; }
 
         public SiteAddressData AddressData { get; set; }
+
+        public bool Edit
+        {
+            get { return (AddressData.Id != Guid.Empty); }
+        }
+
+        public ReusedOffSiteCreateSiteViewModel()
+        {
+            this.AddressData = new SiteAddressData();
+        }
     }
 }

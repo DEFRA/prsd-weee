@@ -19,6 +19,7 @@
             if (source.AatfAddresses != null)
             {
                 summaryData.AddressData = source.AatfAddresses.Select(n => new SiteAddressData(
+                    n.Id,
                     n.Name,
                     n.Address1,
                     n.Address2,
