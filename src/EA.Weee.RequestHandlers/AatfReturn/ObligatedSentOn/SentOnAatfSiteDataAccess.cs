@@ -7,11 +7,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class AddSentOnAatfSiteDataAccess : IAddSentOnAatfSiteDataAccess
+    public class SentOnAatfSiteDataAccess : ISentOnAatfSiteDataAccess
     {
         private readonly WeeeContext context;
 
-        public AddSentOnAatfSiteDataAccess(WeeeContext context)
+        public SentOnAatfSiteDataAccess(WeeeContext context)
         {
             this.context = context;
         }

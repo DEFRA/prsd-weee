@@ -27,7 +27,7 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var dataAccess = new AddSentOnAatfSiteDataAccess(context);
+                var dataAccess = new SentOnAatfSiteDataAccess(context);
 
                 var returnData = await CreateWeeeSentOn(context, dataAccess, aatfAddress);
 
@@ -51,7 +51,7 @@
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeContext context,
-            AddSentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress)
+            SentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
