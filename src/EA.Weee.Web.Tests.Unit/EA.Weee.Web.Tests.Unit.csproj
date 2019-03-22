@@ -203,6 +203,8 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\TonnageUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreatorTests.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\EditSentOnAatfSiteRequestCreatorTests.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\GetSentOnAatfSiteRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreatorTests.cs" />
