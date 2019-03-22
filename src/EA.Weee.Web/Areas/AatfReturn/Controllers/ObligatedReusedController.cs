@@ -23,13 +23,13 @@
         private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper;
+        private readonly IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper;
 
         public ObligatedReusedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
             IObligatedReusedWeeeRequestCreator requestCreator, 
-            IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper)
+            IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
@@ -45,7 +45,7 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var model = mapper.Map(new ReturnToObligatedViewModelTransfer()
+                var model = mapper.Map(new ReturnToObligatedViewModelMapTransfer()
                 {
                     AatfId = aatfId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,

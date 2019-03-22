@@ -49,13 +49,15 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" scope="col">@address.Name</td>
                         <td class="govuk-table__cell" scope="col">@address.Address</td>
-                        <td class="govuk-table__cell" scope="col"></td>
+                        <td class="govuk-table__cell" scope="col">
+                            @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Edit", controller = "ReusedOffSiteCreateSite" }, null)
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
         <div class="govuk-!-padding-bottom-2"></div>
-        @Html.RouteLink("Add another site", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+        @Html.RouteLink("Add another site", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
         <div class="govuk-!-padding-bottom-8"></div>
 
         <form method="post" class="form" style="display: inline">

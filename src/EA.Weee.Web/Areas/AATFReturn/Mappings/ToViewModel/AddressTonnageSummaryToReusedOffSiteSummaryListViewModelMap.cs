@@ -28,6 +28,7 @@
             foreach (var address in source.AddressData)
             {
                 var addressDataSummary = new AddressDataSummary();
+                addressDataSummary.Id = address.Id;
                 addressDataSummary.Name = address.Name;
                 addressDataSummary.Address = addressUtilities.AddressConcatenate(address);
                 AddressDataSummaries.Add(addressDataSummary);

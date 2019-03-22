@@ -115,7 +115,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequested_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
+        public void ViewModelToRequest_GivenValidViewModel_ViewModelPropertiesShouldBeMapped()
         {
             var model = new ObligatedViewModel(calculator)
             {

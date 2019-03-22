@@ -49,7 +49,7 @@
 
             A.CallTo(() => schemeData.Name).Returns(expected);
 
-            var transfer = new ReturnToObligatedViewModelTransfer() { SchemeId = Guid.NewGuid() };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { SchemeId = Guid.NewGuid() };
 
             A.CallTo(() => cache.FetchSchemePublicInfoBySchemeId(transfer.SchemeId)).Returns(schemeData);
 
@@ -66,7 +66,7 @@
 
             A.CallTo(() => aatfData.Name).Returns(expected);
 
-            var transfer = new ReturnToObligatedViewModelTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid() };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid() };
 
             A.CallTo(() => cache.FetchAatfData(transfer.OrganisationId, transfer.AatfId)).Returns(aatfData);
 
@@ -78,7 +78,7 @@
         [Fact]
         public void Map_GivenEntityIds_IdPropertiesShouldBeSet()
         {
-            var transfer = new ReturnToObligatedViewModelTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
 
             var result = mapper.Map(transfer);
 
@@ -98,7 +98,7 @@
                 pastedList[i].B2C = i.ToString();
             }
 
-            var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), PastedData = A.Fake<ObligatedCategoryValue>() };
             var returnList = new List<ObligatedCategoryValue>();
 
             A.CallTo(() => pasteProcessor.ParseObligatedPastedValues(A<ObligatedPastedValues>._, A<IList<ObligatedCategoryValue>>._)).Returns(pastedList);
@@ -111,7 +111,7 @@
         [Fact]
         public void Map_GivenObligatedAndCategoryValues_ObligatedMapperShouldBeCalled()
         {
-            var transfer = new ReturnToObligatedViewModelTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { AatfId = Guid.NewGuid(), SchemeId = Guid.NewGuid() };
             var obligatedValues = new ObligatedCategoryValues();
             var returnList = new List<ObligatedCategoryValue>();
 
