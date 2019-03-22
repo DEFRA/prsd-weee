@@ -10,6 +10,7 @@
     using Domain.Scheme;
     using Domain.User;
     using OverrideImplementations;
+    using RequestHandlers.Scheme.MemberRegistration;
     using Serilog;
 
     public class MigrationDataAccess : IMigrationDataAccess
@@ -51,7 +52,7 @@
             memberUpload.ResetInvoice();
         }
 
-        public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, decimal amount)
+        public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge)
         {
             var producer = context.ProducerSubmissions
                 .Where(p => (p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name))
@@ -63,9 +64,9 @@
                 throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
             }
 
-            Log.Information(string.Format("Producer charges for {0} updated from {1} to {2}", name, producer.First().ChargeThisUpdate, amount));
+            Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
 
-            producer.First().UpdateCharge(amount); 
+            producer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount); 
         }
 
         public void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)

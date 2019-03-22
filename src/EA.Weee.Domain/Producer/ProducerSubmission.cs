@@ -214,8 +214,9 @@
             Invoiced = true;
         }
 
-        public void UpdateCharge(decimal value)
+        public void UpdateCharge(decimal value, ChargeBandAmount chargeBandAmount)
         {
+            this.ChargeBandAmount = chargeBandAmount;
             this.ChargeThisUpdate = value;
         }
 

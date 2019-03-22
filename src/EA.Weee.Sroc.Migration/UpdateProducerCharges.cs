@@ -119,7 +119,7 @@
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {
-                    memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge.Amount);
+                    memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge);
                 }
 
                 if (!producerCharges.ContainsKey(producerName))
