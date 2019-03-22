@@ -313,6 +313,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToCheckReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMapTransfer.cs" />
@@ -327,10 +328,10 @@
     <Compile Include="Areas\AatfReturn\Requests\IAddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesCopyPasteViewModel.cs" />
@@ -405,6 +406,7 @@
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
@@ -798,7 +800,7 @@
     <Content Include="Areas\AatfReturn\Views\ReusedOffSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReusedOffSiteCreateSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\SiteAddressData.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryLIst\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ReusedOffSiteSummaryList\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfTaskListButton.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />

@@ -7,28 +7,29 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using Web.Controllers.Base;
 
     public class ReceivedPcsListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel> mapper;
 
         public ReceivedPcsListController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
-            IMapper mapper)
+            IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -38,14 +39,17 @@
             {
                 var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                var viewModel = new ReceivedPcsListViewModel
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+
+                var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
                 {
-                    AatfName = (await cache.FetchAatfData(schemeList.OperatorData.OrganisationId, aatfId)).Name,
-                    OrganisationId = schemeList.OperatorData.OrganisationId,
-                    ReturnId = returnId,
                     AatfId = aatfId,
-                    SchemeList = schemeList.SchemeDataItems.ToList()
-                };
+                    ReturnId = returnId,
+                    OrganisationId = schemeList.OperatorData.OrganisationId,
+                    AatfName = (await cache.FetchAatfData(schemeList.OperatorData.OrganisationId, aatfId)).Name,
+                    ReturnData = @return,
+                    SchemeDataItems = schemeList.SchemeDataItems.ToList()
+                });
 
                 await SetBreadcrumb(schemeList.OperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 

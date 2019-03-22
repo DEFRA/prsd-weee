@@ -13,21 +13,14 @@
         {
         }
 
-        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf, OperatorData returnOperator) : base(quarter, window, year)
-        {
-            this.Year = year.ToString();
-            this.NonObligatedTonnageTotal = nonObligatedTonnageTotal;
-            this.NonObligatedTonnageTotalDcf = nonObligatedTonnageTotalDcf;
-            this.ReturnOperator = returnOperator;
-        }
-
-        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator) : base(quarter, window, year)
+        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator, Guid returnId) : base(quarter, window, year)
         {
             this.Year = year.ToString();
             this.NonObligatedTonnageTotal = nonObligatedTonnageTotal;
             this.NonObligatedTonnageTotalDcf = nonObligatedTonnageTotalDcf;
             this.AatfsData = obligatedTonnage;
             this.ReturnOperator = returnOperator;
+            this.ReturnId = returnId;
         }
 
         public Guid OrganisationId { get; set; }
