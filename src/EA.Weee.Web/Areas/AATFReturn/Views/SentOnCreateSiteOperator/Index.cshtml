@@ -9,16 +9,13 @@
 
 <section id="main-content">
     <h1 class="govuk-heading-l">Which operator was the WEEE sent to for treatment?</h1>
-    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, new { test = true }, FormMethod.Get, null))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Get))
     {
         @Html.HiddenFor(m => m.WeeeSentOnId)
-        @Html.HiddenFor(m => m.SiteAddressData.Address1)
-        @Html.HiddenFor(m => m.SiteAddressData.Address2)
-        @Html.HiddenFor(m => m.SiteAddressData.CountyOrRegion)
-        @Html.HiddenFor(m => m.SiteAddressData.TownOrCity)
-        @Html.HiddenFor(m => m.SiteAddressData.Postcode)
-        @Html.HiddenFor(m => m.SiteAddressData.CountryId)
-        @Html.HiddenFor(m => m.SiteAddressData.CountryName)
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.Hidden("javascriptDisabled", true)
 
         <div class="govuk-form-group" id="operatorButton" style="display: none">
             <button type="submit" class="govuk-button" formmethod="get" name="operatorButtonName">
