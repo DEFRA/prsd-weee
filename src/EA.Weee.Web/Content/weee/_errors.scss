@@ -27,4 +27,24 @@
     .govuk-form-group--error {
         float: right;
     }
+
+    .error {
+        margin-left: 3ex;
+    }
+}
+
+@media only screen and (max-width: 999px) {
+    #weee-data-entry-table {
+        .error {
+            margin-left: 2ex;
+        }
+    }
+}
+
+@media only screen and (max-width: 959px){
+    #weee-data-entry-table {
+        .error {
+            margin-left: 1ex;
+        }
+    }
 }
