@@ -10,10 +10,10 @@
     <div class="govuk-table__head">
         <div class="govuk-grid-row govuk-table__row govuk-table__header">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
-            <div class="govuk-grid-column-one-quarter" style="padding-left: 1em">
+            <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                 <span>B2C in tonnes</span>
             </div>
-            <div class="govuk-grid-column-one-quarter" style="padding-left: 1em">
+            <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                 <span>B2C in tonnes</span>
             </div>
         </div>
@@ -30,13 +30,13 @@
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
                     @Html.HiddenFor(m => m.CategoryValues[i].Id)
                 </div>
-                <div class="govuk-grid-column-one-quarter" style="padding-left:1em">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                     </div>
                 </div>
-                <div class="govuk-grid-column-one-quarter" style="padding-left:1em">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
