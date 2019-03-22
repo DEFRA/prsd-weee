@@ -11,11 +11,11 @@
     public class GetSentOnAatfSiteHandler : IRequestHandler<GetSentOnAatfSite, AatfAddressData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
+        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IMap<AatfAddress, AatfAddressData> mapper;
 
         public GetSentOnAatfSiteHandler(IWeeeAuthorization authorization,
-            IAddSentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AatfAddressData> mapper)
+            ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AatfAddressData> mapper)
         {
             this.authorization = authorization;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
