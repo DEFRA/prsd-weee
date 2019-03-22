@@ -73,7 +73,13 @@
     }
 }
 
+#weee-data-entry-table * {
+    padding-left: 0;
+    padding-right: 0;
+}
 
-
-
-
+.weee-tonnage-right-aligned-display {
+    text-align: right;
+    padding-left: 1em !important;
+    word-break: break-all;
+}

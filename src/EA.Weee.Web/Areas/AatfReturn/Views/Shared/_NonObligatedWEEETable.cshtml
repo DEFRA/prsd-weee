@@ -6,11 +6,11 @@
     ViewBag.Title = "Non Obligated WEEE";
 }
 
-<div class="govuk-table" id="weee-data-entry-table">
+<div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
     <div class="govuk-table__head">
         <div class="govuk-grid-row govuk-table__row govuk-table__header">
-            <div class="govuk-grid-column-three-quarters" style="padding-left: 0px; padding-right: 0px;">&nbsp;</div>
-            <div class="govuk-grid-column-one-quarter" style="padding-left: 3ex; padding-right: 0px;">
+            <div class="govuk-grid-column-three-quarters">&nbsp;</div>
+            <div class="govuk-grid-column-one-quarter" style="padding-left: 1em">
                 <span>WEEE in tonnes</span>
             </div>
         </div>
@@ -20,14 +20,14 @@
         {
             var category = Model.CategoryValues[i];
 
-            <div class="govuk-grid-row govuk-table__cell" style="padding-right: 0px">
-                <div class="govuk-grid-column-three-quarters govuk-!-padding-bottom-0 " style="padding-left: 0px; padding-right: 0px;" id="@category.CategoryId">
+            <div class="govuk-grid-row govuk-table__cell">
+                <div class="govuk-grid-column-three-quarters govuk-!-padding-bottom-0" id="@category.CategoryId">
                     @(@category.CategoryId). @category.CategoryDisplay
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
                     @Html.HiddenFor(m => m.CategoryValues[i].Id)
                 </div>
-                <div class="govuk-grid-column-one-quarter" style="padding-left: 0px; padding-right: 0px;">
+                <div class="govuk-grid-column-one-quarter" style="padding-left:1em">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
                         @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
@@ -36,12 +36,12 @@
             </div>
         }
         <div class="govuk-grid-row govuk-table__cell">
-            <div class="govuk-grid-column-one-half" style="padding-left: 0px; padding-right: 0px;">
+            <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-heading-m">
                     Total (tonnes)
                 </h3>
             </div>
-            <div class="govuk-grid-column-one-half" style="padding-left: 0px; padding-right: 0px; text-align: right; word-wrap: break-word">
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                 <h3 class="govuk-heading-m" id="TonnageTotal" name="TonnageTotal">@Model.Total</h3>
             </div>
         </div>
