@@ -13,13 +13,13 @@
     public class AddSentOnAatfSiteDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly AddSentOnAatfSiteDataAccess dataAccess;
+        private readonly SentOnAatfSiteDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
 
         public AddSentOnAatfSiteDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            dataAccess = new AddSentOnAatfSiteDataAccess(context);
+            dataAccess = new SentOnAatfSiteDataAccess(context);
             dbContextHelper = new DbContextHelper();
         }
         
