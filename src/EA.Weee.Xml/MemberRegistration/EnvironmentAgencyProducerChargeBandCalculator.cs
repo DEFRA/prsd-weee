@@ -1,81 +1,89 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System.Threading.Tasks;
     using Domain.Lookup;
     using Xml.MemberRegistration;
 
-    public class EnvironmentAgencyProducerChargeBandCalculator : IEnvironmentAgencyProducerChargeBandCalculator
+    public class EnvironmentAgencyProducerChargeBandCalculator : IEnvironmentAgencyProducerChargeBandCalculator, IProducerChargeBandCalculator
     {
-        public ChargeBand GetProducerChargeBand(producerType producerType)
+        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
-            var producerCountry = producerType.GetProducerCountry();
+            var producerCountry = producer.GetProducerCountry();
 
-            if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
-                return ChargeBand.E;
+                return await Task.FromResult(ChargeBand.E);
             }
             else
             { 
-                if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
-                producerType.VATRegistered && producerCountry == countryType.UKENGLAND)
+                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                    producer.VATRegistered && producerCountry == countryType.UKENGLAND)
                 {
-                    return ChargeBand.A2;
+                    return await Task.FromResult(ChargeBand.A2);
                 }
-                else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
-                producerType.VATRegistered && 
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         producer.VATRegistered && 
                 (producerCountry != countryType.UKENGLAND && 
                  producerCountry != countryType.UKSCOTLAND &&
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))
                 {
-                    return ChargeBand.D3;
+                    return await Task.FromResult(ChargeBand.D3);
                 }
-                if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                    producerType.VATRegistered &&
+                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                    producer.VATRegistered &&
                     (producerCountry == countryType.UKSCOTLAND ||
                     producerCountry == countryType.UKWALES ||
                     producerCountry == countryType.UKNORTHERNIRELAND) &&
-                    producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
+                    producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
                 {
-                    return ChargeBand.A;
+                    return await Task.FromResult(ChargeBand.A);
                 }
-                else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                         producerType.VATRegistered &&
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         producer.VATRegistered &&
                         (producerCountry == countryType.UKSCOTLAND ||
                          producerCountry == countryType.UKWALES ||
                          producerCountry == countryType.UKNORTHERNIRELAND) &&
-                         producerType.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
+                         producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
                 {
-                    return ChargeBand.B;
+                    return await Task.FromResult(ChargeBand.B);
                 }
-                else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
                 producerCountry == countryType.UKENGLAND && 
-                !producerType.VATRegistered)
+                !producer.VATRegistered)
                 {
-                    return ChargeBand.C2;
+                    return await Task.FromResult(ChargeBand.C2);
                 }
-                else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                !producerType.VATRegistered &&
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                !producer.VATRegistered &&
                 (producerCountry != countryType.UKENGLAND && 
                  producerCountry != countryType.UKSCOTLAND &&
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))
                 {
-                    return ChargeBand.D2;
+                    return await Task.FromResult(ChargeBand.D2);
                 }
-                else if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                         !producerType.VATRegistered &&
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         !producer.VATRegistered &&
                         (producerCountry == countryType.UKSCOTLAND ||
                          producerCountry == countryType.UKWALES ||
                          producerCountry == countryType.UKNORTHERNIRELAND) &&
-                         producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
+                         producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
                 {
-                    return ChargeBand.D;
+                    return await Task.FromResult(ChargeBand.D);
                 }
                 else
                 { 
-                    return ChargeBand.C;
+                    return await Task.FromResult(ChargeBand.C);
                 }
             }
+        }
+
+        public bool IsMatch(schemeType scheme, producerType producer)
+        {
+            var year = int.Parse(scheme.complianceYear);
+
+            return year > 2018 && producer.status == statusType.I ? true : false;
         }
     }
 }

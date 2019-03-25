@@ -22,7 +22,7 @@
         [Fact]
         public void Evaluate_Insert_ReturnsPass()
         {
-            var result = new ProducerChargeBandChangeEvaluator().Evaluate(ChargeBand.B, statusType.I);
+            var result = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser).Evaluate(ChargeBand.B, statusType.I);
 
             Assert.True(result.IsValid);
         }
@@ -30,7 +30,7 @@
         [Fact]
         public void Evaluate_Amendment_AndProducerExistsWithMatchingChargeBand_ReturnsPass()
         {
-            var evaluator = new ProducerChargeBandChangeEvaluator();
+            var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
 
             var fakeProducer = A.Fake<ProducerSubmission>();
 
@@ -39,11 +39,10 @@
                 ChargeBand.E,
                 123);
 
-            A.CallTo(() => fakeProducer.ChargeBandAmount)
-                .Returns(producerChargeBand);
-
+            A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(producerChargeBand);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(ChargeBand.E);
 
             var result = evaluator.Evaluate(ChargeBand.E);
 
@@ -53,7 +52,7 @@
         [Fact]
         public void Evaluate_Amendment_AndProducerExistsWithDifferentChargeBand_FailAsWarning()
         {
-            var evaluator = new ProducerChargeBandChangeEvaluator();
+            var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
 
             var fakeProducer = A.Fake<ProducerSubmission>();
 
@@ -64,7 +63,7 @@
 
             A.CallTo(() => fakeProducer.ChargeBandAmount)
                 .Returns(chargeBandAmount);
-
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(ChargeBand.B);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
@@ -82,7 +81,7 @@
             var existingChargeBand = ChargeBand.A;
             var newChargeBand = ChargeBand.B;
 
-            var evaluator = new ProducerChargeBandChangeEvaluator();
+            var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
 
             var fakeProducer = A.Fake<ProducerSubmission>();
 
@@ -94,7 +93,7 @@
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
             A.CallTo(() => fakeProducer.RegisteredProducer.ProducerRegistrationNumber).Returns(registrationNumber);
-
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(newChargeBand);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
@@ -113,17 +112,13 @@
             public IProducerQuerySet QuerySet { get; private set; }
             public IProducerChargeBandCalculator ProducerChargeBandCalculator { get; private set; }
             private ProducerChargeBandChange producerChargeBandChange;
-            public IProducerChargeBandCalculatorChooser ProducerChargeBandCalculatorChooser { get; private set; }
-
-            public ProducerChargeBandChangeEvaluator()
+            
+            public ProducerChargeBandChangeEvaluator(IProducerChargeBandCalculatorChooser chooser)
             {
                 QuerySet = A.Fake<IProducerQuerySet>();
-                ProducerChargeBandCalculatorChooser = A.Fake<IProducerChargeBandCalculatorChooser>();
                 ProducerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
 
-                A.CallTo(() => ProducerChargeBandCalculatorChooser.GetCalculator(A<schemeType>._, A<producerType>._, A<int>._))
-                    .Returns(ProducerChargeBandCalculator);
-                producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculatorChooser);
+                producerChargeBandChange = new ProducerChargeBandChange(QuerySet, chooser);
             }
 
             public RuleResult Evaluate(ChargeBand producerChargeBand, statusType producerStatus = statusType.A)
@@ -137,8 +132,6 @@
                 {
                     complianceYear = "2016"
                 };
-
-                A.CallTo(() => ProducerChargeBandCalculator.GetProducerChargeBand(A<producerType>._)).Returns(producerChargeBand);
 
                 return producerChargeBandChange.Evaluate(scheme, producer, A.Dummy<Guid>());
             }

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
     using Domain.Lookup;
+    using Xml.MemberRegistration;
 
     public class ProducerCharge
     {

@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Lookup;
     using Domain.Producer;
 
     public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
@@ -39,6 +40,35 @@
                 .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
                     && p.ComplianceYear == complianceYear)
                 .ToListAsync();
+        }
+
+        public async Task<RegisteredProducer> GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        {
+            var result = await context.RegisteredProducers
+                .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
+                            && p.ComplianceYear == complianceYear
+                            && p.Scheme.ApprovalNumber == schemeApprovalNumber)
+                .ToListAsync();
+
+            if (result.Count() > 1)
+            {
+                throw new ArgumentException(string.Format("Producer with registration number '{0}' for compliance year '{1}' and scheme '{2}' has more than one record", producerRegistrationNumber, complianceYear, schemeApprovalNumber));
+            }
+
+            if (result.Any())
+            {
+                return result.ElementAt(0);
+            }
+
+            return null;
+        }
+
+        public async Task<bool> HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        {
+            return await context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
+                          && p.RegisteredProducer.ComplianceYear == complianceYear
+                          && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
+                          && p.ChargeBandAmount.ChargeBand == ChargeBand.NA).AnyAsync();
         }
     }
 }

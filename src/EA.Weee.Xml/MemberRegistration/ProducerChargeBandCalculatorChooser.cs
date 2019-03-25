@@ -1,24 +1,30 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Domain.Lookup;
+
     public class ProducerChargeBandCalculatorChooser : IProducerChargeBandCalculatorChooser
     {
-        private readonly IEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
-        private readonly IProducerChargeBandCalculator producerChargeBandCalculator;
+        private readonly IEnumerable<IProducerChargeBandCalculator> chargeChargeBandCalculators;
 
-        public ProducerChargeBandCalculatorChooser(IEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator, IProducerChargeBandCalculator producerChargeBandCalculator)
+        public ProducerChargeBandCalculatorChooser(IEnumerable<IProducerChargeBandCalculator> chargeChargeBandCalculators)
         {
-            this.environmentAgencyProducerChargeBandCalculator = environmentAgencyProducerChargeBandCalculator;
-            this.producerChargeBandCalculator = producerChargeBandCalculator;
+            this.chargeChargeBandCalculators = chargeChargeBandCalculators;
         }
 
-        public IProducerChargeBandCalculator GetCalculator(schemeType scheme, producerType producer, int complianceYear)
+        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
-            if (complianceYear > 2018) 
+            var calculator = chargeChargeBandCalculators.FirstOrDefault(c => c.IsMatch(scheme, producer));
+
+            if (calculator == null)
             {
-                return environmentAgencyProducerChargeBandCalculator;
+                throw new ApplicationException(string.Format("No charge band calculator found for scheme {0} and producer {1}", scheme.approvalNo, producer.tradingName));
             }
 
-            return producerChargeBandCalculator;
+            return await calculator.GetProducerChargeBand(scheme, producer);
         }
     }
 }
