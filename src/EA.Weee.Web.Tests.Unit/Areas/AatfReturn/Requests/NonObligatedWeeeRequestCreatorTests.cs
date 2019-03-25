@@ -12,14 +12,14 @@
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 
-    public class NonObligatedWeeRequestCreatorTests
+    public class NonObligatedWeeeRequestCreatorTests
     {
-        private readonly INonObligatedWeeRequestCreator requestCreator;
+        private readonly INonObligatedWeeeRequestCreator requestCreator;
         private readonly ICategoryValueTotalCalculator calculator;
 
-        public NonObligatedWeeRequestCreatorTests()
+        public NonObligatedWeeeRequestCreatorTests()
         {
-            requestCreator = new NonObligatedWeeRequestCreator();
+            requestCreator = new NonObligatedWeeeRequestCreator();
             calculator = new CategoryValueTotalCalculator();
         }
 

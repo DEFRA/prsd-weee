@@ -28,7 +28,7 @@
     public class NonObligatedControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly INonObligatedWeeRequestCreator requestCreator;
+        private readonly INonObligatedWeeeRequestCreator requestCreator;
         private readonly NonObligatedController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly INonObligatedValuesViewModelValidatorWrapper validator;
@@ -39,7 +39,7 @@
         public NonObligatedControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            requestCreator = A.Fake<INonObligatedWeeRequestCreator>();
+            requestCreator = A.Fake<INonObligatedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
             cache = A.Fake<IWeeeCache>();
