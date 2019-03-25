@@ -32,6 +32,8 @@
 
         public async Task<Guid> HandleAsync(EditSentOnAatfSite message)
         {
+            authorization.EnsureCanAccessExternalArea();
+
             var sentOn = await genericDataAccess.GetById<WeeeSentOn>(message.WeeeSentOnId);
 
             Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
