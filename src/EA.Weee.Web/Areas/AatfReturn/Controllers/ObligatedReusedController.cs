@@ -3,9 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -21,19 +23,19 @@
         private readonly IObligatedReusedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly ICategoryValueTotalCalculator calculator;
+        private readonly IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper;
 
         public ObligatedReusedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
-            IObligatedReusedWeeeRequestCreator requestCreator,
-            ICategoryValueTotalCalculator calculator)
+            IObligatedReusedWeeeRequestCreator requestCreator, 
+            IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-            this.calculator = calculator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -43,17 +45,17 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var viewModel = new ObligatedViewModel(new ObligatedCategoryValues(), calculator)
+                var model = mapper.Map(new ReturnToObligatedViewModelMapTransfer()
                 {
+                    AatfId = aatfId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     ReturnId = returnId,
-                    AatfId = aatfId,
-                    AatfName = (await cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Name
-                };
+                    ReturnData = @return
+                });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
-                return View(viewModel);
+                return View(model);
             }
         }
 
@@ -68,6 +70,11 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
+
+                    if (viewModel.Edit)
+                    {
+                        return AatfRedirect.ReusedOffSiteSummaryList(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
+                    }
 
                     return AatfRedirect.ReusedOffSite(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
                 }
