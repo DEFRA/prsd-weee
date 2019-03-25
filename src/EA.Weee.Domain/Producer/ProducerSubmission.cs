@@ -165,7 +165,13 @@
             }
         }
 
-        public virtual string HasAnnualCharge => hasAnnualCharge = MemberUpload.HasAnnualCharge ? "Yes" : "No";
+        public virtual string HasAnnualCharge
+        {
+            get
+            {
+                return MemberUpload.HasAnnualCharge ? "Yes" : "No";
+            }
+        } 
 
         public override int GetHashCode()
         {
