@@ -28,13 +28,6 @@
         {
             ProducerCharge producerCharge = GetProducerCharge(scheme, producer, complianceYear);
 
-            //if (producer.status == statusType.A)
-            //{
-            //    decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingChargesByDate(scheme.approvalNo, producer.registrationNo, complianceYear, submittedDate);
-
-            //    producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
-            //}
-
             return producerCharge;
         }
 
@@ -42,14 +35,7 @@
         {
             var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(scheme, producer)).Result;
 
-            //ChargeBand chargeBandType = calculator.GetProducerChargeBand(producer);
-
-            if (chargeBand == null)
-            {
-                throw new ApplicationException("NULL Charge Band");
-            }
-
-            var currentChargeBandAmount = dataAccess.FetchCurrentChargeBandAmount(chargeBand.Value);
+            var currentChargeBandAmount = dataAccess.FetchCurrentChargeBandAmount(chargeBand);
 
             return new ProducerCharge()
             {

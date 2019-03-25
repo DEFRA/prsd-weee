@@ -60,15 +60,5 @@
             Assert.Equal(25, result.Amount);
             Assert.Equal(chargeBandAmount, result.ChargeBandAmount);
         }
-
-        [Fact]
-        public void CalculateCharge_GivenNullChargeBand_NullShouldBeReturned()
-        {
-            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns((ChargeBand?)null);
-
-            var result = producerChargeCalculator.CalculateCharge(A.Dummy<schemeType>(), A.Dummy<producerType>());
-
-            Assert.Null(result);
-        }
     }
 }

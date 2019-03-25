@@ -32,7 +32,7 @@
 
                     var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
 
-                    if (chargeBand.HasValue && existingChargeBandType != chargeBand)
+                    if (existingChargeBandType != chargeBand)
                     {
                         result = RuleResult.Fail(
                            string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",

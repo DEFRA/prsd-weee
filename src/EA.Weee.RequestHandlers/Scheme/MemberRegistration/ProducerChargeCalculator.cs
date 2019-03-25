@@ -21,18 +21,13 @@
         {
             var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(scheme, producer)).Result;
 
-            if (chargeBand.HasValue)
+            var currentChargeBandAmount = dataAccess.FetchCurrentChargeBandAmount(chargeBand);
+
+            return new ProducerCharge()
             {
-                var currentChargeBandAmount = dataAccess.FetchCurrentChargeBandAmount(chargeBand.Value);
-
-                return new ProducerCharge()
-                {
-                    ChargeBandAmount = currentChargeBandAmount,
-                    Amount = currentChargeBandAmount.Amount
-                };
-            }
-
-            return null;
+                ChargeBandAmount = currentChargeBandAmount,
+                Amount = currentChargeBandAmount.Amount
+            };
         }
     }
 }

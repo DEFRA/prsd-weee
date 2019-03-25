@@ -5,7 +5,7 @@
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
-        public async Task<ChargeBand?> GetProducerChargeBand(schemeType scheme, producerType producer)
+        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
             if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {

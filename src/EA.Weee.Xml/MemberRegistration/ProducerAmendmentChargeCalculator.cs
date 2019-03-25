@@ -15,7 +15,7 @@
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public async Task<ChargeBand?> GetProducerChargeBand(schemeType schmemeType, producerType producerType)
+        public async Task<ChargeBand> GetProducerChargeBand(schemeType schmemeType, producerType producerType)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 

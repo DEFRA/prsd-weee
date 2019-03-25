@@ -6,7 +6,7 @@
 
     public class EnvironmentAgencyProducerChargeBandCalculator : IEnvironmentAgencyProducerChargeBandCalculator, IProducerChargeBandCalculator
     {
-        public async Task<ChargeBand?> GetProducerChargeBand(schemeType scheme, producerType producer)
+        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
             var producerCountry = producer.GetProducerCountry();
 
