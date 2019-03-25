@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
     using System;
+    using System.Threading.Tasks;
     using Domain.Lookup;
     using RequestHandlers.Scheme.MemberRegistration;
     using Xml.MemberRegistration;
@@ -39,18 +40,27 @@
 
         private ProducerCharge GetProducerCharge(schemeType scheme, producerType producer, int complianceYear)
         {
-            var calculator = producerChargeBandCalculatorChooser.GetCalculator(scheme, producer, complianceYear);
+            var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(scheme, producer)).Result;
 
-            ChargeBand chargeBandType = calculator.GetProducerChargeBand(producer);
+            //ChargeBand chargeBandType = calculator.GetProducerChargeBand(producer);
 
-            ChargeBandAmount currentChargeBandAmount =
-                dataAccess.FetchCurrentChargeBandAmount(chargeBandType);
+            if (chargeBand == null)
+            {
+                throw new ApplicationException("NULL Charge Band");
+            }
+
+            var currentChargeBandAmount = dataAccess.FetchCurrentChargeBandAmount(chargeBand.Value);
 
             return new ProducerCharge()
             {
                 ChargeBandAmount = currentChargeBandAmount,
                 Amount = currentChargeBandAmount.Amount
             };
+        }
+
+        public ProducerCharge CalculateCharge(schemeType scheme, producerType producer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

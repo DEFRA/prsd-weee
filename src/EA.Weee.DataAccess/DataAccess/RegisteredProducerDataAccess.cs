@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Lookup;
     using Domain.Producer;
 
     public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
@@ -60,6 +61,14 @@
             }
 
             return null;
+        }
+
+        public async Task<bool> HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        {
+            return await context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
+                          && p.RegisteredProducer.ComplianceYear == complianceYear
+                          && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
+                          && p.ChargeBandAmount.ChargeBand == ChargeBand.NA).AnyAsync();
         }
     }
 }

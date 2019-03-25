@@ -64,7 +64,6 @@
     <Compile Include="Deserialization\XmlDeserializationFailureException.cs" />
     <Compile Include="MemberRegistration\EnvironmentAgencyProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\Extensions.cs" />
-    <Compile Include="MemberRegistration\IProducerAmendmentChargeCalculator.cs" />
     <Compile Include="MemberRegistration\IEnvironmentAgencyProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\IProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\IProducerChargeBandCalculatorChooser.cs" />

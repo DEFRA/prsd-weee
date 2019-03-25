@@ -1,40 +1,48 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System.Threading.Tasks;
     using Domain.Lookup;
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
-        public ChargeBand GetProducerChargeBand(producerType producerType)
+        public async Task<ChargeBand?> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
-            if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
-                return ChargeBand.E;
+                return await Task.FromResult(ChargeBand.E);
             }
             else
             {
-                if (producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                    && producerType.VATRegistered
-                    && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                    && producer.VATRegistered
+                    && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBand.A;
+                    return await Task.FromResult(ChargeBand.A);
                 }
-                else if (producerType.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && producerType.VATRegistered
-                         && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                         && producer.VATRegistered
+                         && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBand.B;
+                    return await Task.FromResult(ChargeBand.B);
                 }
-                else if (producerType.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                         && !producerType.VATRegistered
-                         && producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                         && !producer.VATRegistered
+                         && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBand.D;
+                    return await Task.FromResult(ChargeBand.D);
                 }
                 else
                 {
-                    return ChargeBand.C;
+                    return await Task.FromResult(ChargeBand.C);
                 }
             }
+        }
+
+        public bool IsMatch(schemeType scheme, producerType producer)
+        {
+            var year = int.Parse(scheme.complianceYear);
+
+            return year <= 2018  && producer.status == statusType.I ? true : false;
         }
     }
 }

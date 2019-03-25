@@ -4,7 +4,7 @@
     using Domain.Lookup;
     using EA.Weee.DataAccess.DataAccess;
 
-    public class ProducerAmendmentChargeCalculator : IProducerAmendmentChargeCalculator
+    public class ProducerAmendmentChargeCalculator : IProducerChargeBandCalculator
     {
         private readonly IEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
@@ -15,20 +15,28 @@
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public async Task<ChargeBand?> GetChargeAmount(schemeType schmemeType, producerType producerType)
+        public async Task<ChargeBand?> GetProducerChargeBand(schemeType schmemeType, producerType producerType)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 
             var previousProducerSubmission =
                 await registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
 
-            if (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            var previousAmendmentCharge =
+                await registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
+
+            if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
             {
-                return environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(producerType);
+                return await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType);
             }
 
-            return null;
+            return await Task.FromResult(ChargeBand.NA);
+        }
+
+        public bool IsMatch(schemeType scheme, producerType producer)
+        {
+            return producer.status == statusType.A;
         }
     }
 }

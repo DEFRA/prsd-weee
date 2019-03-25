@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
     using System;
+    using System.Threading.Tasks;
     using Domain.Lookup;
     using QuerySets;
     using Xml.MemberRegistration;
@@ -27,20 +28,18 @@
 
                 if (existingProducer != null)
                 {
-                    ChargeBand existingChargeBandType = existingProducer.ChargeBandAmount.ChargeBand;
+                    var existingChargeBandType = existingProducer.ChargeBandAmount.ChargeBand;
 
-                    var calculator = producerChargeBandCalculatorChooser.GetCalculator(root, element, int.Parse(root.complianceYear));
+                    var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
 
-                    ChargeBand newChargeBandType = calculator.GetProducerChargeBand(element);
-
-                    if (existingChargeBandType != newChargeBandType)
+                    if (chargeBand.HasValue && existingChargeBandType != chargeBand)
                     {
                         result = RuleResult.Fail(
                            string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
                               existingProducer.OrganisationName,
                               existingProducer.RegisteredProducer.ProducerRegistrationNumber,
                               existingChargeBandType,
-                              newChargeBandType),
+                               chargeBand),
                            Core.Shared.ErrorLevel.Warning);
                     }
                 }

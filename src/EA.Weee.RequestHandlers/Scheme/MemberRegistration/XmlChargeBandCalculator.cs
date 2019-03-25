@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Domain.Error;
     using Domain.Scheme;
     using Interfaces;
@@ -32,7 +33,7 @@
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType, producer, complianceYear);
+                var producerCharge = Task.Run(() => producerChargeCalculator.CalculateCharge(schemeType, producer)).Result;
 
                 if (producerCharge != null)
                 {

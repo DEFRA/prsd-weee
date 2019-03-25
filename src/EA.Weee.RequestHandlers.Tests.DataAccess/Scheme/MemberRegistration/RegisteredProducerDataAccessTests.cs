@@ -3,7 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
@@ -78,6 +81,55 @@
             var result = await dataAccess.GetProducerRegistration(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
 
             Assert.Equal(registeredProducer, result);
+        }
+
+        [Fact]
+        public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentCharge_FalseShouldBeReturned()
+        {
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(ChargeBand.A2, 0) }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
+            var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async void GetPreviousAmendmentCharge_GivenPreviousAmendmentCharge_TrueShouldBeReturned()
+        {
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(ChargeBand.NA, 0) }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
+            var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
+
+            Assert.True(result);
+        }
+
+        private ProducerSubmission ProducerSubmission(ChargeBand band, decimal amount)
+        {
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Id).Returns(registeredProducer.Scheme.Id);
+            var memberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload.Scheme).Returns(scheme);
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(ComplianceYear);
+
+            return new ProducerSubmission(registeredProducer,
+                memberUpload, 
+                A.Dummy<ProducerBusiness>(),
+                A.Dummy<AuthorisedRepresentative>(),
+                A.Dummy<DateTime>(),
+                A.Dummy<decimal?>(),
+                A.Dummy<bool>(),
+                A.Dummy<DateTime?>(),
+                A.Dummy<string>(),
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.DirectSellingtoEndUser,
+                ObligationType.B2B,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                A.Dummy<List<BrandName>>(),
+                A.Dummy<List<SICCode>>(),
+                new ChargeBandAmount(Guid.Empty, band, amount),
+                A.Dummy<decimal>());
         }
 
         private RegisteredProducer RegisteredProducer()
