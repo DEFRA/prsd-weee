@@ -75,6 +75,7 @@
           <Property Name="Abbreviation" Type="nvarchar" MaxLength="65" Nullable="false" />
           <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="AnnualChargeAmount" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -155,6 +156,7 @@
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="FacilityName" Type="nvarchar" MaxLength="250" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="FacilityNameDataLength" Type="int" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="AeDeliveryLocation">
           <Key>
@@ -164,6 +166,7 @@
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="OperatorName" Type="nvarchar" MaxLength="250" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="OperatorNameDataLength" Type="int" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="DataReturn">
           <Key>
@@ -265,6 +268,7 @@
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="HasAnnualCharge" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -1499,6 +1503,7 @@
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
           <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AnnualChargeAmount" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -1604,6 +1609,7 @@
           <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
           <NavigationProperty Name="InvoiceRun" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="MemberUpload" ToRole="InvoiceRun" />
+          <Property Name="HasAnnualCharge" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -2896,6 +2902,7 @@
           <Property Name="FacilityName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" FromRole="AatfDeliveryLocation" ToRole="WeeeDeliveredAmount" />
+          <Property Name="FacilityNameDataLength" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="AeDeliveryLocation">
           <Key>
@@ -2906,6 +2913,7 @@
           <Property Name="OperatorName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" FromRole="AeDeliveryLocation" ToRole="WeeeDeliveredAmount" />
+          <Property Name="OperatorNameDataLength" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="FK_WeeeDeliveredAmount_AatfDeliveryLocation">
           <End Type="EA.Weee.TestModel.AatfDeliveryLocation" Role="AatfDeliveryLocation" Multiplicity="0..1" />
@@ -3074,6 +3082,7 @@
           <EntitySetMapping Name="CompetentAuthorities">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthority">
               <MappingFragment StoreEntitySet="CompetentAuthority">
+                <ScalarProperty Name="AnnualChargeAmount" ColumnName="AnnualChargeAmount" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -3148,6 +3157,7 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="HasAnnualCharge" ColumnName="HasAnnualCharge" />
                 <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
                 <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
                 <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />
@@ -3525,6 +3535,7 @@
           <EntitySetMapping Name="AatfDeliveryLocations">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.AatfDeliveryLocation">
               <MappingFragment StoreEntitySet="AatfDeliveryLocation">
+                <ScalarProperty Name="FacilityNameDataLength" ColumnName="FacilityNameDataLength" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="FacilityName" ColumnName="FacilityName" />
                 <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
@@ -3535,6 +3546,7 @@
           <EntitySetMapping Name="AeDeliveryLocations">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.AeDeliveryLocation">
               <MappingFragment StoreEntitySet="AeDeliveryLocation">
+                <ScalarProperty Name="OperatorNameDataLength" ColumnName="OperatorNameDataLength" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
                 <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />

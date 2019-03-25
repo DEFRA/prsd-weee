@@ -119,6 +119,8 @@
 
         private string regOfficeOrPPoBCountry;
 
+        private string hasAnnualCharge;
+
         public virtual string OrganisationName
         {
             get
@@ -162,6 +164,8 @@
                 return null;
             }
         }
+
+        public virtual string HasAnnualCharge => hasAnnualCharge = MemberUpload.HasAnnualCharge ? "Yes" : "No";
 
         public override int GetHashCode()
         {

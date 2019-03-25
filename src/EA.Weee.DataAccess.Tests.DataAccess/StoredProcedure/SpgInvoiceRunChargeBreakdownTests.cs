@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Domain;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,9 +17,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_ForSpecifiedInvoiceRunOnly()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -49,9 +53,9 @@
         [Fact]
         public async Task Execute_ReturnsInvoicedProducers_Only()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -80,9 +84,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_WithNonZeroChargesOnly()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -111,9 +115,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -161,9 +165,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending_ThenByComplianceYearDescending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -208,9 +212,9 @@
         [Fact]
         public async Task Execute_ReturnsProducers_OrderedBy_SchemeAscending_ThenByComplianceYearDescending_ThenBySubmittedDateAscending()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var invoiceRun = helper.CreateInvoiceRun();
 
@@ -267,9 +271,9 @@
         [Fact]
         public async Task Execute_ReturnsProducer_CountryForPartnerShip()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -295,9 +299,9 @@
         [Fact]
         public async Task Execute_ReturnsProducer_CountryForCompany()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
                 var scheme = helper.CreateScheme();
 
@@ -317,6 +321,38 @@
                 Assert.Single(result);
                 Assert.Equal("UK - England", result.Single().RegOfficeOrPBoBCountry);
             }
-        } 
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Execute_ReturnsProducer_HasAnnualCharge_ReturnsCorrectValue(bool value)
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(db.Model);
+
+                var scheme = helper.CreateScheme();
+
+                var invoiceRun = helper.CreateInvoiceRun();
+                invoiceRun.Id = Guid.NewGuid();
+
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRun);
+                memberUpload.HasAnnualCharge = value;
+                memberUpload.ComplianceYear = 2019;
+
+                var producer = helper.CreateProducerAsCompany(memberUpload, "PRN567");
+                producer.ChargeBandAmount = helper.FetchChargeBandAmount(Domain.Lookup.ChargeBand.E);
+                producer.ChargeThisUpdate = 10;
+                producer.Invoiced = true;
+                
+                db.Model.SaveChanges();
+
+                var result = await db.StoredProcedures.SpgInvoiceRunChargeBreakdown(invoiceRun.Id);
+
+                Assert.Single(result);
+                Assert.Equal(value ? "Yes" : "No", result.Single().HasAnnualCharge);
+            }
+        }
     }
 }

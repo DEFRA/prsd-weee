@@ -47,6 +47,7 @@
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
+            csvWriter.DefineColumn(@"Includes Annual Charge", ps => ps.HasAnnualCharge);
 
             string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
