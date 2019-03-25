@@ -2,21 +2,15 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
-    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -56,6 +50,18 @@
             await handler.HandleAsync(new GetSentOnAatfSite(id));
 
             A.CallTo(() => sentOnDataAccess.GetWeeeSentOnAddress(id)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
+        {
+            var address = A.Fake<AatfAddress>();
+
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnAddress(A<Guid>._)).Returns(address);
+
+            await handler.HandleAsync(A.Dummy<GetSentOnAatfSite>());
+
+            A.CallTo(() => mapper.Map(A<AatfAddress>.That.IsSameAs(address))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
