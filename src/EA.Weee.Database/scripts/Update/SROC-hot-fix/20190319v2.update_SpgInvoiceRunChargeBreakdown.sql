@@ -43,6 +43,8 @@ SELECT
                          THEN 'D2'
               WHEN 8
                          THEN 'D3'
+			  WHEN 9
+                         THEN 'NA'
                          ELSE ''
            END AS 'ChargeBandType',
           CASE 
