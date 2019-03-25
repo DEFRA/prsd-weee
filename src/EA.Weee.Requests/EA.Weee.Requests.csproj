@@ -65,7 +65,6 @@
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedBaseRequest.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
-    <Compile Include="AatfReturn\Obligated\ObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReused.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />

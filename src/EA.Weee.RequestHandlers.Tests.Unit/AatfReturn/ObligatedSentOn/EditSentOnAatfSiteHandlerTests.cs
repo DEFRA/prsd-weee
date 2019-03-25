@@ -57,21 +57,19 @@
         [Fact]
         public async Task HandleAsync_GivenEditSentOnAatfSiteRequest_DataAccessIsCalled()
         {
-            var operatorAddressData = new OperatorAddressData()
-            {
-                Name = "OpName",
-                Address1 = "Address1",
-                Address2 = "Address2",
-                TownOrCity = "Town",
-                CountyOrRegion = "County",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid()
-            };
-
             var request = new EditSentOnAatfSite()
             {
                 WeeeSentOnId = Guid.NewGuid(),
-                OperatorAddressData = operatorAddressData
+                OperatorAddressData = new OperatorAddressData()
+                {
+                    Name = "OpName",
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid()
+                }
             };
 
             var weeeSentOn = new WeeeSentOn();
@@ -81,17 +79,17 @@
             A.CallTo(() => orgDataAccess.FetchCountryAsync(request.OperatorAddressData.CountryId)).Returns(country);
 
             var operatorAddress = new AatfAddress(
-            request.OperatorAddressData.Name,
-            request.OperatorAddressData.Address1,
-            request.OperatorAddressData.Address2,
-            request.OperatorAddressData.TownOrCity,
-            request.OperatorAddressData.CountyOrRegion,
-            request.OperatorAddressData.Postcode,
-            country);
+                request.OperatorAddressData.Name,
+                request.OperatorAddressData.Address1,
+                request.OperatorAddressData.Address2,
+                request.OperatorAddressData.TownOrCity,
+                request.OperatorAddressData.CountyOrRegion,
+                request.OperatorAddressData.Postcode,
+                country);
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => sentOnDataAccess.UpdateWithOperatorAddress(weeeSentOn, operatorAddress)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => sentOnDataAccess.UpdateWithOperatorAddress(weeeSentOn, operatorAddress)).WhenArgumentsMatch(p => p.Get<AatfAddress>("request").Address1 == operatorAddress.Address1);
         }
     }
 }
