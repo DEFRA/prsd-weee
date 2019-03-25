@@ -332,13 +332,11 @@
     <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\EditSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\IAddObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IEditSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IGetSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
