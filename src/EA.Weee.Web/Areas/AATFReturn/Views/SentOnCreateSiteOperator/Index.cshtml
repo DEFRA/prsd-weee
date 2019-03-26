@@ -28,6 +28,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.WeeeSentOnId)
+        @Html.HiddenFor(m => m.SiteAddressData.Name)
         @Html.HiddenFor(m => m.SiteAddressData.Address1)
         @Html.HiddenFor(m => m.SiteAddressData.Address2)
         @Html.HiddenFor(m => m.SiteAddressData.CountyOrRegion)
@@ -37,7 +38,7 @@
         @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
         <div class="govuk-form-group" id="operatorCheckBox">
-            @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input" })
+            @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input", @onclick = "IsOperatorSameAddress()" })
             <!--<p class="govuk-body" style="color: grey">If the operator address associated with this AATF/ATF is different please uncheck this box</p>-->
         </div>
 
@@ -51,53 +52,8 @@
     }
 </section>
 
+@Scripts.Render("~/bundles/sent-on-operator-address")
 @section scripts {
-    <script>
-        $('#IsOperatorTheSameAsAATF').click(function () {
-            if (this.checked) {
-                var address1 = $('#SiteAddressData_Address1').val();
-                var address2 = $('#SiteAddressData_Address2').val();
-                var townorcity = $('#SiteAddressData_TownOrCity').val();
-                var postcode = $('#SiteAddressData_Postcode').val();
-                var countyorregion = $('#SiteAddressData_CountyOrRegion').val();
-                var countryId = $('#SiteAddressData_CountryId').val();
-                var countryName = $('#SiteAddressData_CountryName').val();
-
-                if (address1 != '') {
-                    $('#OperatorAddressData_Address1').val(address1);
-                }
-
-                if (address2 != '') {
-                    $('#OperatorAddressData_Address2').val(address2);
-                }
-
-                if (townorcity != '') {
-                    $('#OperatorAddressData_TownOrCity').val(townorcity);
-                }
-
-                if (postcode != '') {
-                    $('#OperatorAddressData_Postcode').val(postcode);
-                }
-
-                if (countyorregion != '') {
-                    $('#OperatorAddressData_CountyOrRegion').val(countyorregion);
-                }
-
-                if (countryId != '') {
-                    $('#OperatorAddressData_CountryId').val(countryId);
-                    $('#country-dropdown-list input').val(countryName);
-                }
-            } else {
-                $('#OperatorAddressData_Address1').val('');
-                $('#OperatorAddressData_Address2').val('');
-                $('#OperatorAddressData_CountyOrRegion').val('');
-                $('#OperatorAddressData_Postcode').val('');
-                $('#OperatorAddressData_TownOrCity').val('');
-                $('#OperatorAddressData_CountryId').val('');
-                $('#country-dropdown-list input').val('');
-            }
-        });
-    </script>
     <noscript>
         <style type="text/css">
             #operatorCheckBox {
