@@ -106,6 +106,8 @@
     <Compile Include="AatfReturn\ObligatedReused\EditObligatedReusedHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandlerTests.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandlerTests.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandlerTests.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTestAccess.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
