@@ -18,6 +18,8 @@
 
         public OperatorAddressData OperatorAddressData;
 
+        public AatfAddressData SiteAddressData;
+
         public ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(IList<Core.Shared.CountryData> countryData)
         {
             this.OperatorAddressData = new OperatorAddressData();

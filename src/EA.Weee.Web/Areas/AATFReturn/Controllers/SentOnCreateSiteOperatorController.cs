@@ -43,28 +43,22 @@
             {
                 var operatorCountryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
+                AatfAddressData siteAddressDataJSDisabled = new AatfAddressData();
 
+                if (javascriptDisabled == true)
+                {
+                    var requestJSDisabled = new GetSentOnAatfSite(weeeSentOnId);
+
+                    siteAddressDataJSDisabled = await client.SendAsync(User.GetAccessToken(), requestJSDisabled);
+                }
+
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, SiteAddressData = siteAddressDataJSDisabled, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
+                
                 var request = getRequestCreator.ViewModelToRequest(viewModel);
 
                 var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
                 viewModel.SiteAddressData = siteAddressData;
-
-                if (javascriptDisabled != null)
-                {
-                    var disabled = (bool)javascriptDisabled;
-                    if (disabled)
-                    {
-                        viewModel.OperatorAddressData.Address1 = viewModel.SiteAddressData.Address1;
-                        viewModel.OperatorAddressData.Address2 = viewModel.SiteAddressData.Address2;
-                        viewModel.OperatorAddressData.CountryId = viewModel.SiteAddressData.CountryId;
-                        viewModel.OperatorAddressData.CountryName = viewModel.SiteAddressData.CountryName;
-                        viewModel.OperatorAddressData.TownOrCity = viewModel.SiteAddressData.TownOrCity;
-                        viewModel.OperatorAddressData.Postcode = viewModel.SiteAddressData.Postcode;
-                        viewModel.OperatorAddressData.CountyOrRegion = viewModel.SiteAddressData.CountyOrRegion;
-                    }
-                }
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 
