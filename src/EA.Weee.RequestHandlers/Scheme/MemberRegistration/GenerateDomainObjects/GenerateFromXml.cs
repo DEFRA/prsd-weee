@@ -10,6 +10,7 @@
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using GenerateDomainObjects.DataAccess;
     using Interfaces;
@@ -96,6 +97,8 @@
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
 
+                StatusType status = Enumeration.FromValue<StatusType>((int)producerData.status);
+
                 DateTime? ceaseDate = null;
                 if (producerData.ceaseToExistDateSpecified)
                 {
@@ -151,7 +154,8 @@
                     brandNames,
                     codes,
                     chargeBandAmount,
-                    chargeThisUpdate);
+                    chargeThisUpdate,
+                    status);
 
                 // modify producer data
                 switch (producerData.status)

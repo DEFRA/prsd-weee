@@ -25,7 +25,8 @@
             var previousAmendmentCharge =
                 await registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
 
-            if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+            if (previousProducerSubmission?.CurrentSubmission != null &&
+                !previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                 previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
             {
                 return await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType);

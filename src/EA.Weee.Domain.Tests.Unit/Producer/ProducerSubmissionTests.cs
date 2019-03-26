@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
@@ -280,7 +281,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             Assert.Equal("FRANCE", producer.RegOfficeOrPBoBCountry);
         }
@@ -333,7 +335,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             Assert.Equal("SPAIN", producer.RegOfficeOrPBoBCountry);
         }
@@ -378,7 +381,8 @@
                new List<Domain.Producer.BrandName>(),
                new List<Domain.Producer.SICCode>(),
                A.Dummy<ChargeBandAmount>(),
-               0);
+               0,
+               A.Dummy<StatusType>());
 
             Assert.Equal("Yes", producer.HasAnnualCharge);
         }
@@ -423,7 +427,8 @@
                new List<Domain.Producer.BrandName>(),
                new List<Domain.Producer.SICCode>(),
                A.Dummy<ChargeBandAmount>(),
-               0);
+               0,
+                A.Dummy<StatusType>());
 
             Assert.Equal("No", producer.HasAnnualCharge);
         }
@@ -496,6 +501,7 @@
             private SellingTechniqueType sellingTechniqueType = new CustomSellingTechniqueType(0);
             private EEEPlacedOnMarketBandType eeePlacedOnMarketBandType = new CustomEEEPlacedOnMarketBandType(0);
             private ChargeBandAmount chargeBandAmount = A.Dummy<ChargeBandAmount>();
+            private StatusType status = A.Dummy<StatusType>();
 
             private AuthorisedRepresentative authorisedRepresentative = new AlwaysEqualAuthorisedRepresentative();
             private ProducerBusiness producerBusiness = new AlwaysEqualProducerBusiness();
@@ -553,7 +559,8 @@
                     brandNames,
                     sicCodes,
                     chargeBandAmount,
-                    (decimal)5.0);
+                    (decimal)5.0,
+                    status);
 
                 registeredProducer.SetCurrentSubmission(producerSubmission);
 

@@ -7,6 +7,7 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
+    using Domain.Producer.Classification;
     using EA.Weee.Core.Shared;
     using FakeItEasy;
     using Weee.DataAccess.StoredProcedure;
@@ -152,7 +153,8 @@
                     new List<Domain.Producer.BrandName>(),
                     new List<Domain.Producer.SICCode>(),
                     chargeBandAmount,
-                    0);
+                    0,
+                    A.Dummy<StatusType>());
 
                 memberUpload1.ProducerSubmissions.Add(submission1);
 
@@ -214,7 +216,8 @@
                     new List<Domain.Producer.BrandName>(),
                     new List<Domain.Producer.SICCode>(),
                     chargeBandAmount,
-                    0);
+                    0,
+                    A.Dummy<StatusType>());
 
                 memberUpload2.ProducerSubmissions.Add(submission2);
 
@@ -308,7 +311,8 @@
                     new List<Domain.Producer.BrandName>(),
                     new List<Domain.Producer.SICCode>(),
                     chargeBandAmount,
-                    0);
+                    0,
+                    A.Dummy<StatusType>());
 
                 memberUpload1.ProducerSubmissions.Add(submission1);
 
@@ -370,7 +374,8 @@
                     new List<Domain.Producer.BrandName>(),
                     new List<Domain.Producer.SICCode>(),
                     chargeBandAmount,
-                    0);
+                    0,
+                    A.Dummy<StatusType>());
 
                 memberUpload2.ProducerSubmissions.Add(submission2);
 

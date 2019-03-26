@@ -6,6 +6,7 @@
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
@@ -123,6 +124,33 @@
         }
 
         [Fact]
+        public async void GetProducerChargeBand_GivenAmendmentCannotFindPreviousSubmission_NotApplicableChargeShouldBeReturned()
+        {
+            var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
+            var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
+
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns((RegisteredProducer)null);
+
+            var result = await calculator.GetProducerChargeBand(schemeType, producerType);
+
+            Assert.Equal(result, ChargeBand.NA);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_NotApplicableChargeShouldBeReturned()
+        {
+            var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
+            var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
+            var producer = new RegisteredProducer(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<Scheme>());
+
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns(producer);
+
+            var result = await calculator.GetProducerChargeBand(schemeType, producerType);
+
+            Assert.Equal(result, ChargeBand.NA);
+        }
+
+        [Fact]
         public void IsMatch_GivenProducerIsAmendement_TrueShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.A };
@@ -170,7 +198,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<ChargeBandAmount>(),
-                A.Dummy<decimal>());
+                A.Dummy<decimal>(),
+                A.Dummy<StatusType>());
 
             A.CallTo(() => registeredProducer.CurrentSubmission).Returns(producerSubmission);
             return registeredProducer;

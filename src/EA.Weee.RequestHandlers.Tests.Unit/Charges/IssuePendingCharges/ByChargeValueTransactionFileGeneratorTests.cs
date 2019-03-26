@@ -8,6 +8,7 @@
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using Domain.User;
     using FakeItEasy;
@@ -122,7 +123,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
@@ -254,7 +256,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                123.45m);
+                123.45m,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
@@ -359,7 +362,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100m);
+                100m,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission1);
 
@@ -380,7 +384,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                200m);
+                200m,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
@@ -473,7 +478,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100m);
+                100m,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission1);
 
@@ -494,7 +500,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100m);
+                100m,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
@@ -583,7 +590,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100m);
+                100m,
+                A.Dummy<StatusType>());
 
             memberUpload1.ProducerSubmissions.Add(producerSubmission1);
 
@@ -619,7 +627,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100m);
+                100m,
+                A.Dummy<StatusType>());
 
             memberUpload2.ProducerSubmissions.Add(producerSubmission2);
 
@@ -701,7 +710,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                100M);
+                100M,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 

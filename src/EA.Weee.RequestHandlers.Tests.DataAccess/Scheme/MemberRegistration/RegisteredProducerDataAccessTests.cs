@@ -7,6 +7,7 @@
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
@@ -84,9 +85,32 @@
         }
 
         [Fact]
-        public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentCharge_FalseShouldBeReturned()
+        public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoStatusMatch_FalseShouldBeReturned()
         {
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(ChargeBand.A2, 0) }));
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(20, StatusType.Insert, 2019, registeredProducer) }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
+            var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoComplianceYearMatch_FalseShouldBeReturned()
+        {
+            var local = RegisteredProducer(2018);
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { local }));
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(20, StatusType.Amendment, 2018, local) }));
+            
+            var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoAmountMatch_FalseShouldBeReturned()
+        {
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(0, StatusType.Amendment, 2019, registeredProducer) }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
@@ -97,7 +121,7 @@
         [Fact]
         public async void GetPreviousAmendmentCharge_GivenPreviousAmendmentCharge_TrueShouldBeReturned()
         {
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(ChargeBand.NA, 0) }));
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(1, StatusType.Amendment, 2019, registeredProducer) }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
@@ -105,13 +129,13 @@
             Assert.True(result);
         }
 
-        private ProducerSubmission ProducerSubmission(ChargeBand band, decimal amount)
+        private ProducerSubmission ProducerSubmission(decimal amount, StatusType status, int complianceYear, RegisteredProducer registeredProducer)
         {
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.Id).Returns(registeredProducer.Scheme.Id);
             var memberUpload = A.Fake<MemberUpload>();
             A.CallTo(() => memberUpload.Scheme).Returns(scheme);
-            A.CallTo(() => memberUpload.ComplianceYear).Returns(ComplianceYear);
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(complianceYear);
 
             return new ProducerSubmission(registeredProducer,
                 memberUpload, 
@@ -128,13 +152,14 @@
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
-                new ChargeBandAmount(Guid.Empty, band, amount),
-                A.Dummy<decimal>());
+                A.Dummy<ChargeBandAmount>(),
+                amount,
+                status);
         }
 
-        private RegisteredProducer RegisteredProducer()
+        private RegisteredProducer RegisteredProducer(int complianceYear = ComplianceYear)
         {
-            return new RegisteredProducer(ProducerRegistrationNumber, ComplianceYear, scheme);
+            return new RegisteredProducer(ProducerRegistrationNumber, complianceYear, scheme);
         }
     }
 }

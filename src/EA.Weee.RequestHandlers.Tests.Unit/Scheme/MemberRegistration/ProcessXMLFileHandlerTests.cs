@@ -13,6 +13,7 @@
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Domain;
@@ -349,7 +350,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                (decimal)30.0);
+                (decimal)30.0,
+                A.Dummy<StatusType>());
         }
 
         public static Scheme FakeSchemeData()

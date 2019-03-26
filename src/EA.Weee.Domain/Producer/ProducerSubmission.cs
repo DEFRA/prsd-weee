@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Classfication;
+    using Classification;
     using Domain;
     using Lookup;
     using Obligation;
@@ -29,7 +30,8 @@
             List<BrandName> brandnames,
             List<SICCode> codes,
             ChargeBandAmount chargeBandAmount,
-            decimal chargeThisUpdate)
+            decimal chargeThisUpdate,
+            StatusType status)
         {
             Guard.ArgumentNotNull(() => registeredProducer, registeredProducer);
             Guard.ArgumentNotNull(() => memberUpload, memberUpload);
@@ -67,6 +69,7 @@
             MemberUpload = memberUpload;
             ChargeBandAmount = chargeBandAmount;
             ChargeThisUpdate = chargeThisUpdate;
+            StatusType = status.Value;
         }
 
         protected ProducerSubmission()
@@ -119,7 +122,7 @@
 
         private string regOfficeOrPPoBCountry;
 
-        private string hasAnnualCharge;
+        public int? StatusType { get; private set; }
 
         public virtual string OrganisationName
         {

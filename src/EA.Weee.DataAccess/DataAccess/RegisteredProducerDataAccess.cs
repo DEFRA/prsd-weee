@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Producer;
+    using Domain.Producer.Classification;
 
     public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
     {
@@ -68,7 +69,9 @@
             return await context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                           && p.RegisteredProducer.ComplianceYear == complianceYear
                           && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
-                          && p.ChargeBandAmount.ChargeBand == ChargeBand.NA).AnyAsync();
+                          && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)
+                            && p.MemberUpload.ComplianceYear > 2018
+                            && p.ChargeThisUpdate > 0).AnyAsync();
         }
     }
 }

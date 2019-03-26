@@ -212,6 +212,7 @@
     <Content Include="scripts\Update\SROC-hot-fix\201903142.charge-bands.sql" />
     <Content Include="scripts\Update\SROC-hot-fix\20190314v1.updates-reg-ppob-country.sql" />
     <Content Include="scripts\Update\SROC-hot-fix\20190319v2.update_SpgInvoiceRunChargeBreakdown.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\201903251-ProducerSubmissionStatus.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
