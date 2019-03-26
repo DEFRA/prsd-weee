@@ -59,9 +59,9 @@
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
-                    await client.SendAsync(User.GetAccessToken(), request);
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "SentOnCreateSiteOperator", new { returnId = viewModel.ReturnId, organisationId = viewModel.OrganisationId, aatfId = viewModel.AatfId, weeeSentOnId = result});
                 }
             }
 

@@ -13,6 +13,11 @@
 
         public virtual Return @Return { get; private set; }
 
+        public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
+        {
+            OperatorAddress = @operator;
+        }
+
         public WeeeSentOn()
         {
         }
