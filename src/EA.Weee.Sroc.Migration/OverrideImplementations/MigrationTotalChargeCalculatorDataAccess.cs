@@ -20,12 +20,6 @@
 
         public bool CheckSchemeHasAnnualCharge(Scheme scheme, int year, DateTime date)
         {
-            var results = context.MemberUploads.Any(m => m.HasAnnualCharge
-                                           && m.Scheme.OrganisationId == scheme.OrganisationId
-                                           && m.ComplianceYear == year
-                                           && m.IsSubmitted
-                                           && m.SubmittedDate < date);
-
             return context.MemberUploads.Any(m => m.HasAnnualCharge
                                                   && m.Scheme.OrganisationId == scheme.OrganisationId
                                                   && m.ComplianceYear == year

@@ -6,6 +6,7 @@
     using Domain.Producer;
     using Domain.Scheme;
     using RequestHandlers.Scheme.MemberRegistration;
+    using Xml.MemberRegistration;
 
     public interface IMigrationDataAccess
     {
@@ -17,7 +18,7 @@
 
         void ResetMemberUploadInvoice(MemberUpload memberUpload);
 
-        void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge);
+        void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status);
 
         void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions);
 

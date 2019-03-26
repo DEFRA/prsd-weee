@@ -27,7 +27,7 @@
 
             try
             {
-                //args = new string[] { "Run" };
+                args = new string[] { "Run" };
                 if (args.Length != 1)
                 {
                     Exit(0);

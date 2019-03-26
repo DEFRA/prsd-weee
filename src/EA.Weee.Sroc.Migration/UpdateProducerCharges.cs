@@ -60,7 +60,7 @@
                         var scheme = context.Schemes.Single(c => c.OrganisationId == message.OrganisationId);
 
                         var hasAnnualCharge = totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(scheme, complianceYear, memberUpload.SubmittedDate.Value);
-                        var annualChargedToBeAdded = !hasAnnualCharge;
+                        var annualChargedToBeAdded = !hasAnnualCharge && scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA;
 
                         var total = TotalCalculatedCharges(memberUpload, schemeType, annualChargedToBeAdded, scheme);
 
@@ -119,7 +119,7 @@
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {
-                    memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge);
+                    memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge, producer.status);
                 }
 
                 if (!producerCharges.ContainsKey(producerName))

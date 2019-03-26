@@ -227,10 +227,11 @@
             Invoiced = true;
         }
 
-        public void UpdateCharge(decimal value, ChargeBandAmount chargeBandAmount)
+        public void UpdateCharge(decimal value, ChargeBandAmount chargeBandAmount, int status)
         {
             this.ChargeBandAmount = chargeBandAmount;
             this.ChargeThisUpdate = value;
+            this.StatusType = status;
         }
 
         public void SetAsNotInvoiced()

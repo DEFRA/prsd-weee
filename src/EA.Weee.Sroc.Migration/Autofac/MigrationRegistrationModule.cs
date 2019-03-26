@@ -2,6 +2,7 @@
 {
     using global::Autofac;
     using DataAccess;
+    using DataAccess.DataAccess;
     using OverrideImplementations;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -35,8 +36,11 @@
             builder.RegisterType<MigrationProducerChargeCalculatorDataAccess>().As<IMigrationProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationProducerChargeCalculator>().As<IMigrationProducerChargeCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<ProducerChargeBandCalculatorChooser>().As<IProducerChargeBandCalculatorChooser>().InstancePerLifetimeScope();
-            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IEnvironmentAgencyProducerChargeBandCalculator>();
-            builder.RegisterType<MigrationTotalChargeCalculatorDataAccess>().As<IMigrationTotalChargeCalculatorDataAccess>();
+            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IEnvironmentAgencyProducerChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationTotalChargeCalculatorDataAccess>().As<IMigrationTotalChargeCalculatorDataAccess>().InstancePerLifetimeScope();
+            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<ProducerAmendmentChargeCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>().InstancePerLifetimeScope();
         }
     }
 }
