@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedSentOnViewModel
 @{
     ViewBag.Title = "Sent On WEEE";
 }
@@ -12,7 +12,7 @@
                 @Model.AatfName
             </h1>
             <h2 class="govuk-heading-l">
-                WEEE sent to *OPERATOR NAME* for treatment
+                WEEE sent to @Model.OperatorName for treatment
             </h2>
         </div>
     </header>
