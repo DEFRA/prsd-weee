@@ -42,9 +42,9 @@
                     <td class="govuk-table__cell" style="text-align:right">
                         @item.Tonnages.B2B
                     </td>
-                    <td class="govuk-table__cell" style="text-align:right">
-                        @Html.RouteLink("Add data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
-                    </td>
+                    <td class="govuk-table__cell" style="text-align: right">
+                        <span class="govuk-visually-hidden">Add data for scheme @item.SchemeName </span>@Html.RouteLink("Add data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+</td>
                 </tr>
             }
         </tbody>
