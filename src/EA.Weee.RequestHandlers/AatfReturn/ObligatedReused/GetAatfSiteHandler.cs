@@ -9,18 +9,18 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
 
-    internal class GetAatfSiteRequestHandler : IRequestHandler<GetAatfSite, AddressTonnageSummary>
+    internal class GetAatfSiteHandler : IRequestHandler<GetAatfSite, AddressTonnageSummary>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfSiteDataAccess getAatfSiteDataAccess;
+        private readonly IAatfSiteDataAccess aatfSiteDataAccess;
         private readonly IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper;
 
-        public GetAatfSiteRequestHandler(IWeeeAuthorization authorization,
-            IAatfSiteDataAccess getAatfSiteDataAccess,
+        public GetAatfSiteHandler(IWeeeAuthorization authorization,
+            IAatfSiteDataAccess aatfSiteDataAccess,
             IMap<AatfAddressObligatedAmount, AddressTonnageSummary> mapper)
         {
             this.authorization = authorization;
-            this.getAatfSiteDataAccess = getAatfSiteDataAccess;
+            this.aatfSiteDataAccess = aatfSiteDataAccess;
             this.mapper = mapper;
         }
 
@@ -28,9 +28,9 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var addressData = await getAatfSiteDataAccess.GetAddresses(message.AatfId, message.ReturnId);
+            var addressData = await aatfSiteDataAccess.GetAddresses(message.AatfId, message.ReturnId);
 
-            var returnObligatedReusedValues = await getAatfSiteDataAccess.GetObligatedWeeeForReturnAndAatf(message.AatfId, message.ReturnId);
+            var returnObligatedReusedValues = await aatfSiteDataAccess.GetObligatedWeeeForReturnAndAatf(message.AatfId, message.ReturnId);
 
             var aatfAddressObligatedAmount = new AatfAddressObligatedAmount(addressData, returnObligatedReusedValues);
 

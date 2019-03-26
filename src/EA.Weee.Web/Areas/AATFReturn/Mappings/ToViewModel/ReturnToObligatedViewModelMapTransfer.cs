@@ -3,7 +3,7 @@
     using System;
     using Core.AatfReturn;
 
-    public class ReturnToObligatedViewModelTransfer
+    public class ReturnToObligatedViewModelMapTransfer
     {
         public ReturnData ReturnData { get; set; }
 
@@ -17,7 +17,7 @@
 
         public ObligatedCategoryValue PastedData { get; set; }
 
-        public ReturnToObligatedViewModelTransfer()
+        public ReturnToObligatedViewModelMapTransfer()
         {
             ReturnData = new ReturnData();
         }

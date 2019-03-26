@@ -91,7 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddAatfSiteIntegration.cs" />
+    <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="AddSentOnAatfSiteIntegration.cs" />
     <Compile Include="Auditing\AuditingTests.cs" />

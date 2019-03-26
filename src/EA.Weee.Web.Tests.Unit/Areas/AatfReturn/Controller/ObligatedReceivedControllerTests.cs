@@ -28,7 +28,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligatedReceivedController controller;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel> mapper;
+        private readonly IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper;
         private readonly ICategoryValueTotalCalculator calculator;
 
         public ObligatedReceivedControllerTests()
@@ -37,7 +37,7 @@
             requestCreator = A.Fake<IObligatedReceivedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            mapper = A.Fake<IMap<ReturnToObligatedViewModelTransfer, ObligatedViewModel>>();
+            mapper = A.Fake<IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             controller = new ObligatedReceivedController(cache, breadcrumb, () => weeeClient, requestCreator, mapper);
@@ -74,7 +74,7 @@
 
             await controller.Index(returnId, aatfId, schemeId);
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.SchemeId.Equals(schemeId)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.SchemeId.Equals(schemeId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
         
         [Fact]
@@ -102,7 +102,7 @@
         {
             var model = A.Fake<ObligatedViewModel>();
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelTransfer>._)).Returns(model);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
