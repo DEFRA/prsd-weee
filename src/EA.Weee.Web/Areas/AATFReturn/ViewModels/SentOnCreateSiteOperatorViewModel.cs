@@ -12,11 +12,5 @@
         public bool IsOperatorTheSameAsAATF { get; set; }
 
         public Guid WeeeSentOnId { get; set; }
-
-        public Guid AatfId { get; set; }
-        
-        public Guid ReturnId { get; set; }
-
-        public Guid OrganisationId { get; set; }
     }
 }
