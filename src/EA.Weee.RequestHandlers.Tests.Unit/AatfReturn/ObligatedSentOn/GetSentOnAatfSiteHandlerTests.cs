@@ -49,7 +49,7 @@
 
             await handler.HandleAsync(new GetSentOnAatfSite(id));
 
-            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnAddress(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnSiteAddress(id)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -57,7 +57,7 @@
         {
             var address = A.Fake<AatfAddress>();
 
-            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnAddress(A<Guid>._)).Returns(address);
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnSiteAddress(A<Guid>._)).Returns(address);
 
             await handler.HandleAsync(A.Dummy<GetSentOnAatfSite>());
 
