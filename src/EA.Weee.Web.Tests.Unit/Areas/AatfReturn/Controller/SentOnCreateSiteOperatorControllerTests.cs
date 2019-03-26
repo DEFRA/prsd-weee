@@ -3,10 +3,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -25,30 +23,32 @@
     using System.Web.Mvc;
     using Xunit;
 
-    public class SentOnCreateSiteControllerTests
+    public class SentOnCreateSiteOperatorControllerTests
     {
         private readonly IWeeeClient apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IAddSentOnAatfSiteRequestCreator requestCreator;
-        private readonly SentOnCreateSiteController controller;
-        private readonly IMap<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer, SentOnCreateSiteViewModel> mapper;
+        private readonly IGetSentOnAatfSiteRequestCreator getRequestCreator;
+        private readonly IEditSentOnAatfSiteRequestCreator requestCreator;
+        private readonly SentOnCreateSiteOperatorController controller;
+        private readonly IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper;
 
-        public SentOnCreateSiteControllerTests()
+        public SentOnCreateSiteOperatorControllerTests()
         {
-            apiClient = A.Fake<IWeeeClient>();
-            breadcrumb = A.Fake<BreadcrumbService>();
-            cache = A.Fake<IWeeeCache>();
-            requestCreator = A.Fake<IAddSentOnAatfSiteRequestCreator>();
-            mapper = A.Fake<IMap<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer, SentOnCreateSiteViewModel>>();
+            this.apiClient = A.Fake<IWeeeClient>();
+            this.breadcrumb = A.Fake<BreadcrumbService>();
+            this.cache = A.Fake<IWeeeCache>();
+            this.getRequestCreator = A.Fake<IGetSentOnAatfSiteRequestCreator>();
+            this.requestCreator = A.Fake<IEditSentOnAatfSiteRequestCreator>();
+            this.mapper = A.Fake<IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel>>();
 
-            controller = new SentOnCreateSiteController(() => apiClient, breadcrumb, cache, requestCreator, mapper);
+            controller = new SentOnCreateSiteOperatorController(() => apiClient, breadcrumb, cache, requestCreator, mapper, getRequestCreator);
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteControllerInheritsExternalSiteController()
+        public void CheckSentOnCreateSiteOperatorControllerInheritsExternalSiteController()
         {
-            typeof(SentOnCreateSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(SentOnCreateSiteOperatorController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
@@ -64,7 +64,7 @@
             A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(Guid.NewGuid(), Guid.NewGuid());
+            await controller.Index(@return.Id, organisationId, Guid.NewGuid(), Guid.NewGuid(), null);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -73,7 +73,7 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -82,19 +82,19 @@
         public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
-            var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteOperatorViewModel();
+            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             await controller.Index(model);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddSentOnAatfSite>._)).MustNotHaveHappened();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSite>._)).MustNotHaveHappened();
         }
 
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            var request = new AddSentOnAatfSite();
+            var model = new SentOnCreateSiteOperatorViewModel();
+            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var request = new EditSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 

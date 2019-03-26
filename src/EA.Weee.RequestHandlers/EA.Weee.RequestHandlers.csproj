@@ -95,9 +95,11 @@
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\IAddSentOnAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\ISentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
     <Compile Include="Mappings\AatfMap.cs" />
+    <Compile Include="Mappings\AatfSentOnSiteMap.cs" />
     <Compile Include="Mappings\AatfSiteMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
