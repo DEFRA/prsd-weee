@@ -67,7 +67,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "ObligatedSentOn", new { organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, weeeSentOnId = viewModel.WeeeSentOnId });
                 }
             }
 

@@ -30,7 +30,12 @@
             return context.SaveChangesAsync();
         }
 
-        public async Task<AatfAddress> GetWeeeSentOnAddress(Guid id)
+        public async Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id)
+        {
+            return await context.WeeeSentOn.Where(w => w.Id == id).Select(w => w.OperatorAddress).SingleOrDefaultAsync();
+        }
+
+        public async Task<AatfAddress> GetWeeeSentOnSiteAddress(Guid id)
         {
             return await context.WeeeSentOn.Where(w => w.Id == id).Select(w => w.SiteAddress).SingleOrDefaultAsync();
         }

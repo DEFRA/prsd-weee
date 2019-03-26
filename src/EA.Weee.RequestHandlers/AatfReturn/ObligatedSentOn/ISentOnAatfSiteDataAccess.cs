@@ -8,7 +8,9 @@
     {
         Task Submit(WeeeSentOn weeeSentOn);
 
-        Task<AatfAddress> GetWeeeSentOnAddress(Guid id);
+        Task<AatfAddress> GetWeeeSentOnSiteAddress(Guid id);
+
+        Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id)
 
         Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
     }
