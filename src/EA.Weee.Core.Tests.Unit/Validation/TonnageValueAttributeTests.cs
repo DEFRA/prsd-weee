@@ -229,7 +229,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format. E.g. 1, 10, 100, 1000 or 1,000");
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using a comma only as a thousand separator");
         }
 
         private void ValidationWithTypeMessage(object value)
