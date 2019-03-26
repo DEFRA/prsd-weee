@@ -262,7 +262,7 @@
       <Name>EA.Weee.Api.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
-      <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
+      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">

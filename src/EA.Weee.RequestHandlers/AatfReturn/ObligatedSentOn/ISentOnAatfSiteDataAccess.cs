@@ -10,7 +10,7 @@
 
         Task<AatfAddress> GetWeeeSentOnSiteAddress(Guid id);
 
-        Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id)
+        Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id);
 
         Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
     }

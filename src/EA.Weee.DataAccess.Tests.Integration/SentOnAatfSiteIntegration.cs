@@ -87,7 +87,7 @@
 
                 var weeeSentOn = await CreateWeeeSentOnInContext(context, dataAccess, siteAddress);
 
-                var result = await dataAccess.GetWeeeSentOnAddress(weeeSentOn.Id);
+                var result = await dataAccess.GetWeeeSentOnSiteAddress(weeeSentOn.Id);
 
                 result.Should().BeSameAs(weeeSentOn.SiteAddress);
             }
