@@ -70,7 +70,7 @@
 
     @if (numWarnings > 0)
     {
-        <details role="group" id="ddd" class="govuk-details weee-upload-warning">
+        <details role="group" class="govuk-details weee-upload-warning">
             @{
                 string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
                 this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings");
