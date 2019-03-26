@@ -43,22 +43,11 @@
             {
                 var operatorCountryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                AatfAddressData siteAddressDataJSDisabled = new AatfAddressData();
-
-                if (javascriptDisabled == true)
-                {
-                    var requestJSDisabled = new GetSentOnAatfSite(weeeSentOnId);
-
-                    siteAddressDataJSDisabled = await client.SendAsync(User.GetAccessToken(), requestJSDisabled);
-                }
-
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, SiteAddressData = siteAddressDataJSDisabled, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId });
-                
-                var request = getRequestCreator.ViewModelToRequest(viewModel);
+                var request = new GetSentOnAatfSite(weeeSentOnId);
 
                 var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
-                viewModel.SiteAddressData = siteAddressData;
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, SiteAddressData = siteAddressData, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 

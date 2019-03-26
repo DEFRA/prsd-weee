@@ -24,10 +24,11 @@
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
                 OperatorAddressData = source.OperatorAddressData,
-                WeeeSentOnId = source.WeeeSentOnId
+                WeeeSentOnId = source.WeeeSentOnId,
+                SiteAddressData = source.SiteAddressData
             };
 
-            if (source.SiteAddressData.Address1 != null)
+            if (source.JavascriptDisabled == true)
             {
                 viewModel.OperatorAddressData.Address1 = source.SiteAddressData.Address1;
                 viewModel.OperatorAddressData.Address2 = source.SiteAddressData.Address2;
