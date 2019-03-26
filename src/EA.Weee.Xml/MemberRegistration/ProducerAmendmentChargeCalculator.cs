@@ -25,11 +25,13 @@
             var previousAmendmentCharge =
                 await registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
 
-            if (previousProducerSubmission?.CurrentSubmission != null &&
-                !previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
+            if (previousProducerSubmission != null && previousProducerSubmission.CurrentSubmission != null)
             {
-                return await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType);
+                if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                                                 previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
+                {
+                    return await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType);
+                }
             }
 
             return await Task.FromResult(ChargeBand.NA);
