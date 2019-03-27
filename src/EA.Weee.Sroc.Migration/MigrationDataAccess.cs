@@ -25,9 +25,10 @@
 
         public IList<MemberUpload> FetchMemberUploadsToProcess()
         {
+            var id = Guid.Parse("6b21d7ea-acbf-4266-8f1f-aa1400d5974d");
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
+                    .Where(m => m.Id == id && m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
                     .OrderBy(m => m.SubmittedDate);
 
             return memberUploads.ToList();
@@ -55,8 +56,10 @@
 
         public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status)
         {
-            var producer = context.ProducerSubmissions
-                .Where(p => p.MemberUploadId == memberUploadId && (p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name))
+            var producersBymember = context.ProducerSubmissions
+                .Where(p => p.MemberUploadId == memberUploadId);
+
+            var producer = producersBymember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
                             || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
             
             if (producer.Count() != 1)
