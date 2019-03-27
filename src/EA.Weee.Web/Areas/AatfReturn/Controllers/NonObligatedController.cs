@@ -70,11 +70,6 @@
             {
                 if (ModelState.IsValid)
                 {
-                    await ValidateResult(viewModel, client);
-                }
-
-                if (ModelState.IsValid)
-                {
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
@@ -95,18 +90,18 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private async Task ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
-        {
-            var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
-            var result = await validator.Validate(model, @return);
+        //private async Task ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
+        //{
+        //    var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
+        //    var result = await validator.Validate(model, @return);
 
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-            }
-        }
+        //    if (!result.IsValid)
+        //    {
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //        }
+        //    }
+        //}
     }
 }
