@@ -29,7 +29,7 @@
                     <td class="govuk-table__cell" style="text-align:right">@Model.B2cTotal</td>
                     <td class="govuk-table__cell" style="text-align:right">@Model.B2bTotal</td>
                     <td class="govuk-table__cell">
-                        @Html.RouteLink("Change", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
+                        <span class="govuk-visually-hidden">Change WEEE re-used</span>@Html.RouteLink("Change", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
                     </td>
                 </tr>
             </tbody>
@@ -50,7 +50,8 @@
                         <td class="govuk-table__cell" scope="col">@address.Name</td>
                         <td class="govuk-table__cell" scope="col">@address.Address</td>
                         <td class="govuk-table__cell" scope="col">
-                            @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Edit", controller = "ReusedOffSiteCreateSite" }, null)
+                            <span class="govuk-visually-hidden">Change the address of @address.Name</span>
+                            @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
                         </td>
                     </tr>
                 }
@@ -60,10 +61,6 @@
         @Html.RouteLink("Add another site", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
         <div class="govuk-!-padding-bottom-8"></div>
 
-        <form method="post" class="form" style="display: inline">
-            <button type="submit" class="govuk-button" id="aatf-task-list">
-                AATF task list
-            </button>
-        </form>
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
     }
 </section>
