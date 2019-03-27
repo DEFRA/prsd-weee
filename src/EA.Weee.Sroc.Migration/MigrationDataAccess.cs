@@ -25,10 +25,9 @@
 
         public IList<MemberUpload> FetchMemberUploadsToProcess()
         {
-            var id = Guid.Parse("6b21d7ea-acbf-4266-8f1f-aa1400d5974d");
             var memberUploads = context.MemberUploads
                     .Include(m => m.ProducerSubmissions)
-                    .Where(m => m.Id == id && m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
+                    .Where(m => m.IsSubmitted && m.InvoiceRun == null && m.ComplianceYear == 2019 && m.Scheme.CompetentAuthority.Abbreviation == "EA")
                     .OrderBy(m => m.SubmittedDate);
 
             return memberUploads.ToList();
