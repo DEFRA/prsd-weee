@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
+    using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -92,19 +94,40 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ReusedOffSiteCreateSiteViewModelShouldBeReturned()
+        public async void IndexGet_GivenActionAndParameters_ViewModelShouldBeMapped()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            
-            var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
+            var siteId = Guid.NewGuid();
 
-            var receivedModel = result.Model as ReusedOffSiteCreateSiteViewModel;
+            var country = new List<CountryData>();
+            var summary = new AddressTonnageSummary();
 
-            receivedModel.OrganisationId.Should().Be(organisationId);
-            receivedModel.ReturnId.Should().Be(returnId);
-            receivedModel.AatfId.Should().Be(aatfId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(country);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfSite>._)).Returns(summary);
+
+            await controller.Index(organisationId, returnId, aatfId, siteId);
+
+            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>.That.Matches(x =>
+                x.OrganisationId.Equals(organisationId) &&
+                x.AatfId.Equals(aatfId) &&
+                x.ReturnId.Equals(returnId) &&
+                x.SiteId.Equals(siteId) &&
+                x.Countries.Equals(country) &&
+                x.ReturnedSites.Equals(summary)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenActionAndParameters_ReusedOffSiteCreateSiteViewModelShouldBeReturned()
+        {
+            var model = new ReusedOffSiteCreateSiteViewModel();
+
+            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+
+            Assert.Equal(result.Model, model);
         }
 
         [Fact]
@@ -117,10 +140,12 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var viewModel = new ReusedOffSiteCreateSiteViewModel();
-            viewModel.OrganisationId = organisationId;
-            viewModel.ReturnId = returnId;
-            viewModel.AatfId = aatfId;
+            var viewModel = new ReusedOffSiteCreateSiteViewModel
+            {
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                AatfId = aatfId,
+            };
 
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
@@ -176,56 +201,6 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.SchemeInfo.Should().Be(schemeInfo);
-        }
-
-        [Fact]
-        public async void EditGet_GivenValidViewModel_BreadcrumbShouldBeSet()
-        {
-            var organisationId = Guid.NewGuid();
-            var schemeInfo = A.Fake<SchemePublicInfo>();
-            const string orgName = "orgName";
-
-            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
-
-            await controller.Edit(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
-
-            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
-            breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
-        }
-
-        [Fact]
-        public async void EditGet_GivenAction_IndexViewShouldBeReturned()
-        {
-            var result = await controller.Edit(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
-
-            result.ViewName.Should().Be("Index");
-        }
-
-        [Fact]
-        public async void EditGet_GivenActionAndParameters_ViewModelShouldBeBuilt()
-        {
-            var organisationId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var siteId = Guid.NewGuid();
-            
-            await controller.Edit(organisationId, returnId, aatfId, siteId);
-            
-            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>.That.Matches(r => r.AatfId.Equals(aatfId) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.OrganisationId.Equals(organisationId)))).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void EditGet_GivenActionAndParameters_ViewModelShouldBeReturned()
-        {
-            var model = A.Fake<ReusedOffSiteCreateSiteViewModel>();
-
-            A.CallTo(() => mapper.Map(A<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer>._)).Returns(model);
-
-            var result = await controller.Edit(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
-
-            result.Model.Should().Be(model);
         }
     }
 }
