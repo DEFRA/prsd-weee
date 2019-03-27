@@ -175,7 +175,6 @@
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidatorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />

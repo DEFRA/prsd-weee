@@ -8,14 +8,37 @@
     public class EnvironmentAgencyProducerChargeBandCalculatorTests
     {
         private readonly EnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
+        private readonly IFetchProducerCharge fetchProducerCharge;
 
         public EnvironmentAgencyProducerChargeBandCalculatorTests()
         {
-            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator();
+            fetchProducerCharge = A.Fake<IFetchProducerCharge>();
+
+            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(fetchProducerCharge);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ReturnsChargeBandE()
+        public async void GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            eeePlacedOnMarketBandType = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ChargeBandEShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -23,51 +46,110 @@
             var annualTurnoverBandType = new annualTurnoverBandType();
 
             eeePlacedOnMarketBandType = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.E, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ReturnsChargeBandA2()
+        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A2)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandA2ShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
             var annualTurnoverBandType = new annualTurnoverBandType();
 
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.A2, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A2)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ReturnsChargeBandD3()
+        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.FRANCE;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D3)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandD3ShouldBeRetrieved()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
             var annualTurnoverBandType = new annualTurnoverBandType();
 
             countryType = countryType.FRANCE;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.D3, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D3)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ReturnsChargeBandA()
+        public async void GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.UKWALES;
+            annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ChargeBandAShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -76,17 +158,37 @@
 
             countryType = countryType.UKWALES;
             annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.A, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered_ReturnsChargeBandB()
+        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.UKSCOTLAND;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered_ChargeBandBShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -94,51 +196,110 @@
             var annualTurnoverBandType = new annualTurnoverBandType();
 
             countryType = countryType.UKSCOTLAND;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.B, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ReturnsChargeBandC2()
+        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C2)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandC2ShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
             var annualTurnoverBandType = new annualTurnoverBandType();
 
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.C2, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C2)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ReturnsChargeBandD2()
+        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.FRANCE;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D2)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandD2ShouldBeRetrieved()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
             var annualTurnoverBandType = new annualTurnoverBandType();
 
             countryType = countryType.FRANCE;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.D2, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D2)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ReturnsChargeBandD()
+        public async void GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.UKNORTHERNIRELAND;
+            annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandDShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -147,17 +308,37 @@
 
             countryType = countryType.UKNORTHERNIRELAND;
             annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.D, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered_ReturnsChargeBandC()
+        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //Arrange
+            var countryType = new countryType();
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            var producerCharge = new ProducerCharge();
+
+            countryType = countryType.UKSCOTLAND;
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandCShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -165,13 +346,13 @@
             var annualTurnoverBandType = new annualTurnoverBandType();
 
             countryType = countryType.UKSCOTLAND;
-            producerType producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, false);
 
             // Act
-            ChargeBand? result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.C, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Theory]

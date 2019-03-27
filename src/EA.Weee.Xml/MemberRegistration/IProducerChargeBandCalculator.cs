@@ -5,7 +5,7 @@
    
     public interface IProducerChargeBandCalculator
     {
-        Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer);
+        Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer);
 
         bool IsMatch(schemeType scheme, producerType producer);
     }

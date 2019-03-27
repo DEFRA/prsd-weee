@@ -13,12 +13,12 @@
     using System.Reflection;
     using System.Text;
     using Xml.Converter;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class TotalChargeCalculatorTests
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        private readonly IProducerChargeCalculator producerChargeCalculator;
         private readonly TotalChargeCalculator totalChargeCalculator;
         private readonly IXmlConverter xmlConverter;
 
@@ -28,13 +28,12 @@
         public TotalChargeCalculatorTests()
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
-            producerChargeCalculator = A.Fake<IProducerChargeCalculator>();
             xmlConverter = A.Fake<IXmlConverter>();
 
             totalCharge = 0;
             file = ProcessTestXmlFile();
 
-            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, producerChargeCalculator, xmlConverter);
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, xmlConverter);
         }
 
         [Fact]
@@ -141,7 +140,7 @@
         {
             var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
 
-            IProducerChargeCalculator producerChargerCalculator = null;
+            IProducerChargeBandCalculatorChooser producerChargerCalculator = A.Fake<IProducerChargeBandCalculatorChooser>();
             return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
 

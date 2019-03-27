@@ -51,13 +51,14 @@
         {
             var producerType = A.Fake<producerType>();
             var schemeType = A.Fake<schemeType>();
+            var producerCharge = new ProducerCharge();
 
             A.CallTo(() => producerChargeBandCalculator.IsMatch(A<schemeType>._, A<producerType>._)).Returns(true);
-            A.CallTo(() => producerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(ChargeBand.A);
+            A.CallTo(() => producerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
 
             var result = await producerChargeBandCalculatorChooser.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, ChargeBand.A);
+            Assert.Equal(producerCharge, result);
         }
 
         [Fact]

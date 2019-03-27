@@ -30,16 +30,16 @@
                 {
                     var existingChargeBandType = existingProducer.ChargeBandAmount.ChargeBand;
 
-                    var chargeBand = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
+                    var producerCharge = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
 
-                    if (existingChargeBandType != chargeBand)
+                    if (existingChargeBandType != producerCharge.ChargeBandAmount.ChargeBand)
                     {
                         result = RuleResult.Fail(
                            string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
                               existingProducer.OrganisationName,
                               existingProducer.RegisteredProducer.ProducerRegistrationNumber,
                               existingChargeBandType,
-                               chargeBand),
+                               producerCharge.ChargeBandAmount.ChargeBand),
                            Core.Shared.ErrorLevel.Warning);
                     }
                 }

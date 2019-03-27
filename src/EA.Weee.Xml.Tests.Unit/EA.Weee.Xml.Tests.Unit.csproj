@@ -82,6 +82,7 @@
     <Compile Include="Converter\XmlConverterTests.cs" />
     <Compile Include="Deserializer\DeserializerTests.cs" />
     <Compile Include="MemberRegistration\ExtensionsTests.cs" />
+    <Compile Include="MemberRegistration\FetchProducerChargeTests.cs" />
     <Compile Include="MemberRegistration\ProducerAmendmentChargeAmountCalculatorTests.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculatorChooserTests.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculatorTests.cs" />

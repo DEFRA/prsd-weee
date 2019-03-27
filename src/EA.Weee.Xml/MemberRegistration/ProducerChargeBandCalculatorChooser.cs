@@ -15,7 +15,7 @@
             this.chargeChargeBandCalculators = chargeChargeBandCalculators;
         }
 
-        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
             var calculator = chargeChargeBandCalculators.FirstOrDefault(c => c.IsMatch(scheme, producer));
 

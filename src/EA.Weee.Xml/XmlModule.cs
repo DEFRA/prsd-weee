@@ -39,6 +39,10 @@
             builder.RegisterType<ProducerChargeBandCalculatorChooser>()
                 .As<IProducerChargeBandCalculatorChooser>()
                 .InstancePerRequest();
+
+            builder.RegisterType<FetchProducerCharge>()
+                .As<IFetchProducerCharge>()
+                .InstancePerRequest();
         }
     }
 }

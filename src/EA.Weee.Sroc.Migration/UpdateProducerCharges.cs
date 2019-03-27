@@ -7,6 +7,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Scheme;
     using OverrideImplementations;
@@ -20,13 +21,13 @@
         private readonly IMigrationDataAccess memberUploadDataAccess;
         private readonly WeeeMigrationContext context;
         private readonly IXmlConverter xmlConverter;
-        private readonly IMigrationProducerChargeCalculator producerChargeCalculator;
+        private readonly IProducerChargeBandCalculatorChooser producerChargeCalculator;
         private readonly IMigrationTotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
 
         public UpdateProducerCharges(WeeeMigrationContext context,
             IMigrationDataAccess memberUploadDataAccess,
             IXmlConverter xmlConverter,
-            IMigrationProducerChargeCalculator producerChargeCalculator,
+            IProducerChargeBandCalculatorChooser producerChargeCalculator,
             IMigrationTotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.memberUploadDataAccess = memberUploadDataAccess;
@@ -115,7 +116,7 @@
             {
                 var producerName = producer.GetProducerName();
 
-                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType, producer, complianceYear, submittedDate);
+                var producerCharge = Task.Run(() => producerChargeCalculator.GetProducerChargeBand(schemeType, producer)).Result;
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {

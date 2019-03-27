@@ -5,11 +5,20 @@
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
-        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
+        private readonly IFetchProducerCharge fetchProducerCharge;
+
+        public ProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge)
         {
+            this.fetchProducerCharge = fetchProducerCharge;
+        }
+
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
+        {
+            ChargeBand band;
+
             if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
-                return await Task.FromResult(ChargeBand.E);
+                band = ChargeBand.E;
             }
             else
             {
@@ -17,25 +26,27 @@
                     && producer.VATRegistered
                     && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return await Task.FromResult(ChargeBand.A);
+                    band = ChargeBand.A;
                 }
                 else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
                          && producer.VATRegistered
                          && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return await Task.FromResult(ChargeBand.B);
+                    band = ChargeBand.B;
                 }
                 else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
                          && !producer.VATRegistered
                          && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return await Task.FromResult(ChargeBand.D);
+                    band = ChargeBand.D;
                 }
                 else
                 {
-                    return await Task.FromResult(ChargeBand.C);
+                    band = ChargeBand.C;
                 }
             }
+
+            return await fetchProducerCharge.GetCharge(band);
         }
 
         public bool IsMatch(schemeType scheme, producerType producer)

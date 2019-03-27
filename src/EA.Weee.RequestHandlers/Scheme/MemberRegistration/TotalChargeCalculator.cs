@@ -7,18 +7,17 @@
     using Requests.Scheme.MemberRegistration;
     using System.Collections.Generic;
     using System.Linq;
+    using Xml.MemberRegistration;
 
     public class TotalChargeCalculator : ITotalChargeCalculator
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
-        private readonly IProducerChargeCalculator producerChargerCalculator;
         private readonly IXmlConverter xmlConverter;
         private const int EaComplianceYearCheck = 2018;
 
-        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerChargeCalculator producerChargerCalculator, IXmlConverter xmlConverter)
+        public TotalChargeCalculator(IXMLChargeBandCalculator xmlChargeBandCalculator, IXmlConverter xmlConverter)
         {
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
-            this.producerChargerCalculator = producerChargerCalculator;
             this.xmlConverter = xmlConverter;
         }
 

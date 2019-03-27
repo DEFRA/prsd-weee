@@ -5,6 +5,6 @@
 
     public interface IProducerChargeBandCalculatorChooser
     {
-        Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer);
+        Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer);
     }
 }

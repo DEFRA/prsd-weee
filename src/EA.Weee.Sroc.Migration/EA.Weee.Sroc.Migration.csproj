@@ -84,10 +84,8 @@
     <Compile Include="OverrideImplementations\EventDispatcher.cs" />
     <Compile Include="MigrationDataAccess.cs" />
     <Compile Include="Autofac\MigrationRegistrationModule.cs" />
-    <Compile Include="OverrideImplementations\IMigrationProducerChargeCalculator.cs" />
     <Compile Include="OverrideImplementations\IMigrationTotalChargeCalculatorDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationProducerChargeCalculatorDataAccess.cs" />
-    <Compile Include="OverrideImplementations\MigrationProducerChargeCalculator.cs" />
     <Compile Include="OverrideImplementations\MigrationRegisteredProducerDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationTotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Program.cs" />

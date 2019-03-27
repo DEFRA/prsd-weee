@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Domain.Scheme;
     using Requests.Scheme.MemberRegistration;
+    using Xml.MemberRegistration;
 
     public interface ITotalChargeCalculator
     {

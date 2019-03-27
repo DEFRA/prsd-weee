@@ -18,14 +18,17 @@
         private readonly ProducerAmendmentChargeCalculator calculator;
         private readonly IEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
+        private readonly IFetchProducerCharge fetchProducerCharge;
+
         private const int ComplianceYear = 2019;
 
         public ProducerAmendmentChargeAmountCalculatorTests()
         {
             environmentAgencyProducerChargeBandCalculator = A.Fake<IEnvironmentAgencyProducerChargeBandCalculator>();
             registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
+            fetchProducerCharge = A.Fake<IFetchProducerCharge>();
 
-            calculator = new ProducerAmendmentChargeCalculator(environmentAgencyProducerChargeBandCalculator, registeredProducerDataAccess);
+            calculator = new ProducerAmendmentChargeCalculator(environmentAgencyProducerChargeBandCalculator, registeredProducerDataAccess, fetchProducerCharge);
         }
 
         [Fact]
@@ -53,101 +56,113 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsMoreThanFiveTonnesAndPreviousProducerSubmissionWasLessThanFiveTonnes_EnvironmentAgencyChargeShouldBeCalculated()
+        public async void GetProducerChargeBand_GivenProducerSubmission_EnvironmentAgencyCalculatorChargeBandShouldBeRetrieved()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
-            var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
+            var producerType = new producerType() { registrationNo = "no" };
 
-            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
-                .Returns(RegisteredProducer());
+            await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            var result = await calculator.GetProducerChargeBand(schemeType, producerType);
-
-            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, producerType)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsMoreThanFiveTonnesAndPreviousProducerSubmissionWasLessThanFiveTonnes_EnvironmentAgencyChargeShouldBeReturned()
+        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsMoreThanFiveTonnesAndPreviousProducerSubmissionWasLessThanFiveTonnes_ProducerChargeShouldBeEnvironmentAgencyCharge()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
-            var chargeBand = ChargeBand.A;
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
                 .Returns(RegisteredProducer());
-            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, producerType)).Returns(chargeBand);
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, chargeBand);
+            Assert.Equal(producerCharge, result);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsNotMoreThanFiveTonnes_NotApplicableChargeShouldBeReturned()
+        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsNotMoreThanFiveTonnes_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, ChargeBand.NA);
+            Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
+            Assert.Equal(result.Amount, 0);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenPreviousAmendmentChargeAndChargeQualifies_CalculatorShouldNotBeCalled()
+        public async void GetProducerChargeBand_GivenPreviousAmendmentChargeAndChargeQualifies_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
-            var chargeBand = ChargeBand.A;
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
                 .Returns(RegisteredProducer());
-            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, producerType)).Returns(chargeBand);
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
             A.CallTo(() => registeredProducerDataAccess.HasPreviousAmendmentCharge(A<string>._, A<int>._, A<string>._)).Returns(true);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).WithAnyArguments().MustNotHaveHappened();
+            Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
+            Assert.Equal(result.Amount, 0);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenNoPreviousAmendmentCharge_NotApplicableChargeShouldBeReturned()
+        public async void GetProducerChargeBand_GivenNoPreviousAmendmentCharge_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
 
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
             A.CallTo(() => registeredProducerDataAccess.HasPreviousAmendmentCharge(A<string>._, A<int>._, A<string>._)).Returns(false);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, ChargeBand.NA);
+            Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
+            Assert.Equal(result.Amount, 0);
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenAmendmentCannotFindPreviousSubmission_NotApplicableChargeShouldBeReturned()
+        public async void GetProducerChargeBand_GivenAmendmentCannotFindPreviousSubmission_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
 
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns((RegisteredProducer)null);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, ChargeBand.NA);
+            Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
+            Assert.Equal(result.Amount, 0);
         }
-
+    
         [Fact]
-        public async void GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_NotApplicableChargeShouldBeReturned()
+        public async void GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
             var producer = new RegisteredProducer(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<Scheme>());
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns(producer);
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(result, ChargeBand.NA);
+            Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
+            Assert.Equal(result.Amount, 0);
         }
 
         [Fact]

@@ -14,10 +14,10 @@
 
     public class XmlChargeBandCalculatorTests
     {
-        private readonly IProducerChargeCalculator producerChargerCalculator;
+        private readonly IProducerChargeBandCalculatorChooser producerChargerCalculator;
         public XmlChargeBandCalculatorTests()
         {
-            producerChargerCalculator = A.Fake<IProducerChargeCalculator>();
+            producerChargerCalculator = A.Fake<IProducerChargeBandCalculatorChooser>();
         }
 
         [Fact]
@@ -83,7 +83,7 @@
             ProducerCharge producerCharge4 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge5 = A.Dummy<ProducerCharge>();
 
-            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<schemeType>._, A<producerType>._))
+            A.CallTo(() => producerChargerCalculator.GetProducerChargeBand(A<schemeType>._, A<producerType>._))
                 .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();

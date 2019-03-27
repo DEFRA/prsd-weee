@@ -6,20 +6,28 @@
 
     public class EnvironmentAgencyProducerChargeBandCalculator : IEnvironmentAgencyProducerChargeBandCalculator, IProducerChargeBandCalculator
     {
-        public async Task<ChargeBand> GetProducerChargeBand(schemeType scheme, producerType producer)
+        private readonly IFetchProducerCharge fetchProducerCharge;
+
+        public EnvironmentAgencyProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge)
+        {
+            this.fetchProducerCharge = fetchProducerCharge;
+        }
+
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
         {
             var producerCountry = producer.GetProducerCountry();
+            ChargeBand band;
 
             if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
-                return await Task.FromResult(ChargeBand.E);
+                band = ChargeBand.E;
             }
             else
             { 
                 if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                     producer.VATRegistered && producerCountry == countryType.UKENGLAND)
                 {
-                    return await Task.FromResult(ChargeBand.A2);
+                    band = ChargeBand.A2;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                          producer.VATRegistered && 
@@ -28,16 +36,16 @@
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))
                 {
-                    return await Task.FromResult(ChargeBand.D3);
+                    band = ChargeBand.D3;
                 }
-                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                     producer.VATRegistered &&
                     (producerCountry == countryType.UKSCOTLAND ||
                     producerCountry == countryType.UKWALES ||
                     producerCountry == countryType.UKNORTHERNIRELAND) &&
                     producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
                 {
-                    return await Task.FromResult(ChargeBand.A);
+                    band = ChargeBand.A;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                          producer.VATRegistered &&
@@ -46,13 +54,13 @@
                          producerCountry == countryType.UKNORTHERNIRELAND) &&
                          producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
                 {
-                    return await Task.FromResult(ChargeBand.B);
+                    band = ChargeBand.B;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
                 producerCountry == countryType.UKENGLAND && 
                 !producer.VATRegistered)
                 {
-                    return await Task.FromResult(ChargeBand.C2);
+                    band = ChargeBand.C2;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                 !producer.VATRegistered &&
@@ -61,7 +69,7 @@
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))
                 {
-                    return await Task.FromResult(ChargeBand.D2);
+                    band = ChargeBand.D2;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                          !producer.VATRegistered &&
@@ -70,13 +78,15 @@
                          producerCountry == countryType.UKNORTHERNIRELAND) &&
                          producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
                 {
-                    return await Task.FromResult(ChargeBand.D);
+                    band = ChargeBand.D;
                 }
                 else
-                { 
-                    return await Task.FromResult(ChargeBand.C);
+                {
+                    band = ChargeBand.C;
                 }
             }
+
+            return await fetchProducerCharge.GetCharge(band);
         }
 
         public bool IsMatch(schemeType scheme, producerType producer)

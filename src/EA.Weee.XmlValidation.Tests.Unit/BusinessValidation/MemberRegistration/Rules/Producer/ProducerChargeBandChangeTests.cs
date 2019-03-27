@@ -33,6 +33,11 @@
             var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
 
             var fakeProducer = A.Fake<ProducerSubmission>();
+            var producerCharge = new ProducerCharge()
+            {
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.E, 0),
+                Amount = 0
+            };
 
             ChargeBandAmount producerChargeBand = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
@@ -42,10 +47,10 @@
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(producerChargeBand);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
-            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(ChargeBand.E);
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
 
             var result = evaluator.Evaluate(ChargeBand.E);
-
+            
             Assert.True(result.IsValid);
         }
 
@@ -55,6 +60,11 @@
             var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
 
             var fakeProducer = A.Fake<ProducerSubmission>();
+            var producerCharge = new ProducerCharge()
+            {
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, 0),
+                Amount = 0
+            };
 
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
@@ -63,7 +73,7 @@
 
             A.CallTo(() => fakeProducer.ChargeBandAmount)
                 .Returns(chargeBandAmount);
-            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(ChargeBand.B);
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
@@ -79,10 +89,13 @@
             string producerName = "ProdA";
             string registrationNumber = "reg123";
             var existingChargeBand = ChargeBand.A;
-            var newChargeBand = ChargeBand.B;
-
+            
             var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
-
+            var producerCharge = new ProducerCharge()
+            {
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, 0),
+                Amount = 0
+            };
             var fakeProducer = A.Fake<ProducerSubmission>();
 
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
@@ -93,18 +106,18 @@
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
             A.CallTo(() => fakeProducer.RegisteredProducer.ProducerRegistrationNumber).Returns(registrationNumber);
-            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(newChargeBand);
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var result = evaluator.Evaluate(newChargeBand);
+            var result = evaluator.Evaluate(ChargeBand.B);
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
             Assert.Contains(producerName, result.Message);
             Assert.Contains(registrationNumber, result.Message);
             Assert.Contains(existingChargeBand.ToString(), result.Message);
-            Assert.Contains(newChargeBand.ToString(), result.Message);
+            Assert.Contains(producerCharge.ChargeBandAmount.ChargeBand.ToString(), result.Message);
         }
 
         private class ProducerChargeBandChangeEvaluator

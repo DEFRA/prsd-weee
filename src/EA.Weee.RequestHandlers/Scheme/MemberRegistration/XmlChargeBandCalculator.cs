@@ -13,10 +13,10 @@
     public class XmlChargeBandCalculator : IXMLChargeBandCalculator
     {
         private readonly IXmlConverter xmlConverter;
-        private readonly IProducerChargeCalculator producerChargeCalculator;
+        private readonly IProducerChargeBandCalculatorChooser producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeBandCalculatorChooser producerChargeCalculator)
         {
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;
@@ -33,7 +33,7 @@
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = Task.Run(() => producerChargeCalculator.CalculateCharge(schemeType, producer)).Result;
+                var producerCharge = Task.Run(() => producerChargeCalculator.GetProducerChargeBand(schemeType, producer)).Result;
 
                 if (producerCharge != null)
                 {

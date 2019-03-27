@@ -1,22 +1,19 @@
-﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
+﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
     using Domain.Lookup;
-    using RequestHandlers.Factories;
-    using RequestHandlers.Scheme.MemberRegistration;
+    using Weee.DataAccess;
 
-    public class MigrationProducerChargeCalculatorDataAccess : IMigrationProducerChargeCalculatorDataAccess
+    public class ProducerChargeCalculatorDataAccess : IProducerChargeCalculatorDataAccess
     {
-        private readonly WeeeMigrationContext context;
+        private readonly WeeeContext context;
 
         private Dictionary<ChargeBand, ChargeBandAmount> currentProducerChargeBandAmounts;
 
-        public MigrationProducerChargeCalculatorDataAccess(WeeeMigrationContext context)
+        public ProducerChargeCalculatorDataAccess(WeeeContext context)
         {
             this.context = context;
         }

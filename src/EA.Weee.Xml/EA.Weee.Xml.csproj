@@ -64,10 +64,13 @@
     <Compile Include="Deserialization\XmlDeserializationFailureException.cs" />
     <Compile Include="MemberRegistration\EnvironmentAgencyProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\Extensions.cs" />
+    <Compile Include="MemberRegistration\FetchProducerCharge.cs" />
     <Compile Include="MemberRegistration\IEnvironmentAgencyProducerChargeBandCalculator.cs" />
+    <Compile Include="MemberRegistration\IFetchProducerCharge.cs" />
     <Compile Include="MemberRegistration\IProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\IProducerChargeBandCalculatorChooser.cs" />
     <Compile Include="MemberRegistration\ProducerAmendmentChargeCalculator.cs" />
+    <Compile Include="MemberRegistration\ProducerCharge.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculator.cs" />
     <Compile Include="MemberRegistration\ProducerChargeBandCalculatorChooser.cs" />
     <Compile Include="MemberRegistration\producerType.cs" />
