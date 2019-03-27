@@ -57,7 +57,7 @@
         {
             var producer = context.ProducerSubmissions
                 .Where(p => p.MemberUploadId == memberUploadId && (p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name))
-                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name)));
+                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
             
             if (producer.Count() != 1)
             {

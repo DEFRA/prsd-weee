@@ -88,6 +88,7 @@
     <Compile Include="OverrideImplementations\IMigrationTotalChargeCalculatorDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationProducerChargeCalculator.cs" />
+    <Compile Include="OverrideImplementations\MigrationRegisteredProducerDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationTotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

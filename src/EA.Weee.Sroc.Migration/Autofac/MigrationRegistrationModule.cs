@@ -40,7 +40,7 @@
             builder.RegisterType<MigrationTotalChargeCalculatorDataAccess>().As<IMigrationTotalChargeCalculatorDataAccess>().InstancePerLifetimeScope();
             builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<ProducerAmendmentChargeCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
-            builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationRegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>().InstancePerLifetimeScope();
         }
     }
 }
