@@ -56,7 +56,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
-            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -66,9 +66,29 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenAatfAndReturn_SitesShouldBeRetrieved()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var result = await controller.Index(A.Dummy<Guid>(), returnId, aatfId, A.Dummy<Guid?>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfSite>.That.Matches(c => c.AatfId.Equals(aatfId) && c.ReturnId.Equals(returnId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenActionExecutes_CountriesShouldBeRetrieved()
+        {
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
