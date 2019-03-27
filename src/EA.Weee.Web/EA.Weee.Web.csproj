@@ -72,6 +72,7 @@
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
@@ -298,6 +299,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPcsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteOperatorController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
@@ -311,6 +313,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
@@ -327,9 +331,13 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\EditSentOnAatfSiteRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\GetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IEditSentOnAatfSiteRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IGetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
@@ -347,6 +355,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
@@ -809,6 +818,8 @@
     <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -828,6 +839,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />

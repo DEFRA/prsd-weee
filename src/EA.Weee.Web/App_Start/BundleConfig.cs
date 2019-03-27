@@ -38,6 +38,9 @@
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
+                "~/Scripts/sent-on-operator-address.js"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 

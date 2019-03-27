@@ -46,7 +46,7 @@
         }
 
         [Fact]
-        public void CheckReuseOffSiteCreateSiteControllerInheritsExternalSiteController()
+        public void CheckSentOnCreateSiteControllerInheritsExternalSiteController()
         {
             typeof(SentOnCreateSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }

@@ -35,7 +35,6 @@
                 AatfId = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid(),
-                OperatorAddressData = A.Fake<AatfAddressData>(),
                 SiteAddressData = A.Fake<AatfAddressData>()
             };
 
@@ -44,7 +43,6 @@
             request.AatfId.Should().Be(viewModel.AatfId);
             request.OrganisationId.Should().Be(viewModel.OrganisationId);
             request.ReturnId.Should().Be(viewModel.ReturnId);
-            request.OperatorAddressData.Should().Be(viewModel.OperatorAddressData);
             request.SiteAddressData.Should().Be(viewModel.SiteAddressData);
         }
     }
