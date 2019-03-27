@@ -60,8 +60,7 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
         {
-            var model = new ReusedOffSiteCreateSiteViewModel();
-            model.AddressData.Id = Guid.NewGuid();
+            var model = new ReusedOffSiteCreateSiteViewModel { SiteId = Guid.NewGuid(), AddressData = { Id = Guid.NewGuid() } };
 
             var request = requestCreator.ViewModelToRequest(model);
 
@@ -71,15 +70,10 @@
         [Fact]
         public void ViewModelToRequest_GivenEditViewModel_CategoryValuesShouldBeMapped()
         {
-            var viewModel = new ReusedOffSiteCreateSiteViewModel()
+            var viewModel = new ReusedOffSiteCreateSiteViewModel
             {
-                AatfId = Guid.NewGuid(),
-                OrganisationId = Guid.NewGuid(),
-                ReturnId = Guid.NewGuid(),
-                AddressData = A.Fake<SiteAddressData>(),
+                SiteId = Guid.NewGuid()
             };
-
-            viewModel.AddressData.Id = Guid.NewGuid();
 
             var request = requestCreator.ViewModelToRequest(viewModel) as EditAatfSite;
 
