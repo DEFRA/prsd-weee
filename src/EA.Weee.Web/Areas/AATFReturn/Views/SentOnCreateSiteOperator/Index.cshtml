@@ -38,10 +38,20 @@
         @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
         <div class="govuk-form-group" id="operatorCheckBox">
-            @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input", @onclick = "IsOperatorSameAddress()" })
-            <!--<p class="govuk-body" style="color: grey">If the operator address associated with this AATF/ATF is different please uncheck this box</p>-->
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" />
+                    <label class="govuk-label govuk-checkboxes__label" for="IsOperatorTheSameAsAATF" style="font-weight: bold; padding-top: 0px;">@Html.DisplayNameFor(m => m.IsOperatorTheSameAsAATF)</label> <br />
+                    <label class="govuk-label govuk-checkboxes__label" for="IsOperatorTheSameAsAATF" style="padding-top: 0px;">If the operator address associated with this AATF/ATF is different please uncheck this box</label>
+                </div>
+            </div>
         </div>
-
+        <!--
+        <div class="govuk-form-group" id="operatorCheckBox">
+            @Html.Gds().CheckBoxFrontEndFor(m => m.IsOperatorTheSameAsAATF, new { @class = "govuk-checkboxes__input", @onclick = "IsOperatorSameAddress()" })
+            <p class="govuk-body" style="color: grey">If the operator address associated with this AATF/ATF is different please uncheck this box</p>
+        </div>
+        -->
         @Html.EditorFor(m => m.OperatorAddressData)
 
         <div class="govuk-!-padding-bottom-3"></div>
