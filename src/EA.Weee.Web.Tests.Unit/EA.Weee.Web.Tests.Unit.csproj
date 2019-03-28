@@ -177,6 +177,7 @@
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\NonObligatedValuesCopyPasteControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ObligatedSentOnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedValuesCopyPasteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
