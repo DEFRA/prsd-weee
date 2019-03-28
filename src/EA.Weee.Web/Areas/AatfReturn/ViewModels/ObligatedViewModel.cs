@@ -16,7 +16,13 @@
 
         public string SchemeName { get; set; }
 
+        public string OperatorName { get; set; }
+
         public string AatfName { get; set; }
+
+        public Guid SiteAddressId { get; set; }
+
+        public Guid WeeeSentOnId { get; set; }
 
         public Guid ReturnId { get; set; }
 
