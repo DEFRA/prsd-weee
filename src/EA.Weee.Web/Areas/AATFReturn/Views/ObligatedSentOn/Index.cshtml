@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedSentOnViewModel
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
     ViewBag.Title = "Sent On WEEE";
 }
@@ -9,11 +9,8 @@
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">
-                @Model.AatfName
-            </h1>
-            <h2 class="govuk-heading-l">
                 WEEE sent to @Model.OperatorName for treatment
-            </h2>
+            </h1>
         </div>
     </header>
     <p class="govuk-body">
@@ -30,6 +27,8 @@
         Html.RenderPartial("_ObligatedWeeeTable", Model);
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.SiteAddressId)
+        @Html.HiddenFor(m => m.WeeeSentOnId)
 
         @Html.AntiForgeryToken()
         <form method="post" class="form" style="display: inline">

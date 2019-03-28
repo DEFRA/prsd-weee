@@ -6,7 +6,7 @@
 
     public class GetSentOnOperatorSite : IRequest<AatfAddressData>
     {
-        public Guid WeeeSentOnId { get; private set; }
+        public Guid WeeeSentOnId { get; set; }
 
         public GetSentOnOperatorSite(Guid id)
         {

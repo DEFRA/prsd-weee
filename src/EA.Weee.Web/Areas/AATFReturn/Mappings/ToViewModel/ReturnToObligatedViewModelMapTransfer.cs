@@ -11,9 +11,15 @@
 
         public Guid SchemeId { get; set; }
 
+        public string OperatorName { get; set; }
+
+        public Guid SiteAddressId { get; set; }
+
         public Guid AatfId { get; set; }
 
         public Guid ReturnId { get; set; }
+
+        public Guid WeeeSentOnId { get; set; }
 
         public ObligatedCategoryValue PastedData { get; set; }
 

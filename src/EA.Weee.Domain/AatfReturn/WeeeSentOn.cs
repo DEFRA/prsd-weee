@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using System;
 
     public class WeeeSentOn : Entity
     {
@@ -13,6 +14,12 @@
 
         public virtual Return @Return { get; private set; }
 
+        public virtual Guid ReturnId { get; private set; }
+
+        public virtual Guid AatfId { get; private set; }
+
+        public virtual Guid SiteAddressId { get; private set; }
+
         public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
         {
             OperatorAddress = @operator;
@@ -20,6 +27,13 @@
 
         public WeeeSentOn()
         {
+        }
+
+        public WeeeSentOn(Guid siteAddress, Guid aatf, Guid @return)
+        {
+            this.SiteAddressId = siteAddress;
+            this.AatfId = aatf;
+            this.ReturnId = @return;
         }
 
         public WeeeSentOn(AatfAddress operatorAddress, AatfAddress siteAddress, Aatf aatf, Return @return)
