@@ -17,6 +17,16 @@
 
     public class BySchemeTransactionFileGeneratorTests
     {
+        private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+        private readonly BySchemeTransactionFileGenerator generator;
+
+        public BySchemeTransactionFileGeneratorTests()
+        {
+            transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+
+            generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
+        }
+
         /// <summary>
         /// This test ensures that the transaction file will be generated with the specified file ID.
         /// </summary>
@@ -54,11 +64,7 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
-
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(
-                transactionReferenceGenerator);
 
             ulong id = 12345;
 
@@ -114,10 +120,7 @@
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
             SystemTime.Unfreeze();
 
-            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
-
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
@@ -209,10 +212,7 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
-
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
@@ -301,10 +301,7 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
-
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
@@ -373,10 +370,8 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
-            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns((string)null); // A null value will cause the Ibis object to throw an exception.
-
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync())
+                .Returns((string)null); // A null value will cause the Ibis object to throw an exception.
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
@@ -384,6 +379,117 @@
             // Assert
             Assert.Null(result.IbisFile);
             Assert.NotEmpty(result.Errors);
+        }
+
+        [Fact]
+        public async void CreateTransactionFile_GivenMemberUploadContainsAnnualChargeAndSchemeHasAnnualChargeAmount_DescriptionShouldContainAnnualCharge()
+        {
+            var organisation = A.Fake<Organisation>();
+            var authority = A.Fake<UKCompetentAuthority>();
+            var scheme = A.Fake<Scheme>();
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                123.45m,
+                A.Dummy<int>(),
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                true);
+
+            SystemTime.Freeze(new DateTime(2019, 1, 1));
+            memberUpload.Submit(A.Dummy<User>());
+            SystemTime.Unfreeze();
+
+            A.CallTo(() => authority.AnnualChargeAmount).Returns(12500);
+            A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
+            A.CallTo(() => scheme.Organisation).Returns(organisation);
+            A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            var memberUploads = new List<MemberUpload>() { memberUpload };
+
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            Assert.Equal(result.IbisFile.Invoices[0].LineItems[0].Description, "Charge for producer registration submission made on 01 Jan 2019 and the £12,500.00 annual charge.");
+        }
+
+        [Fact]
+        public async void CreateTransactionFile_GivenMemberUploadSchemeHasZeroAnnualChargeAmount_DescriptionShouldNotContainAnnualCharge()
+        {
+            var organisation = A.Fake<Organisation>();
+            var authority = A.Fake<UKCompetentAuthority>();
+            var scheme = A.Fake<Scheme>();
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                123.45m,
+                A.Dummy<int>(),
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                true);
+
+            SystemTime.Freeze(new DateTime(2019, 1, 1));
+            memberUpload.Submit(A.Dummy<User>());
+            SystemTime.Unfreeze();
+
+            A.CallTo(() => authority.AnnualChargeAmount).Returns(0);
+            A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
+            A.CallTo(() => scheme.Organisation).Returns(organisation);
+            A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            var memberUploads = new List<MemberUpload>() { memberUpload };
+
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            Assert.Equal(result.IbisFile.Invoices[0].LineItems[0].Description, "Charge for producer registration submission made on 01 Jan 2019.");
+        }
+
+        [Fact]
+        public async void CreateTransactionFile_GivenMemberUploadSchemeHasNoAnnualAmount_DescriptionShouldNotContainAnnualCharge()
+        {
+            var organisation = A.Fake<Organisation>();
+            var authority = A.Fake<UKCompetentAuthority>();
+            var scheme = A.Fake<Scheme>();
+
+            var memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                123.45m,
+                A.Dummy<int>(),
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
+
+            SystemTime.Freeze(new DateTime(2019, 1, 1));
+            memberUpload.Submit(A.Dummy<User>());
+            SystemTime.Unfreeze();
+
+            A.CallTo(() => authority.AnnualChargeAmount).Returns(0);
+            A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
+            A.CallTo(() => scheme.Organisation).Returns(organisation);
+            A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            var memberUploads = new List<MemberUpload>() { memberUpload };
+
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            Assert.Equal(result.IbisFile.Invoices[0].LineItems[0].Description, "Charge for producer registration submission made on 01 Jan 2019.");
         }
     }
 }
