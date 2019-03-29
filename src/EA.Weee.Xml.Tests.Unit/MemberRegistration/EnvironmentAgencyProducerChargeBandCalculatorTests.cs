@@ -1,6 +1,9 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
     using Domain.Lookup;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Scheme;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
     using Xunit;
@@ -9,12 +12,14 @@
     {
         private readonly EnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IFetchProducerCharge fetchProducerCharge;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
 
         public EnvironmentAgencyProducerChargeBandCalculatorTests()
         {
             fetchProducerCharge = A.Fake<IFetchProducerCharge>();
+            registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
 
-            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(fetchProducerCharge);
+            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(fetchProducerCharge, registeredProducerDataAccess);
         }
 
         [Fact]
@@ -393,6 +398,29 @@
 
             Assert.False(result);
         }
+
+        [Fact]
+        public void IsMatch_GivenPreviousSubmission_TrueShouldBeReturned()
+        {
+            var scheme = new schemeType() { complianceYear = "2020" };
+            var producerType = new producerType { status = statusType.A };
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns((RegisteredProducer)null);
+
+            var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
+
+            Assert.True(result);
+        }
+
+        //[Fact]
+        //public void IsMatch_Insert_TrueShouldBeReturned()
+        //{
+        //    var scheme = new schemeType() { complianceYear = "2019" };
+        //    var producerType = new producerType { status = statusType.I };
+
+        //    var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
+
+        //    Assert.True(result);
+        //}
 
         private static producerType SetUpProducer(countryType countryType, eeePlacedOnMarketBandType eeePlacedOnMarketBandType, annualTurnoverBandType annualTurnoverBandType, bool vatRegistered)
         {
