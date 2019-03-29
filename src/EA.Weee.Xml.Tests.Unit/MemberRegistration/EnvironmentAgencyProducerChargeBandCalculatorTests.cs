@@ -401,7 +401,7 @@
         }
 
         [Fact]
-        public void IsMatch_GivenPreviousSubmission_TrueShouldBeReturned()
+        public void IsMatch_Amendment_NoPreviousSubmission_TrueShouldBeReturned()
         {
             var scheme = new schemeType() { complianceYear = "2020" };
             var producerType = new producerType { status = statusType.A };
@@ -412,16 +412,20 @@
             Assert.True(result);
         }
 
-        //[Fact]
-        //public void IsMatch_Insert_TrueShouldBeReturned()
-        //{
-        //    var scheme = new schemeType() { complianceYear = "2019" };
-        //    var producerType = new producerType { status = statusType.I };
+        [Fact]
+        public void IsMatch_Amendment_HasPreviousSubmission_FalseShouldBeReturned()
+        {
+            var scheme = new schemeType() { complianceYear = "2020" };
+            var producerType = new producerType { status = statusType.A };
+            var registeredProducer = new RegisteredProducer(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<Scheme>());
 
-        //    var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration("ABC", 2020, "ABC/WWW"))
+                .Returns(registeredProducer);
 
-        //    Assert.True(result);
-        //}
+            var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
+
+            Assert.False(result);
+        }
 
         private static producerType SetUpProducer(countryType countryType, eeePlacedOnMarketBandType eeePlacedOnMarketBandType, annualTurnoverBandType annualTurnoverBandType, bool vatRegistered)
         {
