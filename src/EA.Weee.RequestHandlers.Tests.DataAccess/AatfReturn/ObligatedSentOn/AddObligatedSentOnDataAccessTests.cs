@@ -50,7 +50,7 @@
 
             dataAccess.Submit(obligatedSentOnWeee);
 
-            context.WeeeReusedAmount.Should().AllBeEquivalentTo(obligatedSentOnWeee);
+            context.WeeeSentOnAmount.Should().AllBeEquivalentTo(obligatedSentOnWeee);
         }
 
         [Fact]
