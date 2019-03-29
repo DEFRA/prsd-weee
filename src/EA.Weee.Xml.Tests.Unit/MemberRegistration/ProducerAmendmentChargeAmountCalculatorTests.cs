@@ -13,7 +13,6 @@
     using Xml.MemberRegistration;
     using Xunit;
 
-
     public class ProducerAmendmentChargeAmountCalculatorTests
     {
         private readonly ProducerAmendmentChargeCalculator calculator;
