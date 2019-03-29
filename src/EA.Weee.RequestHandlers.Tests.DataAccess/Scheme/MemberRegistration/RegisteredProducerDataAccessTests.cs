@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Obligation;
@@ -23,18 +24,11 @@
         private const string ProducerRegistrationNumber = "registrationNumber";
         private const string SchemeApprovalNumber = "approvalNumber";
         private const int ComplianceYear = 2019;
-        private readonly Scheme scheme;
-        private readonly RegisteredProducer registeredProducer;
 
         public RegisteredProducerDataAccessTests()
         {
-            dbHelper = new DbContextHelper();
-            scheme = A.Fake<Scheme>();
+            dbHelper = new DbContextHelper();            
             context = A.Fake<WeeeContext>();
-            registeredProducer = RegisteredProducer();
-
-            A.CallTo(() => scheme.ApprovalNumber).Returns(SchemeApprovalNumber);
-            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             dataAccess = new RegisteredProducerDataAccess(context);
         }
@@ -42,7 +36,7 @@
         [Fact]
         public async Task GetProducerRegistration_GivenMultipleResults_ArgumentExceptionShouldBeThrown()
         {
-            var registeredProducers = new List<RegisteredProducer> { RegisteredProducer(), RegisteredProducer() };
+            var registeredProducers = new List<RegisteredProducer> { RegisteredProducer(ComplianceYear), RegisteredProducer(ComplianceYear) };
 
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(registeredProducers));
 
@@ -55,6 +49,14 @@
         [Fact]
         public async Task GetProducerRegistration_GivenComplianceYearDiffers_ResultShouldBeNull()
         {
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
+            var registeredProducers = new List<RegisteredProducer> { registeredProducer };
+
             var result = await dataAccess.GetProducerRegistration(ProducerRegistrationNumber, 2000, SchemeApprovalNumber);
 
             Assert.Null(result);
@@ -63,6 +65,12 @@
         [Fact]
         public async Task GetProducerRegistration_GivenSchemeApprovalNumberDiffers_ResultShouldBeNull()
         {
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
             var result = await dataAccess.GetProducerRegistration(ProducerRegistrationNumber, ComplianceYear, "myscheme");
 
             Assert.Null(result);
@@ -71,6 +79,12 @@
         [Fact]
         public async Task GetProducerRegistration_GivenProducerRegistrationNumberDiffers_ResultShouldBeNull()
         {
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
             var result = await dataAccess.GetProducerRegistration("myreg", ComplianceYear, SchemeApprovalNumber);
 
             Assert.Null(result);
@@ -79,15 +93,38 @@
         [Fact]
         public async Task GetProducerRegistration_GivenQueryParametersMatch_ResultShouldResult()
         {
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
             var result = await dataAccess.GetProducerRegistration(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
 
             Assert.Equal(registeredProducer, result);
         }
 
         [Fact]
+        public async Task GetProducerRegistration_GivenCurrentSubmissionIsNull_ResultShouldBeNull()
+        {
+            var registeredProducer = RegisteredProducer(ComplianceYear, true);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+
+            var result = await dataAccess.GetProducerRegistration(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoStatusMatch_FalseShouldBeReturned()
         {
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(20, StatusType.Insert, 2019, registeredProducer) }));
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Insert, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
@@ -98,9 +135,11 @@
         [Fact]
         public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoComplianceYearMatch_FalseShouldBeReturned()
         {
-            var local = RegisteredProducer(2018);
-            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { local }));
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(20, StatusType.Amendment, 2018, local) }));
+            var registeredProducer = RegisteredProducer(2018);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, 2018, registeredProducer);
+
+            A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
             
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
 
@@ -110,7 +149,10 @@
         [Fact]
         public async void GetPreviousAmendmentCharge_GivenNoPreviousAmendmentChargeNoAmountMatch_FalseShouldBeReturned()
         {
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(0, StatusType.Amendment, 2019, registeredProducer) }));
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(0, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
@@ -121,7 +163,10 @@
         [Fact]
         public async void GetPreviousAmendmentCharge_GivenPreviousAmendmentCharge_TrueShouldBeReturned()
         {
-            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { ProducerSubmission(1, StatusType.Amendment, 2019, registeredProducer) }));
+            var registeredProducer = RegisteredProducer(ComplianceYear);
+            var producerSubmission = ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer);
+
+            A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
 
             var result = await dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
@@ -138,7 +183,7 @@
             A.CallTo(() => memberUpload.ComplianceYear).Returns(complianceYear);
 
             return new ProducerSubmission(registeredProducer,
-                memberUpload, 
+                memberUpload,
                 A.Dummy<ProducerBusiness>(),
                 A.Dummy<AuthorisedRepresentative>(),
                 A.Dummy<DateTime>(),
@@ -157,9 +202,41 @@
                 status);
         }
 
-        private RegisteredProducer RegisteredProducer(int complianceYear = ComplianceYear)
+        private RegisteredProducer RegisteredProducer(int complianceYear, bool currentSubmissionNUll = false)
         {
-            return new RegisteredProducer(ProducerRegistrationNumber, complianceYear, scheme);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.ApprovalNumber).Returns(SchemeApprovalNumber);
+            var memberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload.Scheme).Returns(scheme);
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(complianceYear);
+
+            var registered = new RegisteredProducer(ProducerRegistrationNumber, complianceYear, scheme);
+
+            var sub = new ProducerSubmission(registered,
+                memberUpload,
+                A.Dummy<ProducerBusiness>(),
+                A.Dummy<AuthorisedRepresentative>(),
+                A.Dummy<DateTime>(),
+                A.Dummy<decimal?>(),
+                A.Dummy<bool>(),
+                A.Dummy<DateTime?>(),
+                A.Dummy<string>(),
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.DirectSellingtoEndUser,
+                ObligationType.B2B,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                A.Dummy<List<BrandName>>(),
+                A.Dummy<List<SICCode>>(),
+                A.Dummy<ChargeBandAmount>(),
+                0,
+                StatusType.Insert);
+
+            if (!currentSubmissionNUll)
+            {
+                registered.SetCurrentSubmission(sub);
+            }
+
+            return registered;
         }
     }
 }

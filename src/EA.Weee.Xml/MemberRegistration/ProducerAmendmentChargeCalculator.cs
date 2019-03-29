@@ -48,7 +48,7 @@
         public bool IsMatch(schemeType scheme, producerType producer)
         {
             var year = int.Parse(scheme.complianceYear);
-            var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistration(producer.registrationNo, year, scheme.approvalNo);
+            var previousProducerSubmission = Task.Run(() => registeredProducerDataAccess.GetProducerRegistration(producer.registrationNo, year, scheme.approvalNo)).Result;
 
             return producer.status == statusType.A && (previousProducerSubmission != null);
         }

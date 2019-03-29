@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
+    using DataAccess.DataAccess;
     using Domain.Lookup;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
@@ -9,12 +10,14 @@
     {
         private readonly EnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IFetchProducerCharge fetchProducerCharge;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
 
         public EnvironmentAgencyProducerChargeBandCalculatorTests()
         {
             fetchProducerCharge = A.Fake<IFetchProducerCharge>();
+            registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
 
-            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(fetchProducerCharge);
+            environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(fetchProducerCharge, registeredProducerDataAccess);
         }
 
         [Fact]
