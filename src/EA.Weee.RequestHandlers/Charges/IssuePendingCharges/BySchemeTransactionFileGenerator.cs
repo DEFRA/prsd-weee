@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Charges;
@@ -17,6 +18,7 @@
     public class BySchemeTransactionFileGenerator : IIbisTransactionFileGenerator
     {
         private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+        private const string CommonMessageString = "Charge for producer registration submission made on {0:dd MMM yyyy}";
 
         public BySchemeTransactionFileGenerator(ITransactionReferenceGenerator transactionReferenceGenerator)
         {
@@ -37,10 +39,15 @@
 
                 foreach (MemberUpload memberUpload in group)
                 {
-                    DateTime submittedDate = memberUpload.SubmittedDate.Value;
+                    var submittedDate = memberUpload.SubmittedDate.Value;
+                    var competantAuthorityAnnualChargeAmount = memberUpload.Scheme.CompetentAuthority.AnnualChargeAmount;
 
-                    string description = string.Format("Charge for producer registration submission made on {0:dd MMM yyyy}.",
-                        submittedDate);
+                    var description = string.Format("{0}.", CommonMessage(submittedDate));
+
+                    if (memberUpload.HasAnnualCharge && competantAuthorityAnnualChargeAmount > 0)
+                    {
+                        description = string.Format("{0} and the {1:C} annual charge.", CommonMessage(submittedDate), competantAuthorityAnnualChargeAmount);
+                    }
 
                     try
                     {
@@ -81,6 +88,10 @@
             }
 
             return new IbisFileGeneratorResult<TransactionFile>(errors.Count == 0 ? transactionFile : null, errors);
+        }
+        private string CommonMessage(DateTime date)
+        {
+            return string.Format(CommonMessageString, date);
         }
     }
 }
