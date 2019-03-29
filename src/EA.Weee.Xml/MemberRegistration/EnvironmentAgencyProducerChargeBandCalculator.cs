@@ -97,8 +97,19 @@
         {
             var year = int.Parse(scheme.complianceYear);
             var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistration(producer.registrationNo, year, scheme.approvalNo);
-           
-            return year > 2018 && producer.status == statusType.I || producer.status == statusType.A && (previousProducerSubmission != null) ? true : false;
+
+            if (year > 2018)
+            {
+                if (producer.status == statusType.I)
+                {
+                    return true;
+                }
+                if (producer.status == statusType.A && previousProducerSubmission == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
