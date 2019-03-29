@@ -47,7 +47,10 @@
 
         public bool IsMatch(schemeType scheme, producerType producer)
         {
-            return producer.status == statusType.A;
+            var year = int.Parse(scheme.complianceYear);
+            var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistration(producer.registrationNo, year, scheme.approvalNo);
+
+            return producer.status == statusType.A && (previousProducerSubmission != null);
         }
     }
 }
