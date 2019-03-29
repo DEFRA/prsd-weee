@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
+    using DataAccess.DataAccess;
     using Domain.Lookup;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Producer;

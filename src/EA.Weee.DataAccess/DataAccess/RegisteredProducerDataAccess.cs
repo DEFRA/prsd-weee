@@ -48,7 +48,8 @@
             var result = await context.RegisteredProducers
                 .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
                             && p.ComplianceYear == complianceYear
-                            && p.Scheme.ApprovalNumber == schemeApprovalNumber)
+                            && p.Scheme.ApprovalNumber == schemeApprovalNumber
+                            && p.CurrentSubmission != null)
                 .ToListAsync();
 
             if (result.Count() > 1)
