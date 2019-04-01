@@ -37,15 +37,11 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string operatorName)
         {
             using (var client = apiClient())
             {
                 var operatorRequest = new GetSentOnOperatorSite(weeeSentOnId);
-
-                var weeeSentOnSite = await client.SendAsync(User.GetAccessToken(), new GetSentOnAatfSite(weeeSentOnId));
-
-                var weeeSentOnOperator = await client.SendAsync(User.GetAccessToken(), operatorRequest);
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
@@ -55,8 +51,7 @@
                     ReturnId = returnId,
                     ReturnData = @return,
                     AatfId = aatfId,
-                    OperatorName = weeeSentOnOperator.Name,
-                    SiteAddressId = weeeSentOnSite.Id,
+                    OperatorName = operatorName,
                     WeeeSentOnId = weeeSentOnId
                 });
 

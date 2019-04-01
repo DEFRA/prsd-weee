@@ -26,11 +26,6 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfWeeeSentOn = new WeeeSentOn(
-                message.AatfId,
-                message.ReturnId,
-                message.SiteAddressId);
-
             var aatfWeeeSentOnAmount = new List<WeeeSentOnAmount>();
 
             foreach (var categoryValue in message.CategoryValues)
