@@ -13,8 +13,6 @@
 
         public string OperatorName { get; set; }
 
-        public Guid SiteAddressId { get; set; }
-
         public Guid AatfId { get; set; }
 
         public Guid ReturnId { get; set; }

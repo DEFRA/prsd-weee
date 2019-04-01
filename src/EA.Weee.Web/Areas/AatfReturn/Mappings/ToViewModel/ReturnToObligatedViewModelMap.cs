@@ -67,7 +67,6 @@
             if (source.OperatorName != null)
             {
                 model.OperatorName = source.OperatorName;
-                model.SiteAddressId = source.SiteAddressId;
             }
 
             if (source.PastedData != null)
