@@ -34,12 +34,12 @@
             builder.RegisterType<WhiteSpaceCollapser>().As<IWhiteSpaceCollapser>().InstancePerLifetimeScope();
             builder.RegisterType<Deserializer>().As<IDeserializer>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();
-            builder.RegisterType<ProducerChargeBandCalculatorChooser>().As<IProducerChargeBandCalculatorChooser>().InstancePerLifetimeScope();
-            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IEnvironmentAgencyProducerChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationProducerChargeBandCalculatorChooser>().As<IMigrationProducerChargeBandCalculatorChooser>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationEnvironmentAgencyProducerChargeBandCalculator>().As<IMigrationEnvironmentAgencyProducerChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationTotalChargeCalculatorDataAccess>().As<IMigrationTotalChargeCalculatorDataAccess>().InstancePerLifetimeScope();
-            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
-            builder.RegisterType<ProducerAmendmentChargeCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
-            builder.RegisterType<MigrationRegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationEnvironmentAgencyProducerChargeBandCalculator>().As<IMigrationChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationProducerAmendmentChargeCalculator>().As<IMigrationChargeBandCalculator>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationRegisteredProducerDataAccess>().As<IMigrationRegisteredProducerDataAccess>().InstancePerLifetimeScope();
             builder.RegisterType<FetchProducerCharge>().As<IFetchProducerCharge>().InstancePerLifetimeScope();
         }
     }

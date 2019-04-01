@@ -21,13 +21,13 @@
         private readonly IMigrationDataAccess memberUploadDataAccess;
         private readonly WeeeMigrationContext context;
         private readonly IXmlConverter xmlConverter;
-        private readonly IProducerChargeBandCalculatorChooser producerChargeCalculator;
+        private readonly IMigrationProducerChargeBandCalculatorChooser producerChargeCalculator;
         private readonly IMigrationTotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
 
         public UpdateProducerCharges(WeeeMigrationContext context,
             IMigrationDataAccess memberUploadDataAccess,
             IXmlConverter xmlConverter,
-            IProducerChargeBandCalculatorChooser producerChargeCalculator,
+            IMigrationProducerChargeBandCalculatorChooser producerChargeCalculator,
             IMigrationTotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.memberUploadDataAccess = memberUploadDataAccess;
@@ -66,8 +66,6 @@
                         var total = TotalCalculatedCharges(memberUpload, schemeType, annualChargedToBeAdded, scheme);
 
                         memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, total, annualChargedToBeAdded);
-
-                        context.SaveChanges();
 
                         Log.Information(string.Format("Member upload {0} updated from {1} to {2}", memberUpload.Id, memberUpload.TotalCharges, total));
                     }
@@ -116,7 +114,7 @@
             {
                 var producerName = producer.GetProducerName();
 
-                var producerCharge = Task.Run(() => producerChargeCalculator.GetProducerChargeBand(schemeType, producer)).Result;
+                var producerCharge = Task.Run(() => producerChargeCalculator.GetProducerChargeBand(schemeType, producer, memberUpload, producerName)).Result;
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {
