@@ -170,7 +170,8 @@
         {
             var producer = new producerType() { status = statusType.A };
 
-            var result = calculator.IsMatch(A.Dummy<schemeType>(), producer);
+            var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
+            var result = calculator.IsMatch(schemeType, producer);
 
             Assert.True(result);
         }
@@ -179,8 +180,8 @@
         public void IsMatch_GivenProducerIsInsert_FalseShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.I };
-
-            var result = calculator.IsMatch(A.Dummy<schemeType>(), producer);
+            var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
+            var result = calculator.IsMatch(schemeType, producer);
 
             Assert.False(result);
         }

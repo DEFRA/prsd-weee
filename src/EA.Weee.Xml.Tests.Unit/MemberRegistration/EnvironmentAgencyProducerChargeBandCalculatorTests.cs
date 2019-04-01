@@ -2,6 +2,9 @@
 {
     using DataAccess.DataAccess;
     using Domain.Lookup;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Scheme;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
     using Xunit;
@@ -393,6 +396,33 @@
             var producer = new producerType { status = statusType.A };
 
             var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producer);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void IsMatch_Amendment_NoPreviousSubmission_TrueShouldBeReturned()
+        {
+            var scheme = new schemeType() { complianceYear = "2020" };
+            var producerType = new producerType { status = statusType.A };
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns((RegisteredProducer)null);
+
+            var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void IsMatch_Amendment_HasPreviousSubmission_FalseShouldBeReturned()
+        {
+            var scheme = new schemeType() { complianceYear = "2020" };
+            var producerType = new producerType { status = statusType.A };
+            var registeredProducer = new RegisteredProducer(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<Scheme>());
+
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration("ABC", 2020, "ABC/WWW"))
+                .Returns(registeredProducer);
+
+            var result = environmentAgencyProducerChargeBandCalculator.IsMatch(scheme, producerType);
 
             Assert.False(result);
         }
