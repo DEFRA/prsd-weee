@@ -67,7 +67,6 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
                     return AatfRedirect.ObligatedSentOn(viewModel.OperatorAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId);
-                    //return RedirectToAction("Index", "ObligatedSentOn", new { operatorName = viewModel.OperatorAddressData.Name, organisationId = viewModel.OrganisationId, aatfId = viewModel.AatfId, returnId = viewModel.ReturnId, weeeSentOnId = viewModel.WeeeSentOnId });
                 }
             }
 
