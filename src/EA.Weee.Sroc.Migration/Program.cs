@@ -76,7 +76,7 @@
             {
                 case ConsoleKey.D1:
                 case ConsoleKey.NumPad1:
-                    return RollbackCommand;
+                    return ExitCommand;
                 case ConsoleKey.D2:
                 case ConsoleKey.NumPad2:
                     return RunCommand;

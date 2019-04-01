@@ -55,7 +55,7 @@
             Console.Clear();
 
             Console.WriteLine(" ----------------------------------------------------------------------------");
-            Console.WriteLine(" 1. Rollback 2019 calculated charges");
+            //Console.WriteLine(" 1. Rollback 2019 calculated charges");
             Console.WriteLine(" 2. Re-calculate 2019 calculated charges");
             Console.WriteLine(" 3. Exit program");
         }
