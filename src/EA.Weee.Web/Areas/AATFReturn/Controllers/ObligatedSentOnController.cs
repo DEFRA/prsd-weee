@@ -41,8 +41,6 @@
         {
             using (var client = apiClient())
             {
-                var operatorRequest = new GetSentOnOperatorSite(weeeSentOnId);
-
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
                 var model = mapper.Map(new ReturnToObligatedViewModelMapTransfer()

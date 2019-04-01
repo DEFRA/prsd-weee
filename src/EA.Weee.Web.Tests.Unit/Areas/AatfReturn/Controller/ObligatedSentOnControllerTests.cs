@@ -96,5 +96,51 @@
 
             result.ViewName.Should().BeEmpty();
         }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_MapperShouldBeCalledWithCorrectParameters()
+        {
+            var operatorName = "OpName";
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+
+            var transfer = new ReturnToObligatedViewModelMapTransfer()
+            {
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                ReturnData = @return,
+                AatfId = aatfId,
+                OperatorName = operatorName,
+                WeeeSentOnId = weeeSentOnId
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
+
+            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName);
+
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.OperatorName.Equals(operatorName) && t.ReturnData.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_ViewModelShouldBeReturnedWithCorrectValues()
+        {
+            var operatorName = "OpName";
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+
+            var viewModel = A.Fake<ObligatedViewModel>();
+
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>._)).Returns(viewModel);
+
+            var result = await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(viewModel);
+        }
     }
 }
