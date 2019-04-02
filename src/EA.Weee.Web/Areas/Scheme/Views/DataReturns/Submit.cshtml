@@ -91,7 +91,7 @@
                 <ul>
                     @foreach (DataReturnError error in Model.DataReturn.Errors)
                     {
-                        <li class="error-list-item govuk-!-font-size-14">
+                        <li class="error-list-item govuk-!-font-size-16">
                             @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
                         </li>
                     }
@@ -109,7 +109,7 @@
                 <ul>
                     @foreach (DataReturnWarning warning in Model.DataReturn.Warnings)
                     {
-                        <li class="warning-list-item govuk-!-font-size-14">@warning.Description</li>
+                        <li class="warning-list-item govuk-!-font-size-16">@warning.Description</li>
                     }
                 </ul>
             </div>

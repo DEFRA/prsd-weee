@@ -40,34 +40,13 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
-        {
-            var viewModel = new ReusedOffSiteCreateSiteViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId,
-                AatfId = aatfId,
-                AddressData = new SiteAddressData()
-            };
-
-            using (var client = apiClient())
-            {
-                var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
-                viewModel.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-            }
-
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        public virtual async Task<ActionResult> Edit(Guid organisationId, Guid returnId, Guid aatfId, Guid siteId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid? siteId)
         {
             using (var client = apiClient())
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
                 var viewModel = mapper.Map(new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
                 {
                     AatfId = aatfId,
@@ -80,20 +59,13 @@
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-                return View("Index", viewModel);
+                return View(viewModel);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReusedOffSiteCreateSiteViewModel viewModel)
-        {
-            return await AatfSitePostAction(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Edit(ReusedOffSiteCreateSiteViewModel viewModel)
         {
             return await AatfSitePostAction(viewModel);
         }
@@ -118,6 +90,7 @@
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
             return View(viewModel);
         }
 
