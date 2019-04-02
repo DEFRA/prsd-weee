@@ -66,8 +66,7 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
-
-                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
+                    return AatfRedirect.ObligatedSentOn(viewModel.OperatorAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId);
                 }
             }
 

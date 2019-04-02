@@ -91,6 +91,7 @@
     <Compile Include="Mappings\AatfWeeeReusedAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReusedMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReusedSiteMapping.cs" />
+    <Compile Include="Mappings\AatfWeeeSentOnAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeSentOnMapping.cs" />
     <Compile Include="Mappings\EeeOutputAmountMapping.cs" />
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
