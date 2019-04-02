@@ -13,7 +13,7 @@
 
         public Guid AatfId { get; set; }
 
-        public Guid SiteId { get; set; }
+        public Guid? SiteId { get; set; }
 
         public AddressTonnageSummary ReturnedSites { get; set; }
 

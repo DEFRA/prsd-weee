@@ -10,7 +10,6 @@
 <section id="main-content">
     @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName))
     {
-        <div class="govuk-!-padding-bottom-2"></div>
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         <header class="hgroup">

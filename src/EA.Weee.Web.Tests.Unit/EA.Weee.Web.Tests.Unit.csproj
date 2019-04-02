@@ -214,6 +214,7 @@
     <Compile Include="Areas\AatfReturn\Validation\NonObligatedValuesViewModelValidatorTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\AatfTaskListViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReusedViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />

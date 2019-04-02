@@ -28,29 +28,55 @@
         }
 
         [Fact]
+        public void Map_GivenNullCountryData_ShouldThrowArgumentNullException()
+        {
+            Action call = () => mapper.Map(new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer());
+
+            call.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            var transfer = new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
+            var source = new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
             {
-                OrganisationId = Guid.NewGuid(),
                 AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid(),
-                SiteId = Guid.NewGuid(),
-                Countries = A.Fake<IList<CountryData>>()
+                Countries = new List<CountryData>()
             };
 
-            var returnedSite = A.Fake<SiteAddressData>();
-            returnedSite.Id = transfer.SiteId;
-            var returnedSiteSummary = A.Fake<AddressTonnageSummary>();
-            returnedSiteSummary.AddressData = new List<SiteAddressData>() { returnedSite };
-            transfer.ReturnedSites = returnedSiteSummary;
+            var result = mapper.Map(source);
 
-            var result = mapper.Map(transfer);
+            result.AatfId.Should().Be(source.AatfId);
+            result.OrganisationId.Should().Be(source.OrganisationId);
+            result.ReturnId.Should().Be(source.ReturnId);
+            result.SiteId.Should().BeNull();
+            result.AddressData.Countries.Should().BeSameAs(source.Countries);
+        }
 
-            result.AatfId.Should().Be(transfer.AatfId);
-            result.OrganisationId.Should().Be(transfer.OrganisationId);
-            result.ReturnId.Should().Be(transfer.ReturnId);
-            result.AddressData.Id.Should().Be(transfer.ReturnedSites.AddressData.ElementAt(0).Id);
+        [Fact]
+        public void Map_GivenSiteAdddressHasBeenSupplied_AddressPropertiesShouldBeMapped()
+        {
+            var id = Guid.NewGuid();
+            var siteAddress = new SiteAddressData() { Id = id };
+            var addressSummary = new AddressTonnageSummary { AddressData = new List<SiteAddressData> { siteAddress } };
+
+            var source = new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                Countries = new List<CountryData>(),
+                SiteId = id,
+                ReturnedSites = addressSummary
+            };
+
+            var result = mapper.Map(source);
+
+            result.SiteId.Should().Be(source.SiteId);
+            result.AddressData.Should().BeSameAs(siteAddress);
+            result.AddressData.Countries.Should().BeSameAs(source.Countries);
         }
     }
 }

@@ -11,12 +11,11 @@
 
         public Guid AatfId { get; set; }
 
+        public Guid? SiteId { get; set; }
+
         public SiteAddressData AddressData { get; set; }
 
-        public bool Edit
-        {
-            get { return (AddressData.Id != Guid.Empty); }
-        }
+        public bool Edit => (SiteId.HasValue);
 
         public ReusedOffSiteCreateSiteViewModel()
         {

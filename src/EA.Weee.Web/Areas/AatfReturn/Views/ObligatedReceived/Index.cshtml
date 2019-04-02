@@ -18,22 +18,17 @@
     <p class="govuk-body">
         Provide tonnage to 3 decimal places. For example 1.238
     </p>
-    <table class="govuk-table govuk-!-margin-bottom-0">
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-width-one-half" style="border-bottom: 0px;"></td>
-            <td class="govuk-table__cell" style="border-bottom: 0px;" colspan="2">
-                <div class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 govuk-!-width-three-quarters">
-                    <div class="govuk-body govuk-!-font-size-19">
-                        @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, schemeId = Model.SchemeId, action = "Index", controller = "ObligatedValuesCopyPaste" }, null)
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
-    
+
     @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
     {
         @Html.Gds().ValidationSummary()
+
+        <div class="govuk-table govuk-!-margin-bottom-0">
+            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
+                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, schemeId = Model.SchemeId, action = "Index", controller = "ObligatedValuesCopyPaste" }, null)
+            </div>
+        </div>
 
         Html.RenderPartial("_ObligatedWeeeTable", Model);
         @Html.HiddenFor(m => m.AatfName)
@@ -48,10 +43,4 @@
             </button>
         </form>
     }
-
-    @Scripts.Render("~/bundles/weee_tonnage_totals")
-    <script>
-        TonnageTotals('B2C');
-        TonnageTotals('B2B');
-    </script>
 </section>

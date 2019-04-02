@@ -23,8 +23,12 @@
     }
 }
 
-#weee-data-entry-table {
+#weee-data-entry-table * {
     .govuk-form-group--error {
         float: right;
+    }
+
+    .error{
+        padding-left: 15px;
     }
 }
