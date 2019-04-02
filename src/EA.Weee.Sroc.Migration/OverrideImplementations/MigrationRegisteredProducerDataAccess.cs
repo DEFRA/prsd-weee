@@ -45,23 +45,21 @@
                 .ToListAsync();
         }
 
-        public async Task<RegisteredProducer> GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        public ProducerSubmission GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload memberUpload)
         {
-            var result = await context.RegisteredProducers
-                .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
-                            && p.ComplianceYear == complianceYear
-                            && p.Scheme.ApprovalNumber == schemeApprovalNumber
-                            && p.CurrentSubmission != null)
-                .ToListAsync();
+            var producerSubmissions = context.ProducerSubmissions
+                .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
+                            && p.RegisteredProducer.ComplianceYear == complianceYear
+                            && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
+                            && p.MemberUpload.IsSubmitted
+                            && p.MemberUpload.CreatedDate < memberUpload.CreatedDate
+                            && p.RegisteredProducer.CurrentSubmission != null).ToList();
 
-            if (result.Count() > 1)
-            {
-                throw new ArgumentException(string.Format("Producer with registration number '{0}' for compliance year '{1}' and scheme '{2}' has more than one record", producerRegistrationNumber, complianceYear, schemeApprovalNumber));
-            }
+            var producerSubmissionsByDate = producerSubmissions.OrderByDescending(p => p.UpdatedDate).ToList();           
 
-            if (result.Any())
+            if (producerSubmissionsByDate.Any())
             {
-                return result.ElementAt(0);
+                return producerSubmissionsByDate.ElementAt(0);
             }
 
             return null;
@@ -80,13 +78,13 @@
             return registeredProducer;
         }
 
-        public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, DateTime date)
+        public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload memberUpload)
         {
             var insert = context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                                                                 && p.RegisteredProducer.ComplianceYear == complianceYear
                                                                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
                                                                 && p.MemberUpload.IsSubmitted
-                                                                && p.MemberUpload.CreatedDate < date
+                                                                && p.MemberUpload.CreatedDate < memberUpload.CreatedDate
                                                                 && (p.StatusType.HasValue && p.StatusType == StatusType.Insert.Value)).AsNoTracking().FirstOrDefault();
 
             if (insert != null)
@@ -100,7 +98,7 @@
                 && p.RegisteredProducer.ComplianceYear == complianceYear
                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
                 && p.MemberUpload.IsSubmitted
-                && p.MemberUpload.CreatedDate < date
+                && p.MemberUpload.CreatedDate < memberUpload.CreatedDate
                 && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)).AsNoTracking().OrderBy(p => p.UpdatedDate).FirstOrDefault();
 
             if (initialAmendment != null)

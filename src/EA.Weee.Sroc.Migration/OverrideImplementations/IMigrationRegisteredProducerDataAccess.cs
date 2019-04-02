@@ -14,9 +14,10 @@
 
         Task<IEnumerable<RegisteredProducer>> GetProducerRegistrations(string producerRegistrationNumber, int complianceYear);
 
-        Task<RegisteredProducer> GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber);
+        ProducerSubmission GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber,
+            MemberUpload memberUpload);
 
-        bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, DateTime date);
+        bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload memberUpload);
 
         ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name);
     }

@@ -18,22 +18,22 @@
             this.fetchProducerCharge = fetchProducerCharge;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType schmemeType, producerType producerType, DateTime date)
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType schmemeType, producerType producerType, MemberUpload memberUpload)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 
             var previousProducerSubmission =
-                await registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
+                registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo, memberUpload);
 
             var previousAmendmentCharge =
-                registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo, date);
+                registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo, memberUpload);
 
-            var chargeband = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType, date);
+            var chargeband = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType, memberUpload);
 
-            if (previousProducerSubmission != null && previousProducerSubmission.CurrentSubmission != null)
+            if (previousProducerSubmission != null)
             {
                 if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                                                 previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
+                                                 previousProducerSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
                 {
                     return chargeband;
                 }

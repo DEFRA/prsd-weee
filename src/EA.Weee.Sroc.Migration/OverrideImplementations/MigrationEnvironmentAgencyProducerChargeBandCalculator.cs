@@ -17,7 +17,7 @@
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, DateTime date)
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload memberUpload)
         {
             var producerCountry = producer.GetProducerCountry();
             ChargeBand band;

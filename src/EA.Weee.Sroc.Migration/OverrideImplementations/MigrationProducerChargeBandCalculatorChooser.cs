@@ -25,7 +25,7 @@
                 throw new ApplicationException(string.Format("No charge band calculator found for scheme {0} and producer {1}", scheme.approvalNo, producer.tradingName));
             }
 
-            return await calculator.GetProducerChargeBand(scheme, producer, upload.CreatedDate);
+            return await calculator.GetProducerChargeBand(scheme, producer, upload);
         }
     }
 }
