@@ -48,6 +48,11 @@
             var transfer = new ObligatedDataToObligatedValueMapTransfer() { ObligatedCategoryValues = model.CategoryValues };
             var existingData = new List<ObligatedCategoryValue>();
 
+            if (source.WeeeSentOnId != null)
+            {
+                model.WeeeSentOnId = source.WeeeSentOnId;
+            }
+
             if (source.SchemeId != new Guid())
             {
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList();
@@ -57,6 +62,11 @@
             {
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReusedData.Where(w => w.Aatf.Id == source.AatfId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
+            }
+
+            if (source.OperatorName != null)
+            {
+                model.OperatorName = source.OperatorName;
             }
 
             if (source.PastedData != null)

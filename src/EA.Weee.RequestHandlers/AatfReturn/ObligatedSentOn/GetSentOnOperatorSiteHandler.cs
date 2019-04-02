@@ -8,13 +8,13 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System.Threading.Tasks;
 
-    public class GetSentOnAatfSiteHandler : IRequestHandler<GetSentOnAatfSite, AatfAddressData>
+    public class GetSentOnOperatorSiteHandler : IRequestHandler<GetSentOnOperatorSite, AatfAddressData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IMap<AatfAddress, AatfAddressData> mapper;
 
-        public GetSentOnAatfSiteHandler(IWeeeAuthorization authorization,
+        public GetSentOnOperatorSiteHandler(IWeeeAuthorization authorization,
             ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<AatfAddress, AatfAddressData> mapper)
         {
             this.authorization = authorization;
@@ -22,11 +22,11 @@
             this.mapper = mapper;
         }
 
-        public async Task<AatfAddressData> HandleAsync(GetSentOnAatfSite message)
+        public async Task<AatfAddressData> HandleAsync(GetSentOnOperatorSite message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfAddress = await getSentOnAatfSiteDataAccess.GetWeeeSentOnSiteAddress(message.WeeeSentOnId);
+            var aatfAddress = await getSentOnAatfSiteDataAccess.GetWeeeSentOnOperatorAddress(message.WeeeSentOnId);
 
             var addressData = mapper.Map(aatfAddress);
 
