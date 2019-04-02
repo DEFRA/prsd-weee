@@ -557,7 +557,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Areas\AatfReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NonObligated\Index.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWEEETable.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_NonObligatedWeeeTable.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\CheckYourReturn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SubmittedReturn\Index.cshtml" />
