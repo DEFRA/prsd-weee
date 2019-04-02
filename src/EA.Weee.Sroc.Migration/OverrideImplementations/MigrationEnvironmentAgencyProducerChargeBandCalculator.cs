@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
+    using System;
     using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Scheme;
@@ -16,7 +17,7 @@
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, DateTime date)
         {
             var producerCountry = producer.GetProducerCountry();
             ChargeBand band;
@@ -95,7 +96,7 @@
         public bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name)
         {
             var year = int.Parse(scheme.complianceYear);
-            var previousProducerSubmission = Task.Run(() => registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name)).Result;
+            var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name);
 
             if (year > 2018)
             {

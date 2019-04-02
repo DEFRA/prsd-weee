@@ -6,7 +6,7 @@
 
     public abstract class AuditableEntity : Entity
     {
-        public DateTime CreatedDate { get; set; }
+        public virtual DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

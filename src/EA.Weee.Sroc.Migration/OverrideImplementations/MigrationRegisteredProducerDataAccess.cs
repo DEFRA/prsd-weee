@@ -67,57 +67,64 @@
             return null;
         }
 
-        public async Task<ProducerSubmission> GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name)
+        public ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name)
         {
-            var producersBymember = context.ProducerSubmissions
-                .Where(p => p.UpdatedDate > upload.CreatedDate);
+            var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
+                                                        || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
 
-            var producer = producersBymember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
-                                                        || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name)));
+            var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate).ToList();
 
-            var registeredProducer = await producer.FirstOrDefaultAsync(c => c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
+            var registeredProducer = producerv2.FirstOrDefault(c => c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                                                                       && c.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber);
 
             return registeredProducer;
         }
 
-        public async Task<bool> HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
+        public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, DateTime date)
         {
-            var insert = await context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
-                                                                      && p.RegisteredProducer.ComplianceYear == complianceYear
-                                                                      && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
-                                                                      && (p.StatusType.HasValue && p.StatusType == StatusType.Insert.Value)).FirstOrDefaultAsync();
+            var insert = context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
+                                                                && p.RegisteredProducer.ComplianceYear == complianceYear
+                                                                && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
+                                                                && p.MemberUpload.IsSubmitted
+                                                                && p.MemberUpload.CreatedDate < date
+                                                                && (p.StatusType.HasValue && p.StatusType == StatusType.Insert.Value)).AsNoTracking().FirstOrDefault();
 
             if (insert != null)
             {
-                return await SubmissionsAfterDate(producerRegistrationNumber, complianceYear, schemeApprovalNumber, StatusType.Amendment, insert.UpdatedDate).AnyAsync();
+                return SubmissionsAfterDate(producerRegistrationNumber, complianceYear, schemeApprovalNumber, StatusType.Amendment, insert.UpdatedDate);
             }
 
             // insert can be null as amendment can be first charge in the year
-            var initialAmendment = await context.ProducerSubmissions.Where(p =>
+            var initialAmendment = context.ProducerSubmissions.Where(p =>
                 p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                 && p.RegisteredProducer.ComplianceYear == complianceYear
                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
-                && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)).OrderBy(p => p.UpdatedDate).FirstOrDefaultAsync();
+                && p.MemberUpload.IsSubmitted
+                && p.MemberUpload.CreatedDate < date
+                && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)).AsNoTracking().OrderBy(p => p.UpdatedDate).FirstOrDefault();
 
             if (initialAmendment != null)
             {
-                return await SubmissionsAfterDate(producerRegistrationNumber, complianceYear, schemeApprovalNumber, StatusType.Amendment, initialAmendment.UpdatedDate).AnyAsync();
+                return SubmissionsAfterDate(producerRegistrationNumber, complianceYear, schemeApprovalNumber, StatusType.Amendment, initialAmendment.UpdatedDate);
             }
 
             return false;
         }
 
-        private IQueryable<ProducerSubmission> SubmissionsAfterDate(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, StatusType status,
+        private bool SubmissionsAfterDate(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, StatusType status,
             DateTime date)
         {
-            return context.ProducerSubmissions.Where(p =>
+            var query = context.ProducerSubmissions.Where(p =>
                 p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                 && p.RegisteredProducer.ComplianceYear == complianceYear
                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
                 && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)
-                && p.UpdatedDate > date
-                && p.ChargeThisUpdate > 0).AsQueryable();
+                && p.MemberUpload.IsSubmitted
+                && p.ChargeThisUpdate > 0).ToList();
+
+            var result = query.Any(c => c.UpdatedDate > date);
+
+            return result;
         }
     }
 }

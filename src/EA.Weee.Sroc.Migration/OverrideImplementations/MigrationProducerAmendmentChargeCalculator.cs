@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Sroc.Migration.OverrideImplementations
 {
+    using System;
     using System.Threading.Tasks;
     using Domain.Scheme;
     using Xml.MemberRegistration;
@@ -17,7 +18,7 @@
             this.fetchProducerCharge = fetchProducerCharge;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType schmemeType, producerType producerType)
+        public async Task<ProducerCharge> GetProducerChargeBand(schemeType schmemeType, producerType producerType, DateTime date)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 
@@ -25,9 +26,9 @@
                 await registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
 
             var previousAmendmentCharge =
-                await registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo);
+                registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo, date);
 
-            var chargeband = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType);
+            var chargeband = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType, date);
 
             if (previousProducerSubmission != null && previousProducerSubmission.CurrentSubmission != null)
             {
@@ -48,7 +49,8 @@
         public bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name)
         {
             var year = int.Parse(scheme.complianceYear);
-            var previousProducerSubmission = Task.Run(() => registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name)).Result;
+            var previousProducerSubmission =
+                registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name);
 
             return producer.status == statusType.A && (previousProducerSubmission != null);
         }
