@@ -290,6 +290,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedValuesCopyPasteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
@@ -328,6 +329,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IObligatedSentOnWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
@@ -343,6 +345,7 @@
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\NonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\ObligatedSentOnWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CheckYourReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModel.cs" />
@@ -820,6 +823,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

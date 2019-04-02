@@ -57,12 +57,14 @@
     <Compile Include="AatfReturn\NonObligated\NonObligated.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
     <Compile Include="AatfReturn\Obligated\AatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\AddSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReused.cs" />
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\GetSentOnOperatorSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedBaseRequest.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReused.cs" />
