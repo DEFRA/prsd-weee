@@ -165,7 +165,6 @@
             Assert.Equal(result.Amount, 0);
         }
 
-        [Fact(Skip = "create")]
         public void IsMatch_GivenProducerIsAmendement_TrueShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.A };
@@ -176,12 +175,23 @@
             Assert.True(result);
         }
 
-        [Fact(Skip = "create")]
         public void IsMatch_GivenProducerIsInsert_FalseShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.I };
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var result = calculator.IsMatch(schemeType, producer);
+
+            Assert.False(result);
+        }
+
+        public void IsMatch_GivenProducerIsInsertAndPreviousSubmissionExists_FalseShouldBeReturned()
+        {
+            var producer = new producerType() { status = statusType.I };
+            var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
+            var result = calculator.IsMatch(schemeType, producer);
+
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._))
+                .Returns((RegisteredProducer)null);
 
             Assert.False(result);
         }

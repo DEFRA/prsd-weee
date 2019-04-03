@@ -1,15 +1,19 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Domain.Lookup;
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
         private readonly IFetchProducerCharge fetchProducerCharge;
-
-        public ProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge)
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
+        
+        public ProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge, 
+            IRegisteredProducerDataAccess registeredProducerDataAccess)
         {
             this.fetchProducerCharge = fetchProducerCharge;
+            this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
         public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
@@ -52,8 +56,20 @@
         public bool IsMatch(schemeType scheme, producerType producer)
         {
             var year = int.Parse(scheme.complianceYear);
+            var previousProducerSubmission = Task.Run(() => registeredProducerDataAccess.GetProducerRegistration(producer.registrationNo, year, scheme.approvalNo)).Result;
 
-            return year <= 2018  && producer.status == statusType.I ? true : false;
+            if (year <= 2018)
+            {
+                if (producer.status == statusType.I)
+                {
+                    return true;
+                }
+                if (producer.status == statusType.A && previousProducerSubmission == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
