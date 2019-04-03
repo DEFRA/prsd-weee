@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public async void GetWeeeSentOnAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
+        public async void GetWeeeSentOnSiteAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -87,9 +87,33 @@
 
                 var weeeSentOn = await CreateWeeeSentOnInContext(context, dataAccess, siteAddress);
 
-                var result = await dataAccess.GetWeeeSentOnAddress(weeeSentOn.Id);
+                var result = await dataAccess.GetWeeeSentOnSiteAddress(weeeSentOn.Id);
 
                 result.Should().BeSameAs(weeeSentOn.SiteAddress);
+            }
+        }
+
+        [Fact]
+        public async void GetWeeeSentOnOperatorAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+
+                var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+
+                var countrySite = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+
+                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(context, dataAccess, operatorAddress, siteAddress);
+
+                var result = await dataAccess.GetWeeeSentOnOperatorAddress(weeeSentOn.Id);
+
+                result.Should().BeSameAs(weeeSentOn.OperatorAddress);
             }
         }
 
@@ -135,6 +159,30 @@
             await context.SaveChangesAsync();
 
             var weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
+
+            await dataAccess.Submit(weeeSentOn);
+
+            return weeeSentOn;
+        }
+
+        private async Task<WeeeSentOn> CreateWeeeSentOnOperatorInContext(WeeeContext context,
+            SentOnAatfSiteDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress)
+        {
+            var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+            var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
+            var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
+
+            context.Organisations.Add(organisation);
+            context.Operators.Add(@operator);
+            context.Schemes.Add(scheme);
+            context.Aatfs.Add(aatf);
+            context.Returns.Add(@return);
+
+            await context.SaveChangesAsync();
+
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 
             await dataAccess.Submit(weeeSentOn);
 
