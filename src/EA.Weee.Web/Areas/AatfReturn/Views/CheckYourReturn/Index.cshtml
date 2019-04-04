@@ -48,15 +48,15 @@
                         @aatf.Aatf.ApprovalNumber
                     </td>
                     <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
-                        Received for treatment (t)
+                        Received for treatment (tonnes)
                     </th>
                     <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
                     <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
-                        Sent to another AATF/ATF (t)
+                        Sent to another AATF/ATF (tonnes)
                     </th>
                     <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
                     <th class="govuk-table__header gov-uk-no-bottom-border" style="text-align:center; width:15%" colspan="2">
-                        Reused as a whole appliance (t)
+                        Reused as a whole appliance (tonnes)
                     </th>
                     <td class="govuk-table__header gov-uk-no-bottom-border" style="width:5%" scope="col"></td>
                 </tr>
@@ -95,11 +95,11 @@
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" style="text-align: right" scope="col">
-                    WEEE received (t)
+                    WEEE received (tonnes)
                 </th>
                 <td class="govuk-table__header" scope="col"></td>
                 <th class="govuk-table__header" style="text-align: right" scope="col">
-                    WEEE retained by a DCF (t)
+                    WEEE retained by a DCF (tonnes)
                 </th>
                 <td class="govuk-table__header" scope="col"></td>
             </tr>
@@ -129,7 +129,7 @@
 
     <div class="govuk-body govuk-!-font-size-19">
         <a class="govuk-link govuk-link--no-visited-state">
-            @Html.RouteLink("AATF Task List", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+            @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
         </a>
     </div>
 </section>
