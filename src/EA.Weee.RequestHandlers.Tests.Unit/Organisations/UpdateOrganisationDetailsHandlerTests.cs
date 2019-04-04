@@ -17,6 +17,7 @@
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
     using OrganisationType = Core.Organisations.OrganisationType;
 
     public class UpdateOrganisationDetailsHandlerTests

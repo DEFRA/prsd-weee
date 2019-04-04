@@ -20,7 +20,6 @@
         public async Task<Organisation> FetchOrganisationAsync(Guid organisationId)
         {
             Organisation organisation = await context.Organisations
-                .Include(o => o.Contact)
                 .Include(o => o.OrganisationAddress)
                 .SingleOrDefaultAsync(o => o.Id == organisationId);
 

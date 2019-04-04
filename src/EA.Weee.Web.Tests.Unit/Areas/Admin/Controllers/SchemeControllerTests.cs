@@ -668,14 +668,14 @@
                 SchemeId = Guid.NewGuid(),
                 OrgId = Guid.NewGuid()
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .Returns(true);
             var schemeController = SchemeController();
             new HttpContextMocker().AttachToController(schemeController);
 
             ActionResult result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
@@ -703,8 +703,8 @@
             await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
-                .WhenArgumentsMatch(a => ((UpdateOrganisationContactDetails)a[1]).SendNotificationOnChange == false)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
+                .WhenArgumentsMatch(a => ((UpdateSchemeContactDetails)a[1]).SendNotificationOnChange == false)
                 .MustHaveHappened();
         }
 

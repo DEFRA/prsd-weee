@@ -12,7 +12,9 @@
     using EA.Weee.Requests.Organisations;
     using Email;
     using FakeItEasy;
+    using RequestHandlers.Scheme;
     using RequestHandlers.Security;
+    using Requests.Scheme;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -32,9 +34,9 @@
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
             var handler =
-                new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+                new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
-            var request = new UpdateOrganisationContactDetails(new OrganisationData { Id = Guid.NewGuid() }, false);
+            var request = new UpdateSchemeContactDetails(new OrganisationData { Id = Guid.NewGuid() }, false);
 
             // Act, Assert
             await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(request));
@@ -52,10 +54,10 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             // Act
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateOrganisationContactDetails>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateSchemeContactDetails>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(action);
@@ -86,7 +88,7 @@
             organisationData.OrganisationAddress.Telephone = "012345678";
             organisationData.OrganisationAddress.Email = "email@domain.com";
 
-            UpdateOrganisationContactDetails request = new UpdateOrganisationContactDetails(organisationData);
+            UpdateSchemeContactDetails request = new UpdateSchemeContactDetails(organisationData);
 
             IWeeeAuthorization authorization = A.Dummy<IWeeeAuthorization>();
             IOrganisationDetailsDataAccess dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
@@ -103,8 +105,8 @@
             A.CallTo(() => dataAccess.FetchCountryAsync(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC")))
                 .Returns(country);
 
-            UpdateOrganisationContactDetailsHandler handler =
-                new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            UpdateSchemeContactDetailsHandler handler =
+                new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             // Act
             bool result = await handler.HandleAsync(request);
@@ -113,9 +115,10 @@
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            Assert.Equal("FirstName", organisation.Contact.FirstName);
-            Assert.Equal("LastName", organisation.Contact.LastName);
-            Assert.Equal("Position", organisation.Contact.Position);
+            //Assert.Equal("FirstName", organisation.Contact.FirstName);
+            //Assert.Equal("LastName", organisation.Contact.LastName);
+            //Assert.Equal("Position", organisation.Contact.Position); //CHECK
+            Assert.False(true);
             Assert.Equal("Address1", organisation.OrganisationAddress.Address1);
             Assert.Equal("Address2", organisation.OrganisationAddress.Address2);
             Assert.Equal("Town", organisation.OrganisationAddress.TownOrCity);
@@ -137,7 +140,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -147,8 +150,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK 
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -184,7 +187,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             // Act
             await handler.HandleAsync(request);
@@ -202,7 +205,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
@@ -211,8 +214,8 @@
 
             var contact = new Contact("FirstName", "LastName", "Position");
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -248,7 +251,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, false);
+            var request = new UpdateSchemeContactDetails(organisationData, false);
 
             // Act
             await handler.HandleAsync(request);
@@ -266,7 +269,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -276,8 +279,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -313,7 +316,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             // Act
             await handler.HandleAsync(request);
@@ -331,7 +334,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -341,8 +344,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -378,7 +381,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, false);
+            var request = new UpdateSchemeContactDetails(organisationData, false);
 
             // Act
             await handler.HandleAsync(request);
@@ -396,7 +399,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -406,8 +409,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -443,7 +446,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             // Act
             await handler.HandleAsync(request);
@@ -461,7 +464,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -471,8 +474,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -511,7 +514,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
                 .Returns((Scheme)null);
@@ -535,7 +538,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -545,8 +548,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -585,7 +588,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.SchemeName)
@@ -616,7 +619,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            var handler = new UpdateOrganisationContactDetailsHandler(authorization, dataAccess, weeeEmailService);
+            var handler = new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             var contact = new Contact("FirstName", "LastName", "Position");
 
@@ -626,8 +629,8 @@
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Contact)
-                .Returns(contact);
+            //A.CallTo(() => organisation.Contact).Returns(contact);
+            //CHECK
 
             A.CallTo(() => organisation.OrganisationAddress)
                 .Returns(organisationAddress);
@@ -666,7 +669,7 @@
                 OrganisationAddress = newOrganisationAddress
             };
 
-            var request = new UpdateOrganisationContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(organisationData, true);
 
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.SchemeName)

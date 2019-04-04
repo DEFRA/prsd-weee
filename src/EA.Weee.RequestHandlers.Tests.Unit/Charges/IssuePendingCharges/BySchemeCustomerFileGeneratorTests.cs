@@ -41,8 +41,9 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            organisation.AddOrUpdateMainContactPerson(contact);
-
+            //organisation.AddOrUpdateMainContactPerson(contact);
+            //CHECK
+            Assert.True(false);
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -105,8 +106,9 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            organisation.AddOrUpdateMainContactPerson(contact);
-
+            //organisation.AddOrUpdateMainContactPerson(contact);
+            //CHECK
+            Assert.False(true);
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -181,8 +183,9 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            organisation.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-
+            //organisation.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
+            //CHECK
+            Assert.False(true);
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -257,8 +260,9 @@
 
             Organisation organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
             organisation1.AddOrUpdateAddress(AddressType.OrganisationAddress, address1);
-            organisation1.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-
+            //organisation1.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
+            //check
+            Assert.True(false);
             Scheme scheme1 = new Scheme(organisation1);
             scheme1.UpdateScheme(
                 "Test scheme 2",
@@ -292,8 +296,9 @@
 
             Organisation organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
             organisation2.AddOrUpdateAddress(AddressType.OrganisationAddress, address2);
-            organisation2.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-
+            //organisation2.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
+            //CHECK
+            Assert.False(true);
             Scheme scheme2 = new Scheme(organisation2);
             scheme2.UpdateScheme(
                 "Test scheme 2",
@@ -360,8 +365,9 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            organisation.AddOrUpdateMainContactPerson(contact);
-
+            //organisation.AddOrUpdateMainContactPerson(contact);
+            //CHECK
+            Assert.False(true);
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -418,8 +424,9 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            organisation.AddOrUpdateMainContactPerson(contact);
-
+            //organisation.AddOrUpdateMainContactPerson(contact);
+            //check
+            Assert.False(true);
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",

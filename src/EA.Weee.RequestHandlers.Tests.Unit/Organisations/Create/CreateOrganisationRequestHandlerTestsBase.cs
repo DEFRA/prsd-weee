@@ -10,6 +10,7 @@
     using RequestHandlers.Security;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class CreateOrganisationRequestHandlerTestsBase
     {

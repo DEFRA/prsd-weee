@@ -14,8 +14,9 @@
     using System.Threading.Tasks;
     using Xunit;
     using Operator = Domain.AatfReturn.Operator;
-    using Organisation = Domain.Organisation.Organisation;
+    using Organisation = Domain.Organisation;
     using Return = Domain.AatfReturn.Return;
+    using ReturnScheme = Domain.AatfReturn.ReturnScheme;
     using Scheme = Domain.Scheme.Scheme;
 
     public class AddReturnSchemeIntegration
@@ -31,7 +32,7 @@
                 var tradingName = "Test Trading Name" + Guid.NewGuid();
                 const string crn = "ABC12345";
 
-                var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
+                var organisation = Organisation.Organisation.CreateRegisteredCompany(name, crn, tradingName);
 
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();

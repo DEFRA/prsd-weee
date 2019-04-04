@@ -128,7 +128,7 @@
     <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetails.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeId.cs" />
@@ -142,7 +142,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
+    <Compile Include="Scheme\AddContactPersonToScheme.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatus.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />

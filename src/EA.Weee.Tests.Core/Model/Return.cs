@@ -18,6 +18,9 @@ namespace EA.Weee.Tests.Core.Model
         {
             this.AATFReturns = new HashSet<AATFReturn>();
             this.NonObligatedWeees = new HashSet<NonObligatedWeee>();
+            this.WeeeReceiveds = new HashSet<WeeeReceived>();
+            this.WeeeReuseds = new HashSet<WeeeReused>();
+            this.WeeeSentOns = new HashSet<WeeeSentOn>();
         }
     
         public System.Guid Id { get; set; }
@@ -26,9 +29,13 @@ namespace EA.Weee.Tests.Core.Model
         public int Quarter { get; set; }
         public int Status { get; set; }
         public byte[] RowVersion { get; set; }
+        public int ReturnStatus { get; set; }
     
         public virtual ICollection<AATFReturn> AATFReturns { get; set; }
         public virtual ICollection<NonObligatedWeee> NonObligatedWeees { get; set; }
         public virtual Operator Operator { get; set; }
+        public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
+        public virtual ICollection<WeeeReused> WeeeReuseds { get; set; }
+        public virtual ICollection<WeeeSentOn> WeeeSentOns { get; set; }
     }
 }

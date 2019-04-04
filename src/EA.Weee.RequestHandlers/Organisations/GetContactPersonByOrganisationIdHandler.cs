@@ -5,6 +5,7 @@
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -14,9 +15,9 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-        private readonly IMap<Organisation, ContactData> mapper;
+        private readonly IMap<Scheme, ContactData> mapper;
 
-        public GetContactPersonByOrganisationIdHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<Organisation, ContactData> mapper)
+        public GetContactPersonByOrganisationIdHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<Scheme, ContactData> mapper)
         {
             this.authorization = authorization;
             this.context = context;
@@ -27,9 +28,10 @@
         {
             authorization.EnsureOrganisationAccess(message.OrganisationsId);
 
-            var organisation = await context.Organisations.SingleAsync(n => n.Id == message.OrganisationsId);
+            //CHECK
+            var scheme = await context.Schemes.SingleAsync(n => n.Id == message.OrganisationsId);
 
-            return mapper.Map(organisation);
+            return mapper.Map(scheme);
         }
     }
 }

@@ -15,6 +15,7 @@
     using Weee.Tests.Core;
     using Xunit;
     using AddressType = Core.Shared.AddressType;
+    using Organisation = Domain.Scheme.Organisation;
 
     public class AddAddressToOrganisationHandlerTests
     {

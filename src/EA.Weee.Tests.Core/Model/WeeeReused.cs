@@ -23,9 +23,13 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid Id { get; set; }
         public System.Guid AATFReturnId { get; set; }
         public byte[] RowVersion { get; set; }
+        public System.Guid ReturnId { get; set; }
+        public System.Guid AatfId { get; set; }
     
         public virtual AATFReturn AATFReturn { get; set; }
         public virtual ICollection<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
         public virtual ICollection<WeeeReusedSite> WeeeReusedSites { get; set; }
+        public virtual AATF AATF { get; set; }
+        public virtual Return Return { get; set; }
     }
 }
