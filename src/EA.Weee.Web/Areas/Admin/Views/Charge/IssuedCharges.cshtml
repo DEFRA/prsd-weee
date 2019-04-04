@@ -50,7 +50,7 @@
             @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
             @Html.Gds().DropDownListFor(
                 m => m.SelectedScheme,
-                Model.Schemes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }),
+                Model.Schemes.Select(x => new SelectListItem() { Text = x.SchemeName, Value = x.Id.ToString() }),
                 string.Empty,
                 new { autocomplete = "false" })
         </div>
