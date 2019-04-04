@@ -30,11 +30,9 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<Organisation> Organisations { get; set; }
         public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
         public virtual DbSet<MemberUploadError> MemberUploadErrors { get; set; }
-        public virtual DbSet<Scheme> Schemes { get; set; }
         public virtual DbSet<Address1> Address1 { get; set; }
         public virtual DbSet<AuthorisedRepresentative> AuthorisedRepresentatives { get; set; }
         public virtual DbSet<BrandName_> BrandName_Set { get; set; }
@@ -83,5 +81,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
         public virtual DbSet<WeeeReusedSite> WeeeReusedSites { get; set; }
         public virtual DbSet<WeeeSentOn> WeeeSentOns { get; set; }
+        public virtual DbSet<Organisation> Organisations { get; set; }
+        public virtual DbSet<Scheme> Schemes { get; set; }
     }
 }

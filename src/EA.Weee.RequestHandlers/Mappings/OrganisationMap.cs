@@ -42,9 +42,9 @@
                 BusinessAddress = source.BusinessAddress != null
                     ? addressMap.Map(source.BusinessAddress)
                     : null,
-                Contact = source.Contact != null
-                    ? contactMap.Map(source.Contact)
-                    : null,
+                //Contact = source.Contact != null
+                //    ? contactMap.Map(source.Contact)
+                //    : null, //CHECK
                 NotificationAddress = source.NotificationAddress != null
                     ? addressMap.Map(source.NotificationAddress)
                     : null,

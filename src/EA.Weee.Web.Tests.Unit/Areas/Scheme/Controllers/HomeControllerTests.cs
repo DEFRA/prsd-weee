@@ -773,7 +773,7 @@
 
             IWeeeClient client = A.Fake<IWeeeClient>();
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .Returns(true);
 
             Func<IWeeeClient> apiClient = () => client;
@@ -792,7 +792,7 @@
             ActionResult result = await controller.ManageContactDetails(organisationData);
 
             // Assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
@@ -824,8 +824,8 @@
             ActionResult result = await controller.ManageContactDetails(A.Dummy<OrganisationData>());
 
             // Assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
-                .WhenArgumentsMatch(a => ((UpdateOrganisationContactDetails)a[1]).SendNotificationOnChange == true)
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
+                .WhenArgumentsMatch(a => ((UpdateSchemeContactDetails)a[1]).SendNotificationOnChange == true)
                 .MustHaveHappened();
         }
 

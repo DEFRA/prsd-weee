@@ -69,10 +69,6 @@
 
         public virtual Guid? NotificationAddressId { get; private set; }
 
-        public virtual Contact Contact { get; private set; }
-
-        public virtual Guid? ContactId { get; private set; }
-
         public static Organisation CreateSoleTrader(string tradingName)
         {
             return new Organisation(OrganisationType.SoleTraderOrIndividual, tradingName);
@@ -142,11 +138,6 @@
             if (OrganisationAddress == null)
             {
                 throw new InvalidOperationException("A Complete organisation must have an OrganisationAddress");
-            }
-
-            if (Contact == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have a Contact");
             }
 
             OrganisationStatus = OrganisationStatus.Complete;

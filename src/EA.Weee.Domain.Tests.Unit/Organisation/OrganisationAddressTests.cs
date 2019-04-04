@@ -4,7 +4,6 @@
     using Domain.Organisation;
     using EA.Weee.Domain.Tests.Unit.Helpers;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationAddressTests
     {

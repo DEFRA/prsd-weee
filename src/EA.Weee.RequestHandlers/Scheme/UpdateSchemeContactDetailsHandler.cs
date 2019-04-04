@@ -1,21 +1,24 @@
-﻿namespace EA.Weee.RequestHandlers.Organisations
+﻿namespace EA.Weee.RequestHandlers.Scheme
 {
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Requests.Organisations;
+    using Domain;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using Email;
+    using Organisations;
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
+    using Requests.Scheme;
     using Security;
     using Weee.Security;
 
-    public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, bool>
+    public class UpdateSchemeContactDetailsHandler : IRequestHandler<UpdateSchemeContactDetails, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IOrganisationDetailsDataAccess dataAccess;
         private readonly IWeeeEmailService weeeEmailService;
 
-        public UpdateOrganisationContactDetailsHandler(IWeeeAuthorization authorization, IOrganisationDetailsDataAccess dataAccess,
+        public UpdateSchemeContactDetailsHandler(IWeeeAuthorization authorization, IOrganisationDetailsDataAccess dataAccess,
             IWeeeEmailService weeeEmailService)
         {
             this.authorization = authorization;
@@ -23,7 +26,7 @@
             this.weeeEmailService = weeeEmailService;
         }
 
-        public async Task<bool> HandleAsync(UpdateOrganisationContactDetails message)
+        public async Task<bool> HandleAsync(UpdateSchemeContactDetails message)
         {
             authorization.EnsureInternalOrOrganisationAccess(message.OrganisationData.Id);
             if (authorization.CheckCanAccessInternalArea())
@@ -31,20 +34,21 @@
                 authorization.EnsureUserInRole(Roles.InternalAdmin);
             }
 
-            Organisation organisation = await dataAccess.FetchOrganisationAsync(message.OrganisationData.Id);
+            var scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
+            var organisation = await dataAccess.FetchOrganisationAsync(message.OrganisationData.Id);
 
-            Contact contact = new Contact(
+            var contact = new Contact(
                 message.OrganisationData.Contact.FirstName,
                 message.OrganisationData.Contact.LastName,
                 message.OrganisationData.Contact.Position);
 
-            var contactChanged = !contact.Equals(organisation.Contact);
+            var contactChanged = !contact.Equals(scheme.Contact);
 
-            organisation.AddOrUpdateMainContactPerson(contact);
+            scheme.AddOrUpdateMainContactPerson(contact);
 
-            Country country = await dataAccess.FetchCountryAsync(message.OrganisationData.OrganisationAddress.CountryId);
+            var country = await dataAccess.FetchCountryAsync(message.OrganisationData.OrganisationAddress.CountryId);
 
-            Address address = new Address(
+            var address = new Address(
                 message.OrganisationData.OrganisationAddress.Address1,
                 message.OrganisationData.OrganisationAddress.Address2,
                 message.OrganisationData.OrganisationAddress.TownOrCity,
@@ -63,7 +67,7 @@
             if (message.SendNotificationOnChange &&
                 (contactChanged || organisationAddressChanged))
             {
-                var scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
+                scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
 
                 if (scheme != null &&
                     scheme.CompetentAuthority != null)

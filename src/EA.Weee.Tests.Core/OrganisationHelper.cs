@@ -30,7 +30,7 @@
 
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, GetAddress());
 
-            organisation.AddOrUpdateMainContactPerson(GetContact());
+            //organisation.AddOrUpdateMainContactPerson(GetContact());  //CHECK
 
             if (status == OrganisationStatus.Complete)
             {

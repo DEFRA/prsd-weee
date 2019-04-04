@@ -14,7 +14,8 @@
     using System;
     using System.Collections.Generic;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
-    
+    using Organisation = Domain.Organisation.Organisation;
+
     public class GetSchemesExternalDataAccessTests
     {
         [Fact]

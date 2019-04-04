@@ -56,7 +56,7 @@
 
             IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme schemePending = new Scheme(organisation);
             schemePending.UpdateScheme("Scheme Pending", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
@@ -115,7 +115,7 @@
 
             IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme schemePending = new Scheme(organisation);
             schemePending.UpdateScheme("Scheme Pending", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
@@ -174,7 +174,7 @@
 
             IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme scheme1 = new Scheme(organisation);
             scheme1.UpdateScheme("Scheme C", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());

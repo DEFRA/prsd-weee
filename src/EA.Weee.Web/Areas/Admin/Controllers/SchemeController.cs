@@ -366,7 +366,7 @@
                     Contact = model.Contact,
                     OrganisationAddress = model.OrganisationAddress,
                 };
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(orgData));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(orgData));
             }
 
             return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.ContactDetails });
