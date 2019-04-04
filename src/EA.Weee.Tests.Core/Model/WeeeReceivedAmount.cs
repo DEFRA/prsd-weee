@@ -20,6 +20,8 @@ namespace EA.Weee.Tests.Core.Model
         public int CategoryId { get; set; }
         public Nullable<decimal> Tonnage { get; set; }
         public byte[] RowVersion { get; set; }
+        public Nullable<decimal> HouseholdTonnage { get; set; }
+        public Nullable<decimal> NonHouseholdTonnage { get; set; }
     
         public virtual WeeeReceived WeeeReceived { get; set; }
     }

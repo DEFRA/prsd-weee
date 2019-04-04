@@ -20,6 +20,5 @@ namespace EA.Weee.Tests.Core.Model
         public byte[] RowVersion { get; set; }
     
         public virtual AATFReturn AATFReturn { get; set; }
-        public virtual Scheme Scheme { get; set; }
     }
 }

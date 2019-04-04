@@ -13,6 +13,7 @@
     using Requests.Organisations;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class GetContactPersonByOrganisationIdHandlerTests
     {
@@ -50,9 +51,10 @@
                 await handler.HandleAsync(new GetContactPersonByOrganisationId(organisations.FirstOrDefault().Id));
 
             Assert.NotNull(contactPerson);
-            Assert.Equal(organisations.FirstOrDefault().Contact.FirstName, contactPerson.FirstName);
-            Assert.Equal(organisations.FirstOrDefault().Contact.LastName, contactPerson.LastName);
-            Assert.Equal(organisations.FirstOrDefault().Contact.Position, contactPerson.Position);
+            Assert.True(false);
+            //Assert.Equal(organisations.FirstOrDefault().Contact.FirstName, contactPerson.FirstName);
+            //Assert.Equal(organisations.FirstOrDefault().Contact.LastName, contactPerson.LastName);
+            //Assert.Equal(organisations.FirstOrDefault().Contact.Position, contactPerson.Position);
         }
 
         private DbSet<Organisation> MakeOrganisation()

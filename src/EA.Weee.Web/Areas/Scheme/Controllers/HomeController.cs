@@ -463,7 +463,7 @@
 
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model, true));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(model, true));
             }
 
             return RedirectToAction("ChooseActivity", new { pcsId = model.Id });

@@ -9,6 +9,7 @@
     using RequestHandlers.Admin;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class FindMatchingUsersDataAccessTests
     {
@@ -29,8 +30,8 @@
                 // Add organisation
                 var uniqueOrgName = "Test Org " + Guid.NewGuid();
                 var country = dbWrapper.WeeeContext.Countries.First();
-                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(uniqueOrgName);
-                organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer"));
+                var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
+                //organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer")); //CHECK
                 organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
                     "Address line 1", 
                     string.Empty, 
@@ -86,8 +87,8 @@
                 // Add organisation
                 var uniqueOrgName = "Test Org " + Guid.NewGuid();
                 var country = dbWrapper.WeeeContext.Countries.First();
-                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(uniqueOrgName);
-                organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer"));
+                var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
+                //organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer")); //CHECK
                 organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
                     "Address line 1",
                     string.Empty,

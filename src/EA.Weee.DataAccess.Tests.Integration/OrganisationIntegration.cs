@@ -33,7 +33,7 @@
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                organisation.AddOrUpdateMainContactPerson(contact);
+                //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
                 organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
@@ -75,7 +75,8 @@
 
                 var organisation = Organisation.CreateSoleTrader(tradingName);
 
-                organisation.AddOrUpdateMainContactPerson(contact);
+                //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
+                Assert.True(false);
                 organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);

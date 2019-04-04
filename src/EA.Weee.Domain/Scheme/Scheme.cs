@@ -6,7 +6,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Scheme : Entity
+    public partial class Scheme : Entity
     {
         public Scheme(Guid organisationId)
         {
@@ -46,6 +46,10 @@
         public Guid? CompetentAuthorityId { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public virtual Contact Contact { get; private set; }
+
+        public virtual Guid? ContactId { get; private set; }
 
         public void UpdateScheme(
             string schemeName,

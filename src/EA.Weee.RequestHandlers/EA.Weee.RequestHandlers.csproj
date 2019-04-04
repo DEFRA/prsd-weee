@@ -328,7 +328,7 @@
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
     <Compile Include="Organisations\OrganisationDetailsDataAccess.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
@@ -361,7 +361,7 @@
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
+    <Compile Include="Scheme\AddContactPersonToSchemeHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandler.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />

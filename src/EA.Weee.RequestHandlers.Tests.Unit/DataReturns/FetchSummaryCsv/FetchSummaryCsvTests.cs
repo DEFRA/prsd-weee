@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using Domain;
+    using Domain.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv;
     using EA.Weee.RequestHandlers.Security;
@@ -54,7 +55,7 @@
         public async Task HandleAsync_Always_CreatesFileNameWithSchemeApprovalNumberComplianceYearAndCurrentTime()
         {
             // Arrange
-            Domain.Scheme.Scheme scheme = new Domain.Scheme.Scheme(A.Dummy<Domain.Organisation.Organisation>());
+            Domain.Scheme.Scheme scheme = new Domain.Scheme.Scheme(A.Dummy<Organisation>());
             scheme.UpdateScheme(
                 "Scheme name",
                 "WEE/AB1234CD/SCH",

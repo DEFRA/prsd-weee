@@ -5,6 +5,7 @@
     using Core.DataStandards;
     using Core.Organisations;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme;
 
     public class ContactPersonViewModel
     {
@@ -28,7 +29,7 @@
         [DataType(DataType.Text)]
         public string Position { get; set; }
 
-        public AddContactPersonToOrganisation ToAddRequest()
+        public AddContactPersonToScheme ToAddRequest()
         {
             var contact = new ContactData
             {   
@@ -36,7 +37,7 @@
                 LastName = LastName,
                 Position = Position
             };
-            return new AddContactPersonToOrganisation(OrganisationId, contact);
+            return new AddContactPersonToScheme(OrganisationId, contact);
         }
 
         public ContactPersonViewModel()

@@ -127,7 +127,7 @@
     <Compile Include="Scheme\MemberUploadError.cs" />
     <Compile Include="Organisation\Organisation.cs" />
     <Compile Include="Organisation\Organisation.Address.cs" />
-    <Compile Include="Organisation\Organisation.MainContactPerson.cs" />
+    <Compile Include="Scheme\Scheme.MainContactPerson.cs" />
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />

@@ -32,7 +32,7 @@
                     var postCode = GetIbisPostCode(scheme.Organisation.OrganisationAddress);
 
                     Address address = new Address(
-                        scheme.Organisation.Contact.FullName,
+                        scheme.Contact.FullName,
                         scheme.Organisation.OrganisationAddress.Address1,
                         scheme.Organisation.OrganisationAddress.Address2,
                         null,

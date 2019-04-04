@@ -36,6 +36,7 @@
             
             //Created PCS created here until AATF/AE are impelemented
             var scheme = new Scheme(message.OrganisationId);
+            // COMPLETE SCHEME HERE THAT SETS THE CONTACT
             context.Schemes.Add(scheme);
            
             await context.SaveChangesAsync();

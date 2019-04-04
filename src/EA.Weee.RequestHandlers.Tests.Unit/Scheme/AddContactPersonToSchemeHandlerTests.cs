@@ -7,14 +7,18 @@
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
+    using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Organisations;
+    using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
-    public class AddContactPersonToOrganisationHandlerTests
+    public class AddContactPersonToSchemeHandlerTests
     {
         private readonly DbContextHelper dbHelper = new DbContextHelper();
 
@@ -27,8 +31,8 @@
         [Fact]
         public async Task AddContactPersonToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new AddContactPersonToOrganisationHandler(A.Fake<WeeeContext>(), denyingAuthorization);
-            var message = new AddContactPersonToOrganisation(A.Dummy<Guid>(), A.Dummy<ContactData>());
+            var handler = new AddContactPersonToSchemeHandler(A.Fake<WeeeContext>(), denyingAuthorization);
+            var message = new AddContactPersonToScheme(A.Dummy<Guid>(), A.Dummy<ContactData>());
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -38,17 +42,17 @@
         [Fact]
         public async Task AddContactPersonToOrganisationHandler_HappyPath_AddsContactPerson()
         {
-            var organisationId = Guid.NewGuid();
-            var organisation = GetOrganisationWithId(organisationId);
+            var schemeId = Guid.NewGuid();
+            var scheme = GetSchemeWithId(schemeId);
 
             var context = A.Fake<WeeeContext>();
-            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
+            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Scheme>
             {
-                organisation
+                scheme
             }));
 
-            var handler = new AddContactPersonToOrganisationHandler(context, permissiveAuthorization);
-            var message = new AddContactPersonToOrganisation(organisationId, new ContactData
+            var handler = new AddContactPersonToSchemeHandler(context, permissiveAuthorization);
+            var message = new AddContactPersonToScheme(schemeId, new ContactData
             {
                 FirstName = "Some first name",
                 LastName = "Some last name",
@@ -57,17 +61,17 @@
 
             await handler.HandleAsync(message);
 
-            Assert.True(organisation.HasContact);
-            Assert.Equal(message.ContactPerson.FirstName, organisation.Contact.FirstName);
-            Assert.Equal(message.ContactPerson.LastName, organisation.Contact.LastName);
-            Assert.Equal(message.ContactPerson.Position, organisation.Contact.Position);
+            Assert.True(scheme.HasContact);
+            Assert.Equal(message.ContactPerson.FirstName, scheme.Contact.FirstName);
+            Assert.Equal(message.ContactPerson.LastName, scheme.Contact.LastName);
+            Assert.Equal(message.ContactPerson.Position, scheme.Contact.Position);
         }
 
-        private Organisation GetOrganisationWithId(Guid id)
+        private Scheme GetSchemeWithId(Guid id)
         {
-            var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Id).Returns(id);
-            return organisation;
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Id).Returns(id);
+            return scheme;
         }
     }
 }

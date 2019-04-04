@@ -18,7 +18,12 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid AATFReturnId { get; set; }
         public System.Guid SiteAddressId { get; set; }
         public byte[] RowVersion { get; set; }
+        public System.Guid ReturnId { get; set; }
+        public System.Guid AatfId { get; set; }
+        public Nullable<System.Guid> OperatorAddressId { get; set; }
     
         public virtual AATFReturn AATFReturn { get; set; }
+        public virtual AATF AATF { get; set; }
+        public virtual Return Return { get; set; }
     }
 }

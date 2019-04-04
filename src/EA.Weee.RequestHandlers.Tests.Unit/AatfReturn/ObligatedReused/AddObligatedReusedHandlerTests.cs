@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class AddObligatedReusedHandlerTests
     {

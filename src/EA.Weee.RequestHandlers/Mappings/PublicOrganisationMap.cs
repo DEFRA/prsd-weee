@@ -4,7 +4,6 @@
     using Core.Shared;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-
     public class PublicOrganisationMap : IMap<Organisation, PublicOrganisationData>
     {
         private readonly IMap<Address, AddressData> addressMap;
