@@ -6,7 +6,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Add your organisation</h1>
+        <h1 class="govuk-heading-l">Find your organisation</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -16,9 +16,9 @@
         
         @Html.HiddenFor(m => m.SelectedOrganisationId);
         
-        <p>
-            Search for your registered company, partnership or sole trader name. If it is not listed, create a new organisation.
-        </p>
+    <p>
+        Search for your registered company, partnership or sole trader name.
+    </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
