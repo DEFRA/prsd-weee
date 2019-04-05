@@ -30,5 +30,10 @@
                 .Include(a => a.WeeeReused.Aatf)
                 .Select(a => a).ToListAsync();
         }
+
+        public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturn(Guid weeeSentOnId)
+        {
+            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOnId == weeeSentOnId).ToListAsync();
+        }
     }
 }
