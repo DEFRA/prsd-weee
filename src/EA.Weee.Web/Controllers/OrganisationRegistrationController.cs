@@ -506,10 +506,12 @@
                 {
                     try
                     {
-                        await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
+                        var contactId = await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
+
                         return RedirectToAction("OrganisationAddress", new
                         {
-                            viewModel.OrganisationId
+                            viewModel.OrganisationId,
+                            contactId
                         });
                     }
                     catch (ApiBadRequestException ex)
@@ -537,11 +539,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationAddress(Guid organisationId)
+        public async Task<ActionResult> OrganisationAddress(Guid organisationId, Guid contactId)
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, false, AddressType.OrganisationAddress);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.OrganisationAddress, contactId);
 
                 return View(model);
             }
@@ -562,11 +564,11 @@
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
+                    var addressId = await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
 
                     return
                         RedirectToAction("RegisteredOfficeAddressPrepopulate",
-                            new { viewModel.OrganisationId });
+                            new { viewModel.OrganisationId, addressId, viewModel.ContactId });
                 }
             }
             catch (ApiBadRequestException ex)
@@ -582,11 +584,11 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid organisationId)
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid organisationId, Guid addressId, Guid contactId)
         {
             using (var client = apiClient())
             {
-                return View(await GetAddressPrepopulateViewModel(organisationId, client));
+                return View(await GetAddressPrepopulateViewModel(organisationId, client, addressId, contactId));
             }
         }
 
@@ -598,7 +600,7 @@
             {
                 if (viewModel.SelectedValue == "No")
                 {
-                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId });
+                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId, viewModel.AddressId, viewModel.ContactId });
                 }
                 if (viewModel.SelectedValue == "Yes")
                 {
@@ -606,10 +608,10 @@
                     {
                         await
                             client.SendAsync(User.GetAccessToken(),
-                                new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                                new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId, viewModel.AddressId));
                     }
 
-                    return RedirectToAction("ReviewOrganisationDetails", new { viewModel.OrganisationId });
+                    return RedirectToAction("ReviewOrganisationDetails", new { viewModel.OrganisationId, viewModel.AddressId, viewModel.ContactId });
                 }
             }
 
@@ -617,11 +619,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId)
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId, Guid contactId)
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress, contactId);
                 return View(model);
             }
         }
@@ -644,7 +646,8 @@
                     await AddAddressToOrganisation(viewModel, AddressType.RegisteredOrPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationDetails", new
                     {
-                        viewModel.OrganisationId
+                        viewModel.OrganisationId,
+                        viewModel.AddressId
                     });
                 }
             }
@@ -669,7 +672,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId)
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId, Guid addressId, Guid contactId)
         {
             using (var client = apiClient())
             {
@@ -681,14 +684,15 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                OrganisationData organisationData = await client.SendAsync(
-                    User.GetAccessToken(),
-                    new GetOrganisationInfo(organisationId));
-
+                OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+                var address = await client.SendAsync(User.GetAccessToken(), new GetAddress(addressId, organisationId));
+                // GET CONTACT INFO
                 var model = new OrganisationSummaryViewModel()
                 {
                     OrganisationData = organisationData,
                 };
+
+                model.OrganisationData.OrganisationAddress = address;
 
                 return View(model);
             }
@@ -726,7 +730,7 @@
                 }
             }
 
-            return await ReviewOrganisationDetails(organisationId);
+            return await ReviewOrganisationDetails(organisationId, model.OrganisationData.OrganisationAddress.Id, model.OrganisationData.Contact.Id);
         }
 
         [HttpGet]
@@ -741,7 +745,7 @@
             return View((object)searchedText);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType, Guid contactId)
         {
             // Check the organisation Id is valid
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
@@ -749,14 +753,15 @@
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
+                ContactId = contactId
             };
 
             if (addressType == AddressType.OrganisationAddress)
             {
-                if (organisation.HasOrganisationAddress)
-                {
-                    model.Address = organisation.OrganisationAddress;
-                }
+                //if (organisation.HasOrganisationAddress) //check
+                //{
+                //    model.Address = organisation.OrganisationAddress;
+                //}
             }
             else if (addressType == AddressType.RegisteredOrPPBAddress)
             {
@@ -777,22 +782,24 @@
             return model;
         }
 
-        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid organisationId, IWeeeClient client)
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid organisationId, IWeeeClient client, Guid addressId, Guid contactId)
         {
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressPrepopulateViewModel
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
+                AddressId = addressId,
+                ContactId = contactId
             };
 
             return model;
         }
 
-        private async Task AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
+        private async Task<Guid> AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
         {
             var request = model.ToAddRequest(type);
-            await client.SendAsync(User.GetAccessToken(), request);
+            return await client.SendAsync(User.GetAccessToken(), request);
         }
 
         private async Task<IEnumerable<CountryData>> GetCountries(bool regionsOfUKOnly)

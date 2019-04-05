@@ -251,6 +251,7 @@
     <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
+    <Compile Include="Organisations\GetAddressHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
@@ -361,7 +362,7 @@
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
-    <Compile Include="Scheme\AddContactPersonToSchemeHandler.cs" />
+    <Compile Include="Scheme\AddContactPersonHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandler.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />

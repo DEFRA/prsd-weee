@@ -31,8 +31,8 @@
         [Fact]
         public async Task AddContactPersonToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new AddContactPersonToSchemeHandler(A.Fake<WeeeContext>(), denyingAuthorization);
-            var message = new AddContactPersonToScheme(A.Dummy<Guid>(), A.Dummy<ContactData>());
+            var handler = new AddContactPersonHandler(A.Fake<WeeeContext>(), denyingAuthorization);
+            var message = new AddContactPerson(A.Dummy<Guid>(), A.Dummy<ContactData>());
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -51,8 +51,8 @@
                 scheme
             }));
 
-            var handler = new AddContactPersonToSchemeHandler(context, permissiveAuthorization);
-            var message = new AddContactPersonToScheme(schemeId, new ContactData
+            var handler = new AddContactPersonHandler(context, permissiveAuthorization);
+            var message = new AddContactPerson(schemeId, new ContactData
             {
                 FirstName = "Some first name",
                 LastName = "Some last name",

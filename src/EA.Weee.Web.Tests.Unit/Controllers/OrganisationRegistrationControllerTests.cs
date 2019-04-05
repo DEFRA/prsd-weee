@@ -161,7 +161,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.OrganisationAddress(A.Dummy<Guid>());
+            ActionResult result = await controller.OrganisationAddress(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;

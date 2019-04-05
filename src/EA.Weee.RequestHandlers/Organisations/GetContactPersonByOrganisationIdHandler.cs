@@ -28,10 +28,14 @@
         {
             authorization.EnsureOrganisationAccess(message.OrganisationsId);
 
-            //CHECK
-            var scheme = await context.Schemes.SingleAsync(n => n.Id == message.OrganisationsId);
+            var scheme = await context.Schemes.SingleOrDefaultAsync(n => n.Id == message.OrganisationsId);
 
-            return mapper.Map(scheme);
+            if (scheme != null)
+            {
+                return mapper.Map(scheme);
+            }
+            
+            return new ContactData() { OrganisationId = message.OrganisationsId };
         }
     }
 }
