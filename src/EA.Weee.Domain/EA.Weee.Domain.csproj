@@ -109,6 +109,7 @@
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Error\UploadErrorType.cs" />
+    <Compile Include="Scheme\Scheme.Address.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />

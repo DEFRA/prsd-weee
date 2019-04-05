@@ -40,7 +40,7 @@
             Contact contact = new Contact("John", "Smith", "Manager");
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
             //organisation.AddOrUpdateMainContactPerson(contact);
             //CHECK
             Assert.True(false);
@@ -105,7 +105,7 @@
             Contact contact = new Contact("John", "Smith", "Manager");
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address); //check
             //organisation.AddOrUpdateMainContactPerson(contact);
             //CHECK
             Assert.False(true);
@@ -182,7 +182,7 @@
                 "someone@domain.com");
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address); 
             //organisation.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
             //CHECK
             Assert.False(true);
@@ -259,7 +259,7 @@
                 "someone@domain.com");
 
             Organisation organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
-            organisation1.AddOrUpdateAddress(AddressType.OrganisationAddress, address1);
+            //organisation1.AddOrUpdateAddress(AddressType.OrganisationAddress, address1);
             //organisation1.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
             //check
             Assert.True(false);
@@ -295,7 +295,7 @@
                 "someone@domain.com");
 
             Organisation organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
-            organisation2.AddOrUpdateAddress(AddressType.OrganisationAddress, address2);
+            //organisation2.AddOrUpdateAddress(AddressType.OrganisationAddress, address2);
             //organisation2.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
             //CHECK
             Assert.False(true);
@@ -364,7 +364,7 @@
             Contact contact = new Contact("John", "Smith", "Manager");
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
             //organisation.AddOrUpdateMainContactPerson(contact);
             //CHECK
             Assert.False(true);
@@ -423,7 +423,7 @@
             Contact contact = new Contact("John", "Smith", "Manager");
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
             //organisation.AddOrUpdateMainContactPerson(contact);
             //check
             Assert.False(true);

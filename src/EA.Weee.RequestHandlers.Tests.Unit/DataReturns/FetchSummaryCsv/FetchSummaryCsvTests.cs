@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using Domain;
+    using Domain.Organisation;
     using Domain.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv;

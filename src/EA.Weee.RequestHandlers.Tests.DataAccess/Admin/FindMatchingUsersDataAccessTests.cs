@@ -32,15 +32,15 @@
                 var country = dbWrapper.WeeeContext.Countries.First();
                 var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
                 //organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer")); //CHECK
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
-                    "Address line 1", 
-                    string.Empty, 
-                    "Town", 
-                    string.Empty, 
-                    string.Empty,
-                    country, 
-                    "01234567890",
-                    "a@b.c"));
+                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
+                //    "Address line 1", 
+                //    string.Empty, 
+                //    "Town", 
+                //    string.Empty, 
+                //    string.Empty,
+                //    country, 
+                //    "01234567890",
+                //    "a@b.c"));
                 organisation.CompleteRegistration();
                 dbWrapper.WeeeContext.Organisations.Add(organisation);
                 dbWrapper.WeeeContext.SaveChanges();
@@ -89,15 +89,15 @@
                 var country = dbWrapper.WeeeContext.Countries.First();
                 var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
                 //organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer")); //CHECK
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
-                    "Address line 1",
-                    string.Empty,
-                    "Town",
-                    string.Empty,
-                    string.Empty,
-                    country,
-                    "01234567890",
-                    "a@b.c"));
+                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address( //CHECK
+                //    "Address line 1",
+                //    string.Empty,
+                //    "Town",
+                //    string.Empty,
+                //    string.Empty,
+                //    country,
+                //    "01234567890",
+                //    "a@b.c"));
                 organisation.CompleteRegistration();
                 dbWrapper.WeeeContext.Organisations.Add(organisation);
                 dbWrapper.WeeeContext.SaveChanges();

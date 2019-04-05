@@ -48,10 +48,10 @@
                 NotificationAddress = source.NotificationAddress != null
                     ? addressMap.Map(source.NotificationAddress)
                     : null,
-                OrganisationAddress = source.OrganisationAddress != null
-                    ? addressMap.Map(source.OrganisationAddress)
-                    : null,
-                HasOrganisationAddress = source.HasOrganisationAddress,
+                //OrganisationAddress = source.OrganisationAddress != null
+                //    ? addressMap.Map(source.OrganisationAddress)
+                //    : null, //CHECK
+                //HasOrganisationAddress = source.HasOrganisationAddress,
                 HasBusinessAddress = source.HasBusinessAddress,
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,

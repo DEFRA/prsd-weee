@@ -64,12 +64,9 @@
             switch (type.Value)
             {
                 case 1:
-                    return organisation.OrganisationAddress.Id;
-
-                case 2:
                     return organisation.BusinessAddress.Id;
 
-                case 3:
+                case 2:
                     return organisation.NotificationAddress.Id;
 
                 default:

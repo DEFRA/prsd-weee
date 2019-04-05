@@ -17,15 +17,6 @@
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="OperatorId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <EntityType Name="AATFReturnReportOn">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="AATFReturnId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="ReportOnQuestionId" Type="int" Nullable="false" />
-          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-        </EntityType>
         <EntityType Name="NonObligatedWeee">
           <Key>
             <PropertyRef Name="Id" />
@@ -44,15 +35,6 @@
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="OrganisationId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ReportOnQuestion">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="Question" Type="nvarchar" MaxLength="300" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="ParentId" Type="int" />
         </EntityType>
         <EntityType Name="Return">
           <Key>
@@ -125,6 +107,17 @@
           <Property Name="AatfId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="OperatorAddressId" Type="uniqueidentifier" />
           <Property Name="SiteAddressId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WeeeSentOnAmount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="WeeeSentOnId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="HouseholdTonnage" Type="decimal" Precision="28" Scale="3" />
+          <Property Name="NonHouseholdTonnage" Type="decimal" Precision="28" Scale="3" />
         </EntityType>
         <EntityType Name="CompetentAuthorityUser">
           <Key>
@@ -254,7 +247,6 @@
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
           <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
           <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="15" />
-          <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
           <Property Name="BusinessAddressId" Type="uniqueidentifier" />
           <Property Name="NotificationAddressId" Type="uniqueidentifier" />
         </EntityType>
@@ -416,6 +408,7 @@
           <Property Name="ObligationType" Type="int" />
           <Property Name="CompetentAuthorityId" Type="uniqueidentifier" />
           <Property Name="ContactId" Type="uniqueidentifier" />
+          <Property Name="AddressId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="WeeeCollectedAmount">
           <Key>
@@ -642,18 +635,6 @@
             </Principal>
             <Dependent Role="AATF">
               <PropertyRef Name="OperatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFReturnReportOn_ReportOnQuestion">
-          <End Role="ReportOnQuestion" Type="Self.ReportOnQuestion" Multiplicity="1" />
-          <End Role="AATFReturnReportOn" Type="Self.AATFReturnReportOn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ReportOnQuestion">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturnReportOn">
-              <PropertyRef Name="ReportOnQuestionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1125,18 +1106,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Organisation_OrganisationAddress">
-          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
-          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Organisation">
-              <PropertyRef Name="OrganisationAddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrganisationUser_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
@@ -1146,18 +1115,6 @@
             </Principal>
             <Dependent Role="OrganisationUser">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrganisationUser_Organisation">
-          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
-          <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Organisation">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OrganisationUser">
-              <PropertyRef Name="OrganisationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1290,6 +1247,18 @@
             </Principal>
             <Dependent Role="WeeeReceived">
               <PropertyRef Name="ReturnId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheme_Address">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Scheme">
+              <PropertyRef Name="AddressId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1497,12 +1466,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WeeeSentOnAmount_WeeeSentOn">
+          <End Role="WeeeSentOn" Type="Self.WeeeSentOn" Multiplicity="1" />
+          <End Role="WeeeSentOnAmount" Type="Self.WeeeSentOnAmount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeeeSentOn">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeSentOnAmount">
+              <PropertyRef Name="WeeeSentOnId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EAWeeeTestModelStoreContainer">
           <EntitySet Name="AATF" EntityType="Self.AATF" Schema="AATF" store:Type="Tables" />
-          <EntitySet Name="AATFReturnReportOn" EntityType="Self.AATFReturnReportOn" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="NonObligatedWeee" EntityType="Self.NonObligatedWeee" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="Operator" EntityType="Self.Operator" Schema="AATF" store:Type="Tables" />
-          <EntitySet Name="ReportOnQuestion" EntityType="Self.ReportOnQuestion" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="Return" EntityType="Self.Return" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="WeeeReceived" EntityType="Self.WeeeReceived" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="WeeeReceivedAmount" EntityType="Self.WeeeReceivedAmount" Schema="AATF" store:Type="Tables" />
@@ -1510,6 +1489,7 @@
           <EntitySet Name="WeeeReusedAmount" EntityType="Self.WeeeReusedAmount" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="WeeeReusedSite" EntityType="Self.WeeeReusedSite" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="WeeeSentOn" EntityType="Self.WeeeSentOn" Schema="AATF" store:Type="Tables" />
+          <EntitySet Name="WeeeSentOnAmount" EntityType="Self.WeeeSentOnAmount" Schema="AATF" store:Type="Tables" />
           <EntitySet Name="CompetentAuthorityUser" EntityType="Self.CompetentAuthorityUser" Schema="Admin" store:Type="Tables" />
           <EntitySet Name="IbisFileData" EntityType="Self.IbisFileData" Schema="Charging" store:Type="Tables" />
           <EntitySet Name="InvoiceRun" EntityType="Self.InvoiceRun" Schema="Charging" store:Type="Tables" />
@@ -1560,10 +1540,6 @@
           <AssociationSet Name="FK_AATFOperator_OperatorId" Association="Self.FK_AATFOperator_OperatorId">
             <End Role="Operator" EntitySet="Operator" />
             <End Role="AATF" EntitySet="AATF" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFReturnReportOn_ReportOnQuestion" Association="Self.FK_AATFReturnReportOn_ReportOnQuestion">
-            <End Role="ReportOnQuestion" EntitySet="ReportOnQuestion" />
-            <End Role="AATFReturnReportOn" EntitySet="AATFReturnReportOn" />
           </AssociationSet>
           <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
             <End Role="Country" EntitySet="Country" />
@@ -1721,16 +1697,8 @@
             <End Role="Address" EntitySet="Address" />
             <End Role="Organisation" EntitySet="Organisation" />
           </AssociationSet>
-          <AssociationSet Name="FK_Organisation_OrganisationAddress" Association="Self.FK_Organisation_OrganisationAddress">
-            <End Role="Address" EntitySet="Address" />
-            <End Role="Organisation" EntitySet="Organisation" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrganisationUser_AspNetUsers" Association="Self.FK_OrganisationUser_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="OrganisationUser" EntitySet="OrganisationUser" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrganisationUser_Organisation" Association="Self.FK_OrganisationUser_Organisation">
-            <End Role="Organisation" EntitySet="Organisation" />
             <End Role="OrganisationUser" EntitySet="OrganisationUser" />
           </AssociationSet>
           <AssociationSet Name="FK_Partner_Partnership" Association="Self.FK_Partner_Partnership">
@@ -1776,6 +1744,10 @@
           <AssociationSet Name="FK_Return_ReturnId" Association="Self.FK_Return_ReturnId">
             <End Role="Return" EntitySet="Return" />
             <End Role="WeeeReceived" EntitySet="WeeeReceived" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheme_Address" Association="Self.FK_Scheme_Address">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="Scheme" EntitySet="Scheme" />
           </AssociationSet>
           <AssociationSet Name="FK_Scheme_Contact" Association="Self.FK_Scheme_Contact">
             <End Role="Contact" EntitySet="Contact" />
@@ -1845,6 +1817,10 @@
             <End Role="WeeeReused" EntitySet="WeeeReused" />
             <End Role="WeeeReusedSite" EntitySet="WeeeReusedSite" />
           </AssociationSet>
+          <AssociationSet Name="FK_WeeeSentOnAmount_WeeeSentOn" Association="Self.FK_WeeeSentOnAmount_WeeeSentOn">
+            <End Role="WeeeSentOn" EntitySet="WeeeSentOn" />
+            <End Role="WeeeSentOnAmount" EntitySet="WeeeSentOnAmount" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -1905,7 +1881,7 @@
           <NavigationProperty Name="Country" Relationship="Self.FK_Address_Country" FromRole="Address" ToRole="Country" />
           <NavigationProperty Name="Organisations" Relationship="EA.Weee.TestModel.FK_Organisation_BusinessAddress" FromRole="Address" ToRole="Organisation" />
           <NavigationProperty Name="Organisations1" Relationship="EA.Weee.TestModel.FK_Organisation_NotificationAddress" FromRole="Address" ToRole="Organisation" />
-          <NavigationProperty Name="Organisations2" Relationship="EA.Weee.TestModel.FK_Organisation_OrganisationAddress" FromRole="Address" ToRole="Organisation" />
+          <NavigationProperty Name="Schemes" Relationship="EA.Weee.TestModel.FK_Scheme_Address" FromRole="Address" ToRole="Scheme" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -2486,14 +2462,7 @@
             <End Role="Role" EntitySet="Roles" />
             <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUsers" />
           </AssociationSet>
-          <EntitySet Name="AATFs" EntityType="EA.Weee.TestModel.AATF" />
-          <EntitySet Name="AATFReturns" EntityType="EA.Weee.TestModel.AATFReturn" />
-          <EntitySet Name="AATFReturnReportOns" EntityType="EA.Weee.TestModel.AATFReturnReportOn" />
-          <EntitySet Name="AATFReturnSchemes" EntityType="EA.Weee.TestModel.AATFReturnScheme" />
           <EntitySet Name="NonObligatedWeees" EntityType="EA.Weee.TestModel.NonObligatedWeee" />
-          <EntitySet Name="Operators" EntityType="EA.Weee.TestModel.Operator" />
-          <EntitySet Name="OperatorAATFs" EntityType="EA.Weee.TestModel.OperatorAATF" />
-          <EntitySet Name="ReportOnQuestions" EntityType="EA.Weee.TestModel.ReportOnQuestion" />
           <EntitySet Name="Returns" EntityType="EA.Weee.TestModel.Return" />
           <EntitySet Name="WeeeReceiveds" EntityType="EA.Weee.TestModel.WeeeReceived" />
           <EntitySet Name="WeeeReceivedAmounts" EntityType="EA.Weee.TestModel.WeeeReceivedAmount" />
@@ -2501,53 +2470,9 @@
           <EntitySet Name="WeeeReusedAmounts" EntityType="EA.Weee.TestModel.WeeeReusedAmount" />
           <EntitySet Name="WeeeReusedSites" EntityType="EA.Weee.TestModel.WeeeReusedSite" />
           <EntitySet Name="WeeeSentOns" EntityType="EA.Weee.TestModel.WeeeSentOn" />
-          <AssociationSet Name="FK_AATFReturn_AATF" Association="EA.Weee.TestModel.FK_AATFReturn_AATF">
-            <End Role="AATF" EntitySet="AATFs" />
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OperatorAATF_AATFId" Association="EA.Weee.TestModel.FK_OperatorAATF_AATFId">
-            <End Role="AATF" EntitySet="AATFs" />
-            <End Role="OperatorAATF" EntitySet="OperatorAATFs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFReturn_Return" Association="EA.Weee.TestModel.FK_AATFReturn_Return">
-            <End Role="Return" EntitySet="Returns" />
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFReturnReportOn_AATFReturn" Association="EA.Weee.TestModel.FK_AATFReturnReportOn_AATFReturn">
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-            <End Role="AATFReturnReportOn" EntitySet="AATFReturnReportOns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFReturnScheme_AATFReturn" Association="EA.Weee.TestModel.FK_AATFReturnScheme_AATFReturn">
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-            <End Role="AATFReturnScheme" EntitySet="AATFReturnSchemes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeReceived_AATFReturn" Association="EA.Weee.TestModel.FK_WeeeReceived_AATFReturn">
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-            <End Role="WeeeReceived" EntitySet="WeeeReceiveds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeReused_AATFReturn" Association="EA.Weee.TestModel.FK_WeeeReused_AATFReturn">
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-            <End Role="WeeeReused" EntitySet="WeeeReuseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeSentOn_AATFReturn" Association="EA.Weee.TestModel.FK_WeeeSentOn_AATFReturn">
-            <End Role="AATFReturn" EntitySet="AATFReturns" />
-            <End Role="WeeeSentOn" EntitySet="WeeeSentOns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFReturnReportOn_ReportOnQuestion" Association="EA.Weee.TestModel.FK_AATFReturnReportOn_ReportOnQuestion">
-            <End Role="ReportOnQuestion" EntitySet="ReportOnQuestions" />
-            <End Role="AATFReturnReportOn" EntitySet="AATFReturnReportOns" />
-          </AssociationSet>
           <AssociationSet Name="FK_NonObligatedWeee_Return" Association="EA.Weee.TestModel.FK_NonObligatedWeee_Return">
             <End Role="Return" EntitySet="Returns" />
             <End Role="NonObligatedWeee" EntitySet="NonObligatedWeees" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OperatorAATF_OperatorId" Association="EA.Weee.TestModel.FK_OperatorAATF_OperatorId">
-            <End Role="Operator" EntitySet="Operators" />
-            <End Role="OperatorAATF" EntitySet="OperatorAATFs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Return_Operator" Association="EA.Weee.TestModel.FK_Return_Operator">
-            <End Role="Operator" EntitySet="Operators" />
-            <End Role="Return" EntitySet="Returns" />
           </AssociationSet>
           <AssociationSet Name="FK_WeeeReceivedAmount_AATFReturn" Association="EA.Weee.TestModel.FK_WeeeReceivedAmount_AATFReturn">
             <End Role="WeeeReceived" EntitySet="WeeeReceiveds" />
@@ -2563,26 +2488,6 @@
           </AssociationSet>
           <EntitySet Name="Organisations" EntityType="EA.Weee.TestModel.Organisation" />
           <EntitySet Name="Schemes" EntityType="EA.Weee.TestModel.Scheme" />
-          <AssociationSet Name="FK_Aatf_AatfId" Association="EA.Weee.TestModel.FK_Aatf_AatfId">
-            <End Role="AATF" EntitySet="AATFs" />
-            <End Role="WeeeReceived" EntitySet="WeeeReceiveds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AATFOperator_OperatorId" Association="EA.Weee.TestModel.FK_AATFOperator_OperatorId">
-            <End Role="Operator" EntitySet="Operators" />
-            <End Role="AATF" EntitySet="AATFs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeReused_Aatf_AatfId" Association="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId">
-            <End Role="AATF" EntitySet="AATFs" />
-            <End Role="WeeeReused" EntitySet="WeeeReuseds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeReused_AatfId" Association="EA.Weee.TestModel.FK_WeeeReused_AatfId">
-            <End Role="AATF" EntitySet="AATFs" />
-            <End Role="WeeeSentOn" EntitySet="WeeeSentOns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Operator_Organisation" Association="EA.Weee.TestModel.FK_Operator_Organisation">
-            <End Role="Organisation" EntitySet="Organisations" />
-            <End Role="Operator" EntitySet="Operators" />
-          </AssociationSet>
           <AssociationSet Name="FK_Return_ReturnId" Association="EA.Weee.TestModel.FK_Return_ReturnId">
             <End Role="Return" EntitySet="Returns" />
             <End Role="WeeeReceived" EntitySet="WeeeReceiveds" />
@@ -2604,10 +2509,6 @@
             <End Role="Organisation" EntitySet="Organisations" />
           </AssociationSet>
           <AssociationSet Name="FK_Organisation_NotificationAddress" Association="EA.Weee.TestModel.FK_Organisation_NotificationAddress">
-            <End Role="Address" EntitySet="Addresses" />
-            <End Role="Organisation" EntitySet="Organisations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Organisation_OrganisationAddress" Association="EA.Weee.TestModel.FK_Organisation_OrganisationAddress">
             <End Role="Address" EntitySet="Addresses" />
             <End Role="Organisation" EntitySet="Organisations" />
           </AssociationSet>
@@ -2642,6 +2543,41 @@
           <AssociationSet Name="FK_RegisteredProducer_Scheme" Association="EA.Weee.TestModel.FK_RegisteredProducer_Scheme">
             <End Role="Scheme" EntitySet="Schemes" />
             <End Role="RegisteredProducer" EntitySet="RegisteredProducers" />
+          </AssociationSet>
+          <EntitySet Name="Operators" EntityType="EA.Weee.TestModel.Operator" />
+          <EntitySet Name="WeeeSentOnAmounts" EntityType="EA.Weee.TestModel.WeeeSentOnAmount" />
+          <AssociationSet Name="FK_Operator_Organisation" Association="EA.Weee.TestModel.FK_Operator_Organisation">
+            <End Role="Organisation" EntitySet="Organisations" />
+            <End Role="Operator" EntitySet="Operators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Return_Operator" Association="EA.Weee.TestModel.FK_Return_Operator">
+            <End Role="Operator" EntitySet="Operators" />
+            <End Role="Return" EntitySet="Returns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeeeSentOnAmount_WeeeSentOn" Association="EA.Weee.TestModel.FK_WeeeSentOnAmount_WeeeSentOn">
+            <End Role="WeeeSentOn" EntitySet="WeeeSentOns" />
+            <End Role="WeeeSentOnAmount" EntitySet="WeeeSentOnAmounts" />
+          </AssociationSet>
+          <EntitySet Name="AATFs" EntityType="EA.Weee.TestModel.AATF" />
+          <AssociationSet Name="FK_Aatf_AatfId" Association="EA.Weee.TestModel.FK_Aatf_AatfId">
+            <End Role="AATF" EntitySet="AATFs" />
+            <End Role="WeeeReceived" EntitySet="WeeeReceiveds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AATFOperator_OperatorId" Association="EA.Weee.TestModel.FK_AATFOperator_OperatorId">
+            <End Role="Operator" EntitySet="Operators" />
+            <End Role="AATF" EntitySet="AATFs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeeeReused_Aatf_AatfId" Association="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId">
+            <End Role="AATF" EntitySet="AATFs" />
+            <End Role="WeeeReused" EntitySet="WeeeReuseds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeeeReused_AatfId" Association="EA.Weee.TestModel.FK_WeeeReused_AatfId">
+            <End Role="AATF" EntitySet="AATFs" />
+            <End Role="WeeeSentOn" EntitySet="WeeeSentOns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheme_Address" Association="EA.Weee.TestModel.FK_Scheme_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Scheme" EntitySet="Schemes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
@@ -3371,60 +3307,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="AATF">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
-          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturns" Relationship="EA.Weee.TestModel.FK_AATFReturn_AATF" FromRole="AATF" ToRole="AATFReturn" />
-          <NavigationProperty Name="OperatorAATFs" Relationship="EA.Weee.TestModel.FK_OperatorAATF_AATFId" FromRole="AATF" ToRole="OperatorAATF" />
-          <Property Name="OperatorId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="WeeeReceiveds" Relationship="EA.Weee.TestModel.FK_Aatf_AatfId" FromRole="AATF" ToRole="WeeeReceived" />
-          <NavigationProperty Name="Operator" Relationship="EA.Weee.TestModel.FK_AATFOperator_OperatorId" FromRole="AATF" ToRole="Operator" />
-          <NavigationProperty Name="WeeeReuseds" Relationship="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId" FromRole="AATF" ToRole="WeeeReused" />
-          <NavigationProperty Name="WeeeSentOns" Relationship="EA.Weee.TestModel.FK_WeeeReused_AatfId" FromRole="AATF" ToRole="WeeeSentOn" />
-        </EntityType>
-        <EntityType Name="AATFReturn">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="ReturnId" Type="Guid" Nullable="false" />
-          <Property Name="AATFId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_AATFReturn_AATF" FromRole="AATFReturn" ToRole="AATF" />
-          <NavigationProperty Name="Return" Relationship="EA.Weee.TestModel.FK_AATFReturn_Return" FromRole="AATFReturn" ToRole="Return" />
-          <NavigationProperty Name="AATFReturnReportOns" Relationship="EA.Weee.TestModel.FK_AATFReturnReportOn_AATFReturn" FromRole="AATFReturn" ToRole="AATFReturnReportOn" />
-          <NavigationProperty Name="AATFReturnSchemes" Relationship="EA.Weee.TestModel.FK_AATFReturnScheme_AATFReturn" FromRole="AATFReturn" ToRole="AATFReturnScheme" />
-          <NavigationProperty Name="WeeeReceiveds" Relationship="EA.Weee.TestModel.FK_WeeeReceived_AATFReturn" FromRole="AATFReturn" ToRole="WeeeReceived" />
-          <NavigationProperty Name="WeeeReuseds" Relationship="EA.Weee.TestModel.FK_WeeeReused_AATFReturn" FromRole="AATFReturn" ToRole="WeeeReused" />
-          <NavigationProperty Name="WeeeSentOns" Relationship="EA.Weee.TestModel.FK_WeeeSentOn_AATFReturn" FromRole="AATFReturn" ToRole="WeeeSentOn" />
-        </EntityType>
-        <EntityType Name="AATFReturnReportOn">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="AATFReturnId" Type="Guid" Nullable="false" />
-          <Property Name="ReportOnQuestionId" Type="Int32" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturn" Relationship="EA.Weee.TestModel.FK_AATFReturnReportOn_AATFReturn" FromRole="AATFReturnReportOn" ToRole="AATFReturn" />
-          <NavigationProperty Name="ReportOnQuestion" Relationship="EA.Weee.TestModel.FK_AATFReturnReportOn_ReportOnQuestion" FromRole="AATFReturnReportOn" ToRole="ReportOnQuestion" />
-        </EntityType>
-        <EntityType Name="AATFReturnScheme">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="SchemeId" Type="Guid" Nullable="false" />
-          <Property Name="AATFReturnId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturn" Relationship="EA.Weee.TestModel.FK_AATFReturnScheme_AATFReturn" FromRole="AATFReturnScheme" ToRole="AATFReturn" />
-        </EntityType>
         <EntityType Name="NonObligatedWeee">
           <Key>
             <PropertyRef Name="Id" />
@@ -3437,39 +3319,6 @@
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Return" Relationship="EA.Weee.TestModel.FK_NonObligatedWeee_Return" FromRole="NonObligatedWeee" ToRole="Return" />
         </EntityType>
-        <EntityType Name="Operator">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="OrganisationId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="OperatorAATFs" Relationship="EA.Weee.TestModel.FK_OperatorAATF_OperatorId" FromRole="Operator" ToRole="OperatorAATF" />
-          <NavigationProperty Name="Returns" Relationship="EA.Weee.TestModel.FK_Return_Operator" FromRole="Operator" ToRole="Return" />
-          <NavigationProperty Name="AATFs" Relationship="EA.Weee.TestModel.FK_AATFOperator_OperatorId" FromRole="Operator" ToRole="AATF" />
-          <NavigationProperty Name="Organisation" Relationship="EA.Weee.TestModel.FK_Operator_Organisation" FromRole="Operator" ToRole="Organisation" />
-        </EntityType>
-        <EntityType Name="OperatorAATF">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="OperatorId" Type="Guid" Nullable="false" />
-          <Property Name="AATFId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_OperatorAATF_AATFId" FromRole="OperatorAATF" ToRole="AATF" />
-          <NavigationProperty Name="Operator" Relationship="EA.Weee.TestModel.FK_OperatorAATF_OperatorId" FromRole="OperatorAATF" ToRole="Operator" />
-        </EntityType>
-        <EntityType Name="ReportOnQuestion">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Question" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ParentId" Type="Int32" />
-          <NavigationProperty Name="AATFReturnReportOns" Relationship="EA.Weee.TestModel.FK_AATFReturnReportOn_ReportOnQuestion" FromRole="ReportOnQuestion" ToRole="AATFReturnReportOn" />
-        </EntityType>
         <EntityType Name="Return">
           <Key>
             <PropertyRef Name="Id" />
@@ -3478,15 +3327,13 @@
           <Property Name="OperatorId" Type="Guid" Nullable="false" />
           <Property Name="ComplianceYear" Type="Int32" Nullable="false" />
           <Property Name="Quarter" Type="Int32" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturns" Relationship="EA.Weee.TestModel.FK_AATFReturn_Return" FromRole="Return" ToRole="AATFReturn" />
           <NavigationProperty Name="NonObligatedWeees" Relationship="EA.Weee.TestModel.FK_NonObligatedWeee_Return" FromRole="Return" ToRole="NonObligatedWeee" />
-          <NavigationProperty Name="Operator" Relationship="EA.Weee.TestModel.FK_Return_Operator" FromRole="Return" ToRole="Operator" />
           <Property Name="ReturnStatus" Type="Int32" Nullable="false" />
           <NavigationProperty Name="WeeeReceiveds" Relationship="EA.Weee.TestModel.FK_Return_ReturnId" FromRole="Return" ToRole="WeeeReceived" />
           <NavigationProperty Name="WeeeReuseds" Relationship="EA.Weee.TestModel.FK_WeeeReused_Return_ReturnId" FromRole="Return" ToRole="WeeeReused" />
           <NavigationProperty Name="WeeeSentOns" Relationship="EA.Weee.TestModel.FK_WeeeReused_ReturnId" FromRole="Return" ToRole="WeeeSentOn" />
+          <NavigationProperty Name="Operator" Relationship="EA.Weee.TestModel.FK_Return_Operator" FromRole="Return" ToRole="Operator" />
         </EntityType>
         <EntityType Name="WeeeReceived">
           <Key>
@@ -3494,15 +3341,13 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="SchemeId" Type="Guid" Nullable="false" />
-          <Property Name="AATFReturnId" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturn" Relationship="EA.Weee.TestModel.FK_WeeeReceived_AATFReturn" FromRole="WeeeReceived" ToRole="AATFReturn" />
           <NavigationProperty Name="WeeeReceivedAmounts" Relationship="EA.Weee.TestModel.FK_WeeeReceivedAmount_AATFReturn" FromRole="WeeeReceived" ToRole="WeeeReceivedAmount" />
           <Property Name="ReturnId" Type="Guid" Nullable="false" />
           <Property Name="AatfId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_Aatf_AatfId" FromRole="WeeeReceived" ToRole="AATF" />
           <NavigationProperty Name="Return" Relationship="EA.Weee.TestModel.FK_Return_ReturnId" FromRole="WeeeReceived" ToRole="Return" />
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_WeeeReceived_Scheme" FromRole="WeeeReceived" ToRole="Scheme" />
+          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_Aatf_AatfId" FromRole="WeeeReceived" ToRole="AATF" />
         </EntityType>
         <EntityType Name="WeeeReceivedAmount">
           <Key>
@@ -3510,9 +3355,7 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="WeeeReceivedId" Type="Guid" Nullable="false" />
-          <Property Name="ObligationType" Type="Int32" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="Tonnage" Type="Decimal" Precision="28" Scale="3" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeReceived" Relationship="EA.Weee.TestModel.FK_WeeeReceivedAmount_AATFReturn" FromRole="WeeeReceivedAmount" ToRole="WeeeReceived" />
           <Property Name="HouseholdTonnage" Type="Decimal" Precision="28" Scale="3" />
@@ -3523,15 +3366,13 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="AATFReturnId" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturn" Relationship="EA.Weee.TestModel.FK_WeeeReused_AATFReturn" FromRole="WeeeReused" ToRole="AATFReturn" />
           <NavigationProperty Name="WeeeReusedAmounts" Relationship="EA.Weee.TestModel.FK_WeeeReusedAmount_WeeeReused" FromRole="WeeeReused" ToRole="WeeeReusedAmount" />
           <NavigationProperty Name="WeeeReusedSites" Relationship="EA.Weee.TestModel.FK_WeeeReusedSite_WeeeReused" FromRole="WeeeReused" ToRole="WeeeReusedSite" />
           <Property Name="ReturnId" Type="Guid" Nullable="false" />
           <Property Name="AatfId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId" FromRole="WeeeReused" ToRole="AATF" />
           <NavigationProperty Name="Return" Relationship="EA.Weee.TestModel.FK_WeeeReused_Return_ReturnId" FromRole="WeeeReused" ToRole="Return" />
+          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId" FromRole="WeeeReused" ToRole="AATF" />
         </EntityType>
         <EntityType Name="WeeeReusedAmount">
           <Key>
@@ -3540,8 +3381,6 @@
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="WeeeReusedId" Type="Guid" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="ObligationType" Type="Int32" Nullable="false" />
-          <Property Name="Tonnage" Type="Decimal" Precision="28" Scale="3" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeReused" Relationship="EA.Weee.TestModel.FK_WeeeReusedAmount_WeeeReused" FromRole="WeeeReusedAmount" ToRole="WeeeReused" />
           <Property Name="HouseholdTonnage" Type="Decimal" Precision="28" Scale="3" />
@@ -3562,124 +3401,15 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="AATFReturnId" Type="Guid" Nullable="false" />
           <Property Name="SiteAddressId" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="AATFReturn" Relationship="EA.Weee.TestModel.FK_WeeeSentOn_AATFReturn" FromRole="WeeeSentOn" ToRole="AATFReturn" />
           <Property Name="ReturnId" Type="Guid" Nullable="false" />
           <Property Name="AatfId" Type="Guid" Nullable="false" />
           <Property Name="OperatorAddressId" Type="Guid" />
-          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_WeeeReused_AatfId" FromRole="WeeeSentOn" ToRole="AATF" />
           <NavigationProperty Name="Return" Relationship="EA.Weee.TestModel.FK_WeeeReused_ReturnId" FromRole="WeeeSentOn" ToRole="Return" />
+          <NavigationProperty Name="WeeeSentOnAmounts" Relationship="EA.Weee.TestModel.FK_WeeeSentOnAmount_WeeeSentOn" FromRole="WeeeSentOn" ToRole="WeeeSentOnAmount" />
+          <NavigationProperty Name="AATF" Relationship="EA.Weee.TestModel.FK_WeeeReused_AatfId" FromRole="WeeeSentOn" ToRole="AATF" />
         </EntityType>
-        <Association Name="FK_AATFReturn_AATF">
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATF">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturn">
-              <PropertyRef Name="AATFId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OperatorAATF_AATFId">
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.OperatorAATF" Role="OperatorAATF" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATF">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OperatorAATF">
-              <PropertyRef Name="AATFId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFReturn_Return">
-          <End Type="EA.Weee.TestModel.Return" Role="Return" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Return">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturn">
-              <PropertyRef Name="ReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFReturnReportOn_AATFReturn">
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATFReturnReportOn" Role="AATFReturnReportOn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATFReturn">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturnReportOn">
-              <PropertyRef Name="AATFReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFReturnScheme_AATFReturn">
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATFReturnScheme" Role="AATFReturnScheme" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATFReturn">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturnScheme">
-              <PropertyRef Name="AATFReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeReceived_AATFReturn">
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeReceived" Role="WeeeReceived" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATFReturn">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeReceived">
-              <PropertyRef Name="AATFReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeReused_AATFReturn">
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeReused" Role="WeeeReused" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATFReturn">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeReused">
-              <PropertyRef Name="AATFReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeSentOn_AATFReturn">
-          <End Type="EA.Weee.TestModel.AATFReturn" Role="AATFReturn" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeSentOn" Role="WeeeSentOn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATFReturn">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeSentOn">
-              <PropertyRef Name="AATFReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFReturnReportOn_ReportOnQuestion">
-          <End Type="EA.Weee.TestModel.ReportOnQuestion" Role="ReportOnQuestion" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATFReturnReportOn" Role="AATFReturnReportOn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ReportOnQuestion">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATFReturnReportOn">
-              <PropertyRef Name="ReportOnQuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_NonObligatedWeee_Return">
           <End Type="EA.Weee.TestModel.Return" Role="Return" Multiplicity="1" />
           <End Type="EA.Weee.TestModel.NonObligatedWeee" Role="NonObligatedWeee" Multiplicity="*" />
@@ -3689,30 +3419,6 @@
             </Principal>
             <Dependent Role="NonObligatedWeee">
               <PropertyRef Name="ReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OperatorAATF_OperatorId">
-          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.OperatorAATF" Role="OperatorAATF" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Operator">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OperatorAATF">
-              <PropertyRef Name="OperatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Return_Operator">
-          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.Return" Role="Return" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Operator">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Return">
-              <PropertyRef Name="OperatorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3763,16 +3469,14 @@
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
           <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="OrganisationAddressId" Type="Guid" />
           <Property Name="BusinessAddressId" Type="Guid" />
           <Property Name="NotificationAddressId" Type="Guid" />
-          <NavigationProperty Name="Operators" Relationship="EA.Weee.TestModel.FK_Operator_Organisation" FromRole="Organisation" ToRole="Operator" />
           <NavigationProperty Name="Address" Relationship="EA.Weee.TestModel.FK_Organisation_BusinessAddress" FromRole="Organisation" ToRole="Address" />
           <NavigationProperty Name="Address1" Relationship="EA.Weee.TestModel.FK_Organisation_NotificationAddress" FromRole="Organisation" ToRole="Address" />
-          <NavigationProperty Name="Address2" Relationship="EA.Weee.TestModel.FK_Organisation_OrganisationAddress" FromRole="Organisation" ToRole="Address" />
           <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK_MemberUpload_Organisation" FromRole="Organisation" ToRole="MemberUpload" />
           <NavigationProperty Name="OrganisationUsers" Relationship="EA.Weee.TestModel.FK_OrganisationUser_Organisation" FromRole="Organisation" ToRole="OrganisationUser" />
           <NavigationProperty Name="Schemes" Relationship="EA.Weee.TestModel.FK_Scheme_Organisation" FromRole="Organisation" ToRole="Scheme" />
+          <NavigationProperty Name="Operators" Relationship="EA.Weee.TestModel.FK_Operator_Organisation" FromRole="Organisation" ToRole="Operator" />
         </EntityType>
         <EntityType Name="Scheme">
           <Key>
@@ -3795,67 +3499,9 @@
           <NavigationProperty Name="DataReturnUploads" Relationship="EA.Weee.TestModel.FK_DataReturnUpload_Scheme" FromRole="Scheme" ToRole="DataReturnUpload" />
           <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK_MemberUpload_Scheme" FromRole="Scheme" ToRole="MemberUpload" />
           <NavigationProperty Name="RegisteredProducers" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" FromRole="Scheme" ToRole="RegisteredProducer" />
+          <Property Name="AddressId" Type="Guid" />
+          <NavigationProperty Name="Address" Relationship="EA.Weee.TestModel.FK_Scheme_Address" FromRole="Scheme" ToRole="Address" />
         </EntityType>
-        <Association Name="FK_Aatf_AatfId">
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeReceived" Role="WeeeReceived" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATF">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeReceived">
-              <PropertyRef Name="AatfId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AATFOperator_OperatorId">
-          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Operator">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AATF">
-              <PropertyRef Name="OperatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeReused_Aatf_AatfId">
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeReused" Role="WeeeReused" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATF">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeReused">
-              <PropertyRef Name="AatfId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeReused_AatfId">
-          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeSentOn" Role="WeeeSentOn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AATF">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeSentOn">
-              <PropertyRef Name="AatfId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Operator_Organisation">
-          <End Type="EA.Weee.TestModel.Organisation" Role="Organisation" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Organisation">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Operator">
-              <PropertyRef Name="OrganisationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Return_ReturnId">
           <End Type="EA.Weee.TestModel.Return" Role="Return" Multiplicity="1" />
           <End Type="EA.Weee.TestModel.WeeeReceived" Role="WeeeReceived" Multiplicity="*" />
@@ -3925,18 +3571,6 @@
             </Principal>
             <Dependent Role="Organisation">
               <PropertyRef Name="NotificationAddressId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Organisation_OrganisationAddress">
-          <End Type="EA.Weee.TestModel.Address" Role="Address" Multiplicity="0..1" />
-          <End Type="EA.Weee.TestModel.Organisation" Role="Organisation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Address">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Organisation">
-              <PropertyRef Name="OrganisationAddressId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4033,6 +3667,141 @@
             </Principal>
             <Dependent Role="RegisteredProducer">
               <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Operator">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="OrganisationId" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Organisation" Relationship="EA.Weee.TestModel.FK_Operator_Organisation" FromRole="Operator" ToRole="Organisation" />
+          <NavigationProperty Name="Returns" Relationship="EA.Weee.TestModel.FK_Return_Operator" FromRole="Operator" ToRole="Return" />
+          <NavigationProperty Name="AATFs" Relationship="EA.Weee.TestModel.FK_AATFOperator_OperatorId" FromRole="Operator" ToRole="AATF" />
+        </EntityType>
+        <EntityType Name="WeeeSentOnAmount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="WeeeSentOnId" Type="Guid" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="HouseholdTonnage" Type="Decimal" Precision="28" Scale="3" />
+          <Property Name="NonHouseholdTonnage" Type="Decimal" Precision="28" Scale="3" />
+          <NavigationProperty Name="WeeeSentOn" Relationship="EA.Weee.TestModel.FK_WeeeSentOnAmount_WeeeSentOn" FromRole="WeeeSentOnAmount" ToRole="WeeeSentOn" />
+        </EntityType>
+        <Association Name="FK_Operator_Organisation">
+          <End Type="EA.Weee.TestModel.Organisation" Role="Organisation" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Operator">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Return_Operator">
+          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.Return" Role="Return" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Return">
+              <PropertyRef Name="OperatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeeeSentOnAmount_WeeeSentOn">
+          <End Type="EA.Weee.TestModel.WeeeSentOn" Role="WeeeSentOn" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.WeeeSentOnAmount" Role="WeeeSentOnAmount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeeeSentOn">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeSentOnAmount">
+              <PropertyRef Name="WeeeSentOnId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AATF">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
+          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="OperatorId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="WeeeReceiveds" Relationship="EA.Weee.TestModel.FK_Aatf_AatfId" FromRole="AATF" ToRole="WeeeReceived" />
+          <NavigationProperty Name="Operator" Relationship="EA.Weee.TestModel.FK_AATFOperator_OperatorId" FromRole="AATF" ToRole="Operator" />
+          <NavigationProperty Name="WeeeReuseds" Relationship="EA.Weee.TestModel.FK_WeeeReused_Aatf_AatfId" FromRole="AATF" ToRole="WeeeReused" />
+          <NavigationProperty Name="WeeeSentOns" Relationship="EA.Weee.TestModel.FK_WeeeReused_AatfId" FromRole="AATF" ToRole="WeeeSentOn" />
+        </EntityType>
+        <Association Name="FK_Aatf_AatfId">
+          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.WeeeReceived" Role="WeeeReceived" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AATF">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeReceived">
+              <PropertyRef Name="AatfId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AATFOperator_OperatorId">
+          <End Type="EA.Weee.TestModel.Operator" Role="Operator" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AATF">
+              <PropertyRef Name="OperatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeeeReused_Aatf_AatfId">
+          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.WeeeReused" Role="WeeeReused" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AATF">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeReused">
+              <PropertyRef Name="AatfId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeeeReused_AatfId">
+          <End Type="EA.Weee.TestModel.AATF" Role="AATF" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.WeeeSentOn" Role="WeeeSentOn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AATF">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeSentOn">
+              <PropertyRef Name="AatfId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheme_Address">
+          <End Type="EA.Weee.TestModel.Address" Role="Address" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.Scheme" Role="Scheme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Scheme">
+              <PropertyRef Name="AddressId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4545,29 +4314,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AATFs">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.AATF">
-              <MappingFragment StoreEntitySet="AATF">
-                <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
-                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AATFReturnReportOns">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.AATFReturnReportOn">
-              <MappingFragment StoreEntitySet="AATFReturnReportOn">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="ReportOnQuestionId" ColumnName="ReportOnQuestionId" />
-                <ScalarProperty Name="AATFReturnId" ColumnName="AATFReturnId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="NonObligatedWeees">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.NonObligatedWeee">
               <MappingFragment StoreEntitySet="NonObligatedWeee">
@@ -4576,25 +4322,6 @@
                 <ScalarProperty Name="Dcf" ColumnName="Dcf" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ReturnId" ColumnName="ReturnId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Operators">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.Operator">
-              <MappingFragment StoreEntitySet="Operator">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ReportOnQuestions">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.ReportOnQuestion">
-              <MappingFragment StoreEntitySet="ReportOnQuestion">
-                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Question" ColumnName="Question" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -4683,7 +4410,6 @@
               <MappingFragment StoreEntitySet="Organisation">
                 <ScalarProperty Name="NotificationAddressId" ColumnName="NotificationAddressId" />
                 <ScalarProperty Name="BusinessAddressId" ColumnName="BusinessAddressId" />
-                <ScalarProperty Name="OrganisationAddressId" ColumnName="OrganisationAddressId" />
                 <ScalarProperty Name="CompanyRegistrationNumber" ColumnName="CompanyRegistrationNumber" />
                 <ScalarProperty Name="TradingName" ColumnName="TradingName" />
                 <ScalarProperty Name="OrganisationStatus" ColumnName="OrganisationStatus" />
@@ -4697,6 +4423,7 @@
           <EntitySetMapping Name="Schemes">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.Scheme">
               <MappingFragment StoreEntitySet="Scheme">
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
                 <ScalarProperty Name="ContactId" ColumnName="ContactId" />
                 <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
                 <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
@@ -4706,6 +4433,40 @@
                 <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
                 <ScalarProperty Name="SchemeStatus" ColumnName="SchemeStatus" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Operators">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Operator">
+              <MappingFragment StoreEntitySet="Operator">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeeeSentOnAmounts">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeSentOnAmount">
+              <MappingFragment StoreEntitySet="WeeeSentOnAmount">
+                <ScalarProperty Name="NonHouseholdTonnage" ColumnName="NonHouseholdTonnage" />
+                <ScalarProperty Name="HouseholdTonnage" ColumnName="HouseholdTonnage" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="WeeeSentOnId" ColumnName="WeeeSentOnId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AATFs">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AATF">
+              <MappingFragment StoreEntitySet="AATF">
+                <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
+                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
