@@ -1,0 +1,51 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnSiteSummaryListViewModel
+@{
+    ViewBag.Title = "Reused WEEE";
+}
+<section id="main-content">
+    <h1 class="govuk-heading-l" style="padding-top: 0px;">WEEE reused as a whole appliance</h1>
+
+    @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        <table class="govuk-table govuk-!-font-size-16" id="reuse-table-summary" style="margin-bottom: 0px;">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" style="width:20%" scope="col">Site name</th>
+                    <th class="govuk-table__header" style="width:60%" scope="col">Operator name and address</th>
+                    <th class="govuk-table__header" style="width:60%" scope="col">B2C (t)</th>
+                    <th class="govuk-table__header" style="width:60%" scope="col">B2B (t)</th>
+                    <th class="govuk-table__header" style="width:20%" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var address in Model.Sites)
+                {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" scope="col">@address.OperatorAddress.Name</td>
+                    <td class="govuk-table__cell" scope="col">@address.OperatorAddress.Address1</td>
+                    <td class="govuk-table__cell" scope="col">@address.Tonnages.B2C</td>
+                    <td class="govuk-table__cell" scope="col">@address.Tonnages.B2B</td>
+                    <td class="govuk-table__cell" scope="col">
+                        <span class="govuk-visually-hidden">Change</span>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <div class="govuk-!-padding-bottom-2"></div>
+        @Html.RouteLink("Add another site", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+        <div class="govuk-!-padding-bottom-8"></div>
+
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+</section>
