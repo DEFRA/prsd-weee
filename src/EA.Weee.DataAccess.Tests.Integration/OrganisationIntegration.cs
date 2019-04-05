@@ -34,7 +34,7 @@
 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
                 //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress); //CHECK
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
@@ -52,7 +52,7 @@
                 VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
                 if (thisTestOrganisation != null)
                 {
-                    VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                    VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
                 }
             }
         }
@@ -77,7 +77,7 @@
 
                 //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
                 Assert.True(false);
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
@@ -94,7 +94,7 @@
                 var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
                 VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
-                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
             }
         }
 
@@ -115,7 +115,7 @@
             Assert.Equal(expectedStatus, fromDatabase.OrganisationStatus);
             Assert.Equal(expectedType, fromDatabase.OrganisationType);
 
-            var thisTestOrganisationAddress = fromDatabase.OrganisationAddress;
+            var thisTestOrganisationAddress = fromDatabase.BusinessAddress;
             Assert.NotNull(thisTestOrganisationAddress);
         }
 

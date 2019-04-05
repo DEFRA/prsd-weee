@@ -14,6 +14,7 @@
     using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Domain.Organisation;
     using Weee.Tests.Core;
     using Xunit;
 

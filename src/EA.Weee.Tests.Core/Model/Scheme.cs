@@ -33,6 +33,7 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<int> ObligationType { get; set; }
         public Nullable<System.Guid> CompetentAuthorityId { get; set; }
         public Nullable<System.Guid> ContactId { get; set; }
+        public Nullable<System.Guid> AddressId { get; set; }
     
         public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
         public virtual Contact Contact { get; set; }
@@ -41,5 +42,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<DataReturnUpload> DataReturnUploads { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

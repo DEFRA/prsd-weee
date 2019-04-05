@@ -27,6 +27,13 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var organisation = await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId);
+            var scheme = await context.Schemes.FirstOrDefaultAsync(s => s.OrganisationId == message.OrganisationId);
+
+            if (scheme == null)
+            {
+                throw new ArgumentException(string.Format("Could not find an scheme for organisation with Id {0}",
+                    message.OrganisationId));
+            }
 
             if (organisation == null)
             {
@@ -34,7 +41,7 @@
                     message.OrganisationId));
             }
 
-            var oa = organisation.OrganisationAddress;
+            var oa = scheme.Address;
 
             // we're explicitly making a copy here rather than pointing at the same address row
             // this is only assumed to be the preferred option

@@ -119,14 +119,14 @@
             //Assert.Equal("LastName", organisation.Contact.LastName);
             //Assert.Equal("Position", organisation.Contact.Position); //CHECK
             Assert.False(true);
-            Assert.Equal("Address1", organisation.OrganisationAddress.Address1);
-            Assert.Equal("Address2", organisation.OrganisationAddress.Address2);
-            Assert.Equal("Town", organisation.OrganisationAddress.TownOrCity);
-            Assert.Equal("County", organisation.OrganisationAddress.CountyOrRegion);
-            Assert.Equal("Postcode", organisation.OrganisationAddress.Postcode);
-            Assert.Equal(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"), organisation.OrganisationAddress.Country.Id);
-            Assert.Equal("012345678", organisation.OrganisationAddress.Telephone);
-            Assert.Equal("email@domain.com", organisation.OrganisationAddress.Email);
+            //Assert.Equal("Address1", organisation.OrganisationAddress.Address1);
+            //Assert.Equal("Address2", organisation.OrganisationAddress.Address2);
+            //Assert.Equal("Town", organisation.OrganisationAddress.TownOrCity);
+            //Assert.Equal("County", organisation.OrganisationAddress.CountyOrRegion);
+            //Assert.Equal("Postcode", organisation.OrganisationAddress.Postcode);
+            //Assert.Equal(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"), organisation.OrganisationAddress.Country.Id);
+            //Assert.Equal("012345678", organisation.OrganisationAddress.Telephone);
+            //Assert.Equal("email@domain.com", organisation.OrganisationAddress.Email);
 
             A.CallTo(() => dataAccess.SaveAsync())
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -152,9 +152,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK 
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -216,9 +214,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -281,9 +277,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -346,9 +340,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -411,9 +403,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -476,9 +466,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -550,9 +538,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);
@@ -631,9 +617,7 @@
             var organisation = A.Fake<Organisation>();
             //A.CallTo(() => organisation.Contact).Returns(contact);
             //CHECK
-
-            A.CallTo(() => organisation.OrganisationAddress)
-                .Returns(organisationAddress);
+            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
 
             A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
                 .Returns(organisation);

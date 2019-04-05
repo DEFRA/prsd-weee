@@ -57,10 +57,6 @@
             }
         }
 
-        public virtual Address OrganisationAddress { get; private set; }
-
-        public virtual Guid? OrganisationAddressId { get; private set; }
-
         public virtual Address BusinessAddress { get; private set; }
 
         public virtual Guid? BusinessAddressId { get; private set; }
@@ -134,18 +130,9 @@
             {
                 throw new InvalidOperationException("Organisation status must be Incomplete to transition to Complete");
             }
-
-            if (OrganisationAddress == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have an OrganisationAddress");
-            }
+            //CHECK RULES AROUND THIS?
 
             OrganisationStatus = OrganisationStatus.Complete;
-        }
-
-        public bool HasOrganisationAddress
-        {
-            get { return OrganisationAddress != null; }
         }
 
         public bool HasBusinessAddress

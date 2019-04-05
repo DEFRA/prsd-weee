@@ -16,8 +16,6 @@ namespace EA.Weee.Tests.Core.Model
     {
         public AATF()
         {
-            this.AATFReturns = new HashSet<AATFReturn>();
-            this.OperatorAATFs = new HashSet<OperatorAATF>();
             this.WeeeReceiveds = new HashSet<WeeeReceived>();
             this.WeeeReuseds = new HashSet<WeeeReused>();
             this.WeeeSentOns = new HashSet<WeeeSentOn>();
@@ -27,12 +25,10 @@ namespace EA.Weee.Tests.Core.Model
         public string Name { get; set; }
         public System.Guid CompetentAuthorityId { get; set; }
         public string ApprovalNumber { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public byte[] RowVersion { get; set; }
         public System.Guid OperatorId { get; set; }
     
-        public virtual ICollection<AATFReturn> AATFReturns { get; set; }
-        public virtual ICollection<OperatorAATF> OperatorAATFs { get; set; }
         public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
         public virtual Operator Operator { get; set; }
         public virtual ICollection<WeeeReused> WeeeReuseds { get; set; }

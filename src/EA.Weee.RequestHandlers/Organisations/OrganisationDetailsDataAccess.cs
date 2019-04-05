@@ -20,7 +20,7 @@
         public async Task<Organisation> FetchOrganisationAsync(Guid organisationId)
         {
             Organisation organisation = await context.Organisations
-                .Include(o => o.OrganisationAddress)
+                //.Include(o => o.OrganisationAddress) //CHECK
                 .SingleOrDefaultAsync(o => o.Id == organisationId);
 
             if (organisation == null)
@@ -36,6 +36,8 @@
         {
             return context.Schemes
                 .Include(s => s.CompetentAuthority)
+                .Include(s => s.Address)
+                .Include(s => s.Contact)
                 .FirstOrDefaultAsync(s => s.OrganisationId == organisationId);
         }
 

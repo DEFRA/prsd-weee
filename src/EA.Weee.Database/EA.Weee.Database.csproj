@@ -221,6 +221,7 @@
     <Content Include="scripts\Update\Release 2\Sprint4\20190308-1517-UpdateWeeeSentOnTable.sql" />
     <Content Include="scripts\Update\Release 2\Sprint4\20190308-1620-ResetReturnData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint4\20190313-1123-UpdateWeeeSentOnOperatorAddressToNull.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint6\20190404-1400-MoveOrganisationAddressIdToScheme.sql" />
     <Content Include="scripts\Update\Release 2\Sprint6\20190404-1400-MoveOrganisationContactIdToScheme.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

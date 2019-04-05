@@ -12,14 +12,15 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class OperatorAATF
+    public partial class WeeeSentOnAmount
     {
         public System.Guid Id { get; set; }
-        public System.Guid OperatorId { get; set; }
-        public System.Guid AATFId { get; set; }
+        public System.Guid WeeeSentOnId { get; set; }
+        public int CategoryId { get; set; }
         public byte[] RowVersion { get; set; }
+        public Nullable<decimal> HouseholdTonnage { get; set; }
+        public Nullable<decimal> NonHouseholdTonnage { get; set; }
     
-        public virtual AATF AATF { get; set; }
-        public virtual Operator Operator { get; set; }
+        public virtual WeeeSentOn WeeeSentOn { get; set; }
     }
 }
