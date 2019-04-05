@@ -104,5 +104,12 @@
         {
             return base.GetHashCode();
         }
+
+        public void AddOrUpdate(Contact contact)
+        {
+            Guard.ArgumentNotNull(() => contact, contact);
+
+            this.OverwriteWhereNull(contact);
+        }
     }
 }

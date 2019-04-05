@@ -103,6 +103,7 @@
     <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
+    <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
@@ -142,7 +143,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />
-    <Compile Include="Scheme\AddContactPersonToScheme.cs" />
+    <Compile Include="Scheme\AddContactPerson.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatus.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />
