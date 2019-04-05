@@ -31,11 +31,21 @@
     @foreach (var item in Model.AatfsData)
     {
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <p>govuk-grid-column-two-thirds</p>
+        <div class="govuk-grid-column-one-third">
+            @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name)
+            {
+            <p><b>1.</b></p>
+            }
+            Obligated WEEE - @item.Aatf.Name
+                <p>
+                    <span class="govuk-visually-hidden">@item.Aatf.Name enter WEEE received on behalf of PCS(s) </span>@Html.RouteLink("Received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                </p>
         </div>
         <div class="govuk-grid-column-one-third">
-            <p>govuk-grid-column-one-third</p>
+            <p>B2C (tonnes)</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <p>B2B (tonnes)</p>
         </div>
     </div>
     }
