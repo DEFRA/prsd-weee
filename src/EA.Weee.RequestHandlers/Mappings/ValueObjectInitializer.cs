@@ -38,6 +38,9 @@
                 case Core.Shared.AddressType.ServiceOfNotice:
                     return AddressType.ServiceOfNoticeAddress;
 
+                case Core.Shared.AddressType.OrganisationAddress:
+                    return AddressType.SchemeAddress;
+
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),
                         "addressType");

@@ -14,6 +14,10 @@
 
         public Guid OrganisationId { get; set; }
 
+        public Guid AddressId { get; set; }
+
+        public Guid ContactId { get; set; }
+
         public OrganisationType OrganisationType { get; set; }
 
         public AddressData Address { get; set; }

@@ -4,15 +4,15 @@
     using Core.Organisations;
     using Prsd.Core.Mediator;
 
-    public class AddContactPersonToScheme : IRequest<Guid>
+    public class AddContactPerson : IRequest<Guid>
     {
-        public AddContactPersonToScheme(Guid id, ContactData contact)
+        public AddContactPerson(Guid id, ContactData contact)
         {
-            SchemeId = id;
+            OrganisationId = id;
             ContactPerson = contact;
         }
 
-        public Guid SchemeId { get; set; }
+        public Guid OrganisationId { get; set; }
 
         public ContactData ContactPerson { get; set; }
     }

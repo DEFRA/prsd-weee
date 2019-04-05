@@ -5,6 +5,7 @@
 
     public class ContactData
     {
+        public Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
 
         [Required]

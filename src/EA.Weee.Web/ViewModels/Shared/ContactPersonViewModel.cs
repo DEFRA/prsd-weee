@@ -29,7 +29,7 @@
         [DataType(DataType.Text)]
         public string Position { get; set; }
 
-        public AddContactPersonToScheme ToAddRequest()
+        public AddContactPerson ToAddRequest()
         {
             var contact = new ContactData
             {   
@@ -37,7 +37,7 @@
                 LastName = LastName,
                 Position = Position
             };
-            return new AddContactPersonToScheme(OrganisationId, contact);
+            return new AddContactPerson(OrganisationId, contact);
         }
 
         public ContactPersonViewModel()
