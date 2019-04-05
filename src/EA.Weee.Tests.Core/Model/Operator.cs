@@ -16,7 +16,6 @@ namespace EA.Weee.Tests.Core.Model
     {
         public Operator()
         {
-            this.OperatorAATFs = new HashSet<OperatorAATF>();
             this.Returns = new HashSet<Return>();
             this.AATFs = new HashSet<AATF>();
         }
@@ -25,9 +24,8 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid OrganisationId { get; set; }
         public byte[] RowVersion { get; set; }
     
-        public virtual ICollection<OperatorAATF> OperatorAATFs { get; set; }
+        public virtual Organisation Organisation { get; set; }
         public virtual ICollection<Return> Returns { get; set; }
         public virtual ICollection<AATF> AATFs { get; set; }
-        public virtual Organisation Organisation { get; set; }
     }
 }

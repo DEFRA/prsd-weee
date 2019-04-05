@@ -34,8 +34,8 @@
                 organisation = context.Organisations.Add(organisation);
                 context.SaveChanges(); // This will reset the change tracker
                 
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, ValidAddress());
-
+                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, ValidAddress()); //CHECK
+                Assert.False(true);
                 var organisationChanges = context.ChangeTracker.Entries<Organisation>();
                 var addressChanges = context.ChangeTracker.Entries<Address>();
 

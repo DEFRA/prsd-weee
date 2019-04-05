@@ -29,15 +29,15 @@
             {
                 try
                 {
-                    var postCode = GetIbisPostCode(scheme.Organisation.OrganisationAddress);
+                    var postCode = GetIbisPostCode(scheme.Address);
 
                     Address address = new Address(
                         scheme.Contact.FullName,
-                        scheme.Organisation.OrganisationAddress.Address1,
-                        scheme.Organisation.OrganisationAddress.Address2,
+                        scheme.Address.Address1,
+                        scheme.Address.Address2,
                         null,
-                        scheme.Organisation.OrganisationAddress.TownOrCity,
-                        scheme.Organisation.OrganisationAddress.CountyOrRegion,
+                        scheme.Address.TownOrCity,
+                        scheme.Address.CountyOrRegion,
                         postCode);
 
                     Customer customer = new Customer(

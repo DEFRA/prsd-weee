@@ -32,9 +32,6 @@
         {
             switch (addressType)
             {
-                case Core.Shared.AddressType.OrganisationAddress:
-                    return AddressType.OrganisationAddress;
-
                 case Core.Shared.AddressType.RegisteredOrPPBAddress:
                     return AddressType.RegisteredOrPPBAddress;
 

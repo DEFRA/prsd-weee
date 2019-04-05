@@ -74,15 +74,15 @@
 
             Assert.NotNull(organisationInfo);
             Assert.NotNull(organisationId);
-            Assert.Equal(organisationInfo.BusinessAddress.Address1, organisationInfo.OrganisationAddress.Address1);
-            Assert.Equal(organisationInfo.BusinessAddress.Address2, organisationInfo.OrganisationAddress.Address2);
-            Assert.Equal(organisationInfo.BusinessAddress.TownOrCity, organisationInfo.OrganisationAddress.TownOrCity);
-            Assert.Equal(organisationInfo.BusinessAddress.CountyOrRegion,
-                organisationInfo.OrganisationAddress.CountyOrRegion);
-            Assert.Equal(organisationInfo.BusinessAddress.Postcode, organisationInfo.OrganisationAddress.Postcode);
-            Assert.Equal(organisationInfo.BusinessAddress.Country, organisationInfo.OrganisationAddress.Country);
-            Assert.Equal(organisationInfo.BusinessAddress.Telephone, organisationInfo.OrganisationAddress.Telephone);
-            Assert.Equal(organisationInfo.BusinessAddress.Email, organisationInfo.OrganisationAddress.Email);
+            Assert.False(true); //check
+            //Assert.Equal(organisationInfo.BusinessAddress.Address1, organisationInfo.OrganisationAddress.Address1);
+            //Assert.Equal(organisationInfo.BusinessAddress.Address2, organisationInfo.OrganisationAddress.Address2);
+            //Assert.Equal(organisationInfo.BusinessAddress.TownOrCity, organisationInfo.OrganisationAddress.TownOrCity);
+            //Assert.Equal(organisationInfo.BusinessAddress.CountyOrRegion, organisationInfo.OrganisationAddress.CountyOrRegion);
+            //Assert.Equal(organisationInfo.BusinessAddress.Postcode, organisationInfo.OrganisationAddress.Postcode);
+            //Assert.Equal(organisationInfo.BusinessAddress.Country, organisationInfo.OrganisationAddress.Country);
+            //Assert.Equal(organisationInfo.BusinessAddress.Telephone, organisationInfo.OrganisationAddress.Telephone);
+            //Assert.Equal(organisationInfo.BusinessAddress.Email, organisationInfo.OrganisationAddress.Email);
         }
 
         private DbSet<Organisation> MakeOrganisation()

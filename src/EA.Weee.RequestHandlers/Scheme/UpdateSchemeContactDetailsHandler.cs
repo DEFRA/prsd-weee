@@ -35,7 +35,6 @@
             }
 
             var scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
-            var organisation = await dataAccess.FetchOrganisationAsync(message.OrganisationData.Id);
 
             var contact = new Contact(
                 message.OrganisationData.Contact.FirstName,
@@ -58,14 +57,14 @@
                 message.OrganisationData.OrganisationAddress.Telephone,
                 message.OrganisationData.OrganisationAddress.Email);
 
-            var organisationAddressChanged = !address.Equals(organisation.OrganisationAddress);
+            var schemeAddressChanged = !address.Equals(scheme.Address);
 
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            scheme.AddOrUpdateAddress(address);
 
             await dataAccess.SaveAsync();
 
             if (message.SendNotificationOnChange &&
-                (contactChanged || organisationAddressChanged))
+                (contactChanged || schemeAddressChanged))
             {
                 scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
 
