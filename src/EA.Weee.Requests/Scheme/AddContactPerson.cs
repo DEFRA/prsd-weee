@@ -6,13 +6,16 @@
 
     public class AddContactPerson : IRequest<Guid>
     {
-        public AddContactPerson(Guid id, ContactData contact)
+        public AddContactPerson(Guid organisationId, ContactData contact, Guid? contactId)
         {
-            OrganisationId = id;
+            OrganisationId = organisationId;
             ContactPerson = contact;
+            ContactId = contactId;
         }
 
         public Guid OrganisationId { get; set; }
+
+        public Guid? ContactId { get; set; }
 
         public ContactData ContactPerson { get; set; }
     }

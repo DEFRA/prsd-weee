@@ -9,6 +9,10 @@
     {
         public Guid? OrganisationId { get; set; }
 
+        public Guid? ContactId { get; set; }
+
+        public Guid? AddressId { get; set; }
+
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("Business trading name")]

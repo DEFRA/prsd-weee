@@ -1,21 +1,27 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
     using ObligationType = Core.Shared.ObligationType;
+    using OrganisationType = Domain.Organisation.OrganisationType;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
     public class SchemeMap : IMap<Scheme, SchemeData>
     {
         private readonly IMapper mapper;
+        private readonly IMap<Address, AddressData> addressMap;
+        private readonly IMap<Contact, ContactData> contactMap;
 
-        public SchemeMap(IMapper mapper)
+        public SchemeMap(IMapper mapper, IMap<Address, AddressData> addressMap, IMap<Contact, ContactData> contactMap)
         {
             this.mapper = mapper;
+            this.addressMap = addressMap;
+            this.contactMap = contactMap;
         }
 
         public SchemeData Map(Scheme source)
@@ -37,7 +43,15 @@
                 CompetentAuthorityId = source.CompetentAuthorityId,
                 CompetentAuthority = source.CompetentAuthority != null
                     ? mapper.Map<Domain.UKCompetentAuthority, UKCompetentAuthorityData>(source.CompetentAuthority)
-                    : null
+                    : null,
+                Contact = source.Contact != null
+                    ? contactMap.Map(source.Contact)
+                    : null,
+                Address = source.Address != null
+                    ? addressMap.Map(source.Address)
+                    : null,
+                HasAddress = source.HasAddress,
+                HasContact = source.HasContact, //CHECK TESTS
             };
         }
     }

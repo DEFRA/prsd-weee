@@ -162,6 +162,23 @@
             return otherAddress;
         }
 
+        public void Overwrite(Address otherAddress)
+        {
+            if (otherAddress == null)
+            {
+                return;
+            }
+
+            this.Address1 = otherAddress.Address1;
+            this.Address2 = otherAddress.Address2;
+            this.TownOrCity = otherAddress.TownOrCity;
+            this.CountyOrRegion = otherAddress.CountyOrRegion;
+            this.Postcode = otherAddress.Postcode;
+            this.Country = otherAddress.Country;
+            this.Telephone = otherAddress.Telephone;
+            this.Email = otherAddress.Email;
+        }
+
         public bool Equals(Address other)
         {
             if (other == null)

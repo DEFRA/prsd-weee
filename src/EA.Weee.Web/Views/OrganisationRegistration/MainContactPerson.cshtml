@@ -14,6 +14,9 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.ContactId)
+        @Html.HiddenFor(m => m.AddressId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-instruction">
             <p>We're looking for the details of your nominated day-to-day contact for the producer compliance scheme (PCS).</p>
