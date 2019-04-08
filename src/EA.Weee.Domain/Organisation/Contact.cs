@@ -69,6 +69,18 @@
             get { return string.Format("{0} {1}", FirstName, LastName); }
         }
 
+        public void Overwrite(Contact otherContact)
+        {
+            if (otherContact == null)
+            {
+                return;
+            }
+
+            this.FirstName = otherContact.FirstName;
+            this.LastName = otherContact.LastName;
+            this.Position = otherContact.Position;
+        }
+
         public Contact OverwriteWhereNull(Contact otherContact)
         {
             if (otherContact == null)
@@ -103,13 +115,6 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public void AddOrUpdate(Contact contact)
-        {
-            Guard.ArgumentNotNull(() => contact, contact);
-
-            this.OverwriteWhereNull(contact);
         }
     }
 }

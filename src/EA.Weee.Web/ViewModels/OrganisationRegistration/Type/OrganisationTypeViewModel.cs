@@ -9,6 +9,10 @@
     {
         public Guid? OrganisationId { get; set; }
 
+        public Guid? ContactId { get; set; }
+
+        public Guid? AddressId { get; set; }
+
         public string SearchedText { get; set; }
 
         [Required(ErrorMessage = "Select the type of organisation that you work for")]

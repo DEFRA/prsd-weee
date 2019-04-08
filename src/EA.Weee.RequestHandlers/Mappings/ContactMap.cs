@@ -15,7 +15,8 @@
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 Position = source.Position,
-                HasContact = true
+                HasContact = true,
+                Id = source.Id
             };
         }
 
@@ -29,13 +30,14 @@
                     FirstName = source.Contact.FirstName,
                     LastName = source.Contact.LastName,
                     Position = source.Contact.Position,
-                    OrganisationId = source.Id,
-                    HasContact = true
+                    OrganisationId = source.OrganisationId,
+                    HasContact = true,
+                    Id = source.Id
                 };
             }
             return new ContactData
             {
-                OrganisationId = source.Id,
+                OrganisationId = source.OrganisationId,
                 HasContact = false
             };
         }

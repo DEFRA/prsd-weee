@@ -14,7 +14,9 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-
+        @Html.HiddenFor(m => m.ContactId)
+        @Html.HiddenFor(m => m.AddressId)
+        @Html.HiddenFor(m => m.OrganisationId)
         <div style="margin-bottom: 1.66667em;">
             <p>Enter the name of your registered company. For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
         </div>
