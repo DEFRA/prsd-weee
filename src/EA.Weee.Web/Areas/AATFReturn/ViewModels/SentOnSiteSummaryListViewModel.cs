@@ -12,7 +12,9 @@
 
         public Guid AatfId { get; set; }
 
-        public List<WeeeSentOnData> Sites { get; set; }
+        public List<WeeeSentOnSummaryListData> Sites { get; set; }
+
+        public ObligatedCategoryValue Tonnages { get; set; }
 
         public SentOnSiteSummaryListViewModel()
         {
