@@ -319,6 +319,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToCheckReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMap.cs" />

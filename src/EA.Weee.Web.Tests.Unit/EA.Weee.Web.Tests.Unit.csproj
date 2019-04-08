@@ -186,6 +186,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteOperatorControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SentOnSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SubmittedReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\NonObligatedControllerTests.cs" />
     <Compile Include="App_Start\ReturnUrlMappingTests.cs" />

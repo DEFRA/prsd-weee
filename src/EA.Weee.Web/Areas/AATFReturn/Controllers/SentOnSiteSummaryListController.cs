@@ -8,6 +8,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -21,14 +22,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IGetWeeeSentOnRequestCreator requestCreator;
+        private readonly IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper;
 
-        public SentOnSiteSummaryListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IGetWeeeSentOnRequestCreator requestCreator)
+        public SentOnSiteSummaryListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-            this.requestCreator = requestCreator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -36,35 +37,19 @@
         {
             using (var client = apiClient())
             {
-                var viewModel = new SentOnSiteSummaryListViewModel()
+                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId));
+
+                var model = mapper.Map(new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
                 {
+                    WeeeSentOnDataItems = weeeSentOn,
                     AatfId = aatfId,
                     ReturnId = returnId,
                     OrganisationId = organisationId
-                };
-
-                var request = requestCreator.ViewModelToRequest(viewModel);
-                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), request);
-
-                viewModel.Sites = weeeSentOn;
+                });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-                return View(viewModel);
-                /*
-                var viewModel = new SentOnSiteSummaryListViewModel();
-
-                viewModel.OrganisationId = organisationId;
-                viewModel.ReturnId = returnId;
-                viewModel.AatfId = aatfId;
-
-                var request = requestCreator.ViewModelToRequest(viewModel);
-                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), request);
-
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
-                return View(viewModel);
-                */
+                return View(model);
             }
         }
 

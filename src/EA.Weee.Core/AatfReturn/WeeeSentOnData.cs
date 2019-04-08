@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
 
     public class WeeeSentOnData
     {
@@ -16,7 +17,7 @@
 
         public virtual Guid SiteAddressId { get; set; }
 
-        public ObligatedCategoryValue Tonnages { get; set; }
+        public List<WeeeObligatedData> Tonnages { get; set; }
 
         public WeeeSentOnData()
         {
