@@ -69,7 +69,8 @@
             @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button btnDisable" })
         </p>
         <p>
-            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
+
         </p>
     }
 
