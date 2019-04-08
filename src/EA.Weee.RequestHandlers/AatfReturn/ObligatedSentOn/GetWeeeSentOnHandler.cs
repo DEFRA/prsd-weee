@@ -8,22 +8,23 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class GetWeeeSentOnHandler : IRequestHandler<GetWeeeSentOn, List<WeeeSentOnData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
-        private readonly IFetchObligatedWeeeForReturnDataAccess sentOnAmountDataAccess;
-        private readonly IMap<WeeeSentOn, WeeeSentOnData> mapper;
+        private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
+        private readonly IMap<AatfAddress, AatfAddressData> addressMapper;
 
         public GetWeeeSentOnHandler(IWeeeAuthorization authorization,
-            ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IMap<WeeeSentOn, WeeeSentOnData> mapper, IFetchObligatedWeeeForReturnDataAccess sentOnAmountDataAccess)
+            ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess, IMap<AatfAddress, AatfAddressData> addressMapper)
         {
             this.authorization = authorization;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
-            this.mapper = mapper;
-            this.sentOnAmountDataAccess = sentOnAmountDataAccess;
+            this.fetchWeeeSentOnAmountDataAccess = fetchWeeeSentOnAmountDataAccess;
+            this.addressMapper = addressMapper;
         }
 
         public async Task<List<WeeeSentOnData>> HandleAsync(GetWeeeSentOn message)
@@ -31,37 +32,22 @@
             authorization.EnsureCanAccessExternalArea();
 
             var weeeSentOnList = new List<WeeeSentOnData>();
-
             var weeeSentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(message.AatfId, message.ReturnId);
 
             foreach (var item in weeeSentOn)
             {
-                var amount = await sentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(item.Id);
-                var sentOn = mapper.Map(item);
-                decimal b2b = 0.000m;
-                decimal b2c = 0.000m;
+                var amount = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(item.Id);
 
-                foreach (var tonnage in amount)
+                var weeeSentOnObligatedData = amount.Select(n => new WeeeObligatedData(n.Id, n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+
+                var weeeSentOnData = new WeeeSentOnData()
                 {
-                    if (tonnage.NonHouseholdTonnage != null)
-                    {
-                        b2b += (decimal)tonnage.NonHouseholdTonnage;
-                    }
-
-                    if (tonnage.HouseholdTonnage != null)
-                    {
-                        b2c += (decimal)tonnage.HouseholdTonnage;
-                    }
-                }
-
-                var tonnages = new ObligatedCategoryValue()
-                {
-                    B2B = b2b.ToString(),
-                    B2C = b2c.ToString()
+                    OperatorAddress = addressMapper.Map(item.OperatorAddress),
+                    SiteAddress = addressMapper.Map(item.SiteAddress),
+                    Tonnages = weeeSentOnObligatedData
                 };
 
-                sentOn.Tonnages = tonnages;
-                weeeSentOnList.Add(sentOn);
+                weeeSentOnList.Add(weeeSentOnData);
             }
 
             return weeeSentOnList;
