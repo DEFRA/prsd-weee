@@ -106,7 +106,7 @@
             Assert.NotNull(csvWriter);
             Assert.Collection(csvWriter.ColumnTitles,
                 c => Assert.Equal("Quarter", c),
-                c => Assert.Equal("EEE or WEEE in tonnes (t)", c),
+                c => Assert.Equal("EEE or WEEE (tonnes)", c),
                 c => Assert.Equal("Obligation type", c),
                 c => Assert.Equal("Cat 1 (t)", c),
                 c => Assert.Equal("Cat 2 (t)", c),
