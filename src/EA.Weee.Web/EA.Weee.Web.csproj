@@ -403,6 +403,7 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Constant\BreadCrumbConstant.cs" />
+    <Compile Include="Constant\ViewDataConstant.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
@@ -925,6 +926,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
     <Compile Include="Infrastructure\AatfRedirect.cs" />
+    <Compile Include="Infrastructure\SchemeViewData.cs" />
     <Compile Include="Logging\ElmahFilter.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />

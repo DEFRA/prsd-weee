@@ -7,10 +7,12 @@
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Constant;
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
     using Infrastructure;
+    using Microsoft.Owin.BuilderProperties;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -123,14 +125,15 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Type(string searchedText, Guid? organisationId = null)
+        public async Task<ActionResult> Type(string searchedText, Guid? organisationId, Guid? contactId, Guid? addressId)
         {
             if (organisationId != null)
             {
                 using (var client = apiClient())
                 {
                     var organisation = await GetOrganisation(organisationId, client);
-                    var model = new OrganisationTypeViewModel(organisationId.Value);
+                    var model = new OrganisationTypeViewModel(organisationId.Value) { ContactId = contactId, AddressId = addressId };
+
                     return View("Type", model);
                 }
             }
@@ -144,8 +147,9 @@
         {
             if (ModelState.IsValid)
             {
-                var organisationType =
-                        model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+                var organisationType = model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+
+                SetViewData(model.AddressId, model.ContactId);
 
                 if (model.OrganisationId != null)
                 {
@@ -184,6 +188,8 @@
         [HttpGet]
         public async Task<ActionResult> SoleTraderDetails(Guid? organisationId = null, string searchedText = null)
         {
+            var schemeViewData = TempData[ViewDataConstant.SchemeViewData] as SchemeViewData;
+
             if (organisationId != null)
             {
                 using (var client = apiClient())
@@ -195,15 +201,17 @@
                         var model = new SoleTraderDetailsViewModel
                         {
                             BusinessTradingName = organisation.TradingName,
-                            OrganisationId = organisationId.Value
+                            OrganisationId = organisationId.Value,
+                            AddressId = schemeViewData?.AddressId,
+                            ContactId = schemeViewData?.ContactId
                         };
 
                         return View("SoleTraderDetails", model);
                     }
-                    return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText });
+                    return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
                 }
             }
-            return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText });
+            return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
         }
 
         [HttpPost]
@@ -217,6 +225,8 @@
 
             using (var client = apiClient())
             {
+                SetViewData(model.AddressId, model.ContactId);
+
                 if (model.OrganisationId != null)
                 {
                     // update orgnisation details
@@ -228,7 +238,7 @@
                         String.Empty);
 
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
-                    return RedirectToAction("MainContactPerson", new { organisationId });
+                    return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
 
                 CreateSoleTraderRequest request = new CreateSoleTraderRequest
@@ -237,13 +247,15 @@
                 };
                 //create the organisation only if does not exist
                 Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
         [HttpGet]
         public async Task<ActionResult> PartnershipDetails(Guid? organisationId = null, string searchedText = null)
         {
+            var schemeViewData = SchemeViewData();
+
             if (organisationId != null)
             {
                 using (var client = apiClient())
@@ -254,15 +266,17 @@
                         var model = new PartnershipDetailsViewModel
                         {
                             BusinessTradingName = organisation.TradingName,
-                            OrganisationId = organisationId.Value
+                            OrganisationId = organisationId.Value,
+                            ContactId = schemeViewData?.ContactId,
+                            AddressId = schemeViewData?.AddressId
                         };
 
                         return View("PartnershipDetails", model);
                     }
-                    return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText });
+                    return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText, ContactId = schemeViewData?.ContactId, AddressId = schemeViewData?.AddressId });
                 }
             }
-            return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText });
+            return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText, ContactId = schemeViewData?.ContactId, AddressId = schemeViewData?.AddressId });
         }
 
         [HttpPost]
@@ -276,6 +290,8 @@
 
             using (var client = apiClient())
             {
+                SetViewData(model.AddressId, model.ContactId);
+
                 if (model.OrganisationId != null)
                 {
                     // update orgnisation details
@@ -287,7 +303,7 @@
                         String.Empty);
 
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
-                    return RedirectToAction("MainContactPerson", new { organisationId });
+                    return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
 
                 CreatePartnershipRequest request = new CreatePartnershipRequest
@@ -296,13 +312,15 @@
                 };
                 //create the organisation only if does not exist
                 Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
         [HttpGet]
         public async Task<ActionResult> RegisteredCompanyDetails(Guid? organisationId = null, string searchedText = null)
         {
+            var schemeViewData = SchemeViewData();
+
             if (organisationId != null)
             {
                 using (var client = apiClient())
@@ -316,15 +334,17 @@
                             BusinessTradingName = organisation.TradingName,
                             CompanyName = organisation.Name,
                             CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
-                            OrganisationId = organisationId.Value
+                            OrganisationId = organisationId.Value,
+                            AddressId = schemeViewData?.AddressId,
+                            ContactId = schemeViewData?.ContactId
                         };
 
                         return View("RegisteredCompanyDetails", model);
                     }
-                    return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText });
+                    return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
                 }
             }
-            return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText });
+            return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
         }
 
         [HttpPost]
@@ -337,6 +357,8 @@
             }
             using (var client = apiClient())
             {
+                SetViewData(model.AddressId, model.ContactId);
+
                 if (model.OrganisationId != null)
                 {
                     // update orgnisation details
@@ -348,7 +370,7 @@
                         model.CompaniesRegistrationNumber);
 
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
-                    return RedirectToAction("MainContactPerson", new { organisationId });
+                    return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
 
                 CreateRegisteredCompanyRequest request = new CreateRegisteredCompanyRequest
@@ -357,9 +379,10 @@
                     CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
                     TradingName = model.BusinessTradingName
                 };
+
                 //create the organisation only if does not exist
                 Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
@@ -467,8 +490,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> MainContactPerson(Guid organisationId)
+        public async Task<ActionResult> MainContactPerson(Guid organisationId, Guid? contactId, Guid? addressId)
         {
+            //var schemeViewData = SchemeViewData();
+
             using (var client = apiClient())
             {
                 /* RP: Check with the API to see if this is a valid organisation
@@ -482,14 +507,15 @@
                 }
 
                 ContactPersonViewModel model;
-                var contactPerson = await client.SendAsync(User.GetAccessToken(), new GetContactPersonByOrganisationId(organisationId));
-                if (contactPerson.HasContact)
+                if (contactId.HasValue)
                 {
-                    model = new ContactPersonViewModel(contactPerson);
+                    var contact = await client.SendAsync(User.GetAccessToken(), new GetContact(contactId.Value, organisationId));
+
+                    model = new ContactPersonViewModel(contact);
                 }
                 else
                 {
-                    model = new ContactPersonViewModel { OrganisationId = organisationId };
+                    model = new ContactPersonViewModel { OrganisationId = organisationId, AddressId = addressId, ContactId = contactId };
                 }
 
                 return View(model);
@@ -508,9 +534,12 @@
                     {
                         var contactId = await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
 
+                        SetViewData(viewModel.AddressId, contactId);
+
                         return RedirectToAction("OrganisationAddress", new
                         {
                             viewModel.OrganisationId,
+                            viewModel.AddressId,
                             contactId
                         });
                     }
@@ -539,11 +568,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationAddress(Guid organisationId, Guid contactId)
+        public async Task<ActionResult> OrganisationAddress(Guid organisationId, Guid? addressId, Guid? contactId)
         {
+            //var schemeViewData = SchemeViewData();
+
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, false, AddressType.OrganisationAddress, contactId);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.OrganisationAddress, contactId, addressId);
 
                 return View(model);
             }
@@ -554,7 +585,7 @@
         public async Task<ActionResult> OrganisationAddress(AddressViewModel viewModel)
         {
             viewModel.Address.Countries = await GetCountries(false);
-
+            
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -565,6 +596,8 @@
                 using (var client = apiClient())
                 {
                     var addressId = await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
+
+                    SetViewData(addressId, viewModel.ContactId);
 
                     return
                         RedirectToAction("RegisteredOfficeAddressPrepopulate",
@@ -584,11 +617,13 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid organisationId, Guid addressId, Guid contactId)
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid organisationId)
         {
+            var schemeViewData = SchemeViewData();
+
             using (var client = apiClient())
             {
-                return View(await GetAddressPrepopulateViewModel(organisationId, client, addressId, contactId));
+                return View(await GetAddressPrepopulateViewModel(organisationId, client, schemeViewData?.AddressId, schemeViewData?.ContactId));
             }
         }
 
@@ -596,11 +631,13 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddressPrepopulate(AddressPrepopulateViewModel viewModel)
         {
+            SetViewData(viewModel.AddressId, viewModel.ContactId);
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "No")
                 {
-                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId, viewModel.AddressId, viewModel.ContactId });
+                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId });
                 }
                 if (viewModel.SelectedValue == "Yes")
                 {
@@ -608,10 +645,10 @@
                     {
                         await
                             client.SendAsync(User.GetAccessToken(),
-                                new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId, viewModel.AddressId));
+                                new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId, viewModel.AddressId.Value));
                     }
 
-                    return RedirectToAction("ReviewOrganisationDetails", new { viewModel.OrganisationId, viewModel.AddressId, viewModel.ContactId });
+                    return RedirectToAction("ReviewOrganisationDetails", new { viewModel.OrganisationId });
                 }
             }
 
@@ -619,11 +656,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId, Guid contactId)
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId)
         {
+            var schemeViewData = SchemeViewData();
+
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress, contactId);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress, schemeViewData?.ContactId, schemeViewData?.AddressId);
                 return View(model);
             }
         }
@@ -672,8 +711,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId, Guid addressId, Guid contactId)
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId)
         {
+            var schemeViewData = SchemeViewData();
+
             using (var client = apiClient())
             {
                 var organisationExists =
@@ -685,14 +726,24 @@
                 }
 
                 OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
-                var address = await client.SendAsync(User.GetAccessToken(), new GetAddress(addressId, organisationId));
-                // GET CONTACT INFO
+
                 var model = new OrganisationSummaryViewModel()
                 {
                     OrganisationData = organisationData,
                 };
 
-                model.OrganisationData.OrganisationAddress = address;
+                AddressData address;
+                if (schemeViewData != null && schemeViewData.AddressId.HasValue)
+                {
+                    address = await client.SendAsync(User.GetAccessToken(), new GetAddress(schemeViewData.AddressId.Value, organisationId));
+                    model.OrganisationData.OrganisationAddress = address;
+                }
+                ContactData contact;
+                if (schemeViewData != null && schemeViewData.ContactId.HasValue)
+                {
+                    contact = await client.SendAsync(User.GetAccessToken(), new GetContact(schemeViewData.ContactId.Value, organisationId));
+                    model.OrganisationData.Contact = contact;
+                }
 
                 return View(model);
             }
@@ -702,6 +753,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model, Guid organisationId)
         {
+            SetViewData(model.AddressId, model.ContactId);
+
             if (!ModelState.IsValid)
             {
                 return View("ReviewOrganisationDetails", model);
@@ -730,7 +783,7 @@
                 }
             }
 
-            return await ReviewOrganisationDetails(organisationId, model.OrganisationData.OrganisationAddress.Id, model.OrganisationData.Contact.Id);
+            return await ReviewOrganisationDetails(organisationId);
         }
 
         [HttpGet]
@@ -745,7 +798,7 @@
             return View((object)searchedText);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType, Guid contactId)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType, Guid? contactId, Guid? addressId)
         {
             // Check the organisation Id is valid
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
@@ -753,15 +806,18 @@
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
-                ContactId = contactId
+                ContactId = contactId,
+                AddressId = addressId
             };
 
-            if (addressType == AddressType.OrganisationAddress)
+            if (addressType == AddressType.OrganisationAddress && addressId.HasValue)
             {
-                //if (organisation.HasOrganisationAddress) //check
-                //{
-                //    model.Address = organisation.OrganisationAddress;
-                //}
+                var address = await client.SendAsync(User.GetAccessToken(), new GetAddress(addressId.Value, organisationId));
+
+                if (address != null)
+                {
+                    model.Address = address;
+                }
             }
             else if (addressType == AddressType.RegisteredOrPPBAddress)
             {
@@ -782,7 +838,7 @@
             return model;
         }
 
-        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid organisationId, IWeeeClient client, Guid addressId, Guid contactId)
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid organisationId, IWeeeClient client, Guid? addressId, Guid? contactId)
         {
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressPrepopulateViewModel
@@ -837,6 +893,16 @@
                      new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
             return organisations;
+        }
+
+        private void SetViewData(Guid? addressId, Guid? contactId)
+        {
+            TempData[ViewDataConstant.SchemeViewData] = new SchemeViewData() { ContactId = contactId, AddressId = addressId };
+        }
+
+        private SchemeViewData SchemeViewData()
+        {
+            return TempData[ViewDataConstant.SchemeViewData] as SchemeViewData;
         }
     }
 }

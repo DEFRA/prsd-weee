@@ -11,6 +11,9 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public Guid? ContactId { get; set; }
+        public Guid? AddressId { get; set; }
+
         [Required]
         [StringLength(CommonMaxFieldLengths.FirstName)]
         [Display(Name = "First name")]
@@ -37,7 +40,7 @@
                 LastName = LastName,
                 Position = Position
             };
-            return new AddContactPerson(OrganisationId, contact);
+            return new AddContactPerson(OrganisationId, contact, ContactId);
         }
 
         public ContactPersonViewModel()

@@ -49,7 +49,17 @@
 
             if (addresstype.Equals(AddressType.SchemeAddress))
             {
-                db.Addresses.Add(address);
+                if (message.AddressId.HasValue)
+                {
+                    var findAddress = await db.Addresses.SingleAsync(a => a.Id == message.AddressId.Value);
+
+                    findAddress.Overwrite(address);
+                    address = findAddress;
+                }
+                else
+                {
+                    db.Addresses.Add(address);
+                }
             }
             else
             {
