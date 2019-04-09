@@ -28,34 +28,34 @@
 
         public async Task<bool> HandleAsync(UpdateSchemeContactDetails message)
         {
-            authorization.EnsureInternalOrOrganisationAccess(message.OrganisationData.Id);
+            authorization.EnsureInternalOrOrganisationAccess(message.SchemeData.OrganisationId);
             if (authorization.CheckCanAccessInternalArea())
             {
                 authorization.EnsureUserInRole(Roles.InternalAdmin);
             }
 
-            var scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
+            var scheme = await dataAccess.FetchSchemeAsync(message.SchemeData.OrganisationId);
 
             var contact = new Contact(
-                message.OrganisationData.Contact.FirstName,
-                message.OrganisationData.Contact.LastName,
-                message.OrganisationData.Contact.Position);
+                message.SchemeData.Contact.FirstName,
+                message.SchemeData.Contact.LastName,
+                message.SchemeData.Contact.Position);
 
             var contactChanged = !contact.Equals(scheme.Contact);
 
             scheme.AddOrUpdateMainContactPerson(contact);
 
-            var country = await dataAccess.FetchCountryAsync(message.OrganisationData.OrganisationAddress.CountryId);
+            var country = await dataAccess.FetchCountryAsync(message.SchemeData.Address.CountryId);
 
             var address = new Address(
-                message.OrganisationData.OrganisationAddress.Address1,
-                message.OrganisationData.OrganisationAddress.Address2,
-                message.OrganisationData.OrganisationAddress.TownOrCity,
-                message.OrganisationData.OrganisationAddress.CountyOrRegion,
-                message.OrganisationData.OrganisationAddress.Postcode,
+                message.SchemeData.Address.Address1,
+                message.SchemeData.Address.Address2,
+                message.SchemeData.Address.TownOrCity,
+                message.SchemeData.Address.CountyOrRegion,
+                message.SchemeData.Address.Postcode,
                 country,
-                message.OrganisationData.OrganisationAddress.Telephone,
-                message.OrganisationData.OrganisationAddress.Email);
+                message.SchemeData.Address.Telephone,
+                message.SchemeData.Address.Email);
 
             var schemeAddressChanged = !address.Equals(scheme.Address);
 
@@ -66,7 +66,7 @@
             if (message.SendNotificationOnChange &&
                 (contactChanged || schemeAddressChanged))
             {
-                scheme = await dataAccess.FetchSchemeAsync(message.OrganisationData.Id);
+                scheme = await dataAccess.FetchSchemeAsync(message.SchemeData.Id);
 
                 if (scheme != null &&
                     scheme.CompetentAuthority != null)

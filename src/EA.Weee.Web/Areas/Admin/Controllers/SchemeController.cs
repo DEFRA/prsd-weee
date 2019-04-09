@@ -125,7 +125,7 @@
                     case OverviewDisplayOption.ContactDetails:
 
                         var organisationData =
-                            await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                            await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
                         var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
                         contactDetailsModel.SchemeName = scheme.SchemeName;
                         contactDetailsModel.SchemeId = scheme.Id;
@@ -330,11 +330,11 @@
                 {
                     return new HttpForbiddenResult();
                 }
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                model.OrganisationAddress = organisationData.OrganisationAddress;
-                model.Contact = organisationData.Contact;
+                model.OrganisationAddress = scheme.Address;
+                model.Contact = scheme.Contact;
                 model.OrganisationAddress.Countries = countries;
                 model.SchemeId = schemeId;
                 model.OrgId = orgId;
@@ -360,11 +360,11 @@
 
             using (var client = apiClient())
             {
-                var orgData = new OrganisationData
+                var orgData = new SchemeData()
                 {
                     Id = model.OrgId,
                     Contact = model.Contact,
-                    OrganisationAddress = model.OrganisationAddress,
+                    Address = model.OrganisationAddress,
                 };
                 await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(orgData));
             }

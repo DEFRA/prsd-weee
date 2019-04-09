@@ -6,6 +6,9 @@
     public class OrganisationData
     {
         public Guid Id { get; set; }
+
+        public Guid? SchemeId { get; set; }
+
         public byte[] RowVersion { get; set; }
 
         public string Name { get; set; }
