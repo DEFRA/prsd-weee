@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -70,6 +71,66 @@
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenReturnIdAndAatfId_ApiShouldBeCalledWithReturnRequest()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            await controller.Index(A.Dummy<Guid>(), returnId, aatfId);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(g => g.ReturnId.Equals(returnId) && g.AatfId.Equals(aatfId))))
+            .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenActionAndParameters_SentOnSiteSummaryListViewModelShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var weeeSentOnList = A.Fake<List<WeeeSentOnSummaryListData>>();
+
+            var model = new SentOnSiteSummaryListViewModel()
+            {
+                AatfId = aatfId,
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                Sites = weeeSentOnList
+            };
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(model);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
+        {
+            var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        {
+            var model = new SentOnSiteSummaryListViewModel();
+            var returnId = new Guid();
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(returnId);
         }
     }
 }
