@@ -85,6 +85,7 @@
                                                                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
                                                                 && p.MemberUpload.IsSubmitted
                                                                 && p.MemberUpload.CreatedDate < memberUpload.CreatedDate
+                                                                && p.MemberUpload.Id != memberUpload.Id //check
                                                                 && (p.StatusType.HasValue && p.StatusType == StatusType.Insert.Value)).AsNoTracking().FirstOrDefault();
 
             if (insert != null)
@@ -99,6 +100,7 @@
                 && p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber
                 && p.MemberUpload.IsSubmitted
                 && p.MemberUpload.CreatedDate < memberUpload.CreatedDate
+                && p.MemberUpload.Id != memberUpload.Id //check
                 && (p.StatusType.HasValue && p.StatusType == StatusType.Amendment.Value)).AsNoTracking().OrderBy(p => p.UpdatedDate).FirstOrDefault();
 
             if (initialAmendment != null)
