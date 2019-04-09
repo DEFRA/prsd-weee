@@ -28,9 +28,9 @@
 
             public async Task<SchemeData> HandleAsync(GetSchemeByOrganisationId request)
             {
-                authorization.EnsureCanAccessInternalArea();
+                authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
-                var scheme = await dataAccess.GetSchemeOrDefault(request.OrganisationId);
+                var scheme = await dataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId);
 
                 if (scheme == null)
                 {

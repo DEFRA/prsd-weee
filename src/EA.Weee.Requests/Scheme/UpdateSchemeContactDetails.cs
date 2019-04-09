@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
     using Core.Organisations;
+    using Core.Scheme;
     using Prsd.Core.Mediator;
 
     public class UpdateSchemeContactDetails : IRequest<bool>
     {
-        public OrganisationData OrganisationData { get; private set; }
+        public SchemeData SchemeData { get; private set; }
 
         public bool SendNotificationOnChange { get; set; }
 
-        public UpdateSchemeContactDetails(OrganisationData organisationData, bool sendNotificationOnChange = false)
+        public UpdateSchemeContactDetails(SchemeData schemeData, bool sendNotificationOnChange = false)
         {
-            OrganisationData = organisationData;
+            SchemeData = schemeData;
             SendNotificationOnChange = sendNotificationOnChange;
         }
     }

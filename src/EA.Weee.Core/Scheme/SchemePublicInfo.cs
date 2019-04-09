@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
     using System;
+    using Organisations;
+    using Shared;
 
     /// <summary>
     /// A DTO providing information about a scheme that is publically available.
@@ -16,5 +18,9 @@
         public string ApprovalNo { get; set; }
 
         public string StatusName { get; set; }
+
+        public AddressData Address { get; set; }
+
+        public ContactData Contact { get; set; }
     }
 }
