@@ -198,6 +198,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ObligatedDataToObligatedValueMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
