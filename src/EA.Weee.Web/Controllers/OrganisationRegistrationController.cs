@@ -765,7 +765,7 @@
                 {
                     await
                         client.SendAsync(User.GetAccessToken(),
-                            new CompleteRegistration(organisationId));
+                            new CompleteRegistration(organisationId, model.OrganisationData.OrganisationAddress.Id, model.OrganisationData.Contact.Id));
                 }
 
                 return RedirectToAction("Confirmation", new

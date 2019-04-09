@@ -15,6 +15,15 @@
             ApprovalNumber = string.Empty;
         }
 
+        public Scheme(Guid organisationId, Guid addressId, Guid contactId)
+        {
+            OrganisationId = organisationId;
+            AddressId = addressId;
+            ContactId = contactId;
+            SchemeStatus = SchemeStatus.Pending;
+            ApprovalNumber = string.Empty;
+        }
+
         public Scheme(Organisation organisation)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
