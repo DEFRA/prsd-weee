@@ -32,7 +32,7 @@
     </table>
     <br/>
     <p class="govuk-body">
-        If your account status is incorrect, contact your organisation's administrator.
+        If your account status is incorrect, contact the administrator.
     </p>
 
     @using (Html.BeginForm("SignOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -43,6 +43,6 @@
     }
 
     <p>
-        <a href="@Url.Action("Search", "OrganisationRegistration")">Create or access another organisation</a>
+        <a href="@Url.Action("Search", "OrganisationRegistration")">Access another organisation</a>
     </p>
 }

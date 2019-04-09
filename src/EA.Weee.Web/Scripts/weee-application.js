@@ -34,7 +34,7 @@
     }
 
     // Bind the disabling behaviour to all buttons.
-    $('input[type=submit], button').bind('click', function() {
+    $('input[type=submit], button').bind('click', function () {
         return disableButtonFor1Second($(this));
     });
 
@@ -71,10 +71,31 @@
         validationInput.attr("id", id);
     }
 
+    //fn setCurPosition
+    $.fn.setCurPosition = function (pos) {
+        this.focus();
+        this.each(function (index, elem) {
+            if (elem.setSelectionRange) {
+                elem.setSelectionRange(pos, pos);
+            } else if (elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
+            }
+        });
+        return this;
+    };
+
+
     // When a link is clicked in the validation summary, move the focus to the associated input.
     // The link will only set the target, not the focus, to the specified anchor.
     $('.error-summary a').click(function () {
-        $($(this).attr('href')).focus();
+        $($(this).attr('href'));
+        var input = $($(this).attr('href'));
+        $(input).setCurPosition(0);
+
         return false;
     });
 });
@@ -97,5 +118,3 @@
         return formData;
     };
 })(jQuery);
-
-
