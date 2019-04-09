@@ -9,6 +9,6 @@
 
         public string DisplayName { get; set; }
 
-        public AddressData Address { get; set; }
+        public AddressData Address { get; set; } //CHECK - REMOVE
     }
 }
