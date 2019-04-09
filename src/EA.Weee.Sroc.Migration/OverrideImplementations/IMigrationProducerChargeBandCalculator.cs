@@ -7,7 +7,7 @@
 
     public interface IMigrationChargeBandCalculator
     {
-        Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload memberUpload);
+        ProducerCharge GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload memberUpload);
 
         bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name);
     }

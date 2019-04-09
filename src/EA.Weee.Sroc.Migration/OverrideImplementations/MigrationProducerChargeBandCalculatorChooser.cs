@@ -16,7 +16,7 @@
             this.chargeChargeBandCalculators = chargeChargeBandCalculators;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload upload, string name)
+        public ProducerCharge GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload upload, string name)
         {
             var calculator = chargeChargeBandCalculators.FirstOrDefault(c => c.IsMatch(scheme, producer, upload, name));
 
@@ -25,7 +25,7 @@
                 throw new ApplicationException(string.Format("No charge band calculator found for scheme {0} and producer {1}", scheme.approvalNo, producer.tradingName));
             }
 
-            return await calculator.GetProducerChargeBand(scheme, producer, upload);
+            return calculator.GetProducerChargeBand(scheme, producer, upload);
         }
     }
 }

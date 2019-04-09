@@ -8,16 +8,16 @@
 
     public class MigrationEnvironmentAgencyProducerChargeBandCalculator : IMigrationEnvironmentAgencyProducerChargeBandCalculator, IMigrationChargeBandCalculator
     {
-        private readonly IFetchProducerCharge fetchProducerCharge;
+        private readonly IMigrationFetchProducerCharge fetchProducerCharge;
         private readonly IMigrationRegisteredProducerDataAccess registeredProducerDataAccess;
 
-        public MigrationEnvironmentAgencyProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge, IMigrationRegisteredProducerDataAccess registeredProducerDataAccess)
+        public MigrationEnvironmentAgencyProducerChargeBandCalculator(IMigrationFetchProducerCharge fetchProducerCharge, IMigrationRegisteredProducerDataAccess registeredProducerDataAccess)
         {
             this.fetchProducerCharge = fetchProducerCharge;
             this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload memberUpload)
+        public ProducerCharge GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload memberUpload)
         {
             var producerCountry = producer.GetProducerCountry();
             ChargeBand band;
@@ -90,7 +90,7 @@
                 }
             }
 
-            return await fetchProducerCharge.GetCharge(band);
+            return fetchProducerCharge.GetCharge(band);
         }
 
         public bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name)

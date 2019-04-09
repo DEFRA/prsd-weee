@@ -21,7 +21,7 @@
             this.context = context;
         }
 
-        public async Task<ChargeBandAmount> FetchCurrentChargeBandAmount(ChargeBand chargeBandType)
+        public ChargeBandAmount FetchCurrentChargeBandAmount(ChargeBand chargeBandType)
         {
             if (currentProducerChargeBandAmounts == null)
             {
@@ -30,9 +30,9 @@
                 * this query will need to select only latest charge band amount
                 * for each charge band type.
                 */
-                currentProducerChargeBandAmounts = await context
+                currentProducerChargeBandAmounts = context
                     .ChargeBandAmounts
-                    .ToDictionaryAsync(pcb => pcb.ChargeBand, pcb => pcb);
+                    .ToDictionary(pcb => pcb.ChargeBand, pcb => pcb);
             }
 
             return currentProducerChargeBandAmounts[chargeBandType];

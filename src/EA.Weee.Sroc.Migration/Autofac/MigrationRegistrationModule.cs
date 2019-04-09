@@ -33,14 +33,14 @@
             builder.RegisterType<ProducerChargeBandCalculator>().As<IProducerChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<WhiteSpaceCollapser>().As<IWhiteSpaceCollapser>().InstancePerLifetimeScope();
             builder.RegisterType<Deserializer>().As<IDeserializer>().InstancePerLifetimeScope();
-            builder.RegisterType<MigrationProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationProducerChargeCalculatorDataAccess>().As<IMigrationProducerChargeCalculatorDataAccess>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationProducerChargeBandCalculatorChooser>().As<IMigrationProducerChargeBandCalculatorChooser>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationEnvironmentAgencyProducerChargeBandCalculator>().As<IMigrationEnvironmentAgencyProducerChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationTotalChargeCalculatorDataAccess>().As<IMigrationTotalChargeCalculatorDataAccess>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationEnvironmentAgencyProducerChargeBandCalculator>().As<IMigrationChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationProducerAmendmentChargeCalculator>().As<IMigrationChargeBandCalculator>().InstancePerLifetimeScope();
             builder.RegisterType<MigrationRegisteredProducerDataAccess>().As<IMigrationRegisteredProducerDataAccess>().InstancePerLifetimeScope();
-            builder.RegisterType<FetchProducerCharge>().As<IFetchProducerCharge>().InstancePerLifetimeScope();
+            builder.RegisterType<MigrationFetchProducerCharge>().As<IMigrationFetchProducerCharge>().InstancePerLifetimeScope();
         }
     }
 }

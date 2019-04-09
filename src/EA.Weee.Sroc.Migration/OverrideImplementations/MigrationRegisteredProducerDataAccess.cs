@@ -70,7 +70,7 @@
             var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
                                                         || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
 
-            var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate).ToList();
+            var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id).ToList();
 
             var registeredProducer = producerv2.FirstOrDefault(c => c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                                                                       && c.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber);

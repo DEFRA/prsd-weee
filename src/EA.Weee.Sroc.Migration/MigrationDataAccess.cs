@@ -57,22 +57,27 @@
 
         public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status)
         {
-            var producersBymember = context.ProducerSubmissions
-                .Where(p => p.MemberUploadId == memberUploadId);
+            var producersMember = context.ProducerSubmissions
+                .Where(p => p.MemberUploadId == memberUploadId).ToList();
 
-            var producer = producersBymember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
+            var producer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
                             || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
             
-            if (producer.Count() != 1)
+            if (producer.Count() == 1)
             {
-                throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
+                //throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
+                Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
+
+                producer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
+
+                context.SaveChanges();
             }
 
-            Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
+            //Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
             
-            producer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
+            //producer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
 
-            context.SaveChanges();
+            //context.SaveChanges();
         }
 
         public void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)

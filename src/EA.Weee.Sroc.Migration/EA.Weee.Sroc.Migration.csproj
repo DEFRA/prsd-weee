@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OverrideImplementations\IMigrationEnvironmentAgencyProducerChargeBandCalculator.cs" />
+    <Compile Include="OverrideImplementations\IMigrationFetchProducerCharge.cs" />
     <Compile Include="OverrideImplementations\IMigrationProducerChargeBandCalculatorChooser.cs" />
     <Compile Include="OverrideImplementations\IMigrationRegisteredProducerDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationEnvironmentAgencyProducerChargeBandCalculator.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Autofac\MigrationRegistrationModule.cs" />
     <Compile Include="OverrideImplementations\IMigrationTotalChargeCalculatorDataAccess.cs" />
     <Compile Include="OverrideImplementations\IMigrationProducerChargeBandCalculator.cs" />
+    <Compile Include="OverrideImplementations\MigrationFetchProducerCharge.cs" />
     <Compile Include="OverrideImplementations\MigrationProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationRegisteredProducerDataAccess.cs" />
     <Compile Include="OverrideImplementations\MigrationTotalChargeCalculatorDataAccess.cs" />

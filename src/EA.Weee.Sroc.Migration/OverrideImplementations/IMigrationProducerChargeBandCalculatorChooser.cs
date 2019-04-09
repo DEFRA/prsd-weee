@@ -6,6 +6,6 @@
 
     public interface IMigrationProducerChargeBandCalculatorChooser
     {
-        Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload upload, string name);
+        ProducerCharge GetProducerChargeBand(schemeType scheme, producerType producer, MemberUpload upload, string name);
     }
 }

@@ -51,10 +51,7 @@
 
                     foreach (var memberUpload in memberUploads)
                     {
-                        Log.Information(string.Format("Process member upload {0}", memberUpload.Id));
-
-                        var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data),
-                            memberUpload.FileName);
+                        var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
 
                         var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
                         var complianceYear = int.Parse(schemeType.complianceYear);
@@ -65,9 +62,9 @@
 
                         var total = TotalCalculatedCharges(memberUpload, schemeType, annualChargedToBeAdded, scheme);
 
-                        memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, total, annualChargedToBeAdded);
-
                         Log.Information(string.Format("Member upload {0} updated from {1} to {2}", memberUpload.Id, memberUpload.TotalCharges, total));
+
+                        memberUploadDataAccess.UpdateMemberUploadAmount(memberUpload, total, annualChargedToBeAdded);                       
                     }
 
                     dbContextTransaction.Commit();
@@ -113,8 +110,8 @@
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-
-                var producerCharge = Task.Run(() => producerChargeCalculator.GetProducerChargeBand(schemeType, producer, memberUpload, producerName)).Result;
+                
+                var producerCharge = producerChargeCalculator.GetProducerChargeBand(schemeType, producer, memberUpload, producerName);
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {
@@ -132,7 +129,7 @@
 
             if (annualChargeToBeAdded && complianceYear > 2018 && scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
             {
-                totalCharges = totalCharges + annualcharge;
+                totalCharges = (totalCharges + annualcharge);
             }
 
             return totalCharges;

@@ -9,16 +9,16 @@
     {
         private readonly IMigrationEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IMigrationRegisteredProducerDataAccess registeredProducerDataAccess;
-        private readonly IFetchProducerCharge fetchProducerCharge;
+        private readonly IMigrationFetchProducerCharge fetchProducerCharge;
 
-        public MigrationProducerAmendmentChargeCalculator(IMigrationEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator, IMigrationRegisteredProducerDataAccess registeredProducerDataAccess, IFetchProducerCharge fetchProducerCharge)
+        public MigrationProducerAmendmentChargeCalculator(IMigrationEnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator, IMigrationRegisteredProducerDataAccess registeredProducerDataAccess, IMigrationFetchProducerCharge fetchProducerCharge)
         {
             this.environmentAgencyProducerChargeBandCalculator = environmentAgencyProducerChargeBandCalculator;
             this.registeredProducerDataAccess = registeredProducerDataAccess;
             this.fetchProducerCharge = fetchProducerCharge;
         }
 
-        public async Task<ProducerCharge> GetProducerChargeBand(schemeType schmemeType, producerType producerType, MemberUpload memberUpload)
+        public ProducerCharge GetProducerChargeBand(schemeType schmemeType, producerType producerType, MemberUpload memberUpload)
         {
             var complianceYear = int.Parse(schmemeType.complianceYear);
 
@@ -28,7 +28,7 @@
             var previousAmendmentCharge =
                 registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, complianceYear, schmemeType.approvalNo, memberUpload);
 
-            var chargeband = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType, memberUpload);
+            var chargeband = environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schmemeType, producerType, memberUpload);
 
             if (previousProducerSubmission != null)
             {
