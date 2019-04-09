@@ -120,7 +120,7 @@
         }
 
         [Fact]
-        public async Task UpdateWithOperatorAddress_GivenAatfAndReturnId_WeeeSentOnShouldContainOperatorAddress()
+        public async Task UpdateWithOperatorAddress_GivenAatfAndReturnId_UpdateMustHaveHappened()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
