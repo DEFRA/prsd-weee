@@ -10,13 +10,13 @@
     using System.Collections.Generic;
     using Xunit;
 
-    public class AddSentOnAatfSiteDataAccessTests
+    public class SentOnAatfSiteDataAccessTests
     {
         private readonly WeeeContext context;
         private readonly SentOnAatfSiteDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
 
-        public AddSentOnAatfSiteDataAccessTests()
+        public SentOnAatfSiteDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
             dataAccess = new SentOnAatfSiteDataAccess(context);
