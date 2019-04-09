@@ -252,7 +252,6 @@
     <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
-    <Compile Include="Mappings\WeeeSentOnMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
