@@ -49,8 +49,10 @@
 
                     context.SaveChanges();
 
+                    //var ids = new List<Guid>() { Guid.Parse("6B80C787-696A-4448-9879-A9A800EAE21D"), Guid.Parse("DD35FA3F-B5C1-41F2-84DA-A9A800EB5D7A"), Guid.Parse("01B4D41B-8B15-4E71-BDDA-A9B200A363B3") };
                     foreach (var memberUpload in memberUploads)
                     {
+                        //.Where(m => ids.Contains(m.Id)))
                         var message = new ProcessXmlFile(memberUpload.OrganisationId, Encoding.ASCII.GetBytes(memberUpload.RawData.Data), memberUpload.FileName);
 
                         var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));

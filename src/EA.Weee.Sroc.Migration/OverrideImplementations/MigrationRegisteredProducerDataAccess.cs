@@ -10,6 +10,7 @@
     using Domain.Producer;
     using Domain.Producer.Classification;
     using Domain.Scheme;
+    using Serilog;
 
     public class MigrationRegisteredProducerDataAccess : IMigrationRegisteredProducerDataAccess
     {
@@ -70,10 +71,17 @@
             var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
                                                         || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
 
-            var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id).ToList();
+            //Log.Information(string.Format("Member upload created {0}", upload.CreatedDate));
+
+            var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id && p.MemberUpload.IsSubmitted).ToList();
 
             var registeredProducer = producerv2.FirstOrDefault(c => c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                                                                       && c.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber);
+
+            if (registeredProducer != null)
+            { 
+                //Log.Information(string.Format("P {0}", registeredProducer.Id));
+            }
 
             return registeredProducer;
         }
