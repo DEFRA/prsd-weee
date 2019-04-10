@@ -46,7 +46,7 @@
 
                     if (memberUpload.HasAnnualCharge && competantAuthorityAnnualChargeAmount > 0)
                     {
-                        description = string.Format("{0} and the {1:C} annual charge.", CommonMessage(submittedDate), competantAuthorityAnnualChargeAmount);
+                        description = string.Format("{0} and the {1} annual charge.", CommonMessage(submittedDate), competantAuthorityAnnualChargeAmount.Value.ToString("#,##0.00"));
                     }
 
                     try

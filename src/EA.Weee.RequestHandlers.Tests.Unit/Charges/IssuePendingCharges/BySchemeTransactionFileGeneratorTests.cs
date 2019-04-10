@@ -415,7 +415,7 @@
 
             var result = await generator.CreateAsync(0, invoiceRun);
 
-            Assert.Equal(result.IbisFile.Invoices[0].LineItems[0].Description, "Charge for producer registration submission made on 01 Jan 2019 and the £12,500.00 annual charge.");
+            Assert.Equal(result.IbisFile.Invoices[0].LineItems[0].Description, "Charge for producer registration submission made on 01 Jan 2019 and the 12,500.00 annual charge.");
         }
 
         [Fact]
