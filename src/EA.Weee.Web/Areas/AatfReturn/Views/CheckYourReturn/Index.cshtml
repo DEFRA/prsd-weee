@@ -12,6 +12,150 @@
             <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
         </div>
     </header>
+    <p>Check and review your AATF return before you proceed to submit</p>
+
+    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <p><strong>Compliance year</strong></p>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                @Model.Year
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <p><strong>Reporting period</strong></p>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                @Model.Period
+            </div>
+        </div>
+    </div>
+
+    @*<div class="govuk-!-padding-bottom-6"></div>*@
+
+    <h2 class="govuk-heading-m" style="margin-bottom: 0px;">Obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-6"></div>
+
+    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+
+        @foreach (var aatf in Model.AatfsData)
+        {
+            <div class="govuk-grid-row govuk-table__row govuk-table__cell">
+                <div class="govuk-grid-column-one-quarter">
+                    @aatf.Aatf.Name
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    @aatf.Aatf.ApprovalNumber
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                    B2C (tonnes)
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    B2B (tonnes)
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    Received for treatment
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeReceived.B2C
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeReceived.B2B
+                    </p>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    Sent to another AATF/ATF
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeSentOn.B2C
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeSentOn.B2B
+                    </p>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    Reused as a whole appliance
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeReused.B2C
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <p>
+                        @aatf.WeeeReused.B2B
+                    </p>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <h2 class="govuk-heading-m" style="margin-bottom: 0px;">Non-obligated WEEE</h2>
+    <div class="govuk-grid-row govuk-table__cell">
+        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+            @*<div class="govuk-grid-row govuk-table__cell">*@
+            @*<div class="govuk-grid-row">*@
+            @*<div class="govuk-table govuk-grid-column-one-half">*@
+            <div class="govuk-grid-column-one-quarter">
+                <p>
+                    WEEE received (tonnes)
+                </p>
+            </div>
+            <div class="govuk-table govuk-grid-column-one-quarter">
+                <p>
+                    @Model.NonObligatedTonnageTotal
+                </p>
+            </div>
+            @*</div>*@
+        </div>
+    </div>
+
+
+        <div class="govuk-!-padding-bottom-6"></div>
+
+        @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(m => m.ReturnId)
+            @Html.HiddenFor(m => m.OrganisationId)
+
+            <div class="govuk-form-group">
+                <button class="govuk-button" type="submit">Continue</button>
+            </div>
+        }
+
+        <div class="govuk-body govuk-!-font-size-19">
+            <a class="govuk-link govuk-link--no-visited-state">
+                @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+            </a>
+        </div>
+</section>
+
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
+        </div>
+    </header>
 
     <p style="display: inline">Check and review your AATF return before you proceed to submit</p>
     <div class="govuk-!-padding-bottom-9"></div>
