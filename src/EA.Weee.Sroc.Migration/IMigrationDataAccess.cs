@@ -18,7 +18,7 @@
 
         void ResetMemberUploadInvoice(MemberUpload memberUpload);
 
-        void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status);
+        void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status, producerType producerType);
 
         void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions);
 

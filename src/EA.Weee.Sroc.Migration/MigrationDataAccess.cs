@@ -55,7 +55,7 @@
             memberUpload.ResetInvoice();
         }
 
-        public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status)
+        public void UpdateProducerSubmissionAmount(Guid memberUploadId, string name, ProducerCharge producerCharge, statusType status, producerType producerType)
         {
             var producersMember = context.ProducerSubmissions
                 .Where(p => p.MemberUploadId == memberUploadId).ToList();
@@ -75,6 +75,32 @@
             else
             {
                 Log.Information(string.Format("Could not find {0}", name));
+
+                var company = producerType.producerBusiness.Item as companyType;
+
+                var findProducer = new List<ProducerSubmission>();
+                if (company != null)
+                {
+                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(company.companyName)).ToList();
+                }
+                else
+                {
+                    var partnerShip = producerType.producerBusiness.Item as partnershipType;
+
+                    if (partnerShip != null)
+                    {
+                        findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(partnerShip.partnershipName)).ToList();
+                    }
+                }
+
+                if (producer.Count() == 1)
+                {
+                    Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
+
+                    findProducer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
+
+                    context.SaveChanges();
+                }
             }
             //Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
             
