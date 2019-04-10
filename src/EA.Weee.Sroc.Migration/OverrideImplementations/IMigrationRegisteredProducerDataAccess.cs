@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Domain.Producer;
     using Domain.Scheme;
+    using Xml.MemberRegistration;
 
     public interface IMigrationRegisteredProducerDataAccess
     {
@@ -19,6 +20,7 @@
 
         bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload memberUpload);
 
-        ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name);
+        ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber,
+            MemberUpload upload, string name, producerType producerType);
     }
 }

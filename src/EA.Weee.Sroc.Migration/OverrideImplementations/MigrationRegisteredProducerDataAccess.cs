@@ -11,6 +11,7 @@
     using Domain.Producer.Classification;
     using Domain.Scheme;
     using Serilog;
+    using Xml.MemberRegistration;
 
     public class MigrationRegisteredProducerDataAccess : IMigrationRegisteredProducerDataAccess
     {
@@ -66,24 +67,30 @@
             return null;
         }
 
-        public ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name)
+        public ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name, producerType producerType)
         {
             var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
                                                         || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
-
-            //Log.Information(string.Format("Member upload created {0}", upload.CreatedDate));
 
             var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id && p.MemberUpload.IsSubmitted).ToList();
 
             var registeredProducer = producerv2.FirstOrDefault(c => c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber
                                                                       && c.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber);
 
-            if (registeredProducer != null)
-            { 
-                //Log.Information(string.Format("P {0}", registeredProducer.Id));
-            }
+            if (registeredProducer == null)
+            {
+                var lastResort = context.ProducerSubmissions.Where(c =>
+                    c.RegisteredProducer.ComplianceYear == complianceYear && c.RegisteredProducer.ProducerRegistrationNumber ==
+                                                                          producerRegistrationNumber
+                                                                          && c.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber);
 
-            return registeredProducer;
+                return lastResort.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id && p.MemberUpload.IsSubmitted)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                return registeredProducer;
+            }
         }
 
         public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload memberUpload)

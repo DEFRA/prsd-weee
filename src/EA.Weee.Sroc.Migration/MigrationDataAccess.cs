@@ -74,23 +74,18 @@
             }
             else
             {
-                Log.Information(string.Format("Could not find {0}", name));
+                Log.Information(string.Format("last chance to find user {0}", producerType.tradingName));
 
-                var company = producerType.producerBusiness.Item as companyType;
+                var company = producerType.producerBusiness.Item; 
 
                 var findProducer = new List<ProducerSubmission>();
-                if (company != null)
+                if (company.GetType() == typeof(companyType))
                 {
-                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(company.companyName)).ToList();
+                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(((companyType)company).companyName)).ToList();
                 }
-                else
+                else if (company.GetType() == typeof(partnershipType))
                 {
-                    var partnerShip = producerType.producerBusiness.Item as partnershipType;
-
-                    if (partnerShip != null)
-                    {
-                        findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(partnerShip.partnershipName)).ToList();
-                    }
+                    findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(((partnershipType)company).partnershipName)).ToList();
                 }
 
                 if (producer.Count() == 1)
@@ -100,6 +95,10 @@
                     findProducer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
 
                     context.SaveChanges();
+                }
+                else
+                {
+                    Log.Information(string.Format("Could not find {0}", name));
                 }
             }
             //Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));

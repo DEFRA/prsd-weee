@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Scheme;
+    using Serilog;
     using Xml.MemberRegistration;
 
     public class MigrationEnvironmentAgencyProducerChargeBandCalculator : IMigrationEnvironmentAgencyProducerChargeBandCalculator, IMigrationChargeBandCalculator
@@ -96,16 +97,18 @@
         public bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name)
         {
             var year = int.Parse(scheme.complianceYear);
-            var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name);
+            var previousProducerSubmission = registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name, producer);
 
             if (year > 2018)
             {
                 if (producer.status == statusType.I)
                 {
+                    Log.Information(string.Format("calc {0}", name));
                     return true;
                 }
                 if (producer.status == statusType.A && previousProducerSubmission == null)
                 {
+                    Log.Information(string.Format("calc {0}", name));
                     return true;
                 }
             }

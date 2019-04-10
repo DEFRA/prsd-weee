@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Domain.Scheme;
+    using Serilog;
     using Xml.MemberRegistration;
 
     public class MigrationProducerAmendmentChargeCalculator : IMigrationChargeBandCalculator
@@ -32,6 +33,8 @@
 
             if (previousProducerSubmission != null)
             {
+                Log.Information(string.Format("previous {0}", previousProducerSubmission.Id));
+                Log.Information(string.Format("previous amendment {0}", previousAmendmentCharge.ToString()));
                 if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                                                  previousProducerSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
                 {
@@ -48,11 +51,17 @@
 
         public bool IsMatch(schemeType scheme, producerType producer, MemberUpload upload, string name)
         {
+            Log.Information(string.Format("amendment calc {0}", name));
             var year = int.Parse(scheme.complianceYear);
             var previousProducerSubmission =
-                registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name);
+                registeredProducerDataAccess.GetProducerRegistrationForInsert(producer.registrationNo, year, scheme.approvalNo, upload, name, producer);
 
-            return producer.status == statusType.A && (previousProducerSubmission != null);
+            var result = producer.status == statusType.A && (previousProducerSubmission != null);
+            if (result)
+            {
+                Log.Information(string.Format("amendment calc {0}", name));
+            }  
+            return result;
         }
     }
 }

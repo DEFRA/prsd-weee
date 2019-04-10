@@ -48,8 +48,8 @@
                     memberUploadDataAccess.ResetMemberUploadsAnnualCharge(memberUploads);
 
                     context.SaveChanges();
-
-                    //var ids = new List<Guid>() { Guid.Parse("548D09DC-1607-41F9-944C-A9F900A526FA") };
+   
+                    //var ids = new List<Guid>() { Guid.Parse("D5D6A346-A113-4153-AA0B-A97B00D3774C"), Guid.Parse("F1E03C85-F42D-4FD3-8F52-A98C00F9FD62") };
                     foreach (var memberUpload in memberUploads)
                     {
                         //.Where(m => ids.Contains(m.Id)))
