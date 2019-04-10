@@ -50,6 +50,11 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnCreateSiteOperator", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId, weeeSentOnId = weeeSentOnId }));
         }
 
+        public static RedirectToRouteResult SentOnCreateSite(Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnCreateSite", action = "Index", returnId = returnId, aatfId = aatfId}));
+        }
+
         public static RedirectToRouteResult ReusedOffSiteSummaryList(Guid returnId, Guid aatfId, Guid organisationId)
         {
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ReusedOffSiteSummaryList", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId }));
