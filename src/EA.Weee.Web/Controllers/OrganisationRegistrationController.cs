@@ -492,8 +492,6 @@
         [HttpGet]
         public async Task<ActionResult> MainContactPerson(Guid organisationId, Guid? contactId, Guid? addressId)
         {
-            //var schemeViewData = SchemeViewData();
-
             using (var client = apiClient())
             {
                 /* RP: Check with the API to see if this is a valid organisation
@@ -511,11 +509,11 @@
                 {
                     var contact = await client.SendAsync(User.GetAccessToken(), new GetContact(contactId.Value, organisationId));
 
-                    model = new ContactPersonViewModel(contact);
+                    model = new ContactPersonViewModel(contact) {OrganisationId = organisationId, AddressId = addressId, ContactId = contactId };
                 }
                 else
                 {
-                    model = new ContactPersonViewModel { OrganisationId = organisationId, AddressId = addressId, ContactId = contactId };
+                    model = new ContactPersonViewModel { OrganisationId = organisationId, AddressId = addressId, ContactId = null };
                 }
 
                 return View(model);
