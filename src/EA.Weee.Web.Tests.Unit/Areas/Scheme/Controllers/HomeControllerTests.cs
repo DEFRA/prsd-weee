@@ -629,7 +629,7 @@
 
         private HomeController HomeController(bool enableDataReturns = false)
         {
-            ConfigurationService configService = A.Fake<ConfigurationService>();
+            var configService = A.Fake<ConfigurationService>();
             configService.CurrentConfiguration.EnableDataReturns = enableDataReturns;
             var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
             new HttpContextMocker().AttachToController(controller);
@@ -639,7 +639,7 @@
 
         private HomeController HomeControllerSetupForAATFReturns(bool enableAATFReturns = false)
         {
-            ConfigurationService configService = A.Fake<ConfigurationService>();
+            var configService = A.Fake<ConfigurationService>();
             configService.CurrentConfiguration.EnableAATFReturns = enableAATFReturns;
             var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
             new HttpContextMocker().AttachToController(controller);
@@ -657,51 +657,42 @@
         public async Task GetManageContactDetails_WithValidOrganisationId_GetsDataAndGetsCountriesAndReturnsDefaultView()
         {
             // Arrange
-            IWeeeClient client = A.Fake<IWeeeClient>();
+            var client = A.Fake<IWeeeClient>();
 
-            OrganisationData organisationData = new OrganisationData();
-            organisationData.Contact = new ContactData();
-            organisationData.OrganisationAddress = new AddressData();
+            var schemeData = new SchemeData() { Contact = new ContactData(), Address = new AddressData() };
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(organisationData);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(schemeData);
 
-            List<CountryData> countries = new List<CountryData>();
+            var countries = new List<CountryData>();
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(countries);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
             Func<IWeeeClient> apiClient = () => client;
 
-            IWeeeCache cache = A.Dummy<IWeeeCache>();
+            var cache = A.Dummy<IWeeeCache>();
 
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
-            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
-
-            ConfigurationService configService = A.Dummy<ConfigurationService>();
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
+            var breadcrumb = A.Dummy<BreadcrumbService>();
+            var csvWriterFactory = A.Dummy<CsvWriterFactory>();
+            var configService = A.Dummy<ConfigurationService>();
+            var controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
-            ActionResult result = await controller.ManageContactDetails(new Guid("A4B50C6B-64FE-4119-ACDF-82C502B59BC8"));
+            var id = new Guid("A4B50C6B-64FE-4119-ACDF-82C502B59BC8");
+            var result = await controller.ManageContactDetails(id);
 
             // Assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.Equal(countries, organisationData.OrganisationAddress.Countries);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeByOrganisationId>.That.Matches(c => c.OrganisationId.Equals(id)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+            Assert.Equal(countries, schemeData.Address.Countries);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
 
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
 
             Assert.Equal(string.Empty, viewResult.ViewName);
-            Assert.Equal(organisationData, viewResult.Model);
+            Assert.Equal(schemeData, viewResult.Model);
         }
 
         /// <summary>
@@ -714,47 +705,41 @@
         public async Task PostManageContactDetails_WithModelErrors_GetsCountriesAndReturnsDefaultView()
         {
             // Arrange
-            OrganisationData organisationData = new OrganisationData();
-            organisationData.Contact = new ContactData();
-            organisationData.OrganisationAddress = new AddressData();
+            var schemeData = new SchemeData { Contact = new ContactData(), Address = new AddressData() };
 
-            IWeeeClient client = A.Fake<IWeeeClient>();
+            var client = A.Fake<IWeeeClient>();
 
-            List<CountryData> countries = new List<CountryData>();
+            var countries = new List<CountryData>();
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(countries);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
             Func<IWeeeClient> apiClient = () => client;
 
-            IWeeeCache cache = A.Dummy<IWeeeCache>();
+            var cache = A.Dummy<IWeeeCache>();
+            var breadcrumb = A.Dummy<BreadcrumbService>();
+            var csvWriterFactory = A.Dummy<CsvWriterFactory>();
+            var configService = A.Dummy<ConfigurationService>();
 
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
-            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
-
-            ConfigurationService configService = A.Dummy<ConfigurationService>();
-
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
+            var controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
 
             // Act
-            ActionResult result = await controller.ManageContactDetails(organisationData);
+            var result = await controller.ManageContactDetails(schemeData);
 
             // Assert
             A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            Assert.Equal(countries, organisationData.OrganisationAddress.Countries);
+            Assert.Equal(countries, schemeData.Address.Countries);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
 
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
 
             Assert.Equal(string.Empty, viewResult.ViewName);
-            Assert.Equal(organisationData, viewResult.Model);
+            Assert.Equal(schemeData, viewResult.Model);
         }
 
         /// <summary>
@@ -767,38 +752,31 @@
         public async Task PostManageContactDetails_WithNoModelErrors_UpdatesDetailsAndRedirectsToActivitySpringboard()
         {
             // Arrange
-            OrganisationData organisationData = new OrganisationData();
-            organisationData.Contact = new ContactData();
-            organisationData.OrganisationAddress = new AddressData();
+            var schemeData = new SchemeData { Contact = new ContactData(), Address = new AddressData() };
 
-            IWeeeClient client = A.Fake<IWeeeClient>();
+            var client = A.Fake<IWeeeClient>();
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
-                .Returns(true);
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._)).Returns(true);
 
             Func<IWeeeClient> apiClient = () => client;
 
-            IWeeeCache cache = A.Dummy<IWeeeCache>();
-
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
-            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
-
-            ConfigurationService configService = A.Dummy<ConfigurationService>();
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
+            var cache = A.Dummy<IWeeeCache>();
+            var breadcrumb = A.Dummy<BreadcrumbService>();
+            var csvWriterFactory = A.Dummy<CsvWriterFactory>();
+            var configService = A.Dummy<ConfigurationService>();
+            var controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
-            ActionResult result = await controller.ManageContactDetails(organisationData);
+            var result = await controller.ManageContactDetails(schemeData);
 
             // Assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._)).MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(RedirectToRouteResult), result);
 
-            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            var redirectResult = (RedirectToRouteResult)result;
 
             Assert.Equal("ChooseActivity", redirectResult.RouteValues["Action"]);
         }
@@ -807,21 +785,19 @@
         public async Task PostManageContactDetails_UpdatesDetailsAndSendNotificationOnChange()
         {
             // Arrange
-            IWeeeClient client = A.Fake<IWeeeClient>();
+            var client = A.Fake<IWeeeClient>();
 
             Func<IWeeeClient> apiClient = () => client;
 
-            IWeeeCache cache = A.Dummy<IWeeeCache>();
+            var cache = A.Dummy<IWeeeCache>();
 
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
-            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
-
-            ConfigurationService configService = A.Dummy<ConfigurationService>();
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
+            var breadcrumb = A.Dummy<BreadcrumbService>();
+            var csvWriterFactory = A.Dummy<CsvWriterFactory>();
+            var configService = A.Dummy<ConfigurationService>();
+            var controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
 
             // Act
-            ActionResult result = await controller.ManageContactDetails(A.Dummy<OrganisationData>());
+            var result = await controller.ManageContactDetails(A.Dummy<SchemeData>());
 
             // Assert
             A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))

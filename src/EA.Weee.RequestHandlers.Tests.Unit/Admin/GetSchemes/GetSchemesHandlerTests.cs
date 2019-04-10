@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using Core.Scheme;
+    using Core.Shared;
     using Domain;
-    using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
     using Mappings;
@@ -17,6 +18,8 @@
     using Weee.Domain.Organisation;
     using Weee.Tests.Core;
     using Xunit;
+    using ObligationType = Domain.Obligation.ObligationType;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class GetSchemesHandlerTests
     {
@@ -55,7 +58,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            var mapper = new SchemeMap(A.Fake<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
             Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
@@ -87,7 +90,7 @@
 
             GetSchemesHandler handler = new GetSchemesHandler(
                 authorization,
-                schemeMap,
+                mapper,
                 dataAccess);
 
             // Act
@@ -114,7 +117,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            var mapper = new SchemeMap(A.Fake<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
             Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
@@ -146,7 +149,7 @@
 
             GetSchemesHandler handler = new GetSchemesHandler(
                 authorization,
-                schemeMap,
+                mapper,
                 dataAccess);
 
             // Act
@@ -173,7 +176,7 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
             Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 

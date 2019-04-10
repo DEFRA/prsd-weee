@@ -3,6 +3,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
@@ -36,7 +37,7 @@
             var handler =
                 new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
-            var request = new UpdateSchemeContactDetails(new OrganisationData { Id = Guid.NewGuid() }, false);
+            var request = new UpdateSchemeContactDetails(new SchemeData() { Id = Guid.NewGuid() }, false);
 
             // Act, Assert
             await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(request));
@@ -46,7 +47,7 @@
         public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
         {
             // Arrange
-            IWeeeAuthorization authorization = new AuthorizationBuilder()
+            var authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
@@ -72,64 +73,62 @@
         public async Task HandleAsync_WithValidData_FetchesOrganisationAndUpdatesAndSaves()
         {
             // Arrange
-            OrganisationData organisationData = new OrganisationData();
-            organisationData.Id = new Guid("93646500-85A1-4F9D-AE18-73265426EF40");
-            organisationData.Contact = new ContactData();
-            organisationData.Contact.FirstName = "FirstName";
-            organisationData.Contact.LastName = "LastName";
-            organisationData.Contact.Position = "Position";
-            organisationData.OrganisationAddress = new Core.Shared.AddressData();
-            organisationData.OrganisationAddress.Address1 = "Address1";
-            organisationData.OrganisationAddress.Address2 = "Address2";
-            organisationData.OrganisationAddress.TownOrCity = "Town";
-            organisationData.OrganisationAddress.CountyOrRegion = "County";
-            organisationData.OrganisationAddress.Postcode = "Postcode";
-            organisationData.OrganisationAddress.CountryId = new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC");
-            organisationData.OrganisationAddress.Telephone = "012345678";
-            organisationData.OrganisationAddress.Email = "email@domain.com";
+            var schemeData = new SchemeData
+            {
+                Id = new Guid("93646500-85A1-4F9D-AE18-73265426EF40"),
+                Contact = new ContactData { FirstName = "FirstName", LastName = "LastName", Position = "Position" },
+                Address = new Core.Shared.AddressData
+                {
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "Postcode",
+                    CountryId = new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"),
+                    Telephone = "012345678",
+                    Email = "email@domain.com"
+                }
+            };
 
-            UpdateSchemeContactDetails request = new UpdateSchemeContactDetails(organisationData);
+            var request = new UpdateSchemeContactDetails(schemeData);
+            var authorization = A.Dummy<IWeeeAuthorization>();
+            var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+            var weeeEmailService = A.Dummy<IWeeeEmailService>();
 
-            IWeeeAuthorization authorization = A.Dummy<IWeeeAuthorization>();
-            IOrganisationDetailsDataAccess dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
-            IWeeeEmailService weeeEmailService = A.Dummy<IWeeeEmailService>();
+            var scheme = A.Dummy<Scheme>();
 
-            Organisation organisation = A.Dummy<Organisation>();
+            A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
+                .Returns(scheme);
 
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
-                .Returns(organisation);
-
-            Country country = new Country(
+            var country = new Country(
                 new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"),
                 "Name");
             A.CallTo(() => dataAccess.FetchCountryAsync(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC")))
                 .Returns(country);
 
-            UpdateSchemeContactDetailsHandler handler =
+            var handler =
                 new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
 
             // Act
-            bool result = await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
+            A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            //Assert.Equal("FirstName", organisation.Contact.FirstName);
-            //Assert.Equal("LastName", organisation.Contact.LastName);
-            //Assert.Equal("Position", organisation.Contact.Position); //CHECK
-            Assert.False(true);
-            //Assert.Equal("Address1", organisation.OrganisationAddress.Address1);
-            //Assert.Equal("Address2", organisation.OrganisationAddress.Address2);
-            //Assert.Equal("Town", organisation.OrganisationAddress.TownOrCity);
-            //Assert.Equal("County", organisation.OrganisationAddress.CountyOrRegion);
-            //Assert.Equal("Postcode", organisation.OrganisationAddress.Postcode);
-            //Assert.Equal(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"), organisation.OrganisationAddress.Country.Id);
-            //Assert.Equal("012345678", organisation.OrganisationAddress.Telephone);
-            //Assert.Equal("email@domain.com", organisation.OrganisationAddress.Email);
+            Assert.Equal("FirstName", scheme.Contact.FirstName);
+            Assert.Equal("LastName", scheme.Contact.LastName);
+            Assert.Equal("Position", scheme.Contact.Position); 
+            Assert.Equal("Address1", scheme.Address.Address1);
+            Assert.Equal("Address2", scheme.Address.Address2);
+            Assert.Equal("Town", scheme.Address.TownOrCity);
+            Assert.Equal("County", scheme.Address.CountyOrRegion);
+            Assert.Equal("Postcode", scheme.Address.Postcode);
+            Assert.Equal(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"), scheme.Address.Country.Id);
+            Assert.Equal("012345678", scheme.Address.Telephone);
+            Assert.Equal("email@domain.com", scheme.Address.Email);
 
-            A.CallTo(() => dataAccess.SaveAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -146,19 +145,15 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK 
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
 
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -167,7 +162,7 @@
                 Position = "New Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "Address1",
                 Address2 = "Address2",
@@ -179,10 +174,10 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationData = new OrganisationData
+            var organisationData = new SchemeData()
             {
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
             var request = new UpdateSchemeContactDetails(organisationData, true);
@@ -207,20 +202,15 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
             var contact = new Contact("FirstName", "LastName", "Position");
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
-
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -229,7 +219,7 @@
                 Position = "New Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "Address1",
                 Address2 = "Address2",
@@ -241,13 +231,13 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, false);
+            var request = new UpdateSchemeContactDetails(schemeData, false);
 
             // Act
             await handler.HandleAsync(request);
@@ -271,19 +261,14 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
-
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -292,7 +277,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAdddress = new AddressData
             {
                 Address1 = "New Address1",
                 Address2 = "New Address2",
@@ -304,13 +289,13 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAdddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(schemeData, true);
 
             // Act
             await handler.HandleAsync(request);
@@ -334,19 +319,15 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
 
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -355,7 +336,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "New Address1",
                 Address2 = "New Address2",
@@ -367,13 +348,13 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, false);
+            var request = new UpdateSchemeContactDetails(schemeData, false);
 
             // Act
             await handler.HandleAsync(request);
@@ -397,19 +378,15 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
 
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -418,7 +395,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "Address1",
                 Address2 = "Address2",
@@ -430,13 +407,13 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(schemeData, true);
 
             // Act
             await handler.HandleAsync(request);
@@ -460,19 +437,14 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
-
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -481,7 +453,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "New Address1",
                 Address2 = "New Address2",
@@ -493,27 +465,24 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
-                Id = organisationId,
+                Id = schemeId,
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(schemeData, true);
 
-            A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
-                .Returns((Scheme)null);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeId)).Returns((Scheme)null);
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
-                .MustHaveHappened();
-
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeId)).MustHaveHappened();
             A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
                 .MustNotHaveHappened();
         }
@@ -532,19 +501,14 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
-
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -553,7 +517,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "New Address1",
                 Address2 = "New Address2",
@@ -565,34 +529,26 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
-                Id = organisationId,
+                Id = schemeId,
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(schemeData, true);
 
-            var scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.SchemeName)
-                .Returns("Test Scheme Name");
-
-            A.CallTo(() => scheme.CompetentAuthority)
-                .Returns(null);
-
-            A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
-                .Returns(scheme);
+            A.CallTo(() => scheme.SchemeName).Returns("Test Scheme Name");
+            A.CallTo(() => scheme.CompetentAuthority).Returns(null);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeId)).Returns(scheme);
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
-                .MustHaveHappened();
-
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeId)).MustHaveHappened();
             A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("test@authorityEmail.gov.uk", "Test Scheme Name"))
                 .MustNotHaveHappened();
         }
@@ -611,19 +567,14 @@
 
             var countryId = Guid.NewGuid();
             var country = new Country(countryId, "Country");
-            var organisationAddress = new Address("Address1", "Address2", "TownOrCity",
+            var schemeAddress = new Address("Address1", "Address2", "TownOrCity",
                 "CountyOrRegion", "Postcode", country, "Telephone", "Email");
 
-            var organisation = A.Fake<Organisation>();
-            //A.CallTo(() => organisation.Contact).Returns(contact);
-            //CHECK
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(organisationAddress);
-
-            A.CallTo(() => dataAccess.FetchOrganisationAsync(A<Guid>._))
-                .Returns(organisation);
-
-            A.CallTo(() => dataAccess.FetchCountryAsync(countryId))
-                .Returns(country);
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.Contact).Returns(contact);
+            A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
 
             var newContactDetails = new ContactData
             {
@@ -632,7 +583,7 @@
                 Position = "Position"
             };
 
-            var newOrganisationAddress = new AddressData
+            var newSchemeAddress = new AddressData
             {
                 Address1 = "New Address1",
                 Address2 = "New Address2",
@@ -644,30 +595,22 @@
                 TownOrCity = "TownOrCity"
             };
 
-            var organisationId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
 
-            var organisationData = new OrganisationData
+            var schemeData = new SchemeData()
             {
-                Id = organisationId,
+                Id = schemeId,
                 Contact = newContactDetails,
-                OrganisationAddress = newOrganisationAddress
+                Address = newSchemeAddress
             };
 
-            var request = new UpdateSchemeContactDetails(organisationData, true);
+            var request = new UpdateSchemeContactDetails(schemeData, true);
 
-            var scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.SchemeName)
-                .Returns("Test Scheme Name");
-
+            A.CallTo(() => scheme.SchemeName).Returns("Test Scheme Name");
             var competentAuthority = A.Fake<UKCompetentAuthority>();
-            A.CallTo(() => competentAuthority.Email)
-                .Returns("test@authorityEmail.gov.uk");
-
-            A.CallTo(() => scheme.CompetentAuthority)
-                .Returns(competentAuthority);
-
-            A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId))
-                .Returns(scheme);
+            A.CallTo(() => competentAuthority.Email).Returns("test@authorityEmail.gov.uk");
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeId)).Returns(scheme);
 
             // Act
             await handler.HandleAsync(request);
