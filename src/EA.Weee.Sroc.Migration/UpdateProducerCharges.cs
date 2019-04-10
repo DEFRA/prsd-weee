@@ -115,6 +115,10 @@
 
                 if (memberUpload.ProducerSubmissions.Any())
                 {
+                    if (producer.status == statusType.A)
+                    {
+                        Log.Information(string.Format("Producer {0}", producer.registrationNo));
+                    }
                     memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge, producer.status);
                 }
 
