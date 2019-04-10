@@ -28,21 +28,17 @@
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.RegisteredCompany;
 
-                var organisationAddress = await MakeInternationalAddress(context, "O");
                 var businessAddress = await MakeUKAddress(context, "B");
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
-                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress); //CHECK
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
 
-                var thisTestOrganisationArray =
-                    context.Organisations.Where(o => o.Name == name).ToArray();
+                var thisTestOrganisationArray = context.Organisations.Where(o => o.Name == name).ToArray();
 
                 Assert.NotNull(thisTestOrganisationArray);
                 Assert.NotEmpty(thisTestOrganisationArray);
@@ -69,15 +65,11 @@
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.SoleTraderOrIndividual;
 
-                var organisationAddress = await MakeInternationalAddress(context, "O");
                 var businessAddress = await MakeUKAddress(context, "B");
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateSoleTrader(tradingName);
 
-                //organisation.AddOrUpdateMainContactPerson(contact); //CHECK
-                Assert.True(false);
-                //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 

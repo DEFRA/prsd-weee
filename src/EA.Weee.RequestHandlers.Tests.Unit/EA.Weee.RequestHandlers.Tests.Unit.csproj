@@ -190,7 +190,7 @@
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsHandlerTests.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesExternalHandlerTests.cs" />

@@ -123,10 +123,7 @@
                         }
 
                     case OverviewDisplayOption.ContactDetails:
-
-                        var organisationData =
-                            await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
-                        var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
+                        var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(scheme);
                         contactDetailsModel.SchemeName = scheme.SchemeName;
                         contactDetailsModel.SchemeId = scheme.Id;
                         contactDetailsModel.CanEditContactDetails = scheme.CanEdit;

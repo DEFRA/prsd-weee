@@ -13,8 +13,12 @@
     using Xunit;
     using System;
     using System.Collections.Generic;
+    using Core.Organisations;
+    using Core.Shared;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using Organisation = Domain.Organisation.Organisation;
+    using OrganisationStatus = Domain.Organisation.OrganisationStatus;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class GetSchemesExternalDataAccessTests
     {
@@ -24,7 +28,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var mapper = new SchemeMap(A.Fake<IMapper>());
+                var mapper = new SchemeMap(A.Fake<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
                 var name = "Test Name" + Guid.NewGuid();
                 var tradingName = "Test Trading Name" + Guid.NewGuid();

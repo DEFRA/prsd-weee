@@ -161,7 +161,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.OrganisationAddress(A.Dummy<Guid>(), A.Dummy<Guid>());
+            ActionResult result = await controller.OrganisationAddress(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;
@@ -208,19 +208,18 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A.Dummy<Guid>());
+            Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async Task GetMainContactPerson_OrganisationIdIsValid_ReturnsContactPersonViewModelWithOrganisationId()
+        public async Task GetMainContactPerson_GivenContactId_ReturnsContactPersonViewModelWithOrganisationId()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
 
             ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -228,16 +227,61 @@
                 () => weeeClient,
                 organisationSearcher);
 
-            var organisationId = new Guid("B387D62D-8615-4F67-999E-41F97F14638D");
+            var organisationId = Guid.NewGuid();
+            var contactId = Guid.NewGuid();
+            var addressId = Guid.NewGuid();
+            var contact = A.Fake<ContactData>();
+
+            A.CallTo(() => contact.FirstName).Returns("first");
+            A.CallTo(() => contact.LastName).Returns("last");
+            A.CallTo(() => contact.Position).Returns("position");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetContact>.That.Matches(c => c.ContactId.Equals(contactId) && c.OrganisationId.Equals(organisationId)))).Returns(contact);
 
             // Act
-            var result = await controller.MainContactPerson(organisationId);
+            var result = await controller.MainContactPerson(organisationId, contactId, addressId) as ViewResult;
 
             // Assert
-            var model = ((ViewResult)result).Model;
+            var model = (ContactPersonViewModel)result.Model;
 
-            Assert.IsType<ContactPersonViewModel>(model);
-            Assert.Equal(organisationId, ((ContactPersonViewModel)model).OrganisationId);
+            Assert.Equal(model.FirstName, contact.FirstName);
+            Assert.Equal(model.LastName, contact.LastName);
+            Assert.Equal(model.Position, contact.Position);
+            Assert.Equal(model.AddressId, addressId);
+            Assert.Equal(model.ContactId, contactId);
+            Assert.Equal(organisationId, model.OrganisationId);
+        }
+
+        [Fact]
+        public async Task GetMainContactPerson_GivenNoContactId_ReturnsContactPersonViewModelWithOrganisationId()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var organisationId = Guid.NewGuid();
+            var addressId = Guid.NewGuid();
+            var contact = A.Fake<ContactData>();
+
+            // Act
+            var result = await controller.MainContactPerson(organisationId, null, addressId) as ViewResult;
+
+            // Assert
+            var model = (ContactPersonViewModel)result.Model;
+
+            Assert.Null(model.FirstName);
+            Assert.Null(model.LastName);
+            Assert.Null(model.Position);
+            Assert.Equal(model.AddressId, addressId);
+            Assert.Equal(model.ContactId, null);
+            Assert.Equal(organisationId, model.OrganisationId);
         }
 
         [Fact]
@@ -301,7 +345,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.Type(A.Dummy<string>(), A.Dummy<Guid>());
+            Func<Task<ActionResult>> action = async () => await controller.Type(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
@@ -324,7 +368,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.Type(A.Dummy<string>(), A.Dummy<Guid>());
+            ActionResult result = await controller.Type(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             var model = ((ViewResult)result).Model;

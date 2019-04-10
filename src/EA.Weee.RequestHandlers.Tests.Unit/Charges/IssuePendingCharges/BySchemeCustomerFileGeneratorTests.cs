@@ -25,9 +25,9 @@
         public async Task CreateCustomerFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address = new Address(
+            var address = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -37,14 +37,10 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Contact contact = new Contact("John", "Smith", "Manager");
+            var contact = new Contact("John", "Smith", "Manager");
 
-            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            //organisation.AddOrUpdateMainContactPerson(contact);
-            //CHECK
-            Assert.True(false);
-            Scheme scheme = new Scheme(organisation);
+            var organisation = Organisation.CreateSoleTrader("Test organisation");
+            var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
@@ -52,9 +48,12 @@
                 A.Dummy<ObligationType>(),
                 authority);
 
-            int complianceYear = A.Dummy<int>();
+            scheme.AddOrUpdateMainContactPerson(contact);
+            scheme.AddOrUpdateAddress(address);
 
-            MemberUpload memberUpload = new MemberUpload(
+            var complianceYear = A.Dummy<int>();
+
+            var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -65,17 +64,16 @@
 
             memberUpload.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            memberUploads.Add(memberUpload);
+            var memberUploads = new List<MemberUpload> { memberUpload };
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
             ulong id = 12345;
 
             // Act
             var result = await generator.CreateAsync(id, invoiceRun);
-            CustomerFile customerFile = result.IbisFile;
+            var customerFile = result.IbisFile;
 
             // Assert
             Assert.Equal((ulong)12345, customerFile.FileID);
@@ -90,9 +88,9 @@
         public async Task CreateCustomerFile_WithOneMemberUpload_CreatesOneCustomer()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address = new Address(
+            var address = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -102,24 +100,23 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Contact contact = new Contact("John", "Smith", "Manager");
+            var contact = new Contact("John", "Smith", "Manager");
 
-            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address); //check
-            //organisation.AddOrUpdateMainContactPerson(contact);
-            //CHECK
-            Assert.False(true);
-            Scheme scheme = new Scheme(organisation);
+            var organisation = Organisation.CreateSoleTrader("Test organisation");
+            
+            var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
                 "WEE00000001",
                 A.Dummy<ObligationType>(),
                 authority);
+            scheme.AddOrUpdateAddress(address);
+            scheme.AddOrUpdateMainContactPerson(contact);
 
-            int complianceYear = A.Dummy<int>();
+            var complianceYear = A.Dummy<int>();
 
-            MemberUpload memberUpload = new MemberUpload(
+            var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -130,22 +127,21 @@
 
             memberUpload.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            memberUploads.Add(memberUpload);
+            var memberUploads = new List<MemberUpload> { memberUpload };
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
-            CustomerFile customerFile = result.IbisFile;
+            var customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
             Assert.Equal(1, customerFile.Customers.Count);
 
-            Customer customer = customerFile.Customers[0];
+            var customer = customerFile.Customers[0];
 
             Assert.NotNull(customer);
             Assert.Equal("WEE00000001", customer.CustomerReference);
@@ -169,9 +165,9 @@
         public async Task CreateCustomerFile_WithTwoMemberUploadsForTheSameScheme_CreatesOneCustomer()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address = new Address(
+            var address = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -181,22 +177,21 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address); 
-            //organisation.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-            //CHECK
-            Assert.False(true);
-            Scheme scheme = new Scheme(organisation);
+            var organisation = Organisation.CreateSoleTrader("Test organisation");
+
+            var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
                 "WEE00000001",
                 A.Dummy<ObligationType>(),
                 authority);
+            scheme.AddOrUpdateAddress(address);
+            scheme.AddOrUpdateMainContactPerson(A.Fake<Contact>());
 
-            int complianceYear = A.Dummy<int>();
+            var complianceYear = A.Dummy<int>();
 
-            MemberUpload memberUpload1 = new MemberUpload(
+            var memberUpload1 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -207,7 +202,7 @@
 
             memberUpload1.Submit(A.Dummy<User>());
 
-            MemberUpload memberUpload2 = new MemberUpload(
+            var memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -218,23 +213,21 @@
 
             memberUpload2.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            memberUploads.Add(memberUpload1);
-            memberUploads.Add(memberUpload2);
+            var memberUploads = new List<MemberUpload> { memberUpload1, memberUpload2 };
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
-            CustomerFile customerFile = result.IbisFile;
+            var customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
             Assert.Equal(1, customerFile.Customers.Count);
 
-            Customer customer = customerFile.Customers[0];
+            var customer = customerFile.Customers[0];
             Assert.NotNull(customer);
         }
 
@@ -246,9 +239,9 @@
         public async Task CreateCustomerFile_WithTwoMemberUploadsForDifferentSchemes_CreatesTwoCustomers()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address1 = new Address(
+            var address1 = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -258,22 +251,21 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Organisation organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
-            //organisation1.AddOrUpdateAddress(AddressType.OrganisationAddress, address1);
-            //organisation1.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-            //check
-            Assert.True(false);
-            Scheme scheme1 = new Scheme(organisation1);
+            var organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
+            
+            var scheme1 = new Scheme(organisation1);
             scheme1.UpdateScheme(
                 "Test scheme 2",
                 "WEE/AA1111AA/SCH",
                 "WEE00000001",
                 A.Dummy<ObligationType>(),
                 authority);
+            scheme1.AddOrUpdateMainContactPerson(A.Fake<Contact>());
+            scheme1.AddOrUpdateAddress(address1);
 
-            int complianceYear1 = A.Dummy<int>();
+            var complianceYear1 = A.Dummy<int>();
 
-            MemberUpload memberUpload1 = new MemberUpload(
+            var memberUpload1 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -284,7 +276,7 @@
 
             memberUpload1.Submit(A.Dummy<User>());
 
-            Address address2 = new Address(
+            var address2 = new Address(
                 "2 High Street",
                 null,
                 "Some town",
@@ -294,22 +286,21 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Organisation organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
-            //organisation2.AddOrUpdateAddress(AddressType.OrganisationAddress, address2);
-            //organisation2.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
-            //CHECK
-            Assert.False(true);
-            Scheme scheme2 = new Scheme(organisation2);
+            var organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
+            
+            var scheme2 = new Scheme(organisation2);
             scheme2.UpdateScheme(
                 "Test scheme 2",
                 "WEE/BB2222BB/SCH",
                 "WEE00000002",
                 A.Dummy<ObligationType>(),
                 authority);
+            scheme2.AddOrUpdateAddress(address2);
+            scheme2.AddOrUpdateMainContactPerson(A.Fake<Contact>());
 
-            int complianceYear2 = A.Dummy<int>();
+            var complianceYear2 = A.Dummy<int>();
 
-            MemberUpload memberUpload2 = new MemberUpload(
+            var memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -320,27 +311,25 @@
 
             memberUpload2.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            memberUploads.Add(memberUpload1);
-            memberUploads.Add(memberUpload2);
+            var memberUploads = new List<MemberUpload> { memberUpload1, memberUpload2 };
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
-            CustomerFile customerFile = result.IbisFile;
+            var customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
             Assert.Equal(2, customerFile.Customers.Count);
 
-            Customer customer1 = customerFile.Customers[0];
+            var customer1 = customerFile.Customers[0];
             Assert.NotNull(customer1);
             Assert.Equal("WEE00000001", customer1.CustomerReference);
 
-            Customer customer2 = customerFile.Customers[1];
+            var customer2 = customerFile.Customers[1];
             Assert.NotNull(customer2);
             Assert.Equal("WEE00000002", customer2.CustomerReference);
         }
@@ -349,26 +338,11 @@
         public async Task CreateCustomerFile_WithExceptionThrown_ReturnsError_AndNoCustomerFile()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address = new Address(
-                "1 High Street",
-                null,
-                "Some town",
-                "Some county",
-                null, // A null value will cause the Ibis class to throw an exception.
-                new Country(Guid.NewGuid(), "UK - England"),
-                "01234 567890",
-                "someone@domain.com");
-
-            Contact contact = new Contact("John", "Smith", "Manager");
-
-            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            //organisation.AddOrUpdateMainContactPerson(contact);
-            //CHECK
-            Assert.False(true);
-            Scheme scheme = new Scheme(organisation);
+            var organisation = Organisation.CreateSoleTrader("Test organisation");
+            
+            var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
@@ -376,9 +350,9 @@
                 A.Dummy<ObligationType>(),
                 authority);
 
-            int complianceYear = A.Dummy<int>();
+            var complianceYear = A.Dummy<int>();
 
-            MemberUpload memberUpload = new MemberUpload(
+            var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -389,12 +363,11 @@
 
             memberUpload.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            memberUploads.Add(memberUpload);
+            var memberUploads = new List<MemberUpload> { memberUpload };
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
@@ -408,9 +381,9 @@
         public async Task CreateCustomerFile_WithNonUkAddress_ConcatenatesPostCodeAndCountry()
         {
             // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+            var authority = A.Dummy<UKCompetentAuthority>();
 
-            Address address = new Address(
+            var address = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -420,24 +393,23 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            Contact contact = new Contact("John", "Smith", "Manager");
+            var contact = new Contact("John", "Smith", "Manager");
 
-            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
-            //organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
-            //organisation.AddOrUpdateMainContactPerson(contact);
-            //check
-            Assert.False(true);
-            Scheme scheme = new Scheme(organisation);
+            var organisation = Organisation.CreateSoleTrader("Test organisation");
+            
+            var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
                 "WEE/AA1111AA/SCH",
                 "WEE00000001",
                 A.Dummy<ObligationType>(),
                 authority);
+            scheme.AddOrUpdateMainContactPerson(contact);
+            scheme.AddOrUpdateAddress(address);
 
-            int complianceYear = A.Dummy<int>();
+            var complianceYear = A.Dummy<int>();
 
-            MemberUpload memberUpload = new MemberUpload(
+            var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
@@ -448,22 +420,22 @@
 
             memberUpload.Submit(A.Dummy<User>());
 
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            var memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+            var invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = await generator.CreateAsync(0, invoiceRun);
-            CustomerFile customerFile = result.IbisFile;
+            var customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
             Assert.Equal(1, customerFile.Customers.Count);
 
-            Customer customer = customerFile.Customers[0];
+            var customer = customerFile.Customers[0];
             Assert.Equal("AABB  Netherlands", customer.Address.PostCode);
         }
 
@@ -475,7 +447,7 @@
         [InlineData(null, "Netherlands", null)]
         public void GetIbisPostCode_WithNonUkAddress_ConcatenatesPostCodeAndCountry(string postCode, string countryName, string expectedResult)
         {
-            Address address = new Address(
+            var address = new Address(
                 "1 High Street",
                 null,
                 "Some town",
@@ -485,7 +457,7 @@
                 "01234 567890",
                 "someone@domain.com");
 
-            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+            var generator = new BySchemeCustomerFileGenerator();
 
             // Act
             var result = generator.GetIbisPostCode(address);
