@@ -43,10 +43,12 @@
 
             if (source.Aatfs != null)
             {
+                var schemeList = new List<ReceivedPcsData>();
                 foreach (var aatf in source.Aatfs)
                 {
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
+                    var pcsReceivedData = source.SchemeDataItems.Where(s => s.Id == aatf.Id).ToList();
                     var obligatedData = new AatfObligatedData(aatf)
                     {
                         WeeeReceived = tonnageUtilities.SumObligatedValues(weeeReceivedData),
