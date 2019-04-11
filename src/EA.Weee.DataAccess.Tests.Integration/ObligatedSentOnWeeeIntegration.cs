@@ -7,6 +7,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -75,7 +76,7 @@
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator);
-            var country = new Country(Guid.NewGuid(), "TestCountry");
+            var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(country);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
 
