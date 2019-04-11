@@ -30,20 +30,23 @@
 
             var contactPerson = ValueObjectInitializer.CreateContact(message.ContactPerson);
 
+            Guid id;
             if (message.ContactId.HasValue)
             {
                 var contact = await dataAccess.GetById<Contact>(message.ContactId.Value);
 
                 contact.Overwrite(contactPerson);
+
+                id = contact.Id;
             }
             else
             {
-                await dataAccess.Add<Contact>(contactPerson);
+                id = await dataAccess.Add<Contact>(contactPerson);
             }
             
             await db.SaveChangesAsync();
 
-            return contactPerson.Id;
+            return id;
         }
     }
 }
