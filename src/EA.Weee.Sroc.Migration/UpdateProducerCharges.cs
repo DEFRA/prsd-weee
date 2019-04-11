@@ -48,8 +48,8 @@
                     memberUploadDataAccess.ResetMemberUploadsAnnualCharge(memberUploads);
 
                     context.SaveChanges();
-   
-                    //var ids = new List<Guid>() { Guid.Parse("D5D6A346-A113-4153-AA0B-A97B00D3774C"), Guid.Parse("F1E03C85-F42D-4FD3-8F52-A98C00F9FD62") };
+
+                    //var ids = new List<Guid>() { Guid.Parse("12EF32AD-44F8-4720-A96C-A9A600CE2593"), Guid.Parse("72FA232F-B1ED-4F5F-AACA-A9FC00D7B806"), Guid.Parse("D31B4E6D-B490-48E5-96FC-AA1E00F0595A") };
                     foreach (var memberUpload in memberUploads)
                     {
                         //.Where(m => ids.Contains(m.Id)))

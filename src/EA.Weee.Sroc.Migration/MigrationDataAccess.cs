@@ -60,8 +60,8 @@
             var producersMember = context.ProducerSubmissions
                 .Where(p => p.MemberUploadId == memberUploadId).ToList();
 
-            var producer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
-                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
+            var producer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(name.Trim())
+                            || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(name.Trim()))).ToList();
             
             if (producer.Count() == 1)
             {
@@ -81,11 +81,13 @@
                 var findProducer = new List<ProducerSubmission>();
                 if (company.GetType() == typeof(companyType))
                 {
-                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(((companyType)company).companyName)).ToList();
+                    Log.Information(string.Format("1. {0}", ((companyType)company).companyName));
+                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(((companyType)company).companyName.Trim())).ToList();
                 }
                 else if (company.GetType() == typeof(partnershipType))
                 {
-                    findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(((partnershipType)company).partnershipName)).ToList();
+                    Log.Information(string.Format("2. {0}", ((partnershipType)company).partnershipName));
+                    findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(((partnershipType)company).partnershipName.Trim())).ToList();
                 }
 
                 if (producer.Count() == 1)

@@ -69,8 +69,8 @@
 
         public ProducerSubmission GetProducerRegistrationForInsert(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, MemberUpload upload, string name, producerType producerType)
         {
-            var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Equals(name)
-                                                        || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Equals(name))).ToList();
+            var producer = context.ProducerSubmissions.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(name.Trim())
+                                                        || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(name.Trim()))).ToList();
 
             var producerv2 = producer.Where(p => p.UpdatedDate < upload.CreatedDate && p.MemberUploadId != upload.Id && p.MemberUpload.IsSubmitted).ToList();
 
