@@ -71,7 +71,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId });
+                    return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
                 }
             }
 
