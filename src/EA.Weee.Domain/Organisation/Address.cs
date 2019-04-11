@@ -39,7 +39,7 @@
 
         public string Address1
         {
-            get { return address1; }
+            get => address1;
             private set
             {
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
@@ -53,7 +53,7 @@
 
         public string Address2
         {
-            get { return address2; }
+            get => address2;
             private set
             {
                 if (value != null && value.Length > 35)
@@ -66,7 +66,7 @@
 
         public string TownOrCity
         {
-            get { return townOrCity; }
+            get => townOrCity;
             private set
             {
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
@@ -81,7 +81,7 @@
 
         public string CountyOrRegion
         {
-            get { return countyOrRegion; }
+            get => countyOrRegion;
             private set
             {
                 if (value != null && value.Length > 35)
@@ -95,7 +95,7 @@
 
         public string Postcode
         {
-            get { return postcode; }
+            get => postcode;
             private set
             {
                 if (value != null && value.Length > 10)
@@ -108,7 +108,7 @@
 
         public string Telephone
         {
-            get { return telephone; }
+            get => telephone;
             private set
             {
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
@@ -122,7 +122,7 @@
 
         public string Email
         {
-            get { return email; }
+            get => email;
             private set
             {
                 Guard.ArgumentNotNullOrEmpty(() => value, value);

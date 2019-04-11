@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
     using System;
     using System.Collections.Generic;
@@ -9,15 +9,13 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
+    using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.Organisations;
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
-    using Requests.Organisations;
     using Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class AddContactPersonToSchemeHandlerTests
     {
@@ -30,7 +28,7 @@
             AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
         [Fact]
-        public async Task AddContactPersonToSchemeHandler_NotOrganisationUser_ThrowsSecurityException()
+        public async Task AddContactPersonHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new AddContactPersonHandler(A.Fake<WeeeContext>(), denyingAuthorization, A.Fake<IGenericDataAccess>());
             var message = new AddContactPerson(A.Dummy<Guid>(), A.Dummy<ContactData>(), A.Dummy<Guid?>());
@@ -41,17 +39,12 @@
         }
 
         [Fact]
-        public async Task AddContactPersonToSchemeHandler_GivenNullContactId_AddsContactPerson()
+        public async Task AddContactPersonHandler_GivenNullContactId_AddsContactPerson()
         {
             var schemeId = Guid.NewGuid();
             var contactId = Guid.NewGuid();
-            var scheme = GetSchemeWithId(schemeId);
             var dataAccess = A.Fake<IGenericDataAccess>();
             var context = A.Fake<WeeeContext>();
-            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Scheme>
-            {
-                scheme
-            }));
 
             var handler = new AddContactPersonHandler(context, permissiveAuthorization, dataAccess);
             var message = new AddContactPerson(schemeId, new ContactData
@@ -61,52 +54,45 @@
                 Position = "Some position"
             }, null);
 
-            await handler.HandleAsync(message);
+            A.CallTo(() => dataAccess.Add<Contact>(A<Contact>.That.Matches(c => c.FirstName.Equals(message.ContactPerson.FirstName)
+                                                                                && c.LastName.Equals(message.ContactPerson.LastName) &&
+                                                                                c.Position.Equals(message.ContactPerson.Position))))
+                .Returns(contactId);
+        
+            var result = await handler.HandleAsync(message);
 
-            Assert.True(scheme.HasContact);
-            Assert.Equal(message.ContactPerson.FirstName, scheme.Contact.FirstName);
-            Assert.Equal(message.ContactPerson.LastName, scheme.Contact.LastName);
-            Assert.Equal(message.ContactPerson.Position, scheme.Contact.Position);
+            A.CallTo(() => dataAccess.Add<Contact>(A<Contact>.That.Matches(c => c.FirstName.Equals(message.ContactPerson.FirstName)
+            && c.LastName.Equals(message.ContactPerson.LastName) && c.Position.Equals(message.ContactPerson.Position)))).MustHaveHappened(Repeated.Exactly.Once).Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+
+            result.Should().Be(contactId);
         }
 
         [Fact]
-        public async Task AddContactPersonToSchemeHandler_GivenContactId_ContactPersonUpdated()
+        public async Task AddContactPersonHandler_GivenContactId_ContactPersonUpdated()
         {
             var schemeId = Guid.NewGuid();
             var contactId = Guid.NewGuid();
-            var scheme = GetSchemeWithId(schemeId);
             var dataAccess = A.Fake<IGenericDataAccess>();
             var context = A.Fake<WeeeContext>();
             var contact = A.Fake<Contact>();
 
-            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Scheme>
-            {
-                scheme
-            }));
-
             var handler = new AddContactPersonHandler(context, permissiveAuthorization, dataAccess);
             var message = new AddContactPerson(schemeId, new ContactData
             {
                 FirstName = "Some first name",
                 LastName = "Some last name",
                 Position = "Some position"
-            }, null);
+            }, contactId);
 
             A.CallTo(() => dataAccess.GetById<Contact>(contactId)).Returns(contact);
 
             await handler.HandleAsync(message);
 
-            Assert.True(scheme.HasContact);
-            Assert.Equal(message.ContactPerson.FirstName, scheme.Contact.FirstName);
-            Assert.Equal(message.ContactPerson.LastName, scheme.Contact.LastName);
-            Assert.Equal(message.ContactPerson.Position, scheme.Contact.Position);
-        }
+            contact.FirstName.Should().Be(message.ContactPerson.FirstName);
+            contact.LastName.Should().Be(message.ContactPerson.LastName);
+            contact.Position.Should().Be(message.ContactPerson.Position);
 
-        private Scheme GetSchemeWithId(Guid id)
-        {
-            var scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.Id).Returns(id);
-            return scheme;
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
