@@ -84,7 +84,6 @@
             context.Schemes.Add(scheme);
             context.Aatfs.Add(aatf);
             context.Returns.Add(@return);
-            context.Countries.Add(country);
             context.AatfAddress.Add(siteAddress);
 
             await context.SaveChangesAsync();
