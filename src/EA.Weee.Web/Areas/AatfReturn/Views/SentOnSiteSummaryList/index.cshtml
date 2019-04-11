@@ -45,7 +45,7 @@
                     @address.SiteAddress.Name
                 </div>
                 <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                    @address.OperatorAddress.Name, @address.OperatorAddress.Address1, @address.OperatorAddress.Address2, @address.OperatorAddress.TownOrCity, @address.OperatorAddress.CountyOrRegion, @address.OperatorAddress.Postcode, @address.OperatorAddress.CountryName
+                   @address.OperatorAddressLong
                 </div>
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-grid-column-one-third weee-tonnage-center-aligned-display">
@@ -68,18 +68,3 @@
     Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
     }
 </section>
-@section scripts {
-<style type="text/css">
-        .govuk-grid-column-one-fifth {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 0 15px;
-        }
-        @@media(min-width:40.0625em){
-        .govuk-grid-column-one-fifth {
-            width: 20%;
-            float: left;
-        }
-    }
-</style>
-}

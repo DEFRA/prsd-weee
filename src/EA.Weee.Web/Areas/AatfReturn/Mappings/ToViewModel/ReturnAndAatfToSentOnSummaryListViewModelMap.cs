@@ -34,21 +34,44 @@
                 ReturnId = source.ReturnId
             };
 
-            var schemeList = new List<WeeeSentOnSummaryListData>();
+            var siteList = new List<WeeeSentOnSummaryListData>();
 
             foreach (var item in source.WeeeSentOnDataItems)
             {
-                var receivedPcsData = new WeeeSentOnSummaryListData()
+                var siteData = new WeeeSentOnSummaryListData()
                 {
                     Tonnages = tonnageUtilities.SumObligatedValues(item.Tonnages),
                     SiteAddress = item.SiteAddress,
                     OperatorAddress = item.OperatorAddress
                 };
 
-                schemeList.Add(receivedPcsData);
+                var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
+
+                if (siteData.OperatorAddress.Address2 != null)
+                {
+                    var address2 = siteData.OperatorAddress.Address2 + ", ";
+                    operatorAddressBuilder += address2;
+                }
+
+                if (siteData.OperatorAddress.TownOrCity != null)
+                {
+                    var town = siteData.OperatorAddress.TownOrCity + ", ";
+                    operatorAddressBuilder += town;
+                }
+
+                if (siteData.OperatorAddress.CountyOrRegion != null)
+                {
+                    var county = siteData.OperatorAddress.CountyOrRegion + ", ";
+                    operatorAddressBuilder += county;
+                }
+
+                operatorAddressBuilder += siteData.OperatorAddress.CountryName;
+                siteData.OperatorAddressLong = operatorAddressBuilder;
+
+                siteList.Add(siteData);
             }
 
-            viewModel.Sites = schemeList;
+            viewModel.Sites = siteList;
 
             return viewModel;
         }
