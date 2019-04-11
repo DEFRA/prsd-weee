@@ -7,6 +7,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using RequestHandlers.Organisations;
@@ -41,8 +42,9 @@
         {
             var addressId = Guid.NewGuid();
 
-            WeeeContext context = A.Fake<WeeeContext>();
+            var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Addresses).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Address>()));
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
             var handler = new CopyOrganisationAddressIntoRegisteredOfficeHandler(permissiveAuthorization, context);
             var message = new CopyOrganisationAddressIntoRegisteredOffice(Guid.NewGuid(), addressId);
@@ -58,13 +60,14 @@
         public async Task CopyOrganisationAddressIntoRegisteredOfficeHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             var organisationId = Guid.NewGuid();
-            
-            WeeeContext context = A.Fake<WeeeContext>();
+            var address = MakeAddress();
+
+            var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
-            A.CallTo(() => context.Addresses).Returns(dbHelper.GetAsyncEnabledDbSet(MakeAddress()));
+            A.CallTo(() => context.Addresses).Returns(dbHelper.GetAsyncEnabledDbSet(address));
 
             var handler = new CopyOrganisationAddressIntoRegisteredOfficeHandler(permissiveAuthorization, context);
-            var message = new CopyOrganisationAddressIntoRegisteredOffice(organisationId, Guid.NewGuid());
+            var message = new CopyOrganisationAddressIntoRegisteredOffice(organisationId, address.First().Id);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
 
@@ -115,7 +118,7 @@
 
         private DbSet<Address> MakeAddress()
         {
-            var address = A.Fake<Address>();
+            var address = new Address("address1", "address2", "town", "county", "postcode", new Country(Guid.NewGuid(), "country"), "telephone", "email");
 
             return dbHelper.GetAsyncEnabledDbSet(new[]
             {

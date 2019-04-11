@@ -1,18 +1,17 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Scheme;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Requests.Organisations;
+    using Domain;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using Email;
     using FakeItEasy;
+    using RequestHandlers.Organisations;
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
@@ -20,7 +19,7 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class UpdateOrganisationContactDetailsHandlerTests
+    public class UpdateSchemeContactDetailsHandlerTests
     {
         [Fact]
         public async Task HandleAsync_WithNonInternalUserOrOrganisationUser_ThrowsSecurityException()
@@ -70,12 +69,13 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task HandleAsync_WithValidData_FetchesOrganisationAndUpdatesAndSaves()
+        public async Task HandleAsync_WithValidData_FetchesSchemeAndUpdatesAndSaves()
         {
             // Arrange
             var schemeData = new SchemeData
             {
-                Id = new Guid("93646500-85A1-4F9D-AE18-73265426EF40"),
+                Id = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
                 Contact = new ContactData { FirstName = "FirstName", LastName = "LastName", Position = "Position" },
                 Address = new Core.Shared.AddressData
                 {
@@ -84,7 +84,7 @@
                     TownOrCity = "Town",
                     CountyOrRegion = "County",
                     Postcode = "Postcode",
-                    CountryId = new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"),
+                    CountryId = Guid.NewGuid(),
                     Telephone = "012345678",
                     Email = "email@domain.com"
                 }
@@ -97,14 +97,10 @@
 
             var scheme = A.Dummy<Scheme>();
 
-            A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
-                .Returns(scheme);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeData.OrganisationId)).Returns(scheme);
 
-            var country = new Country(
-                new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"),
-                "Name");
-            A.CallTo(() => dataAccess.FetchCountryAsync(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC")))
-                .Returns(country);
+            var country = new Country(schemeData.Address.CountryId, "Name");
+            A.CallTo(() => dataAccess.FetchCountryAsync(schemeData.Address.CountryId)).Returns(country);
 
             var handler =
                 new UpdateSchemeContactDetailsHandler(authorization, dataAccess, weeeEmailService);
@@ -113,8 +109,7 @@
             var result = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("93646500-85A1-4F9D-AE18-73265426EF40")))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeData.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.Equal("FirstName", scheme.Contact.FirstName);
             Assert.Equal("LastName", scheme.Contact.LastName);
@@ -124,7 +119,7 @@
             Assert.Equal("Town", scheme.Address.TownOrCity);
             Assert.Equal("County", scheme.Address.CountyOrRegion);
             Assert.Equal("Postcode", scheme.Address.Postcode);
-            Assert.Equal(new Guid("1AF4BB2F-D2B0-41EA-BFD8-B83764C1ECBC"), scheme.Address.Country.Id);
+            Assert.Equal(schemeData.Address.CountryId, scheme.Address.Country.Id);
             Assert.Equal("012345678", scheme.Address.Telephone);
             Assert.Equal("email@domain.com", scheme.Address.Email);
 
@@ -248,7 +243,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_WithOrganisationAddressChange_SendNotificationTrue_SendsChangeEmail()
+        public async Task HandleAsync_WithSchemeAddressChange_SendNotificationTrue_SendsChangeEmail()
         {
             // Arrange
             var authorization = A.Dummy<IWeeeAuthorization>();
@@ -306,7 +301,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_WithOrganisationAddressChange_SendNotificationFalse_DoesNotSendChangeEmail()
+        public async Task HandleAsync_WithSchemeAddressChange_SendNotificationFalse_DoesNotSendChangeEmail()
         {
             // Arrange
             var authorization = A.Dummy<IWeeeAuthorization>();
@@ -365,7 +360,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_WithOrganisationAddressAndContactDetailsUnchanged_SendNotificationTrue_DoesNotSendChangeEmail()
+        public async Task HandleAsync_WithSchemeAddressAndContactDetailsUnchanged_SendNotificationTrue_DoesNotSendChangeEmail()
         {
             // Arrange
             var authorization = A.Dummy<IWeeeAuthorization>();

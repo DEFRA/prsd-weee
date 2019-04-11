@@ -20,9 +20,7 @@
         public string TradingName { get; set; }
 
         public string CompanyRegistrationNumber { get; set; }
-
         public AddressData OrganisationAddress { get; set; }
-
         public AddressData BusinessAddress { get; set; }
 
         public AddressData NotificationAddress { get; set; }
