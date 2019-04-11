@@ -2,6 +2,7 @@
 {
     using EA.Weee.Domain.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface ISentOnAatfSiteDataAccess
@@ -13,5 +14,7 @@
         Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id);
 
         Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
+
+        Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
     }
 }
