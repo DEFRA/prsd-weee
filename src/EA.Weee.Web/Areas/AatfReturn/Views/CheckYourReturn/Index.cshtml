@@ -50,107 +50,204 @@
                     @aatf.Aatf.ApprovalNumber
                 </div>
             </div>
+
+            <div class="govuk-!-padding-bottom-2"></div>
+
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-quarter">
-                    B2C (tonnes)
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    B2B (tonnes)
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third">
+                        <strong>B2C (tonnes)</strong>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <strong>B2B (tonnes)</strong>
+                    </div>
                 </div>
             </div>
+
+            <div class="govuk-!-padding-bottom-2"></div>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    Received for treatment
+                    <strong>Received for treatment</strong>
                 </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeReceived.B2C
-                    </p>
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeReceived.B2B
-                    </p>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeReceived.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeReceived.B2B
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change received for treatment</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                        </p>
+                    </div>
                 </div>
             </div>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    Sent to another AATF/ATF
+                    <strong>Sent to another AATF/ATF</strong>
                 </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeSentOn.B2C
-                    </p>
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeSentOn.B2B
-                    </p>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeSentOn.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeSentOn.B2B
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change sent to another AATF/ATF</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                        </p>
+                    </div>
                 </div>
             </div>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    Reused as a whole appliance
+                    <strong>Reused as a whole appliance</strong>
                 </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeReused.B2C
-                    </p>
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <p>
-                        @aatf.WeeeReused.B2B
-                    </p>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeReused.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            @aatf.WeeeReused.B2B
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <p>
+                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change reused as a whole appliance</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         }
 
     </div>
 
-    <h2 class="govuk-heading-m" style="margin-bottom: 0px;">Non-obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-2"></div>
+
     <div class="govuk-grid-row govuk-table__cell">
-        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-            @*<div class="govuk-grid-row govuk-table__cell">*@
-            @*<div class="govuk-grid-row">*@
-            @*<div class="govuk-table govuk-grid-column-one-half">*@
-            <div class="govuk-grid-column-one-quarter">
+
+        <div class="govuk-grid-column-half">
+            <h2>Non-obligated WEEE</h2>
+        </div>
+    </div>
+    <div class="govuk-!-padding-bottom-2"></div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">&nbsp;</div>
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-third">
                 <p>
-                    WEEE received (tonnes)
+                    <strong>Total</strong>
                 </p>
             </div>
-            <div class="govuk-table govuk-grid-column-one-quarter">
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <p>
+                <strong>WEEE received (tonnes)</strong>
+            </p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-third">
                 <p>
                     @Model.NonObligatedTonnageTotal
                 </p>
             </div>
-            @*</div>*@
+
+            <div class="govuk-grid-column-one-third">
+                <p>
+                    <span class="govuk-visually-hidden">Change non obligated</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                </p>
+            </div>
         </div>
     </div>
 
-
-        <div class="govuk-!-padding-bottom-6"></div>
-
-        @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-
-            @Html.HiddenFor(m => m.ReturnId)
-            @Html.HiddenFor(m => m.OrganisationId)
-
-            <div class="govuk-form-group">
-                <button class="govuk-button" type="submit">Continue</button>
-            </div>
-        }
-
-        <div class="govuk-body govuk-!-font-size-19">
-            <a class="govuk-link govuk-link--no-visited-state">
-                @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
-            </a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <p>
+                <strong>WEEE retained by a DCF (tonnes)</strong>
+            </p>
         </div>
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-third">
+                <p>
+                    @Model.NonObligatedTonnageTotalDcf
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <p>
+                    <span class="govuk-visually-hidden">Change non obligated DCF</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-!-padding-bottom-6"></div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+            @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.ReturnId)
+                @Html.HiddenFor(m => m.OrganisationId)
+
+                <div class="govuk-form-group">
+                    <button class="govuk-button" type="submit">Continue</button>
+                </div>
+            }
+
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-body govuk-!-font-size-19">
+                <a class="govuk-link govuk-link--no-visited-state">
+                    @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @*@using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Continue</button>
+        </div>
+    }
+
+    <div class="govuk-!-padding-bottom-2"></div>
+
+    <div class="govuk-body govuk-!-font-size-19">
+        <a class="govuk-link govuk-link--no-visited-state">
+            @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+        </a>
+    </div>*@
 </section>
 
-<section id="main-content">
+@*<section id="main-content">
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
@@ -276,4 +373,4 @@
             @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
         </a>
     </div>
-</section>
+</section>*@
