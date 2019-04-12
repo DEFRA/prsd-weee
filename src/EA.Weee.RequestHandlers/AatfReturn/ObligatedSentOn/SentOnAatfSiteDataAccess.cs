@@ -3,6 +3,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -38,6 +39,11 @@
         public async Task<AatfAddress> GetWeeeSentOnSiteAddress(Guid id)
         {
             return await context.WeeeSentOn.Where(w => w.Id == id).Select(w => w.SiteAddress).SingleOrDefaultAsync();
+        }
+
+        public async Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId)
+        {
+            return await context.WeeeSentOn.Where(w => w.AatfId == aatfId && w.ReturnId == returnId).ToListAsync();
         }
     }
 }

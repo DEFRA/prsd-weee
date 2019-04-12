@@ -102,6 +102,8 @@
     <Compile Include="AatfReturn\QuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnData.cs" />
     <Compile Include="AatfReturn\Scheme.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnData.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnSummaryListData.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
