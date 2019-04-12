@@ -8,9 +8,6 @@
     public class OrganisationAddressTests
     {
         [Theory]
-        //[InlineData("Organisation Address", "Sole trader or individual")] //CHECK
-        //[InlineData("Organisation Address", "Partnership")]
-        //[InlineData("Organisation Address", "Registered Company")]
         [InlineData("Registered or PPB address", "Sole trader or individual")]
         [InlineData("Registered or PPB address", "Partnership")]
         [InlineData("Registered or PPB address", "Registered Company")]

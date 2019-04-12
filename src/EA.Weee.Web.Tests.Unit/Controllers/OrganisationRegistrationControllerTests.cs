@@ -649,7 +649,6 @@
             var orgData = new PublicOrganisationData
             {
                 Id = Guid.NewGuid(),
-                Address = new AddressData(),
                 DisplayName = "Test"
             };
 

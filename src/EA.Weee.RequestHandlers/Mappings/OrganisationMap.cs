@@ -37,21 +37,13 @@
                     (OrganisationType)
                         Enum.Parse(typeof(OrganisationType),
                             source.OrganisationType.Value.ToString()),
-
-                // Use existing mappers to map addresses and contact
+                // Use existing mappers to map addresses
                 BusinessAddress = source.BusinessAddress != null
                     ? addressMap.Map(source.BusinessAddress)
                     : null,
-                //Contact = source.Contact != null
-                //    ? contactMap.Map(source.Contact)
-                //    : null, //CHECK
                 NotificationAddress = source.NotificationAddress != null
                     ? addressMap.Map(source.NotificationAddress)
                     : null,
-                //OrganisationAddress = source.OrganisationAddress != null
-                //    ? addressMap.Map(source.OrganisationAddress)
-                //    : null, //CHECK
-                //HasOrganisationAddress = source.HasOrganisationAddress,
                 HasBusinessAddress = source.HasBusinessAddress,
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,
