@@ -380,7 +380,6 @@
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
-          <Property Name="HasAnnualCharge" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -1933,7 +1932,6 @@
           <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
           <NavigationProperty Name="InvoiceRun" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="MemberUpload" ToRole="InvoiceRun" />
-          <Property Name="HasAnnualCharge" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Organisation" Relationship="EA.Weee.TestModel.FK_MemberUpload_Organisation" FromRole="MemberUpload" ToRole="Organisation" />
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
         </EntityType>
@@ -3884,7 +3882,6 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
-                <ScalarProperty Name="HasAnnualCharge" ColumnName="HasAnnualCharge" />
                 <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
                 <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
                 <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />
