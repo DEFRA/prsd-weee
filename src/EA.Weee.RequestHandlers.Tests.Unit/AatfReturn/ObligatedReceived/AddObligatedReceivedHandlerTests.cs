@@ -16,6 +16,7 @@
     using Requests.AatfReturn.Obligated;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
     using Scheme = Domain.Scheme.Scheme;
 
     public class AddObligatedReceivedHandlerTests

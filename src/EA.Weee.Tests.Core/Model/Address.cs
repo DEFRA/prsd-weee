@@ -18,7 +18,7 @@ namespace EA.Weee.Tests.Core.Model
         {
             this.Organisations = new HashSet<Organisation>();
             this.Organisations1 = new HashSet<Organisation>();
-            this.Organisations2 = new HashSet<Organisation>();
+            this.Schemes = new HashSet<Scheme>();
         }
     
         public System.Guid Id { get; set; }
@@ -35,6 +35,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual Country Country { get; set; }
         public virtual ICollection<Organisation> Organisations { get; set; }
         public virtual ICollection<Organisation> Organisations1 { get; set; }
-        public virtual ICollection<Organisation> Organisations2 { get; set; }
+        public virtual ICollection<Scheme> Schemes { get; set; }
     }
 }

@@ -21,7 +21,7 @@
                 What are the details for your registered office?
             </h1>
         </header>
-       
+
         <div style="margin-bottom: 1.66667em;">
             <p>For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
         </div>
@@ -32,7 +32,9 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
-
+        @Html.HiddenFor(m => m.AddressId)
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ContactId)
         @Html.EditorFor(m => m.Address)
 
         @(this.WeeeGds().Submit("Continue"))

@@ -50,14 +50,14 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
 
-                var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 var @operator = new Operator(organisation);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
                 var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator);
                 var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator);
 
-                var organisation2 = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation 2");
+                var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
                 var @operator2 = new Operator(organisation);
                 var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2);
 

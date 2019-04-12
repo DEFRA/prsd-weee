@@ -9,6 +9,7 @@
     using RequestHandlers.Admin;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class FindMatchingUsersDataAccessTests
     {
@@ -29,17 +30,7 @@
                 // Add organisation
                 var uniqueOrgName = "Test Org " + Guid.NewGuid();
                 var country = dbWrapper.WeeeContext.Countries.First();
-                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(uniqueOrgName);
-                organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer"));
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
-                    "Address line 1", 
-                    string.Empty, 
-                    "Town", 
-                    string.Empty, 
-                    string.Empty,
-                    country, 
-                    "01234567890",
-                    "a@b.c"));
+                var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
                 organisation.CompleteRegistration();
                 dbWrapper.WeeeContext.Organisations.Add(organisation);
                 dbWrapper.WeeeContext.SaveChanges();
@@ -86,17 +77,7 @@
                 // Add organisation
                 var uniqueOrgName = "Test Org " + Guid.NewGuid();
                 var country = dbWrapper.WeeeContext.Countries.First();
-                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(uniqueOrgName);
-                organisation.AddOrUpdateMainContactPerson(new Domain.Organisation.Contact("First name", "Last name", "Developer"));
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, new Domain.Organisation.Address(
-                    "Address line 1",
-                    string.Empty,
-                    "Town",
-                    string.Empty,
-                    string.Empty,
-                    country,
-                    "01234567890",
-                    "a@b.c"));
+                var organisation = Organisation.CreateSoleTrader(uniqueOrgName);
                 organisation.CompleteRegistration();
                 dbWrapper.WeeeContext.Organisations.Add(organisation);
                 dbWrapper.WeeeContext.SaveChanges();

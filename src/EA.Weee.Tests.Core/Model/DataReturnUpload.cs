@@ -31,7 +31,7 @@ namespace EA.Weee.Tests.Core.Model
         public System.TimeSpan ProcessTime { get; set; }
     
         public virtual DataReturnVersion DataReturnVersion { get; set; }
-        public virtual Scheme Scheme { get; set; }
         public virtual ICollection<DataReturnUploadError> DataReturnUploadErrors { get; set; }
+        public virtual Scheme Scheme { get; set; }
     }
 }
