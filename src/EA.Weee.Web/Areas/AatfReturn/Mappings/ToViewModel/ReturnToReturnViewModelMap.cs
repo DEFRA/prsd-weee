@@ -43,13 +43,15 @@
 
             if (source.Aatfs != null)
             {
-                var schemeList = new List<ReceivedPcsData>();
                 foreach (var aatf in source.Aatfs)
                 {
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
-                    var pcsReceivedData = source.SchemeDataItems.Where(s => s.Id == aatf.Id).ToList();
-                    var obligatedData = new AatfObligatedData(aatf)
+                    var schemeList = source.SchemeDataItems.Where(s => s.Id == aatf.Id).ToList();
+
+                    var schemeData = new List<AatfSchemeData>(); // NEED TO GENERATE THIS LIST BASED OF THE weee received data and the schemeList and update the mapper tests to test this
+                    
+                    var obligatedData = new AatfObligatedData(aatf, schemeData)
                     {
                         WeeeReceived = tonnageUtilities.SumObligatedValues(weeeReceivedData),
                         WeeeReused = tonnageUtilities.SumObligatedValues(weeeReusedData)

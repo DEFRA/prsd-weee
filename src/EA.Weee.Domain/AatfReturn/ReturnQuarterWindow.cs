@@ -24,10 +24,18 @@
 
         public Operator ReturnOperator { get; private set; }
 
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList, List<WeeeReceivedAmount> obligatedReceivedList, List<WeeeReusedAmount> obligatedReusedList, Operator returnOperator)
+        public List<ReturnScheme> ReturnSchemes { get; set; }
+
+        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, 
+            List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList, 
+            List<WeeeReceivedAmount> obligatedReceivedList, 
+            List<WeeeReusedAmount> obligatedReusedList, 
+            Operator returnOperator,
+            List<ReturnScheme> returnSchemes)
         {
             Guard.ArgumentNotNull(() => @return, @return);
             Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
+            Guard.ArgumentNotNull(() => returnSchemes, returnSchemes); // CREATE UNIT TEST TO TEST THIS Argument is not null
 
             this.Return = @return;
             this.QuarterWindow = quarterWindow;
@@ -36,6 +44,7 @@
             this.ObligatedWeeeReceivedList = obligatedReceivedList;
             this.ObligatedWeeeReusedList = obligatedReusedList;
             this.ReturnOperator = returnOperator;
+            this.ReturnSchemes = returnSchemes; // CREATE UNIT TEST TO TEST THIS property is set
         }
 
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, List<NonObligatedWeee> nonObligatedWeeeList)
