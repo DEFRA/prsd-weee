@@ -325,7 +325,6 @@
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccess.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
-    <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
     <Compile Include="Organisations\IOrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
@@ -372,7 +371,6 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
-    <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />

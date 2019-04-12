@@ -87,7 +87,6 @@
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.Id).Returns(id);
-            //A.CallTo(() => organisation.OrganisationAddress).Returns(A.Fake<Address>()); //CHECK
             return organisation;
         }
     }

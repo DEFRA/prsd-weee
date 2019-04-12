@@ -137,18 +137,7 @@
             var totalMatchingOrganisationsData = totalMatchingOrganisations.Select(o =>
                 new PublicOrganisationData
                 {
-                    Id = o.Id, //CHECK THE BELOW
-                    //Address = new AddressData
-                    //{
-                    //    Address1 = o.OrganisationAddress.Address1,
-                    //    Address2 = o.OrganisationAddress.Address2,
-                    //    TownOrCity = o.OrganisationAddress.TownOrCity,
-                    //    CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                    //    Postcode = o.OrganisationAddress.Postcode,
-                    //    CountryId = o.OrganisationAddress.Country.Id,
-                    //    Telephone = o.OrganisationAddress.Telephone,
-                    //    Email = o.OrganisationAddress.Email
-                    //},
+                    Id = o.Id,
                     DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
 

@@ -130,7 +130,6 @@
             {
                 throw new InvalidOperationException("Organisation status must be Incomplete to transition to Complete");
             }
-            //CHECK RULES AROUND THIS?
 
             OrganisationStatus = OrganisationStatus.Complete;
         }
