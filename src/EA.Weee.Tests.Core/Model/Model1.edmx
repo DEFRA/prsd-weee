@@ -189,7 +189,6 @@
           <Property Name="Abbreviation" Type="nvarchar" MaxLength="65" Nullable="false" />
           <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="AnnualChargeAmount" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -1851,7 +1850,6 @@
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
           <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="AnnualChargeAmount" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -3824,7 +3822,6 @@
           <EntitySetMapping Name="CompetentAuthorities">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthority">
               <MappingFragment StoreEntitySet="CompetentAuthority">
-                <ScalarProperty Name="AnnualChargeAmount" ColumnName="AnnualChargeAmount" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
