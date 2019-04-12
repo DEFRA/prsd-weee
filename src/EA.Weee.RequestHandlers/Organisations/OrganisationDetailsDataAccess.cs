@@ -19,14 +19,12 @@
 
         public async Task<Organisation> FetchOrganisationAsync(Guid organisationId)
         {
-            Organisation organisation = await context.Organisations
-                .Include(o => o.Contact)
-                .Include(o => o.OrganisationAddress)
+            var organisation = await context.Organisations
                 .SingleOrDefaultAsync(o => o.Id == organisationId);
 
             if (organisation == null)
             {
-                string errorMessage = string.Format("No organisation was found with an ID of \"{0}\".", organisationId);
+                var errorMessage = $"No organisation was found with an ID of \"{organisationId}\".";
                 throw new Exception(errorMessage);
             }
 
@@ -37,16 +35,18 @@
         {
             return context.Schemes
                 .Include(s => s.CompetentAuthority)
+                .Include(s => s.Address)
+                .Include(s => s.Contact)
                 .FirstOrDefaultAsync(s => s.OrganisationId == organisationId);
         }
 
         public async Task<Country> FetchCountryAsync(Guid countryId)
         {
-            Country country = await context.Countries.FindAsync(countryId);
+            var country = await context.Countries.FindAsync(countryId);
 
             if (country == null)
             {
-                string errorMessage = string.Format("No country was found with an ID of \"{0}\".", countryId);
+                var errorMessage = $"No country was found with an ID of \"{countryId}\".";
                 throw new Exception(errorMessage);
             }
 

@@ -16,7 +16,7 @@ namespace EA.Weee.Tests.Core.Model
     {
         public Contact()
         {
-            this.Organisations = new HashSet<Organisation>();
+            this.Schemes = new HashSet<Scheme>();
         }
     
         public System.Guid Id { get; set; }
@@ -25,6 +25,6 @@ namespace EA.Weee.Tests.Core.Model
         public string Position { get; set; }
         public byte[] RowVersion { get; set; }
     
-        public virtual ICollection<Organisation> Organisations { get; set; }
+        public virtual ICollection<Scheme> Schemes { get; set; }
     }
 }

@@ -16,12 +16,11 @@ namespace EA.Weee.Tests.Core.Model
     {
         public Scheme()
         {
-            this.MemberUploads = new HashSet<MemberUpload>();
-            this.RegisteredProducers = new HashSet<RegisteredProducer>();
+            this.WeeeReceiveds = new HashSet<WeeeReceived>();
             this.DataReturns = new HashSet<DataReturn>();
             this.DataReturnUploads = new HashSet<DataReturnUpload>();
-            this.AATFReturnSchemes = new HashSet<AATFReturnScheme>();
-            this.WeeeReceiveds = new HashSet<WeeeReceived>();
+            this.MemberUploads = new HashSet<MemberUpload>();
+            this.RegisteredProducers = new HashSet<RegisteredProducer>();
         }
     
         public System.Guid Id { get; set; }
@@ -33,13 +32,16 @@ namespace EA.Weee.Tests.Core.Model
         public string IbisCustomerReference { get; set; }
         public Nullable<int> ObligationType { get; set; }
         public Nullable<System.Guid> CompetentAuthorityId { get; set; }
+        public Nullable<System.Guid> ContactId { get; set; }
+        public Nullable<System.Guid> AddressId { get; set; }
     
+        public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual Organisation Organisation { get; set; }
-        public virtual ICollection<MemberUpload> MemberUploads { get; set; }
-        public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
         public virtual ICollection<DataReturn> DataReturns { get; set; }
         public virtual ICollection<DataReturnUpload> DataReturnUploads { get; set; }
-        public virtual ICollection<AATFReturnScheme> AATFReturnSchemes { get; set; }
-        public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
+        public virtual ICollection<MemberUpload> MemberUploads { get; set; }
+        public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
+        public virtual Address Address { get; set; }
     }
 }
