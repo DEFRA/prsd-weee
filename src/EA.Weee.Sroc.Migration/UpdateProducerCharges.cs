@@ -49,7 +49,7 @@
 
                     context.SaveChanges();
 
-                    //var ids = new List<Guid>() { Guid.Parse("12EF32AD-44F8-4720-A96C-A9A600CE2593"), Guid.Parse("72FA232F-B1ED-4F5F-AACA-A9FC00D7B806"), Guid.Parse("D31B4E6D-B490-48E5-96FC-AA1E00F0595A") };
+                    //var ids = new List<Guid>() { Guid.Parse("B3F41E87-AAEE-45F3-A154-A9A00103F871"), Guid.Parse("013F29FF-C68E-4A39-8CDF-A9E400FF75C4"), Guid.Parse("C591E20C-87B5-417C-85AE-AA070093C73F"), Guid.Parse("B88EEA0D-7A2D-4BD0-BA2D-AA1700E8967A"), Guid.Parse("3C7C6D47-10F2-4EEC-A2C8-AA2500D4B5C7") };
                     foreach (var memberUpload in memberUploads)
                     {
                         //.Where(m => ids.Contains(m.Id)))
@@ -107,7 +107,7 @@
             var annualcharge = scheme.CompetentAuthority.AnnualChargeAmount ?? 0;
             var submittedDate = memberUpload.SubmittedDate.Value;
 
-            var producerCharges = new Dictionary<string, ProducerCharge>();
+            var producerCharges = new List<ProducerCharge>();
 
             foreach (var producer in schemeType.producerList)
             {
@@ -124,21 +124,23 @@
                     memberUploadDataAccess.UpdateProducerSubmissionAmount(memberUpload.Id, producerName, producerCharge, producer.status, producer);
                 }
 
-                if (!producerCharges.ContainsKey(producerName))
-                {
-                    producerCharges.Add(producerName, producerCharge);
-                }
+                //if (!producerCharges.ContainsKey(producerName))
+                //{
+                    producerCharges.Add(producerCharge);
+                    Log.Information(string.Format("Adding producer charge {0} {1}", producerName, producerCharge.Amount));
+                //}
             }
 
-            var totalCharges = 0m;
-            totalCharges = producerCharges.Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+            var total = memberUpload.ProducerSubmissions.Where(p => !p.RegisteredProducer.Removed).Sum(p => p.ChargeThisUpdate);
 
+            //var totalCharges = producerCharges.Sum(p => p.Amount);
+            Log.Information(string.Format("Member upload {0} {1} {2}", memberUpload.Id.ToString(), total, producerCharges.Count));
             if (annualChargeToBeAdded && complianceYear > 2018 && scheme.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
             {
-                totalCharges = (totalCharges + annualcharge);
+                total = (total + annualcharge);
             }
 
-            return totalCharges;
+            return total;
         }
     }
 }

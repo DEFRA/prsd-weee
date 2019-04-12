@@ -63,6 +63,7 @@
             var producer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(name.Trim())
                             || (p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(name.Trim()))).ToList();
             
+            Log.Information("number found {0}", producer.Count);
             if (producer.Count() == 1)
             {
                 //throw new ApplicationException(string.Format("Producer with name {0} in upload {1} could not be updated", name, memberUploadId));
@@ -82,12 +83,22 @@
                 if (company.GetType() == typeof(companyType))
                 {
                     Log.Information(string.Format("1. {0}", ((companyType)company).companyName));
-                    findProducer = producersMember.Where(p => p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(((companyType)company).companyName.Trim())).ToList();
+
+                    var test = context.ProducerSubmissions
+                        .Where(p => p.MemberUploadId == memberUploadId).Where(p => p.ProducerBusiness.CompanyDetails != null);
+
+                    foreach (var producerSubmission in test)
+                    {
+                        Log.Information(string.Format("{0}", producerSubmission.ProducerBusiness.CompanyDetails.Name));
+                    }
+                    findProducer = context.ProducerSubmissions
+                        .Where(p => p.MemberUploadId == memberUploadId && p.ProducerBusiness.CompanyDetails != null && p.ProducerBusiness.CompanyDetails.Name.Trim().Equals(((companyType)company).companyName.Trim())).ToList();
                 }
                 else if (company.GetType() == typeof(partnershipType))
                 {
                     Log.Information(string.Format("2. {0}", ((partnershipType)company).partnershipName));
-                    findProducer = producersMember.Where(p => p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(((partnershipType)company).partnershipName.Trim())).ToList();
+                    findProducer = context.ProducerSubmissions
+                        .Where(p => p.MemberUploadId == memberUploadId && p.ProducerBusiness.Partnership != null && p.ProducerBusiness.Partnership.Name.Trim().Equals(((partnershipType)company).partnershipName.Trim())).ToList();
                 }
 
                 if (producer.Count() == 1)
