@@ -44,6 +44,11 @@
             return new Scheme(organisation);
         }
 
+        public static AatfAddress CreateAatfAddress(Domain.Country country)
+        {
+            return new AatfAddress("Name", "Address1", "Address2", "TownOrCity", "County", "TU22 7UT", country);
+        }
+
         public static Organisation CreateOrganisation()
         {
             var companyName = "Test Name" + Guid.NewGuid();
