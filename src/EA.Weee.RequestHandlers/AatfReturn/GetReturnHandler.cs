@@ -25,6 +25,7 @@
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
+        private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
             IReturnDataAccess returnDataAccess,
@@ -33,7 +34,8 @@
             IQuarterWindowFactory quarterWindowFactory, 
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
-            IFetchAatfByOrganisationIdDataAccess aatfDataAccess)
+            IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
+            IReturnSchemeDataAccess returnSchemeDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -43,6 +45,7 @@
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
             this.aatfDataAccess = aatfDataAccess;
+            this.returnSchemeDataAccess = returnSchemeDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -63,7 +66,16 @@
 
             var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
 
-            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, @return.Operator);
+            var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
+
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, 
+                quarterWindow, 
+                aatfList, 
+                returnNonObligatedValues, 
+                returnObligatedReceivedValues, 
+                returnObligatedReusedValues, 
+                @return.Operator, 
+                returnSchemeList);
 
             var result = mapper.Map(returnQuarterWindow);
 

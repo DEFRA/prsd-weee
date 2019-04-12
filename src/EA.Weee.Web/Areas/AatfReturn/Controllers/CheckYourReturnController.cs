@@ -19,13 +19,13 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        //private readonly IMapper mapper;
-        private readonly IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReturnViewModel> mapper;
+        private readonly IMapper mapper;
+        //private readonly IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReturnViewModel> mapper;
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
-            IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReturnViewModel> mapper)    
+            IMapper mapper)    
         {
             this.apiClient = apiClient;
             this.cache = cache;
@@ -38,16 +38,18 @@
         { 
             using (var client = apiClient())
             {
-                var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
+                //var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
-                {
-                    ReturnId = returnId,
-                    OrganisationId = schemeList.OperatorData.OrganisationId,
-                    ReturnData = @return,
-                    SchemeDataItems = schemeList.SchemeDataItems
-                });
+                var viewModel = mapper.Map<ReturnViewModel>(@return);
+
+                //var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
+                //{
+                //    ReturnId = returnId,
+                //    OrganisationId = schemeList.OperatorData.OrganisationId,
+                //    ReturnData = @return,
+                //    SchemeDataItems = schemeList.SchemeDataItems
+                //});
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
