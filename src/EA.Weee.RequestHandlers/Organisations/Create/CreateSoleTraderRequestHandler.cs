@@ -9,7 +9,6 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations.Create;
     using Security;
-
     public class CreateSoleTraderRequestHandler : IRequestHandler<CreateSoleTraderRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;

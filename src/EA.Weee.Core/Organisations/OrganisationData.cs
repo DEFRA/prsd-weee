@@ -6,6 +6,9 @@
     public class OrganisationData
     {
         public Guid Id { get; set; }
+
+        public Guid? SchemeId { get; set; }
+
         public byte[] RowVersion { get; set; }
 
         public string Name { get; set; }
@@ -17,9 +20,7 @@
         public string TradingName { get; set; }
 
         public string CompanyRegistrationNumber { get; set; }
-
         public AddressData OrganisationAddress { get; set; }
-
         public AddressData BusinessAddress { get; set; }
 
         public AddressData NotificationAddress { get; set; }

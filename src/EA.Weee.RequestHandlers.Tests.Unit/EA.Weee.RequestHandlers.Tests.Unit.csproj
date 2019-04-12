@@ -178,7 +178,7 @@
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
+    <Compile Include="Scheme\AddContactPersonToSchemeHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateOrganisationRequestHandlerTestsBase.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandlerTests.cs" />
@@ -191,7 +191,7 @@
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsHandlerTests.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesExternalHandlerTests.cs" />
@@ -213,7 +213,6 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidatorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />
-    <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />

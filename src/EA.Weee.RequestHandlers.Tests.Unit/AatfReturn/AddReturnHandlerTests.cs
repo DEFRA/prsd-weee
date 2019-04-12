@@ -14,6 +14,7 @@
     using Requests.AatfReturn;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class AddReturnUploadHandlerTests
     {

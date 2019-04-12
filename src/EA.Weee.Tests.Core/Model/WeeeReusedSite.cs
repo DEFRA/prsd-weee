@@ -17,6 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid Id { get; set; }
         public System.Guid WeeeReusedId { get; set; }
         public byte[] RowVersion { get; set; }
+        public System.Guid AddressId { get; set; }
     
         public virtual WeeeReused WeeeReused { get; set; }
     }

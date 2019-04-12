@@ -12,6 +12,7 @@
             {
                 return new AddressData
                 {
+                    Id = source.Id,
                     RowVersion = source.RowVersion,
                     Address1 = source.Address1,
                     Address2 = source.Address2,

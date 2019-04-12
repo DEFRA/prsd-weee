@@ -7,9 +7,12 @@ namespace EA.Weee.Requests.Organisations
     {
         public Guid OrganisationId { get; private set; }
 
-        public CopyOrganisationAddressIntoRegisteredOffice(Guid organisationId)
+        public Guid AddressId { get; private set; }
+
+        public CopyOrganisationAddressIntoRegisteredOffice(Guid organisationId, Guid addressId)
         {
             OrganisationId = organisationId;
+            AddressId = addressId;
         }
     }
 }

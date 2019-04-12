@@ -27,26 +27,29 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var organisation = await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId);
+            var address = await context.Addresses.FirstOrDefaultAsync(s => s.Id == message.AddressId);
+
+            if (address == null)
+            {
+                throw new ArgumentException($"Could not find an address with Id {message.AddressId}");
+            }
 
             if (organisation == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with Id {0}",
-                    message.OrganisationId));
+                throw new ArgumentException($"Could not find an organisation with Id {message.OrganisationId}");
             }
-
-            var oa = organisation.OrganisationAddress;
 
             // we're explicitly making a copy here rather than pointing at the same address row
             // this is only assumed to be the preferred option
             var businessAddress = new Address(
-                oa.Address1,
-                oa.Address2,
-                oa.TownOrCity,
-                oa.CountyOrRegion,
-                oa.Postcode,
-                oa.Country,
-                oa.Telephone,
-                oa.Email);
+                address.Address1,
+                address.Address2,
+                address.TownOrCity,
+                address.CountyOrRegion,
+                address.Postcode,
+                address.Country,
+                address.Telephone,
+                address.Email);
 
             organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
 

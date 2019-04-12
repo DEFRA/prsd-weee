@@ -104,8 +104,11 @@
     <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
+    <Compile Include="Organisations\GetContact.cs" />
+    <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetSchemeByOrganisationId.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemeExternalById.cs" />
     <Compile Include="Scheme\GetSchemesExternal.cs" />
@@ -129,7 +132,7 @@
     <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetails.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeId.cs" />
@@ -143,7 +146,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
+    <Compile Include="Scheme\AddContactPerson.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatus.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />
