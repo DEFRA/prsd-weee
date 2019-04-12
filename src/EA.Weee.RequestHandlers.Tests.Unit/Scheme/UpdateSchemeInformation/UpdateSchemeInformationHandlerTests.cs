@@ -18,6 +18,7 @@
     using Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
     public class UpdateSchemeInformationHandlerTests

@@ -5,10 +5,14 @@
     using Core.DataStandards;
     using Core.Organisations;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme;
 
     public class ContactPersonViewModel
     {
         public Guid OrganisationId { get; set; }
+
+        public Guid? ContactId { get; set; }
+        public Guid? AddressId { get; set; }
 
         [Required]
         [StringLength(CommonMaxFieldLengths.FirstName)]
@@ -28,7 +32,7 @@
         [DataType(DataType.Text)]
         public string Position { get; set; }
 
-        public AddContactPersonToOrganisation ToAddRequest()
+        public AddContactPerson ToAddRequest()
         {
             var contact = new ContactData
             {   
@@ -36,7 +40,7 @@
                 LastName = LastName,
                 Position = Position
             };
-            return new AddContactPersonToOrganisation(OrganisationId, contact);
+            return new AddContactPerson(OrganisationId, contact, ContactId);
         }
 
         public ContactPersonViewModel()

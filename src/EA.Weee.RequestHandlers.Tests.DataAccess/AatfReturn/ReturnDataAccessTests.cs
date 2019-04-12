@@ -9,6 +9,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
     using Operator = Domain.AatfReturn.Operator;
+    using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
 
     public class ReturnDataAccessTests
@@ -54,7 +55,7 @@
 
         private Return CreateReturn()
         {
-            var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            var organisation = Organisation.CreateSoleTrader("Test Organisation");
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 

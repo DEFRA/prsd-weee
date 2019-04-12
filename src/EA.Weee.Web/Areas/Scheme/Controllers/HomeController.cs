@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using Core.Scheme;
     using Core.Shared.Paging;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
@@ -434,13 +435,13 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation contact details");
+            await SetBreadcrumb(pcsId, PcsAction.ManageContactDetails);
 
-            OrganisationData model;
+            SchemeData model;
             using (var client = apiClient())
             {
-                model = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
+                model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             return View(model);
@@ -448,25 +449,25 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageContactDetails(OrganisationData model)
+        public async Task<ActionResult> ManageContactDetails(SchemeData model)
         {
-            await SetBreadcrumb(model.Id, "Manage organisation contact details");
+            await SetBreadcrumb(model.OrganisationId, PcsAction.ManageContactDetails);
 
             if (!ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 }
                 return View(model);
             }
 
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model, true));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(model, true));
             }
 
-            return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
+            return RedirectToAction("ChooseActivity", new { pcsId = model.OrganisationId });
         }
 
         [HttpGet]
