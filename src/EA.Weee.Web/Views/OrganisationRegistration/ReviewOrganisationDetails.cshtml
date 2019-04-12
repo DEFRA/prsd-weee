@@ -24,6 +24,8 @@
         @Html.HiddenFor(m => m.OrganisationData.Contact.FirstName)
         @Html.HiddenFor(m => m.OrganisationData.Contact.LastName)
         @Html.HiddenFor(m => m.OrganisationData.Contact.Position)
+        @Html.HiddenFor(m => m.OrganisationData.Contact.Id)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Id)
         @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Address1)
         @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Address2)
         @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.CountryId)
@@ -98,7 +100,7 @@
 
             </div>
             <div class="font-xsmall">
-                <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit your organisation details">Edit your organisation details</a>
+                <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id, contactId = Model.OrganisationData.Contact.Id, addressId = Model.OrganisationData.OrganisationAddress.Id })" class="govuk-link" title="Edit your organisation details">Edit your organisation details</a>
             </div>
 
             <!-- //////////// The-main-contact-for-your-organisation /////////////// -->
@@ -127,7 +129,7 @@
                 </div>
             </div>
             <div class="font-xsmall">
-                <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit main contact</a>
+                <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id, contactId = Model.OrganisationData.Contact.Id, addressId = Model.OrganisationData.OrganisationAddress.Id })" class="govuk-link" title="Edit">Edit main contact</a>
             </div>
 
             <!-- //////////// Your-organisation-details /////////////// -->
@@ -176,7 +178,7 @@
                 </div>
             </div>
             <div class="font-xsmall">
-                <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit main contact details</a>
+                <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id, contactId = Model.OrganisationData.Contact.Id, addressId = Model.OrganisationData.OrganisationAddress.Id })" class="govuk-link" title="Edit">Edit main contact details</a>
             </div>
 
 
@@ -235,13 +237,13 @@
             @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
             {
                 <div class="font-xsmall">
-                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit principal place of business</a>
+                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id, contactId = Model.OrganisationData.Contact.Id, addressId = Model.OrganisationData.OrganisationAddress.Id })" class="govuk-link" title="Edit">Edit principal place of business</a>
                 </div>
             }
             else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
             {
                 <div class="font-xsmall">
-                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" class="govuk-link" title="Edit">Edit registered company details</a>
+                    <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id, contactId = Model.OrganisationData.Contact.Id, addressId = Model.OrganisationData.OrganisationAddress.Id })" class="govuk-link" title="Edit">Edit registered company details</a>
                 </div>
             }
 

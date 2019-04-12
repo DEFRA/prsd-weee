@@ -11,6 +11,7 @@
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class FindMatchingOrganisationsDataAccessTests
     {

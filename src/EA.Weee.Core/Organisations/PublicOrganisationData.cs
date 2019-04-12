@@ -8,7 +8,5 @@
         public Guid Id { get; set; }
 
         public string DisplayName { get; set; }
-
-        public AddressData Address { get; set; }
     }
 }

@@ -4,8 +4,8 @@
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
+    using Weee.Tests.Core.Model;
     using Xunit;
 
     public class UpdateOrganisationContactDetailsDataAccessTests
@@ -33,7 +33,7 @@
                 OrganisationDetailsDataAccess dataAccess = new OrganisationDetailsDataAccess(database.WeeeContext);
 
                 // Act
-                Domain.Organisation.Organisation result = await dataAccess.FetchOrganisationAsync(organisationId);
+                var result = await dataAccess.FetchOrganisationAsync(organisationId);
 
                 // Assert
                 Assert.NotNull(result);

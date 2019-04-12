@@ -7,10 +7,12 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
+    using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class SpgProducerEeeCsvDataTests
     {
@@ -109,7 +111,7 @@
             using (DatabaseWrapper wrapper = new DatabaseWrapper())
             {
                 // Arrange
-                Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
                 Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
                 Domain.Lookup.ChargeBandAmount chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);
@@ -261,7 +263,7 @@
             using (DatabaseWrapper wrapper = new DatabaseWrapper())
             {
                 // Arrange
-                Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
                 Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
                 Domain.Lookup.ChargeBandAmount chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);

@@ -1,24 +1,25 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
     using Core.Organisations;
+    using Core.Scheme;
     using Prsd.Core.Mapper;
     using ViewModels.Scheme.Overview.ContactDetails;
     using Web.ViewModels.OrganisationRegistration;
     using Web.ViewModels.Shared;
 
-    public class OrganisationDataToContactDetailsOverview : IMap<OrganisationData, ContactDetailsOverviewViewModel>
+    public class OrganisationDataToContactDetailsOverview : IMap<SchemeData, ContactDetailsOverviewViewModel>
     {
-        public ContactDetailsOverviewViewModel Map(OrganisationData source)
+        public ContactDetailsOverviewViewModel Map(SchemeData source)
         {
             return new ContactDetailsOverviewViewModel
             {
                 Contact = new ContactPersonViewModel(source.Contact)
                 {
-                    OrganisationId = source.Id
+                    OrganisationId = source.OrganisationId
                 },
                 Address = new AddressViewModel
                 {
-                    Address = source.OrganisationAddress
+                    Address = source.Address
                 }
             };
         }

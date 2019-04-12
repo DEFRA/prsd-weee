@@ -69,6 +69,10 @@
 
         public virtual DbSet<Scheme> Schemes { get; set; }
 
+        public virtual DbSet<Contact> Contacts { get; set; }
+
+        public virtual DbSet<Address> Addresses { get; set; }
+
         /// <summary>
         /// Registered producers including items marked as removed.
         /// </summary>

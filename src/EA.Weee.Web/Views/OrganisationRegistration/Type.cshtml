@@ -9,12 +9,15 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.SearchedText)
+    @Html.HiddenFor(m => m.OrganisationId)
+    @Html.HiddenFor(m => m.ContactId)
+    @Html.HiddenFor(m => m.AddressId)
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             What type of organisation is your producer compliance scheme (PCS)?
         </h1>
     </header>
-    
+
     @Html.Gds().ValidationSummary()
 
     <div class="govuk-form-group">
