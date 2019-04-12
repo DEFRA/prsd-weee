@@ -66,22 +66,6 @@
 
         public bool HasAddress => AddressId != null;
 
-        //CHECK
-        //private void ToComplete()
-        //{
-        //    if (OrganisationStatus != OrganisationStatus.Incomplete)
-        //    {
-        //        throw new InvalidOperationException("Organisation status must be Incomplete to transition to Complete");
-        //    }
-
-        //    if (OrganisationAddress == null)
-        //    {
-        //        throw new InvalidOperationException("A Complete organisation must have an OrganisationAddress");
-        //    }
-
-        //    OrganisationStatus = OrganisationStatus.Complete;
-        //}
-
         public void UpdateScheme(
             string schemeName,
             string approvalNumber,

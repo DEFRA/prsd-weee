@@ -51,7 +51,7 @@
                     ? addressMap.Map(source.Address)
                     : null,
                 HasAddress = source.HasAddress,
-                HasContact = source.HasContact, //CHECK TESTS
+                HasContact = source.HasContact
             };
         }
     }
