@@ -14,6 +14,9 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.ContactId)
+        @Html.HiddenFor(m => m.AddressId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="govuk-form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))

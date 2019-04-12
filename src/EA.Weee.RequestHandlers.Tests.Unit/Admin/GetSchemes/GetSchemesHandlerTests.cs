@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using Core.Scheme;
+    using Core.Shared;
     using Domain;
-    using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
     using Mappings;
@@ -14,8 +15,11 @@
     using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Domain.Organisation;
     using Weee.Tests.Core;
     using Xunit;
+    using ObligationType = Domain.Obligation.ObligationType;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class GetSchemesHandlerTests
     {
@@ -54,9 +58,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            var mapper = new SchemeMap(A.Fake<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme schemePending = new Scheme(organisation);
             schemePending.UpdateScheme("Scheme Pending", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
@@ -86,7 +90,7 @@
 
             GetSchemesHandler handler = new GetSchemesHandler(
                 authorization,
-                schemeMap,
+                mapper,
                 dataAccess);
 
             // Act
@@ -113,9 +117,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            var mapper = new SchemeMap(A.Fake<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme schemePending = new Scheme(organisation);
             schemePending.UpdateScheme("Scheme Pending", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
@@ -145,7 +149,7 @@
 
             GetSchemesHandler handler = new GetSchemesHandler(
                 authorization,
-                schemeMap,
+                mapper,
                 dataAccess);
 
             // Act
@@ -172,9 +176,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>());
+            IMap<Scheme, SchemeData> schemeMap = new SchemeMap(A.Dummy<IMapper>(), A.Fake<IMap<Address, AddressData>>(), A.Fake<IMap<Contact, ContactData>>());
 
-            Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
 
             Scheme scheme1 = new Scheme(organisation);
             scheme1.UpdateScheme("Scheme C", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());

@@ -17,6 +17,7 @@
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
     using OrganisationType = Core.Organisations.OrganisationType;
 
     public class UpdateOrganisationDetailsHandlerTests
@@ -64,7 +65,7 @@
         public async Task UpdateOrganisationDetailsHandler_WithValidData_FetchesOrganisationAndUpdatesAndSaves()
         {
             // Arrange
-            OrganisationData organisationData = new OrganisationData();
+            var organisationData = new OrganisationData();
             organisationData.Id = new Guid("9a310218-311b-460d-bd50-9d246c237dcc");
             organisationData.OrganisationType = OrganisationType.RegisteredCompany;
             organisationData.Name = "CompanyName";
@@ -80,25 +81,25 @@
             organisationData.BusinessAddress.Telephone = "012345678";
             organisationData.BusinessAddress.Email = "email@domain.com";
 
-            UpdateOrganisationDetails request = new UpdateOrganisationDetails(organisationData);
+            var request = new UpdateOrganisationDetails(organisationData);
 
-            IOrganisationDetailsDataAccess dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
-            IWeeeAuthorization weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+            var weeeAuthorization = A.Fake<IWeeeAuthorization>();
 
-            Organisation organisation = A.Dummy<Organisation>();
+            var organisation = A.Dummy<Organisation>();
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("9a310218-311b-460d-bd50-9d246c237dcc")))
                 .Returns(organisation);
 
-            Country country = new Country(
+            var country = new Country(
                 new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4"),
                 "Name");
             A.CallTo(() => dataAccess.FetchCountryAsync(new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4")))
                 .Returns(country);
 
-            UpdateOrganisationDetailsHandler handler = new UpdateOrganisationDetailsHandler(dataAccess, weeeAuthorization);
+            var handler = new UpdateOrganisationDetailsHandler(dataAccess, weeeAuthorization);
 
             // Act
-            bool result = await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
 
             // Assert
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("9a310218-311b-460d-bd50-9d246c237dcc")))

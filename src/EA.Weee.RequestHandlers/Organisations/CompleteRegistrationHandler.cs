@@ -34,8 +34,8 @@
 
             organisation.CompleteRegistration();
             
-            //Created PCS created here until AATF/AE are impelemented
-            var scheme = new Scheme(message.OrganisationId);
+            var scheme = new Scheme(message.OrganisationId, message.AddressId, message.ContactId);
+            
             context.Schemes.Add(scheme);
            
             await context.SaveChangesAsync();

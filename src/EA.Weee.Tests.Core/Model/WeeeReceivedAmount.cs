@@ -16,10 +16,10 @@ namespace EA.Weee.Tests.Core.Model
     {
         public System.Guid Id { get; set; }
         public System.Guid WeeeReceivedId { get; set; }
-        public int ObligationType { get; set; }
         public int CategoryId { get; set; }
-        public Nullable<decimal> Tonnage { get; set; }
         public byte[] RowVersion { get; set; }
+        public Nullable<decimal> HouseholdTonnage { get; set; }
+        public Nullable<decimal> NonHouseholdTonnage { get; set; }
     
         public virtual WeeeReceived WeeeReceived { get; set; }
     }
