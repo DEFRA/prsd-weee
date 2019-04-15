@@ -671,6 +671,8 @@
         {
             viewModel.Address.Countries = await GetCountries(false);
 
+            SetViewData(viewModel.AddressId, viewModel.ContactId);
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -684,7 +686,8 @@
                     return RedirectToAction("ReviewOrganisationDetails", new
                     {
                         viewModel.OrganisationId,
-                        viewModel.AddressId
+                        viewModel.AddressId,
+                        viewModel.ContactId
                     });
                 }
             }
