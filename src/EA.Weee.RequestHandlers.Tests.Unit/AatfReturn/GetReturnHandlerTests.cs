@@ -188,12 +188,14 @@
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();
             var obligatedReusedValues = new List<WeeeReusedAmount>();
+            var obligatedSentOnValues = new List<WeeeSentOnAmount>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -201,6 +203,7 @@
                                                                                 && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
                                                                                 && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
                                                                                 && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
+                                                                                && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
