@@ -13,6 +13,7 @@
     using Requests.Organisations;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class CompleteRegistrationHandlerTests
     {
@@ -28,7 +29,7 @@
         public async Task CompleteRegistrationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new CompleteRegistrationHandler(denyingAuthorization, A.Dummy<WeeeContext>());
-            var message = new CompleteRegistration(Guid.NewGuid());
+            var message = new CompleteRegistration(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             await
                 Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -41,7 +42,7 @@
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
             var handler = new CompleteRegistrationHandler(permissiveAuthorization, context);
-            var message = new CompleteRegistration(Guid.NewGuid());
+            var message = new CompleteRegistration(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             var exception = await
                 Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
@@ -57,6 +58,9 @@
             var context = A.Fake<WeeeContext>();
 
             var organisationId = Guid.NewGuid();
+            var addressId = Guid.NewGuid();
+            var contactId = Guid.NewGuid();
+
             var organisation = GetOrganisationWithId(organisationId);
             organisation.OrganisationStatus = OrganisationStatus.Incomplete;
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
@@ -67,14 +71,14 @@
                 .Invokes((Scheme s) => addedScheme = s);
 
             var handler = new CompleteRegistrationHandler(permissiveAuthorization, context);
-            var message = new CompleteRegistration(organisationId);
+            var message = new CompleteRegistration(organisationId, addressId, contactId);
 
             var result = await handler.HandleAsync(message);
 
             Assert.Equal(organisationId, result);
             Assert.Equal(OrganisationStatus.Complete, organisation.OrganisationStatus);
 
-            A.CallTo(() => context.Schemes.Add(A<Scheme>._)).MustHaveHappened();
+            A.CallTo(() => context.Schemes.Add(A<Scheme>.That.Matches(s => s.AddressId.Equals(addressId) && s.ContactId.Equals(contactId)))).MustHaveHappened();
             Assert.NotNull(addedScheme);
             Assert.Equal(organisationId, addedScheme.OrganisationId);
         }
@@ -83,7 +87,6 @@
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.Id).Returns(id);
-            A.CallTo(() => organisation.OrganisationAddress).Returns(A.Fake<Address>());
             return organisation;
         }
     }

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
     using System;
+    using Organisations;
     using Shared;
 
     public class SchemeData
@@ -18,5 +19,13 @@
         public SchemeDataAvailability SchemeDataAvailability { get; set; }
         public bool CanEdit { get; set; }
         public bool Selected { get; set; }
+
+        public AddressData Address { get; set; }
+
+        public ContactData Contact { get; set; }
+
+        public bool HasAddress { get; set; }
+
+        public bool HasContact { get; set; }
     }
 }
