@@ -70,20 +70,6 @@
             var returnObligatedSentOnValues = new List<WeeeSentOnAmount>();
 
             var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(message.ReturnId);
-            //foreach (var aatf in aatfList)
-            //{
-            //    var sentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, message.ReturnId);
-
-            //    foreach (var sentOnId in sentOn)
-            //    {
-            //        var amountList = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturn(sentOnId.Id);
-
-            //        foreach (var amount in amountList)
-            //        {
-            //            returnObligatedSentOnValues.Add(amount);
-            //        }
-            //    }
-            //}
 
             var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, sentOn, @return.Operator);
 
