@@ -65,7 +65,7 @@
                     siteAddressBuilder += county;
                 }
 
-                siteAddressBuilder += siteData.OperatorAddress.CountryName;
+                siteAddressBuilder += siteData.SiteAddress.CountryName;
                 siteData.SiteAddressLong = siteAddressBuilder;
 
                 var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
