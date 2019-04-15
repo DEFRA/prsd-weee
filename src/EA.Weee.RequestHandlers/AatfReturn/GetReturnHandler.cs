@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
@@ -24,6 +25,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
+        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
@@ -33,7 +35,8 @@
             IQuarterWindowFactory quarterWindowFactory, 
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
-            IFetchAatfByOrganisationIdDataAccess aatfDataAccess)
+            IFetchAatfByOrganisationIdDataAccess aatfDataAccess,
+            ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -43,6 +46,7 @@
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
             this.aatfDataAccess = aatfDataAccess;
+            this.getSentOnAatfSiteDataAccess = sentOnAatfSiteDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -63,7 +67,24 @@
 
             var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
 
-            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, @return.Operator);
+            var returnObligatedSentOnValues = new List<WeeeSentOnAmount>();
+
+            foreach (var aatf in aatfList)
+            {
+                var sentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, message.ReturnId);
+
+                foreach (var sentOnId in sentOn)
+                {
+                    var amountList = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturn(sentOnId.Id);
+
+                    foreach (var amount in amountList)
+                    {
+                        returnObligatedSentOnValues.Add(amount);
+                    }
+                }
+            }
+
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, returnObligatedSentOnValues, @return.Operator);
 
             var result = mapper.Map(returnQuarterWindow);
 
