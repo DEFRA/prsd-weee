@@ -114,11 +114,6 @@
                     Log.Information(string.Format("Could not find {0}", name));
                 }
             }
-            //Log.Information(string.Format("Producer charge for {0} updated from {1} to {2} and from band {3} to {4}", name, producer.First().ChargeThisUpdate, producerCharge.Amount, producer.First().ChargeBandAmount.ChargeBand, producerCharge.ChargeBandAmount.ChargeBand));
-            
-            //producer.First().UpdateCharge(producerCharge.Amount, producerCharge.ChargeBandAmount, (int)status);
-
-            //context.SaveChanges();
         }
 
         public void ResetProducerSubmissionInvoice(IEnumerable<ProducerSubmission> producerSubmissions)
