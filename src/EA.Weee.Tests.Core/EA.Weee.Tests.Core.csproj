@@ -199,6 +199,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Model\Model11.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Model\ModelHelper.cs" />
     <Compile Include="Model\DatabaseWrapper.cs" />
     <Compile Include="Model\NonObligatedWeee.cs">
@@ -316,6 +321,7 @@
     <EntityDeploy Include="Model\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <CustomToolNamespace>EA.Weee.Tests.Core.Model</CustomToolNamespace>
+      <LastGenOutput>Model11.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="Model\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
