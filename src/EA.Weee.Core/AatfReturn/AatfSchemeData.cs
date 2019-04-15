@@ -11,7 +11,6 @@
 
         public AatfSchemeData(Scheme scheme, ObligatedCategoryValue received, string approvalName)
         {
-            // GUARD AGAINST Scheme and ObligatedCategoryValue BEING NULL AND CREATE UNIT TEST TO TEST THE GUARD
             Guard.ArgumentNotNull(() => scheme, scheme);
             Guard.ArgumentNotNull(() => received, received);            
 
