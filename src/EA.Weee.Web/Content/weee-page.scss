@@ -874,10 +874,21 @@ details summary::-ms-details-marker {
     margin-top: 0px;
 }
 
-.btnDisable{
+.btnDisable {
     display:none;
 }
 
+#unset-padding {
+    padding-right:0 ;
+}
+
+.collapsible-padding-left {
+    padding-left:0px;
+}
+
+.collapsible-padding-right {
+    padding-right:0px;
+}
 .section-tabs {
     @include govuk-clearfix;
     border-bottom: 1px solid $govuk-border-colour;
