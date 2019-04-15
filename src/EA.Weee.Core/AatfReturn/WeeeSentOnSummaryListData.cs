@@ -8,6 +8,8 @@
 
         public virtual string OperatorAddressLong { get; set; }
 
+        public virtual string SiteAddressLong { get; set; }
+
         public virtual AatfAddressData SiteAddress { get; set; }
     }
 }
