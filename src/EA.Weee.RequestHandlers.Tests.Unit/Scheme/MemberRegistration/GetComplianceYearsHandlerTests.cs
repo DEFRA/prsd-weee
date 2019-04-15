@@ -12,6 +12,7 @@
     using Requests.Scheme.MemberRegistration;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class GetComplianceYearsHandlerTests
     {

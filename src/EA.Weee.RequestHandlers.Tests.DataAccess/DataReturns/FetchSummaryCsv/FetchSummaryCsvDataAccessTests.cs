@@ -14,6 +14,7 @@
     using RequestHandlers.DataReturns.FetchSummaryCsv;
     using Weee.DataAccess.StoredProcedure;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class FetchSummaryCsvDataAccessTests
     {

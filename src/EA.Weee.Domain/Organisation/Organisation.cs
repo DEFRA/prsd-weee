@@ -57,10 +57,6 @@
             }
         }
 
-        public virtual Address OrganisationAddress { get; private set; }
-
-        public virtual Guid? OrganisationAddressId { get; private set; }
-
         public virtual Address BusinessAddress { get; private set; }
 
         public virtual Guid? BusinessAddressId { get; private set; }
@@ -68,10 +64,6 @@
         public virtual Address NotificationAddress { get; private set; }
 
         public virtual Guid? NotificationAddressId { get; private set; }
-
-        public virtual Contact Contact { get; private set; }
-
-        public virtual Guid? ContactId { get; private set; }
 
         public static Organisation CreateSoleTrader(string tradingName)
         {
@@ -139,22 +131,7 @@
                 throw new InvalidOperationException("Organisation status must be Incomplete to transition to Complete");
             }
 
-            if (OrganisationAddress == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have an OrganisationAddress");
-            }
-
-            if (Contact == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have a Contact");
-            }
-
             OrganisationStatus = OrganisationStatus.Complete;
-        }
-
-        public bool HasOrganisationAddress
-        {
-            get { return OrganisationAddress != null; }
         }
 
         public bool HasBusinessAddress

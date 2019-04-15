@@ -7,8 +7,10 @@
     using Domain.Lookup;
     using Domain.Obligation;
     using Weee.DataAccess.StoredProcedure;
+    using Weee.Domain.Organisation;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class SpgSchemeWeeeCsvAsyncTests
     {
@@ -71,7 +73,7 @@
             using (DatabaseWrapper wrapper = new DatabaseWrapper())
             {
                 // Arrange
-                Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
                 Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);
 
@@ -155,7 +157,7 @@
             using (DatabaseWrapper wrapper = new DatabaseWrapper())
             {
                 // Arrange
-                Domain.Organisation.Organisation organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
                 Domain.UKCompetentAuthority authority = wrapper.WeeeContext.UKCompetentAuthorities.Single(c => c.Abbreviation == "EA");
                 Quarter quarter = new Quarter(2099, QuarterType.Q1);
 

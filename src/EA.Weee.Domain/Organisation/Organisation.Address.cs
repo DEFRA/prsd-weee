@@ -11,9 +11,6 @@
 
             switch (type.DisplayName)
             {
-                case "Organisation address":
-                    OrganisationAddress = address.OverwriteWhereNull(OrganisationAddress);
-                    break;
                 case "Registered or PPB address":
                     BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
                     break;

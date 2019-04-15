@@ -9,6 +9,10 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public Guid? AddressId { get; set; }
+
+        public Guid? ContactId { get; set; }
+
         public OrganisationType OrganisationType { get; set; }
 
         [Required(ErrorMessage = "Tell us if your registered office and main point of contact details are the same")]
