@@ -4,14 +4,10 @@
     using Domain.Organisation;
     using EA.Weee.Domain.Tests.Unit.Helpers;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationAddressTests
     {
         [Theory]
-        [InlineData("Organisation Address", "Sole trader or individual")]
-        [InlineData("Organisation Address", "Partnership")]
-        [InlineData("Organisation Address", "Registered Company")]
         [InlineData("Registered or PPB address", "Sole trader or individual")]
         [InlineData("Registered or PPB address", "Partnership")]
         [InlineData("Registered or PPB address", "Registered Company")]
@@ -24,12 +20,8 @@
             var validAddress = ValidAddress(addressType);
             var type = CastAddressType(addressType);
             organisation.AddOrUpdateAddress(type, validAddress);
-            
-            if (type == AddressType.OrganisationAddress)
-            {
-                Assert.Equal(validAddress, organisation.OrganisationAddress);
-            }
-            else if (type == AddressType.RegisteredOrPPBAddress)
+
+            if (type == AddressType.RegisteredOrPPBAddress)
             {
                 Assert.Equal(validAddress, organisation.BusinessAddress);
             }
@@ -108,8 +100,6 @@
         {
             switch (addressType)
             {
-                case "Organisation Address":
-                    return AddressType.OrganisationAddress;
                 case "Registered or PPB address":
                     return AddressType.RegisteredOrPPBAddress;
                 default:

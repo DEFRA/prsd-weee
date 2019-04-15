@@ -27,7 +27,7 @@ namespace EA.Weee.Tests.Core.Model
         public int Quarter { get; set; }
     
         public virtual DataReturnVersion CurrentDataReturnVersion { get; set; }
-        public virtual Scheme Scheme { get; set; }
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; set; }
+        public virtual Scheme Scheme { get; set; }
     }
 }

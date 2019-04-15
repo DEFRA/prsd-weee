@@ -15,6 +15,7 @@
     using Weee.Tests.Core;
     using Xunit;
     using AddressType = Core.Shared.AddressType;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class AddAddressToOrganisationHandlerTests
     {
@@ -105,7 +106,7 @@
             var handler = new AddAddressToOrganisationHandler(context, permissiveAuthorization);
 
             var addressLine1 = "Some address line";
-            var message = GetMessage(organisationId, AddressType.OrganisationAddress, new AddressData
+            var message = GetMessage(organisationId, AddressType.RegisteredOrPPBAddress, new AddressData
             {
                 Address1 = addressLine1, 
                 CountryId = countryId, 
@@ -116,8 +117,8 @@
 
             await handler.HandleAsync(message);
 
-            Assert.Equal(addressLine1, organisation.OrganisationAddress.Address1);
-            Assert.Equal(countryName, organisation.OrganisationAddress.Country.Name);
+            Assert.Equal(addressLine1, organisation.BusinessAddress.Address1);
+            Assert.Equal(countryName, organisation.BusinessAddress.Country.Name);
         }
 
         private Organisation GetOrganisationWithId(Guid id)

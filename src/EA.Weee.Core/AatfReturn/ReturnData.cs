@@ -21,6 +21,8 @@
 
         public List<WeeeObligatedData> ObligatedWeeeReusedData { get; set; }
 
+        public List<WeeeObligatedData> ObligatedWeeeSentOnData { get; set; }
+
         public virtual OperatorData ReturnOperatorData { get; set; }
 
         public IList<SchemeData> SchemeDataItems { get; set; }

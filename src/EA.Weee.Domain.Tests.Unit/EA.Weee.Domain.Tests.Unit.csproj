@@ -89,6 +89,7 @@
     <Compile Include="AatfReturn\WeeeReusedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedTests.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmountTests.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnAmountTests.cs" />
     <Compile Include="AatfReturn\WeeeSentOnTests.cs" />
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>
@@ -118,7 +119,7 @@
     <Compile Include="Helpers\ObjectInstantiator.cs" />
     <Compile Include="Organisation\AddressTests.cs" />
     <Compile Include="Organisation\ContactTests.cs" />
-    <Compile Include="Organisation\OrganisationContactPersonTests.cs" />
+    <Compile Include="Scheme\SchemeContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
     <Compile Include="Organisation\OrganisationUserTests.cs" />

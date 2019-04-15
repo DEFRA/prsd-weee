@@ -1,0 +1,70 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnSiteSummaryListViewModel
+@{
+    ViewBag.Title = "Sent On WEEE";
+}
+<section id="main-content">
+    <h1 class="govuk-heading-l" style="padding-top: 0px;">WEEE reused as a whole appliance</h1>
+
+    @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+        <div class="govuk-table__head">
+            <div class="govuk-grid-row govuk-table__row govuk-table__header">
+                <div class="govuk-grid-column-one-quarter">
+                    Site name
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    Operator name and address
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third" style="text-align:center">
+                        B2C (t)
+                    </div>
+                    <div class="govuk-grid-column-one-third" style="text-align:center">
+                        B2B (t)
+                    </div>
+                    <div class="govuk-grid-column-one-third" style="text-align:center">
+                        Actions
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach (var address in Model.Sites)
+        {
+            <div class="govuk-grid-row govuk-table__cell">
+                <div class="govuk-grid-column-one-quarter">
+                    @address.SiteAddress.Name
+                </div>
+                <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                   @address.OperatorAddressLong
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third weee-tonnage-center-aligned-display">
+                        @address.Tonnages.B2C
+                    </div>
+                    <div class="govuk-grid-column-one-third weee-tonnage-center-aligned-display">
+                        @address.Tonnages.B2B
+                    </div>
+                    <div class="govuk-grid-column-one-third" style="text-align:center">
+                        <span class="govuk-visually-hidden"></span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="govuk-!-padding-bottom-2"></div>
+      @Html.RouteLink("Add another site", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+    <div class="govuk-!-padding-bottom-8"></div>
+
+    Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+</section>
