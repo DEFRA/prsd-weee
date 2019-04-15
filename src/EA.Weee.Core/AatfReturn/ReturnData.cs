@@ -28,6 +28,7 @@
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
             ObligatedWeeeReusedData = new List<WeeeObligatedData>();
+            ObligatedWeeeSentOnData = new List<WeeeObligatedData>();
             NonObligatedData = new List<NonObligatedData>();
         }
     }
