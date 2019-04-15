@@ -151,6 +151,24 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenReturn_ObligatedSentOnValuesShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
+            var aatfList = A.Fake<List<Aatf>>();
+
+            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id)).Returns(aatfList);
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            foreach (var aatf in aatfList)
+            {
+                A.CallTo(() => sentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            }
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenReturn_AatfsShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
