@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfReturn;
+    using EA.Weee.Core.Scheme;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -47,10 +48,26 @@
                 {
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
-                    var schemeList = source.SchemeDataItems.Where(s => s.Id == aatf.Id).ToList();
 
                     var schemeData = new List<AatfSchemeData>(); // NEED TO GENERATE THIS LIST BASED OF THE weee received data and the schemeList and update the mapper tests to test this
-                    
+
+                    foreach (var scheme in source.SchemeDataItems)
+                    {
+                        var schemeList = weeeReceivedData.Where(s => s.Scheme.Id == scheme.Id).ToList();
+
+                        foreach (var item in schemeList)
+                        {
+                            ObligatedCategoryValue obligatedReceivedValues = new ObligatedCategoryValue
+                            {
+                                B2B = tonnageUtilities.CheckIfTonnageIsNull(item.B2B),
+                                B2C = tonnageUtilities.CheckIfTonnageIsNull(item.B2C)
+                            };
+
+                            var aatfSchemeData = new AatfSchemeData(item.Scheme, obligatedReceivedValues, scheme.ApprovalName);
+                            schemeData.Add(aatfSchemeData);
+                        }                       
+                    }                    
+
                     var obligatedData = new AatfObligatedData(aatf, schemeData)
                     {
                         WeeeReceived = tonnageUtilities.SumObligatedValues(weeeReceivedData),
