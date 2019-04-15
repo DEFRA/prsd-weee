@@ -22,11 +22,10 @@
         private readonly DomainScheme scheme;
         private readonly Organisation organisation;
         private readonly Operator @operator;
-        private readonly IMapper mapper;
 
         public ReturnMapTests()
         {
-            map = new ReturnMap(mapper);
+            map = new ReturnMap(A.Fake<IMapper>());
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
             organisation = Organisation.CreatePartnership("trading name");
@@ -227,16 +226,5 @@
 
             return quarterWindow;
         }
-
-        private ReturnScheme GetReturnScheme()
-        {
-            var @return = GetReturn();
-            var name = "Test Name" + Guid.NewGuid();
-            var tradingName = "Test Trading Name" + Guid.NewGuid();
-            const string crn = "ABC12345";
-
-            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-            return new ReturnScheme(scheme, @return);
-        }    
     }
 }
