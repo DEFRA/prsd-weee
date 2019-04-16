@@ -3,12 +3,15 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Core.Scheme;
+    using EA.Prsd.Core;
 
     public class AatfObligatedData
     {
         public AatfObligatedData(AatfData aatf, List<AatfSchemeData> schemeData)
         {
-            // GUARD AGAINST AATF and SCHEMEDATA BEING NULL AND CREATE UNIT TEST TO TEST THE GUARD
+            Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => schemeData, schemeData);
+
             Aatf = aatf;
             SchemeData = schemeData;
         }

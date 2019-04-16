@@ -9,17 +9,29 @@
     public class AatfSchemeDataTests
     {
         [Fact]
-        public void Construct_GivenNullSchemeAndObligatedReceivedData_ArgumentNullExceptionExpected()
+        public void Construct_GivenNullScheme_ArgumentNullExceptionExpected()
         {
             Action act = () =>
             {
-                var aatfSchemeData = new AatfSchemeData(null, null, "ABC123");
+                var aatfSchemeData = new AatfSchemeData(null, A.Dummy<ObligatedCategoryValue>(), A.Dummy<string>());
             };
+
             act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public void GivenSource_AatfSchemeDataPropertiesShouldBeSet()
+        public void Construct_GivenObligatedReceivedData_ArgumentNullExceptionExpected()
+        {
+            Action act = () =>
+            {
+                var aatfSchemeData = new AatfSchemeData(A.Dummy<Scheme>(), null, "ABC123");
+            };
+
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void GivenSource_AatfSchemeDataPropertyShouldBeSet()
         {
             var testScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
             var obligatedReceivedValues = new ObligatedCategoryValue("25.00", "50.00");
