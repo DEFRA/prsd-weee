@@ -2,8 +2,8 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -50,7 +50,8 @@
                     ReturnData = @return,
                     AatfId = aatfId,
                     OperatorName = operatorName,
-                    WeeeSentOnId = weeeSentOnId
+                    WeeeSentOnId = weeeSentOnId,
+                    PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
