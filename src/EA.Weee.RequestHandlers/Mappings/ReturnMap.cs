@@ -59,6 +59,11 @@
                     n.HouseholdTonnage)).ToList();
             }
 
+            if (source.ObligatedWeeeSentOnList != null)
+            {
+                returnData.ObligatedWeeeSentOnData = source.ObligatedWeeeSentOnList.Select(n => new WeeeObligatedData(n.Id, new Aatf(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
+            }
+
             if (source.ObligatedWeeeReusedList != null)
             {
                 returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(

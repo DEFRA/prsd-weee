@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
@@ -24,6 +25,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
+        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
@@ -35,6 +37,7 @@
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
+            ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess,
             IReturnSchemeDataAccess returnSchemeDataAccess)
         {
             this.authorization = authorization;
@@ -45,7 +48,8 @@
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
             this.aatfDataAccess = aatfDataAccess;
-            this.returnSchemeDataAccess = returnSchemeDataAccess;
+            this.getSentOnAatfSiteDataAccess = sentOnAatfSiteDataAccess;
+             this.returnSchemeDataAccess = returnSchemeDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -66,6 +70,10 @@
 
             var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
 
+            var returnObligatedSentOnValues = new List<WeeeSentOnAmount>();
+
+            var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(message.ReturnId);
+            
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
             var returnQuarterWindow = new ReturnQuarterWindow(@return, 
@@ -73,7 +81,8 @@
                 aatfList, 
                 returnNonObligatedValues, 
                 returnObligatedReceivedValues, 
-                returnObligatedReusedValues, 
+                returnObligatedReusedValues,
+                sentOn,
                 @return.Operator, 
                 returnSchemeList);
 
