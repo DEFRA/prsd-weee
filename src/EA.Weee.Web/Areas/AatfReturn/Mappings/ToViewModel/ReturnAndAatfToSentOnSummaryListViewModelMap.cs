@@ -45,6 +45,29 @@
                     OperatorAddress = item.OperatorAddress
                 };
 
+                var siteAddressBuilder = siteData.SiteAddress.Name + ", " + siteData.SiteAddress.Address1 + ", ";
+
+                if (siteData.SiteAddress.Address2 != null)
+                {
+                    var address2 = siteData.SiteAddress.Address2 + ", ";
+                    siteAddressBuilder += address2;
+                }
+
+                if (siteData.SiteAddress.TownOrCity != null)
+                {
+                    var town = siteData.SiteAddress.TownOrCity + ", ";
+                    siteAddressBuilder += town;
+                }
+
+                if (siteData.SiteAddress.CountyOrRegion != null)
+                {
+                    var county = siteData.SiteAddress.CountyOrRegion + ", ";
+                    siteAddressBuilder += county;
+                }
+
+                siteAddressBuilder += siteData.SiteAddress.CountryName;
+                siteData.SiteAddressLong = siteAddressBuilder;
+
                 var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
 
                 if (siteData.OperatorAddress.Address2 != null)
