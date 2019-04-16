@@ -18,7 +18,10 @@
             return new PublicOrganisationData
             {
                 Id = source.Id,
-                DisplayName = source.OrganisationType == Domain.Organisation.OrganisationType.RegisteredCompany ? source.Name : source.TradingName
+                DisplayName = source.OrganisationType == Domain.Organisation.OrganisationType.RegisteredCompany ? source.Name : source.TradingName,
+                Address = source.BusinessAddress != null
+                    ? addressMap.Map(source.BusinessAddress)
+                    : null
             };
         }
     }

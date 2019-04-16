@@ -47,10 +47,12 @@
                 {
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
+                    var weeeSentOnData = source.ObligatedWeeeSentOnData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var obligatedData = new AatfObligatedData(aatf)
                     {
                         WeeeReceived = tonnageUtilities.SumObligatedValues(weeeReceivedData),
-                        WeeeReused = tonnageUtilities.SumObligatedValues(weeeReusedData)
+                        WeeeReused = tonnageUtilities.SumObligatedValues(weeeReusedData),
+                        WeeeSentOn = tonnageUtilities.SumObligatedValues(weeeSentOnData)
                     };
 
                     AatfObligatedData.Add(obligatedData);
