@@ -138,7 +138,18 @@
                 new PublicOrganisationData
                 {
                     Id = o.Id,
-                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
+                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName,
+                    Address = new AddressData
+                    {
+                        Address1 = o.BusinessAddress.Address1,
+                        Address2 = o.BusinessAddress.Address2,
+                        TownOrCity = o.BusinessAddress.TownOrCity,
+                        CountyOrRegion = o.BusinessAddress.CountyOrRegion,
+                        Postcode = o.BusinessAddress.Postcode,
+                        CountryId = o.BusinessAddress.Country.Id,
+                        Telephone = o.BusinessAddress.Telephone,
+                        Email = o.BusinessAddress.Email
+                    },
                 }).ToList();
 
             return new OrganisationSearchDataResult(
