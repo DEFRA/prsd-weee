@@ -12,6 +12,8 @@
 
         public Guid ReturnId { get; set; }
 
+        public Guid WeeeSentOnId { get; set; }
+
         public int CategoryId { get; set; }
 
         public decimal? B2B { get; set; }
