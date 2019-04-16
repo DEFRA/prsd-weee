@@ -82,8 +82,8 @@
                 returnNonObligatedValues, 
                 returnObligatedReceivedValues, 
                 returnObligatedReusedValues,
+                @return.Operator,
                 sentOn,
-                @return.Operator, 
                 returnSchemeList);
 
             var result = mapper.Map(returnQuarterWindow);
