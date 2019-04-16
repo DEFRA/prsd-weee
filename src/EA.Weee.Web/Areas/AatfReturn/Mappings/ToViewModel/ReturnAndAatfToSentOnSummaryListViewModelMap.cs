@@ -66,6 +66,13 @@
                 }
 
                 siteAddressBuilder += siteData.SiteAddress.CountryName;
+
+                if (siteData.OperatorAddress.Postcode != null)
+                {
+                    var postCode = ", " + siteData.SiteAddress.Postcode;
+                    siteAddressBuilder += postCode;
+                }
+
                 siteData.SiteAddressLong = siteAddressBuilder;
 
                 var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
@@ -89,6 +96,13 @@
                 }
 
                 operatorAddressBuilder += siteData.OperatorAddress.CountryName;
+
+                if (siteData.OperatorAddress.Postcode != null)
+                {
+                    var postCode = ", " + siteData.OperatorAddress.Postcode;
+                    operatorAddressBuilder += postCode;
+                }
+
                 siteData.OperatorAddressLong = operatorAddressBuilder;
 
                 siteList.Add(siteData);

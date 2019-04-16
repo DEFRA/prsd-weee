@@ -51,16 +51,16 @@
         }
 
         [Fact]
-        public void Map_GivenValidSource_LongSiteAddressShouldBeCorrect()
+        public void Map_GivenValidSource_LongAddressesShouldBeCorrect()
         {
             var weeeSentOnList = new List<WeeeSentOnData>();
-            var operatorAddressLong = "OpName, OpAdd1, France";
-            var siteAddressLong = "SiteName, SiteAdd1, Germany";
+            var operatorAddressLong = "OpName, OpAdd1, OpAdd2, OpTown, OpCounty, France, GU22 7UY";
+            var siteAddressLong = "SiteName, SiteAdd1, SiteAdd2, SiteTown, SiteCounty, Germany, GU22 7UT";
 
             var weeeSentOn = new WeeeSentOnData()
             {
-                OperatorAddress = new AatfAddressData() { Name = "OpName", Address1 = "OpAdd1", CountryId = Guid.NewGuid(), CountryName = "France" },
-                SiteAddress = new AatfAddressData() { Name = "SiteName", Address1 = "SiteAdd1", CountryId = Guid.NewGuid(), CountryName = "Germany" }
+                OperatorAddress = new AatfAddressData() { Name = "OpName", Address1 = "OpAdd1", Address2 = "OpAdd2", TownOrCity = "OpTown", CountyOrRegion = "OpCounty", Postcode = "GU22 7UY", CountryId = Guid.NewGuid(), CountryName = "France" },
+                SiteAddress = new AatfAddressData() { Name = "SiteName", Address1 = "SiteAdd1", Address2 = "SiteAdd2", TownOrCity = "SiteTown", CountyOrRegion = "SiteCounty", Postcode = "GU22 7UT", CountryId = Guid.NewGuid(), CountryName = "Germany" }
             };
 
             weeeSentOnList.Add(weeeSentOn);
