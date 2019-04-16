@@ -60,7 +60,7 @@
             }
             else if (source.OperatorName != null)
             {
-                transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeSentOnData.Where(w => w.Aatf.Id == source.AatfId).ToList();
+                transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeSentOnData.Where(w => w.WeeeSentOnId == source.WeeeSentOnId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
             }
             else
