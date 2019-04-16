@@ -110,6 +110,7 @@
     <Compile Include="AatfReturn\NonObligatedDataTests.cs" />
     <Compile Include="AatfReturn\SchemeDataListTests.cs" />
     <Compile Include="AatfReturn\AatfSchemeDataTests.cs" />
+    <Compile Include="AatfReturn\AatfObligatedDataTests.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
