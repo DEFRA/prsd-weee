@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Core.Scheme;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
@@ -20,10 +22,11 @@
         private readonly List<NonObligatedData> mapperTestNonObligatedData;
         private readonly List<WeeeObligatedData> mapperTestObligatedReceivedData;
         private readonly List<WeeeObligatedData> mapperTestObligatedReusedData;
+        private readonly List<WeeeObligatedData> mapperTestObligatedSentOnData;
         private readonly Scheme mapperTestScheme;
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
-
+        
         public ReturnToReturnViewModelMapTests()
         {
             map = new ReturnToReturnViewModelMap(new TonnageUtilities());
@@ -35,6 +38,7 @@
             mapperTestNonObligatedData = new List<NonObligatedData>();
             mapperTestObligatedReceivedData = new List<WeeeObligatedData>();
             mapperTestObligatedReusedData = new List<WeeeObligatedData>();
+            mapperTestObligatedSentOnData = new List<WeeeObligatedData>();
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
             mapperTestAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
             mapperTestAatfList = new List<AatfData>();
@@ -56,8 +60,11 @@
 
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
 
             mapperTestAatfList.Add(mapperTestAatf);
+
+            var schemeDataList = CreateSchemeDataItems();
 
             var returnData = new ReturnData()
             {
@@ -67,7 +74,9 @@
                 NonObligatedData = mapperTestNonObligatedData,
                 ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
-                Aatfs = mapperTestAatfList
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList,
+                SchemeDataItems = schemeDataList
             };
 
             var result = map.Map(returnData);
@@ -82,8 +91,10 @@
             result.AatfsData[0].WeeeReceived.B2C.Should().Be("1.234");
             result.AatfsData[0].WeeeReused.B2B.Should().Be("1.234");
             result.AatfsData[0].WeeeReused.B2C.Should().Be("1.234");
-            result.AatfsData[0].WeeeSentOn.B2B.Should().Be(nullTonnageDisplay);
-            result.AatfsData[0].WeeeSentOn.B2C.Should().Be(nullTonnageDisplay);
+            result.AatfsData[0].WeeeSentOn.B2B.Should().Be("1.234");
+            result.AatfsData[0].WeeeSentOn.B2C.Should().Be("1.234");
+            result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
+            result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
         }
 
         [Fact]
@@ -91,6 +102,7 @@
         {
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, null, null));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, null, null));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, null, null));
             mapperTestAatfList.Add(mapperTestAatf);
 
             var returnData = new ReturnData()
@@ -101,6 +113,7 @@
                 NonObligatedData = mapperTestNonObligatedData,
                 ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
                 Aatfs = mapperTestAatfList
             };
 
@@ -141,6 +154,7 @@
         {
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
 
             var returnData = new ReturnData()
             {
@@ -150,6 +164,7 @@
                 NonObligatedData = mapperTestNonObligatedData,
                 ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
                 Aatfs = mapperTestAatfList
             };
 
@@ -166,6 +181,7 @@
         {
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestAatfList.Add(new AatfData(Guid.NewGuid(), "Other New Aatf", "123456789"));
 
             var returnData = new ReturnData()
@@ -176,6 +192,7 @@
                 NonObligatedData = mapperTestNonObligatedData,
                 ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
                 Aatfs = mapperTestAatfList
             };
 
@@ -198,6 +215,15 @@
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
+        }
+
+        private List<SchemeData> CreateSchemeDataItems()
+        {
+            var schemeDataItems = new List<SchemeData>()
+            {
+                new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = "ABC123" }
+            };
+            return schemeDataItems;
         }
     }
 }

@@ -12,5 +12,7 @@
         Task<IList<int>> GetComplianceYearsWithSubmittedMemberUploads(Guid schemeId);
 
         Task<IList<int>> GetComplianceYearsWithSubmittedDataReturns(Guid schemeId);
+
+        Task<Scheme> GetSchemeOrDefaultByOrganisationId(Guid organisationId);
     }
 }

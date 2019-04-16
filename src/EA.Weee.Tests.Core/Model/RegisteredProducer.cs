@@ -29,9 +29,9 @@ namespace EA.Weee.Tests.Core.Model
         public bool Removed { get; set; }
         public Nullable<System.DateTime> RemovedDate { get; set; }
     
-        public virtual Scheme Scheme { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
         public virtual ProducerSubmission CurrentSubmission { get; set; }
         public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; set; }
+        public virtual Scheme Scheme { get; set; }
     }
 }

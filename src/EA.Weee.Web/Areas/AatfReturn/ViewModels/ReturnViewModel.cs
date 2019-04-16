@@ -6,6 +6,7 @@
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Scheme;
 
     public class ReturnViewModel : ReturnViewModelBase
     {
@@ -46,5 +47,9 @@
         public string SchemeName { get; set; }
 
         public string ApprovalNumber { get; set; }
+
+        public IList<SchemeData> SchemeDataItems { get; set; }
+
+        public ReturnData ReturnData { get; set; }
     }
 }

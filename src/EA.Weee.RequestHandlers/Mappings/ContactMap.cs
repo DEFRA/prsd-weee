@@ -2,9 +2,10 @@
 {
     using Core.Organisations;
     using Domain.Organisation;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    internal class ContactMap : IMap<Contact, ContactData>, IMap<Organisation, ContactData>
+    internal class ContactMap : IMap<Contact, ContactData>, IMap<Scheme, ContactData>
     {
         public ContactData Map(Contact source)
         {
@@ -14,11 +15,12 @@
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 Position = source.Position,
-                HasContact = true
+                HasContact = true,
+                Id = source.Id
             };
         }
 
-        public ContactData Map(Organisation source)
+        public ContactData Map(Scheme source)
         {
             if (source.HasContact)
             {
@@ -28,13 +30,14 @@
                     FirstName = source.Contact.FirstName,
                     LastName = source.Contact.LastName,
                     Position = source.Contact.Position,
-                    OrganisationId = source.Id,
-                    HasContact = true
+                    OrganisationId = source.OrganisationId,
+                    HasContact = true,
+                    Id = source.Id
                 };
             }
             return new ContactData
             {
-                OrganisationId = source.Id,
+                OrganisationId = source.OrganisationId,
                 HasContact = false
             };
         }

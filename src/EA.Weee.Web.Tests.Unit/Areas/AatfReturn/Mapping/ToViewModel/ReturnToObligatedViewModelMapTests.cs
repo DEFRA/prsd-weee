@@ -91,6 +91,16 @@
         }
 
         [Fact]
+        public void Map_GivenNullOperatorName_OperatorNameShouldBeMappedAsNull()
+        {
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), WeeeSentOnId = Guid.NewGuid() };
+
+            var result = mapper.Map(transfer);
+
+            result.OperatorName.Should().Be(null);
+        }
+
+        [Fact]
         public void Map_GivenPastedData_PasteProcessorShouldBeCalled()
         {
             var pastedList = new List<ObligatedCategoryValue>();

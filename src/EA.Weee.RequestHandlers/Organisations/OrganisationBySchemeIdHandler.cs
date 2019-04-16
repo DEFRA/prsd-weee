@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using Core.Organisations;
-
     using DataAccess.DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mapper;

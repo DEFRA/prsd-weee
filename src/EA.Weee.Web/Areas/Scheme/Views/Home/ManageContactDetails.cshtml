@@ -1,14 +1,15 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Core.Organisations.OrganisationData
+@using EA.Weee.Web.Areas.Scheme.ViewModels
+@model EA.Weee.Core.Scheme.SchemeData
 
 @{
-    ViewBag.Title = "Manage organisation contact details";
+    ViewBag.Title = PcsAction.ManageContactDetails;
 }
 
 @section main_content {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Manage organisation contact details</h1>
+        <h1 class="govuk-heading-l">@PcsAction.ManageContactDetails</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -16,6 +17,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
+        @Html.HiddenFor(model => model.OrganisationId)
         @Html.HiddenFor(model => model.Id)
 
         @Html.HiddenFor(model => model.Contact.RowVersion)
@@ -38,7 +40,7 @@
             @Html.Gds().TextBoxFor(model => model.Contact.Position, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Position })
         </div>
 
-        @Html.EditorFor(model => model.OrganisationAddress)
+        @Html.EditorFor(model => model.Address)
 
         <p>
             <button class="govuk-button">Save and Continue</button>
@@ -46,7 +48,7 @@
     }
 
     <div>
-        @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.Id })
+        @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.OrganisationId })
     </div>
 }
 
