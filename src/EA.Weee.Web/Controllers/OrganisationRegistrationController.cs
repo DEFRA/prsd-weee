@@ -635,7 +635,7 @@
             {
                 if (viewModel.SelectedValue == "No")
                 {
-                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId });
+                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId, viewModel.ContactId, viewModel.AddressId });
                 }
                 if (viewModel.SelectedValue == "Yes")
                 {
@@ -654,13 +654,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId)
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId, Guid contactId, Guid addressId)
         {
-            var schemeViewData = SchemeViewData();
-
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress, schemeViewData?.ContactId, schemeViewData?.AddressId);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress, contactId, addressId);
                 return View(model);
             }
         }
@@ -670,6 +668,8 @@
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel viewModel)
         {
             viewModel.Address.Countries = await GetCountries(false);
+
+            SetViewData(viewModel.AddressId, viewModel.ContactId);
 
             if (!ModelState.IsValid)
             {
@@ -684,7 +684,8 @@
                     return RedirectToAction("ReviewOrganisationDetails", new
                     {
                         viewModel.OrganisationId,
-                        viewModel.AddressId
+                        viewModel.AddressId,
+                        viewModel.ContactId
                     });
                 }
             }

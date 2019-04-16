@@ -34,7 +34,7 @@
                 organisationSearcher);
 
             // Act
-            Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A.Dummy<Guid>());
+            Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             await Assert.ThrowsAnyAsync<Exception>(action);
@@ -64,7 +64,7 @@
                 organisationSearcher);
 
             // Act
-            var result = await controller.RegisteredOfficeAddress(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"));
+            var result = await controller.RegisteredOfficeAddress(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             // Assert
             var viewResult = result as ViewResult;

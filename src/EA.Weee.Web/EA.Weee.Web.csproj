@@ -827,7 +827,7 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_CountryPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
