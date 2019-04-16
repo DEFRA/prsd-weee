@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
     using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
@@ -36,6 +37,13 @@
 
             var scheme = await dataAccess.FetchSchemeAsync(message.SchemeData.OrganisationId);
 
+            if (scheme == null)
+            {
+                var errorMessage = $"A scheme with organisation id \"{message.SchemeData.OrganisationId}\" could not be found.";
+
+                throw new ArgumentException(errorMessage);                
+            }
+
             var contact = new Contact(
                 message.SchemeData.Contact.FirstName,
                 message.SchemeData.Contact.LastName,
@@ -64,17 +72,11 @@
             await dataAccess.SaveAsync();
 
             if (message.SendNotificationOnChange &&
-                (contactChanged || schemeAddressChanged))
+                (contactChanged || schemeAddressChanged) && scheme.CompetentAuthority != null)
             {
-                scheme = await dataAccess.FetchSchemeAsync(message.SchemeData.Id);
-
-                if (scheme != null &&
-                    scheme.CompetentAuthority != null)
-                {
-                    await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName);
-                }
+                await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName);
             }
-
+           
             return true;
         }
     }
