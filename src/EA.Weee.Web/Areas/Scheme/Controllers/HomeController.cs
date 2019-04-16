@@ -61,10 +61,10 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                List<string> activities = await GetActivities(pcsId);
+                var activities = await GetActivities(pcsId);
 
-                var model = new ChooseActivityViewModel(activities);
-                model.OrganisationId = pcsId;
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
+
                 await SetBreadcrumb(pcsId, null);
 
                 await SetShowLinkToCreateOrJoinOrganisation(model);
@@ -84,15 +84,14 @@
             }
             var organisationOverview = await GetOrganisationOverview(pcsId);
 
-            List<string> activities = new List<string>();
-            activities.Add(PcsAction.ManagePcsMembers);
+            var activities = new List<string> { PcsAction.ManagePcsMembers };
 
             if (configurationService.CurrentConfiguration.EnableDataReturns)
             {
                 activities.Add(PcsAction.ManageEeeWeeeData);
             }
 
-            bool canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+            var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
             if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
             {
                 activities.Add(PcsAction.ViewSubmissionHistory);
@@ -160,7 +159,7 @@
                 {
                     var organisationOverview = await GetOrganisationOverview(viewModel.OrganisationId);
 
-                    bool canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                    var canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
                     if (organisationOverview.HasMemberSubmissions && canViewDataReturnsSubmission)
                     {
                         return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
@@ -255,17 +254,17 @@
 
         private async Task SetShowLinkToCreateOrJoinOrganisation(ChooseActivityViewModel model)
         {
-            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+            var organisations = await GetOrganisations();
 
-            List<OrganisationUserData> accessibleOrganisations = organisations
+            var accessibleOrganisations = organisations
                 .Where(o => o.UserStatus == UserStatus.Active)
                 .ToList();
 
-            List<OrganisationUserData> inaccessibleOrganisations = organisations
+            var inaccessibleOrganisations = organisations
                 .Except(accessibleOrganisations)
                 .ToList();
 
-            bool showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
+            var showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
 
             model.ShowLinkToCreateOrJoinOrganisation = showLink;
         }
@@ -419,7 +418,7 @@
                 {
                     OrganisationData = orgDetails
                 };
-                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                var organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
                 await SetBreadcrumb(pcsId, organisationDetailsActivityName);
                 return View("ViewOrganisationDetails", model);
             }
@@ -514,14 +513,14 @@
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
+                var csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
                 var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
 
-                string csv = csvWriter.Write(errors);
-                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                var csv = csvWriter.Write(errors);
+                var fileContent = new UTF8Encoding().GetBytes(csv);
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }

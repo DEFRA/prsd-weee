@@ -11,13 +11,13 @@
     using Requests.Scheme;
     using Weee.Security;
 
-    internal class GetSchemeByIdOrganisationIdHandler : IRequestHandler<GetSchemeByOrganisationId, SchemeData>
+    internal class GetSchemeByOrganisationIdHandler : IRequestHandler<GetSchemeByOrganisationId, SchemeData>
         {
             private readonly ISchemeDataAccess dataAccess;
             private readonly IWeeeAuthorization authorization;
             private readonly IMapper mapper;
 
-            public GetSchemeByIdOrganisationIdHandler(ISchemeDataAccess dataAccess,
+            public GetSchemeByOrganisationIdHandler(ISchemeDataAccess dataAccess,
                 IMapper mapper,
                 IWeeeAuthorization authorization)
             {
@@ -40,20 +40,6 @@
 
                 var schemeData = mapper.Map<Scheme, SchemeData>(scheme);
 
-                //CHECK
-                //var complianceYearsWithSubmittedMemberUploads =
-                //    await dataAccess.GetComplianceYearsWithSubmittedMemberUploads(request.SchemeId);
-
-                //var complianceYearsWithSubmittedDataReturns =
-                //    await dataAccess.GetComplianceYearsWithSubmittedDataReturns(request.SchemeId);
-
-                //var schemeDownloadsByYears = mapper.Map<Core.Scheme.SchemeDataAvailability>(
-                //    Domain.Scheme.SchemeDataAvailability.Create(
-                //        complianceYearsWithSubmittedMemberUploads,
-                //        complianceYearsWithSubmittedDataReturns));
-
-                //schemeData.SchemeDataAvailability = schemeDownloadsByYears;
-                //schemeData.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
                 return schemeData;
             }
         }      

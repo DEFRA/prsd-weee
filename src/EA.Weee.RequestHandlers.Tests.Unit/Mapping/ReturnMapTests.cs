@@ -5,11 +5,11 @@
     using System.Linq;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.Organisation;
     using EA.Weee.Domain;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
+    using Prsd.Core.Mapper;
     using Xunit;
     using DomainAatf = Domain.AatfReturn.Aatf;
     using DomainScheme = Domain.Scheme.Scheme;
@@ -25,7 +25,7 @@
 
         public ReturnMapTests()
         {
-            map = new ReturnMap();
+            map = new ReturnMap(A.Fake<IMapper>());
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
             organisation = Organisation.CreatePartnership("trading name");
@@ -43,7 +43,8 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>());
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(), 
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -57,7 +58,8 @@
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
             var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
-            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow);
+
+            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow, null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -69,8 +71,11 @@
         public void Map_GivenSource_OperatorShouldBeMapped()
         {
             var @return = GetReturn();
-
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
+                A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), 
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator,
+                A.Fake<List<WeeeSentOnAmount>>(),
+                A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -89,8 +94,9 @@
                 new NonObligatedWeee(@return, 1, true, 2),
                 new NonObligatedWeee(@return, 2, false, 3)
             };
-
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), nonObligated);
+            
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), null, nonObligated,  
+                null, null, null, null, A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -112,8 +118,12 @@
                 new WeeeReceivedAmount(weeeReceived, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
-
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
+                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, 
+                A.Fake<List<WeeeReusedAmount>>(), @operator,
+                A.Fake<List<WeeeSentOnAmount>>(),
+                A.Fake<List<ReturnScheme>>());
+          
             var result = map.Map(source);
 
             result.ObligatedWeeeReceivedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
@@ -134,8 +144,10 @@
                 new WeeeReusedAmount(weeeReused, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), obligated, A.Fake<List<WeeeSentOnAmount>>(), @operator);
-
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
+                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
+                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
+          
             var result = map.Map(source);
 
             result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
@@ -156,8 +168,9 @@
                 new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m, weeeSentOn.Id),
                 new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m, weeeSentOn.Id)
             };
-
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), obligated, @operator);
+            
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), 
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -177,7 +190,9 @@
                 new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
+                aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
+                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
 
@@ -186,6 +201,15 @@
             result.Aatfs.Count(a => a.Name == "Aatf1" && a.Id == zeroGuid).Should().Be(1);
             result.Aatfs.Count(a => a.Name == "Aatf2" && a.Id == zeroGuid).Should().Be(1);
             result.Aatfs.Count().Should().Be(2);
+        }
+
+        [Fact]
+        public void Map_GivenSource_ReturnSchemesShouldBeMapped()
+        {
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+
+            var result = map.Map(source);
         }
 
         public Return GetReturn()
