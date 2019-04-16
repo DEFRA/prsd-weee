@@ -49,5 +49,37 @@
             result.AatfId.Should().Be(aatfId);
             result.Sites.Should().BeEquivalentTo(weeeList);
         }
+
+        [Fact]
+        public void Map_GivenValidSource_LongSiteAddressShouldBeCorrect()
+        {
+            var weeeSentOnList = new List<WeeeSentOnData>();
+            var operatorAddressLong = "OpName, OpAdd1, France";
+            var siteAddressLong = "SiteName, SiteAdd1, Germany";
+
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                OperatorAddress = new AatfAddressData() { Name = "OpName", Address1 = "OpAdd1", CountryId = Guid.NewGuid(), CountryName = "France" },
+                SiteAddress = new AatfAddressData() { Name = "SiteName", Address1 = "SiteAdd1", CountryId = Guid.NewGuid(), CountryName = "Germany" }
+            };
+
+            weeeSentOnList.Add(weeeSentOn);
+
+            var transfer = new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
+            {
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOnDataItems = weeeSentOnList
+            };
+
+            var result = map.Map(transfer);
+
+            foreach (var site in result.Sites)
+            {
+                site.OperatorAddressLong.Should().Be(operatorAddressLong);
+                site.SiteAddressLong.Should().Be(siteAddressLong);
+            }
+        }
     }
 }

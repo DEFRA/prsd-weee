@@ -70,7 +70,7 @@
         {
             var @return = GetReturn();
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
 
             var result = map.Map(source);
 
@@ -112,7 +112,7 @@
                 new WeeeReceivedAmount(weeeReceived, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, A.Fake<List<WeeeReusedAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
 
             var result = map.Map(source);
 
@@ -134,13 +134,36 @@
                 new WeeeReusedAmount(weeeReused, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), obligated, @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), obligated, A.Fake<List<WeeeSentOnAmount>>(), @operator);
 
             var result = map.Map(source);
 
             result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
             result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 2 && o.B2C == 3 && o.B2B == 4).Should().Be(1);
             result.ObligatedWeeeReusedData.Count().Should().Be(2);
+        }
+
+        [Fact]
+        public void Map_GivenSource_ObligatedWeeeSentOnValuesShouldBeMapped()
+        {
+            var @return = GetReturn();
+            var siteAddress = new AatfAddress("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", A.Fake<Country>());
+
+            var weeeSentOn = ReturnWeeeSentOn(siteAddress, aatf, @return);
+
+            var obligated = new List<WeeeSentOnAmount>()
+            {
+                new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m, weeeSentOn.Id),
+                new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m, weeeSentOn.Id)
+            };
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), obligated, @operator);
+
+            var result = map.Map(source);
+
+            result.ObligatedWeeeSentOnData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
+            result.ObligatedWeeeSentOnData.Count(o => o.CategoryId == 2 && o.B2C == 3 && o.B2B == 4).Should().Be(1);
+            result.ObligatedWeeeSentOnData.Count().Should().Be(2);
         }
 
         [Fact]
@@ -154,7 +177,7 @@
                 new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator);
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), A.Fake<List<WeeeSentOnAmount>>(), @operator);
 
             var result = map.Map(source);
 
@@ -183,6 +206,13 @@
         public WeeeReused ReturnWeeeReused(DomainAatf aatf, Guid returnId)
         {
             var weeeReused = new WeeeReused(aatf, returnId);
+
+            return weeeReused;
+        }
+
+        public WeeeSentOn ReturnWeeeSentOn(AatfAddress siteAddress, DomainAatf aatf, Return @return)
+        {
+            var weeeReused = new WeeeSentOn(siteAddress, aatf, @return);
 
             return weeeReused;
         }
