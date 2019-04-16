@@ -32,6 +32,7 @@
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
         private readonly ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
+        private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
         public GetReturnHandlerTests()
         {
@@ -43,6 +44,7 @@
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
+            returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
 
             handler = new GetReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -54,7 +56,8 @@
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
-                sentOnAatfSiteDataAccess);
+                sentOnAatfSiteDataAccess,
+                returnSchemeDataAccess);
         }
 
         [Fact]
@@ -70,9 +73,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -91,9 +94,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -195,14 +198,15 @@
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
-            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(A<Guid>._)).Returns(obligatedSentOnValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
-            //SG
+
             A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.IsSameOrEqualTo(quarterWindow)
                                                                                 && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
                                                                                 && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
                                                                                 && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
+                                                                                && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 

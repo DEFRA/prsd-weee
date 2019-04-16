@@ -1,44 +1,45 @@
-﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
+﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
     using System;
     using Domain.Organisation;
+    using Domain.Scheme;
+    using FakeItEasy;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
-    public class OrganisationContactPersonTests
+    public class SchemeContactPersonTests
     {
         [Fact]
         public void AddContact_OrganisationAlreadyHasContact_UpdateContactDetails()
         {
             //Changed as per update contact person details
-            var organisation = GetTestOrganisation();
+            var scheme = GetTestScheme();
             var contact = GetTestContact();
-            organisation.AddOrUpdateMainContactPerson(contact);
+            scheme.AddOrUpdateMainContactPerson(contact);
 
-            Assert.Same(contact, organisation.Contact);
+            Assert.Same(contact, scheme.Contact);
             
-            Assert.Equal(organisation.Contact.FirstName, contact.FirstName);
-            Assert.Equal(organisation.Contact.LastName, contact.LastName);
-            Assert.Equal(organisation.Contact.Position, contact.Position);
+            Assert.Equal(scheme.Contact.FirstName, contact.FirstName);
+            Assert.Equal(scheme.Contact.LastName, contact.LastName);
+            Assert.Equal(scheme.Contact.Position, contact.Position);
         }
 
         [Fact]
         public void AddContact_OrganisationHasExistingContact_JustCopiesParameterObject()
         {
-            var organisation = GetTestOrganisation();
+            var scheme = GetTestScheme();
 
             var initialContact = GetTestContact();
-            organisation.AddOrUpdateMainContactPerson(initialContact);
+            scheme.AddOrUpdateMainContactPerson(initialContact);
 
             var updatedContact = new Contact("different firstname", "different lastname", "different position");
-            organisation.AddOrUpdateMainContactPerson(updatedContact);
+            scheme.AddOrUpdateMainContactPerson(updatedContact);
 
-            Assert.Same(initialContact, organisation.Contact);
-            Assert.NotSame(updatedContact, organisation.Contact);
+            Assert.Same(initialContact, scheme.Contact);
+            Assert.NotSame(updatedContact, scheme.Contact);
 
-            Assert.Equal(organisation.Contact.FirstName, updatedContact.FirstName);
-            Assert.Equal(organisation.Contact.LastName, updatedContact.LastName);
-            Assert.Equal(organisation.Contact.Position, updatedContact.Position);
+            Assert.Equal(scheme.Contact.FirstName, updatedContact.FirstName);
+            Assert.Equal(scheme.Contact.LastName, updatedContact.LastName);
+            Assert.Equal(scheme.Contact.Position, updatedContact.Position);
         }
 
         [Fact]
@@ -92,10 +93,10 @@
             return new Contact("firstName", "LastName", "Position");
         }
 
-        private static Organisation GetTestOrganisation()
+        private static Scheme GetTestScheme()
         {
-            var organisation = Organisation.CreateRegisteredCompany("Test", "AB123456");
-            return organisation;
+            var scheme = new Scheme(A.Dummy<Guid>());
+            return scheme;
         }
     }
 }

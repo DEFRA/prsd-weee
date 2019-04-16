@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using Core.Scheme;
     using Core.Shared.Paging;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
@@ -60,10 +61,10 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                List<string> activities = await GetActivities(pcsId);
+                var activities = await GetActivities(pcsId);
 
-                var model = new ChooseActivityViewModel(activities);
-                model.OrganisationId = pcsId;
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
+
                 await SetBreadcrumb(pcsId, null);
 
                 await SetShowLinkToCreateOrJoinOrganisation(model);
@@ -83,15 +84,14 @@
             }
             var organisationOverview = await GetOrganisationOverview(pcsId);
 
-            List<string> activities = new List<string>();
-            activities.Add(PcsAction.ManagePcsMembers);
+            var activities = new List<string> { PcsAction.ManagePcsMembers };
 
             if (configurationService.CurrentConfiguration.EnableDataReturns)
             {
                 activities.Add(PcsAction.ManageEeeWeeeData);
             }
 
-            bool canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+            var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
             if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
             {
                 activities.Add(PcsAction.ViewSubmissionHistory);
@@ -159,7 +159,7 @@
                 {
                     var organisationOverview = await GetOrganisationOverview(viewModel.OrganisationId);
 
-                    bool canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                    var canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
                     if (organisationOverview.HasMemberSubmissions && canViewDataReturnsSubmission)
                     {
                         return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
@@ -254,17 +254,17 @@
 
         private async Task SetShowLinkToCreateOrJoinOrganisation(ChooseActivityViewModel model)
         {
-            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+            var organisations = await GetOrganisations();
 
-            List<OrganisationUserData> accessibleOrganisations = organisations
+            var accessibleOrganisations = organisations
                 .Where(o => o.UserStatus == UserStatus.Active)
                 .ToList();
 
-            List<OrganisationUserData> inaccessibleOrganisations = organisations
+            var inaccessibleOrganisations = organisations
                 .Except(accessibleOrganisations)
                 .ToList();
 
-            bool showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
+            var showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
 
             model.ShowLinkToCreateOrJoinOrganisation = showLink;
         }
@@ -418,7 +418,7 @@
                 {
                     OrganisationData = orgDetails
                 };
-                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                var organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
                 await SetBreadcrumb(pcsId, organisationDetailsActivityName);
                 return View("ViewOrganisationDetails", model);
             }
@@ -434,13 +434,13 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation contact details");
+            await SetBreadcrumb(pcsId, PcsAction.ManageContactDetails);
 
-            OrganisationData model;
+            SchemeData model;
             using (var client = apiClient())
             {
-                model = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
+                model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             return View(model);
@@ -448,25 +448,25 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageContactDetails(OrganisationData model)
+        public async Task<ActionResult> ManageContactDetails(SchemeData model)
         {
-            await SetBreadcrumb(model.Id, "Manage organisation contact details");
+            await SetBreadcrumb(model.OrganisationId, PcsAction.ManageContactDetails);
 
             if (!ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 }
                 return View(model);
             }
 
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model, true));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(model, true));
             }
 
-            return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
+            return RedirectToAction("ChooseActivity", new { pcsId = model.OrganisationId });
         }
 
         [HttpGet]
@@ -513,14 +513,14 @@
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
+                var csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
                 var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
 
-                string csv = csvWriter.Write(errors);
-                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                var csv = csvWriter.Write(errors);
+                var fileContent = new UTF8Encoding().GetBytes(csv);
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }

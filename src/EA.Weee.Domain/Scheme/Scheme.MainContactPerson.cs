@@ -1,13 +1,11 @@
-﻿namespace EA.Weee.Domain.Organisation
+﻿namespace EA.Weee.Domain.Scheme
 {
+    using Organisation;
     using Prsd.Core;
 
-    public partial class Organisation
+    public partial class Scheme
     {
-        public bool HasContact
-        {
-            get { return Contact != null; }
-        }
+        public bool HasContact => Contact != null;
 
         public void AddOrUpdateMainContactPerson(Contact contactPerson)
         {

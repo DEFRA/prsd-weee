@@ -3,8 +3,6 @@
     using System;
     using Domain.Organisation;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
-
     public class OrganisationTests
     {
         [Fact]

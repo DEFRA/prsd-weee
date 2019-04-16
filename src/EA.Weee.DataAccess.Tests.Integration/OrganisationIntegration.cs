@@ -28,21 +28,17 @@
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.RegisteredCompany;
 
-                var organisationAddress = await MakeInternationalAddress(context, "O");
                 var businessAddress = await MakeUKAddress(context, "B");
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                organisation.AddOrUpdateMainContactPerson(contact);
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
 
-                var thisTestOrganisationArray =
-                    context.Organisations.Where(o => o.Name == name).ToArray();
+                var thisTestOrganisationArray = context.Organisations.Where(o => o.Name == name).ToArray();
 
                 Assert.NotNull(thisTestOrganisationArray);
                 Assert.NotEmpty(thisTestOrganisationArray);
@@ -52,7 +48,7 @@
                 VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
                 if (thisTestOrganisation != null)
                 {
-                    VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                    VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
                 }
             }
         }
@@ -69,14 +65,11 @@
                 var status = OrganisationStatus.Incomplete;
                 var type = OrganisationType.SoleTraderOrIndividual;
 
-                var organisationAddress = await MakeInternationalAddress(context, "O");
                 var businessAddress = await MakeUKAddress(context, "B");
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
                 var organisation = Organisation.CreateSoleTrader(tradingName);
 
-                organisation.AddOrUpdateMainContactPerson(contact);
-                organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
@@ -93,7 +86,7 @@
                 var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
                 VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
-                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+                VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
             }
         }
 
@@ -114,7 +107,7 @@
             Assert.Equal(expectedStatus, fromDatabase.OrganisationStatus);
             Assert.Equal(expectedType, fromDatabase.OrganisationType);
 
-            var thisTestOrganisationAddress = fromDatabase.OrganisationAddress;
+            var thisTestOrganisationAddress = fromDatabase.BusinessAddress;
             Assert.NotNull(thisTestOrganisationAddress);
         }
 
