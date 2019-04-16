@@ -12,5 +12,7 @@
         Task<List<WeeeReusedAmount>> FetchObligatedWeeeReusedForReturn(Guid returnId);
 
         Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturn(Guid weeeSentOnId);
+
+        Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturnByReturn(Guid returnId);
     }
 }
