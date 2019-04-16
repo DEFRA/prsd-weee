@@ -32,6 +32,7 @@
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
         private readonly ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
+        private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
         public GetReturnHandlerTests()
         {
@@ -43,6 +44,7 @@
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
+            returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
 
             handler = new GetReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -54,7 +56,8 @@
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
-                sentOnAatfSiteDataAccess);
+                sentOnAatfSiteDataAccess,
+                returnSchemeDataAccess);
         }
 
         [Fact]
@@ -70,9 +73,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -91,9 +94,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
