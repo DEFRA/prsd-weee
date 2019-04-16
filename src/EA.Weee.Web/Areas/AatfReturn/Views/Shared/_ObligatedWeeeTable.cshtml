@@ -30,13 +30,13 @@
                     @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
                     @Html.HiddenFor(m => m.CategoryValues[i].Id)
                 </div>
-                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="display:inline-flex">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                     </div>
                 </div>
-                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="display:inline-flex">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
                         @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
                         @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
@@ -50,10 +50,10 @@
                     Total (tonnes)
                 </h3>
             </div>
-            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display" style="display:inline-flex">
                 <h3 class="govuk-heading-m" id="B2CTotal" name="B2CTotal">@Model.B2CTotal</h3>
             </div>
-            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display" style="display:inline-flex">
                 <h3 class="govuk-heading-m" id="B2BTotal" name="B2BTotal">@Model.B2BTotal</h3>
             </div>
         </div>
