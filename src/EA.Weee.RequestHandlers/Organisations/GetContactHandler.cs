@@ -17,12 +17,10 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<Contact, ContactData> mapper;
-        private readonly WeeeContext context;
         
-        public GetContactHandler(IWeeeAuthorization authorization, WeeeContext context, IGenericDataAccess dataAccess, IMap<Contact, ContactData> mapper)
+        public GetContactHandler(IWeeeAuthorization authorization, IGenericDataAccess dataAccess, IMap<Contact, ContactData> mapper)
         {
             this.authorization = authorization;
-            this.context = context;
             this.dataAccess = dataAccess;
             this.mapper = mapper;
         }
