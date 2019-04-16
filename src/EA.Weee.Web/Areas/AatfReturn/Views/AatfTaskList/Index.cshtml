@@ -2,6 +2,8 @@
 @using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
     ViewBag.Title = "AATF task list";
@@ -57,7 +59,7 @@
         <div class="govuk-grid-row govuk-table__cell">
             <div class="govuk-grid-column-one-half">
                 <p>
-                    @Html.RouteLink("Received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.NavigationRouteLink("Received on behalf of PCS(s)", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
                 </p>
             </div>
 
@@ -78,7 +80,7 @@
         <div class="govuk-grid-row govuk-table__cell">
             <div class="govuk-grid-column-one-half">
                 <p>
-                    @Html.RouteLink("Sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                    @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
                 </p>
             </div>
 
@@ -101,12 +103,11 @@
                 <p>
                     @if (Equals(item.WeeeReused.B2B, "-") && Equals(item.WeeeReused.B2C, "-"))
                     {
-
-                        @Html.RouteLink("Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                        @Html.NavigationRouteLink("Reused as a whole appliance", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
                     }
                     else
                     {
-                        @Html.RouteLink("Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                        @Html.NavigationRouteLink("Reused as a whole appliance", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
                     }
                 </p>
             </div>
@@ -127,19 +128,16 @@
 
     }
 
-
     <div class="govuk-grid-row govuk-table__cell">
         <div class="govuk-grid-column-one-third">
             <p>
                 <b>2. Non-obligated WEEE</b>
             </p>
-            <p>
-                <span class="govuk-visually-hidden">Non obligated received</span>
-                @Html.RouteLink("Received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }, new { @class = "govuk-link govuk-link--no-visited-state" })
+            <p>                
+                @Html.NavigationRouteLink("Received", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
             </p>
             <p>
-                <span class="govuk-visually-hidden">Non obligated DCF retained</span>
-                @Html.RouteLink("Retained by a DCF", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }, new { @class = "govuk-link govuk-link--no-visited-state" })
+                @Html.NavigationRouteLink("Retained by a DCF", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
             </p>
         </div>
         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
