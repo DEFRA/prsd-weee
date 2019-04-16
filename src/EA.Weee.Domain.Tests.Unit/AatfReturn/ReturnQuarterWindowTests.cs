@@ -37,7 +37,7 @@
             {
                 var returnQuarterWindow = new ReturnQuarterWindow(A.Dummy<Return>(), A.Dummy<EA.Weee.Domain.DataReturns.QuarterWindow>(),
                     null, null, null, null,
-                    null, null);
+                    null, null, null);
             };
 
             action.Should().Throw<ArgumentNullException>();

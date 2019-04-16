@@ -56,8 +56,8 @@
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
-                returnSchemeDataAccess,
-                sentOnAatfSiteDataAccess);
+                sentOnAatfSiteDataAccess,
+                returnSchemeDataAccess);
         }
 
         [Fact]
@@ -73,10 +73,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -95,10 +94,9 @@
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>());
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
+                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IReturnSchemeDataAccess>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
