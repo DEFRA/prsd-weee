@@ -49,7 +49,7 @@
                     var weeeReceivedData = source.ObligatedWeeeReceivedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
 
-                    var schemeData = new List<AatfSchemeData>(); // NEED TO GENERATE THIS LIST BASED OF THE weee received data and the schemeList and update the mapper tests to test this
+                    var schemeData = new List<AatfSchemeData>(); 
 
                     foreach (var scheme in source.SchemeDataItems)
                     {
