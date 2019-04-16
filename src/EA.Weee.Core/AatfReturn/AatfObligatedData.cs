@@ -1,26 +1,27 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Core.Scheme;
+    using EA.Prsd.Core;
 
     public class AatfObligatedData
     {
-        public AatfObligatedData(AatfData aatf, ObligatedCategoryValue weeeReceived, ObligatedCategoryValue weeeReused, ObligatedCategoryValue weeeSentOn)
+        public AatfObligatedData(AatfData aatf, List<AatfSchemeData> schemeData)
         {
-            Aatf = aatf;
-            WeeeReceived = weeeReceived;
-            WeeeReused = weeeReused;
-            WeeeSentOn = weeeSentOn;
-        }
+            Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => schemeData, schemeData);
 
-        public AatfObligatedData(AatfData aatf)
-        {
             Aatf = aatf;
+            SchemeData = schemeData;
         }
         public AatfObligatedData()
         {
         }
         
         public AatfData Aatf { get; set; }
+
+        public List<AatfSchemeData> SchemeData { get; set; }
 
         [Display(Name = "Received on behalf of PCS(s)")]
         public ObligatedCategoryValue WeeeReceived { get; set; } = new ObligatedCategoryValue("-", "-");
