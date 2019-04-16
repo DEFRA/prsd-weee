@@ -8,7 +8,8 @@
 }
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">WEEE sent to AATFs/ATFs for treatment</h1>
-    <h2 class="govuk-heading-m" style="padding-top: 0px; font-weight: normal;">You can report on multiple  AATFs/ATFs</h2>
+    <p class="govuk-body">You can report on multiple  AATFs/ATFs</p>
+
     @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -62,7 +63,9 @@
             }
         </div>
         <div class="govuk-!-padding-bottom-2"></div>
-        @Html.RouteLink("Add another site", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+        <p class="govuk-body" style="margin-bottom: 0px;">
+            @Html.RouteLink("Add another AATF/ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+        </p>
         <div class="govuk-!-padding-bottom-8"></div>
 
         Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
