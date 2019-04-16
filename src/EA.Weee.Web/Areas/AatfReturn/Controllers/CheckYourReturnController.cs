@@ -6,6 +6,7 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
@@ -22,8 +23,8 @@
 
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            BreadcrumbService breadcrumb, 
-            IMapper mapper)
+            BreadcrumbService breadcrumb,
+            IMapper mapper)    
         {
             this.apiClient = apiClient;
             this.cache = cache;
@@ -38,11 +39,11 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-                var mappedView = mapper.Map<ReturnViewModel>(@return);
-
+                var viewModel = mapper.Map<ReturnViewModel>(@return);
+       
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
-                return View("Index", mappedView);
+                return View("Index", viewModel);
             }
         }
 

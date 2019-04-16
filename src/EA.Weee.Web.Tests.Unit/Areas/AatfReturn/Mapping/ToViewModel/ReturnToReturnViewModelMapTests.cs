@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Core.Scheme;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
@@ -24,7 +26,7 @@
         private readonly Scheme mapperTestScheme;
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
-
+        
         public ReturnToReturnViewModelMapTests()
         {
             map = new ReturnToReturnViewModelMap(new TonnageUtilities());
@@ -62,6 +64,8 @@
 
             mapperTestAatfList.Add(mapperTestAatf);
 
+            var schemeDataList = CreateSchemeDataItems();
+
             var returnData = new ReturnData()
             {
                 Id = mapperTestId,
@@ -71,7 +75,8 @@
                 ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
                 ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
-                Aatfs = mapperTestAatfList
+                Aatfs = mapperTestAatfList,
+                SchemeDataItems = schemeDataList
             };
 
             var result = map.Map(returnData);
@@ -88,6 +93,8 @@
             result.AatfsData[0].WeeeReused.B2C.Should().Be("1.234");
             result.AatfsData[0].WeeeSentOn.B2B.Should().Be("1.234");
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be("1.234");
+            result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
+            result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
         }
 
         [Fact]
@@ -208,6 +215,15 @@
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
+        }
+
+        private List<SchemeData> CreateSchemeDataItems()
+        {
+            var schemeDataItems = new List<SchemeData>()
+            {
+                new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = "ABC123" }
+            };
+            return schemeDataItems;
         }
     }
 }
