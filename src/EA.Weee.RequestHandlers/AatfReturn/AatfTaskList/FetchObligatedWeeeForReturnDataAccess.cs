@@ -35,5 +35,13 @@
         {
             return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOnId == weeeSentOnId).ToListAsync();
         }
+
+        public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturnByReturn(Guid returnId)
+        {
+            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOn.ReturnId == returnId)
+                .Include(s => s.WeeeSentOn)
+                .Include(s => s.WeeeSentOn.Aatf)
+                .ToListAsync();
+        }
     }
 }

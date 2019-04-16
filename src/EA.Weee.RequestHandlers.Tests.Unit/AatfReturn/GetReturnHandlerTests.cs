@@ -8,6 +8,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
@@ -29,6 +30,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
+        private readonly ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
 
         public GetReturnHandlerTests()
@@ -37,6 +39,7 @@
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            sentOnAatfSiteDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
@@ -50,7 +53,8 @@
                 quarterWindowFactory,
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
-                fetchAatfByOrganisationIdDataAccess);
+                fetchAatfByOrganisationIdDataAccess,
+                sentOnAatfSiteDataAccess);
         }
 
         [Fact]
@@ -65,7 +69,8 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>());
+                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<ISentOnAatfSiteDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -85,7 +90,8 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>());
+                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<ISentOnAatfSiteDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -145,6 +151,24 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenReturn_ObligatedSentOnValuesShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
+            var aatfList = A.Fake<List<Aatf>>();
+
+            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id)).Returns(aatfList);
+
+            var result = await handler.HandleAsync(new GetReturn(returnId));
+
+            foreach (var aatf in aatfList)
+            {
+                A.CallTo(() => sentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            }
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenReturn_AatfsShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
@@ -164,12 +188,14 @@
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();
             var obligatedReusedValues = new List<WeeeReusedAmount>();
+            var obligatedSentOnValues = new List<WeeeSentOnAmount>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -177,6 +203,7 @@
                                                                                 && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
                                                                                 && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
                                                                                 && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
+                                                                                && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 

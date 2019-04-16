@@ -359,7 +359,7 @@
             {
                 var orgData = new SchemeData()
                 {
-                    Id = model.OrgId,
+                    OrganisationId = model.OrgId,
                     Contact = model.Contact,
                     Address = model.OrganisationAddress,
                 };
