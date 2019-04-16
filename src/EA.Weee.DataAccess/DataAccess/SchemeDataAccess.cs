@@ -21,6 +21,11 @@
             return await context.Schemes.FindAsync(schemeId);
         }
 
+        public async Task<Scheme> GetSchemeOrDefaultByOrganisationId(Guid organisationId)
+        {
+            return await context.Schemes.FirstOrDefaultAsync(s => s.OrganisationId == organisationId);
+        }
+
         public async Task<IList<int>> GetComplianceYearsWithSubmittedMemberUploads(Guid schemeId)
         {
             return await context.MemberUploads

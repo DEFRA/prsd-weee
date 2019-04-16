@@ -27,6 +27,7 @@
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
         private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
+        private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
             IReturnDataAccess returnDataAccess,
@@ -35,8 +36,9 @@
             IQuarterWindowFactory quarterWindowFactory, 
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
-            IFetchAatfByOrganisationIdDataAccess aatfDataAccess,
-            ISentOnAatfSiteDataAccess sentOnAatfSiteDataAcces)
+            IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
+            ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess,
+            IReturnSchemeDataAccess returnSchemeDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -46,7 +48,8 @@
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
             this.aatfDataAccess = aatfDataAccess;
-            this.getSentOnAatfSiteDataAccess = sentOnAatfSiteDataAcces;
+            this.getSentOnAatfSiteDataAccess = sentOnAatfSiteDataAccess;
+             this.returnSchemeDataAccess = returnSchemeDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -69,22 +72,19 @@
 
             var returnObligatedSentOnValues = new List<WeeeSentOnAmount>();
 
-            foreach (var aatf in aatfList)
-            {
-                var sentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, message.ReturnId);
+            var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(message.ReturnId);
+            
+            var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
-                foreach (var sentOnId in sentOn)
-                {
-                    var amountList = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturn(sentOnId.Id);
-
-                    foreach (var amount in amountList)
-                    {
-                        returnObligatedSentOnValues.Add(amount);
-                    }
-                }
-            }
-
-            var returnQuarterWindow = new ReturnQuarterWindow(@return, quarterWindow, aatfList, returnNonObligatedValues, returnObligatedReceivedValues, returnObligatedReusedValues, returnObligatedSentOnValues, @return.Operator);
+            var returnQuarterWindow = new ReturnQuarterWindow(@return, 
+                quarterWindow, 
+                aatfList, 
+                returnNonObligatedValues, 
+                returnObligatedReceivedValues, 
+                returnObligatedReusedValues,
+                @return.Operator,
+                sentOn,
+                returnSchemeList);
 
             var result = mapper.Map(returnQuarterWindow);
 

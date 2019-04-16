@@ -17,6 +17,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class AddObligatedSentOnHandlerTests
     {

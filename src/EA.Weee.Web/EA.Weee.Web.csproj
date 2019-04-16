@@ -409,6 +409,7 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Constant\BreadCrumbConstant.cs" />
+    <Compile Include="Constant\ViewDataConstant.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
@@ -826,7 +827,7 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\Shared\_AddressPartial.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_CountryPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
@@ -932,6 +933,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
     <Compile Include="Infrastructure\AatfRedirect.cs" />
+    <Compile Include="Infrastructure\SchemeViewData.cs" />
     <Compile Include="Logging\ElmahFilter.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />

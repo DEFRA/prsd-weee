@@ -8,7 +8,6 @@
     using Domain.Organisation;
     using Domain.User;
     using Weee.DataAccess;
-
     public class FindMatchingOrganisationsDataAccess : IFindMatchingOrganisationsDataAccess
     {
         private readonly WeeeContext context;

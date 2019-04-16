@@ -1,14 +1,15 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Scheme.ViewModels
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ManageContactDetailsViewModel
 
 @{
-    ViewBag.Title = "Edit organisation contact details";
+    ViewBag.Title = PcsAction.ManageContactDetails;
 }
 
 @section main_content {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Edit organisation contact details</h1>
+        <h1 class="govuk-heading-l">@PcsAction.ManageContactDetails</h1>
     </header>
 
     @using (Html.BeginForm())

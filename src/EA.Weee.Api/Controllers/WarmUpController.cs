@@ -22,7 +22,7 @@
         {
             try
             {
-                string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
+                    string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
                 string password = ConfigurationManager.AppSettings["Weee.WarmUpUserPassword"];
 
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
