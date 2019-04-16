@@ -35,7 +35,7 @@
         {
             Guard.ArgumentNotNull(() => @return, @return);
             Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
-            Guard.ArgumentNotNull(() => returnSchemes, returnSchemes); // CREATE UNIT TEST TO TEST THIS Argument is not null
+            Guard.ArgumentNotNull(() => returnSchemes, returnSchemes);
 
             this.Return = @return;
             this.QuarterWindow = quarterWindow;
@@ -44,7 +44,7 @@
             this.ObligatedWeeeReceivedList = obligatedReceivedList;
             this.ObligatedWeeeReusedList = obligatedReusedList;
             this.ReturnOperator = returnOperator;
-            this.ReturnSchemes = returnSchemes; // CREATE UNIT TEST TO TEST THIS property is set
+            this.ReturnSchemes = returnSchemes;
         }
 
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, List<NonObligatedWeee> nonObligatedWeeeList)

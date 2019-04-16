@@ -5,7 +5,6 @@
     using System.Linq;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.Organisation;
     using EA.Weee.Domain;
     using FakeItEasy;
     using FluentAssertions;
@@ -182,7 +181,7 @@
         [Fact]
         public void Map_GivenSource_ReturnSchemesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(), 
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
                 null, null, null, null, null, A.Fake<List<ReturnScheme>>());
 
             var result = map.Map(source);
