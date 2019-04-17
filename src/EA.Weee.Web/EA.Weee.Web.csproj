@@ -935,6 +935,8 @@
     <Compile Include="Infrastructure\AatfRedirect.cs" />
     <Compile Include="Infrastructure\SchemeViewData.cs" />
     <Compile Include="Logging\ElmahFilter.cs" />
+    <Compile Include="RazorHelpers\PropertyHelper.cs" />
+    <Compile Include="RazorHelpers\TypeHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
@@ -1101,6 +1103,7 @@
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Routelink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Tab.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Table.cs" />

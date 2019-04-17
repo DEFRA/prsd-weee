@@ -33,6 +33,8 @@
                 organisation.CompleteRegistration();
             }
 
+            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, GetAddress());
+
             var properties = typeof(Organisation).GetProperties();
 
             foreach (var propertyInfo in properties)

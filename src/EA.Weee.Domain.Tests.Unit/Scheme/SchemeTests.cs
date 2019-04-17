@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
     using System;
+    using Domain.Organisation;
     using Domain.Scheme;
+    using FakeItEasy;
+    using FluentAssertions;
     using Obligation;
     using Xunit;
 
@@ -115,6 +118,43 @@
             var scheme = GetTestScheme();
 
             Assert.Throws<InvalidOperationException>(() => scheme.SetStatus(SchemeStatus.Withdrawn));
+        }
+
+        [Fact]
+        public void HasContact_GivenNoContact_FalseShouldBeReturned()
+        {
+            var scheme = new Scheme(Guid.Empty);
+
+            scheme.HasContact.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasContact_GivenContact_TrueShouldBeReturned()
+        {
+            var scheme = new Scheme(Guid.Empty);
+
+            scheme.AddOrUpdateMainContactPerson(new Contact("first", "last", "position"));
+
+            scheme.HasContact.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasAddress_GivenAddress_TrueShouldBeReturned()
+        {
+            var scheme = new Scheme(Guid.Empty);
+            var address = new Address("address1", "address2", "town", "county", "postcode", A.Dummy<Country>(), "telephone", "email");
+            
+            scheme.AddOrUpdateAddress(address);
+
+            scheme.HasAddress.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasAddress_GivenNoAddress_FalseShouldBeReturned()
+        {
+            var scheme = new Scheme(Guid.Empty);
+
+            scheme.HasAddress.Should().BeFalse();
         }
 
         private static Scheme GetTestScheme()
