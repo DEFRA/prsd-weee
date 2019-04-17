@@ -10,6 +10,7 @@
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using GenerateDomainObjects.DataAccess;
     using Interfaces;
@@ -37,17 +38,17 @@
             return producers;
         }
 
-        public MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
+        public MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme, bool hasAnnualCharge)
         {
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName, null, hasAnnualCharge);
             }
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
                 var deserializedXml = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(messageXmlFile.Data));
-                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName, null, hasAnnualCharge);
             }
         }
 
@@ -95,6 +96,8 @@
                 ObligationType obligationType = producerData.obligationType.ToDomainObligationType();
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
+
+                StatusType status = Enumeration.FromValue<StatusType>((int)producerData.status);
 
                 DateTime? ceaseDate = null;
                 if (producerData.ceaseToExistDateSpecified)
@@ -151,7 +154,8 @@
                     brandNames,
                     codes,
                     chargeBandAmount,
-                    chargeThisUpdate);
+                    chargeThisUpdate,
+                    status);
 
                 // modify producer data
                 switch (producerData.status)

@@ -45,12 +45,12 @@
                 new { autocomplete = "false" })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedSchemeName)">
-            @Html.Gds().LabelFor(m => m.SelectedSchemeName)
-            @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeName)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+            @Html.Gds().LabelFor(m => m.SelectedScheme)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
             @Html.Gds().DropDownListFor(
-                m => m.SelectedSchemeName,
-                Model.SchemeNames.Select(x => new SelectListItem() { Text = x }),
+                m => m.SelectedScheme,
+                Model.Schemes.Select(x => new SelectListItem() { Text = x.SchemeName, Value = x.Id.ToString() }),
                 string.Empty,
                 new { autocomplete = "false" })
         </div>
@@ -71,7 +71,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadIssuedChargesCsv", new { authority, complianceYear = Model.SelectedComplianceYear, schemeName = Model.SelectedSchemeName }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadIssuedChargesCsv", new { authority, complianceYear = Model.SelectedComplianceYear, schemeId = Model.SelectedScheme }))";
         </script>
     }
 }
