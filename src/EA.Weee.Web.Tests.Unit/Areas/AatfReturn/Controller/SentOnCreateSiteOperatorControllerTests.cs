@@ -84,7 +84,7 @@
             controller.ModelState.AddModelError("error", "error");
             var model = new SentOnCreateSiteOperatorViewModel();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            await controller.Index(model);
+            await controller.Index(model, A.Fake<FormCollection>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSite>._)).MustNotHaveHappened();
         }
@@ -98,7 +98,7 @@
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
-            await controller.Index(model);
+            await controller.Index(model, A.Fake<FormCollection>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
         }
