@@ -124,7 +124,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload.Submit(A.Dummy<User>());
 
@@ -200,7 +202,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload1.Submit(A.Dummy<User>());
 
@@ -211,7 +215,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload2.Submit(A.Dummy<User>());
 
@@ -276,7 +282,9 @@
                 A.Dummy<decimal>(),
                 complianceYear1,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload1.Submit(A.Dummy<User>());
 
@@ -311,7 +319,9 @@
                 A.Dummy<decimal>(),
                 complianceYear2,
                 scheme2,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload2.Submit(A.Dummy<User>());
 
@@ -379,7 +389,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload.Submit(A.Dummy<User>());
 
@@ -437,7 +449,9 @@
                 A.Dummy<decimal>(),
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload.Submit(A.Dummy<User>());
 

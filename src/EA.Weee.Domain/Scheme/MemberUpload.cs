@@ -42,6 +42,10 @@
 
         public virtual DateTime? SubmittedDate { get; private set; }
 
+        public virtual bool HasAnnualCharge { get; set; }
+
+        public virtual Guid? InvoiceRunId { get; set; }
+
         public MemberUpload(
             Guid organisationId,
             string data,
@@ -50,7 +54,8 @@
             int? complianceYear,
             Scheme scheme,
             string fileName,
-            string userId = null)
+            string userId = null,
+            bool hasAnnualCharge = false)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
 
@@ -63,6 +68,7 @@
             RawData = new MemberUploadRawData() { Data = data };
             CreatedById = userId;
             FileName = fileName;
+            HasAnnualCharge = hasAnnualCharge;
             ProducerSubmissions = new List<ProducerSubmission>();
         }
 
@@ -112,6 +118,17 @@
         public void DeductFromTotalCharges(decimal amount)
         {
             TotalCharges -= amount;
+        }
+
+        public void UpdateTotalCharges(decimal amount)
+        {
+            TotalCharges = amount;
+        }
+
+        public void ResetInvoice()
+        {
+            InvoiceRun = null;
+            InvoiceRunId = null;
         }
 
         protected MemberUpload()
@@ -166,6 +183,11 @@
             return Errors == null ?
                 0 :
                 Errors.Count(w => w.ErrorLevel == Error.ErrorLevel.Warning);
+        }
+
+        public void SetSubmittedDate(DateTime dateTime)
+        {
+            this.SubmittedDate = dateTime;
         }
     }
 }

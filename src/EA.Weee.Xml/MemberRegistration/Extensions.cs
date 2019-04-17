@@ -24,6 +24,29 @@
             return producer.tradingName;
         }
 
+        public static countryType GetProducerCountry(this producerType producer)
+        {
+            countryType countryType = new countryType();
+
+            if (producer.producerBusiness != null && producer.producerBusiness.Item != null)
+            {
+                var producerItem = producer.producerBusiness.Item;
+
+                if (producerItem.GetType() == typeof(companyType))
+                {
+                    var producerRegisteredOffice = ((companyType)producerItem).registeredOffice;
+                    return countryType = producerRegisteredOffice.contactDetails.address.country;
+                }
+
+                if (producerItem.GetType() == typeof(partnershipType))
+                {
+                    var producerPrincipalBusiness = ((partnershipType)producerItem).principalPlaceOfBusiness;
+                    return countryType = producerPrincipalBusiness.contactDetails.address.country;
+                }
+            }
+            return countryType;
+        }
+
         public static ObligationType ToDomainObligationType(this obligationTypeType obligationType)
         {
             switch (obligationType)

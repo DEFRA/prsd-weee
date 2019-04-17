@@ -100,7 +100,9 @@
                 123.45m,
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             SystemTime.Freeze(new DateTime(2015, 1, 1));
             memberUpload.Submit(A.Dummy<User>());
@@ -183,7 +185,9 @@
                 100,
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload1.Submit(A.Dummy<User>());
 
@@ -194,7 +198,9 @@
                 200,
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload2.Submit(A.Dummy<User>());
 
@@ -251,7 +257,9 @@
                 123.45m,
                 complianceYear,
                 scheme,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUpload.Submit(A.Dummy<User>());
 

@@ -4,6 +4,7 @@
     using Domain.Scheme;
     using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Xml.MemberRegistration;
 
     public interface IXMLChargeBandCalculator
     {
