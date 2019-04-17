@@ -189,6 +189,7 @@
           <Property Name="Abbreviation" Type="nvarchar" MaxLength="65" Nullable="false" />
           <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="AnnualChargeAmount" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -379,6 +380,7 @@
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="HasAnnualCharge" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -1850,6 +1852,7 @@
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
           <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AnnualChargeAmount" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -1930,6 +1933,7 @@
           <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
           <NavigationProperty Name="InvoiceRun" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="MemberUpload" ToRole="InvoiceRun" />
+          <Property Name="HasAnnualCharge" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Organisation" Relationship="EA.Weee.TestModel.FK_MemberUpload_Organisation" FromRole="MemberUpload" ToRole="Organisation" />
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
         </EntityType>
@@ -3822,6 +3826,7 @@
           <EntitySetMapping Name="CompetentAuthorities">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthority">
               <MappingFragment StoreEntitySet="CompetentAuthority">
+                <ScalarProperty Name="AnnualChargeAmount" ColumnName="AnnualChargeAmount" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -3879,6 +3884,7 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="HasAnnualCharge" ColumnName="HasAnnualCharge" />
                 <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
                 <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
                 <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />

@@ -41,6 +41,8 @@
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Charge value (GBP)", i => i.ChargeValue);
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
+            csvWriter.DefineColumn(@"Reg. Off. or PPoB country", i => i.RegOfficeOrPBoBCountry);
+            csvWriter.DefineColumn(@"Includes annual charge", i => i.HasAnnualCharge);
 
             string fileContent = csvWriter.Write(items);
 

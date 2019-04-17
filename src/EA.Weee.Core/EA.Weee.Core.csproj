@@ -197,6 +197,7 @@
     <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Shared\UKCompetentAuthorityAbbreviationType.cs" />
     <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />
