@@ -30,7 +30,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid schemeId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid schemeId, ObligatedType obligatedType)
         {
             using (var client = apiClient())
             {
@@ -40,10 +40,15 @@
                     AatfId = aatfId,
                     ReturnId = returnId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
-                    SchemeId = schemeId,
-                    SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name,
-                    AatfName = Task.Run(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Result.Name
+                    AatfName = Task.Run(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Result.Name,
+                    Type = obligatedType
                 };
+
+                if (obligatedType == ObligatedType.Recieved)
+                {
+                    viewModel.SchemeId = schemeId;
+                    viewModel.SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name;
+                }
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }
@@ -62,6 +67,11 @@
                 {
                     TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
                 }
+            }
+
+            if (viewModel.Type == ObligatedType.Reused)
+            {
+                return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedReused(viewModel.ReturnId, viewModel.AatfId));
             }
 
             return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedReceived(viewModel.ReturnId, viewModel.AatfId, viewModel.SchemeId));

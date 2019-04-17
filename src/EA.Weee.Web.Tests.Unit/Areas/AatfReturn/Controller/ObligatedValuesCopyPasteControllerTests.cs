@@ -46,7 +46,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<ObligatedType>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId))))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -72,7 +72,7 @@
             A.CallTo(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
-            var result = await controller.Index(returnId, aatfId, schemeId) as ViewResult;
+            var result = await controller.Index(returnId, aatfId, schemeId, ObligatedType.Recieved) as ViewResult;
 
             var viewModel = result.Model as ObligatedValuesCopyPasteViewModel;
             viewModel.AatfId.Should().Be(aatfId);
@@ -98,7 +98,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<ObligatedType>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
