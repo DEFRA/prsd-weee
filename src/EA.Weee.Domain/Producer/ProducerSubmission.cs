@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Classfication;
+    using Classification;
     using Domain;
     using Lookup;
     using Obligation;
@@ -29,7 +30,8 @@
             List<BrandName> brandnames,
             List<SICCode> codes,
             ChargeBandAmount chargeBandAmount,
-            decimal chargeThisUpdate)
+            decimal chargeThisUpdate,
+            StatusType status)
         {
             Guard.ArgumentNotNull(() => registeredProducer, registeredProducer);
             Guard.ArgumentNotNull(() => memberUpload, memberUpload);
@@ -67,6 +69,7 @@
             MemberUpload = memberUpload;
             ChargeBandAmount = chargeBandAmount;
             ChargeThisUpdate = chargeThisUpdate;
+            StatusType = status.Value;
         }
 
         protected ProducerSubmission()
@@ -117,6 +120,10 @@
 
         private string organisationName;
 
+        private string regOfficeOrPPoBCountry;
+
+        public int? StatusType { get; private set; }
+
         public virtual string OrganisationName
         {
             get
@@ -140,6 +147,34 @@
                 return null;
             }
         }
+
+        public virtual string RegOfficeOrPBoBCountry
+        {
+            get
+            {
+                if (ProducerBusiness != null)
+                {
+                    if (ProducerBusiness.CompanyDetails != null && ProducerBusiness.CompanyDetails.RegisteredOfficeContact.Address.Country != null)
+                    {
+                        regOfficeOrPPoBCountry = ProducerBusiness.CompanyDetails.RegisteredOfficeContact.Address.Country.Name;
+                    }
+                    else if (ProducerBusiness.Partnership != null && ProducerBusiness.Partnership.PrincipalPlaceOfBusiness.Address.Country != null)
+                    {
+                        regOfficeOrPPoBCountry = ProducerBusiness.Partnership.PrincipalPlaceOfBusiness.Address.Country.Name;
+                    }
+                    return regOfficeOrPPoBCountry;
+                }
+                return null;
+            }
+        }
+
+        public virtual string HasAnnualCharge
+        {
+            get
+            {
+                return MemberUpload.HasAnnualCharge ? "Yes" : "No";
+            }
+        } 
 
         public override int GetHashCode()
         {
@@ -190,6 +225,18 @@
             }
 
             Invoiced = true;
+        }
+
+        public void UpdateCharge(decimal value, ChargeBandAmount chargeBandAmount, int status)
+        {
+            this.ChargeBandAmount = chargeBandAmount;
+            this.ChargeThisUpdate = value;
+            this.StatusType = status;
+        }
+
+        public void SetAsNotInvoiced()
+        {
+            Invoiced = false;
         }
     }
 }

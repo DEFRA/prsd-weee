@@ -135,6 +135,7 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\RegisteredProducerDataAccessTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />

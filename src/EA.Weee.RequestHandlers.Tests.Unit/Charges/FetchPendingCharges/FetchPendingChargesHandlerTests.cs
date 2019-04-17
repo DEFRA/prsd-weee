@@ -11,9 +11,7 @@
     using FakeItEasy;
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
-    using RequestHandlers.Organisations;
     using RequestHandlers.Security;
-    using Requests.Organisations;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -105,6 +103,7 @@
             scheme2.UpdateScheme("BBBB", "WEE/BB2222BB/SCH", null, ObligationType.Both, A.Dummy<Guid>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
+            var submittedDate = new DateTime(2019, 2, 27, 0, 0, 0);
 
             MemberUpload memberUpload1 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -113,7 +112,9 @@
                 10,
                 2017,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -122,7 +123,9 @@
                 20,
                 2017,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload3 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -131,7 +134,9 @@
                 40,
                 2016,
                 scheme1,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             MemberUpload memberUpload4 = new MemberUpload(
                 A.Dummy<Guid>(),
@@ -140,12 +145,18 @@
                 80,
                 2017,
                 scheme2,
-                A.Dummy<string>());
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
 
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
             memberUploads.Add(memberUpload3);
             memberUploads.Add(memberUpload4);
+            memberUpload1.SetSubmittedDate(submittedDate);
+            memberUpload2.SetSubmittedDate(submittedDate);
+            memberUpload3.SetSubmittedDate(submittedDate);
+            memberUpload4.SetSubmittedDate(submittedDate);
 
             ICommonDataAccess dataAccess = A.Fake<ICommonDataAccess>();
             A.CallTo(() => dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(A<UKCompetentAuthority>._))
@@ -165,21 +176,24 @@
             Assert.Collection(results.PendingCharges,
                 r1 =>
                 {
-                    Assert.Equal("AAAA", r1.SchemeName);
-                    Assert.Equal(2017, r1.ComplianceYear);
-                    Assert.Equal(30, r1.TotalGBP);
+                Assert.Equal("AAAA", r1.SchemeName);
+                Assert.Equal(2017, r1.ComplianceYear);
+                Assert.Equal(30, r1.TotalGBP);
+                Assert.Equal(submittedDate, r1.SubmittedDate);
                 },
                 r2 =>
                 {
                     Assert.Equal("AAAA", r2.SchemeName);
                     Assert.Equal(2016, r2.ComplianceYear);
                     Assert.Equal(40, r2.TotalGBP);
+                    Assert.Equal(submittedDate, r2.SubmittedDate);
                 },
                 r3 =>
                 {
                     Assert.Equal("BBBB", r3.SchemeName);
                     Assert.Equal(2017, r3.ComplianceYear);
                     Assert.Equal(80, r3.TotalGBP);
+                    Assert.Equal(submittedDate, r3.SubmittedDate);
                 });
         }
     }
