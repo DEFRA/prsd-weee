@@ -2,7 +2,7 @@
 {
     public enum ObligatedType
     {
-        Recieved,
+        Received,
         Reused
     }
 }

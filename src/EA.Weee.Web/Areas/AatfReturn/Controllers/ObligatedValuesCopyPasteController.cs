@@ -44,7 +44,7 @@
                     Type = obligatedType
                 };
 
-                if (obligatedType == ObligatedType.Recieved)
+                if (obligatedType == ObligatedType.Received)
                 {
                     viewModel.SchemeId = schemeId;
                     viewModel.SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name;

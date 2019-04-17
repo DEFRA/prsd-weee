@@ -72,7 +72,7 @@
             A.CallTo(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
-            var result = await controller.Index(returnId, aatfId, schemeId, ObligatedType.Recieved) as ViewResult;
+            var result = await controller.Index(returnId, aatfId, schemeId, ObligatedType.Received) as ViewResult;
 
             var viewModel = result.Model as ObligatedValuesCopyPasteViewModel;
             viewModel.AatfId.Should().Be(aatfId);
@@ -81,6 +81,32 @@
             viewModel.ReturnId.Should().Be(returnId);
             viewModel.SchemeId.Should().Be(schemeId);
             viewModel.SchemeName.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void IndexGet_FromReuse_GivenReturn_ViewModelShouldBeBuilt()
+        {
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatfName = "Test Aatf";
+            var aatfData = A.Fake<AatfData>();
+            var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+
+            A.CallTo(() => @return.ReturnOperatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => aatfData.Name).Returns(aatfName);
+            A.CallTo(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
+
+            var result = await controller.Index(returnId, aatfId, Guid.Empty, ObligatedType.Reused) as ViewResult;
+
+            var viewModel = result.Model as ObligatedValuesCopyPasteViewModel;
+            viewModel.AatfId.Should().Be(aatfId);
+            viewModel.AatfName.Should().Be(aatfName);
+            viewModel.OrganisationId.Should().Be(organisationId);
+            viewModel.ReturnId.Should().Be(returnId);
+            viewModel.SchemeId.Should().Be(Guid.Empty);
+            viewModel.SchemeName.Should().Be(null);
         }
 
         [Fact]
@@ -106,31 +132,59 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
+        public async void IndexPost_FromReceived_OnSubmit_PageRedirectsToObligatedReceived()
         {
-            var httpContext = new HttpContextMocker();
+            HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var schemeId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
+            Guid schemeId = Guid.NewGuid();
+            Guid returnId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
 
-            var viewModel = new ObligatedValuesCopyPasteViewModel();
+            ObligatedValuesCopyPasteViewModel viewModel = new ObligatedValuesCopyPasteViewModel();
             viewModel.SchemeId = schemeId;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = new String[1];
             viewModel.B2cPastedValues = new String[1];
+            viewModel.Type = ObligatedType.Received;
 
             httpContext.RouteData.Values.Add("schemeId", schemeId);
             httpContext.RouteData.Values.Add("returnId", returnId);
             httpContext.RouteData.Values.Add("aatfId", aatfId);
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.Index(viewModel, null) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedReceived");
             result.RouteValues["schemeId"].Should().Be(schemeId);
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+        }
+
+        [Fact]
+        public async void IndexPost_FromReused_OnSubmit_PageRedirectsToObligatedReused()
+        {
+            HttpContextMocker httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            Guid returnId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+
+            ObligatedValuesCopyPasteViewModel viewModel = new ObligatedValuesCopyPasteViewModel();
+            viewModel.ReturnId = returnId;
+            viewModel.AatfId = aatfId;
+            viewModel.B2bPastedValues = new String[1];
+            viewModel.B2cPastedValues = new String[1];
+            viewModel.Type = ObligatedType.Reused;
+
+            httpContext.RouteData.Values.Add("returnId", returnId);
+            httpContext.RouteData.Values.Add("aatfId", aatfId);
+
+            RedirectToRouteResult result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ObligatedReused");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
         }
