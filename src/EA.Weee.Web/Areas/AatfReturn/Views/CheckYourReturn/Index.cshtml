@@ -36,6 +36,12 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
 
+    <details class="govuk-details" open="open">
+        <summary class="govuk-details__summary" aria-controls="details-content" aria-expanded="true">
+            <span id="mainLink-collapsible" class="mainLink-collapsibleclass">Open All</span>
+        </summary>
+    </details>
+
     <div class="govuk-table govuk-grid-column-full">
 
         @foreach (var aatf in Model.AatfsData)
@@ -90,13 +96,14 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-                <details class="govuk-details">
-                    <summary class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
-                        <span id="unset-padding" class="govuk-details__summary-text">
-                            Breakdown by PCS
-                        </span>
-                    </summary>
-                    <div class="govuk-!-padding-bottom-4"></div>
+            <details class="govuk-details">
+                <summary id ="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                    <span id="unset-padding" class="govuk-details__summary-text">
+                        Breakdown by PCS
+                    </span>
+                </summary>
+                <div class="govuk-!-padding-bottom-4"></div>
+                <div class="collapsible-govuk-grid">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-grid-row">
@@ -144,8 +151,8 @@
                             </div>
                         </div>
                     }
-
-                </details>
+                    </div>
+            </details>
             }
 
             <div class="govuk-grid-row">
@@ -279,3 +286,46 @@
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+
+    document.getElementById('mainLink-collapsible').onclick = function () {
+        debugger;
+      
+        if (document.getElementById('mainLink-collapsible').innerText == "Open All") {
+            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaDat.length; i++) {
+                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
+                document.getElementById('mainLink-collapsible').innerText = "Close All";
+            }
+        }
+        else if (document.getElementById('mainLink-collapsible').innerText == "Close All") {
+            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaDat.length; i++) {
+                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
+                document.getElementById('mainLink-collapsible').innerText = "Open All";
+            }
+        }
+    }
+
+    document.getElementById('summary-collapsible').onclick = function () {
+        var checkCollapse = false;
+        debugger;
+        if (checkCollapse == false) {
+            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaDat.length; i++) {
+                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
+                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
+                checkCollapse = true;
+            }
+        }
+        else if (checkCollapse) {
+            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaDat.length; i++) {
+                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
+                checkCollapse = false;
+            }
+        }
+    }
+
+</script>
