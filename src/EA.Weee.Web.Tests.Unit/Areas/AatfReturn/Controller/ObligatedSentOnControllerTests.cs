@@ -21,6 +21,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using Xunit;
 
@@ -107,7 +108,7 @@
             var weeeSentOnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
 
-            var transfer = new ReturnToObligatedViewModelMapTransfer()
+            /*var transfer = new ReturnToObligatedViewModelMapTransfer()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId,
@@ -115,7 +116,7 @@
                 AatfId = aatfId,
                 OperatorName = operatorName,
                 WeeeSentOnId = weeeSentOnId
-            };
+            };*/
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
@@ -141,6 +142,32 @@
             var result = await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async void IndexGet_ProvidedTempDataForCopyPasteValues_MapperShouldReturnViewModelWithCopyPasteValues()
+        {
+            string operatorName = "OpName";
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+            Guid weeeSentOnId = Guid.NewGuid();
+            ReturnData returnData = A.Fake<ReturnData>();
+            string b2bContent = "1\r\n2\r\n3\r\n4\r\n";
+            string b2cContent = "1\r\n2\r\n3\r\n4\r\n";
+
+            ObligatedCategoryValue obligatedCategoryValue = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
+
+            TempDataDictionary tempdata = new TempDataDictionary();
+            tempdata.Add("pastedValues", obligatedCategoryValue);
+
+            controller.TempData = tempdata;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(returnData);
+
+            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName);
+
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.OperatorName.Equals(operatorName) && t.ReturnData.Equals(returnData) && t.PastedData == obligatedCategoryValue))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
