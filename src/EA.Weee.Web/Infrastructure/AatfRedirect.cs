@@ -85,6 +85,11 @@
             return new RedirectToRouteResult(AatfSchemeSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedReceived", action = "Index", schemeId = schemeId, returnId = returnId, aatfId = aatfId }));
         }
 
+        public static RedirectToRouteResult ObligatedReused(Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "ObligatedReused", action = "Index", returnId = returnId, aatfId = aatfId }));
+        }
+
         public static RedirectToRouteResult NonObligated(Guid returnId, bool dcf)
         {
             return new RedirectToRouteResult((dcf) ? NonObligatedDcfRouteName : NonObligatedRouteName, new RouteValueDictionary(new { returnId = returnId, dcf = dcf }));
