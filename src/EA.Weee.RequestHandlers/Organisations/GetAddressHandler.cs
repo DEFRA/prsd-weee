@@ -16,12 +16,10 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<Address, AddressData> mapper;
-        private readonly WeeeContext context;
         
-        public GetAddressHandler(IWeeeAuthorization authorization, WeeeContext context, IGenericDataAccess dataAccess, IMap<Address, AddressData> mapper)
+        public GetAddressHandler(IWeeeAuthorization authorization, IGenericDataAccess dataAccess, IMap<Address, AddressData> mapper)
         {
             this.authorization = authorization;
-            this.context = context;
             this.dataAccess = dataAccess;
             this.mapper = mapper;
         }

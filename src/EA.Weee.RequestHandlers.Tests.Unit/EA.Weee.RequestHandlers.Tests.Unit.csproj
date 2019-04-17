@@ -178,6 +178,9 @@
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
+    <Compile Include="Organisations\GetContactHandlerTests.cs" />
+    <Compile Include="Organisations\GetAddressHandlerTests.cs" />
     <Compile Include="Scheme\AddContactPersonToSchemeHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateOrganisationRequestHandlerTestsBase.cs" />
