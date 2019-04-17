@@ -13,13 +13,16 @@
         public int ComplianceYear { get; set; }
 
         public string ProducerName { get; set; }
-
         public string PRN { get; set; }
-
+        
         public DateTime SubmissionDate { get; set; }
 
         public decimal ChargeValue { get; set; }
 
         public string ChargeBandType { get; set; }
+
+        public string RegOfficeOrPBoBCountry { get; set; }
+
+        public string HasAnnualCharge { get; set; }
     }
 }

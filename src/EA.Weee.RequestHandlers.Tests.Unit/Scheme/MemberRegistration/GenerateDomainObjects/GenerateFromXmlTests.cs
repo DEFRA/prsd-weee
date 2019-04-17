@@ -28,7 +28,7 @@
                 {
                     new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 },
-                A.Dummy<decimal>(), A.Fake<Scheme>());
+                A.Dummy<decimal>(), A.Fake<Scheme>(), false);
 
             Assert.Null(result.ComplianceYear);
         }
@@ -43,7 +43,7 @@
             var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A.Fake<Scheme>());
+            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A.Fake<Scheme>(), false);
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -59,7 +59,7 @@
             var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A.Fake<Scheme>());
+            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A.Fake<Scheme>(), false);
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -88,7 +88,7 @@
             schemeType xmlScheme = new schemeType() { complianceYear = "2015" };
             A.CallTo(() => builder.XmlConverter.Deserialize<schemeType>(A<XDocument>._)).Returns(xmlScheme);
 
-            var result = builder.Build().GenerateMemberUpload(message, errors, 1000, scheme);
+            var result = builder.Build().GenerateMemberUpload(message, errors, 1000, scheme, false);
 
             Assert.Equal(new Guid("4CAD6CA3-E4E7-4D1A-BAAB-8C454EECF109"), result.OrganisationId);
             Assert.Equal(xml, result.RawData.Data);

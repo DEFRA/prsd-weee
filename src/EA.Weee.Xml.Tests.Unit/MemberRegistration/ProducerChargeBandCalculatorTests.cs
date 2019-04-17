@@ -1,31 +1,66 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
+    using DataAccess.DataAccess;
     using Domain.Lookup;
     using EA.Weee.Xml.MemberRegistration;
+    using FakeItEasy;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests
     {
+        private readonly ProducerChargeBandCalculator producerChargeBandCalculator;
+        private readonly IFetchProducerCharge fetchProducerCharge;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
+
+        public ProducerChargeBandCalculatorTests()
+        {
+            fetchProducerCharge = A.Fake<IFetchProducerCharge>();
+            registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
+
+            producerChargeBandCalculator = new ProducerChargeBandCalculator(fetchProducerCharge, registeredProducerDataAccess);
+        }
+
         /// <summary>
         /// This test ensures that the charge band is A when the amount of EEE placed on the market per year
         /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is VAT registered.
         /// </summary>
         [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ReturnsChargeBandA()
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ProducerChargeBandAShouldBeRetrieved()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.A, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            // Arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
+            var producerCharge = new ProducerCharge();
+
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).Returns(producerCharge);
+
+            // Act
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
         }
 
         /// <summary>
@@ -33,21 +68,42 @@
         /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is VAT registered.
         /// </summary>
         [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ReturnsChargeBandB()
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ProducerChargeBandBShouldBeRetrieved()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.B, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        {
+            // Arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = true,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
+            var producerCharge = new ProducerCharge();
+
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).Returns(producerCharge);
+
+            // Act
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
         }
 
         /// <summary>
@@ -55,21 +111,42 @@
         /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is not VAT registered.
         /// </summary>
         [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ReturnsChargeBandC()
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeBandCShouldBeRetrieved()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.C, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeForChargeBandShouldBeReturned()
+        {
+            // Arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
+            var producerCharge = new ProducerCharge();
+
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).Returns(producerCharge);
+
+            // Act
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
         }
 
         /// <summary>
@@ -77,21 +154,42 @@
         /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is not VAT registered.
         /// </summary>
         [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ReturnsChargeBandD()
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ProducerChargeBandDShouldBeRetrieved()
         {
             // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.D, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandDShouldBeReturned()
+        {
+            // Arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket
+            };
+            var producerCharge = new ProducerCharge();
+
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).Returns(producerCharge);
+
+            // Act
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
         }
 
         /// <summary>
@@ -99,21 +197,81 @@
         /// is less than 5 Tonnes.
         /// </summary>
         [Fact]
-        public void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ReturnsChargeBandE()
+        public async void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeBandEShouldBeRetrieved()
         {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
+            //arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket
+            };
 
             // Act
-            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            Assert.Equal(ChargeBand.E, result);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
+        {
+            //arrange
+            var producer = new producerType
+            {
+                annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds,
+                VATRegistered = false,
+                eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket
+            };
+            var producerCharge = new ProducerCharge();
+
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).Returns(producerCharge);
+
+            // Act
+            var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(producerCharge, result);
+        }
+
+        [Theory]
+        [InlineData("2018")]
+        [InlineData("2017")]
+        [InlineData("2016")]
+        public void IsMatch_GivenSchemeIs2018OrBeforeAndProducerInsert_TrueShouldBeReturned(string year)
+        {
+            var scheme = new schemeType() {complianceYear = year };
+            var producer = new producerType { status = statusType.I };
+
+            var result = producerChargeBandCalculator.IsMatch(scheme, producer);
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData("2019")]
+        [InlineData("2020")]
+        [InlineData("2021")]
+        public void IsMatch_GivenSchemeIsPost2018_FalseShouldBeReturned(string year)
+        {
+            var scheme = new schemeType() { complianceYear = year };
+            var producer = new producerType { status = statusType.I };
+
+            var result = producerChargeBandCalculator.IsMatch(scheme, producer);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void IsMatch_GivenProducerIsAmendment_FalseShouldBeReturned()
+        {
+            var scheme = new schemeType() { complianceYear = "2019" };
+            var producer = new producerType { status = statusType.A };
+
+            var result = producerChargeBandCalculator.IsMatch(scheme, producer);
+
+            Assert.False(result);
         }
     }
 }

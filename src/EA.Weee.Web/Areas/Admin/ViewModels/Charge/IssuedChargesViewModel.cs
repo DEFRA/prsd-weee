@@ -6,6 +6,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web;
+    using Core.Scheme;
 
     public class IssuedChargesViewModel
     {
@@ -14,10 +15,10 @@
         public int SelectedComplianceYear { get; set; }
 
         [DisplayName("PCS name")]
-        public string SelectedSchemeName { get; set; }
+        public Guid? SelectedScheme { get; set; }
 
         public IEnumerable<int> ComplianceYears { get; set; }
 
-        public IEnumerable<string> SchemeNames { get; set; }
+        public IEnumerable<SchemeData> Schemes { get; set; }
     }
 }
