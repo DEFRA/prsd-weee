@@ -293,15 +293,15 @@
         debugger;
       
         if (document.getElementById('mainLink-collapsible').innerText == "Open All") {
-            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
-            for (i = 0; i < schemaDat.length; i++) {
+            var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
                 document.getElementById('mainLink-collapsible').innerText = "Close All";
             }
         }
         else if (document.getElementById('mainLink-collapsible').innerText == "Close All") {
-            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
-            for (i = 0; i < schemaDat.length; i++) {
+            var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
                 document.getElementById('mainLink-collapsible').innerText = "Open All";
             }
@@ -312,16 +312,16 @@
         var checkCollapse = false;
         debugger;
         if (checkCollapse == false) {
-            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
-            for (i = 0; i < schemaDat.length; i++) {
+            var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
                 checkCollapse = true;
             }
         }
         else if (checkCollapse) {
-            var schemaDat = document.getElementsByClassName('collapsible-govuk-grid');
-            for (i = 0; i < schemaDat.length; i++) {
+            var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
+            for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
                 checkCollapse = false;
             }
