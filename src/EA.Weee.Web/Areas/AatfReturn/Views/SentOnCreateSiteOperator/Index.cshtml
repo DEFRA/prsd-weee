@@ -40,7 +40,7 @@
         <div class="govuk-form-group" id="operatorCheckBox">
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
-                    @if (Model.IsOperatorTheSameAsAATF == true)
+                    @if (Model.IsOperatorTheSameAsAATF)
                     {
                         <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" checked />
                     }
