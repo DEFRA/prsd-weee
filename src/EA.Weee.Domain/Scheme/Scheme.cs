@@ -64,7 +64,7 @@
 
         public virtual Guid? AddressId { get; private set; }
 
-        public bool HasAddress => AddressId != null;
+        public bool HasAddress => Address != null;
 
         public void UpdateScheme(
             string schemeName,
