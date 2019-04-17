@@ -9,6 +9,7 @@
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using EA.Weee.Core.Admin;
     using EA.Weee.RequestHandlers.Admin.GetProducerDetails;
@@ -100,7 +101,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             var memberUpload2 = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
             A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
@@ -123,7 +125,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA", 2017)).Returns(new List<Domain.Producer.ProducerSubmission>()
@@ -181,7 +184,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             var scheme2 = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
             A.CallTo(() => scheme2.SchemeName).Returns("Scheme Name 2");
@@ -207,7 +211,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA", 2017)).Returns(new List<Domain.Producer.ProducerSubmission>()
@@ -276,7 +281,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producer);
 
@@ -336,7 +342,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
@@ -404,7 +411,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
@@ -481,7 +489,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))
@@ -549,7 +558,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch(A<string>._, A<int>._))

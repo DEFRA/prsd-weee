@@ -52,6 +52,8 @@
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\SROC-hot-fix\2019031412.set-annual-charge.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\201903141.annual-charge.sql" />
     <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
@@ -206,6 +208,11 @@
     <Content Include="scripts\Update\Sprint27\20161115-1700-AddIndexToProducerSubmissionAndUpload.sql" />
     <Content Include="scripts\Update\Sprint27\20161121-1606-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
     <Content Include="scripts\Update\Sprint28\20161123-1030-UpdateSpgSubmissionChangesCsvData.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\201903143.rollback-2019-ea-charges.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\201903142.charge-bands.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\20190314v1.updates-reg-ppob-country.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\20190319v2.update_SpgInvoiceRunChargeBreakdown.sql" />
+    <Content Include="scripts\Update\SROC-hot-fix\201903251-ProducerSubmissionStatus.sql" />
     <None Include="scripts\Update\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

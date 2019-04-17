@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
+    using System.Threading.Tasks;
     using Domain.Lookup;
    
     public interface IProducerChargeBandCalculator
     {
-        ChargeBand GetProducerChargeBand(annualTurnoverBandType annualTurnoverBand, bool vatRegistered, eeePlacedOnMarketBandType eeePlacedOnMarketBand);
+        Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer);
+
+        bool IsMatch(schemeType scheme, producerType producer);
     }
 }

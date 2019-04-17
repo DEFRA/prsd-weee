@@ -19,5 +19,7 @@
         public bool PrivacyPolicy { get; set; }
 
         public int? ComplianceYear { get; set; }
+
+        public bool HasAnnualCharge { get; set; }
     }
 }

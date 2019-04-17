@@ -23,6 +23,26 @@
             builder.RegisterType<XmlConverter>()
                 .As<IXmlConverter>()
                 .InstancePerRequest();
+
+            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>()
+                .As<IEnvironmentAgencyProducerChargeBandCalculator>()
+                .InstancePerRequest();
+
+            builder.RegisterType<EnvironmentAgencyProducerChargeBandCalculator>()
+                .As<IProducerChargeBandCalculator>()
+                .InstancePerRequest();
+
+            builder.RegisterType<ProducerAmendmentChargeCalculator>()
+                .As<IProducerChargeBandCalculator>()
+                .InstancePerRequest();
+
+            builder.RegisterType<ProducerChargeBandCalculatorChooser>()
+                .As<IProducerChargeBandCalculatorChooser>()
+                .InstancePerRequest();
+
+            builder.RegisterType<FetchProducerCharge>()
+                .As<IFetchProducerCharge>()
+                .InstancePerRequest();
         }
     }
 }

@@ -37,6 +37,7 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.Guid> InvoiceRunId { get; set; }
         public Nullable<System.DateTime> SubmittedDate { get; set; }
         public string SubmittedByUserId { get; set; }
+        public bool HasAnnualCharge { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }
