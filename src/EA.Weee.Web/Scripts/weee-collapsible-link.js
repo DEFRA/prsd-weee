@@ -1,6 +1,4 @@
 ﻿function CollapsibleLinkHref() {
-    document.getElementById('collapsibleHref').onclick = function () {
-
         if (document.getElementById('collapsibleHref').innerText == "Open All") {
             var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
             for (i = 0; i < schemaData.length; i++) {
@@ -17,11 +15,9 @@
                 document.getElementById('collapsibleHref').innerText = "Open All";
             }
         }
-    }
 }
 
 function CollapsibleLinkHefSummary() {
-    document.getElementById('summary-collapsible').onclick = function () {
         var checkCollapse = false;
 
         if (checkCollapse == false) {
@@ -38,5 +34,4 @@ function CollapsibleLinkHefSummary() {
                 checkCollapse = false;
             }
         }
-    }
 }
