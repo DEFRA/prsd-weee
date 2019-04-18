@@ -37,7 +37,7 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
         <span id="mainLink-collapsible" class="mainLink-collapsibleclass">
-            <a href="#" id="collapsibleHref" >Close All</a>
+            <a href="#" id="collapsibleHref"  onclick="return CollapsibleLinkHref();">Close All</a>
         </span>
    
     <div class="govuk-table govuk-grid-column-full">
@@ -96,7 +96,7 @@
             {
             <details class="govuk-details" open ="open">
                 <summary id ="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
-                    <span id="unset-padding" class="govuk-details__summary-text">
+                    <span id="unset-padding" class="govuk-details__summary-text"  onclick="return CollapsibleLinkHefSummary();">
                         Breakdown by PCS
                     </span>
                 </summary>
@@ -289,7 +289,7 @@
         </div>
 </section>
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     document.getElementById('collapsibleHref').onclick = function() {
         
         if (document.getElementById('collapsibleHref').innerText == "Open All") {
@@ -328,4 +328,8 @@
             }
         }
         }
-</script>
+</script>*@
+@Scripts.Render("~/bundles/weee-collapsible-link")
+@section scripts {
+
+}
