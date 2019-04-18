@@ -31,12 +31,11 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-
                 var viewModel = new SelectReportOptionsViewModel
                 {
                     OrganisationId = organisationId,
-                    ReturnId = returnId
+                    ReturnId = returnId,
+                    ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion())
                 };
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);

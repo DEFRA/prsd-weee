@@ -4,6 +4,7 @@
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
     ViewBag.Title = "AATF Return";
+    var message = string.Empty;
 }
 
 <section id="main-content">
@@ -12,43 +13,34 @@
     <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
             <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="obligated-weee-received-check" name="obligated-weee-received-check" type="checkbox" value="yes">
-                    <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-received-check">
-                        Obligated WEEE received on behalf of producer compliance schemes (PCSs)
-                        <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
-                            This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.
-                        </p>
-                    </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="obligated-weee-sent-on-check" name="obligated-weee-sent-on-check" type="checkbox" value="yes">
-                    <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-sent-on-check">
-                        WEEE sent to another AATF or ATF for treatment
-                        <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
-                            This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.
-                        </p>
-                    </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="obligated-weee-reused-check" name="obligated-weee-reused-check" type="checkbox" value="yes">
-                    <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-reused-check">
-                        WEEE reused as a whole appliance
-                        <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
-                            This is WEEE that has been refurbished or repaired to the point it is no longer waste.
-                        </p>
-                    </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="non-obligated-check" name="non-obligated-check" type="checkbox" value="yes">
-                    <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="non-obligated-check">
-                        Non-obligated WEEE
-                        <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
-                            This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS.
-                            It should not include WEEE that has already been reported by another AATF(s).
-                        </p>
-                    </label>
-                </div>
+                @for(var q = 0; q < Model.ReportOnQuestions.Count - 1; q++)
+                {
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="obligated-weee-received-check" name="obligated-weee-received-check" type="checkbox" value="yes">
+                        <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-received-check">
+                            @Model.ReportOnQuestions[q].Description;
+                            <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
+                                @switch (q)
+                                {
+                                    case 0:
+                                        message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.";
+                                        break;
+                                    case 1:
+                                        message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.";
+                                        break;
+                                    case 2:
+                                        message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste.";
+                                        break;
+                                    case 3:
+                                        message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
+                                        break;
+
+                                }
+                                @message
+                                </p>
+                            </label>
+                        </div>
+                }
                 <div id="dcfsection" style="border-left: 5px solid rgb(191, 193, 195); padding-left: 10px; margin-left: 40px;">
                     <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
                         Was any of this non-obligated WEEE received on behalf of a DCF?

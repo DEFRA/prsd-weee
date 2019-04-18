@@ -74,6 +74,7 @@
     <Compile Include="AatfReturn\AddDefaultAatfHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
+    <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />

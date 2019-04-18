@@ -12,6 +12,6 @@
 
         public string Description { get; private set; }
 
-        public int ParentId { get; private set; }
+        public int? ParentId { get; private set; }
     }
 }
