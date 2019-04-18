@@ -54,8 +54,8 @@
         public void Map_GivenValidSource_LongAddressesShouldBeCorrect()
         {
             var weeeSentOnList = new List<WeeeSentOnData>();
-            var operatorAddressLong = "OpName, OpAdd1, OpAdd2, OpTown, OpCounty, France, GU22 7UY";
-            var siteAddressLong = "SiteName, SiteAdd1, SiteAdd2, SiteTown, SiteCounty, Germany, GU22 7UT";
+            var operatorAddressLong = "OpName, OpAdd1, OpAdd2, OpTown, OpCounty, GU22 7UY, France";
+            var siteAddressLong = "SiteName, SiteAdd1, SiteAdd2, SiteTown, SiteCounty, GU22 7UT, Germany";
 
             var weeeSentOn = new WeeeSentOnData()
             {

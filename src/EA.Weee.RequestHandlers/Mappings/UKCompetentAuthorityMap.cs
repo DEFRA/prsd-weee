@@ -14,7 +14,8 @@
                 Abbreviation = source.Abbreviation,
                 CountryId = source.Country.Id,
                 Id = source.Id,
-                Email = source.Email
+                Email = source.Email,
+                AnnualChargeAmount = source.AnnualChargeAmount
             };
         }
     }

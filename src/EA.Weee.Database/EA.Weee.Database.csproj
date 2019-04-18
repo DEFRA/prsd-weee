@@ -53,6 +53,13 @@
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903141.annual-charge.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903143.rollback-2019-ea-charges.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903142.charge-bands.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\20190314v1.updates-reg-ppob-country.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\20190319v2.update_SpgInvoiceRunChargeBreakdown.sql" />
+    <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903251-ProducerSubmissionStatus.sql" />
     <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Release 1\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />

@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Core.AatfReturn
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedValuesCopyPasteViewModel
 
 @{
@@ -7,8 +8,12 @@
 
 <section id="main-content">
     <header class="hgroup">
+
         <div>
-            <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+            @{ 
+                var type = Model.Type == ObligatedType.Reused ? "reused as a whole appliance" : "received for treatment";
+            }
+            <h1 class="govuk-heading-l">WEEE that has been @type  at @Model.AatfName from @Model.SchemeName</h1>
         </div>
     </header>
     <p class="govuk-body">
@@ -25,6 +30,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.Type)
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">

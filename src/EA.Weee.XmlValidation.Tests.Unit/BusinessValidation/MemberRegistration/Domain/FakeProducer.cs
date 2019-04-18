@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FakeItEasy;
     using Weee.Domain.Lookup;
     using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
     using Weee.Domain.Producer.Classfication;
+    using Weee.Domain.Producer.Classification;
     using Weee.Domain.Scheme;
 
     public class FakeProducer
@@ -53,7 +55,8 @@
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 123),
-                999);
+                999,
+                A.Dummy<StatusType>());
         }
     }
 }

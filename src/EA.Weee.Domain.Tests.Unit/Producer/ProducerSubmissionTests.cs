@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
@@ -237,6 +238,201 @@
             Assert.Throws<InvalidOperationException>(() => producer.SetAsInvoiced());
         }
 
+        [Fact]
+        public void Producer_SetProducerCompanyCountry_Returns_RegOfficeOrPPoBCountry()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(
+               A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+               "WEE/AA1111AA",
+               2019,
+               scheme);
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                new EA.Weee.Domain.Producer.ProducerBusiness(
+                    new Company("CompanyName", "RegisteredNo",
+                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
+                    new ProducerAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
+                    new Country(Guid.NewGuid(), "FRANCE"), A.Dummy<string>())))),
+                null,
+                new DateTime(2019, 3, 18),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<Domain.Producer.BrandName>(),
+                new List<Domain.Producer.SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0,
+                A.Dummy<StatusType>());
+
+            Assert.Equal("FRANCE", producer.RegOfficeOrPBoBCountry);
+        }
+
+        [Fact]
+        public void Producer_SetProducerPartnershipCountry_Returns_RegOfficeOrPPoBCountry()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(
+               A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+               "WEE/AA1111AA",
+               2019,
+               scheme);
+
+            var producerAddress = new ProducerAddress("PrimaryName", "SecondaryName", "Street", "Town", "Locality", "AdministrativeArea",
+                new Country(A.Dummy<Guid>(), "SPAIN"), "PostCode");
+
+            var producerContact = new ProducerContact(
+                "Title", "Forename", "Surname", "123456", "1235467", "12345678", "a@b.c", producerAddress);
+
+            var producerBusiness = new ProducerBusiness(
+                partnership: new Partnership("TestPartnership", producerContact, new List<Partner> { }));
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                producerBusiness,
+                null,
+                new DateTime(2019, 3, 18),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<Domain.Producer.BrandName>(),
+                new List<Domain.Producer.SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0,
+                A.Dummy<StatusType>());
+
+            Assert.Equal("SPAIN", producer.RegOfficeOrPBoBCountry);
+        }
+
+        [Fact]
+        public void Producer_SetProducerMemberUpload_HasAnnualCharge_Returns_Yes()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(
+               A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                true);
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+               "WEE/AA1111AA",
+               2019,
+               scheme);
+            
+            var producer = new ProducerSubmission(
+               registeredProducer,
+               memberUpload,
+               A.Dummy<ProducerBusiness>(),
+               null,
+               new DateTime(2019, 3, 21),
+               0,
+               false,
+               null,
+               "Trading Name 1",
+               EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+               SellingTechniqueType.Both,
+               Domain.Obligation.ObligationType.Both,
+               AnnualTurnOverBandType.Greaterthanonemillionpounds,
+               new List<Domain.Producer.BrandName>(),
+               new List<Domain.Producer.SICCode>(),
+               A.Dummy<ChargeBandAmount>(),
+               0,
+               A.Dummy<StatusType>());
+
+            Assert.Equal("Yes", producer.HasAnnualCharge);
+        }
+
+        [Fact]
+        public void Producer_SetProducerMemberUpload_HasAnnualCharge_Returns_No()
+        {
+            // Arrange
+            Scheme scheme = new Scheme(
+               A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+               "WEE/AA1111AA",
+               2019,
+               scheme);
+
+            var producer = new ProducerSubmission(
+               registeredProducer,
+               memberUpload,
+               A.Dummy<ProducerBusiness>(),
+               null,
+               new DateTime(2019, 3, 21),
+               0,
+               false,
+               null,
+               "Trading Name 1",
+               EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+               SellingTechniqueType.Both,
+               Domain.Obligation.ObligationType.Both,
+               AnnualTurnOverBandType.Greaterthanonemillionpounds,
+               new List<Domain.Producer.BrandName>(),
+               new List<Domain.Producer.SICCode>(),
+               A.Dummy<ChargeBandAmount>(),
+               0,
+                A.Dummy<StatusType>());
+
+            Assert.Equal("No", producer.HasAnnualCharge);
+        }
+
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative
         {
             public override bool Equals(AuthorisedRepresentative other)
@@ -305,6 +501,7 @@
             private SellingTechniqueType sellingTechniqueType = new CustomSellingTechniqueType(0);
             private EEEPlacedOnMarketBandType eeePlacedOnMarketBandType = new CustomEEEPlacedOnMarketBandType(0);
             private ChargeBandAmount chargeBandAmount = A.Dummy<ChargeBandAmount>();
+            private StatusType status = A.Dummy<StatusType>();
 
             private AuthorisedRepresentative authorisedRepresentative = new AlwaysEqualAuthorisedRepresentative();
             private ProducerBusiness producerBusiness = new AlwaysEqualProducerBusiness();
@@ -362,7 +559,8 @@
                     brandNames,
                     sicCodes,
                     chargeBandAmount,
-                    (decimal)5.0);
+                    (decimal)5.0,
+                    status);
 
                 registeredProducer.SetCurrentSubmission(producerSubmission);
 

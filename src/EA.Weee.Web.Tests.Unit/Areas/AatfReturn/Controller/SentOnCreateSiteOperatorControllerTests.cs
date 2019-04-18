@@ -81,10 +81,11 @@
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
+            var form = new FormCollection();
             controller.ModelState.AddModelError("error", "error");
             var model = new SentOnCreateSiteOperatorViewModel();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            await controller.Index(model);
+            await controller.Index(model, form);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSite>._)).MustNotHaveHappened();
         }
@@ -92,15 +93,33 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
+            var form = new FormCollection();
             var model = new SentOnCreateSiteOperatorViewModel();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             var request = new EditSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
-            await controller.Index(model);
+            await controller.Index(model, form);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData("true")]
+        [InlineData("false")]
+        public async void IndexPost_GivenValidViewModel_IsOperatorTheSameAsAATFShouldBeSet(string operatorBool)
+        {
+            var form = new FormCollection();
+            var boolConversion = Convert.ToBoolean(operatorBool);
+            var model = new SentOnCreateSiteOperatorViewModel();
+            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+
+            form.Add("IsOperatorTheSameAsAATF", operatorBool);
+
+            await controller.Index(model, form);
+
+            A.CallTo(() => requestCreator.ViewModelToRequest(A<SentOnCreateSiteOperatorViewModel>.That.Matches(m => m.IsOperatorTheSameAsAATF == boolConversion))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
