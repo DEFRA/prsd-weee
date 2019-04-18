@@ -36,12 +36,10 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
 
-    <details class="govuk-details" open="open">
-        <summary class="govuk-details__summary" aria-controls="details-content" aria-expanded="true">
-            <span id="mainLink-collapsible" class="mainLink-collapsibleclass">Open All</span>
-        </summary>
-    </details>
-
+        <span id="mainLink-collapsible" class="mainLink-collapsibleclass">
+            <a href="#" id="collapsibleHref" >Close All</a>
+        </span>
+   
     <div class="govuk-table govuk-grid-column-full">
 
         @foreach (var aatf in Model.AatfsData)
@@ -96,7 +94,7 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-            <details class="govuk-details">
+            <details class="govuk-details" open ="open">
                 <summary id ="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
                     <span id="unset-padding" class="govuk-details__summary-text">
                         Breakdown by PCS
@@ -204,7 +202,7 @@
 
     </div>
 
-    <div class="govuk-!-padding-bottom-2"></div>
+    <div class="govuk-!-padding-bottom-2 collapsible-padding-right"></div>
     <h2 class="govuk-heading-m govuk-grid-row govuk-table__cell">Non-obligated WEEE</h2>
 
     <div class="govuk-!-padding-bottom-4"></div>
@@ -263,47 +261,52 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-            @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
 
-                @Html.HiddenFor(m => m.ReturnId)
-                @Html.HiddenFor(m => m.OrganisationId)
+                    @Html.HiddenFor(m => m.ReturnId)
+                    @Html.HiddenFor(m => m.OrganisationId)
 
-                <div class="govuk-form-group">
-                    <button class="govuk-button" type="submit">Continue</button>
-                </div>
-            }
+                    <div class="govuk-form-group">
+                        <button class="govuk-button" type="submit">Continue</button>
+                    </div>
+                }
 
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-body govuk-!-font-size-19">
-                <a class="govuk-link govuk-link--no-visited-state">
-                    @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
-                </a>
             </div>
         </div>
-    </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-body govuk-!-font-size-19">
+                    <a class="govuk-link govuk-link--no-visited-state">
+                        @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
 </section>
 
 <script type="text/javascript">
-
-    document.getElementById('mainLink-collapsible').onclick = function () {
+    document.getElementById('collapsibleHref').onclick = function() {
         debugger;
-      
-        if (document.getElementById('mainLink-collapsible').innerText == "Open All") {
+
+        if (document.getElementById('collapsibleHref').innerText == "Open All") {
             var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
             for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
-                document.getElementById('mainLink-collapsible').innerText = "Close All";
+                document.getElementsByClassName('govuk-details')[i].open = "open";
+                document.getElementById('collapsibleHref').innerText = "Close All";
             }
         }
-        else if (document.getElementById('mainLink-collapsible').innerText == "Close All") {
+        else if (document.getElementById('collapsibleHref').innerText == "Close All") {
             var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
             for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
-                document.getElementById('mainLink-collapsible').innerText = "Open All";
+                document.getElementsByClassName('govuk-details')[i].open = false;
+                document.getElementById('collapsibleHref').innerText = "Open All";
             }
         }
     }
@@ -314,7 +317,6 @@
         if (checkCollapse == false) {
             var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
             for (i = 0; i < schemaData.length; i++) {
-                document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
                 checkCollapse = true;
             }
@@ -326,6 +328,5 @@
                 checkCollapse = false;
             }
         }
-    }
-
+        }
 </script>
