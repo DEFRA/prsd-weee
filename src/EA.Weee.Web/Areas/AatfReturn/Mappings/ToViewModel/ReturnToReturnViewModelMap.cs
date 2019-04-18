@@ -56,17 +56,14 @@
                     {
                         var schemeList = weeeReceivedData.Where(s => s.Scheme.Id == scheme.Id && s.Aatf.Id == aatf.Id).ToList();
 
-                        foreach (var item in schemeList)
+                        var obligatedReceivedValues = new ObligatedCategoryValue
                         {
-                            ObligatedCategoryValue obligatedReceivedValues = new ObligatedCategoryValue
-                            {
-                                B2B = tonnageUtilities.CheckIfTonnageIsNull(item.B2B),
-                                B2C = tonnageUtilities.CheckIfTonnageIsNull(item.B2C)
-                            };
+                            B2B = tonnageUtilities.SumObligatedValues(schemeList).B2B,
+                            B2C = tonnageUtilities.SumObligatedValues(schemeList).B2C
+                        };
 
-                            var aatfSchemeData = new AatfSchemeData(item.Scheme, obligatedReceivedValues, scheme.ApprovalName);
-                            schemeData.Add(aatfSchemeData);
-                        }                       
+                        var aatfSchemeData = new AatfSchemeData(scheme, obligatedReceivedValues, scheme.ApprovalName);
+                        schemeData.Add(aatfSchemeData);                                           
                     }                    
 
                     var obligatedData = new AatfObligatedData(aatf, schemeData)
