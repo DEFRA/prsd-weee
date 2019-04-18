@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
     using System;
@@ -21,6 +22,13 @@
         public SentOnCreateSiteViewModel Map(ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
+
+            if (source.SiteAddressData.Name == null)
+            {
+                source.SiteAddressData = new AatfAddressData();
+            }
+
+            source.SiteAddressData.Countries = source.CountryData;
 
             var viewModel = new SentOnCreateSiteViewModel()
             {

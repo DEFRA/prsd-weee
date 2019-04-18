@@ -44,7 +44,8 @@
                 {
                     OperatorAddress = addressMapper.Map(item.OperatorAddress),
                     SiteAddress = addressMapper.Map(item.SiteAddress),
-                    Tonnages = weeeSentOnObligatedData
+                    Tonnages = weeeSentOnObligatedData,
+                    WeeeSentOnId = item.Id
                 };
 
                 weeeSentOnList.Add(weeeSentOnData);
