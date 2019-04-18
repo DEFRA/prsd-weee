@@ -41,6 +41,9 @@
             bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
                 "~/Scripts/sent-on-operator-address.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/weee-collapsible-link").Include(
+                "~/Scripts/weee-collapsible-link.js"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 
