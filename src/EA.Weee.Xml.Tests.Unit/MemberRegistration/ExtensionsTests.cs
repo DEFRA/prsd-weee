@@ -114,5 +114,73 @@
 
             Assert.Equal(tradingName, producer.GetProducerName());
         }
+
+        [Fact]
+        public void GetProducerCountry_ProducerIsCompanyType_ReturnsRegisteredOfficeCountry()
+        {
+            var producer = SetRegisteredOfficeOrPPoBDetails(false);
+
+            var producerCountry = producer.GetProducerCountry();
+            Assert.Equal("UKENGLAND", producerCountry.ToString());
+        }
+
+        [Fact]
+        public void GetProducerCountry_ProducerIsBusinessPartnerShipType_ReturnsPPOBCountry()
+        {
+            var producer = SetRegisteredOfficeOrPPoBDetails(true);
+
+            var producerCountry = producer.GetProducerCountry();
+            Assert.Equal("UKENGLAND", producerCountry.ToString());
+        }
+
+        private static producerType SetRegisteredOfficeOrPPoBDetails(bool hasPartnership)
+        {
+            producerBusinessType producerBusiness = null;
+
+            var contactDetailsInfo = new contactDetailsContainerType()
+            {
+                contactDetails = new contactDetailsType()
+                {
+                    address = new addressType()
+                    {
+                        country = countryType.UKENGLAND
+                    }
+                }
+            };
+
+            if (hasPartnership)
+            {
+                var producerPartnership = new partnershipType()
+                {
+                    partnershipName = "MiddleEarth",
+                    principalPlaceOfBusiness = contactDetailsInfo
+                };
+
+                producerBusiness = new producerBusinessType()
+                {
+                    Item = producerPartnership
+                };
+            }
+            else
+            {
+                var producerCompany = new companyType()
+                {
+                    companyName = "Rivendell",
+                    registeredOffice = contactDetailsInfo
+                };
+
+                producerBusiness = new producerBusinessType()
+                {
+                    Item = producerCompany
+                };
+            }
+
+            var producer = new producerType
+            {
+                producerBusiness = producerBusiness
+            };
+
+            return producer;
+        }
     }
 }

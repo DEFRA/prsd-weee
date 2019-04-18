@@ -50,7 +50,8 @@
                     AatfId = aatfId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
                     ReturnId = returnId,
-                    ReturnData = @return
+                    ReturnData = @return,
+                    PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
