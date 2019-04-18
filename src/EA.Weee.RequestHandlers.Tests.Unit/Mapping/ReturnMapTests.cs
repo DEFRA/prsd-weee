@@ -86,6 +86,22 @@
         }
 
         [Fact]
+        public void Map_GivenSource_WeeeSentOnIdShouldBeMapped()
+        {
+            var @return = GetReturn();
+            var obligatedWeeeSentOn = A.Fake<List<WeeeSentOnAmount>>();
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>());
+
+            var result = map.Map(source);
+
+            for (var i = 0; i < result.ObligatedWeeeSentOnData.Count; i++)
+            {
+                result.ObligatedWeeeSentOnData[i].Id.Should().Be(obligatedWeeeSentOn[i].Id);
+            }
+        }
+
+        [Fact]
         public void Map_GivenSource_NonObligatedValuesShouldBeMapped()
         {
             var @return = GetReturn();

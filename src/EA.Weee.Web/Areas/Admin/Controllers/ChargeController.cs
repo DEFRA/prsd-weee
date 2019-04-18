@@ -10,6 +10,7 @@
     using Api.Client;
     using Core.Admin;
     using Core.Charges;
+    using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using Infrastructure;
@@ -212,7 +213,7 @@
             IssuedChargesViewModel viewModel = new IssuedChargesViewModel();
 
             viewModel.ComplianceYears = await GetComplianceYearsWithInvoices(authority);
-            viewModel.SchemeNames = await GetSchemesWithInvoices(authority);
+            viewModel.Schemes = await GetSchemesWithInvoices(authority);
 
             return View(viewModel);
         }
@@ -225,19 +226,19 @@
             ViewBag.TriggerDownload = ModelState.IsValid;
 
             viewModel.ComplianceYears = await GetComplianceYearsWithInvoices(authority);
-            viewModel.SchemeNames = await GetSchemesWithInvoices(authority);
+            viewModel.Schemes = await GetSchemesWithInvoices(authority);
 
             return View(viewModel);
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadIssuedChargesCsv(CompetentAuthority authority, int complianceYear, string schemeName)
+        public async Task<ActionResult> DownloadIssuedChargesCsv(CompetentAuthority authority, int complianceYear, Guid? schemeId)
         {
             FileInfo file;
 
             using (IWeeeClient client = weeeClient())
             {
-                FetchIssuedChargesCsv request = new FetchIssuedChargesCsv(authority, complianceYear, schemeName);
+                FetchIssuedChargesCsv request = new FetchIssuedChargesCsv(authority, complianceYear, schemeId);
                 file = await client.SendAsync(User.GetAccessToken(), request);
             }
 
@@ -253,7 +254,7 @@
             }
         }
 
-        private async Task<IEnumerable<string>> GetSchemesWithInvoices(CompetentAuthority authority)
+        private async Task<IEnumerable<SchemeData>> GetSchemesWithInvoices(CompetentAuthority authority)
         {
             FetchSchemesWithInvoices request = new FetchSchemesWithInvoices(authority);
             using (IWeeeClient client = weeeClient())

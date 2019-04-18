@@ -48,7 +48,7 @@
 
         public virtual string SchemeName { get; private set; }
 
-        public string IbisCustomerReference { get; private set; }
+        public virtual string IbisCustomerReference { get; private set; }
 
         public ObligationType? ObligationType { get; private set; }
 

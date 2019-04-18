@@ -65,7 +65,14 @@
                     siteAddressBuilder += county;
                 }
 
+                if (siteData.OperatorAddress.Postcode != null)
+                {
+                    var postCode = siteData.SiteAddress.Postcode + ", ";
+                    siteAddressBuilder += postCode;
+                }
+
                 siteAddressBuilder += siteData.SiteAddress.CountryName;
+
                 siteData.SiteAddressLong = siteAddressBuilder;
 
                 var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
@@ -88,7 +95,14 @@
                     operatorAddressBuilder += county;
                 }
 
+                if (siteData.OperatorAddress.Postcode != null)
+                {
+                    var postCode = siteData.OperatorAddress.Postcode + ", ";
+                    operatorAddressBuilder += postCode;
+                }
+
                 operatorAddressBuilder += siteData.OperatorAddress.CountryName;
+
                 siteData.OperatorAddressLong = operatorAddressBuilder;
 
                 siteList.Add(siteData);

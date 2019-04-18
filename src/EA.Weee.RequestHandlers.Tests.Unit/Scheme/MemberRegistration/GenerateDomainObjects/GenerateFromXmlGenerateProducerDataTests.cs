@@ -43,7 +43,7 @@
 
             var data = "Test data";
             var fileName = "Test filename";
-            var memberUpload = new MemberUpload(Guid.NewGuid(), data, A.Dummy<List<MemberUploadError>>(), 0, 2015, A.Dummy<Scheme>(), fileName);
+            var memberUpload = new MemberUpload(Guid.NewGuid(), data, A.Dummy<List<MemberUploadError>>(), 0, 2015, A.Dummy<Scheme>(), fileName, null, false);
 
             builder.MemberUpload = memberUpload;
 
@@ -472,7 +472,8 @@
                     A.Dummy<int>(),
                     scheme,
                     A.Dummy<string>(),
-                    A.Dummy<string>());
+                    A.Dummy<string>(),
+                    A.Dummy<bool>());
 
                 ProducerCharges = new Dictionary<string, ProducerCharge>();
                 ProducerCharges.Add(TradingName, new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount() });

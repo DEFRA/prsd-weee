@@ -57,8 +57,11 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnCreateSiteOperatorViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SentOnCreateSiteOperatorViewModel viewModel, FormCollection formCollection)
         {
+            var isOperatorTheSame = Convert.ToBoolean(formCollection["IsOperatorTheSameAsAATF"]);
+            viewModel.IsOperatorTheSameAsAATF = isOperatorTheSame;
+
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
