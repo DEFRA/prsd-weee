@@ -54,7 +54,7 @@
 
                     foreach (var scheme in source.SchemeDataItems)
                     {
-                        var schemeList = weeeReceivedData.Where(s => s.Scheme.Id == scheme.Id).ToList();
+                        var schemeList = weeeReceivedData.Where(s => s.Scheme.Id == scheme.Id && s.Aatf.Id == aatf.Id).ToList();
 
                         foreach (var item in schemeList)
                         {
