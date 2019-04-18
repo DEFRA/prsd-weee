@@ -42,7 +42,8 @@
                 {
                     Tonnages = tonnageUtilities.SumObligatedValues(item.Tonnages),
                     SiteAddress = item.SiteAddress,
-                    OperatorAddress = item.OperatorAddress
+                    OperatorAddress = item.OperatorAddress,
+                    WeeeSentOnId = item.WeeeSentOnId
                 };
 
                 var siteAddressBuilder = siteData.SiteAddress.Name + ", " + siteData.SiteAddress.Address1 + ", ";
