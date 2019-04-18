@@ -292,6 +292,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SelectReportOptionsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
@@ -832,6 +834,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

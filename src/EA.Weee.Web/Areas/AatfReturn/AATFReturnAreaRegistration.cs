@@ -37,8 +37,8 @@
             //    namespaces: new[] { typeof(SelectYourPcsController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: AatfRedirect.SelectPcsRouteName,
-                url: "aatf-return/{organisationId}/select-pcs/{returnId}/{action}",
+                name: AatfRedirect.AatfInitialSelect,
+                url: "aatf-return/{organisationId}/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "SelectYourPcs" },
                 namespaces: new[] { typeof(SelectYourPcsController).Namespace });
 

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
@@ -37,7 +38,7 @@
             {
                 var returnQuarterWindow = new ReturnQuarterWindow(A.Dummy<Return>(), A.Dummy<EA.Weee.Domain.DataReturns.QuarterWindow>(),
                     null, null, null, null,
-                    null, null, null);
+                    null, null, null, A.Dummy<List<ReportOnQuestion>>());
             };
 
             action.Should().Throw<ArgumentNullException>();

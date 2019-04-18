@@ -12,6 +12,8 @@
     {
         Task<Guid> Add<TEntity>(TEntity entity) where TEntity : Entity;
 
+        Task<List<TEntity>> GetAll<TEntity>() where TEntity : class;
+
         Task<TEntity> GetById<TEntity>(Guid id) where TEntity : Entity;
 
         Task<TEntity> GetSingleByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;

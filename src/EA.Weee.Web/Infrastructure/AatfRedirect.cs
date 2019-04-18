@@ -6,7 +6,7 @@
 
     public static class AatfRedirect
     {
-        public static string SelectPcsRouteName = "aatf-select-pcs";
+        public static string AatfInitialSelect = "aatf-initial-select";
         public static string NonObligatedRouteName = "aatf-non-obligated";
         public static string NonObligatedDcfRouteName = "aatf-non-obligated-dcf";
         public static string CheckReturnRouteName = "aatf-check";
@@ -22,7 +22,12 @@
 
         public static RedirectToRouteResult SelectPcs(Guid organsationId, Guid returnId)
         {
-            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(AatfInitialSelect, new RouteValueDictionary(new { controller = "SelectYourPcs", action = "Index", organisationId = organsationId, returnId = returnId }));
+        }
+
+        public static RedirectToRouteResult SelectReportOptions(Guid organsationId, Guid returnId)
+        {
+            return new RedirectToRouteResult(AatfInitialSelect, new RouteValueDictionary(new { controller = "SelectReportOptions", action = "Index", organisationId = organsationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult ReusedOffSite(Guid returnId, Guid aatfId, Guid organisationId)

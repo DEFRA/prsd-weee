@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
+    <Compile Include="AatfReturn\ReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\ReturnReportOn.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />
     <Compile Include="AatfReturn\AatfAddressData.cs" />
     <Compile Include="AatfReturn\AatfData.cs" />
