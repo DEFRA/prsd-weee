@@ -17,5 +17,6 @@
         public DateTime DateAmended { get; set; }
         public string AuthorisedRepresentative { get; set; }
         public string OverseasProducer { get; set; }
+        public string RegOfficeOrPBoBCountry { get; set; }
     }
 }

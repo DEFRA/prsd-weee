@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Weee.Domain;
@@ -20,7 +21,7 @@
         /// <param name="complianceYear"></param>
         /// <param name="schemeName"></param>
         /// <returns></returns>
-        Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, string schemeName);
-        Task<Domain.Scheme.Scheme> FetchSchemeAsync(string schemeName);
+        Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, Guid? schemeName);
+        Task<Domain.Scheme.Scheme> FetchSchemeAsync(Guid? schemeId);
     }
 }

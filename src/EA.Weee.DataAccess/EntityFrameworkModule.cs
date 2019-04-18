@@ -33,6 +33,9 @@
 
             builder.RegisterType<StoredProcedures>().As<IStoredProcedures>()
                 .InstancePerRequest();
+
+            builder.RegisterType<ProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>()
+                .InstancePerRequest();
         }
     }
 }

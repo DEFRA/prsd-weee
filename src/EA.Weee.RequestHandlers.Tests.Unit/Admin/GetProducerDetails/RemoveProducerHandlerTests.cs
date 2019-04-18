@@ -91,7 +91,7 @@
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
 
-            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>());
+            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>(), null, A.Dummy<bool>());
             memberUpload.Submit(A.Dummy<User>());
             memberUpload.AssignToInvoiceRun(A.Dummy<InvoiceRun>());
 
@@ -120,7 +120,7 @@
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
 
-            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>());
+            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>(), null, A.Dummy<bool>());
 
             var producerSubmission = A.Fake<ProducerSubmission>();
             A.CallTo(() => producerSubmission.ChargeThisUpdate)
