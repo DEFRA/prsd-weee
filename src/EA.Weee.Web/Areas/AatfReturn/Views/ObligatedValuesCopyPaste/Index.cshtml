@@ -10,10 +10,24 @@
     <header class="hgroup">
 
         <div>
-            @{ 
+            @{
                 var type = Model.Type == ObligatedType.Reused ? "reused as a whole appliance" : "received for treatment";
+
+                if (Model.Type == ObligatedType.Reused)
+                {
+                    <h1 class="govuk-heading-l">
+                        @Model.AatfName
+                    </h1>
+                    <h2 class="govuk-heading-l">
+                        WEEE that has been reused as a whole appliance
+                    </h2>
+                }
+                else if (Model.Type == ObligatedType.Received)
+                {
+                    <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+                }
             }
-            <h1 class="govuk-heading-l">WEEE that has been @type  at @Model.AatfName from @Model.SchemeName</h1>
+
         </div>
     </header>
     <p class="govuk-body">
@@ -34,11 +48,11 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2c-entry">B2C</h2>
+                <h2 class="govuk-heading-s" id="b2c-entry">B2C (tonnes)</h2>
                 <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
             </div>
             <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2b-entry">B2B</h2>
+                <h2 class="govuk-heading-s" id="b2b-entry">B2B (tonnes)</h2>
                 <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
             </div>
         </div>
