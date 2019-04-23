@@ -5,9 +5,9 @@
 
     public class EditSentOnAatfSiteRequestCreator : IEditSentOnAatfSiteRequestCreator
     {
-        public EditSentOnAatfSite ViewModelToRequest(SentOnCreateSiteOperatorViewModel viewModel)
+        public EditSentOnAatfSiteWithOperator ViewModelToRequest(SentOnCreateSiteOperatorViewModel viewModel)
         {
-            var aatfSite = new EditSentOnAatfSite()
+            var aatfSite = new EditSentOnAatfSiteWithOperator()
             {
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,

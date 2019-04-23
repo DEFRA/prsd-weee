@@ -28,7 +28,12 @@
 
             var aatfAddress = await getSentOnAatfSiteDataAccess.GetWeeeSentOnOperatorAddress(message.WeeeSentOnId);
 
-            var addressData = mapper.Map(aatfAddress);
+            var addressData = new AatfAddressData();
+
+            if (aatfAddress != null)
+            {
+                addressData = mapper.Map(aatfAddress);
+            }
 
             return addressData;
         }

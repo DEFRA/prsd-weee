@@ -63,6 +63,7 @@
     <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReused.cs" />
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\EditSentOnAatfSiteWithOperator.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnOperatorSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetWeeeSentOn.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />

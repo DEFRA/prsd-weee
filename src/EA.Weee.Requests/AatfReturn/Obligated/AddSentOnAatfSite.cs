@@ -2,18 +2,13 @@
 {
     using System;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
 
-    public class AddSentOnAatfSite : IRequest<Guid>
+    public class AddSentOnAatfSite : SentOnAatfSite
     {
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }
 
         public Guid AatfId { get; set; }
-
-        public OperatorAddressData OperatorAddressData { get; set; }
-
-        public AatfAddressData SiteAddressData { get; set; }
     }
 }

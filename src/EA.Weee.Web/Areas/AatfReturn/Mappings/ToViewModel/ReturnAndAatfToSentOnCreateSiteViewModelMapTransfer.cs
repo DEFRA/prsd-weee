@@ -16,6 +16,8 @@
 
         public Guid AatfId;
 
+        public Guid? WeeeSentOnId;
+
         public AatfAddressData SiteAddressData;
 
         public AatfAddressData OperatorAddressData;
