@@ -13,6 +13,7 @@
     using Api.Client;
     using Core.Admin;
     using Core.Charges;
+    using Core.Scheme;
     using Core.Shared;
     using FakeItEasy;
     using Services;
@@ -820,10 +821,10 @@
                 .WhenArgumentsMatch(a => a.Get<FetchComplianceYearsWithInvoices>("request").Authority == authority)
                 .Returns(complianceYears);
 
-            List<string> schemeNames = A.Dummy<List<string>>();
+            List<SchemeData> schemes = A.Dummy<List<SchemeData>>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchSchemesWithInvoices>._))
                 .WhenArgumentsMatch(a => a.Get<FetchSchemesWithInvoices>("request").Authority == authority)
-                .Returns(schemeNames);
+                .Returns(schemes);
 
             ChargeController controller = new ChargeController(
                 A.Dummy<IAppConfiguration>(),
@@ -841,7 +842,7 @@
             Assert.NotNull(viewModel);
 
             Assert.Equal(complianceYears, viewModel.ComplianceYears);
-            Assert.Equal(schemeNames, viewModel.SchemeNames);
+            Assert.Equal(schemes, viewModel.Schemes);
         }
 
         /// <summary>
@@ -938,10 +939,10 @@
                 .WhenArgumentsMatch(a => a.Get<FetchComplianceYearsWithInvoices>("request").Authority == authority)
                 .Returns(complianceYears);
 
-            List<string> schemeNames = A.Dummy<List<string>>();
+            List<SchemeData> schemes = A.Dummy<List<SchemeData>>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchSchemesWithInvoices>._))
                 .WhenArgumentsMatch(a => a.Get<FetchSchemesWithInvoices>("request").Authority == authority)
-                .Returns(schemeNames);
+                .Returns(schemes);
 
             ChargeController controller = new ChargeController(
                 A.Dummy<IAppConfiguration>(),
@@ -959,7 +960,7 @@
             Assert.NotNull(viewModel);
 
             Assert.Equal(complianceYears, viewModel.ComplianceYears);
-            Assert.Equal(schemeNames, viewModel.SchemeNames);
+            Assert.Equal(schemes, viewModel.Schemes);
         }
 
         /// <summary>
@@ -1051,7 +1052,7 @@
             // Arrange
             CompetentAuthority authority = A.Dummy<CompetentAuthority>();
             int complianceYear = A.Dummy<int>();
-            string schemeName = A.Dummy<string>();
+            Guid schemeId = A.Dummy<Guid>();
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
 
@@ -1060,7 +1061,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchIssuedChargesCsv>._))
                 .WhenArgumentsMatch(a => a.Get<FetchIssuedChargesCsv>("request").Authority == authority
                     && a.Get<FetchIssuedChargesCsv>("request").ComplianceYear == complianceYear
-                    && a.Get<FetchIssuedChargesCsv>("request").SchemeName == schemeName)
+                    && a.Get<FetchIssuedChargesCsv>("request").SchemeId == schemeId)
                 .Returns(fileInfo);
 
             ChargeController controller = new ChargeController(
@@ -1069,7 +1070,7 @@
                 () => weeeClient);
 
             // Act
-            ActionResult result = await controller.DownloadIssuedChargesCsv(authority, complianceYear, schemeName);
+            ActionResult result = await controller.DownloadIssuedChargesCsv(authority, complianceYear, schemeId);
 
             // Assert
             FileResult fileResult = result as FileResult;
@@ -1096,7 +1097,7 @@
             ActionResult result = await controller.DownloadIssuedChargesCsv(
                 A.Dummy<CompetentAuthority>(),
                 A.Dummy<int>(),
-                A.Dummy<string>());
+                A.Dummy<Guid>());
 
             // Assert
             FileResult fileResult = result as FileResult;

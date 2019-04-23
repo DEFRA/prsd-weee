@@ -6,6 +6,7 @@
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using Domain.User;
     using Error;
@@ -233,7 +234,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producer);
             memberUpload.Submit(A.Dummy<User>());
@@ -269,7 +271,8 @@
                 new List<BrandName>(),
                 new List<SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             memberUpload.ProducerSubmissions.Add(producer);
             memberUpload.Submit(A.Dummy<User>());

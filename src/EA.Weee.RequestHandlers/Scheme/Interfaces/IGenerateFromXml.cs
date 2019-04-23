@@ -6,12 +6,13 @@
     using Domain.Scheme;
     using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Xml.MemberRegistration;
 
     public interface IGenerateFromXml
     {
         Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXmlFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
 
         MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors,
-            decimal totalCharges, Scheme scheme);
+            decimal totalCharges, Scheme scheme, bool hasAnnualCharge);
     }
 }
