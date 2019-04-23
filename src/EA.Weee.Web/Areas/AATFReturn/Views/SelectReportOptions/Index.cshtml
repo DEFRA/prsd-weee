@@ -13,64 +13,68 @@
     <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
             <div class="govuk-checkboxes">
-                @for(var q = 0; q < Model.ReportOnQuestions.Count - 1; q++)
+                @for (var q = 0; q < Model.ReportOnQuestions.Count; q++)
                 {
-                    <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="obligated-weee-received-check" name="obligated-weee-received-check" type="checkbox" value="yes">
-                        <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-received-check">
-                            @Model.ReportOnQuestions[q].Description;
-                            <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
-                                @switch (q)
-                                {
-                                    case 0:
-                                        message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.";
-                                        break;
-                                    case 1:
-                                        message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.";
-                                        break;
-                                    case 2:
-                                        message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste.";
-                                        break;
-                                    case 3:
-                                        message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
-                                        break;
+                    @Html.HiddenFor(m => m.ReportOnQuestions[q].Selected)
+                    if (q < Model.ReportOnQuestions.Count - 1)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="obligated-weee-received-check" name="obligated-weee-received-check" type="checkbox" value="yes">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="obligated-weee-received-check">
+                                @Model.ReportOnQuestions[q].Description
+                                <p class="govuk-body govuk-!-font-size-16" style="padding-top:10px; color: gray;">
+                                    @switch (q)
+                                    {
+                                        case 0:
+                                            message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.";
+                                            break;
+                                        case 1:
+                                            message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.";
+                                            break;
+                                        case 2:
+                                            message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste.";
+                                            break;
+                                        case 3:
+                                            message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
+                                            break;
 
-                                }
-                                @message
+                                    }
+                                    @message
                                 </p>
                             </label>
                         </div>
-                }
-                <div id="dcfsection" style="border-left: 5px solid rgb(191, 193, 195); padding-left: 10px; margin-left: 40px;">
-                    <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
-                        Was any of this non-obligated WEEE received on behalf of a DCF?
-                    </h3>
-                    <p class="govuk-body govuk-!-font-size-16" style="color: gray;">
-                        This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.
-                    </p>
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <div class="govuk-radios govuk-radios--inline">
-                                <div class="govuk-radios__item">
-
-                                    <input class="govuk-radios__input" id="dcfoption-yes" name="dcfoption" type="radio"
-                                           value="yes">
-
-                                    <label class="govuk-label govuk-radios__label" for="dcfoption-yes">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="dcfoption-no" name="dcfoption" type="radio"
-                                           value="no">
-                                    <label class="govuk-label govuk-radios__label" for="dcfoption-no">
-                                        No
-                                    </label>
-                                </div>
+                    }
+                    else
+                    {
+                        <div id="dcfsection" style="border-left: 5px solid rgb(191, 193, 195); padding-left: 10px; margin-left: 40px;">
+                            <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
+                                @Model.ReportOnQuestions[q].Description
+                            </h3>
+                            <p class="govuk-body govuk-!-font-size-16" style="color: gray;">
+                                This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.
+                            </p>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <div class="govuk-radios govuk-radios--inline">
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="dcfoption-yes" name="dcfoption" type="radio" value="yes">
+                                            <label class="govuk-label govuk-radios__label" for="dcfoption-yes">
+                                                Yes
+                                            </label>
+                                        </div>
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="dcfoption-no" name="dcfoption" type="radio"
+                                                   value="no">
+                                            <label class="govuk-label govuk-radios__label" for="dcfoption-no">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
-                    </div>
-                </div>
+                        </div>
+                    }
+                }
             </div>
         </fieldset>
     </div>

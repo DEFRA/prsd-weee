@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
+    <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />

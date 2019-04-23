@@ -334,7 +334,9 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetWeeeSentOnRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IAddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IGetWeeeSentOnRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedSentOnWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />

@@ -31,7 +31,7 @@
         {
             using (var client = apiClient())
             {
-                var viewModel = new SelectReportOptionsViewModel
+                var viewModel = new SelectReportOptionsViewModel()
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
@@ -42,6 +42,25 @@
 
                 return View("Index", viewModel);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(SelectReportOptionsViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    var request = new AddReturnReportOn();
+
+                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                }
+            }
+
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+            return View(viewModel);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
