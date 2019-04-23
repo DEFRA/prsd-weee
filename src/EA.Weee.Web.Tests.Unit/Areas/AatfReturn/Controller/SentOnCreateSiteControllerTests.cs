@@ -64,7 +64,7 @@
             A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(Guid.NewGuid(), Guid.NewGuid());
+            await controller.Index(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -73,7 +73,7 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }

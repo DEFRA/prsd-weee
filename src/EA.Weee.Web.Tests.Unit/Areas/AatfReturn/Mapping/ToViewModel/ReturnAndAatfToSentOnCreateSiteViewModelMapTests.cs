@@ -34,11 +34,12 @@
             var orgId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer(A.Fake<IList<Core.Shared.CountryData>>())
+            var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
             {
                 ReturnId = returnId,
                 AatfId = aatfId,
-                OrganisationId = orgId
+                OrganisationId = orgId,
+                CountryData = A.Fake<IList<Core.Shared.CountryData>>()
             };
 
             var result = map.Map(transfer);
