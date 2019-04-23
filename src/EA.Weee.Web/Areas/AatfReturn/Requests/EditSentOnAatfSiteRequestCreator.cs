@@ -2,11 +2,22 @@
 {
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using System;
 
     public class EditSentOnAatfSiteRequestCreator : IEditSentOnAatfSiteRequestCreator
     {
-        public EditSentOnAatfSiteWithOperator ViewModelToRequest(SentOnCreateSiteOperatorViewModel viewModel)
+        public SentOnAatfSite ViewModelToRequest(SentOnCreateSiteOperatorViewModel viewModel)
         {
+            if (viewModel.Edit)
+            {
+                return new EditSentOnAatfSite()
+                {
+                    SiteAddressData = viewModel.SiteAddressData,
+                    SiteAddressId = (Guid)viewModel.SiteAddressId,
+                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId
+                };
+            }
+
             var aatfSite = new EditSentOnAatfSiteWithOperator()
             {
                 OrganisationId = viewModel.OrganisationId,

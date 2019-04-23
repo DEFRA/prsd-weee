@@ -20,6 +20,8 @@
 
         public AatfAddressData SiteAddressData;
 
+        public Guid? SiteAddressId;
+
         public AatfAddressData OperatorAddressData;
 
         public IList<Core.Shared.CountryData> CountryData;
