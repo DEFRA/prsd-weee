@@ -48,7 +48,7 @@
         public async Task<UKCompetentAuthority> FetchEnvironmentAgencyAsync()
         {
             return await context.UKCompetentAuthorities
-                .Where(a => a.Abbreviation == "EA")
+                .Where(a => a.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
                 .SingleAsync();
         }
 
@@ -60,7 +60,7 @@
         {
             return await context.Schemes
                 .Where(s => s.SchemeStatus.Value != (int)SchemeStatus.Rejected)
-                .Where(s => s.CompetentAuthority.Abbreviation == "EA")
+                .Where(s => s.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
                 .ToListAsync();
         }
 

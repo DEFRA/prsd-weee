@@ -15,7 +15,8 @@
                 ComplianceYear = source.ComplianceYear,
                 SchemeId = source.Scheme.Id,
                 IsSubmitted = source.IsSubmitted,
-                TotalCharges = source.TotalCharges
+                TotalCharges = source.TotalCharges,
+                HasAnnualCharge = source.HasAnnualCharge
             };
         }
     }

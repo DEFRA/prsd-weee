@@ -1,19 +1,21 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchSchmesWithInvoices
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchSchemesWithInvoices
 {
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Scheme;
     using Core.Shared;
     using Domain;
     using Domain.Charges;
     using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Charges;
-    using EA.Weee.RequestHandlers.Charges.FetchSchemesWithInvoices;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.Charges;
+    using RequestHandlers.Charges.FetchSchemesWithInvoices;
+    using RequestHandlers.Security;
     using Requests.Charges;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class FetchSchemesWithInvoicesHandlerTests
@@ -31,10 +33,11 @@
 
             FetchSchemesWithInvoicesHandler handler = new FetchSchemesWithInvoicesHandler(
                 authorization,
-                A.Dummy<ICommonDataAccess>());
+                A.Dummy<ICommonDataAccess>(),
+                A.Dummy<IMap<Scheme, SchemeData>>());
 
             // Act
-            Func<Task<IReadOnlyList<string>>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.FetchSchemesWithInvoices>());
+            Func<Task<IReadOnlyList<SchemeData>>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.FetchSchemesWithInvoices>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
@@ -44,20 +47,18 @@
         public async Task GetAllInvoicedSchemesHandler_ReturnsSchemes()
         {
             // Arrange
-            UKCompetentAuthority competentAuthority = 
-                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk");
+            UKCompetentAuthority competentAuthority =
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk", 0);
             var scheme1 = A.Fake<Scheme>();
-            A.CallTo(() => scheme1.SchemeName).Returns("Test1");
+            
             A.CallTo(() => scheme1.CompetentAuthority).Returns(competentAuthority);
             var scheme2 = A.Fake<Scheme>();
-            A.CallTo(() => scheme2.SchemeName).Returns("Test2");
             A.CallTo(() => scheme2.CompetentAuthority).Returns(competentAuthority);
             var scheme3 = A.Fake<Scheme>();
-            A.CallTo(() => scheme3.SchemeName).Returns("Test3");
             A.CallTo(() => scheme3.CompetentAuthority).Returns(competentAuthority);
 
             InvoiceRun invoice = A.Fake<InvoiceRun>();
-           
+
             var memberUpload1 = A.Fake<MemberUpload>();
             A.CallTo(() => memberUpload1.ComplianceYear).Returns(2015);
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
@@ -73,6 +74,10 @@
             A.CallTo(() => memberUpload3.Scheme).Returns(scheme3);
             A.CallTo(() => memberUpload3.InvoiceRun).Returns(invoice);
 
+            var schemeData1 = A.Fake<SchemeData>();
+            var schemeData2 = A.Fake<SchemeData>();
+            var schemeData3 = A.Fake<SchemeData>();
+
             ICommonDataAccess dataAccess = A.Fake<ICommonDataAccess>();
             A.CallTo(() => dataAccess.FetchInvoicedMemberUploadsAsync(competentAuthority))
                 .Returns(new List<MemberUpload>()
@@ -83,9 +88,16 @@
                 });
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
+
+            A.CallTo(() => schemeMap.Map(memberUpload1.Scheme)).Returns(schemeData1);
+            A.CallTo(() => schemeMap.Map(memberUpload2.Scheme)).Returns(schemeData2);
+            A.CallTo(() => schemeMap.Map(memberUpload3.Scheme)).Returns(schemeData3);
+
             FetchSchemesWithInvoicesHandler handler = new FetchSchemesWithInvoicesHandler(
                authorization,
-               dataAccess);
+               dataAccess,
+                schemeMap);
 
             FetchSchemesWithInvoices request = new FetchSchemesWithInvoices(CompetentAuthority.England);
             A.CallTo(() => dataAccess.FetchCompetentAuthority(CompetentAuthority.England)).Returns(competentAuthority);
@@ -96,9 +108,9 @@
             Assert.NotNull(schemesList);
             Assert.Equal(3, schemesList.Count);
             Assert.Collection(schemesList,
-                r1 => Assert.Equal("Test1", r1.ToString()),
-                r2 => Assert.Equal("Test2", r2.ToString()),
-                r3 => Assert.Equal("Test3", r3.ToString()));
-        }   
+                r1 => Assert.Equal(r1, schemeData1),
+                r2 => Assert.Equal(r2, schemeData2),
+                r3 => Assert.Equal(r3, schemeData3));
+        }
     }
 }

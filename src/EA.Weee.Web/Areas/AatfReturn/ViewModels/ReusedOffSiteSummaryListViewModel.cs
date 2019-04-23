@@ -16,7 +16,7 @@
 
         public string B2bTotal { get; set; }
 
-        public List<AddressDataSummary> Addresses { get; set; }
+        public List<SiteAddressData> Addresses { get; set; }
 
         public ReusedOffSiteSummaryListViewModel()
         {

@@ -18,5 +18,7 @@
         public int ComplianceYear { get; set; }
 
         public decimal TotalGBP { get; set; }
+
+        public DateTime SubmittedDate { get; set; }
     }
 }

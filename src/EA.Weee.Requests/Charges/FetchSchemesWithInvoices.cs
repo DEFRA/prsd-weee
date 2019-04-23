@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
     using System.Collections.Generic;
+    using Core.Scheme;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
 
@@ -9,7 +10,7 @@
     /// that has a member upload which has been invoiced.
     /// Scheme names are returned in alphabetical order.
     /// </summary>
-    public class FetchSchemesWithInvoices : IRequest<IReadOnlyList<string>>
+    public class FetchSchemesWithInvoices : IRequest<IReadOnlyList<SchemeData>>
     {
         public CompetentAuthority Authority { get; private set; }
 

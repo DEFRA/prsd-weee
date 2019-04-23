@@ -81,7 +81,7 @@
         /// <summary>
         /// Registered producers excluding records marked as removed.
         /// </summary>
-        public IQueryable<RegisteredProducer> RegisteredProducers
+        public virtual IQueryable<RegisteredProducer> RegisteredProducers
         {
             get
             {

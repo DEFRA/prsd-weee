@@ -3,25 +3,30 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Scheme;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
+    using Prsd.Core.Mapper;
 
-    public class FetchSchemesWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchSchemesWithInvoices, IReadOnlyList<string>>
+    public class FetchSchemesWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchSchemesWithInvoices, IReadOnlyList<SchemeData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ICommonDataAccess dataAccess;
+        private readonly IMap<Scheme, SchemeData> schemeMap;
 
         public FetchSchemesWithInvoicesHandler(
             IWeeeAuthorization authorization,
-            ICommonDataAccess dataAccess)
+            ICommonDataAccess dataAccess, 
+            IMap<Scheme, SchemeData> schemeMap)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
+            this.schemeMap = schemeMap;
         }
 
-        public async Task<IReadOnlyList<string>> HandleAsync(Requests.Charges.FetchSchemesWithInvoices message)
+        public async Task<IReadOnlyList<SchemeData>> HandleAsync(Requests.Charges.FetchSchemesWithInvoices message)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -30,10 +35,9 @@
             IEnumerable<MemberUpload> invoicedMemberUploads = await dataAccess.FetchInvoicedMemberUploadsAsync(authority);
 
             return invoicedMemberUploads
-                .Select(mu => mu.Scheme.SchemeName)
-                .Distinct()
-                .OrderBy(x => x)
-                .ToList();
+                .GroupBy(s => new { s.Scheme.Id, s.Scheme.SchemeName, s.Scheme })
+                .Select(s => schemeMap.Map(s.Key.Scheme))
+                .OrderBy(x => x.SchemeName).ToList();
         }
     }
 }
