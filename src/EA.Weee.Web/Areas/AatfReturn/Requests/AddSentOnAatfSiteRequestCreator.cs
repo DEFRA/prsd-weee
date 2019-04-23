@@ -1,12 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
     public class AddSentOnAatfSiteRequestCreator : IAddSentOnAatfSiteRequestCreator
     {
-        public AddSentOnAatfSite ViewModelToRequest(SentOnCreateSiteViewModel viewModel)
+        public SentOnAatfSite ViewModelToRequest(SentOnCreateSiteViewModel viewModel)
         {
+            if (viewModel.Edit)
+            {
+                return new EditSentOnAatfSite()
+                {
+                    SiteAddressData = viewModel.SiteAddressData
+                };
+            }
+
             var aatfSite = new AddSentOnAatfSite()
             {
                 OrganisationId = viewModel.OrganisationId,
