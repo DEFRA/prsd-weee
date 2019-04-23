@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
+    <Compile Include="AatfReturn\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />
     <Compile Include="AatfReturn\AatfAddressData.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Shared\UKCompetentAuthorityAbbreviationType.cs" />
     <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />

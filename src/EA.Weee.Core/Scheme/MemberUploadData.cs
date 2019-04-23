@@ -15,5 +15,6 @@
         public Guid OrganisationId { get; set; }
 
         public decimal TotalCharges { get; set; }
+        public bool HasAnnualCharge { get; set; }
     }
 }

@@ -44,16 +44,18 @@
                         <th class="govuk-table__header" scope="col">Approval number</th>
                         <th class="govuk-table__header" scope="col">Compliance year</th>
                         <th class="govuk-table__header numeric" scope="col">Total</th>
+                        <th class="govuk-table__header" scope="col"> Submitted date</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     @foreach (PendingCharge pendingCharge in Model.PendingCharges)
                     {
-                        <tr class="govuk-table__row">
+                        <tr tr class="govuk-table__row">
                             <td class="govuk-table__cell">@pendingCharge.SchemeName</td>
                             <td class="govuk-table__cell">@pendingCharge.SchemeApprovalNumber</td>
                             <td class="govuk-table__cell">@pendingCharge.ComplianceYear</td>
                             <td class="govuk-table__cell numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                            <td class="govuk-table__cell">@pendingCharge.SubmittedDate.ToString("dd-MMM-yyyy HH:mm")</td>
                         </tr>
                     }
                 </tbody>

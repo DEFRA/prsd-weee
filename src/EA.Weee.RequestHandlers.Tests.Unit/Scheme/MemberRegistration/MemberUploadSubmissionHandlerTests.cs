@@ -48,7 +48,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name",  A.Dummy<string>(), false)
             };
 
             var handler = GetPreparedHandler(memberUploads);
@@ -63,7 +63,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name",  A.Dummy<string>(), false)
             };
 
             var otherPcsId = Guid.NewGuid();
@@ -83,7 +83,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name",  A.Dummy<string>(), false)
             };
 
             var handler = GetPreparedHandler(memberUploads);
@@ -97,7 +97,7 @@
         [Fact]
         public async Task MemberUploadSubmissionHandler_ValidMemberUploadIdAlreadySubmitted_ReturnsAlreadySubmittedMemberUploadId()
         {
-            var memberUpload = new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name");
+            var memberUpload = new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name", A.Dummy<string>(), false);
 
             memberUpload.Submit(A.Dummy<User>());
 

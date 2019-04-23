@@ -12,6 +12,7 @@
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using Domain.Producer.Classification;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -111,7 +112,8 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
-                0);
+                0,
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producer);
 
@@ -186,7 +188,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<ChargeBandAmount>(),
-                A.Dummy<decimal>());
+                A.Dummy<decimal>(),
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producerSubmission);
 
@@ -267,7 +270,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<ChargeBandAmount>(),
-                A.Dummy<decimal>());
+                A.Dummy<decimal>(),
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
@@ -344,7 +348,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<ChargeBandAmount>(),
-                A.Dummy<decimal>());
+                A.Dummy<decimal>(),
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
@@ -416,7 +421,8 @@
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
                 A.Dummy<ChargeBandAmount>(),
-                A.Dummy<decimal>());
+                A.Dummy<decimal>(),
+                A.Dummy<StatusType>());
 
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));

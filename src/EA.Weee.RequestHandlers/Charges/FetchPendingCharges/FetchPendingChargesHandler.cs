@@ -41,7 +41,8 @@
                     SchemeName = group.Key.Scheme.SchemeName,
                     SchemeApprovalNumber = group.Key.Scheme.ApprovalNumber,
                     ComplianceYear = group.Key.ComplianceYear.Value,
-                    TotalGBP = group.Sum(p => p.TotalCharges)
+                    TotalGBP = group.Sum(p => p.TotalCharges),
+                    SubmittedDate = group.FirstOrDefault().SubmittedDate.Value
                 };
 
                 pendingCharges.Add(pendingCharge);
