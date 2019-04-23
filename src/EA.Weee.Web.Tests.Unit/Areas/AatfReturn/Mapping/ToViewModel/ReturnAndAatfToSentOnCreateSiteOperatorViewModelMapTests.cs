@@ -45,14 +45,15 @@
                 CountryName = "CountryName"
             };
 
-            var transfer = new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(A.Fake<IList<Core.Shared.CountryData>>())
+            var transfer = new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer()
             {
                 ReturnId = returnId,
                 AatfId = aatfId,
                 OrganisationId = orgId,
                 WeeeSentOnId = weeeSentOnId,
                 SiteAddressData = siteAddressData,
-                JavascriptDisabled = javascriptDisabled
+                JavascriptDisabled = javascriptDisabled,
+                CountryData = A.Fake<IList<Core.Shared.CountryData>>()
             };
 
             var result = map.Map(transfer);
