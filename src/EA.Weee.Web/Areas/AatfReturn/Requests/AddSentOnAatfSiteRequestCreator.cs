@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using System;
 
     public class AddSentOnAatfSiteRequestCreator : IAddSentOnAatfSiteRequestCreator
     {
@@ -12,7 +13,9 @@
             {
                 return new EditSentOnAatfSite()
                 {
-                    SiteAddressData = viewModel.SiteAddressData
+                    SiteAddressData = viewModel.SiteAddressData,
+                    SiteAddressId = (Guid)viewModel.SiteAddressId,
+                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId
                 };
             }
 

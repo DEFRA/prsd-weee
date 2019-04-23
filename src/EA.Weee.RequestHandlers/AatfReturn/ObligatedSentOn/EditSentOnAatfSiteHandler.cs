@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn
 {
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -14,7 +15,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class EditSentOnAatfSiteHandler
+    public class EditSentOnAatfSiteHandler : IRequestHandler<EditSentOnAatfSite, Guid>
     {
         private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
@@ -42,7 +43,7 @@
 
             Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
 
-            var value = await genericDataAccess.GetById<AatfAddress>(message.SiteAddressData.Id);
+            var value = await genericDataAccess.GetById<AatfAddress>(message.SiteAddressId);
 
             var addressData = new SiteAddressData()
             {
@@ -58,7 +59,7 @@
 
             await offSiteDataAccess.Update(value, addressData, country);
 
-            return addressData.Id;
+            return message.WeeeSentOnId;
         }
     }
 }

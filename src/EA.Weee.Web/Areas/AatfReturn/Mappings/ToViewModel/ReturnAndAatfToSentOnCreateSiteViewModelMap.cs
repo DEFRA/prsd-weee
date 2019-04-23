@@ -35,7 +35,8 @@
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
-                SiteAddressData = source.SiteAddressData
+                SiteAddressData = source.SiteAddressData,
+                SiteAddressId = source.SiteAddressId
             };
 
             return viewModel;
