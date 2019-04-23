@@ -26,7 +26,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess orgDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly EditSentOnAatfSiteHandler handler;
+        private readonly EditSentOnAatfSiteWithOperatorHandler handler;
         private readonly IMap<AatfAddress, AatfAddressData> mapper;
 
         public EditSentOnAatfSiteHandlerTests()
@@ -39,7 +39,7 @@
             returnDataAccess = A.Fake<IReturnDataAccess>();
             mapper = A.Fake<IMap<AatfAddress, AatfAddressData>>();
 
-            handler = new EditSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, orgDataAccess);
+            handler = new EditSentOnAatfSiteWithOperatorHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, orgDataAccess);
         }
 
         [Fact]
@@ -57,7 +57,7 @@
         [Fact]
         public async Task HandleAsync_GivenEditSentOnAatfSiteRequest_DataAccessIsCalled()
         {
-            var request = new EditSentOnAatfSite()
+            var request = new EditSentOnAatfSiteWithOperator()
             {
                 WeeeSentOnId = Guid.NewGuid(),
                 OperatorAddressData = new OperatorAddressData()
@@ -75,7 +75,7 @@
             var weeeSentOn = new WeeeSentOn();
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
-            A.CallTo(() => genericDataAccess.GetById<WeeeSentOn>(request.WeeeSentOnId)).Returns(weeeSentOn);
+            A.CallTo(() => genericDataAccess.GetById<WeeeSentOn>((Guid)request.WeeeSentOnId)).Returns(weeeSentOn);
             A.CallTo(() => orgDataAccess.FetchCountryAsync(request.OperatorAddressData.CountryId)).Returns(country);
 
             var operatorAddress = new AatfAddress(

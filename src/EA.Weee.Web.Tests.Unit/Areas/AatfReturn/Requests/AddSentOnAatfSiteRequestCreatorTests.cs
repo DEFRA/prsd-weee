@@ -2,6 +2,7 @@
 {
     using System;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
@@ -38,8 +39,8 @@
                 SiteAddressData = A.Fake<AatfAddressData>()
             };
 
-            var request = requestCreator.ViewModelToRequest(viewModel);
-
+            var request = requestCreator.ViewModelToRequest(viewModel) as AddSentOnAatfSite;
+            
             request.AatfId.Should().Be(viewModel.AatfId);
             request.OrganisationId.Should().Be(viewModel.OrganisationId);
             request.ReturnId.Should().Be(viewModel.ReturnId);

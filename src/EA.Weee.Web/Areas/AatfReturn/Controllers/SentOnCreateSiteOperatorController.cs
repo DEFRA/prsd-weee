@@ -49,9 +49,13 @@
                 var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
                 var operatorAddress = new AatfAddressData();
+
+                var operatorAddressData = await client.SendAsync(User.GetAccessToken(), new GetSentOnOperatorSite(weeeSentOnId));
+                /*
                 var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId));
                 var weeeSentOn = weeeSentOnList.Where(w => w.WeeeSentOnId == weeeSentOnId).Select(w => w).SingleOrDefault();
-                operatorAddress = weeeSentOn.OperatorAddress;
+                */
+                operatorAddress = operatorAddressData;
 
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer() { ReturnId = returnId, SiteAddressData = siteAddressData, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled, CountryData = operatorCountryData, OperatorAddressData = operatorAddress });
 

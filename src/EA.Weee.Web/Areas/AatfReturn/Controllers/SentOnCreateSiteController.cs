@@ -50,7 +50,7 @@
                     siteAddress = weeeSentOn.SiteAddress;
                 }
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, SiteAddressData = siteAddress });
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, SiteAddressData = siteAddress });
 
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 

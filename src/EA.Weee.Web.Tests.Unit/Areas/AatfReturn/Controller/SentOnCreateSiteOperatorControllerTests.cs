@@ -87,7 +87,7 @@
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             await controller.Index(model, form);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSite>._)).MustNotHaveHappened();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSiteWithOperator>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -96,7 +96,7 @@
             var form = new FormCollection();
             var model = new SentOnCreateSiteOperatorViewModel();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            var request = new EditSentOnAatfSite();
+            var request = new EditSentOnAatfSiteWithOperator();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
