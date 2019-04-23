@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
@@ -50,7 +51,7 @@
                 OperatorAddressData = operatorAddress
             };
 
-            var request = editRequestCreator.ViewModelToRequest(viewModel);
+            var request = editRequestCreator.ViewModelToRequest(viewModel) as EditSentOnAatfSiteWithOperator;
 
             request.WeeeSentOnId.Should().Be(weeeSentOnId);
             request.ReturnId.Should().Be(returnId);
