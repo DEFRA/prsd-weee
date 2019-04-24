@@ -20,8 +20,10 @@
 
         public int? ParentId { get; set; }
 
-        public string SelectedValue { get; set; }
-
-        public IList<string> PossibleValues => new List<string>() { "Yes", "No" };
+        public enum SelectedValue
+        {
+            Yes,
+            No
+        }
     }
 }
