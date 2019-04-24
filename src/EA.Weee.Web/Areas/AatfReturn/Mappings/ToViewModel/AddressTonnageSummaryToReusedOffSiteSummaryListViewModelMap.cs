@@ -9,7 +9,7 @@
     public class AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap : IMap<AddressTonnageSummary, ReusedOffSiteSummaryListViewModel>
     {
         public ReusedOffSiteSummaryListViewModel ViewModel = new ReusedOffSiteSummaryListViewModel();
-        public List<SiteAddressData> AddressDataSummaries = new List<SiteAddressData>();
+        public List<AddressDataSummary> AddressDataSummaries = new List<AddressDataSummary>();
 
         private ITonnageUtilities tonnageUtilities;
         private IAddressUtilities addressUtilities;
@@ -24,10 +24,14 @@
         public ReusedOffSiteSummaryListViewModel Map(AddressTonnageSummary source)
         {
             Guard.ArgumentNotNull(() => source, source);
-             
+
             foreach (var address in source.AddressData)
             {
-                AddressDataSummaries.Add(address);
+                var addressDataSummary = new AddressDataSummary();
+                addressDataSummary.Id = address.Id;
+                addressDataSummary.Name = address.Name;
+                addressDataSummary.Address = addressUtilities.AddressConcatenate(address);
+                AddressDataSummaries.Add(addressDataSummary);
             }
 
             ViewModel.Addresses = AddressDataSummaries;
