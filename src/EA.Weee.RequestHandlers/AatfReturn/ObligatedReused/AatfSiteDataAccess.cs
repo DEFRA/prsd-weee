@@ -43,7 +43,7 @@
                 .Select(a => a).ToListAsync();
         }
 
-        public Task Update(AatfAddress oldAddress, SiteAddressData newAddress, Country country)
+        public Task Update(AatfAddress oldAddress, AddressData newAddress, Country country)
         {
             oldAddress.UpdateAddress(
                 newAddress.Name,

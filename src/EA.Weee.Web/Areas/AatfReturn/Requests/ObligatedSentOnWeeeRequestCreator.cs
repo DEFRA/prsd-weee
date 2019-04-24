@@ -25,7 +25,15 @@
                         householdValue,
                         nonHouseholdValue));
             }
-            
+
+            if (viewModel.Edit)
+            {
+                return new EditObligatedSentOn()
+                {
+                    CategoryValues = obligatedRequestValues
+                };
+            }
+
             return new AddObligatedSentOn()
             {
                 AatfId = viewModel.AatfId,
