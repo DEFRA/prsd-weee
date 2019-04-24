@@ -27,6 +27,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OperatorAddressFound)
+        @Html.HiddenFor(m => m.OperatorAddressId)
         @Html.HiddenFor(m => m.WeeeSentOnId)
         @Html.HiddenFor(m => m.SiteAddressData.Name)
         @Html.HiddenFor(m => m.SiteAddressData.Address1)

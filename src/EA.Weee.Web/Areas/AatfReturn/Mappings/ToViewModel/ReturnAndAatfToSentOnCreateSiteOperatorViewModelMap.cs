@@ -5,6 +5,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
+    using System;
 
     public class ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap : IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel>
     {
@@ -21,7 +22,7 @@
 
             var insertOperatorAddress = new OperatorAddressData();
 
-            if (source.OperatorAddressData.Name != null)
+            if (source.OperatorAddressData != null)
             {
                 insertOperatorAddress.Name = source.OperatorAddressData.Name;
                 insertOperatorAddress.Address1 = source.OperatorAddressData.Address1;
@@ -44,6 +45,16 @@
                 WeeeSentOnId = source.WeeeSentOnId,
                 SiteAddressData = source.SiteAddressData
             };
+
+            if (insertOperatorAddress.Name != null)
+            {
+                viewModel.OperatorAddressFound = true;
+                viewModel.OperatorAddressId = (Guid)source.OperatorAddressId;
+            }
+            else
+            {
+                viewModel.OperatorAddressFound = false;
+            }
 
             if (source.JavascriptDisabled == true)
             {

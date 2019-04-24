@@ -10,5 +10,9 @@
 
         [DisplayName("The operator address is the same as the AATF/ATF address")]
         public bool IsOperatorTheSameAsAATF { get; set; }
+
+        public bool OperatorAddressFound { get; set; }
+
+        public Guid OperatorAddressId { get; set; }
     }
 }

@@ -16,6 +16,8 @@
 
         public Guid WeeeSentOnId;
 
+        public Guid? OperatorAddressId;
+
         public bool? JavascriptDisabled;
 
         public AatfAddressData OperatorAddressData;
