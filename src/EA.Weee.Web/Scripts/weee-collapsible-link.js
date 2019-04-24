@@ -4,16 +4,16 @@
             for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
                 document.getElementsByClassName('govuk-details')[i].open = "open";
-                document.getElementById('collapsibleHref').innerText = "Close all";
             }
+            document.getElementById('collapsibleHref').innerText = "Close all";
         }
         else if (document.getElementById('collapsibleHref').innerText == "Close all") {
             var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
             for (i = 0; i < schemaData.length; i++) {
                 document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
                 document.getElementsByClassName('govuk-details')[i].open = false;
-                document.getElementById('collapsibleHref').innerText = "Open all";
             }
+            document.getElementById('collapsibleHref').innerText = "Open all";
         }
 }
 
@@ -34,4 +34,13 @@ function CollapsibleLinkHefSummary() {
                 checkCollapse = false;
             }
         }
+}
+
+function InitialStartup() {
+    var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
+    for (i = 0; i < schemaData.length; i++) {
+        document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
+        document.getElementsByClassName('govuk-details')[i].open = false;
+    }
+    document.getElementById('collapsibleHref').innerText = "Open all";
 }

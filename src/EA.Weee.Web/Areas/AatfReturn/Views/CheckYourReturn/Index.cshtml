@@ -36,10 +36,10 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
 
-        <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-            <a href="#" id="collapsibleHref"  onclick="return CollapsibleLinkHref();">Close all</a>
-        </span>
-   
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+        <a href="#" id="collapsibleHref" onclick="return CollapsibleLinkHref();">Close all</a>
+    </span>
+
     <div class="govuk-table govuk-grid-column-full">
 
         @foreach (var aatf in Model.AatfsData)
@@ -94,16 +94,16 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-            <details class="govuk-details collapsible-font-size" open ="open">
-                <summary id ="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
-                    <span id="unset-padding" class="govuk-details__summary-text"  onclick="return CollapsibleLinkHefSummary();">
-                        Breakdown by PCS
-                    </span>
-                </summary>
-                <div class="govuk-!-padding-bottom-4"></div>
-                <div class="collapsible-govuk-grid">
-                    <div class="govuk-grid-row govuk-body collapsible-font-size">
-                        <div class="govuk-grid-column-one-half">
+                <details class="govuk-details collapsible-font-size" open ="open">
+                    <summary id="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                        <span id="unset-padding" class="govuk-details__summary-text" onclick="return CollapsibleLinkHefSummary();">
+                            Breakdown by PCS
+                        </span>
+                    </summary>
+                    <div class="govuk-!-padding-bottom-4"></div>
+                    <div class="collapsible-govuk-grid">
+                        <div class="govuk-grid-row govuk-body collapsible-font-size">
+                            <div class="govuk-grid-column-one-half">
                                 <div class="govuk-grid-column-one-quarter">
                                     <strong>PCS Name</strong>
                                 </div>
@@ -112,35 +112,35 @@
                                     <strong>Approval Name</strong>
                                 </div>
 
+                            </div>
                         </div>
-                    </div>
-                    @foreach (var pcsdata in aatf.SchemeData)
-                    {
-                        <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-one-quarter">
-                                    @pcsdata.Scheme.Name
-                                </div>
+                        @foreach (var pcsdata in aatf.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-quarter">
+                                        @pcsdata.Scheme.Name
+                                    </div>
 
-                                <div class="govuk-grid-column-one-quarter collapsible-padding-right">
-                                    @pcsdata.ApprovalName
+                                    <div class="govuk-grid-column-one-quarter collapsible-padding-right">
+                                        @pcsdata.ApprovalName
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        <span class="govuk-visually-hidden">Change Data for Scheme @pcsdata.Scheme.Name </span>@Html.RouteLink("Change", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" }, null)
+                                    </div>
                                 </div>
                             </div>
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    @pcsdata.Received.B2C
-                                </div>
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    @pcsdata.Received.B2B
-                                </div>
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    <span class="govuk-visually-hidden">Change Data for Scheme @pcsdata.Scheme.Name </span>@Html.RouteLink("Change", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" }, null)
-                                </div>
-                            </div>
-                        </div>
-                    }
+                        }
                     </div>
-            </details>
+                </details>
             }
 
             <div class="govuk-grid-row">
@@ -276,10 +276,15 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 </section>
 
 @Scripts.Render("~/bundles/weee-collapsible-link")
 @section scripts {
-
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitialStartup();
+    });
+  </script>
 }
+
