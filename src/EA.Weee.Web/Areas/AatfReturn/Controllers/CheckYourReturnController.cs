@@ -40,7 +40,9 @@
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
-       
+
+                viewModel.OrganisationId = @return.ReturnOperatorData.OrganisationId;
+
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
 
                 return View("Index", viewModel);

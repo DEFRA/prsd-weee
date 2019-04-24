@@ -44,7 +44,7 @@
                 "PO12 3ST",
                 A.Dummy<Guid>(),
                 "Country"));
-                
+
             testObligatedDataList.Add(new WeeeObligatedData(Guid.NewGuid(), null, testAatf, 0, 1.234m, 1.234m));
 
             var returnData = new AddressTonnageSummary()

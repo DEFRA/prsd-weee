@@ -24,7 +24,7 @@
         public ReusedOffSiteSummaryListViewModel Map(AddressTonnageSummary source)
         {
             Guard.ArgumentNotNull(() => source, source);
-             
+
             foreach (var address in source.AddressData)
             {
                 var addressDataSummary = new AddressDataSummary();

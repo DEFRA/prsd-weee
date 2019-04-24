@@ -861,6 +861,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
+    <Content Include="Scripts\weee-collapsible-link.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />

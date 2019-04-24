@@ -1,9 +1,10 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    ViewBag.Title = "Check Your Return";
+    ViewBag.Title = "CheckYourReturnView";
 }
 
 <section id="main-content">
@@ -35,6 +36,10 @@
 
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
+
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+        <a href="#" id="collapsibleHref" onclick="return CollapsibleLinkHref();">Close all</a>
+    </span>
 
     <div class="govuk-table govuk-grid-column-full">
 
@@ -82,7 +87,7 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change received for treatment</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                            @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " change received for treatment", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
                         </p>
                     </div>
                 </div>
@@ -90,61 +95,52 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-                <details class="govuk-details">
-                    <summary class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
-                        <span id="unset-padding" class="govuk-details__summary-text">
+                <details class="govuk-details collapsible-font-size" open ="open">
+                    <summary id="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                        <span id="unset-padding" class="govuk-details__summary-text" onclick="return CollapsibleLinkHefSummary();">
                             Breakdown by PCS
                         </span>
                     </summary>
                     <div class="govuk-!-padding-bottom-4"></div>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-one-quarter collapsible-padding-left">
-                                    <p>
-                                        <strong>PCS Name</strong>
-                                    </p>
-                                </div>
-
-                                <div class="govuk-grid-column-one-quarter collapsible-padding-right">
-                                    <p>
-                                        <strong>Approval Name</strong>
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    @foreach (var pcsdata in aatf.SchemeData)
-                    {
-                        <div class="govuk-grid-row">
+                    <div class="collapsible-govuk-grid">
+                        <div class="govuk-grid-row govuk-body collapsible-font-size">
                             <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-one-quarter collapsible-padding-left">
-                                    <p>
+                                <div class="govuk-grid-column-one-quarter">
+                                    <strong>PCS Name</strong>
+                                </div>
+
+                                <div class="govuk-grid-column-one-half collapsible-padding-right">
+                                    <strong>Approval Name</strong>
+                                </div>
+
+                            </div>
+                        </div>
+                        @foreach (var pcsdata in aatf.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-quarter">
                                         @pcsdata.Scheme.Name
-                                    </p>
-                                </div>
+                                    </div>
 
-                                <div class="govuk-grid-column-one-quarter collapsible-padding-right">
-                                    <p>
+                                    <div class="govuk-grid-column-one-quarter collapsible-padding-right">
                                         @pcsdata.ApprovalName
-                                    </p>
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
+                                    </div>
                                 </div>
                             </div>
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    @pcsdata.Received.B2C
-                                </div>
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    @pcsdata.Received.B2B
-                                </div>
-                                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                    <span class="govuk-visually-hidden">Change Data for Scheme @pcsdata.Scheme.Name </span>@Html.RouteLink("Change", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" }, null)
-                                </div>
-                            </div>
-                        </div>
-                    }
-
+                        }
+                    </div>
                 </details>
             }
 
@@ -165,7 +161,17 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change sent to another AATF/ATF</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                            @if (Equals(aatf.WeeeSentOn.B2B, "-") && Equals(aatf.WeeeSentOn.B2C, "-"))
+                            {
+                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
+
+                            }
+
+
                         </p>
                     </div>
                 </div>
@@ -188,7 +194,14 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            <span class="govuk-visually-hidden">@aatf.Aatf.Name change reused as a whole appliance</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                            @if (Equals(aatf.WeeeReused.B2B, "-") && Equals(aatf.WeeeReused.B2C, "-"))
+                            {
+                                @Html.NavigationRouteLink("Change", aatf.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReused" })
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " Change reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
+                            }
                         </p>
                     </div>
                 </div>
@@ -197,8 +210,8 @@
 
     </div>
 
-    <div class="govuk-!-padding-bottom-2"></div>
-    <h2 class="govuk-heading-m govuk-grid-row govuk-table__cell">Non-obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-2 collapsible-padding-right"></div>
+    <h2 class="govuk-heading-m govuk-table__cell">Non-obligated WEEE</h2>
 
     <div class="govuk-!-padding-bottom-4"></div>
     <div class="govuk-grid-row">
@@ -206,7 +219,7 @@
         <div class="govuk-grid-column-one-half">
             <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                 <p>
-                    <strong>Total</strong>
+                    <strong>Total (tonnes)</strong>
                 </p>
             </div>
         </div>
@@ -227,7 +240,7 @@
 
             <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                 <p>
-                    <span class="govuk-visually-hidden">Change non obligated</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                    @Html.NavigationRouteLink("Change", "Change non obligated", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
                 </p>
             </div>
         </div>
@@ -247,7 +260,7 @@
             </div>
             <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                 <p>
-                    <span class="govuk-visually-hidden">Change non obligated DCF</span><a class="govuk-link govuk-link--no-visited-state">Change</a>
+                    @Html.NavigationRouteLink("Change", "Change non obligated DCF", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
                 </p>
             </div>
         </div>
@@ -256,26 +269,40 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-            @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
 
-                @Html.HiddenFor(m => m.ReturnId)
-                @Html.HiddenFor(m => m.OrganisationId)
+                    @Html.HiddenFor(m => m.ReturnId)
+                    @Html.HiddenFor(m => m.OrganisationId)
 
-                <div class="govuk-form-group">
-                    <button class="govuk-button" type="submit">Continue</button>
-                </div>
-            }
+                    <div class="govuk-form-group">
+                        <button class="govuk-button" type="submit">Continue</button>
+                    </div>
+                }
 
+            </div>
         </div>
-        <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-body govuk-!-font-size-19">
-                <a class="govuk-link govuk-link--no-visited-state">
-                    @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
-                </a>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-body govuk-!-font-size-19">
+                    <a class="govuk-link govuk-link--no-visited-state">
+                        @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+@Scripts.Render("~/bundles/weee-collapsible-link")
+@section scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitialStartup();
+    });
+  </script>
+}
+
