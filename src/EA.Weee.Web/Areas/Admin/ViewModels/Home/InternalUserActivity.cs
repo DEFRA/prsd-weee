@@ -8,5 +8,6 @@
         public const string ManageUsers = "Manage users";
         public const string ViewReports = "View reports";
         public const string ManagePcsCharges = "Manage PCS charges";
+        public const string ManageAatfs = "Manage AATFs";
     }
 }
