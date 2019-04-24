@@ -42,12 +42,17 @@
 
                 var weeeSentOnData = new WeeeSentOnData()
                 {
-                    OperatorAddress = addressMapper.Map(item.OperatorAddress),
                     SiteAddress = addressMapper.Map(item.SiteAddress),
                     Tonnages = weeeSentOnObligatedData,
                     WeeeSentOnId = item.Id,
                     SiteAddressId = item.SiteAddress.Id
                 };
+
+                if (item.OperatorAddress != null)
+                {
+                    weeeSentOnData.OperatorAddress = addressMapper.Map(item.OperatorAddress);
+                    weeeSentOnData.OperatorAddressId = item.OperatorAddress.Id;
+                }
 
                 weeeSentOnList.Add(weeeSentOnData);
             }

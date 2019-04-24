@@ -62,6 +62,7 @@
     <Compile Include="AatfReturn\Obligated\EditAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReused.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSiteWithOperator.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />

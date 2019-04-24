@@ -40,24 +40,46 @@
         public async Task<Guid> HandleAsync(EditSentOnAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
-
-            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
-
-            var value = await genericDataAccess.GetById<AatfAddress>(message.SiteAddressId);
-
-            var addressData = new SiteAddressData()
+            if (message.SiteAddressData != null)
             {
-                Name = message.SiteAddressData.Name,
-                Address1 = message.SiteAddressData.Address1,
-                Address2 = message.SiteAddressData.Address2,
-                TownOrCity = message.SiteAddressData.TownOrCity,
-                CountyOrRegion = message.SiteAddressData.CountyOrRegion,
-                Postcode = message.SiteAddressData.Postcode,
-                CountryName = message.SiteAddressData.CountryName,
-                CountryId = message.SiteAddressData.CountryId
-            };
+                Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
 
-            await offSiteDataAccess.Update(value, addressData, country);
+                var value = await genericDataAccess.GetById<AatfAddress>(message.SiteAddressId);
+
+                var addressData = new SiteAddressData()
+                {
+                    Name = message.SiteAddressData.Name,
+                    Address1 = message.SiteAddressData.Address1,
+                    Address2 = message.SiteAddressData.Address2,
+                    TownOrCity = message.SiteAddressData.TownOrCity,
+                    CountyOrRegion = message.SiteAddressData.CountyOrRegion,
+                    Postcode = message.SiteAddressData.Postcode,
+                    CountryName = message.SiteAddressData.CountryName,
+                    CountryId = message.SiteAddressData.CountryId
+                };
+
+                await offSiteDataAccess.Update(value, addressData, country);
+            }
+            else
+            {
+                Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
+
+                var value = await genericDataAccess.GetById<AatfAddress>(message.OperatorAddressId);
+
+                var addressData = new OperatorAddressData()
+                {
+                    Name = message.OperatorAddressData.Name,
+                    Address1 = message.OperatorAddressData.Address1,
+                    Address2 = message.OperatorAddressData.Address2,
+                    TownOrCity = message.OperatorAddressData.TownOrCity,
+                    CountyOrRegion = message.OperatorAddressData.CountyOrRegion,
+                    Postcode = message.OperatorAddressData.Postcode,
+                    CountryName = message.OperatorAddressData.CountryName,
+                    CountryId = message.OperatorAddressData.CountryId
+                };
+
+                await offSiteDataAccess.Update(value, addressData, country);
+            }
 
             return message.WeeeSentOnId;
         }

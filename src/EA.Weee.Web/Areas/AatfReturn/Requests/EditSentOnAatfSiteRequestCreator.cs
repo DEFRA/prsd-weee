@@ -8,12 +8,12 @@
     {
         public SentOnAatfSite ViewModelToRequest(SentOnCreateSiteOperatorViewModel viewModel)
         {
-            if (viewModel.Edit)
+            if (viewModel.OperatorAddressFound)
             {
                 return new EditSentOnAatfSite()
                 {
-                    SiteAddressData = viewModel.SiteAddressData,
-                    SiteAddressId = (Guid)viewModel.SiteAddressId,
+                    OperatorAddressData = viewModel.OperatorAddressData,
+                    OperatorAddressId = (Guid)viewModel.OperatorAddressId,
                     WeeeSentOnId = (Guid)viewModel.WeeeSentOnId
                 };
             }
