@@ -9,7 +9,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
-    using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion
+    using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
 
     public class AddReturnReportOnHandler : IRequestHandler<AddReturnReportOn, bool>
     {
@@ -31,13 +31,13 @@
 
             foreach (var question in message.SelectedOptions)
             {
-                if (question.ParentId != 0)
-                {
-                    if (message.SelectedOptions.Where(q => q.Id == question.ParentId).FirstOrDefault().SelectedValue == ReportOnQuestion.SelectedValue.Yes)
-                    {
+                //if (question.ParentId != 0)
+                //{
+                //    if (message.SelectedOptions.Where(q => q.Id == question.ParentId).FirstOrDefault().SelectedValue == ReportOnQuestion.SelectedValue.Yes)
+                //    {
 
-                    }
-                }
+                //    }
+                //}
                 returnReportOn.Add(new ReturnReportOn(message.ReturnId, question.Id));
             }
 
