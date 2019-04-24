@@ -6,13 +6,36 @@
     using System.Text;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
 
     public class AddReturnReportOnHandler : IRequestHandler<AddReturnReportOn, bool>
     {
-        public Task<bool> HandleAsync(AddReturnReportOn message)
+        private readonly IWeeeAuthorization authorization;
+        private readonly IGenericDataAccess dataAccess;
+
+        public AddReturnReportOnHandler(IWeeeAuthorization authorization,
+            IGenericDataAccess dataAccess)
         {
-            throw new NotImplementedException();
+            this.authorization = authorization;
+            this.dataAccess = dataAccess;
+        }
+
+        public async Task<bool> HandleAsync(AddReturnReportOn message)
+        {
+            authorization.EnsureCanAccessExternalArea();
+
+            var returnReportOn = new List<ReturnReportOn>();
+
+            foreach (var question in message.SelectedOptions)
+            {
+                returnReportOn.Add(new ReturnReportOn(message.ReturnId, question.Id));
+            }
+
+            await dataAccess.AddMany<ReturnReportOn>(returnReportOn);
+
+            return true;
         }
     }
 }

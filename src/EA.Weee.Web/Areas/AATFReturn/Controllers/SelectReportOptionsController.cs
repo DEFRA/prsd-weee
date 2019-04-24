@@ -6,6 +6,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -18,12 +19,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IAddSelectReportOptionsRequestCreator requestCreator;
 
-        public SelectReportOptionsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public SelectReportOptionsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSelectReportOptionsRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.requestCreator = requestCreator;
         }
 
         [HttpGet]
@@ -52,7 +55,9 @@
             {
                 using (var client = apiClient())
                 {
-                    var request = new AddReturnReportOn();
+                    var request = requestCreator.ViewModelToRequest(viewModel);
+
+                    await client.SendAsync(User.GetAccessToken(), request);
 
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
                 }

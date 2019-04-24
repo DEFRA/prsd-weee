@@ -24,14 +24,16 @@
         private readonly SelectReportOptionsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IAddSelectReportOptionsRequestCreator requestCreator;
 
         public SelectReportOptionsControllerTests()
         {
             apiClient = A.Fake<Func<IWeeeClient>>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
 
-            controller = new SelectReportOptionsController(apiClient, breadcrumb, cache);
+            controller = new SelectReportOptionsController(apiClient, breadcrumb, cache, requestCreator);
         }
 
         [Fact]

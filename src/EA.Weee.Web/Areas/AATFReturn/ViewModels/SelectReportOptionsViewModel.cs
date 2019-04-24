@@ -4,10 +4,11 @@
     using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.ViewModels.Shared;
 
-    public class SelectReportOptionsViewModel
+    public class SelectReportOptionsViewModel : RadioButtonStringCollectionViewModel
     {
-        public SelectReportOptionsViewModel()
+        public SelectReportOptionsViewModel() : base(new List<string> { "Yes", "No" })
         {
         }
 

@@ -80,6 +80,7 @@
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
+    <Compile Include="AatfReturn\IReturnReportOnDataAccess.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\IObligatedDataAccess.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\ReturnReportOnDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\Specification\ISpecification.cs" />
     <Compile Include="AatfReturn\Specification\OrganisationByOrganisationIdSpecification.cs" />

@@ -10,7 +10,8 @@
         {
             var reportOptions = new AddReturnReportOn()
             {
-                ReturnId = viewModel.ReturnId
+                ReturnId = viewModel.ReturnId,
+                SelectedOptions = viewModel.ReportOnQuestions
             };
 
             return reportOptions;

@@ -8,10 +8,10 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
 
-    public class AddReturnReportOn : IRequest<Guid>
+    public class AddReturnReportOn : IRequest<bool>
     {
         public Guid ReturnId { get; set; }
 
-        public IList<> SelectedOptions { get; set; }
+        public IList<ReportOnQuestion> SelectedOptions { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Charges;
@@ -37,6 +38,34 @@
                 var result = await dataAccess.Add<Aatf>(aatf);
 
                 result.Should().NotBeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task AddMany_EntityShouldBeAdded()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var originalAatfCount = database.WeeeContext.Aatfs.Count();
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var dataAccess = new GenericDataAccess(database.WeeeContext);
+                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
+                var @operator = new Operator(organisation);
+                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator);
+
+                await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
+                var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
+
+                database.WeeeContext.Aatfs.Where(a => Equals(aatf1)).Should().NotBeNull();
+                database.WeeeContext.Aatfs.Where(a => Equals(aatf2)).Should().NotBeNull();
+                dbNewAatfs.Should().Be(2);
             }
         }
 
