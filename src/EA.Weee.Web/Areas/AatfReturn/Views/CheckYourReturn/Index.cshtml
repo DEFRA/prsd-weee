@@ -135,7 +135,7 @@
                                         @pcsdata.Received.B2B
                                     </div>
                                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                        <span class="govuk-visually-hidden">Change Data for Scheme @pcsdata.Scheme.Name </span>@Html.RouteLink("Change", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" }, null)
+                                        @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
                                     </div>
                                 </div>
                             </div>
