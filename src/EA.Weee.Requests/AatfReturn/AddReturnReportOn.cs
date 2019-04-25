@@ -12,6 +12,10 @@
     {
         public Guid ReturnId { get; set; }
 
-        public IList<ReportOnQuestion> SelectedOptions { get; set; }
+        public IList<int> SelectedOptions { get; set; }
+
+        public IList<ReportOnQuestion> Options { get; set; }
+
+        public string DcfSelectedValue { get; set; }
     }
 }

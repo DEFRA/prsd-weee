@@ -4,12 +4,16 @@
 
     public class ReportOnQuestion
     {
-        public ReportOnQuestion(int id, string question, string description, int parentId)
+        public ReportOnQuestion(int id, string question, string description, int? parentId)
         {
             Id = id;
             Question = question;
             Description = description;
             ParentId = parentId;
+        }
+
+        public ReportOnQuestion()
+        {
         }
 
         public int Id { get; set; }
@@ -19,11 +23,5 @@
         public string Description { get; set; }
 
         public int? ParentId { get; set; }
-
-        public enum SelectedValue
-        {
-            Yes,
-            No
-        }
     }
 }

@@ -42,20 +42,73 @@
         [Fact]
         public async Task HandleAsync_GivenAddReportOnRequest_DataAccessAddIsCalled()
         {
-            var question = A.Fake<ReportOnQuestion>();
-            question.Id = 1;
+            var questions = CreateResponse(true);
+
+            var options = CreateReportQuestions();
 
             var request = new AddReturnReportOn()
             {
                 ReturnId = Guid.NewGuid(),
-                SelectedOptions = new List<ReportOnQuestion>() { question }
+                SelectedOptions = questions,
+                Options = options
             };
 
             await handler.HandleAsync(request);
 
-            var returnReportOn = new ReturnReportOn(request.ReturnId, question.Id);
+            var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(new List<ReturnReportOn>() { returnReportOn })));
+            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAddReportOnRequest4Selected_DataAccessAddIsCalled()
+        {
+            var questions = CreateResponse(false);
+
+            var options = CreateReportQuestions();
+
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = questions,
+                Options = options
+            };
+
+            await handler.HandleAsync(request);
+
+            var returnReportOn = CreateReportedOptions(request.ReturnId);
+
+            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+        }
+
+        private List<int> CreateResponse(bool dcf)
+        {
+            if (dcf)
+            {
+                return new List<int> { 1, 2, 3, 4, 5 };
+            }
+            return new List<int> { 1, 2, 3, 4 };
+        }
+
+        private List<ReturnReportOn> CreateReportedOptions(Guid returnId)
+        {
+            var output = new List<ReturnReportOn>();
+            for (var i = 1; i <= 5; i++)
+            {
+                output.Add(new ReturnReportOn(returnId, i));
+            }
+            return output;
+        }
+        private List<ReportOnQuestion> CreateReportQuestions()
+        {
+            var output = new List<ReportOnQuestion>();
+            for (var i = 1; i <= 5; i++)
+            {
+                output.Add(new ReportOnQuestion(i, A.Dummy<string>(), A.Dummy<string>(), null));
+            }
+
+            output[4].ParentId = 4;
+            return output;
         }
     }
 }

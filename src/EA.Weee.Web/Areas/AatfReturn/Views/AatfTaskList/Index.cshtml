@@ -152,7 +152,7 @@
         </div>
     </div>
     <div class="govuk-!-padding-bottom-7"></div>
-    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Post, new { style = "display: inline" }))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfInitialSelect, FormMethod.Post, new { style = "display: inline" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)

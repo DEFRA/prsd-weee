@@ -6,16 +6,18 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Shared;
 
-    public class SelectReportOptionsViewModel : RadioButtonStringCollectionViewModel
+    public class SelectReportOptionsViewModel
     {
-        public SelectReportOptionsViewModel() : base(new List<string> { "Yes", "No" })
-        {
-        }
-
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }
 
         public List<ReportOnQuestion> ReportOnQuestions { get; set; }
+
+        public List<int> SelectedOptions { get; set; }
+
+        public string DcfSelectedValue { get; set; }
+
+        public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
     }
 }

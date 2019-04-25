@@ -29,16 +29,20 @@
 
             var returnReportOn = new List<ReturnReportOn>();
 
-            foreach (var question in message.SelectedOptions)
+            foreach (var option in message.SelectedOptions)
             {
-                //if (question.ParentId != 0)
-                //{
-                //    if (message.SelectedOptions.Where(q => q.Id == question.ParentId).FirstOrDefault().SelectedValue == ReportOnQuestion.SelectedValue.Yes)
-                //    {
+                returnReportOn.Add(new ReturnReportOn(message.ReturnId, option));
+            }
 
-                //    }
-                //}
-                returnReportOn.Add(new ReturnReportOn(message.ReturnId, question.Id));
+            if (message.DcfSelectedValue == "Yes")
+            {
+                var dcfQuestion = message.Options.Where(q => q.ParentId != default(int)).FirstOrDefault();
+                bool isParentSelected = message.SelectedOptions.Contains(dcfQuestion.ParentId ?? default(int));
+
+                if (isParentSelected)
+                {
+                    returnReportOn.Add(new ReturnReportOn(message.ReturnId, dcfQuestion.Id));
+                }
             }
 
             await dataAccess.AddMany<ReturnReportOn>(returnReportOn);

@@ -11,7 +11,9 @@
             var reportOptions = new AddReturnReportOn()
             {
                 ReturnId = viewModel.ReturnId,
-                SelectedOptions = viewModel.ReportOnQuestions
+                SelectedOptions = viewModel.SelectedOptions,
+                Options = viewModel.ReportOnQuestions,
+                DcfSelectedValue = viewModel.DcfSelectedValue
             };
 
             return reportOptions;
