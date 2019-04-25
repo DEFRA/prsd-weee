@@ -3,10 +3,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -20,8 +18,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
@@ -64,7 +60,7 @@
             A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            await controller.Index(Guid.NewGuid(), Guid.NewGuid(), null);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -73,9 +69,29 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenWeeeSentOnId_ApiShouldBeCalled()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var weeeSentOnList = new List<WeeeSentOnData>();
+            var weeeSentOn = new WeeeSentOnData();
+            weeeSentOn.SiteAddress = new AatfAddressData();
+            weeeSentOn.SiteAddressId = Guid.NewGuid();
+            weeeSentOn.WeeeSentOnId = weeeSentOnId;
+            weeeSentOnList.Add(weeeSentOn);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+
+            await controller.Index(returnId, aatfId, weeeSentOnId);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(w => w.AatfId == aatfId && w.ReturnId == returnId && w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

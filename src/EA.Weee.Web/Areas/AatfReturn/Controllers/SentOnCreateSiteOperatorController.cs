@@ -51,21 +51,14 @@
                 var operatorAddress = new AatfAddressData();
                 Guid? operatorAddressId = null;
 
-                var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId));
-                var weeeSentOn = weeeSentOnList.Where(w => w.WeeeSentOnId == weeeSentOnId).Select(w => w).SingleOrDefault();
-                operatorAddress = weeeSentOn.OperatorAddress;
-                operatorAddressId = weeeSentOn.OperatorAddressId;
-
-                /*
-                var operatorAddressData = await client.SendAsync(User.GetAccessToken(), new GetSentOnOperatorSite(weeeSentOnId));
-
-                if (operatorAddressData.Name != null)
+                var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, weeeSentOnId));
+                if (weeeSentOnList.Count > 0)
                 {
-                    operatorAddressId = operatorAddressData.Id;
+                    var weeeSentOn = weeeSentOnList[0];
+                    operatorAddress = weeeSentOn.OperatorAddress;
+                    operatorAddressId = weeeSentOn.OperatorAddressId;
                 }
 
-                operatorAddress = operatorAddressData;
-                */
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer() { ReturnId = returnId, SiteAddressData = siteAddressData, OperatorAddressId = operatorAddressId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled, CountryData = operatorCountryData, OperatorAddressData = operatorAddress });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
