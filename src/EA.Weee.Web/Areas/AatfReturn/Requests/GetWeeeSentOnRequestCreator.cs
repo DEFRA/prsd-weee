@@ -15,7 +15,7 @@
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
 
-            return new GetWeeeSentOn(viewModel.AatfId, viewModel.ReturnId);
+            return new GetWeeeSentOn(viewModel.AatfId, viewModel.ReturnId, null);
         }
     }
 }

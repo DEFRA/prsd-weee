@@ -73,5 +73,60 @@
                 result.OperatorAddressData.CountryName.Should().Be(siteAddressData.CountryName);
             }
         }
+
+        [Fact]
+        public void Map_GivenValidSourceWithOperatorAddress_PropertiesShouldBeMapped()
+        {
+            var orgId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var operatorAddressId = Guid.NewGuid();
+            var siteAddressData = new AatfAddressData()
+            {
+                Name = "Site",
+                Address1 = "Address1",
+                Address2 = "Address2",
+                TownOrCity = "Town",
+                CountyOrRegion = "County",
+                CountryName = "CountryName"
+            };
+
+            var operatorAddressData = new AatfAddressData()
+            {
+                Name = "SiteOP",
+                Address1 = "OPAddress1",
+                Address2 = "OPAddress2",
+                TownOrCity = "OPTown",
+                CountyOrRegion = "OPCounty",
+                CountryName = "OPCountryName",
+                CountryId = Guid.NewGuid(),
+                Countries = A.Fake<IList<Core.Shared.CountryData>>()
+            };
+
+            var transfer = new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer()
+            {
+                ReturnId = returnId,
+                AatfId = aatfId,
+                OrganisationId = orgId,
+                WeeeSentOnId = weeeSentOnId,
+                SiteAddressData = siteAddressData,
+                JavascriptDisabled = null,
+                CountryData = A.Fake<IList<Core.Shared.CountryData>>(),
+                OperatorAddressData = operatorAddressData,
+                OperatorAddressId = operatorAddressId
+            };
+
+            var result = map.Map(transfer);
+
+            result.OrganisationId.Should().Be(orgId);
+            result.ReturnId.Should().Be(returnId);
+            result.AatfId.Should().Be(aatfId);
+            result.WeeeSentOnId.Should().Be(weeeSentOnId);
+            result.SiteAddressData.Should().Be(siteAddressData);
+            result.OperatorAddressFound.Should().Be(true);
+            result.OperatorAddressData.Should().BeEquivalentTo(operatorAddressData);
+            result.OperatorAddressId.Should().Be(operatorAddressId);
+        }
     }
 }

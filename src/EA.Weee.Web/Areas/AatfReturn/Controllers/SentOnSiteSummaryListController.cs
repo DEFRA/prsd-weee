@@ -37,7 +37,7 @@
         {
             using (var client = apiClient())
             {
-                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId));
+                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, null));
 
                 var model = mapper.Map(new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
                 {
