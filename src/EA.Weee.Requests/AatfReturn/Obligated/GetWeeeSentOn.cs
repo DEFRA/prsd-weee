@@ -13,12 +13,6 @@
 
         public Guid? WeeeSentOnId { get; set; }
 
-        public GetWeeeSentOn(Guid aatfId, Guid returnId)
-        {
-            AatfId = aatfId;
-            ReturnId = returnId;
-        }
-
         public GetWeeeSentOn(Guid aatfId, Guid returnId, Guid? weeeSentOnId)
         {
             AatfId = aatfId;

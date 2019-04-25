@@ -40,6 +40,7 @@
         public async Task<Guid> HandleAsync(EditSentOnAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
+
             if (message.SiteAddressData != null)
             {
                 Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);

@@ -54,7 +54,7 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            await handler.HandleAsync(new GetWeeeSentOn(aatfId, returnId));
+            await handler.HandleAsync(new GetWeeeSentOn(aatfId, returnId, null));
 
             A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
