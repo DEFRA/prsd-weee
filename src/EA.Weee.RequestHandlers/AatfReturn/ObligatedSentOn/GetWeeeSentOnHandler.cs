@@ -57,6 +57,14 @@
                 weeeSentOnList.Add(weeeSentOnData);
             }
 
+            if (message.WeeeSentOnId != null)
+            {
+                var weeeSentOnListFiltered = new List<WeeeSentOnData>();
+                var weeeSentOnSelected = weeeSentOnList.Where(w => w.WeeeSentOnId == message.WeeeSentOnId).Select(w => w).SingleOrDefault();
+                weeeSentOnListFiltered.Add(weeeSentOnSelected);
+                return weeeSentOnListFiltered;
+            }
+
             return weeeSentOnList;
         }
     }

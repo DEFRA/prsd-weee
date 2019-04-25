@@ -41,16 +41,18 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var siteAddress = new AatfAddressData();
                 Guid? siteAddressId = null;
+                var siteAddress = new AatfAddressData();
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+
                 if (weeeSentOnId != null)
                 {
-                    var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId));
-                    var weeeSentOn = weeeSentOnList.Where(w => w.WeeeSentOnId == weeeSentOnId).Select(w => w).SingleOrDefault();
+                    var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, weeeSentOnId));
+                    var weeeSentOn = weeeSentOnList[0];
                     siteAddress = weeeSentOn.SiteAddress;
                     siteAddressId = weeeSentOn.SiteAddressId;
                 }
+
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, SiteAddressId = siteAddressId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, SiteAddressData = siteAddress });
 
