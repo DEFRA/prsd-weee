@@ -23,7 +23,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            if (source.SiteAddressData.Name == null)
+            if (source.SiteAddressData == null)
             {
                 source.SiteAddressData = new AatfAddressData();
             }
