@@ -8,6 +8,7 @@
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
@@ -25,6 +26,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
+        private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
 
         public SelectReportOptionsControllerTests()
         {
@@ -32,8 +34,9 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
+            validator = A.Fake<ISelectReportOptionsViewModelValidatorWrapper>();
 
-            controller = new SelectReportOptionsController(apiClient, breadcrumb, cache, requestCreator);
+            controller = new SelectReportOptionsController(apiClient, breadcrumb, cache, requestCreator, validator);
         }
 
         [Fact]
