@@ -14,7 +14,6 @@
 
     public class GetReportOnQuestionHandlerTests
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private GetReportOnQuestionHandler handler;
 
