@@ -1,7 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
-    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
@@ -10,14 +11,15 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Web.Areas.AatfReturn.Attributes;
     using Xunit;
+    using ValidationResult = FluentValidation.Results.ValidationResult;
 
     public class SelectReportOptionsControllerTests
     {
@@ -119,6 +121,43 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_ValidatorShouldReturnAnInvalidResult()
+        {
+            var result = new ValidationResult();
+            result.Errors.Add(new ValidationFailure("property", "error"));
+
+            A.CallTo(() => validator.Validate(A<SelectReportOptionsViewModel>._)).Returns(result);
+
+            await controller.Index(A.Fake<SelectReportOptionsViewModel>());
+
+            controller.ModelState.IsValid.Should().BeFalse();
+            controller.ModelState.Should().ContainKey("property");
+            controller.ModelState.Count(c => c.Value.Errors.Any(d => d.ErrorMessage == "error")).Should().Be(1);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModel_ValidatorShouldBeCalled()
+        {
+            var model = new SelectReportOptionsViewModel();
+            
+            await controller.Index(model);
+
+            A.CallTo(() => validator.Validate(model)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
+        {
+            var model = new SelectReportOptionsViewModel();
+
+            controller.ModelState.AddModelError("error", "error");
+            
+            await controller.Index(model);
+
+            A.CallTo(() => validator.Validate(model)).MustNotHaveHappened();
         }
     }
 }
