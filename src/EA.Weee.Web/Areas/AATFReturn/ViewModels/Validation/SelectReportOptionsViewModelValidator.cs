@@ -12,7 +12,7 @@
                 .Custom((o, context) =>
             {
                 var instance = context.InstanceToValidate as SelectReportOptionsViewModel;
-                if (instance != null)
+                if (instance != null && instance.SelectedOptions != null)
                 {
                     var dcfQuestion = instance.ReportOnQuestions.Where(d => d.ParentId != default(int)).FirstOrDefault();
                     bool isParentSelected = instance.SelectedOptions.Contains(dcfQuestion.ParentId ?? default(int));

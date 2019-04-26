@@ -66,14 +66,17 @@
 
             if (ModelState.IsValid)
             {
-                using (var client = apiClient())
+                if (viewModel.SelectedOptions != null)
                 {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
+                    using (var client = apiClient())
+                    {
+                        var request = requestCreator.ViewModelToRequest(viewModel);
 
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                        await client.SendAsync(User.GetAccessToken(), request);
+                    }
                 }
+
+                return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);

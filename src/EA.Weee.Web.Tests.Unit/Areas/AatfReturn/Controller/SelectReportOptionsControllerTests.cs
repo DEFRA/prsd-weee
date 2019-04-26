@@ -1,29 +1,37 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using Core.Shared;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using FluentValidation.Results;
-    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
     using ValidationResult = FluentValidation.Results.ValidationResult;
-
+ 
     public class SelectReportOptionsControllerTests
     {
-        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient weeeClient;
         private readonly SelectReportOptionsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -32,13 +40,13 @@
 
         public SelectReportOptionsControllerTests()
         {
-            apiClient = A.Fake<Func<IWeeeClient>>();
+            weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
             validator = A.Fake<ISelectReportOptionsViewModelValidatorWrapper>();
 
-            controller = new SelectReportOptionsController(apiClient, breadcrumb, cache, requestCreator, validator);
+            controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, validator);
         }
 
         [Fact]
@@ -96,6 +104,33 @@
             result.RouteValues["controller"].Should().Be("SelectYourPcs");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        {
+            var model = new SelectReportOptionsViewModel();
+            model.SelectedOptions = new List<int>() { 1 };
+            var request = new AddReturnReportOn();
+
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModelWithNoSelectedOptions_ApiSendShouldNotBeCalled()
+        {
+            var model = new SelectReportOptionsViewModel();
+            var request = new AddReturnReportOn();
+
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Never);
         }
 
         [Fact]
