@@ -61,6 +61,11 @@
         {
             if (ModelState.IsValid)
             {
+                await ValidateResult(viewModel);
+            }
+
+            if (ModelState.IsValid)
+            {
                 using (var client = apiClient())
                 {
                     var request = requestCreator.ViewModelToRequest(viewModel);
@@ -81,6 +86,19 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private async Task ValidateResult(SelectReportOptionsViewModel model)
+        {
+            var result = await validator.Validate(model);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+            }
         }
     }
 }

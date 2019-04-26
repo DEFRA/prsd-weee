@@ -93,7 +93,7 @@
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
-    <Compile Include="AatfReturn\GetReportOnQuestionRequestHandlerTests.cs" />
+    <Compile Include="AatfReturn\GetReportOnQuestionHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
