@@ -29,6 +29,18 @@
             return entity.Id;
         }
 
+        public Task AddMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
+        {
+            context.Set<TEntity>().AddRange(amounts);
+
+            return context.SaveChangesAsync();
+        }
+
+        public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class
+        {
+            return await context.Set<TEntity>().ToListAsync();
+        }
+
         public async Task<TEntity> GetById<TEntity>(Guid id) where TEntity : Entity
         {
             return await context.Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
