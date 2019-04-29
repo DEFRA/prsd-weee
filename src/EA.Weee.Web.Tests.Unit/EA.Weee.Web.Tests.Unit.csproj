@@ -183,6 +183,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\NonObligatedDataToNonObligatedValueMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ObligatedDataToObligatedValueMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
@@ -217,10 +219,12 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedSentOnWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Validation\NonObligatedValuesViewModelValidatorTests.cs" />
+    <Compile Include="Areas\AatfReturn\Validation\SelectReportOptionsViewModelValidatorTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\AatfTaskListViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReusedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />

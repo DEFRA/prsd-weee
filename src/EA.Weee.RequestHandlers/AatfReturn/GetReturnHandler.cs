@@ -15,6 +15,7 @@
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
+    using ReportOnQuestion = Domain.AatfReturn.ReportOnQuestion;
 
     internal class GetReturnHandler : IRequestHandler<GetReturn, ReturnData>
     {
@@ -28,6 +29,7 @@
         private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetReturnHandler(IWeeeAuthorization authorization,
             IReturnDataAccess returnDataAccess,
@@ -38,7 +40,8 @@
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
             ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess,
-            IReturnSchemeDataAccess returnSchemeDataAccess)
+            IReturnSchemeDataAccess returnSchemeDataAccess,
+            IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -49,7 +52,8 @@
             this.obligatedDataAccess = obligatedDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.getSentOnAatfSiteDataAccess = sentOnAatfSiteDataAccess;
-             this.returnSchemeDataAccess = returnSchemeDataAccess;
+            this.returnSchemeDataAccess = returnSchemeDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<ReturnData> HandleAsync(GetReturn message)
@@ -76,6 +80,8 @@
             
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
+            var reportOnQuestionList = await genericDataAccess.GetAll<ReportOnQuestion>();
+
             var returnQuarterWindow = new ReturnQuarterWindow(@return, 
                 quarterWindow, 
                 aatfList, 
@@ -84,7 +90,8 @@
                 returnObligatedReusedValues,
                 @return.Operator,
                 sentOn,
-                returnSchemeList);
+                returnSchemeList,
+                reportOnQuestionList);
 
             var result = mapper.Map(returnQuarterWindow);
 
