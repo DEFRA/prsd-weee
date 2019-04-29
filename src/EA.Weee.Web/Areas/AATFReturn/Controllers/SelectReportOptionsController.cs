@@ -51,7 +51,8 @@
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
-                    ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion())
+                    ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion()),
+                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId))
                 });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
