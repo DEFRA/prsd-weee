@@ -101,7 +101,7 @@
         [Fact]
         public async void IndexGet_GivenValidViewModel_MapperShouldBeCalledWithCorrectParameters()
         {
-            var operatorName = "OpName";
+            var siteName = "SiteName";
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -120,9 +120,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
 
-            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName);
+            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName);
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.OperatorName.Equals(operatorName) && t.ReturnData.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -147,7 +147,7 @@
         [Fact]
         public async void IndexGet_ProvidedTempDataForCopyPasteValues_MapperShouldReturnViewModelWithCopyPasteValues()
         {
-            string operatorName = "OpName";
+            string siteName = "SiteName";
             Guid returnId = Guid.NewGuid();
             Guid organisationId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
@@ -165,9 +165,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(returnData);
 
-            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName);
+            await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName);
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.OperatorName.Equals(operatorName) && t.ReturnData.Equals(returnData) && t.PastedData == obligatedCategoryValue))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(returnData) && t.PastedData == obligatedCategoryValue))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

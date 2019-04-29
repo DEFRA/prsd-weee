@@ -27,7 +27,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string operatorName)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName)
         {
             using (IWeeeClient client = apiClient())
             {
@@ -38,7 +38,7 @@
                     ReturnId = returnId,
                     OrganisationId = returnData.ReturnOperatorData.OrganisationId,
                     WeeeSentOnId = weeeSentOnId,
-                    OperatorName = operatorName,
+                    SiteName = siteName,
                 };
                 await SetBreadcrumb(returnData.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
@@ -60,7 +60,7 @@
                 }
             }
 
-            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.OperatorName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId));
+            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.SiteName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

@@ -9,7 +9,7 @@
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">
-                WEEE sent to @Model.OperatorName for treatment
+                WEEE sent to @Model.SiteName for treatment
             </h1>
         </div>
     </header>
@@ -27,7 +27,7 @@
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
-                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, operatorName = Model.OperatorName, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
+                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, siteName = Model.SiteName, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
             </div>
         </div>
 
@@ -36,7 +36,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.SiteAddressId)
         @Html.HiddenFor(m => m.WeeeSentOnId)
-        @Html.HiddenFor(m => m.OperatorName)
+        @Html.HiddenFor(m => m.SiteName)
 
         @Html.AntiForgeryToken()
 
