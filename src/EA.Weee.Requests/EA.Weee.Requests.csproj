@@ -72,6 +72,7 @@
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
+    <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
