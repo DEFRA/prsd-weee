@@ -95,7 +95,7 @@
         {
             var form = new FormCollection();
             var model = new SentOnCreateSiteOperatorViewModel();
-            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             var request = new EditSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -114,6 +114,7 @@
             var boolConversion = Convert.ToBoolean(operatorBool);
             var model = new SentOnCreateSiteOperatorViewModel();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
 
             form.Add("IsOperatorTheSameAsAATF", operatorBool);
 
