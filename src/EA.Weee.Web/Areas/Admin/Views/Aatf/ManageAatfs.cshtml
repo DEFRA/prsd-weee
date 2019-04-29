@@ -1,7 +1,30 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
     ViewBag.Title = "ManageAatfs";
 }
 
 <h2>ManageAatfs</h2>
 
+@section scripts{
+    <script>
+        $('#idManageSchemesTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Manage AATFs
+    </h1>
+</header>
+@using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
+{
+
+    @(this.WeeeGds().Submit("Continue"))
+}
