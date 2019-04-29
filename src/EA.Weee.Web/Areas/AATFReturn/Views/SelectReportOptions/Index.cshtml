@@ -12,7 +12,7 @@
     <h1 class="govuk-heading-l">What do you need to report on?</h1>
     <div class="govuk-!-padding-bottom-5"></div>
 
-    @using (Html.BeginRouteForm(AatfRedirect.AatfInitialSelect))
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsRouteName))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
