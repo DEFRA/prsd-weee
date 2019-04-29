@@ -37,6 +37,7 @@
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
+        private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
 
         public SelectReportOptionsControllerTests()
         {
@@ -45,8 +46,9 @@
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
             validator = A.Fake<ISelectReportOptionsViewModelValidatorWrapper>();
+            mapper = A.Fake<IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel>>();
 
-            controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, validator);
+            controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, validator, mapper);
         }
 
         [Fact]

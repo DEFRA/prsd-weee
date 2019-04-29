@@ -14,14 +14,28 @@
 
     public class GetReportOnQuestionHandlerTests
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private GetReportOnQuestionHandler handler;
 
         public GetReportOnQuestionHandlerTests()
         {
             dataAccess = A.Fake<IGenericDataAccess>();
+            authorization = A.Fake<IWeeeAuthorization>();
 
-            handler = new GetReportOnQuestionHandler(dataAccess);
+            handler = new GetReportOnQuestionHandler(authorization, dataAccess);
+        }
+
+        [Fact]
+        public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+
+            var handler = new GetReportOnQuestionHandler(authorization, dataAccess);
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReportOnQuestion>());
+
+            await action.Should().ThrowAsync<SecurityException>();
         }
 
         [Fact]

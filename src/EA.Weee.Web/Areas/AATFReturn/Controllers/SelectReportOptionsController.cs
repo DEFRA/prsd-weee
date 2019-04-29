@@ -3,9 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
@@ -22,19 +24,22 @@
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
+        private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
             IAddSelectReportOptionsRequestCreator requestCreator,
-            ISelectReportOptionsViewModelValidatorWrapper validator)
+            ISelectReportOptionsViewModelValidatorWrapper validator,
+            IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
             this.validator = validator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -42,12 +47,12 @@
         {
             using (var client = apiClient())
             {
-                var viewModel = new SelectReportOptionsViewModel()
+                var viewModel = mapper.Map(new ReportOptionsToSelectReportOptionsViewModelMapTransfer()
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion())
-                };
+                });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 

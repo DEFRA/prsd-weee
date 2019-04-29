@@ -18,6 +18,7 @@
     {
         private readonly IGenericDataAccess dataAccess;
         private AddReturnReportOnHandler handler;
+        private const string DcfYes = "Yes";
 
         public AddReturnReportOnHandlerTests()
         {
@@ -73,7 +74,7 @@
                 ReturnId = Guid.NewGuid(),
                 SelectedOptions = selectedOptions,
                 Options = options,
-                DcfSelectedValue = "Yes"
+                DcfSelectedValue = DcfYes
             };
 
             await handler.HandleAsync(request);
@@ -97,7 +98,7 @@
                 ReturnId = Guid.NewGuid(),
                 SelectedOptions = selectedOptions,
                 Options = options,
-                DcfSelectedValue = "Yes"
+                DcfSelectedValue = DcfYes
             };
 
             await handler.HandleAsync(request);

@@ -15,6 +15,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
+        private const string DcfYes = "Yes";
 
         public AddReturnReportOnHandler(IWeeeAuthorization authorization,
             IGenericDataAccess dataAccess)
@@ -34,7 +35,7 @@
                 returnReportOn.Add(new ReturnReportOn(message.ReturnId, option));
             }
 
-            if (message.DcfSelectedValue == "Yes")
+            if (message.DcfSelectedValue == DcfYes)
             {
                 var dcfQuestion = message.Options.Where(q => q.ParentId != default(int)).FirstOrDefault();
                 bool isParentSelected = message.SelectedOptions.Contains(dcfQuestion.ParentId ?? default(int));

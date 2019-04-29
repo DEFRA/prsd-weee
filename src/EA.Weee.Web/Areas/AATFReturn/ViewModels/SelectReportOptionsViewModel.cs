@@ -2,12 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.ViewModels.Shared;
 
     public class SelectReportOptionsViewModel
     {
+        public SelectReportOptionsViewModel()
+        {
+        }
+
+        public SelectReportOptionsViewModel(Guid organisationId, Guid returnId, List<ReportOnQuestion> reportOnQuestions)
+        {
+            OrganisationId = organisationId;
+            ReturnId = returnId;
+            ReportOnQuestions = reportOnQuestions;
+        }
+
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }

@@ -104,6 +104,23 @@
             }
         }
 
+        [Fact]
+        public async Task GetAll_AllEntitiesShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var modelHelper = new ModelHelper(database.Model);
+
+                var count = database.WeeeContext.Aatfs.Count();
+
+                var dataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatfInfo = await dataAccess.GetAll<Aatf>();
+
+                aatfInfo.Count.Should().Be(count);
+            }
+        }
+
         private Aatf CreateAatf(UKCompetentAuthority competentAuthority)
         {
             return new Aatf("name",
