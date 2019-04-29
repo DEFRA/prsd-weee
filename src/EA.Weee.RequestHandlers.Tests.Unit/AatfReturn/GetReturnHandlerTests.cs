@@ -33,6 +33,7 @@
         private readonly ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetReturnHandlerTests()
         {
@@ -45,6 +46,7 @@
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
 
             handler = new GetReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -57,7 +59,8 @@
                 fetchObligatedWeeeDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
                 sentOnAatfSiteDataAccess,
-                returnSchemeDataAccess);
+                returnSchemeDataAccess,
+                genericDataAccess);
         }
 
         [Fact]
@@ -74,7 +77,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
                 A.Dummy<ISentOnAatfSiteDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>());
+                A.Dummy<IReturnSchemeDataAccess>(),
+                A.Dummy<IGenericDataAccess>());
                 Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();
@@ -95,7 +99,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
                 A.Dummy<ISentOnAatfSiteDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>());
+                A.Dummy<IReturnSchemeDataAccess>(),
+                A.Dummy<IGenericDataAccess>());
                 Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturn>());
 
             await action.Should().ThrowAsync<SecurityException>();

@@ -94,6 +94,7 @@
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="ObligatedSentOnWeeeIntegration.cs" />
+    <Compile Include="ReportOptionsIntegration.cs" />
     <Compile Include="SentOnAatfSiteIntegration.cs" />
     <Compile Include="Auditing\AuditingTests.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccessTests.cs" />

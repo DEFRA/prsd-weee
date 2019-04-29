@@ -293,6 +293,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SelectReportOptionsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReceivedPcsListController.cs" />
@@ -316,6 +317,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
@@ -333,7 +336,9 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetWeeeSentOnRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IAddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IGetWeeeSentOnRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedSentOnWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />
@@ -364,6 +369,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
@@ -372,6 +378,9 @@
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidatorWrapper.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -835,6 +844,7 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOnValuesCopyPaste\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -990,6 +1000,7 @@
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
+    <Content Include="Scripts\weee-checkbox-toggle-visibility.js" />
     <Content Include="Scripts\weee-tonnage-totals.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
