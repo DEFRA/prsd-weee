@@ -11,7 +11,13 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReportOnQuestions, source.ReportOnQuestions);
 
-            return new SelectReportOptionsViewModel(source.OrganisationId, source.ReturnId, source.ReportOnQuestions);
+            return new SelectReportOptionsViewModel(
+                source.OrganisationId,
+                source.ReturnId,
+                source.ReportOnQuestions,
+                source.ReturnData.Quarter,
+                source.ReturnData.QuarterWindow,
+                source.ReturnData.Quarter.Year);
         }
     }
 }

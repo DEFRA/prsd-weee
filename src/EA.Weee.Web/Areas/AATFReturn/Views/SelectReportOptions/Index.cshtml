@@ -8,9 +8,12 @@
 }
 
 <section id="main-content">
-
-    <h1 class="govuk-heading-l">What do you need to report on?</h1>
-    <div class="govuk-!-padding-bottom-5"></div>
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">What do you need to report for @Model.Year @Model.Period?</h1>
+    </header>
+    <p class="govuk-body">
+        Select all that apply
+    </p>
 
     @using (Html.BeginRouteForm(AatfRedirect.AatfInitialSelect))
     {
@@ -78,6 +81,9 @@
             </fieldset>
         </div>
 
+        @Html.HiddenFor(m => m.Quarter)
+        @Html.HiddenFor(m => m.Period)
+        @Html.HiddenFor(m => m.Year)
         @Html.HiddenFor(m => m.DcfSelectedValue)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)

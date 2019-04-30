@@ -9,7 +9,7 @@
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Aatf = Core.AatfReturn.AatfData;
-    using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
+    using ReturnReportOn = Core.AatfReturn.ReturnReportOn;
 
     public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
     {
@@ -31,7 +31,6 @@
                 QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate),
                 ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, source.Return.Operator.Organisation.Id),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(), // CREATE UNIT TEST TO TEST THIS PROPERTY IS SET AND MAPPED
-                ReturnReportOn = source.ReportOnQuestions.Select(s => new ReportOnQuestion(s.Id, s.Question, s.Description, s.ParentId ?? default(int))).ToList()
             };
 
             if (source.Aatfs != null)
