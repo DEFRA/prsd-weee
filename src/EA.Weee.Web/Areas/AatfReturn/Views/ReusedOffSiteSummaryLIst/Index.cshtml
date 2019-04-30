@@ -21,10 +21,10 @@
     <div class="govuk-table">
         <div class="govuk-grid-column-one-half" id="weee-data-entry-table">
             <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-third" style="word-break:break-word">
                     B2C (tonnes)
                 </div>
-                <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-third" style="word-break:break-word">
                     B2B (tonnes)
                 </div>
                 <div class="govuk-grid-column-one-third">
@@ -56,7 +56,7 @@
                     <div class="govuk-grid-column-one-half">
                         Address
                     </div>
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                         Actions
                     </div>
                 </div>
@@ -66,10 +66,10 @@
                         <div class="govuk-grid-column-one-quarter">
                             @address.Name
                         </div>
-                        <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-half" style="word-break:break-word">
                             @address.Address
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                             <span class="govuk-visually-hidden">Change the address of @address.Name</span>
                             @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
                         </div>
