@@ -29,6 +29,21 @@
         }
 
         [Fact]
+        public void ViewModelToRequest_GivenValidViewModelSetToEdit_RequestShouldBeOfTypeEditSentOnAatfSite()
+        {
+            var viewModel = new SentOnCreateSiteViewModel()
+            {
+                WeeeSentOnId = Guid.NewGuid(),
+                SiteAddressData = A.Fake<AatfAddressData>(),
+                SiteAddressId = Guid.NewGuid()
+            };
+
+            var request = requestCreator.ViewModelToRequest(viewModel);
+
+            request.Should().BeOfType(typeof(EditSentOnAatfSite));
+        }
+
+        [Fact]
         public void ViewModelToRequest_GivenValidViewModel_PropertiesShouldBeMapped()
         {
             var viewModel = new SentOnCreateSiteViewModel()
