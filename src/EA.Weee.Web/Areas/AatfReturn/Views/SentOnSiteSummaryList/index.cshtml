@@ -23,14 +23,14 @@
                     <div class="govuk-grid-column-one-quarter">
                         AATF/ATF name and address
                     </div>
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                         Operator name and address
                     </div>
                     <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display" style="word-break:break-word">
                             B2C (tonnes)
                         </div>
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display" style="word-break:break-word">
                             B2B (tonnes)
                         </div>
                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
@@ -42,10 +42,10 @@
             @foreach (var address in Model.Sites)
             {
                 <div class="govuk-grid-row govuk-table__cell">
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-quarter" style="word-break:break-word">
                         @address.SiteAddressLong
                     </div>
-                    <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="word-break:break-word">
                         @address.OperatorAddressLong
                     </div>
                     <div class="govuk-grid-column-one-half">
