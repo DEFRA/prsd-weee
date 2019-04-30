@@ -15,7 +15,7 @@
         Select all that apply
     </p>
 
-    @using (Html.BeginRouteForm(AatfRedirect.AatfInitialSelect))
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsRouteName))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()

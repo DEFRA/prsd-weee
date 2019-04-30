@@ -8,7 +8,7 @@
 }
 
 <section id="main-content">
-    @using (Html.BeginRouteForm(AatfRedirect.AatfInitialSelect))
+    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()

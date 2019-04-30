@@ -103,7 +103,6 @@
             var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("SelectYourPcs");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
         }
