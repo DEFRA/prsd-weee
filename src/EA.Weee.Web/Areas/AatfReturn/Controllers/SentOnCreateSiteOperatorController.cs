@@ -81,7 +81,7 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
-                    return AatfRedirect.ObligatedSentOn(viewModel.OperatorAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, (Guid)viewModel.WeeeSentOnId);
+                    return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, (Guid)viewModel.WeeeSentOnId);
                 }
             }
 

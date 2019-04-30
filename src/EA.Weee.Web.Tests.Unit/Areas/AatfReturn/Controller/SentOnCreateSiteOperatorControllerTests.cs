@@ -116,8 +116,8 @@
             model.AatfId = Guid.NewGuid();
             model.WeeeSentOnId = Guid.NewGuid();
             model.ReturnId = Guid.NewGuid();
-            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            var request = new EditSentOnAatfSiteWithOperator();
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var request = new EditSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
