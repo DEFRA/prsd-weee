@@ -56,7 +56,38 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-        /*
+
+        [Fact]
+        public async Task HandleAsync_GivenSiteAddressDataInRequest_AddressDataShouldBeOfTypeSiteAddressData()
+        {
+            var request = new EditSentOnAatfSite()
+            {
+                WeeeSentOnId = Guid.NewGuid(),
+                SiteAddressId = Guid.NewGuid(),
+                SiteAddressData = new AatfAddressData()
+                {
+                    Name = "OpName",
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "GU22 7UY",
+                    CountryName = "France",
+                    CountryId = Guid.NewGuid()
+                }
+            };
+
+            var value = A.Fake<AatfAddress>();
+            var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
+
+            A.CallTo(() => genericDataAccess.GetById<AatfAddress>(request.SiteAddressId)).Returns(value);
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(request.SiteAddressData.CountryId)).Returns(country);
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => offSiteDataAccess.Update(value, A<SiteAddressData>._, country)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         [Fact]
         public async Task HandleAsync_GivenEditSentOnAatfSiteRequest_DataAccessIsCalled()
         {
@@ -77,18 +108,6 @@
                 }
             };
 
-            var test = new OperatorAddressData()
-            {
-                Name = request.OperatorAddressData.Name,
-                Address1 = request.OperatorAddressData.Address1,
-                Address2 = request.OperatorAddressData.Address2,
-                TownOrCity = request.OperatorAddressData.TownOrCity,
-                CountyOrRegion = request.OperatorAddressData.CountyOrRegion,
-                Postcode = request.OperatorAddressData.Postcode,
-                CountryName = request.OperatorAddressData.CountryName,
-                CountryId = request.OperatorAddressData.CountryId
-            };
-
             var value = A.Fake<AatfAddress>();
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
@@ -97,8 +116,14 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => offSiteDataAccess.Update(value, test, country)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => offSiteDataAccess.Update(value, A<OperatorAddressData>.That.Matches(o => o.Name == request.OperatorAddressData.Name
+                && o.Address1 == request.OperatorAddressData.Address1
+                && o.Address2 == request.OperatorAddressData.Address2
+                && o.TownOrCity == request.OperatorAddressData.TownOrCity
+                && o.CountyOrRegion == request.OperatorAddressData.CountyOrRegion
+                && o.Postcode == request.OperatorAddressData.Postcode
+                && o.CountryName == request.OperatorAddressData.CountryName
+                && o.CountryId == request.OperatorAddressData.CountryId), country)).MustHaveHappened(Repeated.Exactly.Once);
         }
-        */
     }
 }
