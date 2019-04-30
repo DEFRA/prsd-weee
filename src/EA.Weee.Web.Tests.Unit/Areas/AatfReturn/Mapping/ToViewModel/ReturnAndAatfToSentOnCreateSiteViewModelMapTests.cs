@@ -30,6 +30,32 @@
         }
 
         [Fact]
+        public void Map_GivenNullSiteAddress_SiteAddressShouldNotBeNullAndContainCountryData()
+        {
+            var orgId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            
+            var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
+            {
+                ReturnId = returnId,
+                AatfId = aatfId,
+                OrganisationId = orgId,
+                CountryData = A.Fake<IList<Core.Shared.CountryData>>()
+            };
+
+            var siteAddressToCheckAgainst = new AatfAddressData()
+            {
+                Countries = transfer.CountryData
+            };
+
+            var result = map.Map(transfer);
+
+            result.SiteAddressData.Should().BeEquivalentTo(siteAddressToCheckAgainst);
+            result.SiteAddressData.Countries.Should().BeEquivalentTo(transfer.CountryData);
+        }
+
+        [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
             var orgId = Guid.NewGuid();
