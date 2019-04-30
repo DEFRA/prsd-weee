@@ -16,9 +16,13 @@
                 source.OrganisationId,
                 source.ReturnId,
                 source.ReportOnQuestions,
-                source.ReturnData.Quarter,
-                source.ReturnData.QuarterWindow,
-                source.ReturnData.Quarter.Year);
+                source.ReturnData,
+                source.ReturnData.Quarter.Year)
+            {
+                QuarterWindowEndDate = source.ReturnData.QuarterWindow.EndDate,
+                QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
+                Quarter = source.ReturnData.Quarter.Q.ToString()
+            };
         }
     }
 }
