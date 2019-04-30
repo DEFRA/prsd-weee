@@ -43,7 +43,7 @@
                 <td class="govuk-table__cell" width="100%">@aatf.Name</td>
                 <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
                 <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
-                <td class="govuk-table__cell">@aatf.AatfStatus.DisplayName</td>
+                <td class="govuk-table__cell">@aatf.AatfStatusString</td>
                 <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, @aatf.Id)</td>
             </tr>
             }

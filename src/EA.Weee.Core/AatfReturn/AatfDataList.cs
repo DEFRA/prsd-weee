@@ -16,6 +16,8 @@
 
         public virtual AatfStatus AatfStatus { get; set; }
 
+        public virtual string AatfStatusString { get; set; }
+
         public virtual Operator Operator { get; private set; }
 
         public AatfDataList(Guid id, string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
@@ -24,6 +26,7 @@
             this.Name = name;
             this.ApprovalNumber = approvalNumber;
             this.AatfStatus = aatfStatus;
+            this.AatfStatusString = aatfStatus.DisplayName;
             this.CompetentAuthority = competentAuthority;
             this.Operator = @operator;
         }
