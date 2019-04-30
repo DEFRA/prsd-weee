@@ -8,8 +8,9 @@
 
     public class ManageAatfsViewModel
     {
+        public List<AatfDataList> AatfDataList { get; set; }
+
         [Required(ErrorMessage = "You must select a Aatf to manage")]
         public Guid? Selected { get; set; }
-        public List<AatfDataList> AatfDataList { get; set; }
     }
 }

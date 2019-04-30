@@ -47,7 +47,10 @@
                     return View(viewModel);
                 }    
             }
-            return RedirectToAction("AddAatf", new { Id = viewModel.Selected.Value });
+            else
+            {
+                return RedirectToAction("AddAatf", new { Id = viewModel.Selected.Value });
+            }           
         }
 
         private async Task<List<AatfDataList>> GetAatfs()
