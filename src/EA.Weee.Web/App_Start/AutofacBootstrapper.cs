@@ -89,7 +89,9 @@
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces().InstancePerRequest();
 
+            // AATF Return Validators
             builder.RegisterType<NonObligatedValuesViewModelValidatorWrapper>().As<INonObligatedValuesViewModelValidatorWrapper>();
+            builder.RegisterType<SelectReportOptionsViewModelValidatorWrapper>().As<ISelectReportOptionsViewModelValidatorWrapper>();
 
             // AATF View Model Mapping Utilties
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();

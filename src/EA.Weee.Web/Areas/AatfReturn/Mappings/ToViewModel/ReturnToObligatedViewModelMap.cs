@@ -58,7 +58,7 @@
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReceivedData.Where(w => w.Aatf.Id == source.AatfId && w.Scheme.Id == source.SchemeId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
             }
-            else if (source.OperatorName != null)
+            else if (source.SiteName != null)
             {
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeSentOnData.Where(w => w.WeeeSentOnId == source.WeeeSentOnId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
@@ -69,9 +69,9 @@
                 existingData = obligatedMap.Map(transfer).ToList();
             }
 
-            if (source.OperatorName != null)
+            if (source.SiteName != null)
             {
-                model.OperatorName = source.OperatorName;
+                model.SiteName = source.SiteName;
             }
 
             if (source.PastedData != null)

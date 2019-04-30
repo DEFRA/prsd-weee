@@ -883,11 +883,15 @@ details summary::-ms-details-marker {
 }
 
 .collapsible-padding-left {
-    padding-left:0px;
+    padding-left:34px;
 }
 
 .collapsible-padding-right {
     padding-right:0px;
+}
+
+.collapsible-font-size {
+    font-size: 1.0rem;
 }
 .section-tabs {
     @include govuk-clearfix;

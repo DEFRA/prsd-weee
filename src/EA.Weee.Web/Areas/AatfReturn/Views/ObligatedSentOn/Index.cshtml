@@ -5,51 +5,51 @@
     ViewBag.Title = "Sent On WEEE";
 }
 
-    <section id="main-content">
-        <header class="hgroup">
-            <div>
-                <h1 class="govuk-heading-l">
-                    WEEE sent to @Model.OperatorName for treatment
-                </h1>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">
+                WEEE sent to @Model.SiteName for treatment
+            </h1>
+        </div>
+    </header>
+    <p class="govuk-body">
+        This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.
+    </p>
+    <p class="govuk-body">
+        Provide tonnage to 3 decimal places. For example 1.238
+    </p>
+
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    {
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-table govuk-!-margin-bottom-0">
+            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
+                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, siteName = Model.SiteName, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
             </div>
-        </header>
-        <p class="govuk-body">
-            This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.
-        </p>
-        <p class="govuk-body">
-            Provide tonnage to 3 decimal places. For example 1.238
-        </p>
+        </div>
 
-        @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
-        {
-            @Html.Gds().ValidationSummary()
+        Html.RenderPartial("_ObligatedWeeeTable", Model);
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.SiteAddressId)
+        @Html.HiddenFor(m => m.WeeeSentOnId)
+        @Html.HiddenFor(m => m.SiteName)
 
-            <div class="govuk-table govuk-!-margin-bottom-0">
-                <div class="govuk-grid-column-one-half">&nbsp;</div>
-                <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-                    @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, operatorName = Model.OperatorName, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
-                </div>
-            </div>
+        @Html.AntiForgeryToken()
 
-            Html.RenderPartial("_ObligatedWeeeTable", Model);
-            @Html.HiddenFor(m => m.AatfId)
-            @Html.HiddenFor(m => m.OrganisationId)
-            @Html.HiddenFor(m => m.SiteAddressId)
-            @Html.HiddenFor(m => m.WeeeSentOnId)
-            @Html.HiddenFor(m => m.OperatorName)
+        <form method="post" class="form" style="display: inline">
+            <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+                Save and continue
+            </button>
+        </form>
+    }
 
-            @Html.AntiForgeryToken()
-
-            <form method="post" class="form" style="display: inline">
-                <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
-                    Save and continue
-                </button>
-            </form>
-        }
-
-        @Scripts.Render("~/bundles/weee_tonnage_totals")
-        <script>
-            TonnageTotals('B2C');
-            TonnageTotals('B2B');
-        </script>
-    </section>
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    <script>
+        TonnageTotals('B2C');
+        TonnageTotals('B2B');
+    </script>
+</section>
