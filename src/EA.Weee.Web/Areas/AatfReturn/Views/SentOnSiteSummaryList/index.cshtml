@@ -56,7 +56,7 @@
                             @address.Tonnages.B2B
                         </div>
                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                            <span class="govuk-visually-hidden"></span>
+                            <span class="govuk-visually-hidden">Change the address of @address.SiteAddress.Name</span> @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnCreateSite" }, null)
                         </div>
                     </div>
                 </div>
