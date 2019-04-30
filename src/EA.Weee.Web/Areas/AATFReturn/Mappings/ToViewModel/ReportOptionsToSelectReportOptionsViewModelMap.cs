@@ -10,6 +10,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReportOnQuestions, source.ReportOnQuestions);
+            Guard.ArgumentNotNull(() => source.ReturnData, source.ReturnData);
 
             return new SelectReportOptionsViewModel(
                 source.OrganisationId,
