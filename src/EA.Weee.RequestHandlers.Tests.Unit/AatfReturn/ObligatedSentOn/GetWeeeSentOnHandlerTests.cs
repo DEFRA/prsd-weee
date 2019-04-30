@@ -61,6 +61,29 @@
         }
 
         [Fact]
+        public async void HandleAsync_GivenWeeeSentOnId_ReturnedListShouldContainOnly1Element()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var sentOnList = new List<WeeeSentOn>();
+            var operatorAddress = new AatfAddress("OpName", "OpAdd1", "OpAdd2", "OpTown", "OpCounty", "PostOp", A.Fake<Country>());
+            var siteAddress = new AatfAddress("SiteName", "SiteAdd1", "SiteAdd2", "SiteTown", "SiteCounty", "PostSite", A.Fake<Country>());
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, A.Fake<Aatf>(), A.Fake<Return>());
+            sentOnList.Add(weeeSentOn);
+
+            var weeeSentOnId = weeeSentOn.Id;
+
+            var request = new GetWeeeSentOn(aatfId, returnId, weeeSentOnId);
+
+            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).Returns(sentOnList);
+
+            var result = await handler.HandleAsync(request);
+
+            result.Count.Should().Be(1);
+        }
+
+        [Fact]
         public async void HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
         {
             var aatfId = Guid.NewGuid();
