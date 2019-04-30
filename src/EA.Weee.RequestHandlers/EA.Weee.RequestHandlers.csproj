@@ -98,13 +98,14 @@
     <Compile Include="AatfReturn\ObligatedReused\IAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddObligatedSentOnHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnOperatorSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditObligatedSentOnHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\IObligatedSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\ObligatedSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteWithOperatorHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\ISentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />

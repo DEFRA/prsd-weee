@@ -17,9 +17,6 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
@@ -79,6 +76,26 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenWeeeSentOnId_ApiShouldBeCalled()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var weeeSentOnList = new List<WeeeSentOnData>();
+            var weeeSentOn = new WeeeSentOnData();
+            weeeSentOn.SiteAddress = new AatfAddressData();
+            weeeSentOn.SiteAddressId = Guid.NewGuid();
+            weeeSentOn.WeeeSentOnId = weeeSentOnId;
+            weeeSentOnList.Add(weeeSentOn);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+
+            await controller.Index(returnId, A.Dummy<Guid>(), aatfId, weeeSentOnId, null);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(w => w.AatfId == aatfId && w.ReturnId == returnId && w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             var form = new FormCollection();
@@ -87,7 +104,7 @@
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             await controller.Index(model, form);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSite>._)).MustNotHaveHappened();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSiteWithOperator>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -95,6 +112,10 @@
         {
             var form = new FormCollection();
             var model = new SentOnCreateSiteOperatorViewModel();
+            model.OrganisationId = Guid.NewGuid();
+            model.AatfId = Guid.NewGuid();
+            model.WeeeSentOnId = Guid.NewGuid();
+            model.ReturnId = Guid.NewGuid();
             model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             var request = new EditSentOnAatfSite();
 
@@ -113,6 +134,10 @@
             var form = new FormCollection();
             var boolConversion = Convert.ToBoolean(operatorBool);
             var model = new SentOnCreateSiteOperatorViewModel();
+            model.OrganisationId = Guid.NewGuid();
+            model.AatfId = Guid.NewGuid();
+            model.WeeeSentOnId = Guid.NewGuid();
+            model.ReturnId = Guid.NewGuid();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
             model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
 
