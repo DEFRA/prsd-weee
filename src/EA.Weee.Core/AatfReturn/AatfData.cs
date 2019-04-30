@@ -23,14 +23,5 @@
         public virtual UKCompetentAuthority CompetentAuthority { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
-
-        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthority competentAuthority, AatfStatus aatfStatus)
-        {
-            this.Id = id;
-            this.Name = name;
-            this.ApprovalNumber = approvalNumber;
-            this.CompetentAuthority = competentAuthority;
-            this.AatfStatus = aatfStatus;
-        }
     }
 }
