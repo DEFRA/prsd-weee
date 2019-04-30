@@ -55,6 +55,10 @@
 
         public virtual DbSet<WeeeReusedSite> WeeeReusedSite { get; set; }
 
+        public virtual DbSet<ReturnReportOn> ReturnReportOns { get; set; }
+
+        public virtual DbSet<ReportOnQuestion> ReportOnQuestions { get; set; }
+
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Country> Countries { get; set; }

@@ -56,19 +56,19 @@
             Guid aatfId = Guid.NewGuid();
             Guid organisationId = Guid.NewGuid();
             Guid weeeSentOnId = Guid.NewGuid();
-            string operatorName = "opertator name";
+            string siteName = "site name";
             ReturnData returnData = A.Fake<ReturnData>();
 
             A.CallTo(() => returnData.ReturnOperatorData.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(returnData);
 
-            ViewResult result = await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, operatorName) as ViewResult;
+            ViewResult result = await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName) as ViewResult;
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = result.Model as ObligatedSentOnValuesCopyPasteViewModel;
             viewModel.AatfId.Should().Be(aatfId);
             viewModel.OrganisationId.Should().Be(organisationId);
             viewModel.ReturnId.Should().Be(returnId);
-            viewModel.OperatorName.Should().Be(operatorName);
+            viewModel.SiteName.Should().Be(siteName);
         }
 
         [Fact]
@@ -102,10 +102,10 @@
             Guid schemeId = Guid.NewGuid();
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
-            string operatorName = "opertator name";
+            string siteName = "site name";
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel();
-            viewModel.OperatorName = operatorName;
+            viewModel.SiteName = siteName;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = new string[1];
@@ -131,10 +131,10 @@
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
             string[] pastedValues = new string[1] { "2\n" };
-            string operatorName = "opertator name";
+            string siteName = "site name";
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel();
-            viewModel.OperatorName = operatorName;
+            viewModel.SiteName = siteName;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = pastedValues;
@@ -153,10 +153,10 @@
 
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
-            string operatorName = "opertator name";
+            string siteName = "site name";
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel();
-            viewModel.OperatorName = operatorName;
+            viewModel.SiteName = siteName;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = new string[1] { "2\n" };
@@ -175,10 +175,10 @@
 
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
-            string operatorName = "opertator name";
+            string siteName = "site name";
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel();
-            viewModel.OperatorName = operatorName;
+            viewModel.SiteName = siteName;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = new string[1];
@@ -198,10 +198,10 @@
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
             string[] pastedValues = new string[1] { "2\n" };
-            string operatorName = "opertator name";
+            string siteName = "site name";
 
             ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel();
-            viewModel.OperatorName = operatorName;
+            viewModel.SiteName = siteName;
             viewModel.ReturnId = returnId;
             viewModel.AatfId = aatfId;
             viewModel.B2bPastedValues = pastedValues;

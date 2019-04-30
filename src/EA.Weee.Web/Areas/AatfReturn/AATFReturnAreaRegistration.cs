@@ -5,8 +5,8 @@
     using Controllers;
     using Infrastructure;
     using System.Web.Mvc;
-    
-    public class AatfReturnAreaRegistration : AreaRegistration 
+
+    public class AatfReturnAreaRegistration : AreaRegistration
     {
         public override string AreaName => "AatfReturn";
 
@@ -41,6 +41,12 @@
                 url: "aatf-return/{organisationId}/select-pcs/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "SelectYourPcs" },
                 namespaces: new[] { typeof(SelectYourPcsController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfRedirect.SelectReportOptionsRouteName,
+                url: "aatf-return/{organisationId}/select-report-options/{returnId}/{action}",
+                defaults: new { action = "Index", controller = "SelectReportOptions" },
+                namespaces: new[] { typeof(SelectReportOptionsController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: AatfRedirect.AatfSchemeSelectedRoute,

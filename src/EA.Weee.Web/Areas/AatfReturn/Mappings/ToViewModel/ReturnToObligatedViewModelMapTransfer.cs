@@ -11,7 +11,7 @@
 
         public Guid SchemeId { get; set; }
 
-        public string OperatorName { get; set; }
+        public string SiteName { get; set; }
 
         public Guid AatfId { get; set; }
 
