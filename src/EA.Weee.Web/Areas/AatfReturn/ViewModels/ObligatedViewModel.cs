@@ -16,7 +16,7 @@
 
         public string SchemeName { get; set; }
 
-        public string OperatorName { get; set; }
+        public string SiteName { get; set; }
 
         public string AatfName { get; set; }
 

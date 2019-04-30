@@ -8,7 +8,7 @@
 
         public Guid AatfId { get; set; }
 
-        public String OperatorName { get; set; }
+        public String SiteName { get; set; }
 
         public Guid WeeeSentOnId {get; set; }
 

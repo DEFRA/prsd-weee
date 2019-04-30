@@ -139,6 +139,7 @@
             model.WeeeSentOnId = Guid.NewGuid();
             model.ReturnId = Guid.NewGuid();
             model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
 
             form.Add("IsOperatorTheSameAsAATF", operatorBool);
 

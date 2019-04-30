@@ -78,7 +78,7 @@
         [Fact]
         public void Map_GivenEntityIds_IdPropertiesShouldBeSet()
         {
-            var transfer = new ReturnToObligatedViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), WeeeSentOnId = Guid.NewGuid(), OperatorName = "OpName" };
+            var transfer = new ReturnToObligatedViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), SchemeId = Guid.NewGuid(), WeeeSentOnId = Guid.NewGuid(), SiteName = "SiteName" };
 
             var result = mapper.Map(transfer);
 
@@ -87,7 +87,7 @@
             result.ReturnId.Should().Be(transfer.ReturnId);
             result.SchemeId.Should().Be(transfer.SchemeId);
             result.WeeeSentOnId.Should().Be(transfer.WeeeSentOnId);
-            result.OperatorName.Should().Be(transfer.OperatorName);
+            result.SiteName.Should().Be(transfer.SiteName);
         }
 
         [Fact]
@@ -97,7 +97,7 @@
 
             var result = mapper.Map(transfer);
 
-            result.OperatorName.Should().Be(null);
+            result.SiteName.Should().Be(null);
         }
 
         [Fact]
