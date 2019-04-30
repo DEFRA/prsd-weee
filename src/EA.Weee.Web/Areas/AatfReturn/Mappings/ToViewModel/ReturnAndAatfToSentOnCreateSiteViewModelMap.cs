@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
     using System;
@@ -22,12 +23,20 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            if (source.SiteAddressData == null)
+            {
+                source.SiteAddressData = new AatfAddressData();
+            }
+
+            source.SiteAddressData.Countries = source.CountryData;
+
             var viewModel = new SentOnCreateSiteViewModel()
             {
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
-                SiteAddressData = source.SiteAddressData
+                SiteAddressData = source.SiteAddressData,
+                SiteAddressId = source.SiteAddressId
             };
 
             return viewModel;

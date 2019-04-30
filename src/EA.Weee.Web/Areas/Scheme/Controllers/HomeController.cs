@@ -186,7 +186,7 @@
                         var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
                             new AddReturn() { OrganisationId = viewModel.OrganisationId });
 
-                        return AatfRedirect.SelectPcs(viewModel.OrganisationId, aatfReturnId);
+                        return AatfRedirect.SelectReportOptions(viewModel.OrganisationId, aatfReturnId);
                     }
                 }
             }

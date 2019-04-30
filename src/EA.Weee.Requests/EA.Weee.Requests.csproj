@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
+    <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
@@ -62,9 +64,10 @@
     <Compile Include="AatfReturn\Obligated\EditAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\EditObligatedReused.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\EditSentOnAatfSiteWithOperator.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
-    <Compile Include="AatfReturn\Obligated\GetSentOnOperatorSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedBaseRequest.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />

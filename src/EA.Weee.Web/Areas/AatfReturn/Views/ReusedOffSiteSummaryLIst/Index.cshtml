@@ -7,117 +7,91 @@
     ViewBag.Title = "Reused WEEE";
 }
 
-    <section id="main-content">
-        <header class="hgroup">
-            <div>
-                <h1 class="govuk-heading-l">WEEE reused as a whole appliance</h1>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">WEEE reused as a whole appliance</h1>
+        </div>
+    </header>
+
+    <p class="govuk-body">
+        This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first
+    </p>
+
+    <div class="govuk-table">
+        <div class="govuk-grid-column-one-half" id="weee-data-entry-table">
+            <div class="govuk-grid-row govuk-table__row govuk-table__header">
+                <div class="govuk-grid-column-one-third" style="word-break:break-word">
+                    B2C (tonnes)
+                </div>
+                <div class="govuk-grid-column-one-third" style="word-break:break-word">
+                    B2B (tonnes)
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    Actions
+                </div>
             </div>
-        </header>
-
-        <p class="govuk-body">
-            This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first
-        </p>
-
-        <div class="govuk-table">
-            <div class="govuk-grid-column-one-half" id="weee-data-entry-table">
+            <div class="govuk-grid-row govuk-table__row govuk-table__cell">
+                <div class="govuk-grid-column-one-third">
+                    @Model.B2cTotal
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    @Model.B2bTotal
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    <span class="govuk-visually-hidden">Change WEEE re-used</span>@Html.RouteLink("Change", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-table govuk-grid-column-full govuk-!-padding-left-0">
+        @if (Model.Addresses.Count > 0)
+        {
+            <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
                 <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                    <div class="govuk-grid-column-one-third">
-                        B2C (tonnes)
+                    <div class="govuk-!-padding-bottom-8"></div>
+                    <div class="govuk-grid-column-one-quarter">
+                        Site name
                     </div>
-                    <div class="govuk-grid-column-one-third">
-                        B2B (tonnes)
+                    <div class="govuk-grid-column-one-half">
+                        Address
                     </div>
-                    <div class="govuk-grid-column-one-third">
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                         Actions
                     </div>
                 </div>
-                <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                    <div class="govuk-grid-column-one-third">
-                        @Model.B2cTotal
-                    </div>
-                    <div class="govuk-grid-column-one-third">
-                        @Model.B2bTotal
-                    </div>
-                    <div class="govuk-grid-column-one-third">
-                        <span class="govuk-visually-hidden">Change WEEE re-used</span>@Html.RouteLink("Change", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="govuk-grid-column-full">
-            @if (Model.Addresses.Count > 0)
-            {
-                <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-                    <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                        <div class="govuk-!-padding-bottom-8"></div>
+                @foreach (var address in Model.Addresses)
+                {
+                    <div class="govuk-grid-row govuk-table__row govuk-table__cell">
                         <div class="govuk-grid-column-one-quarter">
-                            Site Name
+                            @address.Name
                         </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                Street
-                            </div>
-                            <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                Town
-                            </div>
-                            <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                Country
-                            </div>
-                            <div class="govuk-grid-column-one-quarter">
-                                Postcode
-                            </div>
+                        <div class="govuk-grid-column-one-half" style="word-break:break-word">
+                            @address.Address
                         </div>
-                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                            Actions
+                        <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                            <span class="govuk-visually-hidden">Change the address of @address.Name</span>
+                            @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
                         </div>
                     </div>
-                    @foreach (var address in Model.Addresses)
-                    {
-                        <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                            <div class="govuk-grid-column-one-quarter">
-                                @address.Name
-                            </div>
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                    @address.Address1
-                                </div>
-                                <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                    @address.TownOrCity
-                                </div>
-                                <div class="govuk-grid-column-one-quarter right-aligned-display">
-                                    @address.CountryName
-                                </div>
-                                <div class="govuk-grid-column-one-quarter">
-                                    @address.Postcode
-                                </div>
-                            </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                                <span class="govuk-visually-hidden">Change the address of @address.Name</span>
-                                @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-  
-                <div class="govuk-!-padding-bottom-8"></div>
-
-                <p>You have not entered any reuse sites. If WEEE has been received at another site, enter the site details</p>
-
-            }
-        </div>
-
-        <div style="clear: both">
-            @{
-                var buttonText = Model.Addresses.Count > 0 ? "Add another site" : "Add a site";
-            }
-            <p>
-                @Html.RouteLink(@buttonText, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
-            </p>
-        </div>
-        @{
-            Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+                }
+            </div>
         }
-    </section>
+        else
+        {
+            <div class="govuk-!-padding-bottom-8"></div>
+            <p>You have not entered any reuse sites. If WEEE has been received at another site, enter the site details</p>
+        }
+    </div>
+    <div style="clear: both">
+        @{
+            var buttonText = Model.Addresses.Count > 0 ? "Add another site" : "Add a site";
+        }
+        <p>
+            @Html.RouteLink(@buttonText, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+        </p>
+    </div>
+    @{
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+</section>

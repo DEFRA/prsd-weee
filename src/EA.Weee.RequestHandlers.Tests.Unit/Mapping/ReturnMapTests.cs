@@ -44,7 +44,7 @@
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
             var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(), 
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -59,7 +59,7 @@
             var endTime = DateTime.Now.AddDays(1);
             var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
 
-            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow, null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow, null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -75,7 +75,8 @@
                 A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), 
                 A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator,
                 A.Fake<List<WeeeSentOnAmount>>(),
-                A.Fake<List<ReturnScheme>>());
+                A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -90,7 +91,7 @@
             var @return = GetReturn();
             var obligatedWeeeSentOn = A.Fake<List<WeeeSentOnAmount>>();
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -112,7 +113,7 @@
             };
             
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), null, nonObligated,  
-                null, null, null, null, A.Fake<List<ReturnScheme>>());
+                null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -138,7 +139,8 @@
                 A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, 
                 A.Fake<List<WeeeReusedAmount>>(), @operator,
                 A.Fake<List<WeeeSentOnAmount>>(),
-                A.Fake<List<ReturnScheme>>());
+                A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReportOnQuestion>>());
           
             var result = map.Map(source);
 
@@ -162,7 +164,7 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
                 A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
-                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
+                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
           
             var result = map.Map(source);
 
@@ -186,7 +188,7 @@
             };
             
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), 
-                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>());
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -208,7 +210,7 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
                 aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
-                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
+                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
 
@@ -223,7 +225,7 @@
         public void Map_GivenSource_ReturnSchemesShouldBeMapped()
         {
             var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReportOnQuestion>>());
 
             var result = map.Map(source);
         }

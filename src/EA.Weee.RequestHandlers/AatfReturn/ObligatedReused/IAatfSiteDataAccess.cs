@@ -15,6 +15,6 @@
 
         Task<List<WeeeReusedAmount>> GetObligatedWeeeForReturnAndAatf(Guid aatfId, Guid returnId);
 
-        Task Update(AatfAddress oldAddress, SiteAddressData newAddress, Country country);
+        Task Update(AatfAddress oldAddress, AddressData newAddress, Country country);
     }
 }
