@@ -119,7 +119,6 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
             viewModel.PossibleValues.Add(InternalUserActivity.ViewReports);
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageAatfs);
 
             if (configuration.EnableInvoicing)
             {

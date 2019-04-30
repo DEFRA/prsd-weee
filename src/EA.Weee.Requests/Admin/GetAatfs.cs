@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using Prsd.Core.Mediator;
-    public class GetAatfs : IRequest<List<AatfData>>
+    public class GetAatfs : IRequest<List<AatfDataList>>
     {
     }
 }

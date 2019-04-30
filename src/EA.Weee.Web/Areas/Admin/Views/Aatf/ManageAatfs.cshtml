@@ -6,14 +6,12 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
-    ViewBag.Title = "ManageAatfs";
+    ViewBag.Title = "Manage Aatfs";
 }
-
-<h2>ManageAatfs</h2>
 
 @section scripts{
     <script>
-        $('#idManageSchemesTable tr').click(function () {
+        $('#idManageAatfsTable tr').click(function () {
             $(this).find('td input[type=radio]').prop('checked', true);
         })
     </script>
@@ -25,6 +23,33 @@
 </header>
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    <div class="table-hr"></div>
+    <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name of Aatf</th>
+                <th class="govuk-table__header" scope="col">Approval Number</th>
+                <th class="govuk-table__header" scope="col">Appropriate Authority</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var aatf in Model.AatfDataList)
+            {
+            <tr>
+                <td class="govuk-table__cell" width="100%">@aatf.Name</td>
+                <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
+                <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
+                <td class="govuk-table__cell">@aatf.AatfStatus.DisplayName</td>
+                <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, @aatf.Id)</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
 
     @(this.WeeeGds().Submit("Continue"))
 }

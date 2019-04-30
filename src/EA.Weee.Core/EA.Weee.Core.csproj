@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
+    <Compile Include="AatfReturn\AatfDataList.cs" />
     <Compile Include="AatfReturn\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />

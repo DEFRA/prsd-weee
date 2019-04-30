@@ -4,8 +4,10 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -32,15 +34,23 @@
         [HttpGet]
         public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
         {
+            SetBreadcrumb();
+
             if (!ModelState.IsValid)
             {
-                //await SetBreadcrumb();
-                return View(new ManageAatfsViewModel { AatfListData = await GetAatfs() });
+                using (var client = apiClient())
+                {
+                    viewModel = new ManageAatfsViewModel
+                    {
+                        AatfDataList = await GetAatfs()
+                    };
+                    return View(viewModel);
+                }    
             }
-            return RedirectToAction("ViewAatf", new { Id = viewModel.Selected.Value });
+            return RedirectToAction("AddAatf", new { Id = viewModel.Selected.Value });
         }
 
-        private async Task<List<AatfData>> GetAatfs()
+        private async Task<List<AatfDataList>> GetAatfs()
         {
             using (var client = apiClient())
             {
@@ -48,9 +58,9 @@
             }
         }
 
-        private Task SetBreadcrumb()
+        private void SetBreadcrumb()
         {
-            throw new NotImplementedException();
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
         }
     }
 }
