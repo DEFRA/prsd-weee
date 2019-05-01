@@ -4,7 +4,7 @@
     using Domain.AatfReturn;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    public class AatfSchemeMap : IMap<Aatf, AatfDataList>
+    public class AatfDataListMap : IMap<Aatf, AatfDataList>
     {
         public AatfDataList Map(Aatf source)
         {
