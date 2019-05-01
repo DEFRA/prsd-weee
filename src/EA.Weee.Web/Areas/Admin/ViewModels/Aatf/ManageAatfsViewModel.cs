@@ -10,7 +10,7 @@
     {
         public List<AatfDataList> AatfDataList { get; set; }
 
-        [Required(ErrorMessage = "You must select a Aatf to manage")]
+        [Required(ErrorMessage = "You must select an Aatf to manage")]
         public Guid? Selected { get; set; }
     }
 }
