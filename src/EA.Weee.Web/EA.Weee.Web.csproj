@@ -381,6 +381,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />

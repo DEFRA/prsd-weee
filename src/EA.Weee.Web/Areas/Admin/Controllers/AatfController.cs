@@ -32,6 +32,13 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> ManageAatfs()
+        {
+            SetBreadcrumb();
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
+        }
+
+        [HttpPost]
         public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
         {
             SetBreadcrumb();
