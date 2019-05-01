@@ -30,7 +30,32 @@ function CollapsibleLinkHefSummary() {
     for (i = 0; i < schemaData.length; i++) {
         document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
     }
-    document.getElementById('collapsibleHref').innerText = "Close all";
+
+    SetcollapsibleHrefText();
+}
+
+function SetcollapsibleHrefText() {
+    var elements = document.getElementsByClassName('govuk-details');
+
+    var closedElements = [];
+
+    for (i = 0; i < elements.length; i++) {
+
+
+        var x = elements[i].open;
+
+        closedElements[i] = x;
+
+    }
+
+    var x = false;
+    console.log(closedElements);
+
+    if (new Set(closedElements).size == 1 && closedElements[0] == true) {
+        document.getElementById('collapsibleHref').innerText = "Open all";
+    } else {
+        document.getElementById('collapsibleHref').innerText = "Close all";
+    }
 }
 
 function InitialStartup() {
