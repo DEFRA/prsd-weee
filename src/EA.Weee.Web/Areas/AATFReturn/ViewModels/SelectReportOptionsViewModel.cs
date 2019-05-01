@@ -17,28 +17,21 @@
             Guid organisationId,
             Guid returnId,
             List<ReportOnQuestion> reportOnQuestions,
-            Quarter quarter,
-            QuarterWindow window,
+            ReturnData returnData,
             int year)
         {
-            Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => window, window);
-
             OrganisationId = organisationId;
             ReturnId = returnId;
             ReportOnQuestions = reportOnQuestions;
-            this.QuarterWindow = window;
-            this.quarter = quarter;
+            ReturnData = returnData;
             Year = year.ToString();
         }
-
-        protected readonly QuarterWindow QuarterWindow;
-        private readonly Quarter quarter;
-        private readonly int year;
 
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }
+
+        public ReturnData ReturnData { get; set; }
 
         public List<ReportOnQuestion> ReportOnQuestions { get; set; }
 
@@ -48,10 +41,14 @@
 
         public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
 
-        public string Quarter => quarter.Q.ToString();
+        public DateTime QuarterWindowStartDate { get; set; }
 
-        public string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
+        public DateTime QuarterWindowEndDate { get; set; }
 
-        public string Year { get; }
+        public string Quarter { get; set; }
+
+        public string Period => $"{Quarter} {QuarterWindowStartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindowEndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
+
+        public string Year { get; set; }
     }
 }

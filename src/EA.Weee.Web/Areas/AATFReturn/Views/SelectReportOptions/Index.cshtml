@@ -80,7 +80,8 @@
                 </div>
             </fieldset>
         </div>
-
+        @Html.HiddenFor(m => m.QuarterWindowEndDate)
+        @Html.HiddenFor(m => m.QuarterWindowStartDate)
         @Html.HiddenFor(m => m.Quarter)
         @Html.HiddenFor(m => m.Period)
         @Html.HiddenFor(m => m.Year)

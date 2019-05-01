@@ -16,8 +16,8 @@
         [InlineData("No")]
         public void SelectReportOptionsViewModel_GivenSelectedValueIsYesOrNo_IsValid(string selectedValue)
         {
-            var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), new Quarter(2019, QuarterType.Q1), A.Fake<QuarterWindow>(), A.Dummy<int>()) { DcfSelectedValue = selectedValue };
-
+            //var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), new Quarter(2019, QuarterType.Q1), A.Fake<QuarterWindow>(), A.Dummy<int>()) { DcfSelectedValue = selectedValue };
+            var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), A.Fake<ReturnData>(), A.Dummy<int>()) { DcfSelectedValue = selectedValue };
             var context = new ValidationContext(viewModel, null, null);
             var results = new List<ValidationResult>();
             var isValid = Validator.TryValidateObject(viewModel, context, results, true);
