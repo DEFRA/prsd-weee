@@ -14,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -47,7 +48,18 @@
 
                 var siteAddressData = await client.SendAsync(User.GetAccessToken(), request);
 
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(operatorCountryData) { ReturnId = returnId, SiteAddressData = siteAddressData, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled });
+                var operatorAddress = new AatfAddressData();
+                Guid? operatorAddressId = null;
+
+                var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, weeeSentOnId));
+                if (weeeSentOnList.Count > 0)
+                {
+                    var weeeSentOn = weeeSentOnList[0];
+                    operatorAddress = weeeSentOn.OperatorAddress;
+                    operatorAddressId = weeeSentOn.OperatorAddressId;
+                }
+
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer() { ReturnId = returnId, SiteAddressData = siteAddressData, OperatorAddressId = operatorAddressId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled, CountryData = operatorCountryData, OperatorAddressData = operatorAddress });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 
@@ -69,7 +81,7 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
-                    return AatfRedirect.ObligatedSentOn(viewModel.OperatorAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId);
+                    return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, (Guid)viewModel.WeeeSentOnId);
                 }
             }
 

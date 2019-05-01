@@ -11,6 +11,12 @@
 
         public Guid AatfId { get; set; }
 
+        public Guid? WeeeSentOnId { get; set; }
+
+        public bool Edit => (WeeeSentOnId.HasValue);
+
         public AatfAddressData SiteAddressData { get; set; }
+
+        public Guid? SiteAddressId { get; set; }
     }
 }

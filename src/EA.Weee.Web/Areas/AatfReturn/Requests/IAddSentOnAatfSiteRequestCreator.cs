@@ -4,7 +4,7 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Requests.Base;
 
-    public interface IAddSentOnAatfSiteRequestCreator : IRequestCreator<SentOnCreateSiteViewModel, AddSentOnAatfSite>
+    public interface IAddSentOnAatfSiteRequestCreator : IRequestCreator<SentOnCreateSiteViewModel, SentOnAatfSite>
     {
     }
 }
