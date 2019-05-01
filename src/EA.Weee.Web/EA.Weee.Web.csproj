@@ -303,6 +303,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteOperatorController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SentOnRemoveSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnSiteSummaryListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\CheckYourReturnController.cs" />
@@ -373,6 +374,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
@@ -845,6 +847,7 @@
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOnValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SentOnRemoveSite\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
