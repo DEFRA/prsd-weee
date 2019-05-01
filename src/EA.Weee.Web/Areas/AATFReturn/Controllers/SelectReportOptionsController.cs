@@ -67,24 +67,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectReportOptionsViewModel viewModel)
         {
-            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
-            {
-                foreach (var option in viewModel.SelectedOptions)
-                {
-                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
-                }
-            }
-
-            if (ModelState.IsValid)
-            {
-                await ValidateResult(viewModel);
-            }
-            else
-            {
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
-
-                return View(viewModel);
-            }
+            SetSelected(viewModel);
 
             if (ModelState.IsValid)
             {
@@ -106,6 +89,17 @@
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
 
             return View(viewModel);
+        }
+
+        private void SetSelected(SelectReportOptionsViewModel viewModel)
+        {
+            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+            {
+                foreach (var option in viewModel.SelectedOptions)
+                {
+                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
+                }
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
