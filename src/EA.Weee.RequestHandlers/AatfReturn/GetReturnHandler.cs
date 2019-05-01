@@ -15,7 +15,7 @@
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
-    using ReportOnQuestion = Domain.AatfReturn.ReportOnQuestion;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     internal class GetReturnHandler : IRequestHandler<GetReturn, ReturnData>
     {
@@ -80,8 +80,6 @@
             
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
-            var reportOnQuestionList = await genericDataAccess.GetAll<ReportOnQuestion>();
-
             var returnQuarterWindow = new ReturnQuarterWindow(@return, 
                 quarterWindow, 
                 aatfList, 
@@ -90,8 +88,7 @@
                 returnObligatedReusedValues,
                 @return.Operator,
                 sentOn,
-                returnSchemeList,
-                reportOnQuestionList);
+                returnSchemeList);
 
             var result = mapper.Map(returnQuarterWindow);
 
