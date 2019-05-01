@@ -1,4 +1,4 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
@@ -95,56 +95,56 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-    <details class="govuk-details collapsible-font-size" open="open">
-        <summary id="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false" onclick="return CollapsibleLinkHefSummary();">
-            <span id="unset-padding" class="govuk-details__summary-text" onclick="return CollapsibleLinkHefSummary();">
-                Breakdown by PCS
-            </span>
-        </summary>
-        <div class="govuk-details__text">
-            <div class="govuk-!-padding-bottom-4"></div>
+                <details class="govuk-details collapsible-font-size" open="open">
+                    <summary id="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false" onclick="return CollapsibleLinkHefSummary();">
+                        <span id="unset-padding" class="govuk-details__summary-text" onclick="return CollapsibleLinkHefSummary();">
+                            Breakdown by PCS
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <div class="govuk-!-padding-bottom-4"></div>
 
-            <div class="collapsible-govuk-grid">
-                <div class="govuk-grid-row govuk-body collapsible-font-size">
-                    <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-two-thirds">
-                            <strong>PCS Name</strong>
+                        <div class="collapsible-govuk-grid">
+                            <div class="govuk-grid-row govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        <strong>PCS Name</strong>
+                                    </div>
+
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        <strong>Approval No</strong>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @foreach (var pcsdata in aatf.SchemeData)
+                            {
+                                <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                    <div class="govuk-grid-column-one-half">
+                                        <div class="govuk-grid-column-two-thirds">
+                                            @pcsdata.Scheme.Name
+                                        </div>
+
+                                        <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                            @pcsdata.ApprovalName
+                                        </div>
+                                    </div>
+                                    <div class="govuk-grid-column-one-half">
+                                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                            @pcsdata.Received.B2C
+                                        </div>
+                                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                            @pcsdata.Received.B2B
+                                        </div>
+                                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                            @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
-
-                        <div class="govuk-grid-column-one-third collapsible-padding-right">
-                            <strong>Approval No</strong>
-                        </div>
-
                     </div>
-                </div>
-                @foreach (var pcsdata in aatf.SchemeData)
-                {
-                    <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-two-thirds">
-                                @pcsdata.Scheme.Name
-                            </div>
-
-                            <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                @pcsdata.ApprovalName
-                            </div>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2C
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2B
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </details>
+                </details>
             }
 
             <div class="govuk-grid-row">

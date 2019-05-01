@@ -1,8 +1,12 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
+
     public class WeeeSentOnSummaryListData
     {
         public ObligatedCategoryValue Tonnages { get; set; }
+
+        public virtual Guid WeeeSentOnId { get; set; }
 
         public virtual AatfAddressData OperatorAddress { get; set; }
 

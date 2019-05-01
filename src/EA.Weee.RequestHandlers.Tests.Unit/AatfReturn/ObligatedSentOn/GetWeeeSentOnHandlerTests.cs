@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
@@ -54,19 +55,51 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            await handler.HandleAsync(new GetWeeeSentOn(aatfId, returnId));
+            await handler.HandleAsync(new GetWeeeSentOn(aatfId, returnId, null));
 
             A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
+        public async void HandleAsync_GivenWeeeSentOnId_ReturnedListShouldContainOnly1Element()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var sentOnList = new List<WeeeSentOn>();
+            var operatorAddress = new AatfAddress("OpName", "OpAdd1", "OpAdd2", "OpTown", "OpCounty", "PostOp", A.Fake<Country>());
+            var siteAddress = new AatfAddress("SiteName", "SiteAdd1", "SiteAdd2", "SiteTown", "SiteCounty", "PostSite", A.Fake<Country>());
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, A.Fake<Aatf>(), A.Fake<Return>());
+            sentOnList.Add(weeeSentOn);
+
+            var weeeSentOnId = weeeSentOn.Id;
+
+            var request = new GetWeeeSentOn(aatfId, returnId, weeeSentOnId);
+
+            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).Returns(sentOnList);
+
+            var result = await handler.HandleAsync(request);
+
+            result.Count.Should().Be(1);
+        }
+
+        [Fact]
         public async void HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
         {
-            var sentOnList = A.Fake<List<WeeeSentOn>>();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            
+            var sentOnList = new List<WeeeSentOn>();
+            var operatorAddress = new AatfAddress("OpName", "OpAdd1", "OpAdd2", "OpTown", "OpCounty", "PostOp", A.Fake<Country>());
+            var siteAddress = new AatfAddress("SiteName", "SiteAdd1", "SiteAdd2", "SiteTown", "SiteCounty", "PostSite", A.Fake<Country>());
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, A.Fake<Aatf>(), A.Fake<Return>());
+            sentOnList.Add(weeeSentOn);
 
-            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(A<Guid>._, A<Guid>._)).Returns(sentOnList);
+            var request = new GetWeeeSentOn(aatfId, returnId, null);
 
-            await handler.HandleAsync(A.Dummy<GetWeeeSentOn>());
+            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).Returns(sentOnList);
+
+            await handler.HandleAsync(request);
 
             for (var i = 0; i < sentOnList.Count; i++)
             {

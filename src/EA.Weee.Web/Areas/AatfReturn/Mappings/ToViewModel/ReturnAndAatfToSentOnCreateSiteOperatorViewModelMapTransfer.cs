@@ -16,16 +16,18 @@
 
         public Guid WeeeSentOnId;
 
+        public Guid? OperatorAddressId;
+
         public bool? JavascriptDisabled;
 
-        public OperatorAddressData OperatorAddressData;
+        public AatfAddressData OperatorAddressData;
 
         public AatfAddressData SiteAddressData;
 
-        public ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer(IList<Core.Shared.CountryData> countryData)
+        public IList<Core.Shared.CountryData> CountryData;
+
+        public ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer()
         {
-            this.OperatorAddressData = new OperatorAddressData();
-            OperatorAddressData.Countries = countryData;
         }
     }
 }
