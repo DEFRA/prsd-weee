@@ -28,7 +28,7 @@
     using FluentValidation.Results;
     using Xunit;
     using ValidationResult = FluentValidation.Results.ValidationResult;
- 
+
     public class SelectReportOptionsControllerTests
     {
         private readonly IWeeeClient weeeClient;
@@ -112,6 +112,7 @@
         {
             var model = new SelectReportOptionsViewModel();
             model.SelectedOptions = new List<int>() { 1 };
+            model.ReportOnQuestions = new List<ReportOnQuestion>() { new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), null) };
             var request = new AddReturnReportOn();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -178,7 +179,7 @@
         public async void IndexPost_GivenValidViewModel_ValidatorShouldBeCalled()
         {
             var model = new SelectReportOptionsViewModel();
-            
+
             await controller.Index(model);
 
             A.CallTo(() => validator.Validate(model)).MustHaveHappened(Repeated.Exactly.Once);
@@ -190,7 +191,7 @@
             var model = new SelectReportOptionsViewModel();
 
             controller.ModelState.AddModelError("error", "error");
-            
+
             await controller.Index(model);
 
             A.CallTo(() => validator.Validate(model)).MustNotHaveHappened();

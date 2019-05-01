@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
@@ -65,9 +67,23 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectReportOptionsViewModel viewModel)
         {
+            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+            {
+                foreach (var option in viewModel.SelectedOptions)
+                {
+                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 await ValidateResult(viewModel);
+            }
+            else
+            {
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
             }
 
             if (ModelState.IsValid)
@@ -81,6 +97,8 @@
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
                 }
+
+                ModelState.Clear();
 
                 return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
             }

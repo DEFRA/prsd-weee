@@ -24,11 +24,6 @@
                 Quarter = source.ReturnData.Quarter.Q.ToString()
             };
 
-            foreach (var reportOnQuestion in model.ReportOnQuestions)
-            {
-                reportOnQuestion.Selected = true;
-            }
-
             return model;
         }
     }
