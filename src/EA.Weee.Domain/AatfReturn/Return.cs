@@ -4,6 +4,7 @@
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using User;
 
     public partial class Return : Entity
     {
@@ -29,5 +30,13 @@
         public virtual ReturnStatus ReturnStatus { get; private set; }
 
         public virtual Operator Operator { get; private set; }
+
+        public virtual DateTime CreateDate { get; private set; }
+
+        public virtual DateTime SubmittedDate { get; private set; }
+
+        public virtual User CreatedBy { get; private set; }
+
+        public virtual User SubmittedBy { get; private set; }
     }
 }
