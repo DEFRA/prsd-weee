@@ -2,8 +2,12 @@
 {
     using System;
 
-    public class EditSentOnAatfSite : AddSentOnAatfSite
+    public class EditSentOnAatfSite : SentOnAatfSite
     {
+        public Guid SiteAddressId { get; set; }
+
+        public Guid OperatorAddressId { get; set; }
+
         public Guid WeeeSentOnId { get; set; }
     }
 }

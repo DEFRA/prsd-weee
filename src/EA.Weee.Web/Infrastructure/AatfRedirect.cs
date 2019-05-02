@@ -6,7 +6,7 @@
 
     public static class AatfRedirect
     {
-        public static string AatfInitialSelect = "aatf-initial-select";
+        public static string SelectPcsRouteName = "aatf-select-pcs";
         public static string NonObligatedRouteName = "aatf-non-obligated";
         public static string NonObligatedDcfRouteName = "aatf-non-obligated-dcf";
         public static string CheckReturnRouteName = "aatf-check";
@@ -14,6 +14,7 @@
         public static string AatfSelectedRoute = "aatf-selected";
         public static string AatfSchemeSelectedRoute = "aatf-scheme-selected";
         public static string AatfOrganisationSelectedRoute = "aatf-selected-organisation";
+        public static string SelectReportOptionsRouteName = "aatf-report-options";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -22,12 +23,12 @@
 
         public static RedirectToRouteResult SelectPcs(Guid organsationId, Guid returnId)
         {
-            return new RedirectToRouteResult(AatfInitialSelect, new RouteValueDictionary(new { controller = "SelectYourPcs", action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult SelectReportOptions(Guid organsationId, Guid returnId)
         {
-            return new RedirectToRouteResult(AatfInitialSelect, new RouteValueDictionary(new { controller = "SelectReportOptions", action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectReportOptionsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult ReusedOffSite(Guid returnId, Guid aatfId, Guid organisationId)
@@ -45,9 +46,9 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ReusedOffSiteCreateSite", action = "Edit", returnId = returnId, aatfId = aatfId, organisationId = organisationId, siteId = siteId }));
         }
 
-        public static RedirectToRouteResult ObligatedSentOn(string operatorName, Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId)
+        public static RedirectToRouteResult ObligatedSentOn(string siteName, Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId)
         {
-            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedSentOn", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId, weeeSentOnId = weeeSentOnId, operatorName = operatorName }));
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedSentOn", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId, weeeSentOnId = weeeSentOnId, siteName = siteName }));
         }
 
         public static RedirectToRouteResult SentOnCreateSiteOperator(Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId)
@@ -57,7 +58,7 @@
 
         public static RedirectToRouteResult SentOnCreateSite(Guid returnId, Guid aatfId)
         {
-            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnCreateSite", action = "Index", returnId = returnId, aatfId = aatfId}));
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnCreateSite", action = "Index", returnId = returnId, aatfId = aatfId }));
         }
 
         public static RedirectToRouteResult SentOnSummaryList(Guid organisationId, Guid returnId, Guid aatfId)

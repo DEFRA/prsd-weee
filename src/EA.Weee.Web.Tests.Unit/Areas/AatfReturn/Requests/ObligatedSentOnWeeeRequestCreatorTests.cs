@@ -140,5 +140,16 @@
 
             request.Should().BeOfType<AddObligatedSentOn>();
         }
+
+        [Fact]
+        public void ViewModelToRequest_GivenEditViewModel_RequestTypeShouldBeEdit()
+        {
+            var model = new ObligatedViewModel(calculator);
+            model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
+
+            var request = requestCreator.ViewModelToRequest(model);
+
+            request.Should().BeOfType<EditObligatedSentOn>();
+        }
     }
 }

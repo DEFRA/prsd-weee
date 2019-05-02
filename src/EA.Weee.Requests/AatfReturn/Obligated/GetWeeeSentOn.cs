@@ -11,10 +11,13 @@
 
         public Guid ReturnId { get; set; }
 
-        public GetWeeeSentOn(Guid aatfId, Guid returnId)
+        public Guid? WeeeSentOnId { get; set; }
+
+        public GetWeeeSentOn(Guid aatfId, Guid returnId, Guid? weeeSentOnId)
         {
             AatfId = aatfId;
             ReturnId = returnId;
+            WeeeSentOnId = weeeSentOnId;
         }
     }
 }

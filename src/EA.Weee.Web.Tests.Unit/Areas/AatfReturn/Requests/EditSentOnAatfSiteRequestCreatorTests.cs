@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
@@ -31,6 +32,22 @@
         }
 
         [Fact]
+        public void ViewModelToRequest_GivenValidViewModelSetToEdit_RequestShouldBeOfTypeEditSentOnAatfSite()
+        {
+            var viewModel = new SentOnCreateSiteOperatorViewModel()
+            {
+                WeeeSentOnId = Guid.NewGuid(),
+                OperatorAddressData = A.Fake<OperatorAddressData>(),
+                OperatorAddressId = Guid.NewGuid(),
+                OperatorAddressFound = true
+            };
+
+            var request = editRequestCreator.ViewModelToRequest(viewModel);
+
+            request.Should().BeOfType(typeof(EditSentOnAatfSite));
+        }
+
+        [Fact]
         public void ViewModelToRequested_GivenValidViewModel_RequestShouldBeMapped()
         {
             var organisationId = Guid.NewGuid();
@@ -50,7 +67,7 @@
                 OperatorAddressData = operatorAddress
             };
 
-            var request = editRequestCreator.ViewModelToRequest(viewModel);
+            var request = editRequestCreator.ViewModelToRequest(viewModel) as EditSentOnAatfSiteWithOperator;
 
             request.WeeeSentOnId.Should().Be(weeeSentOnId);
             request.ReturnId.Should().Be(returnId);

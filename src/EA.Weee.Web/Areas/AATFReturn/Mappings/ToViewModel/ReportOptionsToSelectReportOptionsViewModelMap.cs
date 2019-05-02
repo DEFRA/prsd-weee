@@ -10,8 +10,19 @@
         {
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReportOnQuestions, source.ReportOnQuestions);
+            Guard.ArgumentNotNull(() => source.ReturnData, source.ReturnData);
 
-            return new SelectReportOptionsViewModel(source.OrganisationId, source.ReturnId, source.ReportOnQuestions);
+            return new SelectReportOptionsViewModel(
+                source.OrganisationId,
+                source.ReturnId,
+                source.ReportOnQuestions,
+                source.ReturnData,
+                source.ReturnData.Quarter.Year)
+            {
+                QuarterWindowEndDate = source.ReturnData.QuarterWindow.EndDate,
+                QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
+                Quarter = source.ReturnData.Quarter.Q.ToString()
+            };
         }
     }
 }

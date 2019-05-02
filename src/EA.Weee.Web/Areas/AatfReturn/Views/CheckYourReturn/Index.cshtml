@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    ViewBag.Title = "CheckYourReturnView";
+    ViewBag.Title = "Check your AATF return for " + Model.ReturnOperator.OperatorName;
 }
 
 <section id="main-content">
@@ -95,7 +95,7 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-                <details class="govuk-details collapsible-font-size" open="open" >
+                <details class="govuk-details collapsible-font-size" open="open">
                     <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content">
                         <span class="govuk-details__summary-text">
                             Breakdown by PCS
@@ -105,11 +105,11 @@
                         <div class="govuk-grid-row govuk-body collapsible-font-size">
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-grid-column-two-thirds">
-                                    <strong>PCS Name</strong>
+                                    <strong>PCS name</strong>
                                 </div>
 
                                 <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                    <strong>Approval No</strong>
+                                    <strong>Approval number</strong>
                                 </div>
 
                             </div>

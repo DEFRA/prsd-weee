@@ -11,5 +11,7 @@
         public Guid ReturnId { get; set; }
 
         public List<ReportOnQuestion> ReportOnQuestions { get; set; }
+
+        public ReturnData ReturnData { get; set; }
     }
 }

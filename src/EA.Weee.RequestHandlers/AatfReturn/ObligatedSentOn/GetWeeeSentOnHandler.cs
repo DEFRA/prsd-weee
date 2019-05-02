@@ -42,12 +42,27 @@
 
                 var weeeSentOnData = new WeeeSentOnData()
                 {
-                    OperatorAddress = addressMapper.Map(item.OperatorAddress),
                     SiteAddress = addressMapper.Map(item.SiteAddress),
-                    Tonnages = weeeSentOnObligatedData
+                    Tonnages = weeeSentOnObligatedData,
+                    WeeeSentOnId = item.Id,
+                    SiteAddressId = item.SiteAddress.Id
                 };
 
+                if (item.OperatorAddress != null)
+                {
+                    weeeSentOnData.OperatorAddress = addressMapper.Map(item.OperatorAddress);
+                    weeeSentOnData.OperatorAddressId = item.OperatorAddress.Id;
+                }
+
                 weeeSentOnList.Add(weeeSentOnData);
+            }
+
+            if (message.WeeeSentOnId != null)
+            {
+                var weeeSentOnListFiltered = new List<WeeeSentOnData>();
+                var weeeSentOnSelected = weeeSentOnList.Where(w => w.WeeeSentOnId == message.WeeeSentOnId).Select(w => w).SingleOrDefault();
+                weeeSentOnListFiltered.Add(weeeSentOnSelected);
+                return weeeSentOnListFiltered;
             }
 
             return weeeSentOnList;

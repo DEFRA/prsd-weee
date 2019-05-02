@@ -37,7 +37,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string operatorName)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName)
         {
             using (var client = apiClient())
             {
@@ -49,7 +49,7 @@
                     ReturnId = returnId,
                     ReturnData = @return,
                     AatfId = aatfId,
-                    OperatorName = operatorName,
+                    SiteName = siteName,
                     WeeeSentOnId = weeeSentOnId,
                     PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
