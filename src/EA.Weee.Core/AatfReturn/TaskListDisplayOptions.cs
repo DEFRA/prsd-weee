@@ -2,10 +2,14 @@
 {
     public class TaskListDisplayOptions
     {
-        public bool ObligatedReceived { get; set; }
-        public bool ObligatedSentOn { get; set; }
-        public bool ObligatedReused { get; set; }
-        public bool NonObligated { get; set; }
-        public bool NonObligatedDcf { get; set; }
+        public bool DisplayObligatedReceived { get; set; }
+
+        public bool DisplayObligatedSentOn { get; set; }
+
+        public bool DisplayObligatedReused { get; set; }
+
+        public bool DisplayNonObligated { get; set; }
+
+        public bool DisplayNonObligatedDcf { get; set; }
     }
 }
