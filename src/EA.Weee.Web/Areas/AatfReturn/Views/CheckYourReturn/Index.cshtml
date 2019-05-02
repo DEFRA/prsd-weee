@@ -215,30 +215,28 @@
 
     <div class="govuk-!-padding-bottom-4"></div>
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">&nbsp;</div>
-        <div class="govuk-grid-column-one-half">
-            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+        <div class="govuk-grid-column-two-thirds">&nbsp;</div>
+            <div class="govuk-grid-column-one-third">
                 <p>
                     <strong>Total (tonnes)</strong>
                 </p>
-            </div>
-        </div>
+            </div>  
     </div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-two-thirds">
             <p>
                 <strong>WEEE received (tonnes)</strong>
             </p>
         </div>
-        <div class="govuk-grid-column-one-half">
-            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+        <div class="govuk-grid-column-one-third">
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                 <p>
                     @Model.NonObligatedTonnageTotal
                 </p>
             </div>
 
-            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                 <p>
                     @Html.NavigationRouteLink("Change", "Change non obligated", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
                 </p>
@@ -247,18 +245,18 @@
     </div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-two-thirds">
             <p>
                 <strong>WEEE retained by a DCF (tonnes)</strong>
             </p>
         </div>
-        <div class="govuk-grid-column-one-half">
-            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+        <div class="govuk-grid-column-one-third">
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                 <p>
                     @Model.NonObligatedTonnageTotalDcf
                 </p>
             </div>
-            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                 <p>
                     @Html.NavigationRouteLink("Change", "Change non obligated DCF", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
                 </p>
