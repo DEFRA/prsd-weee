@@ -23,12 +23,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel> mapper;
 
-        public SentOnRemoveSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public SentOnRemoveSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -42,6 +44,16 @@
                 var siteAddress = GenerateAddress(weeeSentOn.SiteAddress);
                 var operatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
 
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
+                {
+                    ReturnId = returnId,
+                    AatfId = aatfId,
+                    OrganisationId = organisationId,
+                    WeeeSentOn = weeeSentOn,
+                    SiteAddress = siteAddress,
+                    OperatorAddress = operatorAddress
+                });
+                /*
                 var model = new SentOnRemoveSiteViewModel()
                 {
                     WeeeSentOn = weeeSentOn,
@@ -66,10 +78,10 @@
                         model.TonnageB2C += category.B2C;
                     }
                 }
-
+                */
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-                return View(model);
+                return View(viewModel);
             }
         }
 
