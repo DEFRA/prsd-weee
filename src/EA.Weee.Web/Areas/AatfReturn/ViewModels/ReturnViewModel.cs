@@ -44,6 +44,8 @@
 
         public OperatorData ReturnOperator { get; set; }
 
+        public TaskListDisplayOptions ReportOnDisplayOptions { get; set; }
+
         public string SchemeName { get; set; }
 
         public string ApprovalNumber { get; set; }
