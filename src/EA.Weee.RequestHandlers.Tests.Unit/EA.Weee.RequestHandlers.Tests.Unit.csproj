@@ -116,6 +116,7 @@
     <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnHandlerTests.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTestAccess.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ReturnHelper.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />

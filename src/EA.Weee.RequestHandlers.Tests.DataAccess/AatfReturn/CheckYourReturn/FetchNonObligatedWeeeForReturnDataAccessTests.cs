@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.User;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -35,7 +36,7 @@
                 var domainHelper = new DomainHelper(database.WeeeContext);
                 var context = A.Fake<WeeeContext>();
 
-                var @return = CreateReturn();
+                var @return = CreateReturn(database);
 
                 var returnDataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -78,13 +79,13 @@
             }
         }
 
-        private Return CreateReturn()
+        private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created);
+            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
         }
     }
 }

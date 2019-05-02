@@ -119,7 +119,7 @@
         [Fact]
         public async Task HandleAsync_GivenReturn_QuarterWindowShouldBeRetrieved()
         {
-            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());
+            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>(), "id");
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
 
@@ -191,7 +191,7 @@
         [Fact]
         public async Task HandleAsync_GivenReturn_MapperShouldBeCalled()
         {
-            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>());
+            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), A.Fake<ReturnStatus>(), "id");
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue);
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();
