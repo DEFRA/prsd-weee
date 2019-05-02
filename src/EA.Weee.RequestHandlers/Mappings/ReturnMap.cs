@@ -31,6 +31,7 @@
                 QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate),
                 ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, source.Return.Operator.Organisation.Id),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(), // CREATE UNIT TEST TO TEST THIS PROPERTY IS SET AND MAPPED
+                ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList()
             };
 
             if (source.Aatfs != null)
