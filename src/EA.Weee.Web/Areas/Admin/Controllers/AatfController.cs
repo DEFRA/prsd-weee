@@ -39,6 +39,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
         {
             SetBreadcrumb();
@@ -56,7 +57,7 @@
             }
             else
             {
-                return RedirectToAction("AddAatf", new { Id = viewModel.Selected.Value });
+                return RedirectToAction("AATFdetails", new { Id = viewModel.Selected.Value });
             }           
         }
 

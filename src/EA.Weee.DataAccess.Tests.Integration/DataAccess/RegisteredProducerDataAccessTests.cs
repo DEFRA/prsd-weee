@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.DataAccess
 {
-    using Weee.Tests.Core.Model;
     using FakeItEasy;
     using Weee.DataAccess.DataAccess;
+    using Weee.Tests.Core.Model;
     using Xunit;
 
     public class RegisteredProducerDataAccessTests
