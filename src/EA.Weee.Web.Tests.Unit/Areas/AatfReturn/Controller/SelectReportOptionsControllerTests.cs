@@ -28,7 +28,7 @@
     using FluentValidation.Results;
     using Xunit;
     using ValidationResult = FluentValidation.Results.ValidationResult;
- 
+
     public class SelectReportOptionsControllerTests
     {
         private readonly IWeeeClient weeeClient;
@@ -110,8 +110,8 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new SelectReportOptionsViewModel();
-            model.SelectedOptions = new List<int>() { 1 };
+            var model = CreateSubmittedViewModel();
+            model.SelectedOptions.Add(1);
             var request = new AddReturnReportOn();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -160,40 +160,48 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ValidatorShouldReturnAnInvalidResult()
-        {
-            var result = new ValidationResult();
-            result.Errors.Add(new ValidationFailure("property", "error"));
-
-            A.CallTo(() => validator.Validate(A<SelectReportOptionsViewModel>._)).Returns(result);
-
-            await controller.Index(A.Fake<SelectReportOptionsViewModel>());
-
-            controller.ModelState.IsValid.Should().BeFalse();
-            controller.ModelState.Should().ContainKey("property");
-            controller.ModelState.Count(c => c.Value.Errors.Any(d => d.ErrorMessage == "error")).Should().Be(1);
-        }
-
-        [Fact]
-        public async void IndexPost_GivenValidViewModel_ValidatorShouldBeCalled()
-        {
-            var model = new SelectReportOptionsViewModel();
-            
-            await controller.Index(model);
-
-            A.CallTo(() => validator.Validate(model)).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
         public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
         {
             var model = new SelectReportOptionsViewModel();
 
             controller.ModelState.AddModelError("error", "error");
-            
+
             await controller.Index(model);
 
             A.CallTo(() => validator.Validate(model)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void SetSelected_OptionsSelected_ViewModelQuestionsUpdate()
+        {
+            var model = CreateSubmittedViewModel();
+            var selectionOptions = new List<int>() { 1, 2, 3, 4 };
+            model.SelectedOptions.AddRange(selectionOptions);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.Index(model) as ViewResult;
+
+            var outputModel = result.Model as SelectReportOptionsViewModel;
+
+            foreach (var selectedOption in selectionOptions)
+            {
+                model.ReportOnQuestions.FirstOrDefault(r => r.Id == selectedOption).Selected.Should().BeTrue();
+            }
+        }
+
+        private static SelectReportOptionsViewModel CreateSubmittedViewModel()
+        {
+            var model = new SelectReportOptionsViewModel();
+            model.SelectedOptions = new List<int>();
+            model.ReportOnQuestions = new List<ReportOnQuestion>();
+
+            for (var i = 0; i < 5; i++)
+            {
+                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+            }
+
+            return model;
         }
     }
 }

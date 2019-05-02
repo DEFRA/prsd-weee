@@ -6,7 +6,10 @@
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using FluentValidation.Attributes;
+    using Validation;
 
+    [Validator(typeof(SelectReportOptionsViewModelValidator))]
     public class SelectReportOptionsViewModel
     {
         public SelectReportOptionsViewModel()
