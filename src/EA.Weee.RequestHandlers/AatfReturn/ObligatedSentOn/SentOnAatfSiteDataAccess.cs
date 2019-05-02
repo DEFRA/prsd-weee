@@ -45,5 +45,12 @@
         {
             return await context.WeeeSentOn.Where(w => w.AatfId == aatfId && w.ReturnId == returnId).ToListAsync();
         }
+
+        public Task UpdateWeeeSentOnAsRemoved(WeeeSentOn weeeSentOn)
+        {
+            weeeSentOn.RemoveWeeeSentOn();
+
+            return context.SaveChangesAsync();
+        }
     }
 }

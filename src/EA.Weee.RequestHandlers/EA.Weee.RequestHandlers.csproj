@@ -103,6 +103,7 @@
     <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\IObligatedSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\ObligatedSentOnDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\RemoveWeeeSentOnHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteWithOperatorHandler.cs" />
