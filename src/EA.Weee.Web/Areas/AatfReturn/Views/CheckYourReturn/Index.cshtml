@@ -42,7 +42,7 @@
     </span>
 
     <div class="govuk-table govuk-grid-column-full">
-    <div class="govuk-grid-row govuk-table__line"></div>
+        <div class="govuk-grid-row govuk-table__line"></div>
 
         @foreach (var aatf in Model.AatfsData)
         {
@@ -112,36 +112,35 @@
                                     <strong>Approval No</strong>
                                 </div>
 
-                    </div>
-                </div>
-                @foreach (var pcsdata in aatf.SchemeData)
-                {
-                    <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-two-thirds">
-                                @pcsdata.Scheme.Name
                             </div>
+                        </div>
+                        @foreach (var pcsdata in aatf.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        @pcsdata.Scheme.Name
+                                    </div>
 
-                            <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                @pcsdata.ApprovalName
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        @pcsdata.ApprovalName
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2C
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2B
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </details>
+                        }
+
+                </details>
             }
 
             <div class="govuk-grid-row">
@@ -177,7 +176,7 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-row govuk-table__line">
+            <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <strong>Reused as a whole appliance</strong>
                 </div>
@@ -206,6 +205,7 @@
                     </div>
                 </div>
             </div>
+            <div class="govuk-grid-row govuk-table__line"></div>
         }
 
     </div>
