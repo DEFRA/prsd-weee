@@ -13,6 +13,8 @@
 
         public Guid AatfId { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         public WeeeSentOnData WeeeSentOn { get; set; }
 
         public string SiteAddress { get; set; }

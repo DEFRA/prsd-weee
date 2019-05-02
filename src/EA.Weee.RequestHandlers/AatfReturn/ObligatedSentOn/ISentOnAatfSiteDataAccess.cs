@@ -16,5 +16,7 @@
         Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
 
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
+
+        Task UpdateWeeeSentOnAsRemoved(WeeeSentOn weeeSentOn);
     }
 }

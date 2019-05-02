@@ -45,6 +45,9 @@
                 var model = new SentOnRemoveSiteViewModel()
                 {
                     WeeeSentOn = weeeSentOn,
+                    OrganisationId = organisationId,
+                    ReturnId = returnId,
+                    AatfId = aatfId,
                     SiteAddress = siteAddress,
                     OperatorAddress = operatorAddress,
                     TonnageB2B = 0.000m,
@@ -72,10 +75,23 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnSiteSummaryListViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SentOnRemoveSiteViewModel viewModel)
         {
-            return await Task.Run<ActionResult>(() =>
-                RedirectToAction("Index", "SentOnSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    if (viewModel.SelectedValue == "Yes")
+                    {
+                        var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId));
+                    }
+
+                    return await Task.Run<ActionResult>(() =>
+                        RedirectToAction("Index", "SentOnSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+                }
+            }
+
+            return View(viewModel);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
