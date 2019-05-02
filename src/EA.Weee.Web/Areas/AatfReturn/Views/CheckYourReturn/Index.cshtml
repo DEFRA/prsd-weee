@@ -37,24 +37,23 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
 
-    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size ">
         <a href="#" id="collapsibleHref" onclick="return CollapsibleLinkHref();">Close all</a>
     </span>
 
     <div class="govuk-table govuk-grid-column-full">
+        <div class="govuk-grid-row govuk-table__line"></div>
 
         @foreach (var aatf in Model.AatfsData)
         {
-            <div class="govuk-grid-row govuk-table__row govuk-table__cell">
+            <div class="govuk-grid-row govuk-table__row govuk-table__header--no-line">
                 <div class="govuk-grid-column-one-quarter">
-                    @aatf.Aatf.Name
+                    <h1 class="govuk-heading-m">@aatf.Aatf.Name</h1>
                 </div>
                 <div class="govuk-grid-column-one-quarter">
-                    @aatf.Aatf.ApprovalNumber
+                    <h1 class="govuk-heading-m">@aatf.Aatf.ApprovalNumber</h1>
                 </div>
             </div>
-
-            <div class="govuk-!-padding-bottom-4"></div>
 
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-row">
@@ -106,43 +105,42 @@
                         <div class="govuk-grid-row govuk-body collapsible-font-size">
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-grid-column-two-thirds">
-                                    <strong>PCS name</strong>
+                                    <strong>PCS Name</strong>
                                 </div>
 
                                 <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                    <strong>Approval number</strong>
+                                    <strong>Approval No</strong>
                                 </div>
 
-                    </div>
-                </div>
-                @foreach (var pcsdata in aatf.SchemeData)
-                {
-                    <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-two-thirds">
-                                @pcsdata.Scheme.Name
                             </div>
+                        </div>
+                        @foreach (var pcsdata in aatf.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        @pcsdata.Scheme.Name
+                                    </div>
 
-                            <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                @pcsdata.ApprovalName
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        @pcsdata.ApprovalName
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2C
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @pcsdata.Received.B2B
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </details>
+                        }
+
+                </details>
             }
 
             <div class="govuk-grid-row">
@@ -207,12 +205,13 @@
                     </div>
                 </div>
             </div>
+            <div class="govuk-grid-row govuk-table__line"></div>
         }
 
     </div>
 
-    <div class="govuk-!-padding-bottom-2 collapsible-padding-right"></div>
-    <h2 class="govuk-heading-m govuk-table__cell">Non-obligated WEEE</h2>
+
+    <h2 class="govuk-heading-m">Non-obligated WEEE</h2>
 
     <div class="govuk-!-padding-bottom-4"></div>
     <div class="govuk-grid-row">
