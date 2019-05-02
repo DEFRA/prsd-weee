@@ -52,7 +52,7 @@
 
         <br />*@
     <div class="govuk-table govuk-grid-column-full">
-        <div class="govuk-grid-row govuk-table__header weee-tonnage-top-aligned-display">
+        <div class="govuk-grid-row govuk-table__header weee-tonnage-top-aligned-display" style="background-color:#D0D0D0">
             <div class="govuk-grid-column-one-third">
                 <div class="govuk-grid-column-one-third" style="width:150px;">
                     Name of Aatf
@@ -75,7 +75,7 @@
         </div>
         @foreach (var aatf in Model.AatfDataList)
         {
-        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display" style="background-color:#F8F8F8">
             <div class="govuk-grid-column-one-third">
                 <div class="govuk-grid-column-two-thirds">
                     @aatf.Name
@@ -98,8 +98,6 @@
         </div>
 
         }
-        
-
     </div>
 
     @(this.WeeeGds().Submit("Continue"))
