@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -21,14 +24,16 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly SentOnRemoveSiteController controller;
+        private readonly IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel> mapper;
 
         public SentOnRemoveSiteControllerTests()
         {
             this.apiClient = A.Fake<Func<IWeeeClient>>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
+            this.mapper = A.Fake<IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel>>();
 
-            controller = new SentOnRemoveSiteController(apiClient, breadcrumb, cache);
+               controller = new SentOnRemoveSiteController(apiClient, breadcrumb, cache, mapper);
         }
 
         [Fact]
