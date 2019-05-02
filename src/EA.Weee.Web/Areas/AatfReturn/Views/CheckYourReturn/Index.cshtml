@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    ViewBag.Title = "CheckYourReturnView";
+    ViewBag.Title = "Check your AATF return for " + Model.ReturnOperator.OperatorName;
 }
 
 <section id="main-content">
@@ -37,8 +37,8 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-6"></div>
 
-    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size ">
-        <a href="#" id="collapsibleHref" onclick="return CollapsibleLinkHref();">Close all</a>
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+        <a href="#" id="collapsibleHref">Close all</a>
     </span>
 
     <div class="govuk-table govuk-grid-column-full">
@@ -95,13 +95,12 @@
             if (aatf.SchemeData.Count > 0)
             {
                 <details class="govuk-details collapsible-font-size" open="open">
-                    <summary id="summary-collapsible" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false" onclick="return CollapsibleLinkHefSummary();">
-                        <span id="unset-padding" class="govuk-details__summary-text" onclick="return CollapsibleLinkHefSummary();">
+                    <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content">
+                        <span class="govuk-details__summary-text">
                             Breakdown by PCS
                         </span>
                     </summary>
-                    <div class="govuk-!-padding-bottom-4"></div>
-                    <div class="collapsible-govuk-grid">
+                    <div class="govuk-details__text">
                         <div class="govuk-grid-row govuk-body collapsible-font-size">
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-grid-column-two-thirds">
@@ -139,7 +138,7 @@
                                 </div>
                             </div>
                         }
-
+                    </div>
                 </details>
             }
 
