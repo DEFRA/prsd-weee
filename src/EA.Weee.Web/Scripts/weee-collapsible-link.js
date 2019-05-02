@@ -1,43 +1,68 @@
-﻿function CollapsibleLinkHref() {
-    if (document.getElementById('collapsibleHref').innerText == "Open all") {
-        var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
-        for (i = 0; i < schemaData.length; i++) {
-            document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
-            var divopen = document.getElementsByClassName('govuk-details')[i].open;
-            if (divopen) {
-                document.getElementsByClassName('govuk-details')[i].open = false
-            }
-            else if (!divopen) {
-                document.getElementsByClassName('govuk-details')[i].open = true;
-            }
-        }
-        document.getElementById('collapsibleHref').innerText = "Close all";
-    }
-    else if (document.getElementById('collapsibleHref').innerText == "Close all") {
-        var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
-        for (i = 0; i < schemaData.length; i++) {
-            var cdisplay = document.getElementsByClassName('collapsible-govuk-grid')[i].style.display;
-            document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
-            var copen = document.getElementsByClassName('govuk-details')[i].open;
-            document.getElementsByClassName('govuk-details')[i].open = false;
-        }
-        document.getElementById('collapsibleHref').innerText = "Open all";
-    }
-}
-
-function CollapsibleLinkHefSummary() {
-    var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
-    for (i = 0; i < schemaData.length; i++) {
-        document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = "inherit";
-    }
-    document.getElementById('collapsibleHref').innerText = "Close all";
-}
+﻿var openAllText = "Open all";
+var closeAllText = "Close all";
 
 function InitialStartup() {
-    var schemaData = document.getElementsByClassName('collapsible-govuk-grid');
-    for (i = 0; i < schemaData.length; i++) {
-        document.getElementsByClassName('collapsible-govuk-grid')[i].style.display = 'none';
-        document.getElementsByClassName('govuk-details')[i].open = false;
+    var summaries = document.querySelectorAll(".govuk-details__summary");
+
+    for (var i = 0; i < summaries.length; i++) {
+		summaries[i].addEventListener("click",
+            function (e) {
+                function allOpenClosedCheck(id, valueToCheck) {
+					for (var i = 0; i < summaries.length; i++) {
+						var detailsElement = summaries[i];
+                        if (detailsElement.id !== id) {
+                            if (detailsElement.getAttribute("aria-expanded") !== valueToCheck) {
+								return false;
+							}
+						}
+                    }
+					return true;
+                }
+
+				var isOpening = false;
+				if (e.target.getAttribute("aria-expanded") === "true") {
+					isOpening = true;
+				}
+
+                if (isOpening && allOpenClosedCheck(e.target.id, "true") === true) {
+                    document.getElementById("collapsibleHref").innerText = closeAllText;
+                } else {
+                    document.getElementById("collapsibleHref").innerText = closeAllText;
+				}
+
+                if (!isOpening && allOpenClosedCheck(e.target.id, "false") === true) {
+                    document.getElementById("collapsibleHref").innerText = openAllText;
+                }
+            });
+
+        var open = document.getElementById("collapsibleHref");
+
+        open.addEventListener("click",
+			function(e) {
+				var details = document.querySelectorAll(".govuk-details");
+				var openAll = false;
+				if (document.getElementById("collapsibleHref").innerText === openAllText) {
+					document.getElementById("collapsibleHref").innerText = closeAllText;
+					openAll = true;
+				} else {
+					document.getElementById("collapsibleHref").innerText = openAllText;
+					openAll = false;
+				}
+
+				for (var i = 0; i < details.length; i++) {
+					var detailsElement = details[i];
+					if (openAll) {
+						detailsElement.open = "open";
+						detailsElement.getElementsByClassName("govuk-details__summary")[0].setAttribute("aria-expanded", true);
+						detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", false);
+						detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "";
+					} else {
+						detailsElement.removeAttribute("open");
+						detailsElement.getElementsByClassName("govuk-details__summary")[0].setAttribute("aria-expanded", false);
+						detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", true);
+						detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "none";
+					}
+				}
+		});
     }
-    document.getElementById('collapsibleHref').innerText = "Open all";
 }
