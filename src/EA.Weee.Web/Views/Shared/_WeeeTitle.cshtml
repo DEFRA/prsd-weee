@@ -9,13 +9,13 @@
         || (Model.Breadcrumb.InternalOrganisation != null)
         || (Model.Breadcrumb.InternalUser != null)
         || (Model.Breadcrumb.TestAreaActivity != null);
-        
+
     bool showIdentity = Model.User.Identity.IsAuthenticated;
-    
+
     bool showTitle = showBreadcrumb || showIdentity;
 
     int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
-    
+
     string columnClass;
     switch (columnCount)
     {
@@ -24,7 +24,7 @@
         case 1:
             columnClass = "column-whole";
             break;
-            
+
         case 2:
             columnClass = "column-one-half";
             break;
@@ -33,109 +33,112 @@
 
 @if (showTitle)
 {
-<div class="govuk-grid-row">
+    <div class="govuk-grid-row">
 
-    @if (showBreadcrumb)
-    {
-    <div class="@columnClass">
-        <div class="breadcrumb-title-display font-xsmall">
-            <ul class="govuk-breadcrumbs__list">
-                @if (Model.Breadcrumb.ExternalOrganisation != null)
-                {
-                    <li>
-                        @if (Model.ShowLinkToSelectOrganisation)
+        @if (showBreadcrumb)
+        {
+            <div class="@columnClass">
+                <div class="breadcrumb-title-display font-xsmall">
+                    <ul class="govuk-breadcrumbs__list">
+                        @if (Model.Breadcrumb.ExternalOrganisation != null)
                         {
-                            @:<a href="@Url.Action("Index", "Organisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                            <li>
+                                @if (Model.ShowLinkToSelectOrganisation)
+                                {
+                                    @:<a href="@Url.Action("Index", "Organisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                                }
+                                else
+                                {
+                                    @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                                }
+                            </li>
                         }
-                        else
+
+                        @if (Model.Breadcrumb.ExternalActivity != null)
                         {
-                            @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                            <li>
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
+                                Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.SchemeInfo.OrganisationId)),
+                                    "Navigation",
+                                    "External activity",
+                                    null,
+                                   null)):
+                                @Model.Breadcrumb.ExternalActivity
+                            </li>
                         }
-                    </li>
-                }
-                
-                @if (Model.Breadcrumb.ExternalActivity != null)
-                {
-                    <li>
-                        @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.SchemeInfo.OrganisationId)),
-                            "Navigation",
-                            "External activity",
-                            null,
-                           null)):
-                        @Model.Breadcrumb.ExternalActivity
-                    </li>
-                }
-                
-                @if (Model.Breadcrumb.InternalActivity != null)
-                {
-                    <li>
-                        @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                        Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                        "Navigation",
-                        "Internal activity",
-                        null,
-                       null)):
-                        @Model.Breadcrumb.InternalActivity               
-                    </li>
-                }
 
-                @if (Model.Breadcrumb.InternalOrganisation != null)
-                {
-                    <li>
-                        <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
-                    </li>
-                }
-
-                @if (Model.Breadcrumb.InternalUser != null)
-                {
-                    <li>                       
-                            <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
-                    </li>
-                }
-
-                @if (Model.Breadcrumb.TestAreaActivity != null)
-                {
-                    <li>
-                        <a href="@Url.Action("Index", "Home", new { Area = "test" })">Activity</a>: @Model.Breadcrumb.TestAreaActivity
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-    }
-    
-    @if (showIdentity)
-    {
-        <div class="@columnClass">
-           
-
-            <div class="username-title-display font-xsmall ">
-             
-                <ul class="govuk-breadcrumbs__list">
-                    <li>
-                        <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
-                    </li>
-                    <li>
-                        @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                        @if (Model.Breadcrumb.InternalActivity != null)
                         {
-                            @Html.AntiForgeryToken()
-
-                            <input class="link-submit" id="link-sign-out" type="submit" value="Sign out" />
+                            <li>
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
+                                Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                "Navigation",
+                                "Internal activity",
+                                null,
+                               null)):
+                                @Model.Breadcrumb.InternalActivity
+                            </li>
                         }
-                    </li>
-                </ul>
-             
+
+                        @if (Model.Breadcrumb.InternalOrganisation != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
+                            </li>
+                        }
+
+                        @if (Model.Breadcrumb.InternalUser != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
+                            </li>
+                        }
+
+                        @if (Model.Breadcrumb.TestAreaActivity != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Home", new { Area = "test" })">Activity</a>: @Model.Breadcrumb.TestAreaActivity
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
-    }
-    
-</div>
-    
-<div class="account-link-banner"></div>
+        }
+
+        @if (showIdentity)
+        {
+            <div class="@columnClass">
+
+
+                <div class="username-title-display font-xsmall ">
+
+                    <ul class="govuk-breadcrumbs__list">
+                        <li>
+                            <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
+                        </li>
+                        <li>
+                            @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <input class="link-submit" id="link-sign-out" type="submit" value="Sign out" />
+                            }
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <div class="account-link-banner"></div>
 }
 
-@if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected"))
+
+@if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected") && Model.Breadcrumb.ExternalActivity != "AATF return")
 {
     <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
 }
+
+
