@@ -8,6 +8,7 @@
     using Domain.DataReturns;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.User;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -48,7 +49,7 @@
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
                 var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
-                var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+                var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
 
                 database.WeeeContext.Organisations.Add(organisation);
                 database.WeeeContext.Aatfs.Add(aatf);
