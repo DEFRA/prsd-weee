@@ -8,6 +8,8 @@
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
+    using Microsoft.AspNet.Identity;
+    using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Security;
@@ -20,7 +22,8 @@
     {
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
-        private readonly IGenericDataAccess operDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IUserContext userContext;
         private AddReturnHandler handler;
 
         public AddReturnUploadHandlerTests()
@@ -28,9 +31,10 @@
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
-            operDataAccess = A.Fake<IGenericDataAccess>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
+            userContext = A.Fake<IUserContext>();
 
-            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, organisationDataAccess, operDataAccess);
+            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, organisationDataAccess, genericDataAccess, userContext);
         }
 
         [Fact]
@@ -41,7 +45,8 @@
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                A.Dummy<IUserContext>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -56,7 +61,8 @@
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IOrganisationDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                A.Dummy<IUserContext>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -72,13 +78,15 @@
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year };
 
             var @return = A.Dummy<Return>();
-            var organisation = A.Fake<Organisation>();
+            var @operator = new Operator(A.Fake<Organisation>());
+            var userId = Guid.NewGuid();
 
-            A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => userContext.UserId).Returns(userId);
+            A.CallTo(() => genericDataAccess.GetSingleByExpression(A<OperatorByOrganisationIdSpecification>._)).Returns(@operator);
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter && c.Operator.Equals(@operator) && c.CreatedBy.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -88,24 +96,11 @@
             var organisation = A.Fake<Organisation>();
             var request = new AddReturn { OrganisationId = organisationId };
 
-            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => organisation.Id).Returns(organisationId);
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => operDataAccess.GetSingleByExpression<Operator>(A<OperatorByOrganisationIdSpecification>.That.Matches(c => c.OrganisationId == request.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenAddReturnRequest_OrganisationShouldBeRetrieved()
-        {
-            var organisationId = Guid.NewGuid();
-
-            var request = new AddReturn { OrganisationId = organisationId };
-
-            await handler.HandleAsync(request);
-
-            A.CallTo(() => organisationDataAccess.GetById(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.GetSingleByExpression<Operator>(A<OperatorByOrganisationIdSpecification>.That.Matches(c => c.OrganisationId == request.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
