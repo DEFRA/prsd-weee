@@ -51,14 +51,14 @@
         </table>
 
         <br />*@
-    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+    <div class="govuk-table govuk-grid-column-full">
         <div class="govuk-grid-row govuk-table__header weee-tonnage-top-aligned-display">
-            <div class="govuk-grid-column-one-half">
-                <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-third" style="width:150px;">
                     Name of Aatf
                 </div>
             </div>
-            <div class="govuk-grid-column-one-half" style="padding-left:20px">
+            <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
                     Approval Number
                 </div>
@@ -76,19 +76,19 @@
         @foreach (var aatf in Model.AatfDataList)
         {
         <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-third">
                 <div class="govuk-grid-column-two-thirds">
                     @aatf.Name
                 </div>
             </div>
-            <div class="govuk-grid-column-one-half" style="padding-left:20px">
+            <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
                     @aatf.ApprovalNumber
                 </div>
                 <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
                     @aatf.CompetentAuthority.Abbreviation
                 </div>
-                <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
                     @aatf.AatfStatusString
                 </div>
                 <div class="govuk-grid-column-one-quarter weee-tonnage-centre-aligned-display">
