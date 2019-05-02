@@ -1,14 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
+﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.ViewModels.Shared;
     using System;
-    using System.Collections.Generic;
 
-    public class SentOnRemoveSiteViewModel : RadioButtonStringCollectionViewModel
+    public class ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer
     {
-        public Guid WeeeSentOnId { get; set; }
-
         public Guid ReturnId { get; set; }
 
         public Guid AatfId { get; set; }
@@ -25,12 +21,12 @@
 
         public decimal? TonnageB2C { get; set; }
 
-        public ObligatedCategoryValue Tonnages { get; set; }
+        public string SelectedValue { get; set; }
 
-        public override string SelectedValue { get; set; }
-
-        public SentOnRemoveSiteViewModel() : base(new List<string> { "Yes", "No" })
+        public ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
         {
+            TonnageB2B = 0.000m;
+            TonnageB2C = 0.000m;
         }
     }
 }
