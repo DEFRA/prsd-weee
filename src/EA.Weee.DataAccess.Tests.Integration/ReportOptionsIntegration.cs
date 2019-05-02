@@ -19,7 +19,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new GenericDataAccess(context);
 
-                var @return = await CreateReturn(context);
+                var @return = await CreateReturn(context, database);
 
                 var questions = context.ReportOnQuestions.ToList();
 
@@ -42,11 +42,11 @@
             }
         }
 
-        private static async Task<Domain.AatfReturn.Return> CreateReturn(WeeeContext context)
+        private static async Task<Domain.AatfReturn.Return> CreateReturn(WeeeContext context, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);
