@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.User;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using Weee.Tests.Core;
@@ -22,7 +25,7 @@
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
 
-                var @return = CreateReturn();
+                var @return = CreateReturn(database);
 
                 var dataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -39,7 +42,7 @@
             {
                 var modelHelper = new ModelHelper(database.Model);
 
-                var @return = CreateReturn();
+                var @return = CreateReturn(database);
 
                 var dataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -53,13 +56,13 @@
             }
         }
 
-        private Return CreateReturn()
+        private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created);
+            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
         }
     }
 }
