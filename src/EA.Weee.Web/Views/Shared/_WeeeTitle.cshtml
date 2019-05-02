@@ -135,11 +135,8 @@
     <div class="account-link-banner"></div>
 }
 
-@if (Model.Breadcrumb.ExternalActivity != null && Model.Breadcrumb.ExternalActivity == "AATF return")
-{
-    <div id="schemeBanner">&nbsp;</div>
-}
-else if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected"))
+
+@if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected") && Model.Breadcrumb.ExternalActivity != "AATF return")
 {
     <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
 }
