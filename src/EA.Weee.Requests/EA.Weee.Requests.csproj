@@ -69,6 +69,7 @@
     <Compile Include="AatfReturn\Obligated\EditSentOnAatfSiteWithOperator.cs" />
     <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\GetWeeeSentOn.cs" />
+    <Compile Include="AatfReturn\Obligated\GetWeeeSentOnById.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedBaseRequest.cs" />
     <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\AddObligatedReused.cs" />

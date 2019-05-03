@@ -38,8 +38,7 @@
         {
             using (var client = apiClient())
             {
-                var weeeSentOnList = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, weeeSentOnId));
-                var weeeSentOn = weeeSentOnList[0];
+                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOnById(weeeSentOnId));
 
                 var siteAddress = GenerateAddress(weeeSentOn.SiteAddress);
                 var operatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
@@ -53,32 +52,7 @@
                     SiteAddress = siteAddress,
                     OperatorAddress = operatorAddress
                 });
-                /*
-                var model = new SentOnRemoveSiteViewModel()
-                {
-                    WeeeSentOn = weeeSentOn,
-                    OrganisationId = organisationId,
-                    ReturnId = returnId,
-                    AatfId = aatfId,
-                    SiteAddress = siteAddress,
-                    OperatorAddress = operatorAddress,
-                    TonnageB2B = 0.000m,
-                    TonnageB2C = 0.000m
-                };
 
-                foreach (var category in weeeSentOn.Tonnages)
-                {
-                    if (category.B2B != null)
-                    {
-                        model.TonnageB2B += category.B2B;
-                    }
-
-                    if (category.B2C != null)
-                    {
-                        model.TonnageB2C += category.B2C;
-                    }
-                }
-                */
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
