@@ -22,7 +22,7 @@
             Quarter = quarter;
             ReturnStatus = ReturnStatus.Created;
             CreatedBy = createdBy;
-            CreatedDate = DateTime.Now;
+            CreatedDate = SystemTime.UtcNow;
         }
 
         public void UpdateSubmitted(string submittedBy)
@@ -35,7 +35,7 @@
             }
 
             SubmittedBy = submittedBy;
-            SubmittedDate = DateTime.Now;
+            SubmittedDate = SystemTime.UtcNow;
             ReturnStatus = ReturnStatus.Submitted;
         }
 
