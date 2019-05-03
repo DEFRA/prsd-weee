@@ -38,7 +38,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null);
+                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null, value);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
