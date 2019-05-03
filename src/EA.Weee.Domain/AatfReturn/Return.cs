@@ -25,7 +25,7 @@
             CreatedDate = SystemTime.UtcNow;
         }
 
-        public void UpdateSubmitted(string submittedBy)
+        public virtual void UpdateSubmitted(string submittedBy)
         {
             Guard.ArgumentNotNullOrEmpty(() => submittedBy, submittedBy);
 
@@ -43,7 +43,7 @@
 
         public Guid OperatorId { get; set; }
 
-        public virtual ReturnStatus ReturnStatus { get; private set; }
+        public virtual ReturnStatus ReturnStatus { get; set; }
 
         public virtual Operator Operator { get; private set; }
 

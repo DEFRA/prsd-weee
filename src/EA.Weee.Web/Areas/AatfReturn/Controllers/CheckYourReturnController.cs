@@ -51,8 +51,12 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(CheckYourReturnViewModel viewModel)
+        public virtual async Task<ActionResult> Index(ReturnViewModel viewModel)
         {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
+            }
             return await Task.Run<ActionResult>(() => AatfRedirect.SubmittedReturn(viewModel.ReturnId));
         }
 
