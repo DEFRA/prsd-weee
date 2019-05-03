@@ -12,16 +12,16 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class SentOnAatfSiteDataAccessTests
+    public class WeeeSentOnDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly SentOnAatfSiteDataAccess dataAccess;
+        private readonly WeeeSentOnDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
 
-        public SentOnAatfSiteDataAccessTests()
+        public WeeeSentOnDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            dataAccess = new SentOnAatfSiteDataAccess(context);
+            dataAccess = new WeeeSentOnDataAccess(context);
             dbContextHelper = new DbContextHelper();
         }
         

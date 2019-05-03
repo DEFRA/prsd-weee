@@ -22,7 +22,7 @@
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess sentOnDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess orgDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
@@ -34,7 +34,7 @@
             context = A.Fake<WeeeContext>();
             authorization = A.Fake<IWeeeAuthorization>();
             orgDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
-            sentOnDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
+            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
             mapper = A.Fake<IMap<AatfAddress, AatfAddressData>>();

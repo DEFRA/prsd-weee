@@ -20,13 +20,13 @@
         private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess sentOnDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IAatfSiteDataAccess offSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
         public EditSentOnAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
-        ISentOnAatfSiteDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess, IReturnDataAccess returnDataAccess, IOrganisationDetailsDataAccess orgDataAccess, IAatfSiteDataAccess offSiteDataAccess)
+        IWeeeSentOnDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess, IReturnDataAccess returnDataAccess, IOrganisationDetailsDataAccess orgDataAccess, IAatfSiteDataAccess offSiteDataAccess)
         {
             this.context = context;
             this.authorization = authorization;

@@ -105,11 +105,11 @@
     <Compile Include="AatfReturn\ObligatedSentOn\IObligatedSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\ObligatedSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\RemoveWeeeSentOnHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\WeeeSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteWithOperatorHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandler.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\ISentOnAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\IWeeeSentOnDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
