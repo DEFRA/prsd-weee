@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ISentOnAatfSiteDataAccess
+    public interface IWeeeSentOnDataAccess
     {
         Task Submit(WeeeSentOn weeeSentOn);
 

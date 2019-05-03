@@ -17,14 +17,14 @@
     public class GetSentOnAatfSiteHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess sentOnDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly GetSentOnAatfSiteHandler handler;
         private readonly IMap<AatfAddress, AatfAddressData> mapper;
 
         public GetSentOnAatfSiteHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            sentOnDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
+            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             mapper = A.Fake<IMap<AatfAddress, AatfAddressData>>();
 
             handler = new GetSentOnAatfSiteHandler(authorization, sentOnDataAccess, mapper);

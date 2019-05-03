@@ -22,7 +22,7 @@
     public class GetWeeeSentOnByIdHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
+        private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
         private readonly IMap<AatfAddress, AatfAddressData> addressMapper;
         private readonly GetWeeeSentOnByIdHandler handler;
@@ -30,7 +30,7 @@
         public GetWeeeSentOnByIdHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
-            this.getSentOnAatfSiteDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
+            this.getSentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             this.fetchWeeeSentOnAmountDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             this.addressMapper = A.Fake<IMap<AatfAddress, AatfAddressData>>();
 

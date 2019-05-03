@@ -8,11 +8,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class SentOnAatfSiteDataAccess : ISentOnAatfSiteDataAccess
+    public class WeeeSentOnDataAccess : IWeeeSentOnDataAccess
     {
         private readonly WeeeContext context;
 
-        public SentOnAatfSiteDataAccess(WeeeContext context)
+        public WeeeSentOnDataAccess(WeeeContext context)
         {
             this.context = context;
         }

@@ -27,7 +27,7 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var dataAccess = new SentOnAatfSiteDataAccess(context);
+                var dataAccess = new WeeeSentOnDataAccess(context);
 
                 var returnData = await CreateWeeeSentOn(context, dataAccess, aatfAddress);
 
@@ -56,7 +56,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
                 var operatorCountry = await context.Countries.SingleAsync(c => c.Name == "Germany");
@@ -79,7 +79,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
 
@@ -99,7 +99,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
 
@@ -118,7 +118,7 @@
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress)
+            WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -142,7 +142,7 @@
         }
 
         private async Task<WeeeSentOn> CreateWeeeSentOnInContext(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress)
+            WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -166,7 +166,7 @@
         }
 
         private async Task<WeeeSentOn> CreateWeeeSentOnOperatorInContext(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress)
+            WeeeSentOnDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
