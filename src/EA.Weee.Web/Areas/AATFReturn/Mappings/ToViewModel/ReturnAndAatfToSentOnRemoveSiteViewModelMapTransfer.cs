@@ -17,16 +17,10 @@
 
         public string OperatorAddress { get; set; }
 
-        public decimal? TonnageB2B { get; set; }
-
-        public decimal? TonnageB2C { get; set; }
-
         public string SelectedValue { get; set; }
 
         public ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
         {
-            TonnageB2B = 0.000m;
-            TonnageB2C = 0.000m;
         }
     }
 }
