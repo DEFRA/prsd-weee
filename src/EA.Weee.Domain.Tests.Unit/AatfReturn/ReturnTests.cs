@@ -120,10 +120,8 @@
         [Fact]
         public void UpdateSubmitted_GivenReturnIsNotCreatedStatus_InvalidOperationExceptionExpected()
         {
-            var @return = A.Fake<Return>();
+            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me") { ReturnStatus = ReturnStatus.Submitted };
 
-            A.CallTo(() => @return.ReturnStatus).Returns(ReturnStatus.Submitted);
-            
             Action update = () =>
             {
                 @return.UpdateSubmitted("me2");
