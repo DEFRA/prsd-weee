@@ -228,34 +228,6 @@
         }
 
         [Fact]
-        public void Map_GivenSource_ReturnSchemesShouldBeMapped()
-        {
-            var @return = GetReturn();
-            var returnSchemeList = new List<ReturnScheme>();
-
-            var newScheme = new DomainScheme(organisation);
-
-            var newScheme1 = A.Fake<DomainScheme>();
-            var newScheme2 = A.Fake<DomainScheme>();
-            A.CallTo(() => newScheme1.Id).Returns(Guid.NewGuid());
-            A.CallTo(() => newScheme2.Id).Returns(Guid.NewGuid());
-
-            returnSchemeList.Add(new ReturnScheme(newScheme, @return));
-            returnSchemeList.Add(new ReturnScheme(newScheme1, @return));
-            returnSchemeList.Add(new ReturnScheme(newScheme2, @return));
-
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
-                null, null, null, null, null, null, returnSchemeList, A.Fake<List<ReturnReportOn>>());
-
-            var result = map.Map(source);
-
-            result.SchemeDataItems.Count(s => s.Id == newScheme.Id).Should().Be(1);
-            result.SchemeDataItems.Count(s => s.Id == newScheme1.Id).Should().Be(1);
-            result.SchemeDataItems.Count(s => s.Id == newScheme2.Id).Should().Be(1);
-            result.SchemeDataItems.Count.Should().Be(1);
-        }
-
-        [Fact]
         public void Map_GivenSource_ReturnReportOnsShouldBeMapped()
         {
             var @return = GetReturn();
