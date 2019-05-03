@@ -1,27 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Organisations;
-    using Core.Scheme;
-    using Core.Shared;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
-    using Infrastructure;
     using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
-    using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Aatf;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Scheme;
-    using Weee.Requests.Scheme.MemberRegistration;
-    using Weee.Requests.Shared;
     using Xunit;
 
     public class AatfControllerTests
@@ -70,6 +59,18 @@
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("AATFdetails", redirectValues["action"]);
             Assert.Equal(selectedGuid, redirectValues["Id"]);
+        }
+
+        [Fact]
+        public async Task ManageAatfPost_ModelError_GetAatfsMustBeRun()
+        {
+            AatfController controller = CreateController();
+
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            await controller.ManageAatfs(new ManageAatfsViewModel());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
