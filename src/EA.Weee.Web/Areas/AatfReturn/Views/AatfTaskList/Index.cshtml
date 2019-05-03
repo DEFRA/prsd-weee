@@ -80,7 +80,15 @@
         <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
             <div class="govuk-grid-column-one-half">
                 <p>
-                    @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
+                    @if (Equals(item.WeeeSentOn.B2B, "-") && Equals(item.WeeeSentOn.B2C, "-"))
+                    {
+                        @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
+                    }
+                    else
+                    {
+                        @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId,  organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
+                    }
+
                 </p>
             </div>
 
