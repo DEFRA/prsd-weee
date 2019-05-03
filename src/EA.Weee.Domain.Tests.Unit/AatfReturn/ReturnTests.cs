@@ -38,7 +38,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null, value);
+                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -46,15 +46,14 @@
 
         [Theory]
         [InlineData("")]
-        [InlineData(" ")]
-        public void Return_CreatedByIsEmpty_ThrowsArgumentNullException(string value)
+        public void Return_CreatedByIsEmpty_ThrowsArgumentException(string value)
         {
             Action constructor = () =>
             {
                 var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), value);
             };
 
-            constructor.Should().Throw<ArgumentNullException>();
+            constructor.Should().Throw<ArgumentException>();
         }
 
         [Fact]
@@ -64,33 +63,73 @@
             var quarter = A.Fake<Quarter>();
             var userId = "user";
 
-            var @return = new Return(aatfOperator, quarter, userId);
-
             SystemTime.Freeze(new DateTime(2019, 05, 2));
+            var @return = new Return(aatfOperator, quarter, userId);
+            SystemTime.Unfreeze();
 
             @return.Operator.Should().Be(aatfOperator);
             @return.Quarter.Should().Be(quarter);
             @return.ReturnStatus.Should().Be(ReturnStatus.Created);
             @return.CreatedBy.Should().Be(userId);
-            @return.CreatedDate.Should().BeSameDateAs(new DateTime(2019, 05, 2));
-
-            SystemTime.Unfreeze();
+            @return.CreatedDate.Date.Should().Be(new DateTime(2019, 05, 2));
+            @return.SubmittedDate.Should().BeNull();
+            @return.SubmittedBy.Should().BeNull();
         }
 
         [Theory]
         [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public void UpdateSubmitted_GivenSubmittedByIsEmpty_ThrowsArgumentNullException(string value)
+        public void UpdateSubmitted_GivenSubmittedByIsEmpty_ThrowsArgumentException(string value)
         {
             var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
 
             Action update = () =>
             {
-                @return.UpdateSubmitted("me");
+                @return.UpdateSubmitted(value);
+            };
+
+            update.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void UpdateSubmitted_GivenSubmittedByIsNull_ThrowsArgumentNullException()
+        {
+            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+
+            Action update = () =>
+            {
+                @return.UpdateSubmitted(null);
             };
 
             update.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void UpdateSubmitted_GivenSubmittedBy_ReturnSubmittedPropertiesShouldBeSet()
+        {
+            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+
+            SystemTime.Freeze(new DateTime(2019, 05, 2));
+            @return.UpdateSubmitted("me2");
+            SystemTime.Unfreeze();
+
+            @return.SubmittedDate.Value.Date.Should().Be(new DateTime(2019, 05, 2));
+            @return.SubmittedBy.Should().Be("me2");
+            @return.ReturnStatus.Should().Be(ReturnStatus.Submitted);
+        }
+
+        [Fact]
+        public void UpdateSubmitted_GivenReturnIsNotCreatedStatus_InvalidOperationExceptionExpected()
+        {
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => @return.ReturnStatus).Returns(ReturnStatus.Submitted);
+            
+            Action update = () =>
+            {
+                @return.UpdateSubmitted("me2");
+            };
+
+            update.Should().Throw<InvalidOperationException>();
         }
     }
 }
