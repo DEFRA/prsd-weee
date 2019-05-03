@@ -72,7 +72,7 @@
 
             if (ModelState.IsValid)
             {
-                if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+                if (viewModel.HasSelectedOptions)
                 {
                     using (var client = apiClient())
                     {

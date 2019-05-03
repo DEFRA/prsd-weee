@@ -37,5 +37,29 @@
 
             customAttribute.ValidatorType.Should().Be(typeof(SelectReportOptionsViewModelValidator));
         }
+
+        [Fact]
+        public void SelectReportOptionsViewModel_GivenZeroSelectionOptions_HasSelectionOptionsIsFalse()
+        {
+            var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), A.Fake<ReturnData>(), A.Dummy<int>()) { SelectedOptions = new List<int>() };
+
+            viewModel.HasSelectedOptions.Should().Be(false);
+        }
+
+        [Fact]
+        public void SelectReportOptionsViewModel_GivenNullSelectionOptions_HasSelectionOptionsIsFalse()
+        {
+            var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), A.Fake<ReturnData>(), A.Dummy<int>()) { SelectedOptions = null };
+
+            viewModel.HasSelectedOptions.Should().Be(false);
+        }
+
+        [Fact]
+        public void SelectReportOptionsViewModel_GivenAnySelectionOptions_HasSelectionOptionsIsTrue()
+        {
+            var viewModel = new SelectReportOptionsViewModel(Guid.NewGuid(), Guid.NewGuid(), A.Fake<List<ReportOnQuestion>>(), A.Fake<ReturnData>(), A.Dummy<int>()) { SelectedOptions = new List<int>() { 1 } };
+
+            viewModel.HasSelectedOptions.Should().Be(true);
+        }
     }
 }
