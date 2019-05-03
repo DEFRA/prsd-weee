@@ -26,11 +26,11 @@
         private readonly Scheme mapperTestScheme;
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
-        
+
         public ReturnToReturnViewModelMapTests()
         {
             map = new ReturnToReturnViewModelMap(new TonnageUtilities());
-            mapperTestId = new Guid();
+            mapperTestId = Guid.NewGuid();
             mapperTestYear = 2019;
             mapperTestQuarter = new Quarter(mapperTestYear, QuarterType.Q1);
             mapperTestQuarterWindow = new QuarterWindow(new DateTime(mapperTestYear, 1, 1), new DateTime(mapperTestYear, 3, 31));
@@ -40,7 +40,7 @@
             mapperTestObligatedReusedData = new List<WeeeObligatedData>();
             mapperTestObligatedSentOnData = new List<WeeeObligatedData>();
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
-            mapperTestAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
+            mapperTestAatf = new AatfData(mapperTestId, "Test Aatf", "Aatf approval");
             mapperTestAatfList = new List<AatfData>();
         }
 
@@ -197,7 +197,7 @@
             };
 
             var result = map.Map(returnData);
-            
+
             ReturnViewModelMapCommonAsserts(result);
             result.NonObligatedTonnageTotal.Should().Be(nullTonnageDisplay);
             result.NonObligatedTonnageTotalDcf.Should().Be(nullTonnageDisplay);
@@ -207,6 +207,49 @@
             result.AatfsData[0].WeeeReused.B2C.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeSentOn.B2B.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be(nullTonnageDisplay);
+        }
+
+        [Theory]
+        [InlineData(null, null, false)]
+        [InlineData("1.234", null, true)]
+        [InlineData(null, "1.234", true)]
+        [InlineData("1.234", "1.234", true)]
+        public void Map_TonnageForSentOnOrReusedScreensObligatedCategoryValue_ReturnsRedirectToSummary(string b2bString, string b2cString, bool expectedResult)
+        {
+            decimal? b2b = null;
+            if (b2bString != null)
+            {
+                b2b = decimal.Parse(b2bString);
+            }
+
+            decimal? b2c = null;
+            if (b2cString != null)
+            {
+                b2c = decimal.Parse(b2cString);
+            }
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(mapperTestId, null, mapperTestAatf, 0, b2b, b2c));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(mapperTestId, null, mapperTestAatf, 0, b2b, b2c));
+            mapperTestAatfList.Add(new AatfData(mapperTestId, "Other New Aatf", "123456789"));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            ReturnViewModelMapCommonAsserts(result);
+            result.AatfsData[0].WeeeSentOn.RedirectToSummary.Should().Be(expectedResult);
+            result.AatfsData[0].WeeeReused.RedirectToSummary.Should().Be(expectedResult);
         }
 
         private void ReturnViewModelMapCommonAsserts(Web.Areas.AatfReturn.ViewModels.ReturnViewModel result)
