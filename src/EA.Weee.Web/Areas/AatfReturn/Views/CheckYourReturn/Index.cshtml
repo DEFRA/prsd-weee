@@ -38,7 +38,7 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-        <a href="#" id="collapsibleHref">Close all</a>
+        <a href="#" id="collapsibleHref">Open all</a>
     </span>
 
     <div class="govuk-table govuk-grid-column-full">
@@ -94,13 +94,13 @@
 
             if (aatf.SchemeData.Count > 0)
             {
-                <details class="govuk-details collapsible-font-size" open="open">
-                    <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content">
+                <details class="govuk-details collapsible-font-size">
+                    <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
                         <span class="govuk-details__summary-text">
                             Breakdown by PCS
                         </span>
                     </summary>
-                    <div class="govuk-details__text">
+                    <div class="govuk-details__text" aria-hidden="true" style="display: none;">
                         <div class="govuk-grid-row govuk-body collapsible-font-size">
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-grid-column-two-thirds">
