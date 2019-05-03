@@ -27,6 +27,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
+        private const string pcsQuestion = "PCS";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -71,7 +72,7 @@
 
             if (ModelState.IsValid)
             {
-                if (viewModel.SelectedOptions != null)
+                if (viewModel.HasSelectedOptions)
                 {
                     using (var client = apiClient())
                     {
@@ -81,9 +82,12 @@
                     }
                 }
 
-                ModelState.Clear();
+                if (viewModel.ReportOnQuestions.First(r => r.Question == pcsQuestion).Selected)
+                {
+                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                }
 
-                return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                return AatfRedirect.TaskList(viewModel.ReturnId);
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
