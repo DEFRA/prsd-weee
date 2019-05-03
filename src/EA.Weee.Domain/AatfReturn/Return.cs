@@ -12,18 +12,31 @@
         {
         }
 
-        public Return(Operator aatfOperator, Quarter quarter, ReturnStatus returnStatus, string createdBy)
+        public Return(Operator aatfOperator, Quarter quarter, string createdBy)
         {
             Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
             Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => returnStatus, returnStatus);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
 
             Operator = aatfOperator;
             Quarter = quarter;
-            ReturnStatus = returnStatus;
+            ReturnStatus = ReturnStatus.Created;
             CreatedBy = createdBy;
             CreatedDate = DateTime.Now;
+        }
+
+        public void UpdateSubmitted(string submittedBy)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => submittedBy, submittedBy);
+
+            if (ReturnStatus != ReturnStatus.Created)
+            {
+                throw new InvalidOperationException("Return status must be Created to transition to Submitted");
+            }
+
+            SubmittedBy = submittedBy;
+            SubmittedDate = DateTime.Now;
+            ReturnStatus = ReturnStatus.Submitted;
         }
 
         public virtual Quarter Quarter { get; private set; }

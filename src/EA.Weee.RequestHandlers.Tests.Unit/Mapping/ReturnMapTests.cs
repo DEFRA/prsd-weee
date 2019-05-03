@@ -231,7 +231,7 @@
         public Return GetReturn()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);
-            var @return = new Return(@operator, quarter, ReturnStatus.Created, Guid.NewGuid().ToString());
+            var @return = new Return(@operator, quarter, Guid.NewGuid().ToString());
 
             return @return;
         }

@@ -26,7 +26,7 @@
     {
         public static Return CreateReturn(Operator operatorTest, string createdById)
         {
-            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created, createdById);
+            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
         public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator)
