@@ -38,7 +38,8 @@ function InitialStartup() {
         var open = document.getElementById("collapsibleHref");
 
         open.addEventListener("click",
-			function(e) {
+            function (e) {
+				e.preventDefault();
 				var details = document.querySelectorAll(".govuk-details");
 				var openAll = false;
 				if (document.getElementById("collapsibleHref").innerText === openAllText) {
@@ -62,7 +63,7 @@ function InitialStartup() {
 						detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", true);
 						detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "none";
 					}
-				}
-		});
+                }
+			});
     }
 }
