@@ -166,6 +166,13 @@
             </div>
         </div>
     }
+
+    @if (!displayObligatedGroup && !Model.ReportOnDisplayOptions.DisplayNonObligated)
+    {
+        <h2 class="govuk-heading-m">
+            Nothing to report
+        </h2>
+    }
     <div class="govuk-!-padding-bottom-7"></div>
     @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Post, new { style = "display: inline" }))
     {
