@@ -9,6 +9,7 @@
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
@@ -20,6 +21,7 @@
     using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetReturnHandlerTests
     {
@@ -197,6 +199,7 @@
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();
             var obligatedReusedValues = new List<WeeeReusedAmount>();
             var obligatedSentOnValues = new List<WeeeSentOnAmount>();
+            var returnReportOns = new List<ReturnReportOn>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
@@ -204,6 +207,7 @@
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
+            A.CallTo(() => genericDataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>._)).Returns(returnReportOns);
 
             await handler.HandleAsync(A.Dummy<GetReturn>());
 
@@ -212,6 +216,7 @@
                                                                                 && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
                                                                                 && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
                                                                                 && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
+                                                                                && c.ReturnReportOns.IsSameOrEqualTo(returnReportOns)
                                                                                 && c.Return.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
