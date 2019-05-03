@@ -15,10 +15,10 @@
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess sentOnDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
-        public RemoveWeeeSentOnHandler(WeeeContext context, IWeeeAuthorization authorization, ISentOnAatfSiteDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess)
+        public RemoveWeeeSentOnHandler(WeeeContext context, IWeeeAuthorization authorization, IWeeeSentOnDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
