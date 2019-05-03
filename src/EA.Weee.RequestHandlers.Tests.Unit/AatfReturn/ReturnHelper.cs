@@ -15,7 +15,7 @@
             var scheme = A.Fake<Scheme>();
             var @operator = new Operator(organisation);
 
-            return new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created, Guid.NewGuid().ToString());
+            return new Return(@operator, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
         }
     }
 }

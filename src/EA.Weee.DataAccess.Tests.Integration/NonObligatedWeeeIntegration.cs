@@ -41,7 +41,7 @@
 
                 var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter, ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
+                var aatfReturn = new Return(operatorTest, quarter, database.Model.AspNetUsers.First().Id);
 
                 var categoryValues = new List<NonObligatedValue>();
 
@@ -100,7 +100,7 @@
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var @operator = new Operator(organisation);
-                var @return = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
+                var @return = new Return(@operator, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
 
                 context.Organisations.Add(organisation);
                 context.Operators.Add(@operator);

@@ -47,7 +47,7 @@
 
             var aatfOperator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
 
-            var aatfReturn = new Return(aatfOperator, quarter, ReturnStatus.Created, userContext.UserId.ToString());
+            var aatfReturn = new Return(aatfOperator, quarter, userContext.UserId.ToString());
 
             await returnDataAccess.Submit(aatfReturn);
 
