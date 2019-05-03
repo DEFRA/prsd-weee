@@ -16,7 +16,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(null, A.Dummy<Quarter>(), A.Dummy<ReturnStatus>(), A.Dummy<string>());
+                var @return = new Return(null, A.Dummy<Quarter>(), A.Dummy<string>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -27,18 +27,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), null, A.Dummy<ReturnStatus>(), A.Dummy<string>());
-            };
-
-            constructor.Should().Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Return_ReturnStatusIsNull_ThrowsArgumentNullException()
-        {
-            Action constructor = () =>
-            {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null, A.Dummy<string>());
+                var @return = new Return(A.Dummy<Operator>(), null, A.Dummy<string>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -49,7 +38,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null, null);
+                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -62,7 +51,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null, value);
+                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), value);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -75,7 +64,7 @@
             var quarter = A.Fake<Quarter>();
             var userId = "user";
 
-            var @return = new Return(aatfOperator, quarter, ReturnStatus.Created, userId);
+            var @return = new Return(aatfOperator, quarter, userId);
 
             SystemTime.Freeze(new DateTime(2019, 05, 2));
 
@@ -86,6 +75,22 @@
             @return.CreatedDate.Should().BeSameDateAs(new DateTime(2019, 05, 2));
 
             SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void UpdateSubmitted_GivenSubmittedByIsEmpty_ThrowsArgumentNullException(string value)
+        {
+            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+
+            Action update = () =>
+            {
+                @return.UpdateSubmitted("me");
+            };
+
+            update.Should().Throw<ArgumentNullException>();
         }
     }
 }

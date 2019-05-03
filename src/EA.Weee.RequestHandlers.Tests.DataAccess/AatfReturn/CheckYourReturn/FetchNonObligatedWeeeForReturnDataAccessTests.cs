@@ -85,7 +85,7 @@
             var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, ReturnStatus.Created, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
         }
     }
 }
