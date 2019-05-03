@@ -113,6 +113,7 @@
     <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteWithOperatorHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandlerTests.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnByIdHandlerTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnHandlerTests.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTestAccess.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedDataAccessTests.cs" />
