@@ -20,9 +20,10 @@ function InitialStartup() {
                 }
 
 				var isOpening = false;
-				if (e.target.getAttribute("aria-expanded") === "true") {
+                if (e.target.getAttribute("aria-expanded") === "true") {
 					isOpening = true;
-				}
+					e.target.nextElementSibling.style.display = "";
+                }
 
                 if (isOpening && allOpenClosedCheck(e.target.id, "true") === true) {
                     document.getElementById("collapsibleHref").innerText = closeAllText;
