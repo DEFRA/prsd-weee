@@ -26,7 +26,7 @@
         private readonly Scheme mapperTestScheme;
         private readonly AatfData mapperTestAatf;
         private readonly List<AatfData> mapperTestAatfList;
-        
+
         public ReturnToReturnViewModelMapTests()
         {
             map = new ReturnToReturnViewModelMap(new TonnageUtilities());
@@ -65,6 +65,7 @@
             mapperTestAatfList.Add(mapperTestAatf);
 
             var schemeDataList = CreateSchemeDataItems();
+            var reportedOnList = CreateReportedOptions();
 
             var returnData = new ReturnData()
             {
@@ -76,7 +77,8 @@
                 ObligatedWeeeReusedData = mapperTestObligatedReusedData,
                 ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
                 Aatfs = mapperTestAatfList,
-                SchemeDataItems = schemeDataList
+                SchemeDataItems = schemeDataList,
+                ReturnReportOns = reportedOnList
             };
 
             var result = map.Map(returnData);
@@ -95,6 +97,7 @@
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be("1.234");
             result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
             result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
+            result.ReportOnDisplayOptions.DisplayObligatedReceived.Should().Be(true);
         }
 
         [Fact]
@@ -208,7 +211,7 @@
             result.AatfsData[0].WeeeSentOn.B2B.Should().Be(nullTonnageDisplay);
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be(nullTonnageDisplay);
         }
-
+        
         private void ReturnViewModelMapCommonAsserts(Web.Areas.AatfReturn.ViewModels.ReturnViewModel result)
         {
             result.ReturnId.Should().Be(mapperTestId);
@@ -224,6 +227,16 @@
                 new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = "ABC123" }
             };
             return schemeDataItems;
+        }
+
+        private List<ReturnReportOn> CreateReportedOptions()
+        {
+            var reportedOptionsList = new List<ReturnReportOn>();
+            for (var i = 1; i <= 5; i++)
+            {
+                reportedOptionsList.Add(new ReturnReportOn(i, mapperTestId));
+            }
+            return reportedOptionsList;
         }
     }
 }

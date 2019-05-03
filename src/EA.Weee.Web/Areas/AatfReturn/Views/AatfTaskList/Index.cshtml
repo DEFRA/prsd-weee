@@ -39,10 +39,6 @@
             <div class="govuk-grid-row govuk-table__cell" style="padding-top: 20px">
                 <div class="govuk-grid-column-one-half">
                     <p>
-                        @if (item.Aatf.Name == Model.AatfsData[0].Aatf.Name && Model.ReportOnDisplayOptions.DisplayNonObligated)
-                        {
-                            <b>1.</b>
-                        }
                         <b>Obligated WEEE - @item.Aatf.Name</b>
                     </p>
                 </div>
@@ -142,10 +138,6 @@
         <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
             <div class="govuk-grid-column-one-third">
                 <p>
-                    @if (displayObligatedGroup)
-                    {
-                        <b>2. </b>
-                    }
                     <b>Non-obligated WEEE</b>
                 </p>
                 <p>
