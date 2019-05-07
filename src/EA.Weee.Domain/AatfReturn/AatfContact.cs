@@ -22,5 +22,9 @@
         public virtual string Telephone { get; set; }
 
         public virtual string Email { get; set; }
+
+        public virtual Guid AddressId { get; set; }
+
+        public virtual AatfAddress Address { get; set; }
     }
 }
