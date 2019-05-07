@@ -52,7 +52,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Name of AATF</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.AatfName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Site address</th>
@@ -60,11 +60,13 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Approval number</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ApprovalNumber</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Appropiate authority</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">
+                        @Model.CompetentAuthority.Abbreviation <br />
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Status</th>

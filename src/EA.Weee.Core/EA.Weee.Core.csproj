@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
+    <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="AatfReturn\PastedValue.cs" />
     <Compile Include="AatfReturn\PastedValues.cs" />
     <Compile Include="AatfReturn\SchemeDataList.cs" />
+    <Compile Include="AatfReturn\UKCompetentAuthority.cs" />
     <Compile Include="AatfReturn\WeeeObligatedData.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
     <Compile Include="AatfReturn\ReceivedPcsData.cs" />

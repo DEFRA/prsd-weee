@@ -2,9 +2,12 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
@@ -31,10 +34,19 @@
         {
             SetBreadcrumb();
 
+            AatfData aatf;
+
+            using (var client = apiClient())
+            {
+                aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+            }
+
             AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
             {
                 AatfId = id,
-                AatfName = ""
+                AatfName = aatf.Name,
+                ApprovalNumber = aatf.ApprovalNumber,
+                CompetentAuthority = aatf.CompetentAuthority
             };
 
             return View(viewModel);
