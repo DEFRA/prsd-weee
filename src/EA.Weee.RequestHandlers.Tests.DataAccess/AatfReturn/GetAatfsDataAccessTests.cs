@@ -20,8 +20,6 @@
     public class GetAatfsDataAccessTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGetAatfsDataAccess dataAccess;
-        private readonly WeeeContext context;
         private readonly Organisation organisation;
         private readonly Operator @operator;
         public GetAatfsDataAccessTests()
