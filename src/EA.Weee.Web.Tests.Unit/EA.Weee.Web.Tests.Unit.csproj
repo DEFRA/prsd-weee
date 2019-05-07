@@ -182,6 +182,7 @@
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\NonObligatedValuesCopyPasteControllerTests.cs" />

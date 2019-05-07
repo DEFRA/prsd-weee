@@ -56,10 +56,41 @@
             }
         }
 
+        [Fact]
+        public async Task GetByOrganisationId_GivenOrganisationIdReturnsAreReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var modelHelper = new ModelHelper(database.Model);
+
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
+                var @operator = new Operator(organisation);
+                var @return1 = CreateReturn(database, @operator);
+                var @return2 = CreateReturn(database, @operator);
+
+                var dataAccess = new ReturnDataAccess(database.WeeeContext);
+
+                await dataAccess.Submit(@return1);
+                await dataAccess.Submit(@return2);
+
+                var result = await dataAccess.GetByOrganisationId(organisation.Id);
+
+                result.Should().NotBeNull();
+                result.Count().Should().Be(2);
+            }
+        }
+
         private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
             var @operator = new Operator(organisation);
+            var quarter = new Quarter(2019, QuarterType.Q1);
+
+            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+        }
+
+        private Return CreateReturn(DatabaseWrapper database, Operator @operator)
+        { 
             var quarter = new Quarter(2019, QuarterType.Q1);
 
             return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);

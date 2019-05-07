@@ -17,23 +17,35 @@
     using Security;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
-    internal class GetReturnHandler : IRequestHandler<GetReturn, ReturnData>
+    internal class GetReturnsHandler : IRequestHandler<GetReturns, IList<ReturnData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetPopulatedReturn getPopulatedReturn;
+        private readonly IReturnDataAccess returnDataAccess;
 
-        public GetReturnHandler(IWeeeAuthorization authorization,
-            IGetPopulatedReturn getPopulatedReturn)
+        public GetReturnsHandler(IWeeeAuthorization authorization,
+            IGetPopulatedReturn getPopulatedReturn, 
+            IReturnDataAccess returnDataAccess)
         {
             this.authorization = authorization;
             this.getPopulatedReturn = getPopulatedReturn;
+            this.returnDataAccess = returnDataAccess;
         }
 
-        public async Task<ReturnData> HandleAsync(GetReturn message)
+        public async Task<IList<ReturnData>> HandleAsync(GetReturns message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            return await getPopulatedReturn.GetReturnData(message.ReturnId);
+            var @returns = await returnDataAccess.GetByOrganisationId(message.OrganisationId);
+
+            var returnsData = new List<ReturnData>();
+
+            foreach (var @return in @returns)
+            {
+                returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
+            }
+
+            return returnsData;
         }
     }
 }
