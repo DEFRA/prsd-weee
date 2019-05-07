@@ -120,6 +120,18 @@
         }
 
         [Fact]
+        public async Task GetWeeeSentOnById_GivenWeeeSentOn_CorrectWeeeSentOnShouldBeReturned()
+        {
+            var weeeSentOn = A.Fake<WeeeSentOn>();
+
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn }));
+
+            var result = await dataAccess.GetWeeeSentOnById(weeeSentOn.Id);
+
+            result.Should().BeEquivalentTo(weeeSentOn);
+        }
+
+        [Fact]
         public async Task UpdateWithOperatorAddress_GivenAatfAndReturnId_UpdateMustHaveHappened()
         {
             var aatfId = Guid.NewGuid();
