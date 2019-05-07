@@ -1,10 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
+    using Constant;
+    using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using ViewModels;
+    using Weee.Requests.AatfReturn;
+    using Weee.Requests.Organisations;
 
     public class ReturnsController : AatfReturnBaseController
     {
@@ -19,6 +26,30 @@
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+        }
+
+        [HttpGet]
+        public virtual async Task<ActionResult> Index(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId));
+
+                var viewModel = mapper.Map<ReturnsViewModel>(@return);
+
+                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View(viewModel);
+            }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }

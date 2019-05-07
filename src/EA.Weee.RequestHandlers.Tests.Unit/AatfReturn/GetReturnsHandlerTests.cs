@@ -59,8 +59,10 @@
         public async Task HandleAsync_GivenOrganisation_GetPopulatedReturnsShouldBeCalled()
         {
             var organisationId = Guid.NewGuid();
-            //var returns = new List<Return> { A.Fake<Return>(), A.Fake<Return>() };
             var returns = A.CollectionOfFake<Return>(2);
+
+            A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
+            A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
 
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).Returns(returns);
 
@@ -73,10 +75,11 @@
         [Fact]
         public async Task HandleAsync_GivenOrganisation_PopulatedReturnsShouldBeReturned()
         {
-            var returnData = A.CollectionOfFake<ReturnData>(2);
+            var returns = A.CollectionOfFake<Return>(2);
+            var returnData = A.CollectionOfFake<ReturnData>(2).ToArray();
 
-            A.CallTo((() => populatedReturn.GetReturnData(A<Guid>._))).Returns(returnData.ElementAt(0));
-            A.CallTo((() => populatedReturn.GetReturnData(A<Guid>._))).Returns(returnData.ElementAt(1));
+            A.CallTo(() => returnDataAccess.GetByOrganisationId(A<Guid>._)).Returns(returns);
+            A.CallTo((() => populatedReturn.GetReturnData(A<Guid>._))).ReturnsNextFromSequence(returnData);
 
             var result = await handler.HandleAsync(A.Dummy<GetReturns>());
 
