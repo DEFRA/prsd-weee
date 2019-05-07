@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
@@ -13,6 +14,7 @@
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
+    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
     public class SentOnAatfSiteIntegration
     {
@@ -117,6 +119,104 @@
             }
         }
 
+        [Fact]
+        public async void RemoveWeeeSentOn_GivenWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
+
+                var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+
+                var countrySite = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+
+                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(context, dataAccess, operatorAddress, siteAddress);
+
+                var weeeSentOnAmountList = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn);
+
+                context.AatfAddress.Should().Contain(weeeSentOn.SiteAddress);
+                context.AatfAddress.Should().Contain(weeeSentOn.OperatorAddress);
+                foreach (var amount in weeeSentOnAmountList)
+                {
+                    context.WeeeSentOnAmount.Should().Contain(amount);
+                }
+                context.WeeeSentOn.Should().Contain(weeeSentOn);
+
+                await dataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmountList);
+
+                context.AatfAddress.Should().NotContain(weeeSentOn.SiteAddress);
+                context.AatfAddress.Should().NotContain(weeeSentOn.OperatorAddress);
+                foreach (var amount in weeeSentOnAmountList)
+                {
+                    context.WeeeSentOnAmount.Should().NotContain(amount);
+                }
+                context.WeeeSentOn.Should().NotContain(weeeSentOn);
+            }
+        }
+
+        [Fact]
+        public async void RemoveWeeeSentOn_GivenMultipleWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
+
+                var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
+                var countrySite = await context.Countries.SingleAsync(c => c.Name == "France");
+
+                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+
+                var operatorAddress2 = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+                var siteAddress2 = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+
+                var operatorAddress3 = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+                var siteAddress3 = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+
+                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(context, dataAccess, operatorAddress, siteAddress);
+                var weeeSentOn2 = await CreateWeeeSentOnOperatorInContext(context, dataAccess, operatorAddress2, siteAddress2);
+                var weeeSentOn3 = await CreateWeeeSentOnOperatorInContext(context, dataAccess, operatorAddress3, siteAddress3);
+
+                var weeeSentOnAmountList = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn);
+                var weeeSentOnAmountList2 = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn2);
+                var weeeSentOnAmountList3 = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn3);
+
+                var weeeSentOnCount = context.WeeeSentOn.Count();
+                var weeeSentOnAmountCount = context.WeeeSentOnAmount.Count();
+                var weeeSentOnSiteCount = context.AatfAddress.Count();
+
+                await dataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmountList);
+
+                context.WeeeSentOn.Count().Should().Be(weeeSentOnCount - 1);
+                context.WeeeSentOnAmount.Count().Should().Be(weeeSentOnAmountCount - 14);
+                context.AatfAddress.Count().Should().Be(weeeSentOnSiteCount - 2);
+
+                context.WeeeSentOn.Should().Contain(weeeSentOn2);
+                context.WeeeSentOn.Should().Contain(weeeSentOn3);
+
+                context.AatfAddress.Should().Contain(weeeSentOn2.SiteAddress);
+                context.AatfAddress.Should().Contain(weeeSentOn2.OperatorAddress);
+                context.AatfAddress.Should().Contain(weeeSentOn3.SiteAddress);
+                context.AatfAddress.Should().Contain(weeeSentOn3.OperatorAddress);
+
+                foreach (var amount in weeeSentOnAmountList2)
+                {
+                    context.WeeeSentOnAmount.Should().Contain(amount);
+                }
+
+                foreach (var amount in weeeSentOnAmountList3)
+                {
+                    context.WeeeSentOnAmount.Should().Contain(amount);
+                }
+            }
+        }
+
         private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeContext context,
             WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress)
         {
@@ -187,6 +287,22 @@
             await dataAccess.Submit(weeeSentOn);
 
             return weeeSentOn;
+        }
+
+        private async Task<List<WeeeSentOnAmount>> AppendWeeeSentOnAmountToWeeeSentOn(WeeeContext context, WeeeSentOn weeeSentOn)
+        {
+            var weeeSentOnAmountList = new List<WeeeSentOnAmount>();
+
+            foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
+            {
+                weeeSentOnAmountList.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1, weeeSentOn.Id));
+            }
+
+            context.WeeeSentOnAmount.AddRange(weeeSentOnAmountList);
+
+            await context.SaveChangesAsync();
+
+            return weeeSentOnAmountList;
         }
     }
 }
