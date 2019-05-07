@@ -6,7 +6,10 @@
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using FluentValidation.Attributes;
+    using Validation;
 
+    [Validator(typeof(SelectReportOptionsViewModelValidator))]
     public class SelectReportOptionsViewModel
     {
         public SelectReportOptionsViewModel()
@@ -34,6 +37,8 @@
         public ReturnData ReturnData { get; set; }
 
         public List<ReportOnQuestion> ReportOnQuestions { get; set; }
+
+        public bool HasSelectedOptions => SelectedOptions != null && SelectedOptions.Count != 0;
 
         public List<int> SelectedOptions { get; set; }
 

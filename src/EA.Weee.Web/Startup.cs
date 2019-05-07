@@ -59,7 +59,7 @@ namespace EA.Weee.Web
 
             ApplicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            //FluentValidationModelValidatorProvider.Configure();
+            FluentValidationModelValidatorProvider.Configure();
         }
     }
 }

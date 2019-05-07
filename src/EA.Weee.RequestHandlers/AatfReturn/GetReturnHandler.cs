@@ -10,6 +10,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
@@ -80,6 +81,8 @@
             
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
+            var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(message.ReturnId));
+
             var returnQuarterWindow = new ReturnQuarterWindow(@return, 
                 quarterWindow, 
                 aatfList, 
@@ -88,7 +91,8 @@
                 returnObligatedReusedValues,
                 @return.Operator,
                 sentOn,
-                returnSchemeList);
+                returnSchemeList,
+                returnReportsOn);
 
             var result = mapper.Map(returnQuarterWindow);
 
