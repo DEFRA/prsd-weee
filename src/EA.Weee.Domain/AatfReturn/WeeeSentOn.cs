@@ -21,16 +21,9 @@
 
         public virtual Guid SiteAddressId { get; private set; }
 
-        public virtual bool Removed { get; private set; }
-
         public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
         {
             OperatorAddress = @operator;
-        }
-
-        public virtual void RemoveWeeeSentOn()
-        {
-            Removed = true;
         }
 
         public WeeeSentOn()

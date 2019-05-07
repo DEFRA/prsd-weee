@@ -45,8 +45,7 @@
                 SiteAddress = addressMapper.Map(weeeSentOn.SiteAddress),
                 Tonnages = weeeSentOnObligatedData,
                 WeeeSentOnId = weeeSentOn.Id,
-                SiteAddressId = weeeSentOn.SiteAddress.Id,
-                Removed = weeeSentOn.Removed
+                SiteAddressId = weeeSentOn.SiteAddress.Id
             };
 
             if (weeeSentOn.OperatorAddress != null)
