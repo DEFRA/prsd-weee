@@ -381,6 +381,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
@@ -391,6 +392,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\AatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
@@ -845,6 +847,7 @@
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOnValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\Details.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
