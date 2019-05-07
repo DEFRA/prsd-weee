@@ -124,6 +124,9 @@
     <Compile Include="AatfReturn\Specification\ReturnReportOnByReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
+    <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
@@ -212,6 +215,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="Mappings\AatfDataListMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />

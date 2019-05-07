@@ -3,6 +3,7 @@
     public static class InternalUserActivity
     {
         public const string ManageScheme = "Manage PCSs";
+        public const string ManageAatfs = "Manage AATFs";
         public const string SubmissionsHistory = "Submissions history";
         public const string ProducerDetails = "Producer details and data";
         public const string ManageUsers = "Manage users";
