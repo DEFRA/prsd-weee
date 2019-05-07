@@ -50,12 +50,5 @@
         {
             return await context.WeeeSentOn.Where(w => w.Id == weeeSentOnId).SingleAsync();
         }
-
-        public Task UpdateWeeeSentOnAsRemoved(WeeeSentOn weeeSentOn)
-        {
-            weeeSentOn.RemoveWeeeSentOn();
-
-            return context.SaveChangesAsync();
-        }
     }
 }
