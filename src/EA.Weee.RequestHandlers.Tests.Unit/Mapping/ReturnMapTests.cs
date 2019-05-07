@@ -43,8 +43,8 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(), 
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -59,7 +59,8 @@
             var endTime = DateTime.Now.AddDays(1);
             var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
 
-            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow, null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), quarterWindow,
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -71,11 +72,12 @@
         public void Map_GivenSource_OperatorShouldBeMapped()
         {
             var @return = GetReturn();
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
-                A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), 
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(),
                 A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator,
                 A.Fake<List<WeeeSentOnAmount>>(),
-                A.Fake<List<ReturnScheme>>());
+                A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -90,7 +92,9 @@
             var @return = GetReturn();
             var obligatedWeeeSentOn = A.Fake<List<WeeeSentOnAmount>>();
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(),
+                @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -110,9 +114,9 @@
                 new NonObligatedWeee(@return, 1, true, 2),
                 new NonObligatedWeee(@return, 2, false, 3)
             };
-            
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), null, nonObligated,  
-                null, null, null, null, A.Fake<List<ReturnScheme>>());
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), null, nonObligated,
+                null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -125,7 +129,7 @@
         public void Map_GivenSource_ObligatedWeeeReceivedValuesShouldBeMapped()
         {
             var @return = GetReturn();
-            
+
             var weeeReceived = ReturnWeeeReceived(scheme, aatf, @return.Id);
 
             var obligated = new List<WeeeReceivedAmount>()
@@ -134,12 +138,13 @@
                 new WeeeReceivedAmount(weeeReceived, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
-                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated, 
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated,
                 A.Fake<List<WeeeReusedAmount>>(), @operator,
                 A.Fake<List<WeeeSentOnAmount>>(),
-                A.Fake<List<ReturnScheme>>());
-          
+                A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReturnReportOn>>());
+
             var result = map.Map(source);
 
             result.ObligatedWeeeReceivedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
@@ -160,10 +165,11 @@
                 new WeeeReusedAmount(weeeReused, 2, 3.000m, 4.000m)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
-                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
-                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
-          
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
+                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReturnReportOn>>());
+
             var result = map.Map(source);
 
             result.ObligatedWeeeReusedData.Count(o => o.CategoryId == 1 && o.B2C == 1 && o.B2B == 2).Should().Be(1);
@@ -184,9 +190,10 @@
                 new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m, weeeSentOn.Id),
                 new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m, weeeSentOn.Id)
             };
-            
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), 
-                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>());
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(),
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -206,9 +213,10 @@
                 new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator)
             };
 
-            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), 
-                aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), 
-                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>());
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
+                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -220,12 +228,21 @@
         }
 
         [Fact]
-        public void Map_GivenSource_ReturnSchemesShouldBeMapped()
+        public void Map_GivenSource_ReturnReportOnsShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+            var @return = GetReturn();
+            var returnReportOnList = new List<ReturnReportOn>();
+            returnReportOnList.Add(new ReturnReportOn(@return.Id, 1));
+            returnReportOnList.Add(new ReturnReportOn(@return.Id, 3));
+
+            var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), returnReportOnList);
 
             var result = map.Map(source);
+
+            result.ReturnReportOns.Count.Should().Be(2);
+            result.ReturnReportOns.Count(r => r.ReportOnQuestionId == 1).Should().Be(1);
+            result.ReturnReportOns.Count(r => r.ReportOnQuestionId == 3).Should().Be(1);
         }
 
         public Return GetReturn()
