@@ -37,18 +37,7 @@
 
             var weeeSentOnAmount = await obligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(message.WeeeSentOnId);
 
-            context.Entry(weeeSentOn.SiteAddress).State = System.Data.Entity.EntityState.Deleted;
-
-            context.Entry(weeeSentOn.OperatorAddress).State = System.Data.Entity.EntityState.Deleted;
-
-            context.Entry(weeeSentOn).State = System.Data.Entity.EntityState.Deleted;
-
-            foreach (var amount in weeeSentOnAmount)
-            {
-                context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
-            }
-
-            await context.SaveChangesAsync();
+            await sentOnDataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmount);
 
             return true;
         }
