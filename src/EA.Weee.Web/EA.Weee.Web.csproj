@@ -293,6 +293,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReturnsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectReportOptionsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReusedController.cs" />
@@ -843,6 +844,7 @@
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOnValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Returns\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
