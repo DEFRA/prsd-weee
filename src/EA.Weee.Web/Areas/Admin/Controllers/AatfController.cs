@@ -34,10 +34,29 @@
             AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
             {
                 AatfId = id,
-                AatfName = ""
+                AatfName = String.Empty
             };
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            SetBreadcrumb();
+
+            AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
+            {
+                AatfId = id,
+                AatfName = String.Empty
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(AatfEditContactAddressViewModel viewModel)
+        {
         }
 
         private void SetBreadcrumb()

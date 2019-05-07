@@ -1,0 +1,24 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditContactAddressViewModel
+@{
+    ViewBag.Title = "Edit AATF contact details - GOV.UK";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Which site received the WEEE for reuse?</h1>
+
+    @using (Html.BeginRouteForm(FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.EditorFor(m => m.ContactData)
+
+        <div class="govuk-!-padding-bottom-3"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+    }
+</section>
