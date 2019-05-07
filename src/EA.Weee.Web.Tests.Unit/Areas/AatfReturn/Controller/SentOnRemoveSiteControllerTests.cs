@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -14,15 +15,12 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Xunit;
 
     public class SentOnRemoveSiteControllerTests
     {
-        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly SentOnRemoveSiteController controller;
@@ -30,12 +28,12 @@
 
         public SentOnRemoveSiteControllerTests()
         {
-            this.apiClient = A.Fake<Func<IWeeeClient>>();
+            this.apiClient = A.Fake<IWeeeClient>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
             this.mapper = A.Fake<IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel>>();
 
-            controller = new SentOnRemoveSiteController(apiClient, breadcrumb, cache, mapper);
+            controller = new SentOnRemoveSiteController(() => apiClient, breadcrumb, cache, mapper);
         }
 
         [Fact]
@@ -59,6 +57,58 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenSelectedValueIsYes_RemoveWeeeSentOnIsCalled()
+        {
+            var viewModel = new SentOnRemoveSiteViewModel()
+            {
+                SelectedValue = "Yes",
+                WeeeSentOnId = Guid.NewGuid()
+            };
+
+            await controller.Index(viewModel);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveWeeeSentOn>.That.Matches(r => r.WeeeSentOnId == viewModel.WeeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+        
+        [Fact]
+        public async void IndexPost_GivenSelectedValueIsNo_RedirectToActionIsCalled()
+        {
+            var returnId = new Guid();
+            var organisationId = new Guid();
+            var aatfId = new Guid();
+            var model = new SentOnRemoveSiteViewModel()
+            {
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                AatfId = aatfId
+            };
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
+            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+        }
+
+        [Fact]
+        public async void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
+        {
+            var weeeSentOn = new WeeeSentOnData();
+            weeeSentOn.SiteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
+            weeeSentOn.OperatorAddress = new AatfAddressData("Operator name", "Op address 1", "Op address 2", "Op town", "Op county", "GU22 7UT", Guid.NewGuid(), "Op country");
+            var siteAddressLong = string.Empty;
+            var operatorAddressLong = string.Empty;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>._)).Returns(weeeSentOn);
+            A.CallTo(() => controller.GenerateAddress(A<AatfAddressData>.That.Matches(a => a.Id == weeeSentOn.SiteAddress.Id))).Returns(siteAddressLong);
+            A.CallTo(() => controller.GenerateAddress(A<AatfAddressData>.That.Matches(a => a.Id == weeeSentOn.OperatorAddress.Id))).Returns(operatorAddressLong);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
         }
     }
 }
