@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSchemes
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
     using System;
     using System.Collections.Generic;
