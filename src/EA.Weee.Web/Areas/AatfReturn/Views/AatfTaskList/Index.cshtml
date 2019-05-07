@@ -78,6 +78,8 @@
                 </div>
             }
 
+            if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+            {
             <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
                 <div class="govuk-grid-column-one-half">
                     <p>
@@ -106,7 +108,10 @@
                 </div>
 
             </div>
+            }
 
+            if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
+            {
             <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
                 <div class="govuk-grid-column-one-half">
                     <p>
@@ -133,6 +138,7 @@
                     </p>
                 </div>
             </div>
+            }
         }
     }
 
