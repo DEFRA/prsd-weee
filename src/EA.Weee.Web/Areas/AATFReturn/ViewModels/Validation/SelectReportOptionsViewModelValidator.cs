@@ -12,10 +12,12 @@
                 .Custom((o, context) =>
             {
                 var instance = context.InstanceToValidate as SelectReportOptionsViewModel;
-                if (instance != null && instance.SelectedOptions != null)
+
+                if (instance?.SelectedOptions != null)
                 {
-                    var dcfQuestion = instance.ReportOnQuestions.Where(d => d.ParentId != default(int)).FirstOrDefault();
-                    bool isParentSelected = instance.SelectedOptions.Contains(dcfQuestion.ParentId ?? default(int));
+                    var dcfQuestion = instance.ReportOnQuestions.FirstOrDefault(d => d.ParentId != default(int));
+                    var isParentSelected = dcfQuestion != null && instance.SelectedOptions.Contains(dcfQuestion.ParentId ?? default(int));
+
                     if (isParentSelected && !instance.DcfPossibleValues.Contains(instance.DcfSelectedValue))
                     {
                         context.AddFailure(new ValidationFailure($"DcfSelectedValue", $"You must tell us whether any of the non-obligated WEEE was retained by a DCF"));

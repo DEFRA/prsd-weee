@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
@@ -25,6 +27,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
+        private const string pcsQuestion = "PCS";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -65,14 +68,11 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectReportOptionsViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                await ValidateResult(viewModel);
-            }
+            SetSelected(viewModel);
 
             if (ModelState.IsValid)
             {
-                if (viewModel.SelectedOptions != null)
+                if (viewModel.HasSelectedOptions)
                 {
                     using (var client = apiClient())
                     {
@@ -82,7 +82,12 @@
                     }
                 }
 
-                return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                if (viewModel.ReportOnQuestions.First(r => r.Question == pcsQuestion).Selected)
+                {
+                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                }
+
+                return AatfRedirect.TaskList(viewModel.ReturnId);
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
@@ -90,24 +95,22 @@
             return View(viewModel);
         }
 
+        private void SetSelected(SelectReportOptionsViewModel viewModel)
+        {
+            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+            {
+                foreach (var option in viewModel.SelectedOptions)
+                {
+                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
+                }
+            }
+        }
+
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-        }
-
-        private async Task ValidateResult(SelectReportOptionsViewModel model)
-        {
-            var result = await validator.Validate(model);
-
-            if (!result.IsValid)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-            }
         }
     }
 }

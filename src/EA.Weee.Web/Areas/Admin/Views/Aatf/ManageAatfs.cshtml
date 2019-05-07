@@ -1,0 +1,104 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
+@{
+    ViewBag.Title = "Manage Aatfs";
+}
+
+@section scripts{
+    <script>
+        $('#idManageAatfsTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Manage AATFs
+    </h1>
+</header>
+@using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    @*<div class="table-hr"></div>
+    <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name of Aatf</th>
+                    <th class="govuk-table__header" scope="col">Approval Number</th>
+                    <th class="govuk-table__header" scope="col">Appropriate Authority</th>
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var aatf in Model.AatfDataList)
+                {
+                <tr>
+                    <td class="govuk-table__cell" width="100%">@aatf.Name</td>
+                    <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
+                    <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
+                    <td class="govuk-table__cell">@aatf.AatfStatusString</td>
+                    <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, @aatf.Id)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />*@
+    <div class="govuk-table govuk-grid-column-full">
+        <div class="govuk-grid-row govuk-table__header weee-tonnage-top-aligned-display" style="background-color:#D0D0D0">
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-third" style="width:150px;">
+                    Name of Aatf
+                </div>
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    Approval Number
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    Appropriate Authority
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    Status
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    Select
+                </div>
+            </div>
+        </div>
+        @foreach (var aatf in Model.AatfDataList)
+        {
+        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display" style="background-color:#F8F8F8;padding-right: 20px;">
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-two-thirds">
+                    @aatf.Name
+                </div>
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    @aatf.ApprovalNumber
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    @aatf.CompetentAuthority.Abbreviation
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-left-aligned-display">
+                    @aatf.AatfStatusString
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-centre-aligned-display">
+                    @Html.RadioButtonFor(m => m.Selected, @aatf.Id)
+                </div>
+            </div>
+        </div>
+
+        }
+    </div>
+
+    @(this.WeeeGds().Submit("Continue"))
+}
