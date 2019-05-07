@@ -1,0 +1,172 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Home
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
+@{
+    ViewBag.Title = "View AATF details - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <section class="govuk-grid-column-full" id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l"> @Model.AatfName</h1>
+        </header>
+    </section>
+</div>
+
+<div class="govuk-tabs" data-module="tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#aatfDetails">
+                AATF details
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#data">
+                Data
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#organistationDetails">
+                Organisation details
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#contactDetails">
+                Contact details
+            </a>
+        </li>
+    </ul>
+
+    <section class="govuk-tabs__panel" id="aatfDetails">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name of AATF</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Site address</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Appropiate authority</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Size</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval date</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        <h2 class="govuk-table__header">
+                            AATF data returns
+                            </h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organistationDetails">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company name</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Trading name</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company registration number</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr>
+                    <th colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">First name</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Last name</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Position</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email</th>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
