@@ -18,7 +18,5 @@
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
 
         Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId);
-
-        Task RemoveWeeeSentOn(WeeeSentOn weeeSentOn, List<WeeeSentOnAmount> weeeSentOnAmount);
     }
 }

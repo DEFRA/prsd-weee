@@ -50,21 +50,5 @@
         {
             return await context.WeeeSentOn.Where(w => w.Id == weeeSentOnId).SingleAsync();
         }
-
-        public Task RemoveWeeeSentOn(WeeeSentOn weeeSentOn, List<WeeeSentOnAmount> weeeSentOnAmount)
-        {
-            context.Entry(weeeSentOn.SiteAddress).State = System.Data.Entity.EntityState.Deleted;
-
-            context.Entry(weeeSentOn.OperatorAddress).State = System.Data.Entity.EntityState.Deleted;
-
-            context.Entry(weeeSentOn).State = System.Data.Entity.EntityState.Deleted;
-
-            foreach (var amount in weeeSentOnAmount)
-            {
-                context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
-            }
-
-            return context.SaveChangesAsync();
-        }
     }
 }

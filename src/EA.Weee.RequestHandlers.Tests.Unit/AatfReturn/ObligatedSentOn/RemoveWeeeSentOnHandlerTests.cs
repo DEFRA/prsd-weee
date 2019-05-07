@@ -49,7 +49,7 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-
+        
         [Fact]
         public async Task HandleAsync_GivenGetSentOnAatfSiteRequest_DataAccessIsCalled()
         {
@@ -62,7 +62,8 @@
 
             await handler.HandleAsync(new RemoveWeeeSentOn(weeeSentOnId));
 
-            A.CallTo(() => sentOnDataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmount)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.Remove(weeeSentOn)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.RemoveMany(weeeSentOnAmount)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

@@ -36,20 +36,17 @@
             return context.SaveChangesAsync();
         }
 
-        public async Task<Guid> Remove<TEntity>(TEntity entity) where TEntity : Entity
+        public void Remove<TEntity>(TEntity entity) where TEntity : Entity
         {
-            context.Set<TEntity>().Remove(entity);
-
-            await context.SaveChangesAsync();
-
-            return entity.Id;
+            context.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
         }
 
-        public Task RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
+        public void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
         {
-            context.Set<TEntity>().RemoveRange(amounts);
-
-            return context.SaveChangesAsync();
+            foreach (var amount in amounts)
+            {
+                context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
+            }
         }
 
         public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class
