@@ -72,5 +72,15 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task GetAatfsList_Always_SetsInternalBreadcrumbToManageAATFs()
+        {
+            AatfController controller = CreateController();
+
+            ActionResult result = await controller.ManageAatfs();
+
+            Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
+        }
     }
 }
