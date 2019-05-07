@@ -87,7 +87,7 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private string GenerateAddress(AatfAddressData address)
+        public virtual string GenerateAddress(AatfAddressData address)
         {
             var siteAddressLong = address.Name + "<br/>" + address.Address1;
 
