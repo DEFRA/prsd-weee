@@ -1,1 +1,0 @@
-﻿ALTER TABLE [AATF].[WeeeSentOn] ADD Removed BIT

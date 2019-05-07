@@ -6,10 +6,6 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class RemoveWeeeSentOnHandler : IRequestHandler<RemoveWeeeSentOn, bool>
@@ -37,7 +33,15 @@
 
             var weeeSentOnAmount = await obligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(message.WeeeSentOnId);
 
-            await sentOnDataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmount);
+            genericDataAccess.Remove(weeeSentOn.SiteAddress);
+
+            genericDataAccess.Remove(weeeSentOn.OperatorAddress);
+
+            genericDataAccess.Remove(weeeSentOn);
+
+            genericDataAccess.RemoveMany(weeeSentOnAmount);
+
+            await context.SaveChangesAsync();
 
             return true;
         }
