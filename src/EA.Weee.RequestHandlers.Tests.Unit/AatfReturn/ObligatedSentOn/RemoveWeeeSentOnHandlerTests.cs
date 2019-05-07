@@ -3,6 +3,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -23,6 +24,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IFetchObligatedWeeeForReturnDataAccess obligatedWeeeDataAccess;
         private readonly RemoveWeeeSentOnHandler handler;
 
         public RemoveWeeeSentOnHandlerTests()
@@ -31,8 +33,9 @@
             this.authorization = A.Fake<IWeeeAuthorization>();
             this.sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             this.genericDataAccess = A.Fake<IGenericDataAccess>();
+            this.obligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
 
-            handler = new RemoveWeeeSentOnHandler(context, authorization, sentOnDataAccess, genericDataAccess);
+            handler = new RemoveWeeeSentOnHandler(context, authorization, sentOnDataAccess, genericDataAccess, obligatedWeeeDataAccess);
         }
 
         [Fact]
@@ -40,7 +43,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new RemoveWeeeSentOnHandler(context, authorization, sentOnDataAccess, genericDataAccess);
+            var handler = new RemoveWeeeSentOnHandler(context, authorization, sentOnDataAccess, genericDataAccess, obligatedWeeeDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<RemoveWeeeSentOn>());
 
@@ -52,12 +55,14 @@
         {
             var weeeSentOnId = Guid.NewGuid();
             var weeeSentOn = new WeeeSentOn();
+            var weeeSentOnAmount = new List<WeeeSentOnAmount>();
 
             A.CallTo(() => genericDataAccess.GetById<WeeeSentOn>(weeeSentOnId)).Returns(weeeSentOn);
+            A.CallTo(() => obligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(weeeSentOnId)).Returns(weeeSentOnAmount);
 
             await handler.HandleAsync(new RemoveWeeeSentOn(weeeSentOnId));
 
-            A.CallTo(() => sentOnDataAccess.UpdateWeeeSentOnAsRemoved(weeeSentOn)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => sentOnDataAccess.RemoveWeeeSentOn(weeeSentOn, weeeSentOnAmount)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
