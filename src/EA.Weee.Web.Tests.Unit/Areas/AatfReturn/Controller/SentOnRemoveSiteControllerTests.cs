@@ -97,7 +97,7 @@
 
         [Fact]
         public void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
-        {            
+        {
             var siteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
             var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
 

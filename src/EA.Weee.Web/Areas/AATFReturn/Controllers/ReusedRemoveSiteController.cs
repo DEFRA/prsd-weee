@@ -25,11 +25,12 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer, ReusedRemoveSiteViewModel> mapper;
 
-        public ReusedRemoveSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public ReusedRemoveSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMap<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer, ReusedRemoveSiteViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -100,7 +101,12 @@
                 siteAddressLong += "<br/>" + address.CountyOrRegion;
             }
 
-            siteAddressLong += "<br/>" + address.CountryName + "<br/>" + address.Postcode;
+            siteAddressLong += "<br/>" + address.CountryName;
+
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
 
             return siteAddressLong;
         }
