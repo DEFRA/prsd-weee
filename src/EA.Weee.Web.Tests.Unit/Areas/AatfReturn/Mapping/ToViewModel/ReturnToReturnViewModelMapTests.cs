@@ -209,6 +209,333 @@
             result.AatfsData[0].WeeeSentOn.B2C.Should().Be(nullTonnageDisplay);
         }
 
+        [Fact]
+        public void Map_GivenNullNonObligated_NonObligatedTotalReturnsNullTonnageDisplay()
+        {
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, null, true, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, null, false, Guid.NewGuid()));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be(nullTonnageDisplay);
+        }
+
+        [Fact]
+        public void Map_GivenEmptyDcfNonObligated_NonObligatedTotalReturnsNullTonnageDisplay()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = null,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be(nullTonnageDisplay);
+        }
+
+        [Fact]
+        public void Map_GivenNullDcfNonObligated_NonObligatedTotalShouldBeCorrect()
+        {
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, null, true, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, 1m, false, Guid.NewGuid()));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be("1.000");
+        }
+
+        [Fact]
+        public void Map_GivenNullNonDcfNonObligated_NonObligatedTotalShouldBeCorrect()
+        {
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, 1m, true, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, null, false, Guid.NewGuid()));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be("1.000");
+        }
+
+        [Fact]
+        public void Map_GivenNonDcfAndDcfNonObligated_NonObligatedTotalShouldBeCorrect()
+        {
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, 1m, true, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(1, 2m, false, Guid.NewGuid()));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be("3.000");
+        }
+
+        [Fact]
+        public void Map_GivenEmptyAatfData_ObligatedTotalReturnsNullTonnageDisplay()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be(nullTonnageDisplay);
+        }
+
+        [Fact]
+        public void Map_GivenAllAatfDataIsEmpty_ObligatedTotalReturnsNullTonnageDisplay()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.NonObligatedTotal.Should().Be(nullTonnageDisplay);
+        }
+
+        [Fact]
+        public void Map_GivenReuseData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("3.000");
+        }
+
+        [Fact]
+        public void Map_GivenReceivedData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("3.000");
+        }
+
+        [Fact]
+        public void Map_GivenSentOnData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("3.000");
+        }
+
+        [Fact]
+        public void Map_GivenSentOnEmptyReceivedAndReUsedData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 4m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("10.000");
+        }
+
+        [Fact]
+        public void Map_GivenSentOnReceivedAndEmptyReUsedData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 5m, 6m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("14.000");
+        }
+
+        [Fact]
+        public void Map_GivenEmptySentOnReceivedAndReUsedData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 4m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 5m, 6m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("18.000");
+        }
+
+        [Fact]
+        public void Map_GivenSentOnReceivedAndReUsedData_ObligatedTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 1m, 2m));
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 4m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 5m, 6m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedTotal.Should().Be("21.000");
+        }
+
         private void ReturnViewModelMapCommonAsserts(Web.Areas.AatfReturn.ViewModels.ReturnViewModel result)
         {
             result.ReturnId.Should().Be(mapperTestId);

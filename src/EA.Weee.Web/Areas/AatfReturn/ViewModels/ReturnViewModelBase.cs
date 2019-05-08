@@ -17,14 +17,27 @@
 
         public virtual string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {Year}";
 
-        protected ReturnViewModelBase(Quarter quarter, QuarterWindow window, int year)
-        {
-            Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => window, window);
+        public string CreatedBy { get; private set; }
 
-            this.QuarterWindow = window;
-            this.quarter = quarter;
-            this.year = year;
+        public string CreatedDate { get; private set; }
+
+        public string SubmittedBy { get; private set; }
+
+        public string SubmittedDate { get; private set; }
+
+        protected ReturnViewModelBase(ReturnData returnData)
+        {
+            Guard.ArgumentNotNull(() => returnData, returnData);
+            Guard.ArgumentNotNull(() => returnData.Quarter, returnData.Quarter);
+            Guard.ArgumentNotNull(() => returnData.QuarterWindow, returnData.QuarterWindow);
+
+            this.QuarterWindow = returnData.QuarterWindow;
+            this.quarter = returnData.Quarter;
+            this.year = returnData.Quarter.Year;
+            this.CreatedBy = returnData.CreatedBy;
+            this.CreatedDate = returnData.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss");
+            this.SubmittedBy = returnData.SubmittedBy;
+            this.SubmittedDate = returnData.SubmittedDate.HasValue ? returnData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
         }
 
         protected ReturnViewModelBase()

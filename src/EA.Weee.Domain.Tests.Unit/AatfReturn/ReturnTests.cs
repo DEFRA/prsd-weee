@@ -70,10 +70,10 @@
             @return.Operator.Should().Be(aatfOperator);
             @return.Quarter.Should().Be(quarter);
             @return.ReturnStatus.Should().Be(ReturnStatus.Created);
-            @return.CreatedBy.Should().Be(userId);
+            @return.CreatedById.Should().Be(userId);
             @return.CreatedDate.Date.Should().Be(new DateTime(2019, 05, 2));
             @return.SubmittedDate.Should().BeNull();
-            @return.SubmittedBy.Should().BeNull();
+            @return.SubmittedById.Should().BeNull();
         }
 
         [Theory]
@@ -113,7 +113,7 @@
             SystemTime.Unfreeze();
 
             @return.SubmittedDate.Value.Date.Should().Be(new DateTime(2019, 05, 2));
-            @return.SubmittedBy.Should().Be("me2");
+            @return.SubmittedById.Should().Be("me2");
             @return.ReturnStatus.Should().Be(ReturnStatus.Submitted);
         }
 

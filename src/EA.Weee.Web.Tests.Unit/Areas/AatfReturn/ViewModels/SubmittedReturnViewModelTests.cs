@@ -13,9 +13,14 @@
         [Fact]
         public void SubmittedReturnViewModel_GivenQuarterIsNull_ArgumentNullExceptionExpected()
         {
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2020, 1, 1))
+            };
+
             Action action = () =>
             {
-                var submittedReturnViewModel = new SubmittedReturnViewModel(null, A.Fake<QuarterWindow>(), 1);
+                var submittedReturnViewModel = new SubmittedReturnViewModel(returnData);
             };
 
             action.Should().Throw<ArgumentNullException>();
@@ -24,9 +29,14 @@
         [Fact]
         public void SubmittedReturnViewModel_GivenQuarterWindowIsNull_ArgumentNullExceptionExpected()
         {
+            var returnData = new ReturnData()
+            {
+                Quarter = new Quarter(2019, QuarterType.Q1)
+            };
+
             Action action = () =>
             {
-                var submittedReturnViewModel = new SubmittedReturnViewModel(new Quarter(2019, QuarterType.Q1), null, 1);
+                var submittedReturnViewModel = new SubmittedReturnViewModel(returnData);
             };
 
             action.Should().Throw<ArgumentNullException>();
