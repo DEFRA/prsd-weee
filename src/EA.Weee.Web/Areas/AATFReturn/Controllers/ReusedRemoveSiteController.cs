@@ -23,6 +23,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMap<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer, ReusedRemoveSiteViewModel> mapper;
 
         public ReusedRemoveSiteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
@@ -38,8 +39,8 @@
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
                 var site = sites.AddressData.Select(s => s).Where(s => s.Id == siteId).Single();
-                
-                var viewModel = new ReusedRemoveSiteViewModel()
+
+                var viewModel = mapper.Map(new ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer()
                 {
                     SiteAddress = GenerateAddress(site),
                     Site = site,
@@ -47,7 +48,7 @@
                     AatfId = aatfId,
                     ReturnId = returnId,
                     OrganisationId = organisationId
-                };
+                });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
@@ -65,11 +66,7 @@
                 {
                     if (viewModel.SelectedValue == "Yes")
                     {
-                        await client.SendAsync(User.GetAccessToken(), new RemoveAatfSite(viewModel.SiteId)
-                        {
-                            AatfId = viewModel.AatfId,
-                            ReturnId = viewModel.ReturnId
-                        });
+                        await client.SendAsync(User.GetAccessToken(), new RemoveAatfSite(viewModel.SiteId));
                     }
 
                     return await Task.Run<ActionResult>(() =>
