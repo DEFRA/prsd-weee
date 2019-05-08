@@ -64,7 +64,7 @@
             string name = "fake name";
             string approvalNumber = "1234";
 
-            Aatf aatf = new Aatf(name, A.Fake<Domain.UKCompetentAuthority>(), approvalNumber, A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Operator>());
+            Aatf aatf = new Aatf(name, A.Fake<Domain.UKCompetentAuthority>(), approvalNumber, A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now);
             A.CallTo(() => dataAccess.GetAatfById(id)).Returns(aatf);
 
             // Act

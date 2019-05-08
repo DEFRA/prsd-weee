@@ -47,7 +47,7 @@
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
-                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
+                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
                 var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
                 database.WeeeContext.Organisations.Add(organisation);
@@ -95,6 +95,11 @@
                     reusedHouseholdList.Should().Contain(category.HouseholdTonnage);
                 }
             }
+        }
+
+        private AatfAddress CreateAddress()
+        {
+            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England"));
         }
     }
 }

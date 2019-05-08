@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
     using Core.Shared;
 
     public class AatfData
@@ -23,5 +22,8 @@
         public virtual UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
+        public virtual AatfAddressData SiteAddress { get; set; }
+        public int Size { get; set; }
+        public DateTime ApprovalDate { get; set; }
     }
 }

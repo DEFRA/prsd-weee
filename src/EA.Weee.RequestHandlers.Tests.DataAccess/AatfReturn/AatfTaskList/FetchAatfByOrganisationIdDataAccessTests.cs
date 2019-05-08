@@ -64,7 +64,10 @@
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
-                @operator);
+                @operator,
+                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England")),
+                A.Fake<AatfSize>(),
+                DateTime.Now);
         }
     }
 }
