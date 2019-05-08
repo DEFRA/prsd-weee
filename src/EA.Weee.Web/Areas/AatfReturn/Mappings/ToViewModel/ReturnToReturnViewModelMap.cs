@@ -10,9 +10,6 @@
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {
-        //public decimal? NonObligatedTonnageTotal = null;
-        //public decimal? NonObligatedTonnageTotalDcf = null;
-
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
         public TaskListDisplayOptions DisplayOptions = new TaskListDisplayOptions();
         private readonly ITonnageUtilities tonnageUtilities;
@@ -106,7 +103,8 @@
             return new ReturnViewModel(
                 source,
                 AatfObligatedData,
-                source.ReturnOperatorData)
+                source.ReturnOperatorData,
+                DisplayOptions)
             {
                 NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),

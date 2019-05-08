@@ -19,7 +19,7 @@
             this.Year = returnData.Quarter.Year.ToString();
             this.AatfsData = obligatedTonnage;
             this.ReturnOperator = returnOperator;
-            this.ReturnId = returnId;
+            this.ReturnId = returnData.Id;
             this.ReportOnDisplayOptions = displayOptions;
         }
 

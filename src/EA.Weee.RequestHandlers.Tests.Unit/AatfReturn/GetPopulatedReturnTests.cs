@@ -15,11 +15,13 @@
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.CheckYourReturn;
+    using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetPopulatedReturnTests
     {
@@ -29,20 +31,22 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
-        private readonly ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetPopulatedReturnTests()
         {
             returnDataAccess = A.Fake<IReturnDataAccess>();
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-            sentOnAatfSiteDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
+            sentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
 
             populatedReturn = new GetPopulatedReturn(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -54,7 +58,8 @@
                 fetchObligatedWeeeDataAccess,
                 sentOnAatfSiteDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
-                returnSchemeDataAccess);
+                returnSchemeDataAccess,
+                genericDataAccess);
         }
 
         [Fact]
@@ -68,9 +73,10 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IWeeeSentOnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>());
+                A.Dummy<IReturnSchemeDataAccess>(),
+                A.Dummy<IGenericDataAccess>());
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>());
 
@@ -89,9 +95,10 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<ISentOnAatfSiteDataAccess>(),
+                A.Dummy<IWeeeSentOnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IReturnSchemeDataAccess>());
+                A.Dummy<IReturnSchemeDataAccess>(),
+                A.Dummy<IGenericDataAccess>());
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>());
 
@@ -189,7 +196,17 @@
 
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
-    
+
+        [Fact]
+        public async Task GetReturnData_GivenReturn_ReturnReportsOnShouldBeRetrieved()
+        {
+            var returnId = Guid.NewGuid();
+
+            var result = await populatedReturn.GetReturnData(returnId);
+
+            A.CallTo(() => genericDataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(s => s.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         [Fact]
         public async Task GetReturnData_GivenReturn_MapperShouldBeCalled()
         {
@@ -200,6 +217,7 @@
             var obligatedReusedValues = new List<WeeeReusedAmount>();
             var obligatedSentOnValues = new List<WeeeSentOnAmount>();
             var returnSchemes = new List<ReturnScheme>();
+            var reportsOn = new List<ReturnReportOn>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
@@ -208,6 +226,7 @@
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnSchemes);
+            A.CallTo(() => genericDataAccess.GetManyByExpression<ReturnReportOn>(A<ReturnReportOnByReturnIdSpecification>._)).Returns(reportsOn);
 
             await populatedReturn.GetReturnData(A.Dummy<Guid>());
 
@@ -217,7 +236,8 @@
                                                                                 && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
                                                                                 && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)
-                                                                                && c.ReturnSchemes.Equals(returnSchemes)))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                && c.ReturnSchemes.Equals(returnSchemes)
+                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

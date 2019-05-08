@@ -116,8 +116,7 @@
             var redirectResult = await controller.Index(model) as RedirectToRouteResult;
 
             redirectResult.RouteName.Should().Be(AatfRedirect.SelectReportOptionsRouteName);
-            redirectResult.RouteValues["Controller"].Should().Be("SelectReportOptions");
-            redirectResult.RouteValues["Index"].Should().Be("Index");
+            redirectResult.RouteValues["action"].Should().Be("Index");
             redirectResult.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             redirectResult.RouteValues["returnId"].Should().Be(returnId);
         }
