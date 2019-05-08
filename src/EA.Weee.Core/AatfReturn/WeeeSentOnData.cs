@@ -17,6 +17,8 @@
 
         public virtual Guid SiteAddressId { get; set; }
 
+        public virtual bool Removed { get; set; }
+
         public virtual Guid OperatorAddressId { get; set; }
 
         public List<WeeeObligatedData> Tonnages { get; set; }

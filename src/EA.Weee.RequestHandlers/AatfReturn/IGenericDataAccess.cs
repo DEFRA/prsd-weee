@@ -21,5 +21,9 @@
         Task<TEntity> GetSingleByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;
 
         Task<List<TEntity>> GetManyByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;
+
+        void Remove<TEntity>(TEntity entity) where TEntity : Entity;
+
+        void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity;
     }
 }
