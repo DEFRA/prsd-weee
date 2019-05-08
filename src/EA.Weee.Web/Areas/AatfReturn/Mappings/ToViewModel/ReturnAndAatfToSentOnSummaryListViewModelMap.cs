@@ -9,7 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
-    
+
     public class ReturnAndAatfToSentOnSummaryListViewModelMap : IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel>
     {
         private readonly IWeeeCache cache;
@@ -22,7 +22,7 @@
             this.cache = cache;
             this.tonnageUtilities = tonnageUtilities;
         }
-        
+
         public SentOnSiteSummaryListViewModel Map(ReturnAndAatfToSentOnSummaryListViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
