@@ -32,7 +32,10 @@
         public GetAatfByIdRequestHandlerTests()
         {
             authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            mapper = new AatfMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(), A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>());
+            mapper = new AatfMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(),
+                A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>(),
+                A.Fake<IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize>>(),
+                A.Fake<IMap<AatfAddress, AatfAddressData>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
             
             handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
@@ -64,7 +67,7 @@
             string name = "fake name";
             string approvalNumber = "1234";
 
-            Aatf aatf = new Aatf(name, A.Fake<Domain.UKCompetentAuthority>(), approvalNumber, A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now);
+            Aatf aatf = new Aatf(name, A.Fake<Domain.UKCompetentAuthority>(), approvalNumber, A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now);
             A.CallTo(() => dataAccess.GetAatfById(id)).Returns(aatf);
 
             // Act

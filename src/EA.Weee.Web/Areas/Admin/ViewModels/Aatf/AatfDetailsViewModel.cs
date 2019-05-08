@@ -13,5 +13,8 @@
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public AatfStatus AatfStatus { get; set; }
+        public virtual AatfAddressData SiteAddress { get; set; }
+        public AatfSize Size { get; set; }
+        public DateTime ApprovalDate { get; set; }
     }
 }

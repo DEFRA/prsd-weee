@@ -56,7 +56,14 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Site address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">
+                        @Model.SiteAddress.Address1<br />
+                        @Model.SiteAddress.Address2<br />
+                        @Model.SiteAddress.TownOrCity<br />
+                        @Model.SiteAddress.CountyOrRegion<br />
+                        @Model.SiteAddress.Postcode<br />
+                        @Model.SiteAddress.CountryName<br />
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Approval number</th>
@@ -70,15 +77,15 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Status</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.AatfStatus</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Size</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Size</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Approval date</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ApprovalDate</td>
                 </tr>
             </tbody>
         </table>

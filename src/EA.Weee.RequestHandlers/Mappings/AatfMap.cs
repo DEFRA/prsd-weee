@@ -10,11 +10,18 @@
     {
         private readonly IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap;
         private readonly IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> aatfStatusMap;
+        private readonly IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize> aatfSizeMap;
+        private readonly IMap<AatfAddress, AatfAddressData> aatfAddressMap;
 
-        public AatfMap(IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap, IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> aatfStatusMap)
+        public AatfMap(IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap,
+            IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> aatfStatusMap,
+            IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize> aatfSizeMap,
+            IMap<AatfAddress, AatfAddressData> aatfAddressMap)
         {
             this.competentAuthorityMap = competentAuthorityMap;
             this.aatfStatusMap = aatfStatusMap;
+            this.aatfSizeMap = aatfSizeMap;
+            this.aatfAddressMap = aatfAddressMap;
         }
 
         public AatfData Map(Aatf source)
@@ -25,7 +32,11 @@
 
             Core.AatfReturn.AatfStatus aatfStatus = aatfStatusMap.Map(source.AatfStatus);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus);
+            Core.AatfReturn.AatfSize aatfSize = aatfSizeMap.Map(source.Size);
+
+            AatfAddressData address = aatfAddressMap.Map(source.SiteAddress);
+
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate);
         }
     }
 }

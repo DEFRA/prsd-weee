@@ -5,13 +5,16 @@
 
     public class AatfData
     {
-        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null)
+        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
         {
             this.Id = id;
             this.Name = name;
             this.ApprovalNumber = approvalNumber;
             this.CompetentAuthority = competentAuthority;
             this.AatfStatus = status;
+            this.SiteAddress = siteAddress;
+            this.Size = size;
+            this.ApprovalDate = approvalDate;
         }
 
         public Guid Id { get; set; }
@@ -23,7 +26,7 @@
 
         public virtual AatfStatus AatfStatus { get; set; }
         public virtual AatfAddressData SiteAddress { get; set; }
-        public int Size { get; set; }
+        public AatfSize Size { get; set; }
         public DateTime ApprovalDate { get; set; }
     }
 }

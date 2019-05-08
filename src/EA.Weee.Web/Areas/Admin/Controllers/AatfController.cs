@@ -46,7 +46,11 @@
                 AatfId = id,
                 AatfName = aatf.Name,
                 ApprovalNumber = aatf.ApprovalNumber,
-                CompetentAuthority = aatf.CompetentAuthority
+                CompetentAuthority = aatf.CompetentAuthority,
+                AatfStatus = aatf.AatfStatus,
+                SiteAddress = aatf.SiteAddress,
+                Size = aatf.Size,
+                ApprovalDate = aatf.ApprovalDate
             };
 
             return View(viewModel);
