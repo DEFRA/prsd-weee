@@ -83,7 +83,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToPcsSelect()
+        public async void IndexPost_OnSubmitWithPcsOptionSelected_PageRedirectsToPcsSelect()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -91,11 +91,10 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = new SelectReportOptionsViewModel
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+            var viewModel = CreateSubmittedViewModel();
+            viewModel.ReturnId = returnId;
+            viewModel.OrganisationId = organisationId;
+            viewModel.SelectedOptions.Add(1);
 
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
@@ -104,6 +103,29 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["returnId"].Should().Be(returnId);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmitWithoutPcsOptionSelected_PageRedirectsToAatfTaskList()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var viewModel = CreateSubmittedViewModel();
+            viewModel.ReturnId = returnId;
+            viewModel.OrganisationId = organisationId;
+
+            httpContext.RouteData.Values.Add("organisationId", organisationId);
+            httpContext.RouteData.Values.Add("returnId", returnId);
+
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteValues["returnId"].Should().Be(returnId);
         }
 
@@ -124,7 +146,7 @@
         [Fact]
         public async void IndexPost_GivenValidViewModelWithNoSelectedOptions_ApiSendShouldNotBeCalled()
         {
-            var model = new SelectReportOptionsViewModel();
+            var model = CreateSubmittedViewModel();
             var request = new AddReturnReportOn();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -200,6 +222,8 @@
             {
                 model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
             }
+
+            model.ReportOnQuestions[0].Question = "PCS";
 
             return model;
         }

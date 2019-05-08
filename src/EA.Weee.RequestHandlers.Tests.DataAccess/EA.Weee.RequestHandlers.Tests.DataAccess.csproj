@@ -100,11 +100,12 @@
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReceivedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
+    <Compile Include="AatfReturn\GetAatfsDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetSchemesExternalDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AatfSiteDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\WeeeSentOnDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddObligatedSentOnDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />

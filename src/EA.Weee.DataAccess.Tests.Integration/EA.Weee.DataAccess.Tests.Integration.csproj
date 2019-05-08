@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
+    <Compile Include="GenericIntegration.cs" />
     <Compile Include="ObligatedSentOnWeeeIntegration.cs" />
     <Compile Include="ReportOptionsIntegration.cs" />
     <Compile Include="SentOnAatfSiteIntegration.cs" />

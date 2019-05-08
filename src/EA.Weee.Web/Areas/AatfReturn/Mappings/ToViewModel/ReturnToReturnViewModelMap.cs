@@ -14,6 +14,7 @@
         //public decimal? NonObligatedTonnageTotalDcf = null;
 
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
+        public TaskListDisplayOptions DisplayOptions = new TaskListDisplayOptions();
         private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnToReturnViewModelMap(ITonnageUtilities tonnageUtilities)
@@ -57,6 +58,33 @@
                     };
 
                     AatfObligatedData.Add(obligatedData);
+                }
+            }
+
+            if (source.ReturnReportOns != null)
+            {
+                foreach (var option in source.ReturnReportOns)
+                {
+                    switch (option.ReportOnQuestionId)
+                    {
+                        case 1:
+                            DisplayOptions.DisplayObligatedReceived = true;
+                            break;
+                        case 2:
+                            DisplayOptions.DisplayObligatedSentOn = true;
+                            break;
+                        case 3:
+                            DisplayOptions.DisplayObligatedReused = true;
+                            break;
+                        case 4:
+                            DisplayOptions.DisplayNonObligated = true;
+                            break;
+                        case 5:
+                            DisplayOptions.DisplayNonObligatedDcf = true;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 

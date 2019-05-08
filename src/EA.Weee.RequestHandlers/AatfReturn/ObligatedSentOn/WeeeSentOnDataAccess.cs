@@ -8,11 +8,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class SentOnAatfSiteDataAccess : ISentOnAatfSiteDataAccess
+    public class WeeeSentOnDataAccess : IWeeeSentOnDataAccess
     {
         private readonly WeeeContext context;
 
-        public SentOnAatfSiteDataAccess(WeeeContext context)
+        public WeeeSentOnDataAccess(WeeeContext context)
         {
             this.context = context;
         }
@@ -44,6 +44,11 @@
         public async Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId)
         {
             return await context.WeeeSentOn.Where(w => w.AatfId == aatfId && w.ReturnId == returnId).ToListAsync();
+        }
+
+        public async Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId)
+        {
+            return await context.WeeeSentOn.Where(w => w.Id == weeeSentOnId).SingleAsync();
         }
     }
 }
