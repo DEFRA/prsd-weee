@@ -7,6 +7,8 @@
     using System.Threading.Tasks;
     using DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.Admin.Aatf;
+
 
     public class GetAatfsDataAccess : IGetAatfsDataAccess
     {
@@ -20,5 +22,11 @@
         {
             return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<List<Aatf>> GetAatfs()
+        {
+            return await context.Aatfs.ToListAsync();
+        }
     }
 }
+

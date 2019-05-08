@@ -82,6 +82,7 @@
         [Theory]
         [InlineData(InternalUserActivity.ManageUsers, "Index")]
         [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
+        [InlineData(InternalUserActivity.ManageAatfs, "ManageAatfs")]
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]

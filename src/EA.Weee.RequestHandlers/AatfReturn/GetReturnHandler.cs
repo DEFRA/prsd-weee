@@ -10,6 +10,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
@@ -26,7 +27,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
-        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
+        private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
@@ -39,7 +40,7 @@
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess,
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
-            ISentOnAatfSiteDataAccess sentOnAatfSiteDataAccess,
+            IWeeeSentOnDataAccess sentOnAatfSiteDataAccess,
             IReturnSchemeDataAccess returnSchemeDataAccess,
             IGenericDataAccess genericDataAccess)
         {
@@ -80,6 +81,8 @@
             
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
+            var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(message.ReturnId));
+
             var returnQuarterWindow = new ReturnQuarterWindow(@return, 
                 quarterWindow, 
                 aatfList, 
@@ -88,7 +91,8 @@
                 returnObligatedReusedValues,
                 @return.Operator,
                 sentOn,
-                returnSchemeList);
+                returnSchemeList,
+                returnReportsOn);
 
             var result = mapper.Map(returnQuarterWindow);
 

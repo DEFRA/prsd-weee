@@ -196,6 +196,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteOperatorControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SentOnRemoveSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SubmittedReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\NonObligatedControllerTests.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnRemoveSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />

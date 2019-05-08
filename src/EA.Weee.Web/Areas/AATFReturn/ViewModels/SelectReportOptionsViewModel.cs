@@ -38,6 +38,8 @@
 
         public List<ReportOnQuestion> ReportOnQuestions { get; set; }
 
+        public bool HasSelectedOptions => SelectedOptions != null && SelectedOptions.Count != 0;
+
         public List<int> SelectedOptions { get; set; }
 
         public string DcfSelectedValue { get; set; }
