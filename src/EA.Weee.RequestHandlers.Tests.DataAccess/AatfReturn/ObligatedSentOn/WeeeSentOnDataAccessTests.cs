@@ -12,16 +12,16 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class SentOnAatfSiteDataAccessTests
+    public class WeeeSentOnDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly SentOnAatfSiteDataAccess dataAccess;
+        private readonly WeeeSentOnDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
 
-        public SentOnAatfSiteDataAccessTests()
+        public WeeeSentOnDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            dataAccess = new SentOnAatfSiteDataAccess(context);
+            dataAccess = new WeeeSentOnDataAccess(context);
             dbContextHelper = new DbContextHelper();
         }
         
@@ -115,6 +115,18 @@
             A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn }));
 
             var result = await dataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId);
+
+            result.Should().BeEquivalentTo(weeeSentOn);
+        }
+
+        [Fact]
+        public async Task GetWeeeSentOnById_GivenWeeeSentOn_CorrectWeeeSentOnShouldBeReturned()
+        {
+            var weeeSentOn = A.Fake<WeeeSentOn>();
+
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn }));
+
+            var result = await dataAccess.GetWeeeSentOnById(weeeSentOn.Id);
 
             result.Should().BeEquivalentTo(weeeSentOn);
         }
