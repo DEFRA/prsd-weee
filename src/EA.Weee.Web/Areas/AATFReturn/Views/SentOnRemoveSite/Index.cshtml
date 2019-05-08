@@ -1,0 +1,74 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnRemoveSiteViewModel
+@{
+    ViewBag.Title = "Sent On Remove Site";
+}
+<section id="main-content">
+    @using (Html.BeginForm("Index", "SentOnRemoveSite", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.WeeeSentOnId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+        <h1 class="govuk-heading-l">Are you sure you want to remove this AATF/ATF from your list?</h1>
+        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+            <div class="govuk-table__head">
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        AATF/ATF name and address
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
+                    </div>
+                </div>
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        Operator name and address
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
+                    </div>
+                </div>
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="border-bottom: 0px; width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        WEEE sent on
+                    </div>
+                </div>
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="border-bottom: 0px; width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        B2C
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Model.Tonnages.B2C
+                    </div>
+                </div>
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        B2B
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Model.Tonnages.B2B
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Confirm if you want to remove this AATF/ATF from your list",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+        <p class="govuk-body-s">Removing this AATF/ATF will delete all tonnage data associated with it.</p>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+    }
+
+</section>
