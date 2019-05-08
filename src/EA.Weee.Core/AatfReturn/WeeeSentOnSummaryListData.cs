@@ -15,5 +15,7 @@
         public virtual string SiteAddressLong { get; set; }
 
         public virtual AatfAddressData SiteAddress { get; set; }
+
+        public virtual bool Removed { get; set; }
     }
 }
