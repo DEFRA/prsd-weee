@@ -13,14 +13,12 @@
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IAatfSiteDataAccess aatfSiteDataAccess;
 
-        public RemoveAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization, IGenericDataAccess genericDataAccess, IAatfSiteDataAccess aatfSiteDataAccess)
+        public RemoveAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
-            this.aatfSiteDataAccess = aatfSiteDataAccess;
         }
 
         public async Task<bool> HandleAsync(RemoveAatfSite message)
