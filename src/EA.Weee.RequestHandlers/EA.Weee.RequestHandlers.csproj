@@ -121,6 +121,7 @@
     <Compile Include="AatfReturn\Specification\ISpecification.cs" />
     <Compile Include="AatfReturn\Specification\OrganisationByOrganisationIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\OperatorByOrganisationIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\ReturnReportOnByReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
