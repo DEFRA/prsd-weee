@@ -11,6 +11,7 @@
     using ObligatedSentOn;
     using Prsd.Core.Mapper;
     using Security;
+    using Specification;
 
     public class GetPopulatedReturn : IGetPopulatedReturn
     {
@@ -20,19 +21,21 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
-        private readonly ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess;
+        private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetPopulatedReturn(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess,  
             IMap<ReturnQuarterWindow, ReturnData> mapper, 
             IQuarterWindowFactory quarterWindowFactory, 
             IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess, 
-            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess, 
-            ISentOnAatfSiteDataAccess getSentOnAatfSiteDataAccess, 
+            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
+            IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess, 
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
-            IReturnSchemeDataAccess returnSchemeDataAccess)
+            IReturnSchemeDataAccess returnSchemeDataAccess,
+            IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -43,6 +46,7 @@
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.returnSchemeDataAccess = returnSchemeDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<ReturnData> GetReturnData(Guid returnId)
@@ -67,6 +71,8 @@
 
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId);
 
+            var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
+
             var returnQuarterWindow = new ReturnQuarterWindow(@return,
                 quarterWindow,
                 aatfList,
@@ -75,7 +81,8 @@
                 returnObligatedReusedValues,
                 @return.Operator,
                 sentOn,
-                returnSchemeList);
+                returnSchemeList,
+                returnReportsOn);
 
             return mapper.Map(returnQuarterWindow);
         }

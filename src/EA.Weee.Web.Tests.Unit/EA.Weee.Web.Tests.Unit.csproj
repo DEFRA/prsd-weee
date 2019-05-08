@@ -63,7 +63,7 @@
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -299,6 +299,10 @@
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Web\EA.Weee.Web.csproj">
       <Project>{2e112d48-a841-4db7-b96f-4211c4da31c0}</Project>
