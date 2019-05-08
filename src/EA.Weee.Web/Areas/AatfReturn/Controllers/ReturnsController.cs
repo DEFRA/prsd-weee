@@ -45,6 +45,20 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(ReturnsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new AddDefaultAatf() { OrganisationId = model.OrganisationId });
+
+                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn() { OrganisationId = model.OrganisationId });
+
+                return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
+            }
+        }
+
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);

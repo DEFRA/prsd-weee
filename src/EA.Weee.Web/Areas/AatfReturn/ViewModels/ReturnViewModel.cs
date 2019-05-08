@@ -14,14 +14,12 @@
         {
         }
 
-        public ReturnViewModel(Quarter quarter, QuarterWindow window, int year, string nonObligatedTonnageTotal, string nonObligatedTonnageTotalDcf, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator, Guid returnId) : base(quarter, window, year)
+        public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator) : base(returnData)
         {
-            this.Year = year.ToString();
-            this.NonObligatedTonnageTotal = nonObligatedTonnageTotal;
-            this.NonObligatedTonnageTotalDcf = nonObligatedTonnageTotalDcf;
+            this.Year = returnData.Quarter.Year.ToString();
             this.AatfsData = obligatedTonnage;
             this.ReturnOperator = returnOperator;
-            this.ReturnId = returnId;
+            this.ReturnId = returnData.Id;
         }
 
         public Guid OrganisationId { get; set; }
@@ -39,7 +37,11 @@
         public string NonObligatedTonnageTotal { get; set; }
 
         public string NonObligatedTonnageTotalDcf { get; set; }
-        
+
+        public string NonObligatedTotal { get; set; }
+
+        public string ObligatedTotal { get; set; }
+
         public List<AatfObligatedData> AatfsData { get; set; }
 
         public OperatorData ReturnOperator { get; set; }

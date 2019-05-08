@@ -82,12 +82,44 @@
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
         {
             var model = new ReturnsViewModel();
+            var organisationId = Guid.NewGuid();
 
             A.CallTo(() => mapper.Map<ReturnsViewModel>(A<IList<ReturnData>>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(organisationId) as ViewResult;
 
-            result.Model.Should().Be(model);
+            var returnedModel = (ReturnsViewModel)model;
+
+            returnedModel.Should().Be(model);
+            returnedModel.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated()
+        {
+            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid() };
+
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(c => c.OrganisationId.Equals(model.OrganisationId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenOrganisationId_UserShouldBeRedirectedToOptions()
+        {
+            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid() };
+            var returnId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
+
+            var redirectResult = await controller.Index(model) as RedirectToRouteResult;
+
+            redirectResult.RouteName.Should().Be(AatfRedirect.SelectReportOptionsRouteName);
+            redirectResult.RouteValues["Controller"].Should().Be("SelectReportOptions");
+            redirectResult.RouteValues["Index"].Should().Be("Index");
+            redirectResult.RouteValues["organisationId"].Should().Be(model.OrganisationId);
+            redirectResult.RouteValues["returnId"].Should().Be(returnId);
         }
     }
 }

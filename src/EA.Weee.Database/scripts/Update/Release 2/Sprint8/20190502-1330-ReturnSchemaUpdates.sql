@@ -29,4 +29,7 @@ GO
 ALTER TABLE [AATF].[Return] ADD CONSTRAINT FK_Return_ParentId FOREIGN KEY (ParentId) REFERENCES [AATF].[Return](Id);
 GO
 
+EXEC sp_rename 'AATF.Return.CreatedBy', 'CreatedById';  
+EXEC sp_rename 'AATF.Return.SubmittedBy', 'SubmittedById';  
+
 COMMIT TRANSACTION
