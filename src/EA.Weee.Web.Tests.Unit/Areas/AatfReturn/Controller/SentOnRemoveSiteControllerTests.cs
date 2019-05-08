@@ -96,19 +96,24 @@
         }
 
         [Fact]
-        public async void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
-        {
-            var weeeSentOn = new WeeeSentOnData();
-            weeeSentOn.SiteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
-            weeeSentOn.OperatorAddress = new AatfAddressData("Operator name", "Op address 1", "Op address 2", "Op town", "Op county", "GU22 7UT", Guid.NewGuid(), "Op country");
-            var siteAddressLong = string.Empty;
-            var operatorAddressLong = string.Empty;
+        public void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
+        {            
+            var siteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
+            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>._)).Returns(weeeSentOn);
-            A.CallTo(() => controller.GenerateAddress(A<AatfAddressData>.That.Matches(a => a.Id == weeeSentOn.SiteAddress.Id))).Returns(siteAddressLong);
-            A.CallTo(() => controller.GenerateAddress(A<AatfAddressData>.That.Matches(a => a.Id == weeeSentOn.OperatorAddress.Id))).Returns(operatorAddressLong);
+            var siteAddressWithoutAddress2 = new AatfAddressData("Site name", "Site address 1", null, "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
+            var siteAddressWithoutAddress2Long = "Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
+            var siteAddressWithoutCounty = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", null, "GU22 7UY", Guid.NewGuid(), "Site country");
+            var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site country<br/>GU22 7UY";
+
+            var result = controller.GenerateAddress(siteAddress);
+            var resultWithoutAddress2 = controller.GenerateAddress(siteAddressWithoutAddress2);
+            var resultWithoutCounty = controller.GenerateAddress(siteAddressWithoutCounty);
+
+            result.Should().Be(siteAddressLong);
+            resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
+            resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
         }
     }
 }
