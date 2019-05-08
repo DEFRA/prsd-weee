@@ -36,6 +36,19 @@
             return context.SaveChangesAsync();
         }
 
+        public void Remove<TEntity>(TEntity entity) where TEntity : Entity
+        {
+            context.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
+        }
+
+        public void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
+        {
+            foreach (var amount in amounts)
+            {
+                context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
+            }
+        }
+
         public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class
         {
             return await context.Set<TEntity>().ToListAsync();

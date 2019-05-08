@@ -105,7 +105,7 @@
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AatfSiteDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />
-    <Compile Include="AatfReturn\ObligatedSentOn\SentOnAatfSiteDataAccessTests.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\WeeeSentOnDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddObligatedSentOnDataAccessTests.cs" />
     <Compile Include="AatfReturn\ReturnDataAccessTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
