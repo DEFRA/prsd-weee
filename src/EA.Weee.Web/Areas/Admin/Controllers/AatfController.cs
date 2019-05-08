@@ -1,15 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Web.Areas.Admin.Controllers.Base;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
 
     public class AatfController : AdminController
     {
@@ -41,25 +43,37 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Edit(Guid id)
+        public async Task<ActionResult> ManageContactDetails(Guid id)
         {
-            SetBreadcrumb();
-
-            AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
+            using (var client = apiClient())
             {
-                AatfId = id,
-                AatfName = String.Empty
-            };
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
+                {
+                    AatfId = id,
+                    AatfName = String.Empty
+                };
 
-            return View(viewModel);
+                await SetBreadcrumb();
+
+                return View(viewModel);
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(AatfEditContactAddressViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageContactDetails(AatfEditContactAddressViewModel viewModel)
         {
+            if (ModelState.IsValid)
+            {
+                return View("Details");
+            }
+
+            SetBreadcrumb();
+            return View(viewModel);
         }
 
-        private void SetBreadcrumb()
+        private async Task SetBreadcrumb()
         {
             breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
         }

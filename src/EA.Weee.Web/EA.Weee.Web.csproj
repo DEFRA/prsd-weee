@@ -849,7 +849,9 @@
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOnValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptions\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Aatf\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\ManageContactDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactData.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_CountryPartial.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
