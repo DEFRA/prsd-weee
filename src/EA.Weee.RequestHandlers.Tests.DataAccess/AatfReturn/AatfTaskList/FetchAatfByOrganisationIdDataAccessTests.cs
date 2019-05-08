@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using EA.Weee.DataAccess;
@@ -35,6 +36,7 @@
             organisation = Organisation.CreatePartnership("Dummy");
             @operator = new Operator(organisation);
         }
+
         [Fact]
         public async Task FetchAatfByOrganisationIdDataAccess_ReturnedListContainsAatf()
         {
@@ -47,8 +49,10 @@
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
 
-                var aatf = CreateAatf(competantAuthority, @operator);
+                var aatf = CreateAatf(competantAuthority, @operator, contact);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
@@ -58,13 +62,14 @@
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
         {
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
-                @operator);
+                @operator,
+                contact);
         }
     }
 }

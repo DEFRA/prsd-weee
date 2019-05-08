@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Charges;
@@ -32,8 +33,10 @@
                 var countryId = new Guid("B5EBE1D1-8349-43CD-9E87-0081EA0A8463");
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = CreateContact(country);
 
-                var aatf = CreateAatf(competantAuthority);
+                var aatf = CreateAatf(competantAuthority, contact);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -56,9 +59,11 @@
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 var @operator = new Operator(organisation);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, contact);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, contact);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -82,13 +87,15 @@
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 var @operator = new Operator(organisation);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, contact);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, contact);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
                 var @operator2 = new Operator(organisation);
-                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2);
+                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2, contact);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -121,13 +128,29 @@
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, AatfContact contact)
         {
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
-                new Operator(Organisation.CreatePartnership("trading")));
+                new Operator(Organisation.CreatePartnership("trading")),
+                contact);
+        }
+
+        private AatfContact CreateContact(Domain.Country country)
+        {
+            return new AatfContact("First Name",
+                "Last Name",
+                "Manager",
+                "1 Address Lane",
+                "Address Ward",
+                "Town",
+                "County",
+                "Postcode",
+                country,
+                "01234 567890",
+                "email@email.com");
         }
     }
 }

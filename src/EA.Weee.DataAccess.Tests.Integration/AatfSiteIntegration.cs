@@ -72,7 +72,9 @@
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator);
+            var country = await context.Countries.SingleAsync(c => c.Name == "France");
+            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, contact);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
             
             context.Organisations.Add(organisation);

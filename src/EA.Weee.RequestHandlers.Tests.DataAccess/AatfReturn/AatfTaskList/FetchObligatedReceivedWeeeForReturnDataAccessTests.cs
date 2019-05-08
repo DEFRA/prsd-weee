@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
@@ -51,7 +52,9 @@
                 var scheme = new Scheme(organisation);
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
-                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
+                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest, contact);
                 var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
 
                 database.WeeeContext.Organisations.Add(organisation);

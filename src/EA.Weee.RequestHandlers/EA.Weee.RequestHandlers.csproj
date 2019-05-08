@@ -80,6 +80,9 @@
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\IGenericDataAccess.cs" />
+    <Compile Include="AatfReturn\Internal\GetContactHandler.cs" />
+    <Compile Include="AatfReturn\Internal\AatfContactDataAccess.cs" />
+    <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\ObligatedGeneric\IObligatedDataAccess.cs" />

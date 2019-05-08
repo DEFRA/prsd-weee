@@ -20,23 +20,27 @@
 
         public virtual Operator Operator { get; private set; }
 
+        public virtual AatfContact Contact { get; private set; }
+
         protected Aatf()
         {
         }
 
-        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
+        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfContact contact)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
             Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
             Guard.ArgumentNotNull(() => aatfStatus, aatfStatus);
             Guard.ArgumentNotNull(() => @operator, @operator);
+            Guard.ArgumentNotNull(() => contact, contact);
 
             Name = name;
             CompetentAuthority = competentAuthority;
             ApprovalNumber = approvalNumber;
             AatfStatus = aatfStatus;
             Operator = @operator;
+            Contact = contact;
         }
     }
 }

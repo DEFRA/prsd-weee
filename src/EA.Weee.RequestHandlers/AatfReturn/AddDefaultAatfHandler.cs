@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -22,8 +23,8 @@
         private readonly ICommonDataAccess commonDataAccess;
         private readonly WeeeContext context;
 
-        public AddDefaultAatfHandler(IGenericDataAccess genericDataAccess, 
-            ICommonDataAccess commonDataAccess, 
+        public AddDefaultAatfHandler(IGenericDataAccess genericDataAccess,
+            ICommonDataAccess commonDataAccess,
             WeeeContext context)
         {
             this.genericDataAccess = genericDataAccess;
@@ -34,7 +35,7 @@
         public async Task<bool> HandleAsync(AddDefaultAatf message)
         {
             var @operator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
-            
+
             if (@operator == null)
             {
                 var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
@@ -44,9 +45,13 @@
 
             var competantAuthority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
+            var country = await context.Countries.SingleAsync(c => c.Name == "UK - England");
+
+            var contact = CreateDefaultContact(country);
+
             if (!context.Aatfs.Any(a => a.Operator.Organisation.Id == message.OrganisationId))
             {
-                context.Aatfs.AddRange(GetAatfs(@operator, competantAuthority));
+                context.Aatfs.AddRange(GetAatfs(@operator, competantAuthority, contact));
             }
 
             await context.SaveChangesAsync();
@@ -54,16 +59,21 @@
             return true;
         }
 
-        private List<Aatf> GetAatfs(Operator @operator, UKCompetentAuthority competentAuthority)
+        private List<Aatf> GetAatfs(Operator @operator, UKCompetentAuthority competentAuthority, AatfContact contact)
         {
             var aatfs = new List<Aatf>()
             {
-                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator),
-                new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator),
-                new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator)
+                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator, contact),
+                new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator, contact),
+                new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator, contact)
             };
 
             return aatfs;
+        }
+
+        private AatfContact CreateDefaultContact(Country country)
+        {
+            return new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
         }
     }
 }

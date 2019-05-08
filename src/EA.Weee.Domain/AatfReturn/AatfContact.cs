@@ -9,6 +9,32 @@
         {
         }
 
+        public AatfContact(
+            string firstName,
+            string lastName,
+            string position,
+            string address1,
+            string address2,
+            string town,
+            string county,
+            string postcode,
+            Country country,
+            string telephone,
+            string email)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Position = position;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = town;
+            CountyOrRegion = county;
+            Postcode = postcode;
+            Country = country;
+            Telephone = telephone;
+            Email = email;
+        }
+
         public virtual string FirstName { get; set; }
 
         public virtual string LastName { get; set; }
@@ -32,9 +58,5 @@
         public virtual string Telephone { get; set; }
 
         public virtual string Email { get; set; }
-
-        public virtual Guid AddressId { get; set; }
-
-        public virtual AatfAddress Address { get; set; }
     }
 }
