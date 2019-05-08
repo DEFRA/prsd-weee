@@ -57,7 +57,7 @@
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("AATFdetails", redirectValues["action"]);
+            Assert.Equal("Details", redirectValues["action"]);
             Assert.Equal(selectedGuid, redirectValues["Id"]);
         }
 

@@ -129,9 +129,7 @@
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
-    <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
-    <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />

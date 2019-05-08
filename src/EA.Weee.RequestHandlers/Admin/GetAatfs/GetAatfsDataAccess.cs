@@ -9,7 +9,6 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.Aatf;
 
-
     public class GetAatfsDataAccess : IGetAatfsDataAccess
     {
         private readonly WeeeContext context;
@@ -29,4 +28,3 @@
         }
     }
 }
-

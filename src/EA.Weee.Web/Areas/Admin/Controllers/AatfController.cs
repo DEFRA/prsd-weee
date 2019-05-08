@@ -88,7 +88,7 @@
             }
             else
             {
-                return RedirectToAction("AATFdetails", new { Id = viewModel.Selected.Value });
+                return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
             }           
         }
 
