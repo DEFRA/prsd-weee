@@ -10,6 +10,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using Factories;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;

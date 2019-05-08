@@ -27,6 +27,8 @@
 
         public IList<SchemeData> SchemeDataItems { get; set; }
 
+        public IList<ReturnReportOn> ReturnReportOns { get; set; }
+
         public string CreatedBy { get; set; }
 
         public string SubmittedBy { get; set; }
@@ -42,6 +44,7 @@
             ObligatedWeeeSentOnData = new List<WeeeObligatedData>();
             NonObligatedData = new List<NonObligatedData>();
             SchemeDataItems = new List<SchemeData>();
+            ReturnReportOns = new List<ReturnReportOn>();
         }
     }
 }

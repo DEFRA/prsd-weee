@@ -14,12 +14,13 @@
         {
         }
 
-        public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator) : base(returnData)
+        public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator, TaskListDisplayOptions displayOptions) : base(returnData)
         {
             this.Year = returnData.Quarter.Year.ToString();
             this.AatfsData = obligatedTonnage;
             this.ReturnOperator = returnOperator;
-            this.ReturnId = returnData.Id;
+            this.ReturnId = returnId;
+            this.ReportOnDisplayOptions = displayOptions;
         }
 
         public Guid OrganisationId { get; set; }
@@ -45,6 +46,8 @@
         public List<AatfObligatedData> AatfsData { get; set; }
 
         public OperatorData ReturnOperator { get; set; }
+
+        public TaskListDisplayOptions ReportOnDisplayOptions { get; set; }
 
         public string SchemeName { get; set; }
 

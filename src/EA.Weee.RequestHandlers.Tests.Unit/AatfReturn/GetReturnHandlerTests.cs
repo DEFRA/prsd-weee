@@ -10,6 +10,7 @@
     using Requests.AatfReturn;
     using Weee.Tests.Core;
     using Xunit;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetReturnHandlerTests
     {
