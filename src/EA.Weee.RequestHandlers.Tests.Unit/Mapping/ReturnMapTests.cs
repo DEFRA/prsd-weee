@@ -334,7 +334,7 @@
         public ReturnQuarterWindow GetReturnQuarterWindow()
         {
            return new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>());
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null);
         }
     }
 }
