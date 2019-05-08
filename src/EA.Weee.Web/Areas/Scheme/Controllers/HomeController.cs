@@ -107,7 +107,7 @@
 
             if (configurationService.CurrentConfiguration.EnableAATFReturns)
             {
-                activities.Add(PcsAction.MakeAatfReturn);
+                activities.Add(PcsAction.ManageAatfReturns);
             }
 
             return activities;
@@ -177,7 +177,7 @@
                 {
                     return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.MakeAatfReturn)
+                if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
                 {
                     return AatfRedirect.ReturnsList(viewModel.OrganisationId);
                 }
