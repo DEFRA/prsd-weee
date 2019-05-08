@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
@@ -13,6 +14,7 @@
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
+    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
     public class SentOnAatfSiteIntegration
     {
@@ -27,7 +29,7 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var dataAccess = new SentOnAatfSiteDataAccess(context);
+                var dataAccess = new WeeeSentOnDataAccess(context);
 
                 var returnData = await CreateWeeeSentOn(context, dataAccess, aatfAddress, database);
 
@@ -56,7 +58,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
                 var operatorCountry = await context.Countries.SingleAsync(c => c.Name == "Germany");
@@ -79,7 +81,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
 
@@ -99,7 +101,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new SentOnAatfSiteDataAccess(database.WeeeContext);
+                var dataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
 
@@ -118,7 +120,7 @@
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
+            WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -142,7 +144,7 @@
         }
 
         private async Task<WeeeSentOn> CreateWeeeSentOnInContext(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
+            WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -166,7 +168,7 @@
         }
 
         private async Task<WeeeSentOn> CreateWeeeSentOnOperatorInContext(WeeeContext context,
-            SentOnAatfSiteDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress, DatabaseWrapper database)
+            WeeeSentOnDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -187,6 +189,22 @@
             await dataAccess.Submit(weeeSentOn);
 
             return weeeSentOn;
+        }
+
+        private async Task<List<WeeeSentOnAmount>> AppendWeeeSentOnAmountToWeeeSentOn(WeeeContext context, WeeeSentOn weeeSentOn)
+        {
+            var weeeSentOnAmountList = new List<WeeeSentOnAmount>();
+
+            foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
+            {
+                weeeSentOnAmountList.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1, weeeSentOn.Id));
+            }
+
+            context.WeeeSentOnAmount.AddRange(weeeSentOnAmountList);
+
+            await context.SaveChangesAsync();
+
+            return weeeSentOnAmountList;
         }
     }
 }

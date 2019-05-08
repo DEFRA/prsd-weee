@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ISentOnAatfSiteDataAccess
+    public interface IWeeeSentOnDataAccess
     {
         Task Submit(WeeeSentOn weeeSentOn);
 
@@ -16,5 +16,7 @@
         Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
 
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
+
+        Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId);
     }
 }

@@ -34,7 +34,8 @@
                 CreatedBy = source.Return.CreatedBy.FullName,
                 CreatedDate = source.Return.CreatedDate,
                 SubmittedBy = source.Return.SubmittedBy?.FullName,
-                SubmittedDate = source.Return.SubmittedDate
+                SubmittedDate = source.Return.SubmittedDate,
+                ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList()
             };
 
             if (source.Aatfs != null)

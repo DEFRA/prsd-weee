@@ -27,14 +27,17 @@
         public Operator ReturnOperator { get; private set; }
 
         public List<ReturnScheme> ReturnSchemes { get; private set; }
-        
+
+        public List<ReturnReportOn> ReturnReportOns { get; private set; }
+
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow,
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,
             List<WeeeReceivedAmount> obligatedReceivedList,
             List<WeeeReusedAmount> obligatedReusedList,
             Operator returnOperator,
             List<WeeeSentOnAmount> obligatedSentOnList,
-            List<ReturnScheme> returnSchemes)
+            List<ReturnScheme> returnSchemes,
+            List<ReturnReportOn> returnReportOns)
         {
             Guard.ArgumentNotNull(() => @return, @return);
             Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
@@ -49,6 +52,7 @@
             this.ReturnOperator = returnOperator;
             this.ObligatedWeeeSentOnList = obligatedSentOnList;
             this.ReturnSchemes = returnSchemes;
+            this.ReturnReportOns = returnReportOns;
         }
 
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow)
