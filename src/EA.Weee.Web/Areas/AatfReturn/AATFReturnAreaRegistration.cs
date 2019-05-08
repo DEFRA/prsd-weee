@@ -61,16 +61,16 @@
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: AatfRedirect.OrganisationRouteName,
-                url: "aatf-return/{organisationId}/{controller}/{action}",
-                defaults: new { action = "Index", controller = "Returns" },
-                namespaces: new[] { typeof(ReturnsController).Namespace });
-
-            context.MapLowercaseDashedRoute(
                 name: AatfRedirect.Default,
                 url: "aatf-return/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "AatfTaskList" },
                 namespaces: new[] { typeof(AatfTaskListController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfRedirect.OrganisationRouteName,
+                url: "aatf-return/{organisationId}/{controller}/{action}",
+                defaults: new { action = "Index", controller = "Returns" },
+                namespaces: new[] { typeof(ReturnsController).Namespace });
         }
     }
 }
