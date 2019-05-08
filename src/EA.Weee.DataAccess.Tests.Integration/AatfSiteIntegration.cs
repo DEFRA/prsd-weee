@@ -80,6 +80,7 @@
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);
             context.Schemes.Add(scheme);
+            context.AatfContacts.Add(contact);
             context.Aatfs.Add(aatf);
             context.Returns.Add(@return);
             
