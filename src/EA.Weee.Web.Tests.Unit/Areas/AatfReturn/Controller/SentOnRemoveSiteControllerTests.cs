@@ -107,13 +107,18 @@
             var siteAddressWithoutCounty = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", null, "GU22 7UY", Guid.NewGuid(), "Site country");
             var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site country<br/>GU22 7UY";
 
+            var siteAddressWithoutPostcode = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", null, Guid.NewGuid(), "Site country");
+            var siteAddressWithoutPostcodeLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
+
             var result = controller.GenerateAddress(siteAddress);
             var resultWithoutAddress2 = controller.GenerateAddress(siteAddressWithoutAddress2);
             var resultWithoutCounty = controller.GenerateAddress(siteAddressWithoutCounty);
+            var resultWithoutPostcode = controller.GenerateAddress(siteAddressWithoutPostcode);
 
             result.Should().Be(siteAddressLong);
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
+            resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
         }
     }
 }
