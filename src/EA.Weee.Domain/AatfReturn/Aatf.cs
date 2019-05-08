@@ -21,7 +21,7 @@
         public virtual Operator Operator { get; private set; }
         public virtual AatfAddress SiteAddress { get; private set; }
         public virtual AatfSize Size { get; private set; }
-        public virtual DateTime ApprovalDate { get; private set; }
+        public virtual DateTime? ApprovalDate { get; private set; }
 
         protected Aatf()
         {

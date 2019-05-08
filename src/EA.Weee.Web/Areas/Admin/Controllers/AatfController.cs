@@ -49,10 +49,14 @@
                 CompetentAuthority = aatf.CompetentAuthority,
                 AatfStatus = aatf.AatfStatus,
                 SiteAddress = aatf.SiteAddress,
-                Size = aatf.Size,
-                ApprovalDate = aatf.ApprovalDate
+                Size = aatf.Size
             };
 
+            if (aatf.ApprovalDate != default(DateTime))
+            {
+                viewModel.ApprovalDate = aatf.ApprovalDate.GetValueOrDefault();
+            }
+            
             return View(viewModel);
         }
 

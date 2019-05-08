@@ -5,6 +5,7 @@
     using EA.Weee.Core.Shared;
     using Prsd.Core;
     using Prsd.Core.Mapper;
+    using System;
 
     public class AatfMap : IMap<Aatf, AatfData>
     {
@@ -36,7 +37,7 @@
 
             AatfAddressData address = aatfAddressMap.Map(source.SiteAddress);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate);
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault());
         }
     }
 }
