@@ -30,12 +30,6 @@
                 defaults: new { action = "Index", controller = "NonObligated", dcf = false },
                 namespaces: new[] { typeof(NonObligatedController).Namespace });
 
-            //context.MapLowercaseDashedRoute(
-            //    name: AatfRedirect.CheckReturnRouteName,
-            //    url: "aatf-return/{organisationId}/check-/{returnId}/{action}",
-            //    defaults: new { action = "Index", controller = "SelectYourPcs" },
-            //    namespaces: new[] { typeof(SelectYourPcsController).Namespace });
-
             context.MapLowercaseDashedRoute(
                 name: AatfRedirect.SelectPcsRouteName,
                 url: "aatf-return/{organisationId}/select-pcs/{returnId}/{action}",
@@ -65,6 +59,12 @@
                 url: "aatf-return/{returnId}/{controller}/{aatfId}/{action}",
                 defaults: new { action = "Index", controller = "ReceivedPcsList" },
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfRedirect.OrganisationRouteName,
+                url: "aatf-return/{organisationId}/{controller}/{action}",
+                defaults: new { action = "Index", controller = "Returns" },
+                namespaces: new[] { typeof(ReturnsController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: AatfRedirect.Default,

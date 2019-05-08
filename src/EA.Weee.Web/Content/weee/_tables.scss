@@ -63,13 +63,36 @@
 .prsd-table-collapse tr {
 }
 
-@media screen and (max-width:360px) {
-    .prsd-table-collapse tr {
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+
+    .prsd-table-collapse {
         display: block;
     }
 
-    .govuk-table__cell {
-        padding: 2px;
+    .prsd-table-collapse-header {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .prsd-table-collapse-row {
+    }
+
+    .prsd-table-collapse-cell {
+        border: none;
+        border-bottom: 1px solid #bfc1c3;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .prsd-table-collapse-cell:before {
+        font-weight: 700;
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        white-space: nowrap;
+        padding: 10px 20px 10px 0;
     }
 }
 

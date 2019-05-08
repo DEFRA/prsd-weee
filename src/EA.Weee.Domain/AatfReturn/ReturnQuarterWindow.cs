@@ -10,9 +10,9 @@
 
     public class ReturnQuarterWindow
     {
-        public Return Return { get; private set; }
+        public virtual Return Return { get; private set; }
 
-        public QuarterWindow QuarterWindow { get; private set; }
+        public virtual QuarterWindow QuarterWindow { get; private set; }
 
         public List<Aatf> Aatfs { get; private set; }
 

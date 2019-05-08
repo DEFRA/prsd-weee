@@ -21,7 +21,7 @@
             Operator = aatfOperator;
             Quarter = quarter;
             ReturnStatus = ReturnStatus.Created;
-            CreatedBy = createdBy;
+            CreatedById = createdBy;
             CreatedDate = SystemTime.UtcNow;
         }
 
@@ -34,7 +34,7 @@
                 throw new InvalidOperationException("Return status must be Created to transition to Submitted");
             }
 
-            SubmittedBy = submittedBy;
+            SubmittedById = submittedBy;
             SubmittedDate = SystemTime.UtcNow;
             ReturnStatus = ReturnStatus.Submitted;
         }
@@ -51,8 +51,12 @@
 
         public virtual DateTime? SubmittedDate { get; set; }
 
-        public virtual string CreatedBy { get; private set; }
+        public virtual string CreatedById { get; private set; }
+        
+        public virtual string SubmittedById { get; set; }
 
-        public virtual string SubmittedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
+
+        public virtual User SubmittedBy { get; set; }
     }
 }
