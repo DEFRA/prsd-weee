@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnsHandler.cs" />
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
@@ -132,8 +133,8 @@
     <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
-    <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChangesCsvData.cs" />
@@ -221,6 +222,9 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="Mappings\AatfAddressMap.cs" />
+    <Compile Include="Mappings\AatfSizeMap.cs" />
+    <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
