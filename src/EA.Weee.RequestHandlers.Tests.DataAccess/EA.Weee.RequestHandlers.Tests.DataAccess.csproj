@@ -101,6 +101,7 @@
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetSchemesExternalDataAccessTests.cs" />
+    <Compile Include="AatfReturn\Internal\AatfContactDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AatfSiteDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />

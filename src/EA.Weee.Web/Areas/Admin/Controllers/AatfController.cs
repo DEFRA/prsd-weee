@@ -51,7 +51,7 @@
         {
             using (var client = apiClient())
             {
-                var contact = await client.SendAsync(User.GetAccessToken(), new GetContact(aatfId));
+                var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(aatfId));
                 AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
                 {
                     AatfId = aatfId,

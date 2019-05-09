@@ -8,7 +8,7 @@
     using Prsd.Core.Mediator;
     using Security;
 
-    public class GetAatfContactHandler : IRequestHandler<GetContact, AatfContactData>
+    public class GetAatfContactHandler : IRequestHandler<GetAatfContact, AatfContactData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfContactDataAccess dataAccess;
@@ -21,7 +21,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<AatfContactData> HandleAsync(GetContact message)
+        public async Task<AatfContactData> HandleAsync(GetAatfContact message)
         {
             authorization.EnsureCanAccessInternalArea();
 

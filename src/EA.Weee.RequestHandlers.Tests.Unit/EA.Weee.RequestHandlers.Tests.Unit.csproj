@@ -95,6 +95,8 @@
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContactHandlerTests.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContactHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandlerTests.cs" />

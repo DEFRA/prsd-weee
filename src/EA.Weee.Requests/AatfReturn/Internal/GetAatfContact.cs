@@ -4,11 +4,11 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
 
-    public class GetContact : IRequest<AatfContactData>
+    public class GetAatfContact : IRequest<AatfContactData>
     {
         public Guid AatfId { get; private set; }
 
-        public GetContact(Guid aatfId)
+        public GetAatfContact(Guid aatfId)
         {
             this.AatfId = aatfId;
         }
