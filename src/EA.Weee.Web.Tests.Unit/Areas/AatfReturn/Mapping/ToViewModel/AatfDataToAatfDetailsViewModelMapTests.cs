@@ -2,8 +2,10 @@
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using FakeItEasy;
     using FluentAssertions;
     using System;
     using Xunit;
@@ -14,7 +16,7 @@
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
-            map = new AatfDataToAatfDetailsViewModel();
+            map = new AatfDataToAatfDetailsViewModel(new AddressUtilities());
         }
 
         [Fact]
@@ -28,9 +30,12 @@
         [Fact]
         public void Map_GivenValidSource_WithApprovalDate_PropertiesShouldBeMapped()
         {
-            AatfData aatfData = new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
+            AatfData aatfData = CreateAatfData();
+            AatfContactData aatfContactData = CreateAatfContactData();
 
-            AatfDetailsViewModel result = map.Map(aatfData);
+            var transfer = new AatfDataToAatfDetailsViewModelTransfer(aatfData, aatfContactData);
+
+            AatfDetailsViewModel result = map.Map(transfer);
 
             result.Should().BeEquivalentTo(aatfData);
             Assert.NotNull(result.ApprovalDate);
@@ -39,9 +44,13 @@
         [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDatetime()
         {
-            AatfData aatfData = new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, default(DateTime));
+            AatfData aatfData = CreateAatfData();
+            AatfContactData aatfContactData = CreateAatfContactData();
+            aatfData.ApprovalDate = default(DateTime);
 
-            AatfDetailsViewModel result = map.Map(aatfData);
+            var transfer = new AatfDataToAatfDetailsViewModelTransfer(aatfData, aatfContactData);
+
+            AatfDetailsViewModel result = map.Map(transfer);
 
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
@@ -66,6 +75,16 @@
         private AatfAddressData CreateAatfAddressData()
         {
             return new AatfAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
+        }
+
+        private static AatfContactData CreateAatfContactData()
+        {
+            return new AatfContactData(Guid.NewGuid(), "FirstName", "LastName", "Position", A.Fake<AatfContactAddressData>(), "Telephone", "Email");
+        }
+
+        private AatfData CreateAatfData()
+        {
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
         }
     }
 }

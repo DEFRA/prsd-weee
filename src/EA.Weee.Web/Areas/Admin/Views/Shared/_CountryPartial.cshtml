@@ -2,6 +2,6 @@
 @using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.AatfReturn.AatfContactData
 
-@Html.Gds().LabelFor(m => m.CountryId)
-@Html.Gds().ValidationMessageFor(m => m.CountryId)
-@Html.DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", autocomplete = "false", aria_labelledby = "country-dropdown-list" })
+@Html.Gds().LabelFor(m => m.AddressData.CountryId)
+@Html.Gds().ValidationMessageFor(m => m.AddressData.CountryId)
+@Html.DropDownListFor(m => m.AddressData.CountryId, new SelectList(Model.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", autocomplete = "false", aria_labelledby = "country-dropdown-list" })

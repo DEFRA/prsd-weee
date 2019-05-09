@@ -3,29 +3,39 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
 
-    public class AatfDataToAatfDetailsViewModel : IMap<AatfData, AatfDetailsViewModel>
+    public class AatfDataToAatfDetailsViewModel : IMap<AatfDataToAatfDetailsViewModelTransfer, AatfDetailsViewModel>
     {
-        public AatfDetailsViewModel Map(AatfData source)
+        private IAddressUtilities addressUtilities;
+        public AatfDataToAatfDetailsViewModel(IAddressUtilities addressUtilities)
+        {
+            this.addressUtilities = addressUtilities;
+        }
+
+        public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
             AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
             {
-                Id = source.Id,
-                Name = source.Name,
-                ApprovalNumber = source.ApprovalNumber,
-                CompetentAuthority = source.CompetentAuthority,
-                AatfStatus = source.AatfStatus,
-                SiteAddress = source.SiteAddress,
-                Size = source.Size
+                Id = source.AatfData.Id,
+                Name = source.AatfData.Name,
+                ApprovalNumber = source.AatfData.ApprovalNumber,
+                CompetentAuthority = source.AatfData.CompetentAuthority,
+                AatfStatus = source.AatfData.AatfStatus,
+                SiteAddress = source.AatfData.SiteAddress,
+                Size = source.AatfData.Size,
+                ContactData = source.ContactData
             };
 
-            if (source.ApprovalDate != default(DateTime))
+            viewModel.ContactData.ConcatenatedAddress = addressUtilities.AddressConcatenate(source.ContactData.AddressData);
+
+            if (source.AatfData.ApprovalDate != default(DateTime))
             {
-                viewModel.ApprovalDate = source.ApprovalDate.GetValueOrDefault();
+                viewModel.ApprovalDate = source.AatfData.ApprovalDate.GetValueOrDefault();
             }
 
             return viewModel;

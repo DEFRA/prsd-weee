@@ -8,5 +8,10 @@
         public Guid AatfId { get; set; }
 
         public AatfContactData ContactData { get; set; }
+
+        public AatfEditContactAddressViewModel()
+        {
+            this.ContactData = new AatfContactData();
+        }
     }
 }

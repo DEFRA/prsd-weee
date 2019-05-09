@@ -34,7 +34,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.ContactData.CountryId);
+            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.ContactData.AddressData.CountryId);
 
             var value = await genericDataAccess.GetById<AatfContact>(message.ContactData.Id);
 

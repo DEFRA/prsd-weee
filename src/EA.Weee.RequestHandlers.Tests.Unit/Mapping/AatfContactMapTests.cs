@@ -33,12 +33,11 @@
             result.FirstName.Should().Be(null);
             result.LastName.Should().Be(null);
             result.Position.Should().Be(null);
-            result.Address1.Should().Be(null);
-            result.Address2.Should().Be(null);
-            result.TownOrCity.Should().Be(null);
-            result.CountyOrRegion.Should().Be(null);
-            result.Postcode.Should().Be(null);
-            result.CountryName.Should().Be(null);
+            result.AddressData.Address1.Should().Be(null);
+            result.AddressData.Address2.Should().Be(null);
+            result.AddressData.TownOrCity.Should().Be(null);
+            result.AddressData.CountyOrRegion.Should().Be(null);
+            result.AddressData.CountryName.Should().Be(null);
             result.Telephone.Should().Be(null);
             result.Email.Should().Be(null);
         }
@@ -64,12 +63,12 @@
             result.FirstName.Should().Be("First Name");
             result.LastName.Should().Be("Last Name");
             result.Position.Should().Be("Position");
-            result.Address1.Should().Be("Address1");
-            result.Address2.Should().Be("Address2");
-            result.TownOrCity.Should().Be("Town");
-            result.CountyOrRegion.Should().Be("County");
-            result.Postcode.Should().Be("PO12 3ST");
-            result.CountryName.Should().Be("UK - England");
+            result.AddressData.Address1.Should().Be("Address1");
+            result.AddressData.Address2.Should().Be("Address2");
+            result.AddressData.TownOrCity.Should().Be("Town");
+            result.AddressData.CountyOrRegion.Should().Be("County");
+            result.AddressData.Postcode.Should().Be("PO12 3ST");
+            result.AddressData.CountryName.Should().Be("UK - England");
             result.Telephone.Should().Be("01234 567890");
             result.Email.Should().Be("email@email.com");
         }

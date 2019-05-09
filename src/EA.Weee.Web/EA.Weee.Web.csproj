@@ -394,6 +394,7 @@
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToContactDetailsOverview.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToPartnershipDetailsOverviewViewModel.cs" />
@@ -863,7 +864,6 @@
     <Content Include="Areas\Admin\Views\Aatf\ManageAatfs.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnRemoveSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Returns\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Aatf\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\ManageContactDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactData.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_CountryPartial.cshtml" />

@@ -1,6 +1,8 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
     ViewBag.Title = "View AATF details - GOV.UK";
@@ -102,7 +104,7 @@
                     <td>
                         <h2 class="govuk-table__header">
                             AATF data returns
-                            </h2>
+                        </h2>
                     </td>
                 </tr>
             </tbody>
@@ -153,29 +155,32 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">First name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.FirstName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Last name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.LastName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Position</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.Position</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.ConcatenatedAddress</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Email</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.ContactData.Email</td>
                 </tr>
             </tbody>
         </table>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
+        </p>
     </section>
 </div>

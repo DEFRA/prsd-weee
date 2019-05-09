@@ -10,18 +10,14 @@
         {
             if (source != null)
             {
+                var addressData = new AatfContactAddressData(null, source.Address1, source.Address2, source.TownOrCity, source.CountyOrRegion, source.Postcode, source.Country.Id, source.Country.Name);
+
                 return new AatfContactData(
                 source.Id,
                 source.FirstName,
                 source.LastName,
                 source.Position,
-                source.Address1,
-                source.Address2,
-                source.TownOrCity,
-                source.CountyOrRegion,
-                source.Postcode,
-                source.Country.Id,
-                source.Country.Name,
+                addressData,
                 source.Telephone,
                 source.Email);
             }

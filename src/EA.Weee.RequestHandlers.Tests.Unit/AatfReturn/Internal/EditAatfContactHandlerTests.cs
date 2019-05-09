@@ -55,6 +55,16 @@
         [Fact]
         public async Task HandleAsync_GivenMessageContainingUpdatedAddress_DetailsAreUpdatedCorrectly()
         {
+            var addressData = new AatfContactAddressData()
+            {
+                Address1 = "Address1",
+                Address2 = "Address2",
+                TownOrCity = "Town",
+                CountyOrRegion = "County",
+                Postcode = "Postcode",
+                CountryId = Guid.NewGuid()
+            };
+
             var updateRequest = new EditAatfContact()
             {
                 ContactData = new AatfContactData()
@@ -62,12 +72,7 @@
                     FirstName = "First Name",
                     LastName = "Last Name",
                     Position = "Position",
-                    Address1 = "Address1",
-                    Address2 = "Address2",
-                    TownOrCity = "Town",
-                    CountyOrRegion = "County",
-                    Postcode = "Postcode",
-                    CountryId = Guid.NewGuid(),
+                    AddressData = addressData,
                     Telephone = "01234 567890",
                     Email = "email@email.com",
                     Id = Guid.NewGuid()
@@ -78,7 +83,7 @@
 
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
-            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(updateRequest.ContactData.CountryId)).Returns(country);
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(updateRequest.ContactData.AddressData.CountryId)).Returns(country);
             A.CallTo(() => genericDataAccess.GetById<AatfContact>(updateRequest.ContactData.Id)).Returns(returnContact);
 
             await handler.HandleAsync(updateRequest);

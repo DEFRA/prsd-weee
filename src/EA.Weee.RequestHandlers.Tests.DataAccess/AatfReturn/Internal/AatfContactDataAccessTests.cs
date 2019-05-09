@@ -49,7 +49,7 @@
         public void Update_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
         {
             var oldSite = A.Fake<AatfContact>();
-            var newSite = new AatfContactData();
+            var newSite = new AatfContactData() { AddressData = new AatfContactAddressData() };
             var country = A.Fake<Country>();
 
             dataAccess.Update(oldSite, newSite, country);
@@ -58,11 +58,11 @@
                 newSite.FirstName,
                 newSite.LastName,
                 newSite.Position,
-                newSite.Address1,
-                newSite.Address2,
-                newSite.TownOrCity,
-                newSite.CountyOrRegion,
-                newSite.Postcode,
+                newSite.AddressData.Address1,
+                newSite.AddressData.Address2,
+                newSite.AddressData.TownOrCity,
+                newSite.AddressData.CountyOrRegion,
+                newSite.AddressData.Postcode,
                 country,
                 newSite.Telephone,
                 newSite.Email)).MustHaveHappened(Repeated.Exactly.Once)
