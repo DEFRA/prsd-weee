@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
@@ -43,16 +44,19 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageContactDetails(Guid id)
+        public async Task<ActionResult> ManageContactDetails(Guid aatfId)
         {
             using (var client = apiClient())
             {
-                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                var contact = await client.SendAsync(User.GetAccessToken(), new GetContact(aatfId));
                 AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
                 {
-                    AatfId = id,
-                    AatfName = String.Empty
+                    AatfId = aatfId,
+                    AatfName = String.Empty,
+                    ContactData = contact
                 };
+
+                viewModel.ContactData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 await SetBreadcrumb();
 

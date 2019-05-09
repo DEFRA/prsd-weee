@@ -8,6 +8,40 @@
 
     public class AatfContactData
     {
+        public AatfContactData()
+        {
+        }
+
+        public AatfContactData(
+            Guid id,
+            string firstName,
+            string lastName,
+            string position,
+            string address1,
+            string address2,
+            string town,
+            string county,
+            string postcode,
+            Guid countryId,
+            string countryName,
+            string telephone,
+            string email)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Position = position;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = town;
+            CountyOrRegion = county;
+            Postcode = postcode;
+            CountryId = countryId;
+            CountryName = countryName;
+            Telephone = telephone;
+            Email = email;
+        }
+
         public Guid Id { get; set; }
 
         [Required]

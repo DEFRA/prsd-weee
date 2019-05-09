@@ -1,36 +1,35 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
-    using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.AatfReturn;
-    using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
-    using EA.Weee.RequestHandlers.AatfReturn.Specification;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
-    using Factories;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
-    using Requests.AatfReturn;
     using Security;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetContactHandler : IRequestHandler<GetContact, AatfContactData>
     {
         private readonly IWeeeAuthorization authorization;
+        private readonly IAatfContactDataAccess dataAccess;
+        private readonly IMap<AatfContact, AatfContactData> mapper;
 
-        public GetContactHandler(IWeeeAuthorization authorization)
+        public GetContactHandler(IWeeeAuthorization authorization, IAatfContactDataAccess dataAccess, IMap<AatfContact, AatfContactData> mapper)
         {
             this.authorization = authorization;
+            this.dataAccess = dataAccess;
+            this.mapper = mapper;
         }
 
-        public Task<AatfContactData> HandleAsync(GetContact message)
+        public async Task<AatfContactData> HandleAsync(GetContact message)
         {
-            throw new NotImplementedException();
+            authorization.EnsureCanAccessInternalArea();
+
+            var contact = await dataAccess.GetContact(message.AatfId);
+            
+            var result = mapper.Map(contact);
+
+            return result;
         }
     }
 }
