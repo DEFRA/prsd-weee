@@ -34,7 +34,7 @@
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var aatf = CreateAatf(competantAuthority);
+                var aatf = CreateAatf(competantAuthority, database);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -58,8 +58,8 @@
                 var @operator = new Operator(organisation);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -78,18 +78,18 @@
                 var modelHelper = new ModelHelper(database.Model);
 
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 var @operator = new Operator(organisation);
-                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
                 var @operator2 = new Operator(organisation);
-                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf3 = new Aatf("Name3", competentAuthority, "approval1", AatfStatus.Approved, @operator2, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -122,21 +122,23 @@
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, DatabaseWrapper database)
         {
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
                 new Operator(Organisation.CreatePartnership("trading")),
-                CreateAddress(), 
+                CreateAddress(database), 
                 A.Fake<AatfSize>(),
                 DateTime.Now);
         }
 
-        private AatfAddress CreateAddress()
+        private AatfAddress CreateAddress(DatabaseWrapper database)
         {
-            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England"));
+            var country = database.WeeeContext.Countries.First();
+
+            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country);
         }
     }
 }

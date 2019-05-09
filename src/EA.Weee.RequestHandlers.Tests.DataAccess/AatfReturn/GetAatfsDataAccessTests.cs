@@ -15,6 +15,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
@@ -41,7 +42,7 @@
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var aatfAddress = CreateAatfSiteAddress();
+                var aatfAddress = CreateAatfSiteAddress(database);
                 var aatfSize = AatfSize.Large;
 
                 var aatf = new Aatf("KoalaBears", competantAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now);
@@ -53,9 +54,10 @@
             }
         }
 
-        private AatfAddress CreateAatfSiteAddress()
+        private AatfAddress CreateAatfSiteAddress(DatabaseWrapper database)
         {
-            Country country = new Country(Guid.NewGuid(), "England");
+            var country = database.WeeeContext.Countries.First();
+
             return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }
