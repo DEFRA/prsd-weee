@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using EA.Weee.DataAccess;
@@ -45,27 +46,29 @@
 
                 var dataAccess = new FetchAatfByOrganisationIdDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
-                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var aatf = CreateAatf(competantAuthority, @operator);
+                var aatf = CreateAatf(competentAuthority, @operator, database);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
-                List<Aatf> aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
+                var aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
 
                 aatfList.Should().Contain(aatf);
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, DatabaseWrapper database)
         {
+            var country = database.WeeeContext.Countries.First();
+
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
                 @operator,
-                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England")),
+                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
                 A.Fake<AatfSize>(),
                 DateTime.Now);
         }
