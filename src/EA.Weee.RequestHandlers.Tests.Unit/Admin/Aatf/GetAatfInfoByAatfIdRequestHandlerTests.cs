@@ -2,7 +2,6 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    //using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
@@ -23,14 +22,14 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class GetAatfByIdRequestHandlerTests
+    public class GetAatfInfoByAatfIdRequestHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
         private readonly AatfMap mapper;
         private readonly IGetAatfsDataAccess dataAccess;
         private readonly GetAatfInfoByAatfIdRequestHandler handler;
 
-        public GetAatfByIdRequestHandlerTests()
+        public GetAatfInfoByAatfIdRequestHandlerTests()
         {
             authorization = AuthorizationBuilder.CreateUserWithAllRights();
             mapper = new AatfMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(),
