@@ -2,12 +2,11 @@
 {
     using System;
     using Domain.AatfReturn;
-    using EA.Weee.Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
-    using AatfStatus = Domain.AatfReturn.AatfStatus;
     using AatfSize = Domain.AatfReturn.AatfSize;
+    using AatfStatus = Domain.AatfReturn.AatfStatus;
 
     public class AatfTests
     {
