@@ -8,9 +8,8 @@
 <section id="main-content">
     <header class="hgroup">
         <div>
-            @{
-                var typeheading = Model.Dcf == false ? "Non-obligated WEEE" :"Non-obligated WEEE retained by a DCF";    
-            <h1 id="data-entry-label" class="govuk-heading-l">@typeheading</h1>
+            @{  
+            <h1 id="data-entry-label" class="govuk-heading-l">@Model.Typeheading</h1>
             }
         </div>
     </header>
