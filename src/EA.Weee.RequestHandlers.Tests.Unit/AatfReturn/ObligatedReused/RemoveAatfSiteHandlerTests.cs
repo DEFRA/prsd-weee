@@ -58,9 +58,10 @@
             A.CallTo(() => genericDataAccess.GetById<WeeeReusedSite>(weeeReusedSite.Id)).Returns(weeeReusedSiteReturned);
 
             await handler.HandleAsync(new RemoveAatfSite(siteAddressId));
-
-            A.CallTo(() => genericDataAccess.Remove(siteAddress)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => genericDataAccess.Remove(weeeReusedSiteReturned)).MustHaveHappened(Repeated.Exactly.Once);
+            
+            A.CallTo(() => genericDataAccess.Remove(weeeReusedSiteReturned)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => genericDataAccess.Remove(siteAddress)).MustHaveHappened(Repeated.Exactly.Once))
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }
