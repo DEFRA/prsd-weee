@@ -41,9 +41,9 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteOperatorControllerInheritsExternalSiteController()
+        public void CheckSentOnCreateSiteOperatorControllerInheritsAATFReturnBaseController()
         {
-            typeof(ReusedRemoveSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(ReusedRemoveSiteController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
 
         [Fact]
@@ -87,6 +87,69 @@
             await controller.Index(viewModel);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveAatfSite>.That.Matches(r => r.SiteId == viewModel.SiteId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var siteId = Guid.NewGuid();
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            siteAddressData.Id = siteId;
+            var addressTonnage = new AddressTonnageSummary()
+            {
+                AddressData = new List<SiteAddressData>()
+                {
+                    siteAddressData
+                }
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>.That.Matches(w => w.AatfId == aatfId && w.ReturnId == returnId))).Returns(addressTonnage);
+
+            await controller.Index(organisationId, returnId, aatfId, siteId);
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
+                && t.ReturnId == returnId
+                && t.AatfId == aatfId
+                && t.SiteId == siteAddressData.Id))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_ViewResultIsReturnedCorrectly()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var siteId = Guid.NewGuid();
+
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            siteAddressData.Id = siteId;
+            var addressTonnage = new AddressTonnageSummary()
+            {
+                AddressData = new List<SiteAddressData>()
+                {
+                    siteAddressData
+                }
+            };
+
+            var viewModel = new ReusedRemoveSiteViewModel()
+            {
+                OrganisationId = organisationId,
+                ReturnId = returnId,
+                AatfId = aatfId,
+                SiteAddress = controller.GenerateAddress(siteAddressData),
+                SiteId = siteAddressData.Id,
+                Site = siteAddressData
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>.That.Matches(w => w.AatfId == aatfId && w.ReturnId == returnId))).Returns(addressTonnage);
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer>._)).Returns(viewModel);
+
+            var result = await controller.Index(organisationId, returnId, aatfId, siteId) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(viewModel);
         }
 
         [Fact]

@@ -18,7 +18,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class ReusedRemoveSiteController : ExternalSiteController
+    public class ReusedRemoveSiteController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
