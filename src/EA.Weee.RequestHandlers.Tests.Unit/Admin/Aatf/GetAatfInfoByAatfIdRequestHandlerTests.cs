@@ -26,6 +26,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly AatfMap mapper;
+        private readonly IMap<Aatf, AatfData> fakeMapper;
         private readonly IGetAatfsDataAccess dataAccess;
         private readonly GetAatfInfoByAatfIdRequestHandler handler;
 
@@ -37,8 +38,10 @@
                 A.Fake<IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize>>(),
                 A.Fake<IMap<AatfAddress, AatfAddressData>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
-            
-            handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
+
+            fakeMapper = A.Fake<IMap<Aatf, AatfData>>();
+
+             handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
         }
 
         [Fact]
@@ -60,22 +63,24 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ProvideAatfId_AatfShouldBeMapped()
+        public async Task HandleAsync_GivenReturn_MappedObjectShouldBeReturned()
         {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            string name = "fake name";
-            string approvalNumber = "1234";
+            DateTime date = DateTime.Now;
 
-            Aatf aatf = new Aatf(name, A.Fake<Domain.UKCompetentAuthority>(), approvalNumber, A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now);
-            A.CallTo(() => dataAccess.GetAatfById(id)).Returns(aatf);
+            Aatf aatf = new Aatf("name", A.Dummy<UKCompetentAuthority>(), "1234", Domain.AatfReturn.AatfStatus.Approved, A.Fake<Operator>(), A.Dummy<AatfAddress>(), Domain.AatfReturn.AatfSize.Large, date);
+            A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(aatf);
 
-            // Act
+            AatfData aatfData = new AatfData(Guid.Empty, "name", "1234", A.Dummy<UKCompetentAuthorityData>(), A.Fake<Core.AatfReturn.AatfStatus>(), A.Dummy<AatfAddressData>(), A.Fake<Core.AatfReturn.AatfSize>(), date);
+            A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(aatfData);
+
             var result = await handler.HandleAsync(new GetAatfById(A.Dummy<Guid>()));
 
-            // Assert
-            result.ApprovalNumber = approvalNumber;
-            result.Name = name;
+            Assert.Equal(aatfData.Id, result.Id);
+            Assert.Equal(aatfData.Name, result.Name);
+            Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
+            Assert.Equal(aatfData.AatfStatus, result.AatfStatus);
+            Assert.Equal(aatfData.Size, result.Size);
+            Assert.Equal(aatfData.ApprovalDate, result.ApprovalDate);
         }
 
         [Fact]

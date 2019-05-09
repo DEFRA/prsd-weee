@@ -37,16 +37,14 @@
         {
             SetBreadcrumb();
 
-            AatfData aatf;
-
             using (var client = apiClient())
             {
-                aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+                AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(aatf);
+
+                return View(viewModel);
             }
-
-            AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(aatf);
-
-            return View(viewModel);
         }
         
         public async Task<ActionResult> ManageAatfs()

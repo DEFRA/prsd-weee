@@ -102,7 +102,6 @@
     <Compile Include="AatfReturn\PastedValue.cs" />
     <Compile Include="AatfReturn\PastedValues.cs" />
     <Compile Include="AatfReturn\SchemeDataList.cs" />
-    <Compile Include="AatfReturn\UKCompetentAuthority.cs" />
     <Compile Include="AatfReturn\TaskListDisplayOptions.cs" />
     <Compile Include="AatfReturn\WeeeObligatedData.cs" />
     <Compile Include="AatfReturn\OperatorData.cs" />
