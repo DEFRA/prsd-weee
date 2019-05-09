@@ -391,6 +391,7 @@
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToContactDetailsOverview.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToPartnershipDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />

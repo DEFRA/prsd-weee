@@ -86,5 +86,17 @@
             await handler.HandleAsync(A.Dummy<GetAatfById>());
             A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task HandleAsync_ProvideNonExistantAatfId_ReturnsException()
+        {
+            Aatf returnData = null;
+
+            A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(returnData);
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfById>());
+
+            await Assert.ThrowsAsync<ArgumentException>(action);
+        }
     }
 }

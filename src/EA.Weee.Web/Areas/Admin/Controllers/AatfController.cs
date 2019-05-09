@@ -44,22 +44,8 @@
                 aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
             }
 
-            AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
-            {
-                AatfId = id,
-                AatfName = aatf.Name,
-                ApprovalNumber = aatf.ApprovalNumber,
-                CompetentAuthority = aatf.CompetentAuthority,
-                AatfStatus = aatf.AatfStatus,
-                SiteAddress = aatf.SiteAddress,
-                Size = aatf.Size
-            };
+            AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(aatf);
 
-            if (aatf.ApprovalDate != default(DateTime))
-            {
-                viewModel.ApprovalDate = aatf.ApprovalDate.GetValueOrDefault();
-            }
-            
             return View(viewModel);
         }
         

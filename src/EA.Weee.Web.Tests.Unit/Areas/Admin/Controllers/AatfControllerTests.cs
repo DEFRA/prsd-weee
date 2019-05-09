@@ -4,10 +4,14 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using FluentAssertions;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Aatf;
@@ -81,6 +85,49 @@
             ActionResult result = await controller.ManageAatfs();
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
+        }
+
+        [Fact]
+        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet()
+        {
+            AatfController controller = CreateController();
+
+            var aatfData = A.Fake<AatfData>();
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+
+            await controller.Details(A.Dummy<Guid>());
+
+            Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAatfs);
+        }
+
+        [Fact]
+        public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
+        {
+            AatfController controller = CreateController();
+            AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
+
+            var aatfData = A.Fake<AatfData>();
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+
+            var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async void DetailsGet_GivenValidAatfIdButNoApprovalDate_ViewModelShouldBeCreatedWithNullApprovalDate()
+        {
+            AatfController controller = CreateController();
+            AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
+            viewModel.ApprovalDate = null;
+
+            var aatfData = A.Fake<AatfData>();
+            aatfData.ApprovalDate = default(DateTime);
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+
+            var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
+
+            result.Model.Should().BeEquivalentTo(viewModel);
         }
     }
 }
