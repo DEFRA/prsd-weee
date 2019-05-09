@@ -226,6 +226,7 @@
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />

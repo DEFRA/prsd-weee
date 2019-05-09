@@ -190,6 +190,7 @@
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
+    <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetContactHandlerTests.cs" />
