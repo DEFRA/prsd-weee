@@ -38,7 +38,6 @@
         {
             var name = "KoalsInTheWild";
             var competentAuthority = A.Fake<Domain.UKCompetentAuthority>();
-            var aatfContact = A.Fake<AatfContact>();
             var @operator = A.Fake<Operator>();
             var approvalNumber = "123456789";
             var status = Domain.AatfReturn.AatfStatus.Approved;
@@ -49,7 +48,7 @@
             A.CallTo(() => statusMap.Map(status)).Returns(returnStatus);
             A.CallTo(() => competentAuthorityMap.Map(competentAuthority)).Returns(returnCompetentAuthority);
 
-            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, aatfContact);
+            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
 
             var result = map.Map(source);
 
