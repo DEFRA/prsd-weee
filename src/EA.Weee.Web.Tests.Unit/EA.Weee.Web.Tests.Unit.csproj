@@ -63,7 +63,7 @@
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -182,6 +182,7 @@
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\NonObligatedValuesCopyPasteControllerTests.cs" />
@@ -214,6 +215,8 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnRemoveSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
@@ -233,8 +236,9 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedSentOnWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Validation\NonObligatedValuesViewModelValidatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Validation\SelectReportOptionsViewModelValidatorTests.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\AatfTaskListViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReusedViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBaseTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelTest.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModelTests.cs" />
@@ -296,6 +300,10 @@
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Web\EA.Weee.Web.csproj">
       <Project>{2e112d48-a841-4db7-b96f-4211c4da31c0}</Project>

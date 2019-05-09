@@ -4,6 +4,7 @@
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using User;
 
     public partial class Return : Entity
     {
@@ -11,23 +12,51 @@
         {
         }
 
-        public Return(Operator aatfOperator, Quarter quarter, ReturnStatus returnStatus)
+        public Return(Operator aatfOperator, Quarter quarter, string createdBy)
         {
             Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
             Guard.ArgumentNotNull(() => quarter, quarter);
-            Guard.ArgumentNotNull(() => returnStatus, returnStatus);
+            Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
 
             Operator = aatfOperator;
             Quarter = quarter;
-            ReturnStatus = returnStatus;
+            ReturnStatus = ReturnStatus.Created;
+            CreatedById = createdBy;
+            CreatedDate = SystemTime.UtcNow;
+        }
+
+        public virtual void UpdateSubmitted(string submittedBy)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => submittedBy, submittedBy);
+
+            if (ReturnStatus != ReturnStatus.Created)
+            {
+                throw new InvalidOperationException("Return status must be Created to transition to Submitted");
+            }
+
+            SubmittedById = submittedBy;
+            SubmittedDate = SystemTime.UtcNow;
+            ReturnStatus = ReturnStatus.Submitted;
         }
 
         public virtual Quarter Quarter { get; private set; }
 
-        public Guid OperatorId { get; private set; }
+        public Guid OperatorId { get; set; }
 
-        public virtual ReturnStatus ReturnStatus { get; private set; }
+        public virtual ReturnStatus ReturnStatus { get; set; }
 
         public virtual Operator Operator { get; private set; }
+
+        public virtual DateTime CreatedDate { get; private set; }
+
+        public virtual DateTime? SubmittedDate { get; set; }
+
+        public virtual string CreatedById { get; private set; }
+        
+        public virtual string SubmittedById { get; set; }
+
+        public virtual User CreatedBy { get; set; }
+
+        public virtual User SubmittedBy { get; set; }
     }
 }
