@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using System;
@@ -12,7 +13,7 @@
 
         public string ApprovalNumber { get; set; }
 
-        public virtual UKCompetentAuthority CompetentAuthority { get; set; }
+        public virtual UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
 
@@ -20,7 +21,7 @@
 
         public virtual Operator Operator { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
         {
             this.Id = id;
             this.Name = name;

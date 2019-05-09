@@ -210,8 +210,8 @@
 
             var aatfs = new List<Aatf>()
             {
-                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator),
-                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator)
+                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now),
+                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now)
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),

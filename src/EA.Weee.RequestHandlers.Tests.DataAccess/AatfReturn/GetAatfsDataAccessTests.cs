@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -12,6 +13,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
@@ -39,14 +41,22 @@
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
                 var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var aatfAddress = CreateAatfSiteAddress();
+                var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competantAuthority, "123456789", AatfStatus.Approved, @operator);
+                var aatf = new Aatf("KoalaBears", competantAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
                 List<Aatf> aatfList = await dataAccess.GetAatfs();
                 aatfList.Should().Contain(aatf);
             }
+        }
+
+        private AatfAddress CreateAatfSiteAddress()
+        {
+            Country country = new Country(Guid.NewGuid(), "England");
+            return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }
 }
