@@ -8,13 +8,13 @@
     using Prsd.Core.Mediator;
     using Security;
 
-    public class GetContactHandler : IRequestHandler<GetContact, AatfContactData>
+    public class GetAatfContactHandler : IRequestHandler<GetContact, AatfContactData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfContactDataAccess dataAccess;
         private readonly IMap<AatfContact, AatfContactData> mapper;
 
-        public GetContactHandler(IWeeeAuthorization authorization, IAatfContactDataAccess dataAccess, IMap<AatfContact, AatfContactData> mapper)
+        public GetAatfContactHandler(IWeeeAuthorization authorization, IAatfContactDataAccess dataAccess, IMap<AatfContact, AatfContactData> mapper)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
     public class AatfContact : Entity
@@ -15,8 +16,42 @@
             string position,
             string address1,
             string address2,
-            string town,
-            string county,
+            string townOrCity,
+            string countyOrRegion,
+            string postcode,
+            Country country,
+            string telephone,
+            string email)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
+            Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
+            Guard.ArgumentNotNullOrEmpty(() => position, position);
+            Guard.ArgumentNotNullOrEmpty(() => address1, address1);
+            Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
+            Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
+            Guard.ArgumentNotNullOrEmpty(() => email, email);
+
+            FirstName = firstName;
+            LastName = lastName;
+            Position = position;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
+            Postcode = postcode;
+            Country = country;
+            Telephone = telephone;
+            Email = email;
+        }
+
+        public virtual void UpdateDetails(
+            string firstName,
+            string lastName,
+            string position,
+            string address1,
+            string address2,
+            string townOrCity,
+            string countyOrRegion,
             string postcode,
             Country country,
             string telephone,
@@ -27,8 +62,8 @@
             Position = position;
             Address1 = address1;
             Address2 = address2;
-            TownOrCity = town;
-            CountyOrRegion = county;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
             Postcode = postcode;
             Country = country;
             Telephone = telephone;

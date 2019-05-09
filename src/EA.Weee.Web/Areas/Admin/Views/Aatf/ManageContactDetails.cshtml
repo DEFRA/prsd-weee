@@ -9,7 +9,7 @@
 <section id="main-content">
     <h1 class="govuk-heading-l">Manage AATF contact details</h1>
 
-    @using (Html.BeginRouteForm(FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()

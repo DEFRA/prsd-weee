@@ -392,6 +392,8 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreator.cs" />
+    <Compile Include="Areas\Admin\Requests\IEditAatfContactRequestCreator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />

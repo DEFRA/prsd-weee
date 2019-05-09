@@ -7,8 +7,6 @@
     {
         public Guid AatfId { get; set; }
 
-        public string AatfName { get; set; }
-
         public AatfContactData ContactData { get; set; }
     }
 }
