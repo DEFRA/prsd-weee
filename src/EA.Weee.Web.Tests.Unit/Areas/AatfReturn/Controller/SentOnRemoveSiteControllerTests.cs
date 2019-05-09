@@ -60,6 +60,61 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var siteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var operatorAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                SiteAddress = siteAddressData,
+                OperatorAddress = operatorAddressData
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).Returns(weeeSentOn);
+
+            await controller.Index(organisationId, returnId, aatfId, weeeSentOnId);
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
+                && t.ReturnId == returnId
+                && t.AatfId == aatfId
+                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_MapperIsCalled()
+        {
+            var viewModel = new SentOnRemoveSiteViewModel()
+            {
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                WeeeSentOnId = Guid.NewGuid()
+            };
+
+            var siteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var operatorAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                SiteAddress = siteAddressData,
+                OperatorAddress = operatorAddressData
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == viewModel.WeeeSentOnId))).Returns(weeeSentOn);
+
+            controller.ModelState.AddModelError("error", "error");
+            await controller.Index(viewModel);
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == viewModel.OrganisationId
+                && t.ReturnId == viewModel.ReturnId
+                && t.AatfId == viewModel.AatfId
+                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void IndexPost_GivenSelectedValueIsYes_RemoveWeeeSentOnIsCalled()
         {
             var viewModel = new SentOnRemoveSiteViewModel()
@@ -99,13 +154,13 @@
         public void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
         {            
             var siteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
+            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
 
             var siteAddressWithoutAddress2 = new AatfAddressData("Site name", "Site address 1", null, "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressWithoutAddress2Long = "Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
+            var siteAddressWithoutAddress2Long = "Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
 
             var siteAddressWithoutCounty = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", null, "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site country<br/>GU22 7UY";
+            var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>GU22 7UY<br/>Site country";
 
             var siteAddressWithoutPostcode = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", null, Guid.NewGuid(), "Site country");
             var siteAddressWithoutPostcodeLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
