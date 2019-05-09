@@ -10,9 +10,6 @@
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {
-        public decimal? NonObligatedTonnageTotal = null;
-        public decimal? NonObligatedTonnageTotalDcf = null;
-
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
         public TaskListDisplayOptions DisplayOptions = new TaskListDisplayOptions();
         private readonly ITonnageUtilities tonnageUtilities;
@@ -25,23 +22,6 @@
         public ReturnViewModel Map(ReturnData source)
         {
             Guard.ArgumentNotNull(() => source, source);
-
-            if (source.NonObligatedData != null)
-            {
-                foreach (var category in source.NonObligatedData)
-                {
-                    if (category.Dcf && category.Tonnage != null)
-                    {
-                        NonObligatedTonnageTotalDcf = tonnageUtilities.InitialiseTotalDecimal(NonObligatedTonnageTotalDcf);
-                        NonObligatedTonnageTotalDcf += category.Tonnage;
-                    }
-                    else if (!category.Dcf && category.Tonnage != null)
-                    {
-                        NonObligatedTonnageTotal = tonnageUtilities.InitialiseTotalDecimal(NonObligatedTonnageTotal);
-                        NonObligatedTonnageTotal += category.Tonnage;
-                    }
-                }
-            }
 
             if (source.Aatfs != null)
             {
@@ -105,16 +85,90 @@
                 }
             }
 
+            decimal? totalNonObligatedTonnageDcf = null;
+            decimal? totalNonObligatedTonnage = null;
+            if (source.NonObligatedData != null)
+            {
+                if (source.NonObligatedData.Any(n => n.Dcf && n.Tonnage.HasValue))
+                {
+                    totalNonObligatedTonnageDcf = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
+                }
+
+                if (source.NonObligatedData.Any(n => !n.Dcf && n.Tonnage.HasValue))
+                {
+                    totalNonObligatedTonnage = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => !n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
+                }
+            }
+
             return new ReturnViewModel(
-                source.Quarter,
-                source.QuarterWindow,
-                source.Quarter.Year,
-                tonnageUtilities.CheckIfTonnageIsNull(NonObligatedTonnageTotal),
-                tonnageUtilities.CheckIfTonnageIsNull(NonObligatedTonnageTotalDcf),
+                source,
                 AatfObligatedData,
                 source.ReturnOperatorData,
-                source.Id,
-                DisplayOptions);
+                DisplayOptions)
+            {
+                NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
+                NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
+                NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalNonObligated(totalNonObligatedTonnage, totalNonObligatedTonnageDcf)),
+                ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source))
+            };
+        }
+
+        private decimal? TotalNonObligated(decimal? totalNonObligatedTonnage, decimal? totalNonObligatedTonnageDcf)
+        {
+            if (totalNonObligatedTonnage.HasValue && totalNonObligatedTonnageDcf.HasValue)
+            {
+                return totalNonObligatedTonnage.Value + totalNonObligatedTonnageDcf.Value;
+            }
+
+            if (totalNonObligatedTonnageDcf.HasValue)
+            {
+                return totalNonObligatedTonnageDcf.Value;
+            }
+
+            return totalNonObligatedTonnage;
+        }
+
+        private decimal? TotalObligated(ReturnData returnData)
+        {
+            decimal? reusedTotal = null;
+            decimal? receivedTotal = null;
+            decimal? sentOnTotal = null;
+            decimal? total = null;
+
+            if (returnData.ObligatedWeeeReusedData.Any(o => o.Total.HasValue))
+            {
+                reusedTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeReusedData.Sum(o => o.Total));
+            }
+            if (returnData.ObligatedWeeeReceivedData.Any(o => o.Total.HasValue))
+            {
+                receivedTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeReceivedData.Sum(o => o.Total));
+            }
+            if (returnData.ObligatedWeeeSentOnData.Any(o => o.Total.HasValue))
+            {
+                sentOnTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeSentOnData.Sum(o => o.Total));
+            }
+
+            if (reusedTotal.HasValue)
+            {
+                total = reusedTotal.Value;
+            }
+            if (receivedTotal.HasValue)
+            {
+                if (!total.HasValue)
+                {
+                    total = 0;
+                }
+                total += receivedTotal.Value;
+            }
+            if (sentOnTotal.HasValue)
+            {
+                if (!total.HasValue)
+                {
+                    total = 0;
+                }
+                total += sentOnTotal.Value;
+            }
+            return total;
         }
     }
 }

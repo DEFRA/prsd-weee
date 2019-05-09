@@ -49,7 +49,7 @@
             var aatf = A.Fake<Aatf>();
             var scheme = A.Fake<Scheme>();
             var @operator = new Operator(organisation);
-            var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+            var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
 
             var weeeReceived = new WeeeReceived(
                 scheme.Id,

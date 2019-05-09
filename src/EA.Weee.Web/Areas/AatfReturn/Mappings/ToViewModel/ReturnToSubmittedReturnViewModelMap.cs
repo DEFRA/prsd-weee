@@ -11,7 +11,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new SubmittedReturnViewModel(source.Quarter, source.QuarterWindow, source.Quarter.Year)
+            var model = new SubmittedReturnViewModel(source)
             {
                 OrgansationId = source.ReturnOperatorData.OrganisationId
             };
