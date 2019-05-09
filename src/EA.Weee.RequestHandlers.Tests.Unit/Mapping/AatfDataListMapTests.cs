@@ -32,11 +32,12 @@
         {
             var name = "KoalsInTheWild";
             var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var aatfContact = A.Fake<AatfContact>();
             var @operator = A.Fake<Operator>();
             var approvalNumber = "123456789";
             var status = AatfStatus.Approved;
 
-            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator);
+            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, aatfContact);
 
             var result = map.Map(source);
 

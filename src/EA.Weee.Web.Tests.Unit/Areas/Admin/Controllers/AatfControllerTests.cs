@@ -10,6 +10,7 @@
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Requests;
     using Web.Areas.Admin.ViewModels.Aatf;
     using Xunit;
 
@@ -19,12 +20,15 @@
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
+        private readonly IEditAatfContactRequestCreator requestCreator;
+
         public AatfControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
+            requestCreator = A.Fake<IEditAatfContactRequestCreator>();
         }
 
         [Fact]
@@ -42,7 +46,7 @@
 
         private AatfController CreateController()
         {
-            return new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper);
+            return new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper, requestCreator);
         }
 
         [Fact]

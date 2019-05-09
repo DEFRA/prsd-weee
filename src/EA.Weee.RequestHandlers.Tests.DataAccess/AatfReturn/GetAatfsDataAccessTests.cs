@@ -13,22 +13,14 @@
     using FakeItEasy;
     using FluentAssertions;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
+
     public class GetAatfsDataAccessTests
     {
-        private readonly IWeeeAuthorization authorization;
-        private readonly Organisation organisation;
-        private readonly Operator @operator;
-        public GetAatfsDataAccessTests()
-        {
-            authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            organisation = Organisation.CreatePartnership("Koalas");
-            @operator = new Operator(organisation);
-        }
-
         [Fact]
         public async Task GetAatfsDataAccess_ReturnsAatfsList()
         {
@@ -37,14 +29,20 @@
                 ModelHelper helper = new ModelHelper(database.Model);
                 var dataAccess = new GetAatfsDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
-                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
+                var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
+                var organisation = Organisation.CreatePartnership("Koalas");
+                var @operator = new Operator(organisation);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, @operator, aatfContact);
 
-                var aatf = new Aatf("KoalaBears", competantAuthority, "123456789", AatfStatus.Approved, @operator);
+                database.WeeeContext.AatfContacts.Add(aatfContact);
+                await database.WeeeContext.SaveChangesAsync();
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
-                List<Aatf> aatfList = await dataAccess.GetAatfs();
+                var aatfList = await dataAccess.GetAatfs();
                 aatfList.Should().Contain(aatf);
             }
         }

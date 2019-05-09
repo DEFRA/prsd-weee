@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn.Internal;
@@ -14,6 +16,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Weee.Requests.Admin;
 
     public class AatfController : AdminController
     {
@@ -36,6 +39,7 @@
         public async Task<ActionResult> ManageAatfs()
         {
             SetBreadcrumb();
+
             return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
         }
 
@@ -70,9 +74,8 @@
             }
         }
 
-
         [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public ActionResult Details(Guid id)
         {
             SetBreadcrumb();
 
@@ -91,6 +94,7 @@
             using (var client = apiClient())
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(aatfId));
+
                 AatfEditContactAddressViewModel viewModel = new AatfEditContactAddressViewModel()
                 {
                     AatfId = aatfId,
@@ -99,7 +103,7 @@
 
                 viewModel.ContactData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                await SetBreadcrumb();
+                SetBreadcrumb();
 
                 return View(viewModel);
             }
@@ -128,12 +132,12 @@
                 viewModel.ContactData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
-            await SetBreadcrumb();
+            SetBreadcrumb();
 
             return View(viewModel);
         }
 
-        private async Task SetBreadcrumb()
+        private void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
         }
