@@ -1,0 +1,260 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
+@{
+    ViewBag.Title = "Check your AATF return for " + Model.ReturnOperator.OperatorName;
+}
+
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
+        </div>
+    </header>
+    <p>Check and review your AATF return before you proceed to submit</p>
+
+    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <p><strong>Compliance year</strong></p>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                @Model.Year
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <p><strong>Reporting period</strong></p>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                @Model.Period
+            </div>
+        </div>
+    </div>
+
+    <h2 class="govuk-heading-m">Obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-6"></div>
+
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+        <a href="#" id="collapsibleHref">Open all</a>
+    </span>
+
+    <div class="govuk-table govuk-grid-column-full">
+        <div class="govuk-grid-row govuk-table__line"></div>
+
+        @foreach (var aatf in Model.AatfsData)
+        {
+            <div class="govuk-grid-row govuk-table__row govuk-table__header--no-line">
+                <div class="govuk-grid-column-one-quarter">
+                    <h1 class="govuk-heading-m">@aatf.Aatf.Name</h1>
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <h1 class="govuk-heading-m">@aatf.Aatf.ApprovalNumber</h1>
+                </div>
+            </div>
+
+            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <strong>B2C (tonnes)</strong>
+                    </div>
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <strong>B2B (tonnes)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-!-padding-bottom-4"></div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <strong>Received for treatment</strong>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeReceived.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeReceived.B2B
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            if (aatf.SchemeData.Count > 0)
+            {
+                <details class="govuk-details collapsible-font-size">
+                    <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text">
+                            Breakdown by PCS
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text" aria-hidden="true">
+                        <div class="govuk-grid-row govuk-body collapsible-font-size">
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-grid-column-two-thirds">
+                                    <strong>PCS name</strong>
+                                </div>
+
+                                <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                    <strong>Approval number</strong>
+                                </div>
+
+                            </div>
+                        </div>
+                        @foreach (var pcsdata in aatf.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        @pcsdata.Scheme.Name
+                                    </div>
+
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        @pcsdata.ApprovalName
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </details>
+            }
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <strong>Sent to another AATF/ATF</strong>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeSentOn.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeSentOn.B2B
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <strong>Reused as a whole appliance</strong>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeReused.B2C
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p>
+                            @aatf.WeeeReused.B2B
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-row govuk-table__line"></div>
+        }
+
+    </div>
+
+
+    <h2 class="govuk-heading-m">Non-obligated WEEE</h2>
+
+    <div class="govuk-!-padding-bottom-4"></div>
+    <div class="govuk-table govuk-grid-column-full">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">&nbsp;</div>
+            <div class="govuk-grid-column-one-third">
+                <p>
+                    <strong>Total (tonnes)</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <p>
+                    <strong>WEEE received (tonnes)</strong>
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                    <p>
+                        @Model.NonObligatedTonnageTotal
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <p>
+                    <strong>WEEE retained by a DCF (tonnes)</strong>
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                    <p>
+                        @Model.NonObligatedTonnageTotalDcf
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-!-padding-bottom-6"></div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.ReturnId)
+                    @Html.HiddenFor(m => m.OrganisationId)
+
+                    <div class="govuk-form-group">
+                        <button class="govuk-button" type="submit">Submit</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-body govuk-!-font-size-19">
+                    <a class="govuk-link govuk-link--no-visited-state">
+                        @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Scripts.Render("~/bundles/weee-collapsible-link")
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            InitialStartup();
+        });
+    </script>
+}
