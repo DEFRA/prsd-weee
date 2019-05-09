@@ -33,7 +33,7 @@
 
                 var dataAccess = new AatfSiteDataAccess(context, A.Fake<IGenericDataAccess>());
 
-                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress);
+                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress, database);
 
                 AssertSubmitted(context, country, returnData, aatfAddress);
             }
@@ -52,7 +52,7 @@
 
                 var dataAccess = new AatfSiteDataAccess(context, A.Fake<IGenericDataAccess>());
 
-                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress);
+                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress, database);
 
                 var oldAddress = (context.WeeeReusedSite
                                         .Where(t => t.WeeeReused.ReturnId == returnData.Item1
@@ -67,7 +67,7 @@
         }
 
         private async Task<Tuple<Guid, Guid>> CreateWeeeReusedSite(WeeeContext context,
-            AatfSiteDataAccess dataAccess, AatfAddress aatfAddress)
+            AatfSiteDataAccess dataAccess, AatfAddress aatfAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -75,8 +75,8 @@
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, contact);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
-            
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
+
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);
             context.Schemes.Add(scheme);

@@ -33,6 +33,45 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> ManageAatfs()
+        {
+            SetBreadcrumb();
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
+        {
+            SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    viewModel = new ManageAatfsViewModel
+                    {
+                        AatfDataList = await GetAatfs()
+                    };
+                    return View(viewModel);
+                }
+            }
+            else
+            {
+                return RedirectToAction("AATFdetails", new { Id = viewModel.Selected.Value });
+            }
+        }
+
+        private async Task<List<AatfDataList>> GetAatfs()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs());
+            }
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> Details(Guid id)
         {
             SetBreadcrumb();

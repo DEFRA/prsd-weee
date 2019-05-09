@@ -24,7 +24,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReusedAmounts(context, dataAccess);
+                var returnId = await CreateWeeeReusedAmounts(context, dataAccess, database);
 
                 AssertValues(context, returnId);
             }
@@ -38,7 +38,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReusedAmounts(context, dataAccess);
+                var returnId = await CreateWeeeReusedAmounts(context, dataAccess, database);
 
                 AssertValues(context, returnId);
 
@@ -68,7 +68,7 @@
         }
 
         private async Task<Guid> CreateWeeeReusedAmounts(WeeeContext context,
-            ObligatedReusedDataAccess dataAccess)
+            ObligatedReusedDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -76,7 +76,7 @@
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, contact);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);

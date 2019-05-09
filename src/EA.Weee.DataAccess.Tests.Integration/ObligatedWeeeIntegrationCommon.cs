@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.User;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
@@ -23,9 +24,9 @@
 
     public static class ObligatedWeeeIntegrationCommon
     {
-        public static Return CreateReturn(Operator operatorTest)
+        public static Return CreateReturn(Operator operatorTest, string createdById)
         {
-            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
         public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)

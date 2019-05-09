@@ -2,12 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.User;
     using NonObligated;
     using Organisations;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Requests.AatfReturn.NonObligated;
@@ -19,17 +22,20 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
-        private readonly IGenericDataAccess operatorAccess;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IUserContext userContext;
 
         public AddReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
             IOrganisationDataAccess organisationDataAccess, 
-            IGenericDataAccess operatorAccess)
+            IGenericDataAccess genericDataAccess, 
+            IUserContext userContext)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.organisationDataAccess = organisationDataAccess;
-            this.operatorAccess = operatorAccess;
+            this.genericDataAccess = genericDataAccess;
+            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(AddReturn message)
@@ -39,11 +45,9 @@
 
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            var organisation = await organisationDataAccess.GetById(message.OrganisationId);
+            var aatfOperator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
 
-            var aatfOperator = await operatorAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
-
-            var aatfReturn = new Return(aatfOperator, quarter, ReturnStatus.Created);
+            var aatfReturn = new Return(aatfOperator, quarter, userContext.UserId.ToString());
 
             await returnDataAccess.Submit(aatfReturn);
 

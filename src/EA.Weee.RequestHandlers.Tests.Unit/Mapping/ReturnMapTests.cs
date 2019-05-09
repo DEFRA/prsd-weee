@@ -5,6 +5,7 @@
     using System.Linq;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.User;
     using EA.Weee.Domain;
     using FakeItEasy;
     using FluentAssertions;
@@ -245,10 +246,48 @@
             result.ReturnReportOns.Count(r => r.ReportOnQuestionId == 3).Should().Be(1);
         }
 
+        [Fact]
+        public void Map_GivenSourceCreatedBy_CreatedByValuesShouldBeMapped()
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => @return.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
+            A.CallTo(() => @return.CreatedBy).Returns(new User("id", "first", "surname", "email"));
+            A.CallTo(() => @return.CreatedDate).Returns(new DateTime(2019, 01, 01));
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.CreatedBy.Should().Be("first surname");
+            result.CreatedDate.Should().Be(new DateTime(2019, 01, 01));
+            result.SubmittedDate.Should().BeNull();
+            result.SubmittedBy.Should().Be(" ");
+        }
+
+        [Fact]
+        public void Map_GivenSourceSubmitted_SubmittedByValuesShouldBeMapped()
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => @return.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
+            A.CallTo(() => @return.SubmittedBy).Returns(new User("id", "first", "surname", "email"));
+            A.CallTo(() => @return.SubmittedDate).Returns(new DateTime(2019, 01, 01));
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.SubmittedBy.Should().Be("first surname");
+            result.SubmittedDate.Should().Be(new DateTime(2019, 01, 01));
+        }
+
         public Return GetReturn()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);
-            var @return = new Return(@operator, quarter, ReturnStatus.Created);
+            var @return = new Return(@operator, quarter, Guid.NewGuid().ToString()) { CreatedBy = new User("id", "first", "surname", "email") };
 
             return @return;
         }
@@ -290,6 +329,12 @@
             var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
 
             return quarterWindow;
+        }
+
+        public ReturnQuarterWindow GetReturnQuarterWindow()
+        {
+           return new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null);
         }
     }
 }

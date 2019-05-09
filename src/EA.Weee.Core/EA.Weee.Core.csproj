@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
+    <Compile Include="AatfReturn\AatfDataList.cs" />
     <Compile Include="AatfReturn\AatfContactData.cs" />
     <Compile Include="AatfReturn\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
@@ -272,6 +273,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
+      <Project>{A987FFF6-5386-419E-AF0A-E6C74E3323CF}</Project>
+      <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>

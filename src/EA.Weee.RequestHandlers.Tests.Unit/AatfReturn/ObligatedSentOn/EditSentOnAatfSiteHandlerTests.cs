@@ -26,7 +26,7 @@
         private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeAuthorization authorization;
-        private readonly ISentOnAatfSiteDataAccess sentOnDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IAatfSiteDataAccess offSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
@@ -37,7 +37,7 @@
             context = A.Fake<WeeeContext>();
             authorization = A.Fake<IWeeeAuthorization>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-            sentOnDataAccess = A.Fake<ISentOnAatfSiteDataAccess>();
+            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             offSiteDataAccess = A.Fake<IAatfSiteDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
