@@ -3,15 +3,20 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using System;
-    using System.Collections.Generic;
+    using Core.Shared;
 
     public class AatfData
     {
-        public AatfData(Guid id, string name, string approvalNumber)
+        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
         {
             this.Id = id;
             this.Name = name;
             this.ApprovalNumber = approvalNumber;
+            this.CompetentAuthority = competentAuthority;
+            this.AatfStatus = status;
+            this.SiteAddress = siteAddress;
+            this.Size = size;
+            this.ApprovalDate = approvalDate;
         }
 
         public Guid Id { get; set; }
@@ -20,8 +25,14 @@
 
         public string ApprovalNumber { get; set; }
 
-        public virtual UKCompetentAuthority CompetentAuthority { get; set; }
+        public virtual UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
+      
+        public virtual AatfAddressData SiteAddress { get; set; }
+      
+        public AatfSize Size { get; set; }
+      
+        public DateTime? ApprovalDate { get; set; }
     }
 }
