@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -12,6 +13,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -35,16 +37,22 @@
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
                 var @operator = new Operator(organisation);
-                var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, @operator, aatfContact);
+                var aatfAddress = CreateAatfSiteAddress();
+                var aatfSize = AatfSize.Large;
 
-                database.WeeeContext.AatfContacts.Add(aatfContact);
-                await database.WeeeContext.SaveChangesAsync();
+                var aatf = new Aatf("KoalaBears", competantAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
                 var aatfList = await dataAccess.GetAatfs();
                 aatfList.Should().Contain(aatf);
             }
+        }
+
+        private AatfAddress CreateAatfSiteAddress()
+        {
+            Country country = new Country(Guid.NewGuid(), "England");
+            return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }
 }

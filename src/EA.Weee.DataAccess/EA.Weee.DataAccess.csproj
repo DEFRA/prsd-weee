@@ -89,6 +89,7 @@
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnReportOnMapping.cs" />
     <Compile Include="Mappings\AatfSiteAddressMapping.cs" />
+    <Compile Include="Mappings\AatfSizeMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedAmountMapping.cs" />
     <Compile Include="Mappings\AatfWeeeReceivedMapping.cs" />
     <Compile Include="Mappings\AatfReturnMapping.cs" />

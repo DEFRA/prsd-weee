@@ -14,7 +14,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf(value, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfContact>());
+                var @return = new Aatf(value, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfContact>(), A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -25,7 +25,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf(null, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfContact>());
+                var @return = new Aatf(null, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -36,7 +36,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", null, "approval", AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfContact>());
+                var @return = new Aatf("name", null, "approval", AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -48,7 +48,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", A.Dummy<UKCompetentAuthority>(), value, AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfContact>());
+                var @return = new Aatf("name", A.Dummy<UKCompetentAuthority>(), value, AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -59,7 +59,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", null, "approvalNumber", null, A.Fake<Operator>(), A.Fake<AatfContact>());
+                var @return = new Aatf("name", null, "approvalNumber", null, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -70,7 +70,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", null, "approvalNumber", null, null, null);
+                var @return = new Aatf("name", null, "approvalNumber", null, null, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -86,7 +86,7 @@
             var aatfStatus = AatfStatus.Approved;
             var contact = A.Fake<AatfContact>();
 
-            var aatf = new Aatf(name, competantAuthority, approvalNumber, aatfStatus, @operator, contact);
+            var aatf = new Aatf(name, competantAuthority, approvalNumber, aatfStatus, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>());
 
             aatf.CompetentAuthority.Should().Be(competantAuthority);
             aatf.ApprovalNumber.Should().Be(approvalNumber);

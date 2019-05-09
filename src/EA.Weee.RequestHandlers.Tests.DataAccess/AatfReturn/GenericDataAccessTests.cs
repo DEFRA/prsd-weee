@@ -8,6 +8,7 @@
     using Charges;
     using Domain;
     using Domain.AatfReturn;
+    using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
@@ -62,8 +63,8 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, contact);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, contact);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -90,12 +91,12 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, contact);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, contact);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
                 var @operator2 = new Operator(organisation);
-                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2, contact);
+                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -135,7 +136,15 @@
                 "12345678",
                 AatfStatus.Approved,
                 new Operator(Organisation.CreatePartnership("trading")),
+                CreateAddress(), 
+                A.Fake<AatfSize>(),
+                DateTime.Now,
                 contact);
+        }
+
+        private AatfAddress CreateAddress()
+        {
+            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England"));
         }
 
         private AatfContact CreateContact(Domain.Country country)
