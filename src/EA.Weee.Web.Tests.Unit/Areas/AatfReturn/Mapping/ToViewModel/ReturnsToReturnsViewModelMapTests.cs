@@ -42,18 +42,22 @@
                 }
             };
 
+            var returnsItems = A.CollectionOfFake<ReturnViewModel>(2).ToArray();
+
+            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData.ElementAt(0))).Returns(returnsItems.ElementAt(0));
+            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData.ElementAt(1))).Returns(returnsItems.ElementAt(1));
             A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
 
             returnsMap.Map(returnData);
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData.ElementAt(0))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => mapper.Map<ReturnViewModel>(returnData.ElementAt(1))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnsItemViewModel>(returnsItems.ElementAt(0))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnsItemViewModel>(returnsItems.ElementAt(1))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Map_GivenMappedReturns_ModelShouldBeReturned()
         {
-            var returns = A.CollectionOfFake<ReturnsItemViewModel>(2).ToArray();
+            var returnsItems = A.CollectionOfFake<ReturnsItemViewModel>(2).ToArray();
 
             var returnData = new List<ReturnData>()
             {
@@ -68,12 +72,12 @@
             };
 
             A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
-            A.CallTo(() => mapper.Map<ReturnsItemViewModel>(A<ReturnData>._)).ReturnsNextFromSequence(returns);
-
+            A.CallTo(() => mapper.Map<ReturnsItemViewModel>(A<ReturnViewModel>._)).ReturnsNextFromSequence(returnsItems);
+            
             var result = returnsMap.Map(returnData);
 
-            result.Returns.Should().Contain(returns.ElementAt(0));
-            result.Returns.Should().Contain(returns.ElementAt(1));
+            result.Returns.Should().Contain(returnsItems.ElementAt(0));
+            result.Returns.Should().Contain(returnsItems.ElementAt(1));
             result.Returns.Count().Should().Be(2);
         }
     }

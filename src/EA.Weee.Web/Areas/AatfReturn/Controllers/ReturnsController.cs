@@ -66,5 +66,11 @@
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
+
+        [HttpGet]
+        public ActionResult Continue(bool redirectReportingOptions, bool redirectSelectYourPcs, bool redirectTaskList, Guid organisationId, Guid returnId)
+        {
+            return AatfRedirect.SelectReportOptions(organisationId, returnId);
+        }
     }
 }

@@ -62,5 +62,29 @@
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(returnViewModel.ReturnStatus)).MustHaveHappened(Repeated.Exactly.Once);
             result.ReturnsListDisplayOptions.Should().Be(returnsListDisplayOptions);
         }
+
+        [Fact]
+        public void Map_GivenSource_ReturnRedirectOptionsListShouldBeMapped()
+        {
+            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
+
+            var result = mapper.Map(returnViewModel);
+
+            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Map_GivenSource_ReturnRedirectOptionsListAndReturned()
+        {
+            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
+            var returnsListRedirectOptions = new ReturnsListRedirectOptions();
+
+            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).Returns(returnsListRedirectOptions);
+
+            var result = mapper.Map(returnViewModel);
+
+            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+            result.ReturnsListRedirectOptions.Should().Be(returnsListRedirectOptions);
+        }
     }
 }

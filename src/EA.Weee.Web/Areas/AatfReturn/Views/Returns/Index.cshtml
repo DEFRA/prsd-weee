@@ -57,14 +57,7 @@
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                         @{
-                            if (item.ReturnsListDisplayOptions.DisplayContinue)
-                            {
-                                <a>continue</a>
-                            }
-                            if (item.ReturnsListDisplayOptions.DisplayEdit)
-                            {
-                                <a>Edit</a>
-                            }
+                            @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.OrganisationRouteName, new { returnId = @item.ReturnViewModel.ReturnId, organisationId = @item.ReturnViewModel.ReturnId, redirectReportingOptions = @item.ReturnsListRedirectOptions.RedirectReportingOptions, redirectSelectYourPcs = @item.ReturnsListRedirectOptions.RedirectSelectYourPcs, redirectTaskList = @item.ReturnsListRedirectOptions.RedirectTaskList, action = "Index", controller = "Returns" })
                         }
                     </td>
                 </tr>
