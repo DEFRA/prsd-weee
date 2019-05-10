@@ -71,9 +71,7 @@
                     {
                         var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId));
                     }
-
-                    return await Task.Run<ActionResult>(() =>
-                        RedirectToAction("Index", "SentOnSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+                    return AatfRedirect.SentOnSummaryList(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
                 }
             }
 
