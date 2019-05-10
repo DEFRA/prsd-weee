@@ -36,8 +36,7 @@
             var transfer = new AatfDataToAatfDetailsViewModelTransfer(aatfData, aatfContactData);
 
             AatfDetailsViewModel result = map.Map(transfer);
-
-            result.Should().BeEquivalentTo(aatfData);
+            AssertResults(aatfData, aatfContactData, result);
             Assert.NotNull(result.ApprovalDate);
         }
 
@@ -52,6 +51,12 @@
 
             AatfDetailsViewModel result = map.Map(transfer);
 
+            AssertResults(aatfData, aatfContactData, result);
+            Assert.Null(result.ApprovalDate);
+        }
+
+        private static void AssertResults(AatfData aatfData, AatfContactData aatfContactData, AatfDetailsViewModel result)
+        {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
@@ -59,7 +64,7 @@
             Assert.Equal(aatfData.AatfStatus, result.AatfStatus);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(aatfData.Size, result.Size);
-            Assert.Null(result.ApprovalDate);
+            Assert.Equal(aatfContactData, result.ContactData);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -77,9 +82,14 @@
             return new AatfAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
         }
 
-        private static AatfContactData CreateAatfContactData()
+        private AatfContactAddressData CreateContactAddressData()
         {
-            return new AatfContactData(Guid.NewGuid(), "FirstName", "LastName", "Position", A.Fake<AatfContactAddressData>(), "Telephone", "Email");
+            return new AatfContactAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
+        }
+
+        private AatfContactData CreateAatfContactData()
+        {
+            return new AatfContactData(Guid.NewGuid(), "FirstName", "LastName", "Position", CreateContactAddressData(), "Telephone", "Email");
         }
 
         private AatfData CreateAatfData()
