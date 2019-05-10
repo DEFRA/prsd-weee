@@ -3,7 +3,6 @@
     using System.Linq;
     using Core.AatfReturn;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
     public class ReturnToReturnsListRedirectOptionsMap : IMap<ReturnData, ReturnsListRedirectOptions>
     {

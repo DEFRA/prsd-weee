@@ -147,6 +147,7 @@
     <Compile Include="Helpers\ICategoryValueTotalCalculator.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculator.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
+    <Compile Include="AatfReturn\ReturnsListRedirectOptions.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />

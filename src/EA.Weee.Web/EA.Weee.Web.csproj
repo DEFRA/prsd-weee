@@ -336,7 +336,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsOrdering.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnStatusToReturnDisplayOptionsMapper.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnStatusToReturnDisplayOptionsMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnsListRedirectOptionsMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnViewModelToReturnsItemViewModelMapper.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsToReturnsViewModelMap.cs" />
@@ -376,7 +376,6 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnsItemViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReturnsListRedirectOptions.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />

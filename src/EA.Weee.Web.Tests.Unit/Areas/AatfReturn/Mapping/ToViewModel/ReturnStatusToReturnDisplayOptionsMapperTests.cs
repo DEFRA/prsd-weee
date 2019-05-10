@@ -7,11 +7,11 @@
 
     public class ReturnStatusToReturnDisplayOptionsMapperTests
     {
-        private readonly ReturnStatusToReturnDisplayOptionsMapper mapper;
+        private readonly ReturnStatusToReturnDisplayOptionsMap mapper;
 
         public ReturnStatusToReturnDisplayOptionsMapperTests()
         {
-            mapper = new ReturnStatusToReturnDisplayOptionsMapper();
+            mapper = new ReturnStatusToReturnDisplayOptionsMap();
         }
 
         [Fact]

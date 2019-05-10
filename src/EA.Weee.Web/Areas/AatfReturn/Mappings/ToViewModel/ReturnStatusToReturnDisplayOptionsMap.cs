@@ -3,7 +3,7 @@
     using Core.AatfReturn;
     using Prsd.Core.Mapper;
 
-    public class ReturnStatusToReturnDisplayOptionsMapper : IMap<ReturnStatus, ReturnsListDisplayOptions>
+    public class ReturnStatusToReturnDisplayOptionsMap : IMap<ReturnStatus, ReturnsListDisplayOptions>
     {
         public ReturnsListDisplayOptions Map(ReturnStatus source)
         {
