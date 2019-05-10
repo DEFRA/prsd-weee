@@ -37,6 +37,8 @@
 
         public DateTime CreatedDate { get; set; }
 
+        public Core.AatfReturn.ReturnStatus ReturnStatus { get; set; }
+
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();

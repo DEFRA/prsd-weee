@@ -28,15 +28,17 @@
         <table class="govuk-table prsd-table-collapse">
             <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
             <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
-            <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Total obligated (t)</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Total non-obligated (t)</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date</th>
-                <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
-            </tr>
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Total obligated (t)</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Total non-obligated (t)</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                </tr>
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
 
@@ -45,13 +47,26 @@
                 var item = Model.Returns[returnCount];
 
                 <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.Quarter</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.Year</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.NonObligatedTotal</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ObligatedTotal</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.CreatedBy</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.SubmittedDate</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.SubmittedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.NonObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @{
+                            if (item.ReturnsListDisplayOptions.DisplayContinue)
+                            {
+                                <a>continue</a>
+                            }
+                            if (item.ReturnsListDisplayOptions.DisplayEdit)
+                            {
+                                <a>Edit</a>
+                            }
+                        }
+                    </td>
                 </tr>
             }
 
@@ -89,6 +104,10 @@
 
                 td:nth-of-type(7):before {
                     content: "Submitted by";
+                }
+
+                td:nth-of-type(8):before {
+                    content: "Status";
                 }
             }
         </style>

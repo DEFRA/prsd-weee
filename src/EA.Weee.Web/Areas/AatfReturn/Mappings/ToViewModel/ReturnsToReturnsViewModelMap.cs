@@ -24,7 +24,9 @@
             var orderedItems = ordering.Order(source);
             foreach (var @return in orderedItems)
             {
-                model.Returns.Add(mapper.Map<ReturnViewModel>(@return));
+                var returnViewModelItem = mapper.Map<ReturnsItemViewModel>((mapper.Map<ReturnViewModel>(@return)));
+
+                model.Returns.Add(returnViewModelItem);
             }
 
             return model;

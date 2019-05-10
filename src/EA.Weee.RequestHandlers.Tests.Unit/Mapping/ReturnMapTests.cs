@@ -10,6 +10,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Xunit;
     using DomainAatf = Domain.AatfReturn.Aatf;
@@ -23,10 +24,14 @@
         private readonly DomainScheme scheme;
         private readonly Organisation organisation;
         private readonly Operator @operator;
+        private readonly IMapper mapper;
 
         public ReturnMapTests()
         {
-            map = new ReturnMap(A.Fake<IMapper>());
+            mapper = A.Fake<IMapper>();
+
+            map = new ReturnMap(mapper);
+            
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
             organisation = Organisation.CreatePartnership("trading name");
@@ -232,9 +237,7 @@
         public void Map_GivenSource_ReturnReportOnsShouldBeMapped()
         {
             var @return = GetReturn();
-            var returnReportOnList = new List<ReturnReportOn>();
-            returnReportOnList.Add(new ReturnReportOn(@return.Id, 1));
-            returnReportOnList.Add(new ReturnReportOn(@return.Id, 3));
+            var returnReportOnList = new List<ReturnReportOn> { new ReturnReportOn(@return.Id, 1), new ReturnReportOn(@return.Id, 3) };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), returnReportOnList);
@@ -282,6 +285,23 @@
 
             result.SubmittedBy.Should().Be("first surname");
             result.SubmittedDate.Should().Be(new DateTime(2019, 01, 01));
+        }
+
+        [Fact]
+        public void Map_GivenSourceStatus_ReturnStatusShouldBeMapped()
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = GetReturn();
+            var returnStatusMap = new ReturnStatusMap();
+
+            @return.ReturnStatus = ReturnStatus.Submitted;
+            
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => mapper.Map<Core.AatfReturn.ReturnStatus>(@return.ReturnStatus)).Returns(Core.AatfReturn.ReturnStatus.Created);
+
+            var result = map.Map(@returnQuarterWindow);
+            result.ReturnStatus.Should().Be(Core.AatfReturn.ReturnStatus.Created);
         }
 
         public Return GetReturn()

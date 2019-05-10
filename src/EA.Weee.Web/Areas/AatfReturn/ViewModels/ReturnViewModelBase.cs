@@ -25,6 +25,8 @@
 
         public string SubmittedDate { get; private set; }
 
+        public ReturnStatus ReturnStatus { get; private set; }
+
         protected ReturnViewModelBase(ReturnData returnData)
         {
             Guard.ArgumentNotNull(() => returnData, returnData);
@@ -38,6 +40,7 @@
             this.CreatedDate = returnData.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss");
             this.SubmittedBy = returnData.SubmittedBy;
             this.SubmittedDate = returnData.SubmittedDate.HasValue ? returnData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
+            this.ReturnStatus = returnData.ReturnStatus;
         }
 
         protected ReturnViewModelBase()

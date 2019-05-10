@@ -53,7 +53,7 @@
         [Fact]
         public void Map_GivenMappedReturns_ModelShouldBeReturned()
         {
-            var returns = A.CollectionOfFake<ReturnViewModel>(2).ToArray();
+            var returns = A.CollectionOfFake<ReturnsItemViewModel>(2).ToArray();
 
             var returnData = new List<ReturnData>()
             {
@@ -68,7 +68,7 @@
             };
 
             A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
-            A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).ReturnsNextFromSequence(returns);
+            A.CallTo(() => mapper.Map<ReturnsItemViewModel>(A<ReturnData>._)).ReturnsNextFromSequence(returns);
 
             var result = returnsMap.Map(returnData);
 
