@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using DataAccess;
     using Domain.AatfReturn;
     
@@ -31,6 +33,14 @@
                     .Include(r => r.Operator)
                     .Include(r => r.Operator.Organisation)
                     .SingleOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task<IList<Return>> GetByOrganisationId(Guid id)
+        {
+            return await context.Returns
+                .Include(r => r.Operator)
+                .Include(r => r.Operator.Organisation)
+                .Where(r => r.Operator.Organisation.Id == id).ToListAsync();
         }
     }
 }
