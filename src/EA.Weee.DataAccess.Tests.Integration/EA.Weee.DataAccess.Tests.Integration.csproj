@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfContactIntegration.cs" />
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="GenericIntegration.cs" />

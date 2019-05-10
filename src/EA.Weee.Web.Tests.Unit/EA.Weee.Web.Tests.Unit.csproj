@@ -258,6 +258,7 @@
     <Compile Include="Areas\Admin\Controllers\TestEmailControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
+    <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />
