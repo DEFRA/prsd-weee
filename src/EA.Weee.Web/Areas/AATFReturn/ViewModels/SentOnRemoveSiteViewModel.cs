@@ -21,6 +21,7 @@
         [AllowHtml]
         public string SiteAddress { get; set; }
 
+        [AllowHtml]
         public string OperatorAddress { get; set; }
 
         public decimal? TonnageB2B { get; set; }
