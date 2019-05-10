@@ -3,9 +3,9 @@
     using System.Data.Entity.ModelConfiguration;
     using EA.Weee.Domain.AatfReturn;
 
-    internal class AatfReportOnQuestion : EntityTypeConfiguration<ReportOnQuestion>
+    internal class AatfReportOnQuestionMapping : EntityTypeConfiguration<ReportOnQuestion>
     {
-        public AatfReportOnQuestion()
+        public AatfReportOnQuestionMapping()
         {
             ToTable("ReportOnQuestion", "AATF");
         }
