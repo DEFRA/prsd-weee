@@ -118,6 +118,26 @@
         }
 
         [Fact]
+        public async void SetsHeaderTitle_For_NonObligatedCopyPaste()
+        {
+            var typeheading = "Non-obligated WEEE";
+
+            var result = await controller.Index(A.Dummy<Guid>(), false) as ViewResult;
+            var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
+            viewModel.Typeheading.Should().Be(typeheading);
+        }
+
+        [Fact]
+        public async void SetsHeaderTitle_For_DcfObligatedCopyPaste()
+        {
+            var typeheading = "Non-obligated WEEE retained by a DCF";
+
+            var result = await controller.Index(A.Dummy<Guid>(), true) as ViewResult;
+            var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
+            viewModel.Typeheading.Should().Be(typeheading);
+        }
+
+        [Fact]
         public async void IndexPost_OnSubmitDcf_PageRedirectsToNonObligatedDcf()
         {
             var httpContext = new HttpContextMocker();
