@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
@@ -48,8 +49,10 @@
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
                 var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
-                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now);
+                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 database.WeeeContext.Organisations.Add(organisation);
                 database.WeeeContext.Aatfs.Add(aatf);
@@ -98,9 +101,11 @@
             }
         }
 
-        private AatfAddress CreateAddress()
+        private AatfAddress CreateAddress(DatabaseWrapper database)
         {
-            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England"));
+            var country = database.WeeeContext.Countries.First();
+
+            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country);
         }
     }
 }

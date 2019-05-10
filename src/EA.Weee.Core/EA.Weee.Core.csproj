@@ -83,11 +83,13 @@
     <Compile Include="AatfReturn\AatfSize.cs" />
     <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\AatfDataList.cs" />
+    <Compile Include="AatfReturn\AatfContactData.cs" />
     <Compile Include="AatfReturn\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
     <Compile Include="AatfReturn\ReportOnQuestionEnum.cs" />
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
+    <Compile Include="AatfReturn\AatfContactAddressData.cs" />
     <Compile Include="AatfReturn\ReturnsListDisplayOptions.cs" />
     <Compile Include="AatfReturn\ReturnStatus.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />
