@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.Admin.Aatf;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Charges;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
@@ -37,7 +31,7 @@
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
                 var @operator = new Operator(organisation);
-                var aatfAddress = CreateAatfSiteAddress();
+                var aatfAddress = CreateAatfSiteAddress(database);
                 var aatfSize = AatfSize.Large;
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact);
@@ -49,9 +43,10 @@
             }
         }
 
-        private AatfAddress CreateAatfSiteAddress()
+        private AatfAddress CreateAatfSiteAddress(DatabaseWrapper database)
         {
-            Country country = new Country(Guid.NewGuid(), "England");
+            var country = database.WeeeContext.Countries.First();
+
             return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }

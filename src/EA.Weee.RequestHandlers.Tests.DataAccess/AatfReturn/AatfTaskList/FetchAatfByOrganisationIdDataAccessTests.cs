@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using EA.Weee.DataAccess;
@@ -47,29 +48,30 @@
 
                 var dataAccess = new FetchAatfByOrganisationIdDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
-                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
-
-                var aatf = CreateAatf(competantAuthority, @operator, contact);
+                var aatf = CreateAatf(competentAuthority, @operator, database, contact);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
-                List<Aatf> aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
+                var aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
 
                 aatfList.Should().Contain(aatf);
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, DatabaseWrapper database, AatfContact contact)
         {
+            var country = database.WeeeContext.Countries.First();
+
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
                 @operator,
-                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England")),
+                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
                 A.Fake<AatfSize>(),
                 DateTime.Now,
                 contact);

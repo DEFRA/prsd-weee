@@ -37,7 +37,7 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf = CreateAatf(competantAuthority, contact);
+                var aatf = CreateAatf(competantAuthority, database, contact);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -63,8 +63,8 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -83,20 +83,20 @@
                 var modelHelper = new ModelHelper(database.Model);
 
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var competantAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 var @operator = new Operator(organisation);
-                var competantAuthority = await competantAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competantAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
-                var aatf2 = new Aatf("Name2", competantAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, @operator, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
                 var @operator2 = new Operator(organisation);
-                var aatf3 = new Aatf("Name3", competantAuthority, "approval1", AatfStatus.Approved, @operator2, CreateAddress(), A.Fake<AatfSize>(), DateTime.Now, contact);
+                var aatf3 = new Aatf("Name3", competentAuthority, "approval1", AatfStatus.Approved, @operator2, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -129,22 +129,24 @@
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, AatfContact contact)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, DatabaseWrapper database, AatfContact contact)
         {
             return new Aatf("name",
                 competentAuthority,
                 "12345678",
                 AatfStatus.Approved,
                 new Operator(Organisation.CreatePartnership("trading")),
-                CreateAddress(), 
+                CreateAddress(database), 
                 A.Fake<AatfSize>(),
                 DateTime.Now,
                 contact);
         }
 
-        private AatfAddress CreateAddress()
+        private AatfAddress CreateAddress(DatabaseWrapper database)
         {
-            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", new Domain.Country(Guid.NewGuid(), "England"));
+            var country = database.WeeeContext.Countries.First();
+
+            return new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country);
         }
 
         private AatfContact CreateContact(Domain.Country country)
