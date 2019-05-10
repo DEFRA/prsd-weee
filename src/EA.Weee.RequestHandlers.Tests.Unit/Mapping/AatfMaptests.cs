@@ -13,7 +13,7 @@
 
         public AatfMapTests()
         {
-            map = new AatfMap();
+            map = new AatfMap(A.Fake<UKCompetentAuthorityMap>(), A.Fake<AatfStatusMap>(), A.Fake<AatfSizeMap>(), A.Fake<AatfAddressMap>());
         }
 
         [Fact]

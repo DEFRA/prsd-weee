@@ -12,5 +12,7 @@
         Task<Guid> Submit(Return aatfReturn);
 
         Task<Return> GetById(Guid id);
+
+        Task<IList<Return>> GetByOrganisationId(Guid id);
     }
 }
