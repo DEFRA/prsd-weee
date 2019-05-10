@@ -37,9 +37,9 @@
         <h2 class="govuk-heading-m">Obligated WEEE</h2>
         <div class="govuk-!-padding-bottom-6"></div>
 
-    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-        <a href="#" id="collapsibleHref">Open all</a>
-    </span>
+        <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+            <a href="#" id="collapsibleHref">Open all</a>
+        </span>
 
         <div class="govuk-table govuk-grid-column-full">
             <div class="govuk-grid-row govuk-table__line"></div>
@@ -92,24 +92,24 @@
                     </div>
                 </div>
 
-            if (aatf.SchemeData.Count > 0)
-            {
-                <details class="govuk-details collapsible-font-size">
-                    <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
-                        <span class="govuk-details__summary-text">
-                            Breakdown by PCS
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text" aria-hidden="true">
-                        <div class="govuk-grid-row govuk-body collapsible-font-size">
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-grid-column-two-thirds">
-                                    <strong>PCS name</strong>
-                                </div>
+                if (aatf.SchemeData.Count > 0)
+                {
+                    <details class="govuk-details collapsible-font-size">
+                        <summary id="details-@aatf.Aatf.Id" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                            <span class="govuk-details__summary-text">
+                                Breakdown by PCS
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text" aria-hidden="true">
+                            <div class="govuk-grid-row govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        <strong>PCS name</strong>
+                                    </div>
 
-                                <div class="govuk-grid-column-one-third collapsible-padding-right">
-                                    <strong>Approval number</strong>
-                                </div>
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        <strong>Approval number</strong>
+                                    </div>
 
                                 </div>
                             </div>
@@ -265,26 +265,35 @@
             </div>
         </div>
 
-            <div class="govuk-!-padding-bottom-6"></div>
+        <div class="govuk-!-padding-bottom-6"></div>
 
+        <div class="govuk-grid-row">
             <div class="govuk-grid-row">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-quarter">
-                        @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
+                <div class="govuk-grid-column-one-quarter">
+                    @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
 
-                            @Html.HiddenFor(m => m.ReturnId)
-                            @Html.HiddenFor(m => m.OrganisationId)
+                        @Html.HiddenFor(m => m.ReturnId)
+                        @Html.HiddenFor(m => m.OrganisationId)
 
-                            <div class="govuk-form-group">
-                                <button class="govuk-button" type="submit">Submit</button>
-                            </div>
-                        }
+                        <div class="govuk-form-group">
+                            <button class="govuk-button" type="submit">Submit</button>
+                        </div>
+                    }
 
-                    </div>
                 </div>
             </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-body govuk-!-font-size-19">
+                    <a class="govuk-link govuk-link--no-visited-state">
+                        @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 
 @Scripts.Render("~/bundles/weee-collapsible-link")
