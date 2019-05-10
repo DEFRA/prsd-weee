@@ -4,16 +4,15 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    ViewBag.Title = "Check your AATF return for " + Model.ReturnOperator.OperatorName;
+    ViewBag.Title = "AATF return summary - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
+            <h1 class="govuk-heading-l">AATF return summary</h1>
         </div>
     </header>
-    <p>Check and review your AATF return before you proceed to submit</p>
 
     <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
         <div class="govuk-grid-row">
@@ -222,31 +221,7 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-
-                    @Html.HiddenFor(m => m.ReturnId)
-                    @Html.HiddenFor(m => m.OrganisationId)
-
-                    <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Submit</button>
-                    </div>
-                }
-
-            </div>
-        </div>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-                <div class="govuk-body govuk-!-font-size-19">
-                    <a class="govuk-link govuk-link--no-visited-state">
-                        @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
-                    </a>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </section>
 
