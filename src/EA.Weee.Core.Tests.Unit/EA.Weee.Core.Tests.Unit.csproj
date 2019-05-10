@@ -103,6 +103,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
+    <Compile Include="AatfReturn\AatfContactDataTests.cs" />
     <Compile Include="AatfReturn\OperatorAddressDataTests.cs" />
     <Compile Include="AatfReturn\SiteAddressDataTests.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValueTests.cs" />

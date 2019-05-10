@@ -231,7 +231,9 @@
     <Content Include="scripts\Update\Release 2\Sprint6\20190404-1400-MoveOrganisationAddressIdToScheme.sql" />
     <Content Include="scripts\Update\Release 2\Sprint6\20190404-1400-MoveOrganisationContactIdToScheme.sql" />
     <Content Include="scripts\Update\Release 2\Sprint7\20190417-1400-RenameAndUpdateReturnReportOn.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint8\20190503-1530-CreateTableAATFContact.sql" />
     <Content Include="scripts\Update\Release 2\Sprint8\20190502-1330-ReturnSchemaUpdates.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint8\20190508-0900-UpdateAATFTable.sql" />
     <Content Include="scripts\Update\Release 2\Sprint8\20190508-1039-UpdateAatfTable.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
@@ -278,9 +280,7 @@
     <Content Include="scripts\Update\Release 1\Sprint07\20150616-UpdateCATable-Remove_IsSysetmUser.sql" />
     <Content Include="scripts\Update\Release 1\Sprint07\20150618-162503-AddOrganisationUserTable.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="scripts\Update\Release 2\Sprint8\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
