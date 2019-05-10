@@ -20,7 +20,7 @@
     public class ReturnsSummaryControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly CheckYourReturnController controller;
+        private readonly ReturnsSummaryController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
 
@@ -30,7 +30,7 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
 
-            controller = new CheckYourReturnController(() => weeeClient, A.Fake<IWeeeCache>(), breadcrumb, mapper);
+            controller = new ReturnsSummaryController(() => weeeClient, A.Fake<IWeeeCache>(), breadcrumb, mapper);
         }
 
         [Fact]
