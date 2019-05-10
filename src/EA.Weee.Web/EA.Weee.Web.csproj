@@ -293,6 +293,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedValuesCopyPasteController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ReusedRemoveSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReturnsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SelectReportOptionsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ReusedOffSiteCreateSiteController.cs" />
@@ -322,6 +323,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ObligatedDataToObligatedValueMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToReusedRemoveSiteViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
@@ -375,6 +378,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReusedRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
@@ -859,6 +863,7 @@
     <Content Include="Areas\Admin\Views\Aatf\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\ManageAatfs.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnRemoveSite\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ReusedRemoveSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Returns\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
