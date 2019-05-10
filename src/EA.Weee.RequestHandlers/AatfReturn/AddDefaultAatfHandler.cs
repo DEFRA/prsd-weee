@@ -51,7 +51,7 @@
 
             if (!context.Aatfs.Any(a => a.Operator.Organisation.Id == message.OrganisationId))
             {
-                context.Aatfs.AddRange(GetAatfs(@operator, competantAuthority, contact));
+                context.Aatfs.AddRange(GetAatfs(@operator, competantAuthority, contact, country));
             }
 
             await context.SaveChangesAsync();
@@ -59,9 +59,9 @@
             return true;
         }
 
-        private List<Aatf> GetAatfs(Operator @operator, UKCompetentAuthority competentAuthority, AatfContact contact)
+        private List<Aatf> GetAatfs(Operator @operator, UKCompetentAuthority competentAuthority, AatfContact contact, Country country)
         {
-            AatfAddress siteAddress = CreateAatfSiteAddress();
+            var siteAddress = CreateAatfSiteAddress(country);
             var aatfs = new List<Aatf>()
             {
                 new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact),
@@ -72,9 +72,8 @@
             return aatfs;
         }
 
-        private AatfAddress CreateAatfSiteAddress()
+        private AatfAddress CreateAatfSiteAddress(Country country)
         {
-            Country country = new Country(Guid.NewGuid(), "England");
             return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
 
