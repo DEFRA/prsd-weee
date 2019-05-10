@@ -70,8 +70,9 @@
                             @address.Address
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
-                            <span class="govuk-visually-hidden">Change the address of @address.Name</span>
-                            @Html.RouteLink("Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+                            @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
+                            <br />
+                            @Html.NavigationRouteLink("Remove", "Remove " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
                         </div>
                     </div>
                 }
@@ -88,7 +89,7 @@
             var buttonText = Model.Addresses.Count > 0 ? "Add another site" : "Add a site";
         }
         <p>
-            @Html.RouteLink(@buttonText, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" }, null)
+            @Html.NavigationRouteLink(buttonText, buttonText, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteCreateSite" })
         </p>
     </div>
     @{

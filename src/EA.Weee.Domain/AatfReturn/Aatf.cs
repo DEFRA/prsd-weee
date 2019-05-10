@@ -23,17 +23,20 @@
         public virtual AatfSize Size { get; private set; }
         public virtual DateTime? ApprovalDate { get; private set; }
 
+        public virtual AatfContact Contact { get; private set; }
+
         protected Aatf()
         {
         }
 
-        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate)
+        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
             Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
             Guard.ArgumentNotNull(() => aatfStatus, aatfStatus);
             Guard.ArgumentNotNull(() => @operator, @operator);
+            Guard.ArgumentNotNull(() => contact, contact);
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
 
@@ -45,6 +48,7 @@
             Size = aatfSize;
             SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
+            Contact = contact;
         }
     }
 }
