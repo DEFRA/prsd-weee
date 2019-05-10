@@ -76,6 +76,10 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\Internal\AatfContactDataAccess.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
+    <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnsHandler.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />

@@ -1,19 +1,28 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Requests;
     using Web.Areas.Admin.ViewModels.Aatf;
     using Xunit;
 
@@ -23,19 +32,23 @@
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
+        private readonly IEditAatfContactRequestCreator requestCreator;
+        private readonly AatfController controller;
+
         public AatfControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
+            requestCreator = A.Fake<IEditAatfContactRequestCreator>();
+
+            controller = new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper, requestCreator);
         }
 
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
-            AatfController controller = CreateController();
-
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel());
@@ -44,16 +57,10 @@
             Assert.IsType<ViewResult>(result);
         }
 
-        private AatfController CreateController()
-        {
-            return new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper);
-        }
-
         [Fact]
         public async Task ManageAatfsPost_ReturnsSelectedGuid()
         {
             var selectedGuid = Guid.NewGuid();
-            var controller = CreateController();
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel { Selected = selectedGuid });
 
@@ -68,8 +75,6 @@
         [Fact]
         public async Task ManageAatfPost_ModelError_GetAatfsMustBeRun()
         {
-            AatfController controller = CreateController();
-
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             await controller.ManageAatfs(new ManageAatfsViewModel());
@@ -80,8 +85,6 @@
         [Fact]
         public async Task GetAatfsList_Always_SetsInternalBreadcrumbToManageAATFs()
         {
-            AatfController controller = CreateController();
-
             ActionResult result = await controller.ManageAatfs();
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
@@ -90,8 +93,6 @@
         [Fact]
         public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet()
         {
-            AatfController controller = CreateController();
-
             var aatfData = A.Fake<AatfData>();
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
 
@@ -103,7 +104,6 @@
         [Fact]
         public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
         {
-            AatfController controller = CreateController();
             AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
 
             var aatfData = A.Fake<AatfData>();
@@ -117,7 +117,6 @@
         [Fact]
         public async void DetailsGet_GivenValidAatfIdButNoApprovalDate_ViewModelShouldBeCreatedWithNullApprovalDate()
         {
-            AatfController controller = CreateController();
             AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
             viewModel.ApprovalDate = null;
 
@@ -128,6 +127,141 @@
             var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var aatfId = Guid.NewGuid();
+            ContactDataAccessSetup(true);
+
+            await controller.ManageContactDetails(aatfId);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
+        {
+            ContactDataAccessSetup(true);
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenAatf_ContactShouldBeRetrieved()
+        {
+            var aatfId = Guid.NewGuid();
+
+            var result = await controller.ManageContactDetails(aatfId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
+        {
+            ContactDataAccessSetup(true);
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
+        {
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_OnSubmit_PageRedirectsToSiteList()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var aatfId = Guid.NewGuid();
+
+            var viewModel = new AatfEditContactAddressViewModel
+            {
+                AatfId = aatfId,
+            };
+
+            httpContext.RouteData.Values.Add("id", aatfId);
+
+            var result = await controller.ManageContactDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Details");
+            result.RouteValues["id"].Should().Be(aatfId);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        {
+            var model = new AatfEditContactAddressViewModel();
+            var request = new EditAatfContact();
+
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+
+            await controller.ManageContactDetails(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_ApiShouldBeCalled()
+        {
+            var model = new AatfEditContactAddressViewModel() { ContactData = new AatfContactData() };
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.ManageContactDetails(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_CountriesShouldBeAttached()
+        {
+            var model = new AatfEditContactAddressViewModel() { ContactData = new AatfContactData() };
+            controller.ModelState.AddModelError("error", "error");
+
+            var countryGuid = Guid.NewGuid();
+            var countryName = "MyCountryName";
+            var countryList = new List<CountryData>() { new CountryData() { Id = countryGuid, Name = countryName } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryList);
+
+            var result = await controller.ManageContactDetails(model) as ViewResult;
+            var viewModel = result.Model as AatfEditContactAddressViewModel;
+            viewModel.ContactData.AddressData.Countries.Should().NotBeNull();
+            viewModel.ContactData.AddressData.Countries.Count().Should().Be(1);
+            viewModel.ContactData.AddressData.Countries.ElementAt(0).Id.Should().Be(countryGuid);
+            viewModel.ContactData.AddressData.Countries.ElementAt(0).Name.Should().Be(countryName);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        {
+            var aatfId = Guid.NewGuid();
+            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData() };
+            controller.ModelState.AddModelError("error", "error");
+
+            await controller.ManageContactDetails(model);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+        }
+
+        private void ContactDataAccessSetup(bool canEdit)
+        {
+            var contact = new AatfContactData()
+            {
+                CanEditContactDetails = canEdit
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
+                .Returns(contact);
         }
     }
 }

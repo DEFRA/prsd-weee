@@ -96,6 +96,8 @@
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnsHandlerTests.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContactHandlerTests.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContactHandlerTests.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
+    <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
