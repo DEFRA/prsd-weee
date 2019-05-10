@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -32,6 +33,20 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Details(Guid id)
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(aatf);
+
+                return View(viewModel);
+            }
+        }
+        
         public async Task<ActionResult> ManageAatfs()
         {
             SetBreadcrumb();
@@ -57,7 +72,7 @@
             }
             else
             {
-                return RedirectToAction("AATFdetails", new { Id = viewModel.Selected.Value });
+                return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
             }           
         }
 

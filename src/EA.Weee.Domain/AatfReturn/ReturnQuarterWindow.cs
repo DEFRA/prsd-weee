@@ -10,9 +10,9 @@
 
     public class ReturnQuarterWindow
     {
-        public Return Return { get; private set; }
+        public virtual Return Return { get; private set; }
 
-        public QuarterWindow QuarterWindow { get; private set; }
+        public virtual QuarterWindow QuarterWindow { get; private set; }
 
         public List<Aatf> Aatfs { get; private set; }
 
@@ -53,16 +53,6 @@
             this.ObligatedWeeeSentOnList = obligatedSentOnList;
             this.ReturnSchemes = returnSchemes;
             this.ReturnReportOns = returnReportOns;
-        }
-
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow, List<NonObligatedWeee> nonObligatedWeeeList)
-        {
-            Guard.ArgumentNotNull(() => @return, @return);
-            Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
-
-            this.Return = @return;
-            this.QuarterWindow = quarterWindow;
-            this.NonObligatedWeeeList = nonObligatedWeeeList;
         }
 
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow)

@@ -63,9 +63,6 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
-
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();

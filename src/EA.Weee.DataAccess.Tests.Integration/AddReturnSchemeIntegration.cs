@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain.User;
     using Xunit;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation;
@@ -33,8 +34,9 @@
                 const string crn = "ABC12345";
 
                 var organisation = Organisation.Organisation.CreateRegisteredCompany(name, crn, tradingName);
-
+                
                 context.Organisations.Add(organisation);
+
                 await context.SaveChangesAsync();
 
                 var scheme = new Scheme(organisation.Id);
@@ -43,7 +45,7 @@
 
                 var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var @return = new Return(operatorTest, quarter, ReturnStatus.Created);
+                var @return = new Return(operatorTest, quarter, database.Model.AspNetUsers.First().Id);
 
                 context.Returns.Add(@return);
                 await context.SaveChangesAsync();
