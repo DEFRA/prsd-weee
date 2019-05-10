@@ -20,6 +20,27 @@
 
         public decimal? B2C { get; set; }
 
+        public decimal? Total
+        {
+            get
+            {
+                if (B2C.HasValue && B2B.HasValue)
+                {
+                    return B2B.Value + B2C.Value;
+                }
+                else if (B2C.HasValue)
+                {
+                    return B2C;
+                }
+                else if (B2B.HasValue)
+                {
+                    return B2B.Value;
+                }
+
+                return null;
+            }
+        }
+
         public WeeeObligatedData(Guid id, Scheme scheme, AatfData aatf, int categoryId, decimal? b2b, decimal? b2c)
         {
             this.Id = id;

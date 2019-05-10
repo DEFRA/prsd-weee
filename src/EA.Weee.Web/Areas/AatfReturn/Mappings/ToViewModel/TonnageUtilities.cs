@@ -33,12 +33,7 @@
 
         public decimal? InitialiseTotalDecimal(decimal? tonnage)
         {
-            if (tonnage == null)
-            {
-                tonnage = 0.000m;
-            }
-
-            return tonnage;
+            return tonnage ?? (tonnage = 0.000m);
         }
 
         public string CheckIfTonnageIsNull(decimal? tonnage)

@@ -29,6 +29,14 @@
 
         public IList<ReturnReportOn> ReturnReportOns { get; set; }
 
+        public string CreatedBy { get; set; }
+
+        public string SubmittedBy { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();

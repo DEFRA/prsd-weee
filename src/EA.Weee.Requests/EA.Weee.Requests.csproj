@@ -49,9 +49,11 @@
     <Compile Include="AatfReturn\AddDefaultAatf.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\GetAatfById.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
+    <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />

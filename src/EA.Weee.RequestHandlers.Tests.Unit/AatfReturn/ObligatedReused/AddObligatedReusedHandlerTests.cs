@@ -45,10 +45,8 @@
         [Fact]
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
-            var organisation = A.Fake<Organisation>();
-            var aatf = A.Fake<Aatf>();
-            var @operator = new Operator(organisation);
-            var aatfReturn = new Return(@operator, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+            var aatf = A.Fake<Aatf>();            
+            var aatfReturn = ReturnHelper.GetReturn();
 
             var weeeReused = new WeeeReused(
                 aatf.Id,
@@ -66,7 +64,7 @@
             {
                 AatfId = aatf.Id,
                 ReturnId = aatfReturn.Id,
-                OrganisationId = organisation.Id,
+                OrganisationId = aatfReturn.Operator.Organisation.Id,
                 CategoryValues = categoryValues
             };
             
