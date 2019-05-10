@@ -97,6 +97,7 @@
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
+            builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
 
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
 

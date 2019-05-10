@@ -26,7 +26,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedSentOnDataAccess(database.WeeeContext);
 
-                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess);
+                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess, database);
 
                 AssertValues(context, weeeSentOnId);
             }
@@ -40,7 +40,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedSentOnDataAccess(database.WeeeContext);
 
-                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess);
+                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess, database);
 
                 AssertValues(context, weeeSentOnId);
 
@@ -70,7 +70,7 @@
         }
 
         private async Task<Guid> CreateWeeeSentOnAmounts(WeeeContext context,
-            ObligatedSentOnDataAccess dataAccess)
+            ObligatedSentOnDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
@@ -78,7 +78,7 @@
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator);
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(country);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);
