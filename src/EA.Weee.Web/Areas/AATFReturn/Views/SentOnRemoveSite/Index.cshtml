@@ -23,6 +23,7 @@
                         AATF/ATF name and address
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.HiddenFor(model => model.SiteAddress)
                         @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
                     </div>
                 </div>
