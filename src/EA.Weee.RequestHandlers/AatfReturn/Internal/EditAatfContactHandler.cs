@@ -8,6 +8,7 @@
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
+    using EA.Weee.Security;
 
     internal class EditAatfContactHandler : IRequestHandler<EditAatfContact, bool>
     {
@@ -33,6 +34,10 @@
         public async Task<bool> HandleAsync(EditAatfContact message)
         {
             authorization.EnsureCanAccessInternalArea();
+            if (authorization.CheckCanAccessInternalArea())
+            {
+                authorization.EnsureUserInRole(Roles.InternalAdmin);
+            }
 
             Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.ContactData.AddressData.CountryId);
 

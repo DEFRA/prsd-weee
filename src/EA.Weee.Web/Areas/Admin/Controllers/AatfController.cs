@@ -89,6 +89,12 @@
             using (var client = apiClient())
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
+
+                if (!contact.CanEditContactDetails)
+                {
+                    return new HttpForbiddenResult();
+                }
+
                 var viewModel = new AatfEditContactAddressViewModel()
                 {
                     AatfId = id,

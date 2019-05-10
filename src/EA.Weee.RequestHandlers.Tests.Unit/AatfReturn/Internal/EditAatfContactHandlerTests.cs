@@ -12,6 +12,7 @@
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
@@ -41,6 +42,18 @@
         public async Task HandleAsync_NoInternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
+
+            var handler = new EditAatfContactHandler(context, authorization, aatfContactDataAccess, genericDataAccess, organisationDetailsDataAccess);
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfContact>());
+
+            await action.Should().ThrowAsync<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_NoAdminRoleAccess_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
             var handler = new EditAatfContactHandler(context, authorization, aatfContactDataAccess, genericDataAccess, organisationDetailsDataAccess);
 

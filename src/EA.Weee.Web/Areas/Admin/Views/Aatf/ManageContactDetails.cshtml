@@ -19,11 +19,11 @@
         @Html.HiddenFor(m => m.AatfId)
         @Html.EditorFor(m => m.ContactData)
 
-        <div class="govuk-!-padding-bottom-3"></div>
+        <div class="govuk-!-padding-bottom-6"></div>
         <button type="submit" name="save" class="govuk-button" id="site-details">
             Save and continue
         </button>
-
+        <div class="govuk-!-padding-bottom-6"></div>
         <p>
             <a href="@(Url.UrlFor<AatfController>(a => a.Details(Model.AatfId)))">Back</a>
         </p>

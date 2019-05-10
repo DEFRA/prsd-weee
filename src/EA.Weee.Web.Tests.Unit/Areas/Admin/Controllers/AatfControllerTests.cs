@@ -11,6 +11,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
@@ -129,6 +130,7 @@
         public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var aatfId = Guid.NewGuid();
+            ContactDataAccessSetup(true);
 
             await controller.ManageContactDetails(aatfId);
 
@@ -138,6 +140,7 @@
         [Fact]
         public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
+            ContactDataAccessSetup(true);
             var result = await controller.ManageContactDetails(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
@@ -156,9 +159,18 @@
         [Fact]
         public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
+            ContactDataAccessSetup(true);
             var result = await controller.ManageContactDetails(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
+        {
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
@@ -216,6 +228,17 @@
             await controller.ManageContactDetails(model);
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+        }
+
+        private void ContactDataAccessSetup(bool canEdit)
+        {
+            var contact = new AatfContactData()
+            {
+                CanEditContactDetails = canEdit
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
+                .Returns(contact);
         }
     }
 }
