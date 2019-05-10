@@ -85,36 +85,6 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_MapperIsCalled()
-        {
-            var viewModel = new SentOnRemoveSiteViewModel()
-            {
-                OrganisationId = Guid.NewGuid(),
-                ReturnId = Guid.NewGuid(),
-                AatfId = Guid.NewGuid(),
-                WeeeSentOnId = Guid.NewGuid()
-            };
-
-            var siteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            var operatorAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            var weeeSentOn = new WeeeSentOnData()
-            {
-                SiteAddress = siteAddressData,
-                OperatorAddress = operatorAddressData
-            };
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == viewModel.WeeeSentOnId))).Returns(weeeSentOn);
-
-            controller.ModelState.AddModelError("error", "error");
-            await controller.Index(viewModel);
-
-            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == viewModel.OrganisationId
-                && t.ReturnId == viewModel.ReturnId
-                && t.AatfId == viewModel.AatfId
-                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
         public async void IndexPost_GivenSelectedValueIsYes_RemoveWeeeSentOnIsCalled()
         {
             var viewModel = new SentOnRemoveSiteViewModel()
@@ -144,7 +114,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["aatfId"].Should().Be(aatfId);

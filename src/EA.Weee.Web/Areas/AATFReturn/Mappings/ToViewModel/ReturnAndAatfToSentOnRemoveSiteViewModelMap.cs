@@ -22,6 +22,8 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            var tonnages = tonnageUtilities.SumObligatedValues(source.WeeeSentOn.Tonnages);
+
             var viewModel = new SentOnRemoveSiteViewModel()
             {
                 WeeeSentOn = source.WeeeSentOn,
@@ -30,7 +32,8 @@
                 AatfId = source.AatfId,
                 SiteAddress = source.SiteAddress,
                 OperatorAddress = source.OperatorAddress,
-                Tonnages = tonnageUtilities.SumObligatedValues(source.WeeeSentOn.Tonnages)
+                TonnageB2B = decimal.Parse(tonnages.B2B),
+                TonnageB2C = decimal.Parse(tonnages.B2C)
             };
 
             return viewModel;
