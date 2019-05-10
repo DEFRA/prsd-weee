@@ -7,15 +7,15 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
 
-    public class AatfDataToAatfDetailsViewModel : IMap<AatfDataToAatfDetailsViewModelTransfer, AatfDetailsViewModel>
+    public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private IAddressUtilities addressUtilities;
-        public AatfDataToAatfDetailsViewModel(IAddressUtilities addressUtilities)
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities)
         {
             this.addressUtilities = addressUtilities;
         }
 
-        public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelTransfer source)
+        public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 

@@ -5,10 +5,12 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
@@ -64,7 +66,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAddressesAndWeeReusedAmounts_SummaryDataShouldBeMapped()
+        public async void HandleAsync_GivenAatfId_MapperIsCalled()
         {
             var aatfContact = A.Fake<AatfContact>();
 
@@ -73,6 +75,33 @@
             await handler.HandleAsync(A.Dummy<GetAatfContact>());
 
             A.CallTo(() => mapper.Map(A<AatfContact>.That.IsSameAs(aatfContact))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void HandleAsync_GivenAatfId_CanEditContactDetailsSet(bool selectedValue)
+        {
+            var aatfContact = A.Fake<AatfContact>();
+
+            A.CallTo(() => authorization.CheckUserInRole(A<Roles>._)).Returns(selectedValue);
+            A.CallTo(() => dataAccess.GetContact(A<Guid>._)).Returns(aatfContact);
+
+            var result = await handler.HandleAsync(A.Dummy<GetAatfContact>());
+
+            result.CanEditContactDetails.Should().Be(selectedValue);
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenAatfId_MappedObjectShouldBeReturned()
+        {
+            var aatfContactData = new AatfContactData();
+
+            A.CallTo(() => mapper.Map(A<AatfContact>._)).Returns(aatfContactData);
+
+            var result = await handler.HandleAsync(A.Dummy<GetAatfContact>());
+
+            result.Should().Be(aatfContactData);
         }
     }
 }

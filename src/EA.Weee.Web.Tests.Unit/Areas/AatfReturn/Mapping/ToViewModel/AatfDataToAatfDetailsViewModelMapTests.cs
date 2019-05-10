@@ -12,11 +12,11 @@
 
     public class AatfDataToAatfDetailsViewModelMapTests
     {
-        private readonly AatfDataToAatfDetailsViewModel map;
+        private readonly AatfDataToAatfDetailsViewModelMap map;
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
-            map = new AatfDataToAatfDetailsViewModel(new AddressUtilities());
+            map = new AatfDataToAatfDetailsViewModelMap(new AddressUtilities());
         }
 
         [Fact]
@@ -33,7 +33,7 @@
             AatfData aatfData = CreateAatfData();
             AatfContactData aatfContactData = CreateAatfContactData();
 
-            var transfer = new AatfDataToAatfDetailsViewModelTransfer(aatfData, aatfContactData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
 
             AatfDetailsViewModel result = map.Map(transfer);
             AssertResults(aatfData, aatfContactData, result);
@@ -47,7 +47,7 @@
             AatfContactData aatfContactData = CreateAatfContactData();
             aatfData.ApprovalDate = default(DateTime);
 
-            var transfer = new AatfDataToAatfDetailsViewModelTransfer(aatfData, aatfContactData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
 
             AatfDetailsViewModel result = map.Map(transfer);
 

@@ -48,7 +48,7 @@
                 AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
                 AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelTransfer(aatf, contactData));
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData));
 
                 return View(viewModel);
             }

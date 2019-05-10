@@ -1,10 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
@@ -216,6 +219,26 @@
             await controller.ManageContactDetails(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_CountriesShouldBeAttached()
+        {
+            var model = new AatfEditContactAddressViewModel() { ContactData = new AatfContactData() };
+            controller.ModelState.AddModelError("error", "error");
+
+            var countryGuid = Guid.NewGuid();
+            var countryName = "MyCountryName";
+            var countryList = new List<CountryData>() { new CountryData() { Id = countryGuid, Name = countryName } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryList);
+
+            var result = await controller.ManageContactDetails(model) as ViewResult;
+            var viewModel = result.Model as AatfEditContactAddressViewModel;
+            viewModel.ContactData.AddressData.Countries.Should().NotBeNull();
+            viewModel.ContactData.AddressData.Countries.Count().Should().Be(1);
+            viewModel.ContactData.AddressData.Countries.ElementAt(0).Id.Should().Be(countryGuid);
+            viewModel.ContactData.AddressData.Countries.ElementAt(0).Name.Should().Be(countryName);
         }
 
         [Fact]

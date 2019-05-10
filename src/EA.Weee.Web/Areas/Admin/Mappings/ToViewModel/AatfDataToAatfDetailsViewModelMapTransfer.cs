@@ -6,9 +6,9 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
 
-    public class AatfDataToAatfDetailsViewModelTransfer
+    public class AatfDataToAatfDetailsViewModelMapTransfer
     {
-        public AatfDataToAatfDetailsViewModelTransfer(AatfData aatfData, AatfContactData contactData)
+        public AatfDataToAatfDetailsViewModelMapTransfer(AatfData aatfData, AatfContactData contactData)
         {
             AatfData = aatfData;
             ContactData = contactData;

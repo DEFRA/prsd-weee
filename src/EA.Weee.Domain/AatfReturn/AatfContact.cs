@@ -70,11 +70,11 @@
             Email = email;
         }
 
-        public virtual string FirstName { get; set; }
+        public virtual string FirstName { get; private set; }
 
-        public virtual string LastName { get; set; }
+        public virtual string LastName { get; private set; }
 
-        public virtual string Position { get; set; }
+        public virtual string Position { get; private set; }
 
         public virtual string Address1 { get; private set; }
 
@@ -90,8 +90,8 @@
 
         public virtual Country Country { get; private set; }
 
-        public virtual string Telephone { get; set; }
+        public virtual string Telephone { get; private set; }
 
-        public virtual string Email { get; set; }
+        public virtual string Email { get; private set; }
     }
 }
