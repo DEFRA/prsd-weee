@@ -1,4 +1,3 @@
-
 GO
 
 ALTER TABLE [AATF].AATF ADD SiteAddressId uniqueidentifier  NULL;
@@ -21,5 +20,3 @@ ALTER TABLE [AATF].AATF ALTER COLUMN SiteAddressId uniqueidentifier NOT NULL;
 GO
 
 ALTER TABLE [AATF].AATF ALTER COLUMN Size int NOT NULL;
-GO
-
