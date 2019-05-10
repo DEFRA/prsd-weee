@@ -2,19 +2,21 @@
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using FakeItEasy;
     using FluentAssertions;
     using System;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
     {
-        private readonly AatfDataToAatfDetailsViewModel map;
+        private readonly AatfDataToAatfDetailsViewModelMap map;
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
-            map = new AatfDataToAatfDetailsViewModel();
+            map = new AatfDataToAatfDetailsViewModelMap(new AddressUtilities());
         }
 
         [Fact]
@@ -28,21 +30,33 @@
         [Fact]
         public void Map_GivenValidSource_WithApprovalDate_PropertiesShouldBeMapped()
         {
-            AatfData aatfData = new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
+            AatfData aatfData = CreateAatfData();
+            AatfContactData aatfContactData = CreateAatfContactData();
 
-            AatfDetailsViewModel result = map.Map(aatfData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
 
-            result.Should().BeEquivalentTo(aatfData);
+            AatfDetailsViewModel result = map.Map(transfer);
+            AssertResults(aatfData, aatfContactData, result);
             Assert.NotNull(result.ApprovalDate);
         }
 
         [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDatetime()
         {
-            AatfData aatfData = new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, default(DateTime));
+            AatfData aatfData = CreateAatfData();
+            AatfContactData aatfContactData = CreateAatfContactData();
+            aatfData.ApprovalDate = default(DateTime);
 
-            AatfDetailsViewModel result = map.Map(aatfData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
 
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            AssertResults(aatfData, aatfContactData, result);
+            Assert.Null(result.ApprovalDate);
+        }
+
+        private static void AssertResults(AatfData aatfData, AatfContactData aatfContactData, AatfDetailsViewModel result)
+        {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
@@ -50,7 +64,7 @@
             Assert.Equal(aatfData.AatfStatus, result.AatfStatus);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(aatfData.Size, result.Size);
-            Assert.Null(result.ApprovalDate);
+            Assert.Equal(aatfContactData, result.ContactData);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -66,6 +80,21 @@
         private AatfAddressData CreateAatfAddressData()
         {
             return new AatfAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
+        }
+
+        private AatfContactAddressData CreateContactAddressData()
+        {
+            return new AatfContactAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
+        }
+
+        private AatfContactData CreateAatfContactData()
+        {
+            return new AatfContactData(Guid.NewGuid(), "FirstName", "LastName", "Position", CreateContactAddressData(), "Telephone", "Email");
+        }
+
+        private AatfData CreateAatfData()
+        {
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
         }
     }
 }

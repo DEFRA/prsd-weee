@@ -76,5 +76,27 @@
 
             constructor.Should().Throw<ArgumentException>();
         }
+
+        [Fact]
+        public void AatfAddress_GivenValidParameters_AatfAddressPropertiesShouldBeSet()
+        {
+            var name = "Name";
+            var address1 = "Address1";
+            var address2 = "Address2";
+            var town = "Town";
+            var county = "County";
+            var postcode = "Postcode";
+            var country = new Country(Guid.NewGuid(), "Country");
+
+            var contact = new AatfAddress(name, address1, address2, town, county, postcode, country);
+
+            contact.Name.Should().Be(name);
+            contact.Address1.Should().Be(address1);
+            contact.Address2.Should().Be(address2);
+            contact.TownOrCity.Should().Be(town);
+            contact.CountyOrRegion.Should().Be(county);
+            contact.Postcode.Should().Be(postcode);
+            contact.Country.Should().Be(country);
+        }
     }
 }

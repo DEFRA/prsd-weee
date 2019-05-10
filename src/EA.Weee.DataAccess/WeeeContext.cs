@@ -59,6 +59,8 @@
 
         public virtual DbSet<ReportOnQuestion> ReportOnQuestions { get; set; }
 
+        public virtual DbSet<AatfContact> AatfContacts { get; set; }
+
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Country> Countries { get; set; }

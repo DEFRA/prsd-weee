@@ -29,9 +29,9 @@
             return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator)
+        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(null), AatfSize.Large, DateTime.Now);
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(null), AatfSize.Large, DateTime.Now, contact);
             return aatf;
         }
 
@@ -58,6 +58,11 @@
 
             var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
             return organisation;
+        }
+
+        public static AatfContact CreateDefaultContact(Domain.Country country)
+        {
+            return new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
         }
     }
 }

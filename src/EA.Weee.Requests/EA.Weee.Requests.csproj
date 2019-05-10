@@ -55,6 +55,8 @@
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContact.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContact.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligated.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
     <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\RemoveAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
@@ -206,6 +209,7 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
