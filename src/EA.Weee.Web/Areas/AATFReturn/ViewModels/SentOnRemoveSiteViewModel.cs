@@ -4,6 +4,7 @@
     using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
+    using System.Web.Mvc;
 
     public class SentOnRemoveSiteViewModel : RadioButtonStringCollectionViewModel
     {
@@ -17,6 +18,7 @@
 
         public WeeeSentOnData WeeeSentOn { get; set; }
 
+        [AllowHtml]
         public string SiteAddress { get; set; }
 
         public string OperatorAddress { get; set; }
