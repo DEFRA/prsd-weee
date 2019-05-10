@@ -1,0 +1,31 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditContactAddressViewModel
+@{
+    ViewBag.Title = "Edit AATF contact details - GOV.UK";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Manage AATF contact details</h1>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.ContactData.Id)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.EditorFor(m => m.ContactData)
+
+        <div class="govuk-!-padding-bottom-6"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(a => a.Details(Model.AatfId)))">Back</a>
+        </p>
+    }
+</section>
