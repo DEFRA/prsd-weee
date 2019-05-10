@@ -32,6 +32,7 @@
                         Operator name and address
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.HiddenFor(model => model.OperatorAddress)
                         @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
                     </div>
                 </div>
@@ -45,7 +46,8 @@
                         B2C
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Model.Tonnages.B2C
+                        @Html.HiddenFor(m => m.TonnageB2C)
+                        @Model.TonnageB2C
                     </div>
                 </div>
                 <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
@@ -53,7 +55,8 @@
                         B2B
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Model.Tonnages.B2B
+                        @Html.HiddenFor(m => m.TonnageB2B)
+                        @Model.TonnageB2B
                     </div>
                 </div>
             </div>
@@ -79,3 +82,8 @@
     }
 
 </section>
+<style type="text/css">
+    .error {
+        padding-left: 15px !important;
+    }
+</style>

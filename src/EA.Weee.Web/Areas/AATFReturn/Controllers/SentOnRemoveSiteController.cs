@@ -75,24 +75,7 @@
                 }
             }
 
-            using (var client = apiClient())
-            {
-                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOnById(viewModel.WeeeSentOnId));
-                viewModel.SiteAddress = GenerateAddress(weeeSentOn.SiteAddress);
-                viewModel.OperatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
-
-                viewModel = mapper.Map(new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
-                {
-                    ReturnId = viewModel.ReturnId,
-                    AatfId = viewModel.AatfId,
-                    OrganisationId = viewModel.OrganisationId,
-                    WeeeSentOn = weeeSentOn,
-                    SiteAddress = viewModel.SiteAddress,
-                    OperatorAddress = viewModel.OperatorAddress
-                });
-
-                return View(viewModel);
-            }
+            return View(viewModel);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
