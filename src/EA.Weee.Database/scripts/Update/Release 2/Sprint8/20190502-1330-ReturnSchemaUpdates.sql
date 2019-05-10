@@ -17,7 +17,7 @@ BEGIN
 	SELECT TOP 1 @Id = Id FROM [Identity].AspNetUsers
 	UPDATE [AATF].[Return] SET CreatedBy = @Id, SubmittedBy = @Id, CreatedDate = GETDATE(), SubmittedDate = GETDATE()
 END
-
+GO
 ALTER TABLE [AATF].[Return] ALTER COLUMN CreatedBy NVARCHAR(128) NOT NULL;
 GO
 ALTER TABLE [AATF].[Return] ALTER COLUMN CreatedDate DATETIME NOT NULL;
