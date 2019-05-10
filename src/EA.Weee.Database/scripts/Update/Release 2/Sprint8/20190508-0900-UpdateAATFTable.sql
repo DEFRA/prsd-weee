@@ -1,6 +1,3 @@
-BEGIN TRANSACTION
-GO
-
 ALTER TABLE [AATF].AATF ADD ContactId uniqueidentifier NULL;
 ALTER TABLE [AATF].AATF ADD CONSTRAINT FK_Aatf_Contact_ContactId FOREIGN KEY (ContactId) REFERENCES [AATF].[Contact](Id);
 GO
@@ -38,5 +35,3 @@ UPDATE [AATF].AATF SET ContactId = @defaultContactId;
 
 ALTER TABLE [AATF].AATF ALTER COLUMN ContactId uniqueidentifier NOT NULL;
 GO
-
-COMMIT TRANSACTION
