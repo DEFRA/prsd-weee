@@ -64,6 +64,12 @@
         }
 
         [Fact]
+        public void SelectReportOptionsController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(SelectReportOptionsController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+        }
+
+        [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;

@@ -286,6 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />

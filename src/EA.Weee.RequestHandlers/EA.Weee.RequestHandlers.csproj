@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
     <Compile Include="AatfReturn\Internal\AatfContactDataAccess.cs" />
     <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
