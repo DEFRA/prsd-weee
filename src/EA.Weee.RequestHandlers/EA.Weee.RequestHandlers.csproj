@@ -101,6 +101,7 @@
     <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IAatfSiteDataAccess.cs" />
     <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\RemoveAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\AddObligatedSentOnHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\EditObligatedSentOnHandler.cs" />
     <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandler.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedByAddressIdSpecification.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
