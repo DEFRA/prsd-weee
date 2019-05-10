@@ -13,6 +13,7 @@
             Property(x => x.ApprovalNumber).HasColumnName("ApprovalNumber").IsRequired().HasMaxLength(10);
 
             HasRequired<Operator>(a => a.Operator);
+            HasRequired<AatfAddress>(a => a.SiteAddress);
         }
     }
 }

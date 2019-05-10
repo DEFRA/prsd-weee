@@ -56,14 +56,21 @@
 
         private List<Aatf> GetAatfs(Operator @operator, UKCompetentAuthority competentAuthority)
         {
+            AatfAddress siteAddress = CreateAatfSiteAddress();
             var aatfs = new List<Aatf>()
             {
-                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator),
-                new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator),
-                new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator)
+                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now),
+                new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now),
+                new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now)
             };
 
             return aatfs;
+        }
+
+        private AatfAddress CreateAatfSiteAddress()
+        {
+            Country country = new Country(Guid.NewGuid(), "England");
+            return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }
 }
