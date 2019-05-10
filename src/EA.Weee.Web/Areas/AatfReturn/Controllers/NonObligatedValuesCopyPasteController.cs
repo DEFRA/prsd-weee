@@ -34,11 +34,13 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var typeheading = dcf == false ? "Non-obligated WEEE" : "Non-obligated WEEE retained by a DCF";
                 var viewModel = new NonObligatedValuesCopyPasteViewModel()
                 {
                     ReturnId = returnId,
                     OrganisationId = @return.ReturnOperatorData.OrganisationId,
-                    Dcf = dcf
+                    Dcf = dcf,
+                    Typeheading = typeheading
                 };
                 await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
