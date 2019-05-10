@@ -179,8 +179,12 @@
                 </tr>
             </tbody>
         </table>
-        <p>
-            <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
-        </p>
+
+        @if (Model.CanEditContactDetails)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
+            </p>
+        }
     </section>
 </div>

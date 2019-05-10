@@ -61,5 +61,7 @@
         public string ConcatenatedAddress { get; set; }
 
         public AatfContactAddressData AddressData { get; set; }
+
+        public bool CanEditContactDetails { get; set; }
     }
 }

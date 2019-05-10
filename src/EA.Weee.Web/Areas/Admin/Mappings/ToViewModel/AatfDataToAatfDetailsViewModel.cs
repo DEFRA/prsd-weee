@@ -28,7 +28,8 @@
                 AatfStatus = source.AatfData.AatfStatus,
                 SiteAddress = source.AatfData.SiteAddress,
                 Size = source.AatfData.Size,
-                ContactData = source.ContactData
+                ContactData = source.ContactData,
+                CanEditContactDetails = source.ContactData.CanEditContactDetails
             };
 
             viewModel.ContactData.ConcatenatedAddress = addressUtilities.AddressConcatenate(source.ContactData.AddressData);

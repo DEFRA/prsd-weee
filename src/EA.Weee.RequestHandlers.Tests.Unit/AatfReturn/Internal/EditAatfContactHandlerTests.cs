@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
@@ -41,7 +38,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
+        public async Task HandleAsync_NoInternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 

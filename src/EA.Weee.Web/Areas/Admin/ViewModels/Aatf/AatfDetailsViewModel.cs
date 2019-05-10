@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using System;
+
     public class AatfDetailsViewModel
     {
         public Guid Id { get; set; }
@@ -21,5 +22,7 @@
         public DateTime? ApprovalDate { get; set; }
 
         public AatfContactData ContactData { get; set; }
+
+        public bool CanEditContactDetails { get; set; }
     }
 }

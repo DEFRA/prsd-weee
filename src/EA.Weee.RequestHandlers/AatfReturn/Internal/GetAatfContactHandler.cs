@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
     using System.Threading.Tasks;
-    using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
-    using Prsd.Core.Mediator;
-    using Security;
+    using EA.Weee.Security;
 
     public class GetAatfContactHandler : IRequestHandler<GetAatfContact, AatfContactData>
     {
@@ -26,8 +27,10 @@
             authorization.EnsureCanAccessInternalArea();
 
             var contact = await dataAccess.GetContact(message.AatfId);
-            
+
             var result = mapper.Map(contact);
+
+            result.CanEditContactDetails = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             return result;
         }

@@ -12,7 +12,6 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using Xunit;
 
     public class GetAatfContactHandlerTests
