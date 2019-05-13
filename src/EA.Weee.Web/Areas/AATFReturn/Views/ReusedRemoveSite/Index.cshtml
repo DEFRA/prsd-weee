@@ -22,7 +22,8 @@
                         Site name
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Model.Site.Name
+                        @Html.HiddenFor(m => m.SiteAddressName)
+                        @Model.SiteAddressName
                     </div>
                 </div>
             </div>
@@ -56,3 +57,8 @@
         }
 
 </section>
+<style type="text/css">
+    .error {
+        padding-left: 15px !important;
+    }
+</style>

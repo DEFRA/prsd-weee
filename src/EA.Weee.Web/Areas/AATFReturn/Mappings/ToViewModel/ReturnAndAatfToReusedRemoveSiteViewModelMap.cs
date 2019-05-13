@@ -21,7 +21,8 @@
                 AatfId = source.AatfId,
                 SiteAddress = source.SiteAddress,
                 SiteId = source.SiteId,
-                Site = source.Site
+                Site = source.Site,
+                SiteAddressName = source.Site.Name
             };
 
             return viewModel;
