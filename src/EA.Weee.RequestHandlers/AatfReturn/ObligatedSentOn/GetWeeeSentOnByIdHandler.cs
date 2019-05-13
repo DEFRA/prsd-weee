@@ -36,6 +36,11 @@
             var weeeSentOnList = new List<WeeeSentOnData>();
             var weeeSentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnById(message.WeeeSentOnId);
 
+            if (weeeSentOn == null)
+            {
+                return null;
+            }
+
             var amount = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(weeeSentOn.Id);
 
             var weeeSentOnObligatedData = amount.Select(n => new WeeeObligatedData(n.Id, new AatfData(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
