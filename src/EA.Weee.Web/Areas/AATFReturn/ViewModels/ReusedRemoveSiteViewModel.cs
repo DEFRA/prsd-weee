@@ -21,6 +21,8 @@
         [AllowHtml]
         public string SiteAddress { get; set; }
 
+        public string SiteAddressName { get; set; }
+
         public override string SelectedValue { get; set; }
 
         public ReusedRemoveSiteViewModel() : base(new List<string> { "Yes", "No" })
