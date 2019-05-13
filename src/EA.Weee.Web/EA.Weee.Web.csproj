@@ -521,6 +521,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Function\prototype\bind.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
+    <Content Include="Content\remove-site.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -874,6 +875,7 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactData.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_CountryPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReturnsSummary\Index.cshtml" />
+    <None Include="Content\remove-site.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
