@@ -32,7 +32,7 @@
             var returnId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
             var siteAddress = "SITE ADDRESS";
-            var site = A.Fake<SiteAddressData>();
+            var site = new SiteAddressData("TEST NAME", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
 
             var transfer = new ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer()
             {
@@ -52,6 +52,7 @@
             result.SiteAddress.Should().Be(siteAddress);
             result.Site.Should().Be(site);
             result.SiteId.Should().Be(siteId);
+            result.SiteAddressName.Should().Be(site.Name);
         }
     }
 }
