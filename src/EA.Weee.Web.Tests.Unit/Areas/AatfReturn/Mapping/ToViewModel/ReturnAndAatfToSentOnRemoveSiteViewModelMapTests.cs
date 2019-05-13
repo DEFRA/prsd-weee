@@ -11,11 +11,13 @@
 
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMapTests
     {
+        private readonly ITonnageUtilities tonnageUtilities;
         private readonly ReturnAndAatfToSentOnRemoveSiteViewModelMap mapper;
 
         public ReturnAndAatfToSentOnRemoveSiteViewModelMapTests()
         {
-            mapper = new ReturnAndAatfToSentOnRemoveSiteViewModelMap(A.Fake<IWeeeCache>(), A.Fake<ITonnageUtilities>());
+            this.tonnageUtilities = A.Fake<ITonnageUtilities>();
+            mapper = new ReturnAndAatfToSentOnRemoveSiteViewModelMap(A.Fake<IWeeeCache>(), tonnageUtilities);
         }
 
         [Fact]
@@ -34,10 +36,16 @@
             var returnId = Guid.NewGuid();
             var weeeSentOn = new WeeeSentOnData()
             {
-                Tonnages = A.Fake<List<WeeeObligatedData>>()
+                Tonnages = new List<WeeeObligatedData>()
             };
             var siteAddress = "SITE ADDRESS";
             var operatorAddress = "OPERATOR ADDRESS";
+            var obligatedTonnage = new ObligatedCategoryValue()
+            {
+                B2B = "20",
+                B2C = "30",
+                CategoryId = 1
+            };
 
             var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
             {
@@ -49,6 +57,8 @@
                 OperatorAddress = operatorAddress
             };
 
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(weeeSentOn.Tonnages)).Returns(obligatedTonnage);
+
             var result = mapper.Map(transfer);
 
             result.OrganisationId.Should().Be(orgId);
@@ -57,6 +67,8 @@
             result.SiteAddress.Should().Be(siteAddress);
             result.OperatorAddress.Should().Be(operatorAddress);
             result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
+            result.TonnageB2B.Should().Be(decimal.Parse(obligatedTonnage.B2B));
+            result.TonnageB2C.Should().Be(decimal.Parse(obligatedTonnage.B2C));
         }
     }
 }
