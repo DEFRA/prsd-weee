@@ -14,6 +14,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Infrastructure;
     using Xunit;
 
     public class CheckYourReturnControllerTests
@@ -99,6 +100,30 @@
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
+        {
+            var model = new ReturnViewModel() { ReturnId = Guid.NewGuid() };
+
+            await controller.Index(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(model.ReturnId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
+        {
+            var model = new ReturnViewModel() { ReturnId = Guid.NewGuid() };
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteName.Should().Be(AatfRedirect.Default);
+            result.RouteValues["controller"].Should().Be("SubmittedReturn");
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["returnId"].Should().Be(model.ReturnId);
         }
     }
 }

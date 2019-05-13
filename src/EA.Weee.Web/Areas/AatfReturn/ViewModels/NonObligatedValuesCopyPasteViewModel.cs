@@ -11,5 +11,6 @@
         public String[] PastedValues { get; set; }
 
         public bool Dcf { get; set; }
+        public string Typeheading { get; internal set; }
     }
 }

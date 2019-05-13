@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.User;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
@@ -23,14 +24,14 @@
 
     public static class ObligatedWeeeIntegrationCommon
     {
-        public static Return CreateReturn(Operator operatorTest)
+        public static Return CreateReturn(Operator operatorTest, string createdById)
         {
-            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), ReturnStatus.Created);
+            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator)
+        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator);
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(null), AatfSize.Large, DateTime.Now, contact);
             return aatf;
         }
 
@@ -57,6 +58,11 @@
 
             var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
             return organisation;
+        }
+
+        public static AatfContact CreateDefaultContact(Domain.Country country)
+        {
+            return new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
         }
     }
 }
