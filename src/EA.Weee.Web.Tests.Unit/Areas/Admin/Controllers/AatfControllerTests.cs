@@ -210,6 +210,8 @@
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
+            controller.Url = new UrlHelper(A.Fake<RequestContext>(), A.Fake<RouteCollection>());
+
             await controller.ManageContactDetails(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
