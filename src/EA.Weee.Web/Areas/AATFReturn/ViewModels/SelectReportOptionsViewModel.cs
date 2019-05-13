@@ -36,7 +36,7 @@
 
         public ReturnData ReturnData { get; set; }
 
-        public List<ReportOnQuestion> ReportOnQuestions { get; set; }
+        public IList<ReportOnQuestion> ReportOnQuestions { get; set; }
 
         public bool HasSelectedOptions => SelectedOptions != null && SelectedOptions.Count != 0;
 
