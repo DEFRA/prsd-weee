@@ -239,6 +239,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
