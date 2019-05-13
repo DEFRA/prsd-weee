@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
@@ -34,6 +35,7 @@
         private readonly IMapper mapper;
         private readonly IEditAatfContactRequestCreator requestCreator;
         private readonly AatfController controller;
+        private readonly UrlHelper urlHelper;
 
         public AatfControllerTests()
         {
@@ -42,6 +44,7 @@
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
             requestCreator = A.Fake<IEditAatfContactRequestCreator>();
+            urlHelper = A.Fake<UrlHelper>();
 
             controller = new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper, requestCreator);
         }
@@ -190,6 +193,8 @@
             };
 
             httpContext.RouteData.Values.Add("id", aatfId);
+
+            controller.Url = new UrlHelper(A.Fake<RequestContext>(), A.Fake<RouteCollection>());
 
             var result = await controller.ManageContactDetails(viewModel) as RedirectToRouteResult;
 

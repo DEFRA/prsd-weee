@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Validation;
 
     public class AatfContactData
     {
@@ -50,11 +51,13 @@
 
         [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
-        [Display(Name = "Telephone")]
+        [Display(Name = "Phone")]
+        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters")]
         public string Telephone { get; set; }
 
         [Required]
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
+        [EmailAddress]
         [Display(Name = "E-mail")]
         public string Email { get; set; }
 
