@@ -101,12 +101,12 @@
                 siteAddressLong += "<br/>" + address.CountyOrRegion;
             }
 
-            siteAddressLong += "<br/>" + address.CountryName;
-
             if (address.Postcode != null)
             {
                 siteAddressLong += "<br/>" + address.Postcode;
             }
+
+            siteAddressLong += "<br/>" + address.CountryName;
 
             return siteAddressLong;
         }
