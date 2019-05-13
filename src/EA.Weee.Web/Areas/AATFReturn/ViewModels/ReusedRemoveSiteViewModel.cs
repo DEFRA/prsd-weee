@@ -4,6 +4,7 @@
     using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
+    using System.Web.Mvc;
 
     public class ReusedRemoveSiteViewModel : RadioButtonStringCollectionViewModel
     {
@@ -17,7 +18,10 @@
 
         public AddressData Site { get; set; }
 
+        [AllowHtml]
         public string SiteAddress { get; set; }
+
+        public string SiteAddressName { get; set; }
 
         public override string SelectedValue { get; set; }
 
