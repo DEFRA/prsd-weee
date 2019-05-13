@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
@@ -13,7 +14,6 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -34,6 +34,7 @@
         private readonly IMapper mapper;
         private readonly IEditAatfContactRequestCreator requestCreator;
         private readonly AatfController controller;
+        private readonly UrlHelper urlHelper;
 
         public AatfControllerTests()
         {
@@ -42,6 +43,7 @@
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
             requestCreator = A.Fake<IEditAatfContactRequestCreator>();
+            urlHelper = A.Fake<UrlHelper>();
 
             controller = new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper, requestCreator);
         }
@@ -191,10 +193,14 @@
 
             httpContext.RouteData.Values.Add("id", aatfId);
 
-            var result = await controller.ManageContactDetails(viewModel) as RedirectToRouteResult;
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
 
-            result.RouteValues["action"].Should().Be("Details");
-            result.RouteValues["id"].Should().Be(aatfId);
+            A.CallTo(() => helper.Action("Details", new { Id = viewModel.AatfId })).Returns("aatfUrl");
+
+            var result = await controller.ManageContactDetails(viewModel) as RedirectResult;
+
+            result.Url.Should().Be("#contactDetails");
         }
 
         [Fact]
@@ -204,6 +210,8 @@
             var request = new EditAatfContact();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+
+            controller.Url = new UrlHelper(A.Fake<RequestContext>(), A.Fake<RouteCollection>());
 
             await controller.ManageContactDetails(model);
 
