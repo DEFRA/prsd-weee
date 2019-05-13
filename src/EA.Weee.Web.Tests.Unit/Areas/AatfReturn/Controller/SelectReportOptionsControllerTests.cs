@@ -225,6 +225,19 @@
             Assert.Equal(true, outputModel.HasDcfError);
         }
 
+        [Fact]
+        public async void NonObligatedWeeNotSelected_ViewModelShouldNotHaveDcfError()
+        {
+            SelectReportOptionsViewModel viewModel = new SelectReportOptionsViewModel();
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.Index(viewModel) as ViewResult;
+
+            var outputModel = result.Model as SelectReportOptionsViewModel;
+
+            Assert.Equal(false, outputModel.HasDcfError);
+        }
+
         private static SelectReportOptionsViewModel CreateSubmittedViewModel()
         {
             var model = new SelectReportOptionsViewModel();
