@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -74,8 +73,14 @@
             {
                 if (viewModel.HasSelectedOptions)
                 {
+                    if (CheckHasDeselectedOptions(viewModel))
+                    {
+
+                    }
+
                     using (var client = apiClient())
                     {
+                        viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
                         var request = requestCreator.ViewModelToRequest(viewModel);
 
                         await client.SendAsync(User.GetAccessToken(), request);
@@ -97,13 +102,29 @@
 
         private void SetSelected(SelectReportOptionsViewModel viewModel)
         {
-            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+            if (viewModel.HasSelectedOptions)
             {
                 foreach (var option in viewModel.SelectedOptions)
                 {
-                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
+                    viewModel.ReportOnQuestions.First(r => r.Id == option).Selected = true;
                 }
             }
+        }
+
+        private bool CheckHasDeselectedOptions(SelectReportOptionsViewModel viewModel)
+        {
+            var deselectedOptions = viewModel.SelectedOptions.Except(viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId)).ToList();
+            if (deselectedOptions != null && deselectedOptions.Count != 0)
+            {
+                foreach (var option in deselectedOptions)
+                {
+                    viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

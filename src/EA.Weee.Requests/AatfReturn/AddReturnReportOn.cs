@@ -17,5 +17,7 @@
         public IList<ReportOnQuestion> Options { get; set; }
 
         public string DcfSelectedValue { get; set; }
+
+        public IList<ReturnReportOn> OldReportOptions { get; set; }
     }
 }

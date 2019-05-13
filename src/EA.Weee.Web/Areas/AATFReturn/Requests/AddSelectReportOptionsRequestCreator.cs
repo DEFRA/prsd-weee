@@ -13,7 +13,8 @@
                 ReturnId = viewModel.ReturnId,
                 SelectedOptions = viewModel.SelectedOptions,
                 Options = viewModel.ReportOnQuestions,
-                DcfSelectedValue = viewModel.DcfSelectedValue
+                DcfSelectedValue = viewModel.DcfSelectedValue,
+                OldReportOptions = viewModel.ReturnData.ReturnReportOns
             };
 
             return reportOptions;
