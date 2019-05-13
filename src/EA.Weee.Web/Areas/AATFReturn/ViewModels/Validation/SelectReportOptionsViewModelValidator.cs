@@ -20,7 +20,7 @@
 
                     if (isParentSelected && !instance.DcfPossibleValues.Contains(instance.DcfSelectedValue))
                     {
-                        context.AddFailure(new ValidationFailure($"DcfSelectedValue", $"You must tell us whether any of the non-obligated WEEE was retained by a DCF"));
+                        context.AddFailure(new ValidationFailure($"DcfSelectedValue-0", $"You must tell us whether any of the non-obligated WEEE was retained by a DCF"));
                     }
                 }
             });
