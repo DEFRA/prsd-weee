@@ -12,13 +12,15 @@
     public class ReturnViewModelToReturnsItemViewModelTests
     {
         private readonly IMapper genericMapper;
+        private readonly IMap<ReturnViewModel, ReturnsListRedirectOptions> returnListRedirectMap;
         private readonly ReturnViewModelToReturnsItemViewModelMapper mapper;
 
         public ReturnViewModelToReturnsItemViewModelTests()
         {
             genericMapper = A.Fake<IMapper>();
+            returnListRedirectMap = A.Fake<IMap<ReturnViewModel, ReturnsListRedirectOptions>>();
 
-            mapper = new ReturnViewModelToReturnsItemViewModelMapper(genericMapper);
+            mapper = new ReturnViewModelToReturnsItemViewModelMapper(genericMapper, returnListRedirectMap);
         }
 
         [Fact]
@@ -70,7 +72,7 @@
 
             var result = mapper.Map(returnViewModel);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -79,11 +81,11 @@
             var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
             var returnsListRedirectOptions = new ReturnsListRedirectOptions();
 
-            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).Returns(returnsListRedirectOptions);
+            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).Returns(returnsListRedirectOptions);
 
             var result = mapper.Map(returnViewModel);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListRedirectOptions>(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
             result.ReturnsListRedirectOptions.Should().Be(returnsListRedirectOptions);
         }
     }

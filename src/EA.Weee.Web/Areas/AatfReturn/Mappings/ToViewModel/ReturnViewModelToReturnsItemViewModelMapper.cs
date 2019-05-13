@@ -5,25 +5,27 @@
     using Prsd.Core.Mapper;
     using ViewModels;
 
-    public class ReturnViewModelToReturnsItemViewModelMapper : IMap<ReturnViewModel, ReturnsItemViewModel>
+    public class ReturnViewModelToReturnsItemViewModelMapper : IMap<ReturnData, ReturnsItemViewModel>
     {
         private readonly IMapper mapper;
-        private readonly IMap<ReturnViewModel, ReturnsListRedirectOptions> returnListRedirectMap;
+        private readonly IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap;
+        private readonly IMap<ReturnData, ReturnViewModel> returnMap;
 
         public ReturnViewModelToReturnsItemViewModelMapper(IMapper mapper, 
-            IMap<ReturnViewModel, ReturnsListRedirectOptions> returnListRedirectMap)
+            IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap,
+            IMap<ReturnData, ReturnViewModel> returnMap)
         {
             this.mapper = mapper;
             this.returnListRedirectMap = returnListRedirectMap;
         }
 
-        public ReturnsItemViewModel Map(ReturnViewModel source)
+        public ReturnsItemViewModel Map(ReturnData source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
             var model = new ReturnsItemViewModel()
             {
-                ReturnViewModel = source,
+                ReturnViewModel = returnMap.Map(source),
                 ReturnsListDisplayOptions = mapper.Map<ReturnsListDisplayOptions>(source.ReturnStatus),
                 ReturnsListRedirectOptions = returnListRedirectMap.Map(source)
             };
