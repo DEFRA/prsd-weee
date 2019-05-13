@@ -14,46 +14,17 @@
 
     public class ReturnsToReturnsViewModelMapTests
     {
-        private readonly IMap<ReturnData, ReturnViewModel> returnViewModelMap;
-        private readonly IMap<ReturnViewModel, ReturnsItemViewModel> returnItemViewModelMap;
+        private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
 
         private readonly ReturnsToReturnsViewModelMap returnsMap;
 
         public ReturnsToReturnsViewModelMapTests()
         {
-            returnViewModelMap = A.Fake<IMap<ReturnData, ReturnViewModel>>();
-            returnItemViewModelMap = A.Fake<IMap<ReturnViewModel, ReturnsItemViewModel>>();
+            returnItemViewModelMap = A.Fake<IMap<ReturnData, ReturnsItemViewModel>>();
             ordering = A.Fake<IReturnsOrdering>();
 
-            returnsMap = new ReturnsToReturnsViewModelMap(returnViewModelMap, ordering, returnItemViewModelMap);
-        }
-
-        [Fact]
-        public void Map_GivenReturnsData_ReturnDataShouldBeMapped()
-        {
-            var returnData = new List<ReturnData>()
-            {
-                new ReturnData()
-                {
-                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
-                },
-                new ReturnData()
-                {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
-                }
-            };
-
-            var returnsItems = A.CollectionOfFake<ReturnViewModel>(2).ToArray();
-
-            A.CallTo(() => returnViewModelMap.Map(returnData.ElementAt(0))).Returns(returnsItems.ElementAt(0));
-            A.CallTo(() => returnViewModelMap.Map(returnData.ElementAt(1))).Returns(returnsItems.ElementAt(1));
-            A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
-
-            returnsMap.Map(returnData);
-
-            A.CallTo(() => returnItemViewModelMap.Map(returnsItems.ElementAt(0))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => returnItemViewModelMap.Map(returnsItems.ElementAt(1))).MustHaveHappened(Repeated.Exactly.Once);
+            returnsMap = new ReturnsToReturnsViewModelMap(ordering, returnItemViewModelMap);
         }
 
         [Fact]
@@ -74,7 +45,7 @@
             };
 
             A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
-            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnViewModel>._)).ReturnsNextFromSequence(returnsItems);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems);
             
             var result = returnsMap.Map(returnData);
 

@@ -68,7 +68,7 @@
         }
 
         [HttpGet]
-        public ActionResult Continue(bool redirectReportingOptions, bool redirectSelectYourPcs, bool redirectTaskList, Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Continue(Guid organisationId, Guid returnId, bool redirectReportingOptions, bool redirectSelectYourPcs, bool redirectTaskLis)
         {
             return AatfRedirect.SelectReportOptions(organisationId, returnId);
         }

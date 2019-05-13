@@ -17,6 +17,7 @@
         {
             this.mapper = mapper;
             this.returnListRedirectMap = returnListRedirectMap;
+            this.returnMap = returnMap;
         }
 
         public ReturnsItemViewModel Map(ReturnData source)

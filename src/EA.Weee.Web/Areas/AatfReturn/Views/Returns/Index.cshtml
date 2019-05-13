@@ -28,11 +28,11 @@
         <table class="govuk-table prsd-table-collapse">
             <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
             <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Total obligated (t)</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Total non-obligated (t)</th>
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header" style="text-align:right">
+                    <th class="govuk-table__header prsd-table-collapse" style="text-align:right" scope="col">Year</th>
+                    <th class="govuk-table__header prsd-table-collapse" style="text-align:right" scope="col">Quarter</th>
+                    <th class="govuk-table__header prsd-table-collapse" style="text-align:right" scope="col">Total obligated (t)</th>
+                    <th class="govuk-table__header prsd-table-collapse" style="text-align:right" scope="col">Total non-obligated (t)</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
@@ -47,19 +47,19 @@
                 var item = Model.Returns[returnCount];
 
                 <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ObligatedTotal</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.NonObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Year</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Quarter</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.ObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.NonObligatedTotal</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                        @{
-                            @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.OrganisationRouteName, new { returnId = @item.ReturnViewModel.ReturnId, organisationId = @item.ReturnViewModel.ReturnId, redirectReportingOptions = @item.ReturnsListRedirectOptions.RedirectReportingOptions, redirectSelectYourPcs = @item.ReturnsListRedirectOptions.RedirectSelectYourPcs, redirectTaskList = @item.ReturnsListRedirectOptions.RedirectTaskList, action = "Index", controller = "Returns" })
+                    @*<td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @
+                            @Html.NavigationRouteLink("Continue", "Continue return","Test", new { organisationId = Model.OrganisationId, returnId = @item.ReturnViewModel.ReturnId, redirectReportingOptions = @item.ReturnsListRedirectOptions.RedirectReportingOptions, redirectSelectYourPcs = @item.ReturnsListRedirectOptions.RedirectSelectYourPcs, redirectTaskList = @item.ReturnsListRedirectOptions.RedirectTaskList })
                         }
-                    </td>
+                    </td>*@
                 </tr>
             }
 

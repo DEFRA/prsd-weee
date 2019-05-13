@@ -12,15 +12,17 @@
     public class ReturnViewModelToReturnsItemViewModelTests
     {
         private readonly IMapper genericMapper;
-        private readonly IMap<ReturnViewModel, ReturnsListRedirectOptions> returnListRedirectMap;
+        private readonly IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap;
+        private readonly IMap<ReturnData, ReturnViewModel> returnMap;
         private readonly ReturnViewModelToReturnsItemViewModelMapper mapper;
 
         public ReturnViewModelToReturnsItemViewModelTests()
         {
             genericMapper = A.Fake<IMapper>();
-            returnListRedirectMap = A.Fake<IMap<ReturnViewModel, ReturnsListRedirectOptions>>();
+            returnListRedirectMap = A.Fake<IMap<ReturnData, ReturnsListRedirectOptions>>();
+            returnMap = A.Fake<IMap<ReturnData, ReturnViewModel>>();
 
-            mapper = new ReturnViewModelToReturnsItemViewModelMapper(genericMapper, returnListRedirectMap);
+            mapper = new ReturnViewModelToReturnsItemViewModelMapper(genericMapper, returnListRedirectMap, returnMap);
         }
 
         [Fact]
@@ -34,9 +36,12 @@
         [Fact]
         public void Map_GivenSource_ReturnViewModelShouldBeMapped()
         {
+            var returnData = new ReturnData();
             var returnViewModel = new ReturnViewModel();
 
-            var result = mapper.Map(returnViewModel);
+            A.CallTo(() => returnMap.Map(returnData)).Returns(returnViewModel);
+
+            var result = mapper.Map(returnData);
 
             result.ReturnViewModel.Should().Be(returnViewModel);
         }
@@ -44,7 +49,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
-            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created }};
+            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
 
             var result = mapper.Map(returnViewModel);
 
@@ -54,7 +59,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
-            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
+            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
 
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(returnViewModel.ReturnStatus)).Returns(returnsListDisplayOptions);
@@ -68,7 +73,7 @@
         [Fact]
         public void Map_GivenSource_ReturnRedirectOptionsListShouldBeMapped()
         {
-            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
+            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
 
             var result = mapper.Map(returnViewModel);
 
@@ -78,7 +83,7 @@
         [Fact]
         public void Map_GivenSource_ReturnRedirectOptionsListAndReturned()
         {
-            var returnViewModel = new ReturnViewModel() { ReturnData = new ReturnData() { ReturnStatus = ReturnStatus.Created } };
+            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
             var returnsListRedirectOptions = new ReturnsListRedirectOptions();
 
             A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).Returns(returnsListRedirectOptions);
