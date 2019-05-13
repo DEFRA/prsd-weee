@@ -12,7 +12,7 @@
         {
         }
 
-        public SubmittedReturnViewModel(Quarter quarter, QuarterWindow window, int year) : base(quarter, window, year)
+        public SubmittedReturnViewModel(ReturnData returnData) : base(returnData)
         {
         }
     }

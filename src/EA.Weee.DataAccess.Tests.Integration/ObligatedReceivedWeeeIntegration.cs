@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
@@ -23,7 +24,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess);
+                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess, database);
 
                 AssertValues(context, returnId);
             }
@@ -37,7 +38,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess);
+                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess, database);
                 
                 AssertValues(context, returnId);
 
@@ -67,13 +68,15 @@
         }
 
         private async Task<Guid> CreateWeeeReceivedAmounts(WeeeContext context,
-            ObligatedReceivedDataAccess dataAccess)
+            ObligatedReceivedDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator);
+            var country = await context.Countries.SingleAsync(c => c.Name == "France");
+            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, contact);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
             context.Operators.Add(@operator);

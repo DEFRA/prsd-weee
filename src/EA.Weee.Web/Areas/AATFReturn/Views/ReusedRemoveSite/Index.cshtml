@@ -1,0 +1,60 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedRemoveSiteViewModel
+@{
+    ViewBag.Title = "Confirm removal of reuse site - GOV.UK";
+}
+<section id="main-content">
+    @using (Html.BeginForm("Index", "ReusedRemoveSite", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.SiteId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+        <h1 class="govuk-heading-l">Are you sure you want to remove this site from your list?</h1>
+        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+            <div class="govuk-table__head">
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        Site name
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.HiddenFor(m => m.SiteAddressName)
+                        @Model.SiteAddressName
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-table__head">
+                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
+                    <div class="govuk-grid-column-one-half">
+                        Site address
+                    </div>
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
+                        @Html.HiddenFor(m => m.SiteAddress)
+                        @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-form-group" style="padding-bottom: 10px">
+            <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedValue,
+                    Model.PossibleValues,
+                    "Confirm if you want to remove this site from your list",
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Inline)
+            </div>
+            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+            <p class="important">You may need to update the reuse tonnage values you have entered</p>
+        </div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+    }
+
+</section>
+@Styles.Render("~/Content/remove-site")

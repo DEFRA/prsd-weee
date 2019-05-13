@@ -103,6 +103,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
+    <Compile Include="AatfReturn\AatfContactDataTests.cs" />
     <Compile Include="AatfReturn\OperatorAddressDataTests.cs" />
     <Compile Include="AatfReturn\SiteAddressDataTests.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValueTests.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="AatfReturn\SchemeDataListTests.cs" />
     <Compile Include="AatfReturn\AatfSchemeDataTests.cs" />
     <Compile Include="AatfReturn\AatfObligatedDataTests.cs" />
+    <Compile Include="AatfReturn\WeeObligatedTests.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />

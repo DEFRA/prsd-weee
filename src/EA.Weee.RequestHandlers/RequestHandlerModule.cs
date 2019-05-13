@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
+    using AatfReturn;
     using Admin;
     using Autofac;
     using Charges.IssuePendingCharges;
@@ -75,6 +76,8 @@
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
 
             builder.RegisterType<GetAdminUserDataAccess>().As<IGetAdminUserDataAccess>();
+
+            builder.RegisterType<GetPopulatedReturn>().As<IGetPopulatedReturn>();
         }
     }
 }
