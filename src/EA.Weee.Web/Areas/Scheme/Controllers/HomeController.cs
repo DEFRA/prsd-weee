@@ -107,7 +107,7 @@
 
             if (configurationService.CurrentConfiguration.EnableAATFReturns)
             {
-                activities.Add(PcsAction.MakeAatfReturn);
+                activities.Add(PcsAction.ManageAatfReturns);
             }
 
             return activities;
@@ -177,17 +177,9 @@
                 {
                     return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.MakeAatfReturn)
+                if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
                 {
-                    using (var client = apiClient())
-                    {
-                        await client.SendAsync(User.GetAccessToken(), new AddDefaultAatf() { OrganisationId = viewModel.OrganisationId });
-
-                        var aatfReturnId = await client.SendAsync(User.GetAccessToken(),
-                            new AddReturn() { OrganisationId = viewModel.OrganisationId });
-
-                        return AatfRedirect.SelectReportOptions(viewModel.OrganisationId, aatfReturnId);
-                    }
+                    return AatfRedirect.ReturnsList(viewModel.OrganisationId);
                 }
             }
 

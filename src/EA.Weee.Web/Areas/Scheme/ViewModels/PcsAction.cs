@@ -9,6 +9,6 @@
         public static string ViewPrinciplePlaceOfBusinessDetails = "View principal place of business";
         public static string ManageContactDetails = "Manage PCS contact details";
         public static string ManageOrganisationUsers = "Manage organisation users";
-        public static string MakeAatfReturn = "Make an AATF return";
+        public static string ManageAatfReturns = "Manage AATF returns";
     }
 }
