@@ -194,12 +194,14 @@
 
             httpContext.RouteData.Values.Add("id", aatfId);
 
-            controller.Url = new UrlHelper(A.Fake<RequestContext>(), A.Fake<RouteCollection>());
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
 
-            var result = await controller.ManageContactDetails(viewModel) as RedirectToRouteResult;
+            A.CallTo(() => helper.Action("Details", new { Id = viewModel.AatfId })).Returns("aatfUrl");
 
-            result.RouteValues["action"].Should().Be("Details");
-            result.RouteValues["id"].Should().Be(aatfId);
+            var result = await controller.ManageContactDetails(viewModel) as RedirectResult;
+
+            result.Url.Should().Be("#contactDetails");
         }
 
         [Fact]

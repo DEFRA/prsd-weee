@@ -119,7 +119,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return Redirect(Url.Action("Details", new { Id = viewModel.AatfId }) + "#contactDetails");
+                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.AatfId }) + "#contactDetails");
                 }
             }
 
