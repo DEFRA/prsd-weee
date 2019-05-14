@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -11,6 +12,7 @@
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
 
+    [ValidateReturnActionFilter]
     public class ReusedOffSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

@@ -17,6 +17,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class SentOnSiteSummaryListControllerTests
@@ -41,6 +42,11 @@
         public void CheckSentOnSiteSummaryListControllerInheritsFromExternalSiteController()
         {
             typeof(SentOnSiteSummaryListController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+        }
+        [Fact]
+        public void CheckSentOnSiteSummaryListController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(SentOnSiteSummaryListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

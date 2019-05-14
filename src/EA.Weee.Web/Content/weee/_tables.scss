@@ -83,6 +83,8 @@
         border-bottom: 1px solid #bfc1c3;
         position: relative;
         padding-left: 50%;
+        min-height: 20px;
+        text-align: right;
     }
 
     .prsd-table-collapse-cell:before {
@@ -93,6 +95,7 @@
         width: 45%;
         white-space: nowrap;
         padding: 10px 20px 10px 0;
+        text-align: left;
     }
 }
 
