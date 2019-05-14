@@ -25,11 +25,12 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private const string pcsQuestion = "PCS";
 
-        public SelectReportOptionsDeselectController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public SelectReportOptionsDeselectController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSelectReportOptionsRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.requestCreator = requestCreator;
         }
 
         [HttpGet]
