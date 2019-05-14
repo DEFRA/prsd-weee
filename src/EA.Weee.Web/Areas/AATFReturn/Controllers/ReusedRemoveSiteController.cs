@@ -39,6 +39,12 @@
             using (var client = apiClient())
             {
                 var sites = await client.SendAsync(User.GetAccessToken(), new GetAatfSite(aatfId, returnId));
+
+                if (sites.AddressData.Count == 0 || sites.AddressData.Count(p => p.Id == siteId) == 0)
+                {
+                    return AatfRedirect.ReusedOffSiteSummaryList(returnId, aatfId, organisationId);
+                }
+
                 var site = sites.AddressData.Select(s => s).Where(s => s.Id == siteId).Single();
 
                 var viewModel = mapper.Map(new ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer()
