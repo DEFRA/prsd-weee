@@ -167,7 +167,14 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell">@Model.ContactData.ConcatenatedAddress</td>
+                    <td class="govuk-table__cell">
+                        @Model.ContactData.AddressData.Address1<br />
+                        @Model.ContactData.AddressData.Address2<br />
+                        @Model.ContactData.AddressData.TownOrCity<br />
+                        @Model.ContactData.AddressData.CountyOrRegion<br />
+                        @Model.ContactData.AddressData.Postcode<br />
+                        @Model.ContactData.AddressData.CountryName<br />
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Telephone</th>
