@@ -14,6 +14,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class AatfTaskListControllerTests
@@ -32,11 +33,17 @@
         }
 
         [Fact]
-        public void CheckAatfTaskListControllerInheritsExternalSiteController()
+        public void AatfTaskListControllerInheritsExternalSiteController()
         {
-            typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+            typeof(AatfTaskListController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
-        
+
+        [Fact]
+        public void AatfTaskListController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(AatfTaskListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+        }
+
         [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
