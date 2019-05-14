@@ -76,5 +76,18 @@
             A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(weeeSentOn.OperatorAddress))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(weeeSentOn.SiteAddress))).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task HandleAsync_ProvideNonExistantWeeeSentOnId_ReturnsNull()
+        {
+            WeeeSentOn returnData = null;
+            var request = new GetWeeeSentOnById(A.Dummy<Guid>());
+
+            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnById(A.Dummy<Guid>())).Returns(returnData);
+
+            WeeeSentOnData result = await handler.HandleAsync(request);
+
+            Assert.Null(result);
+        }
     }
 }
