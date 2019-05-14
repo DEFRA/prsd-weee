@@ -89,6 +89,12 @@
                 </tr>
             </tbody>
         </table>
+        @if (Model.CanEdit)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AdminHoldingController>(a => a.Index()))">Edit AATF details</a>
+            </p>
+        }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
         <h2 class="govuk-heading-l">Data</h2>
@@ -175,7 +181,7 @@
             </tbody>
         </table>
 
-        @if (Model.CanEditContactDetails)
+        @if (Model.CanEdit)
         {
             <p>
                 <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
