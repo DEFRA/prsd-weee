@@ -5,13 +5,13 @@
     using Prsd.Core.Mapper;
     using ViewModels;
 
-    public class ReturnViewModelToReturnsItemViewModelMapper : IMap<ReturnData, ReturnsItemViewModel>
+    public class ReturnToReturnsItemViewModelMapper : IMap<ReturnData, ReturnsItemViewModel>
     {
         private readonly IMapper mapper;
         private readonly IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap;
         private readonly IMap<ReturnData, ReturnViewModel> returnMap;
 
-        public ReturnViewModelToReturnsItemViewModelMapper(IMapper mapper, 
+        public ReturnToReturnsItemViewModelMapper(IMapper mapper, 
             IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap,
             IMap<ReturnData, ReturnViewModel> returnMap)
         {

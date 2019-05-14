@@ -16,6 +16,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReceivedPcsListControllerTests
@@ -37,9 +38,15 @@
         }
 
         [Fact]
-        public void CheckReceivedPcsListControllerInheritsExternalSiteController()
+        public void ReceivedPcsListControllerInheritsExternalSiteController()
         {
             typeof(ReceivedPcsListController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ReceivedPcsListController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ReceivedPcsListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

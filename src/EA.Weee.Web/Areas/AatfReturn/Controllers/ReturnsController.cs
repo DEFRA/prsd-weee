@@ -66,11 +66,5 @@
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
-
-        [HttpGet]
-        public virtual async Task<ActionResult> Continue(Guid organisationId, Guid returnId, bool redirectReportingOptions, bool redirectSelectYourPcs, bool redirectTaskLis)
-        {
-            return AatfRedirect.SelectReportOptions(organisationId, returnId);
-        }
     }
 }

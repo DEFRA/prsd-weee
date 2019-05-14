@@ -17,7 +17,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
 
+    [ValidateReturnActionFilter]
     public class SentOnCreateSiteOperatorController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

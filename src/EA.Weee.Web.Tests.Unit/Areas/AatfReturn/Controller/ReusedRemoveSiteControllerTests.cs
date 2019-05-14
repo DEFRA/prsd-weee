@@ -20,6 +20,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReusedRemoveSiteControllerTests
@@ -41,9 +42,15 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteOperatorControllerInheritsAATFReturnBaseController()
+        public void ReusedRemoveSiteControllerInheritsAATFReturnBaseController()
         {
             typeof(ReusedRemoveSiteController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ReusedRemoveSiteController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ReusedRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

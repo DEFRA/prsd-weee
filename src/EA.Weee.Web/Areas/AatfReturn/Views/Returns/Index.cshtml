@@ -22,6 +22,19 @@
                         <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
                     </div>
                 }
+                
+                <details class="govuk-details govuk-!-font-size-16" role="group">
+                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text">
+                            I need to submit a return for a different quarter
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
+                        <div class="govuk-body govuk-!-font-size-16">
+                            If you want to start a different return other than the one available, contact your environmental regulator.
+                        </div>
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -55,11 +68,25 @@
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus</td>
-                    @*<td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                        @
-                            @Html.NavigationRouteLink("Continue", "Continue return","Test", new { organisationId = Model.OrganisationId, returnId = @item.ReturnViewModel.ReturnId, redirectReportingOptions = @item.ReturnsListRedirectOptions.RedirectReportingOptions, redirectSelectYourPcs = @item.ReturnsListRedirectOptions.RedirectSelectYourPcs, redirectTaskList = @item.ReturnsListRedirectOptions.RedirectTaskList })
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @{
+                            if (item.ReturnsListDisplayOptions.DisplayContinue)
+                            {
+                                if (item.ReturnsListRedirectOptions.RedirectTaskList)
+                                {
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
+                                }
+                                else if (item.ReturnsListRedirectOptions.RedirectSelectYourPcs)
+                                {
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
+                                }
+                                else if (item.ReturnsListRedirectOptions.RedirectReportingOptions)
+                                {
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
+                                }
+                            }
                         }
-                    </td>*@
+                    </td>
                 </tr>
             }
 

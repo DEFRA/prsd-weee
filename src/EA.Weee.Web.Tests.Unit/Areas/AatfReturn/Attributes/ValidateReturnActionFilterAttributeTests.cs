@@ -4,20 +4,26 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Api.Client;
+    using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using Infrastructure;
     using Services;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Requests.AatfReturn;
     using Xunit;
 
     public class ValidateReturnActionFilterAttributeTests
     {
         private readonly ValidateReturnActionFilterAttribute attribute;
         private readonly ActionExecutingContext context;
+        private readonly IWeeeClient client;
 
         public ValidateReturnActionFilterAttributeTests()
         {
-            attribute = new ValidateReturnActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>() };
+            client = A.Fake<IWeeeClient>();
+            attribute = new ValidateReturnActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
             
             var routeData = new RouteData();
@@ -37,7 +43,7 @@
         }
 
         [Fact]
-        public void OnActionExecuting_GivenNoOrganisationId_ArgumentExceptionExpected()
+        public void OnActionExecuting_GivenNoReturnIdId_ArgumentExceptionExpected()
         {
             Action action = () => attribute.OnActionExecuting(context);
 
@@ -47,7 +53,7 @@
         }
 
         [Fact]
-        public void OnActionExecuting_GivenOrganisationIdIsNotGuid_ArgumentExceptionExpected()
+        public void OnActionExecuting_GivenReturnIdIsNotGuid_ArgumentExceptionExpected()
         {
             Action action = () => attribute.OnActionExecuting(context);
 
@@ -57,6 +63,28 @@
             A.CallTo(() => context.RouteData).Returns(routeData);
 
             action.Should().Throw<ArgumentException>().WithMessage("The specified return ID is not valid.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenReturnStatusIsNotCreated_ShouldBeRedirectedToTaskList()
+        {
+            var returnData = new ReturnData()
+            {
+                OrganisationId = Guid.NewGuid(),
+                ReturnStatus = ReturnStatus.Submitted
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
+
+            attribute.OnActionExecuting(context);
+
+            var result = context.Result as RedirectToRouteResult;
+
+            result.RouteName.Should().Be(AatfRedirect.OrganisationRouteName);
+            result.RouteValues["controller"].Should().Be("Returns");
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["organisationId"].Should().Be(returnData.OrganisationId);
         }
     }
 }

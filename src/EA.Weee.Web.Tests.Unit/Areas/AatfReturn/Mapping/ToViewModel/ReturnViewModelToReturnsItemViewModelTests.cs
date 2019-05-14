@@ -14,7 +14,7 @@
         private readonly IMapper genericMapper;
         private readonly IMap<ReturnData, ReturnsListRedirectOptions> returnListRedirectMap;
         private readonly IMap<ReturnData, ReturnViewModel> returnMap;
-        private readonly ReturnViewModelToReturnsItemViewModelMapper mapper;
+        private readonly ReturnToReturnsItemViewModelMapper mapper;
 
         public ReturnViewModelToReturnsItemViewModelTests()
         {
@@ -22,7 +22,7 @@
             returnListRedirectMap = A.Fake<IMap<ReturnData, ReturnsListRedirectOptions>>();
             returnMap = A.Fake<IMap<ReturnData, ReturnViewModel>>();
 
-            mapper = new ReturnViewModelToReturnsItemViewModelMapper(genericMapper, returnListRedirectMap, returnMap);
+            mapper = new ReturnToReturnsItemViewModelMapper(genericMapper, returnListRedirectMap, returnMap);
         }
 
         [Fact]

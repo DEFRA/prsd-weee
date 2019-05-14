@@ -28,7 +28,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
-        private const string pcsQuestion = "PCS";
+        private const string PcsQuestion = "PCS";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -83,7 +83,7 @@
                     }
                 }
 
-                if (viewModel.ReportOnQuestions.First(r => r.Question == pcsQuestion).Selected)
+                if (viewModel.ReportOnQuestions.First(r => r.Question == PcsQuestion).Selected)
                 {
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
                 }

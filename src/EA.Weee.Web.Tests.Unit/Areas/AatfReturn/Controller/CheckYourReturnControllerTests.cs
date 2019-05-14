@@ -15,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Infrastructure;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class CheckYourReturnControllerTests
@@ -37,6 +38,12 @@
         public void CheckCheckYourReturnControllerInheritsExternalSiteController()
         {
             typeof(CheckYourReturnController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void CheckYourReturnController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(CheckYourReturnController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

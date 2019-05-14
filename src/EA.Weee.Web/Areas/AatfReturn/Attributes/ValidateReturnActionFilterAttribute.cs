@@ -20,12 +20,17 @@
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            AsyncHelpers.RunSync(() => OnAuthorizationAsync(context));
+        }
+
+        public async Task OnAuthorizationAsync(ActionExecutingContext filterContext)
+        {
             if (!ConfigService.CurrentConfiguration.EnableAATFReturns)
             {
                 throw new InvalidOperationException("AATF returns are not enabled.");
             }
 
-            if (!context.RouteData.Values.TryGetValue("returnId", out var returnIdActionParameter))
+            if (!filterContext.RouteData.Values.TryGetValue("returnId", out var returnIdActionParameter))
             {
                 throw new ArgumentException("No return ID was specified.");
             }
@@ -39,10 +44,15 @@
 
             using (var client = Client())
             {
-                var @returnStatus = client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
+                var @returnStatus = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
+
+                if (@returnStatus.ReturnStatus != ReturnStatus.Created)
+                {
+                    filterContext.Result = AatfRedirect.ReturnsList(@returnStatus.OrganisationId);
+                }
             }
 
-            base.OnActionExecuting(context);
+            base.OnActionExecuting(filterContext);
         }
     }
 }

@@ -39,6 +39,8 @@
 
         public Core.AatfReturn.ReturnStatus ReturnStatus { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
