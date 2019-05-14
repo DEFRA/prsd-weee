@@ -82,6 +82,7 @@
         {
             var weeeReceiveds = await dataAccess.GetManyByReturnId<WeeeReceived>(returnId);
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>();
+            var weeeReturnSchemes = (await dataAccess.GetAll<ReturnScheme>()).Where(w => w.ReturnId == returnId);
 
             foreach (var weeeReceived in weeeReceiveds)
             {
@@ -90,6 +91,7 @@
 
             dataAccess.RemoveMany<WeeeReceivedAmount>(weeeReceivedAmounts);
             dataAccess.RemoveMany<WeeeReceived>(weeeReceiveds);
+            dataAccess.RemoveMany<ReturnScheme>(weeeReturnSchemes);
         }
 
         private async void DeleteWeeeReusedData(Guid returnId)
@@ -100,8 +102,10 @@
             var addresses = new List<AatfAddress>();
             foreach (var weeeReused in weeeReuseds)
             {
-                weeeReusedAmounts.AddRange((await dataAccess.GetAll<WeeeReusedAmount>()).Where(w => w.WeeeReused.Id == weeeReused.Id));
-                weeeReusedSites.AddRange((await dataAccess.GetAll<WeeeReusedSite>()).Where(w => w.WeeeReused.Id == weeeReused.Id));
+                var wra = (await dataAccess.GetAll<WeeeReusedAmount>());
+                weeeReusedAmounts.AddRange(wra.Where(w => w.WeeeReused.Id == weeeReused.Id).ToList());
+                var wrs = (await dataAccess.GetAll<WeeeReusedSite>());
+                weeeReusedSites.AddRange(wrs.Where(w => w.WeeeReused.Id == weeeReused.Id).ToList());
             }
 
             foreach (var weeeReusedSite in weeeReusedSites)

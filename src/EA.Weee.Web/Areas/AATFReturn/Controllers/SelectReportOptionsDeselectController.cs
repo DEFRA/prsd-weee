@@ -58,7 +58,6 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectReportOptionsDeselectViewModel viewModel)
         {
-            SetSelected(viewModel);
             var oldModel = TempData["viewModel"] as SelectReportOptionsViewModel;
             var newViewModel = new SelectReportOptionsDeselectViewModel()
             {
@@ -67,7 +66,8 @@
                 OrganisationId = oldModel.OrganisationId,
                 SelectedOptions = oldModel.SelectedOptions,
                 DcfSelectedValue = oldModel.DcfSelectedValue,
-                SelectedValue = viewModel.SelectedValue
+                SelectedValue = viewModel.SelectedValue,
+                DeselectedOptions = oldModel.ReportOnQuestions.Where(d => d.Deselected == true).Select(d => d.Id).ToList()
             };
             SetSelected(newViewModel);
             TempData["viewModel"] = oldModel;
@@ -108,9 +108,12 @@
         {
             if (viewModel.HasSelectedOptions)
             {
-                foreach (var option in viewModel.SelectedOptions)
+                foreach (var option in viewModel.ReportOnQuestions)
                 {
-                    viewModel.ReportOnQuestions.First(r => r.Id == option).Selected = true;
+                    if (option.Deselected)
+                    {
+                        option.Selected = false;
+                    }
                 }
             }
         }
