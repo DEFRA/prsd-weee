@@ -67,6 +67,31 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var weeeSentOnId = Guid.NewGuid();
+            var siteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var operatorAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                SiteAddress = siteAddressData,
+                OperatorAddress = operatorAddressData
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).Returns(weeeSentOn);
+
+            await controller.Index(organisationId, returnId, aatfId, weeeSentOnId);
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
+                && t.ReturnId == returnId
+                && t.AatfId == aatfId
+                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void IndexPost_GivenSelectedValueIsYes_RemoveWeeeSentOnIsCalled()
         {
             var viewModel = new SentOnRemoveSiteViewModel()
@@ -96,7 +121,6 @@
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
@@ -106,21 +130,26 @@
         public void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
         {
             var siteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
+            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
 
             var siteAddressWithoutAddress2 = new AatfAddressData("Site name", "Site address 1", null, "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressWithoutAddress2Long = "Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>Site country<br/>GU22 7UY";
+            var siteAddressWithoutAddress2Long = "Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
 
             var siteAddressWithoutCounty = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", null, "GU22 7UY", Guid.NewGuid(), "Site country");
-            var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site country<br/>GU22 7UY";
+            var siteAddressWithoutCountyLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>GU22 7UY<br/>Site country";
+
+            var siteAddressWithoutPostcode = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", null, Guid.NewGuid(), "Site country");
+            var siteAddressWithoutPostcodeLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
 
             var result = controller.GenerateAddress(siteAddress);
             var resultWithoutAddress2 = controller.GenerateAddress(siteAddressWithoutAddress2);
             var resultWithoutCounty = controller.GenerateAddress(siteAddressWithoutCounty);
+            var resultWithoutPostcode = controller.GenerateAddress(siteAddressWithoutPostcode);
 
             result.Should().Be(siteAddressLong);
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
+            resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
         }
     }
 }

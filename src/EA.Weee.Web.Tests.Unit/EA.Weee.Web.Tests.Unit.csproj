@@ -190,6 +190,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ObligatedSentOnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedSentOnValuesCopyPasteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedValuesCopyPasteControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\ReturnsSummaryControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
@@ -247,9 +248,11 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelTest.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReusedRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
