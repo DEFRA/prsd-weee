@@ -7,6 +7,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using ReturnReportOn = EA.Weee.Domain.AatfReturn.ReturnReportOn;
@@ -102,10 +103,10 @@
             var addresses = new List<AatfAddress>();
             foreach (var weeeReused in weeeReuseds)
             {
-                var wra = (await dataAccess.GetAll<WeeeReusedAmount>());
-                weeeReusedAmounts.AddRange(wra.Where(w => w.WeeeReused.Id == weeeReused.Id).ToList());
-                var wrs = (await dataAccess.GetAll<WeeeReusedSite>());
-                weeeReusedSites.AddRange(wrs.Where(w => w.WeeeReused.Id == weeeReused.Id).ToList());
+                var wra = await dataAccess.GetManyByExpression(new WeeeReusedAmountByWeeeReusedIdSpecification(weeeReused.Id));
+                weeeReusedAmounts.AddRange(wra);
+                var wrs = await dataAccess.GetManyByExpression(new WeeeReusedSiteByWeeeReusedIdSpecification(weeeReused.Id));
+                weeeReusedSites.AddRange(wrs);
             }
 
             foreach (var weeeReusedSite in weeeReusedSites)
