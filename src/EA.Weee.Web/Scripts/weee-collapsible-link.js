@@ -40,7 +40,10 @@ function InitialStartup() {
 
         open.addEventListener("click",
             function (e) {
-				e.preventDefault();
+                e.preventDefault();
+                var ua = window.navigator.userAgent;
+                var isIE = /MSIE|Trident/.test(ua);
+
 				var details = document.querySelectorAll(".govuk-details");
 				var openAll = false;
 				if (document.getElementById("collapsibleHref").innerText === openAllText) {
@@ -56,13 +59,17 @@ function InitialStartup() {
 					if (openAll) {
 						detailsElement.open = "open";
 						detailsElement.getElementsByClassName("govuk-details__summary")[0].setAttribute("aria-expanded", true);
-						detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", false);
-						detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "";
+                        detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", false);
+                        if (isIE) {
+	                        detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "";
+                        }
 					} else {
 						detailsElement.removeAttribute("open");
 						detailsElement.getElementsByClassName("govuk-details__summary")[0].setAttribute("aria-expanded", false);
-						detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", true);
-						detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "none";
+                        detailsElement.getElementsByClassName("govuk-details__text")[0].setAttribute("aria-hidden", true);
+                        if (isIE) {
+	                        detailsElement.getElementsByClassName("govuk-details__text")[0].style.display = "none";
+                        }
 					}
                 }
 			});

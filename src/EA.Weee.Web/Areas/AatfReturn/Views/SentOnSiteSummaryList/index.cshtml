@@ -56,9 +56,12 @@
                             @address.Tonnages.B2B
                         </div>
                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                            @Html.NavigationRouteLink("Change", "Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnCreateSite" })
-                            <br />
-                            @Html.NavigationRouteLink("Remove", "Remove", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnRemoveSite" })
+                            <div>
+                                @Html.NavigationRouteLink("Change", "Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnCreateSite" })
+                            </div>
+                            <div style="padding-top: 10px;">
+                                @Html.NavigationRouteLink("Remove", "Remove", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnRemoveSite" })
+                            </div>
                         </div>
                     </div>
                 </div>

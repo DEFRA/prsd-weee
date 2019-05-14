@@ -9,11 +9,11 @@
 
         public string OrganisationName { get; set; }
 
-        public IList<ReturnViewModel> Returns { get; set; }
+        public IList<ReturnsItemViewModel> Returns { get; set; }
 
         public ReturnsViewModel()
         {
-            Returns = new List<ReturnViewModel>();
+            Returns = new List<ReturnsItemViewModel>();
         }
     }
 }

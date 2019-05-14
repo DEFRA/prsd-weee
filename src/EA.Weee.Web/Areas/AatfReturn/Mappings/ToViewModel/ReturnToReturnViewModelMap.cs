@@ -23,6 +23,41 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            SetObligatedValues(source);
+
+            SetDisplayOptions(source);
+
+            decimal? totalNonObligatedTonnageDcf = null;
+            decimal? totalNonObligatedTonnage = null;
+
+            if (source.NonObligatedData != null)
+            {
+                if (source.NonObligatedData.Any(n => n.Dcf && n.Tonnage.HasValue))
+                {
+                    totalNonObligatedTonnageDcf = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
+                }
+
+                if (source.NonObligatedData.Any(n => !n.Dcf && n.Tonnage.HasValue))
+                {
+                    totalNonObligatedTonnage = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => !n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
+                }
+            }
+
+            return new ReturnViewModel(
+                source,
+                AatfObligatedData,
+                source.ReturnOperatorData,
+                DisplayOptions)
+            {
+                NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
+                NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
+                NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalNonObligated(totalNonObligatedTonnage, totalNonObligatedTonnageDcf)),
+                ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source))
+            };
+        }
+
+        private void SetObligatedValues(ReturnData source)
+        {
             if (source.Aatfs != null)
             {
                 foreach (var aatf in source.Aatfs)
@@ -31,7 +66,7 @@
                     var weeeReusedData = source.ObligatedWeeeReusedData.Where(s => s.Aatf.Id == aatf.Id).ToList();
                     var weeeSentOnData = source.ObligatedWeeeSentOnData.Where(s => s.Aatf.Id == aatf.Id).ToList();
 
-                    var schemeData = new List<AatfSchemeData>(); 
+                    var schemeData = new List<AatfSchemeData>();
 
                     foreach (var scheme in source.SchemeDataItems)
                     {
@@ -44,8 +79,8 @@
                         };
 
                         var aatfSchemeData = new AatfSchemeData(scheme, obligatedReceivedValues, scheme.ApprovalName);
-                        schemeData.Add(aatfSchemeData);                                           
-                    }                    
+                        schemeData.Add(aatfSchemeData);
+                    }
 
                     var obligatedData = new AatfObligatedData(aatf, schemeData)
                     {
@@ -57,7 +92,10 @@
                     AatfObligatedData.Add(obligatedData);
                 }
             }
+        }
 
+        private void SetDisplayOptions(ReturnData source)
+        {
             if (source.ReturnReportOns != null)
             {
                 foreach (var option in source.ReturnReportOns)
@@ -84,33 +122,6 @@
                     }
                 }
             }
-
-            decimal? totalNonObligatedTonnageDcf = null;
-            decimal? totalNonObligatedTonnage = null;
-            if (source.NonObligatedData != null)
-            {
-                if (source.NonObligatedData.Any(n => n.Dcf && n.Tonnage.HasValue))
-                {
-                    totalNonObligatedTonnageDcf = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
-                }
-
-                if (source.NonObligatedData.Any(n => !n.Dcf && n.Tonnage.HasValue))
-                {
-                    totalNonObligatedTonnage = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => !n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
-                }
-            }
-
-            return new ReturnViewModel(
-                source,
-                AatfObligatedData,
-                source.ReturnOperatorData,
-                DisplayOptions)
-            {
-                NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
-                NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
-                NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalNonObligated(totalNonObligatedTonnage, totalNonObligatedTonnageDcf)),
-                ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source))
-            };
         }
 
         private decimal? TotalNonObligated(decimal? totalNonObligatedTonnage, decimal? totalNonObligatedTonnageDcf)

@@ -18,6 +18,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
     using Xunit;
 
@@ -44,9 +45,15 @@
         }
 
         [Fact]
-        public void CheckObligatedReusedControllerInheritsExternalSiteController()
+        public void ObligatedReusedControllerInheritsExternalSiteController()
         {
             typeof(ObligatedReusedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ObligatedReusedController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ObligatedReusedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]
