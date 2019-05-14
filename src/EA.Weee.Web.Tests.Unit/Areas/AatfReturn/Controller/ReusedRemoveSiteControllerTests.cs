@@ -229,5 +229,59 @@
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
             resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
         }
+
+        [Fact]
+        public async void IndexGet_NoSitesReturned_RedirectsToSummaryList()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+            Guid weeeSentOnId = Guid.NewGuid();
+
+            AddressTonnageSummary addressesData = new AddressTonnageSummary()
+            {
+                AddressData = new List<SiteAddressData>()
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>._)).Returns(addressesData);
+
+            RedirectToRouteResult result = await controller.Index(organisationId, returnId, aatfId, weeeSentOnId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+        }
+
+        [Fact]
+        public async void IndexGet_SiteNotInReturnedList_RedirectsToSummaryList()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+            Guid weeeSentOnId = Guid.NewGuid();
+
+            AddressTonnageSummary addressesData = new AddressTonnageSummary()
+            {
+                AddressData = new List<SiteAddressData>()
+                {
+                    new SiteAddressData()
+                    {
+                        Id = Guid.NewGuid()
+                    }
+                }
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>._)).Returns(addressesData);
+
+            RedirectToRouteResult result = await controller.Index(organisationId, returnId, aatfId, weeeSentOnId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ReusedOffSiteSummaryList");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+        }
     }
 }
