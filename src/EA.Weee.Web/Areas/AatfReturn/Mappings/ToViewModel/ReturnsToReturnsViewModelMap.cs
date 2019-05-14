@@ -8,13 +8,13 @@
 
     public class ReturnsToReturnsViewModelMap : IMap<List<ReturnData>, ReturnsViewModel>
     {
-        private readonly IMapper mapper;
+        private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
 
-        public ReturnsToReturnsViewModelMap(IMapper mapper, IReturnsOrdering ordering)
+        public ReturnsToReturnsViewModelMap(IReturnsOrdering ordering, IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap)
         {
-            this.mapper = mapper;
             this.ordering = ordering;
+            this.returnItemViewModelMap = returnItemViewModelMap;
         }
 
         public ReturnsViewModel Map(List<ReturnData> source)
@@ -24,7 +24,9 @@
             var orderedItems = ordering.Order(source);
             foreach (var @return in orderedItems)
             {
-                model.Returns.Add(mapper.Map<ReturnViewModel>(@return));
+                var returnViewModelItem = returnItemViewModelMap.Map(@return);
+
+                model.Returns.Add(returnViewModelItem);
             }
 
             return model;

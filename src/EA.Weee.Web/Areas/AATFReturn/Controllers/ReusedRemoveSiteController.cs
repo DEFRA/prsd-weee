@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -18,6 +19,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateReturnActionFilter]
     public class ReusedRemoveSiteController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -44,8 +46,8 @@
                 {
                     return AatfRedirect.ReusedOffSiteSummaryList(returnId, aatfId, organisationId);
                 }
-
-                var site = sites.AddressData.Select(s => s).Where(s => s.Id == siteId).Single();
+                
+                var site = sites.AddressData.Select(s => s).Single(s => s.Id == siteId);
 
                 var viewModel = mapper.Map(new ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer()
                 {
@@ -80,7 +82,7 @@
                         RedirectToAction("Index", "ReusedOffSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
                 }
             }
-
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
 

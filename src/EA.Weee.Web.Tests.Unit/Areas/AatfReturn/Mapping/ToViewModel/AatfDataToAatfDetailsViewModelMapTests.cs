@@ -16,7 +16,7 @@
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
-            map = new AatfDataToAatfDetailsViewModelMap(new AddressUtilities());
+            map = new AatfDataToAatfDetailsViewModelMap();
         }
 
         [Fact]

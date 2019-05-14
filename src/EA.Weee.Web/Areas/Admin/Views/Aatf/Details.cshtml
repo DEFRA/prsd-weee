@@ -45,11 +45,9 @@
     </ul>
 
     <section class="govuk-tabs__panel" id="aatfDetails">
+        <h2 class="govuk-heading-l">AATF details</h2>
         <table class="govuk-table">
             <thead class="govuk-table__head">
-                <tr>
-                    <th colspan="2">&nbsp;</th>
-                </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
@@ -93,11 +91,9 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
+        <h2 class="govuk-heading-l">Data</h2>
         <table class="govuk-table">
             <thead class="govuk-table__head">
-                <tr>
-                    <th colspan="2">&nbsp;</th>
-                </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
@@ -111,11 +107,9 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organistationDetails">
+        <h2 class="govuk-heading-l">Organistation details</h2>
         <table class="govuk-table">
             <thead class="govuk-table__head">
-                <tr>
-                    <th colspan="2">&nbsp;</th>
-                </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
@@ -146,20 +140,14 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
+        <h2 class="govuk-heading-l">Contact details</h2>
         <table class="govuk-table">
             <thead class="govuk-table__head">
-                <tr>
-                    <th colspan="2">&nbsp;</th>
-                </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">First name</th>
-                    <td class="govuk-table__cell">@Model.ContactData.FirstName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Last name</th>
-                    <td class="govuk-table__cell">@Model.ContactData.LastName</td>
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Position</th>
@@ -167,7 +155,14 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell">@Model.ContactData.ConcatenatedAddress</td>
+                    <td class="govuk-table__cell">
+                        @Model.ContactData.AddressData.Address1<br />
+                        @Model.ContactData.AddressData.Address2<br />
+                        @Model.ContactData.AddressData.TownOrCity<br />
+                        @Model.ContactData.AddressData.CountyOrRegion<br />
+                        @Model.ContactData.AddressData.Postcode<br />
+                        @Model.ContactData.AddressData.CountryName<br />
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Telephone</th>
@@ -187,4 +182,9 @@
             </p>
         }
     </section>
+
+    <div>&nbsp;</div>
+    <p>
+        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Back</a>
+    </p>
 </div>

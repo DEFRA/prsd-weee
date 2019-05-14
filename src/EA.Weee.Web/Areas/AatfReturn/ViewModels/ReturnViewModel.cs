@@ -34,7 +34,7 @@
 
         [Display(Name = "Compliance year")]
         public override string Year { get; }
-        
+
         public string NonObligatedTonnageTotal { get; set; }
 
         public string NonObligatedTonnageTotalDcf { get; set; }

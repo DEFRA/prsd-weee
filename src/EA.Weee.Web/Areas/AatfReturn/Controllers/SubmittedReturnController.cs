@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Attributes;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
     using Infrastructure;

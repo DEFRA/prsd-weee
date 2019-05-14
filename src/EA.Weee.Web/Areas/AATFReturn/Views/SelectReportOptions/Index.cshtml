@@ -64,6 +64,7 @@
                         }
                         else
                         {
+                            var errorClass = @Model.HasDcfError == true ? "error" : "";            
                             <div id="dcfSection" class="dcf-section">
                                 <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
                                     @Model.ReportOnQuestions[i].Description?
@@ -71,7 +72,7 @@
                                 <p class="govuk-body govuk-!-font-size-16">
                                     This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.
                                 </p>
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DcfSelectedValue)" id="WeeeReusedOptions">
+                                <div class="govuk-form-group @errorClass @Html.Gds().FormGroupClass(m => m.DcfSelectedValue)" id="WeeeReusedOptions">
                                     @this.WeeeGds().RadioButtonsFor(
                                         m => m.DcfSelectedValue,
                                         Model.DcfPossibleValues,

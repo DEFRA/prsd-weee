@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -17,6 +18,7 @@
     using EA.Weee.Web.Services.Caching;
     using Weee.Requests.AatfReturn;
 
+    [ValidateReturnActionFilter]
     public class ObligatedReusedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
