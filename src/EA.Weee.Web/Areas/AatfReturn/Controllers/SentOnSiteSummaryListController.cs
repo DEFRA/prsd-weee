@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn;
@@ -17,6 +18,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateReturnActionFilter]
     public class SentOnSiteSummaryListController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

@@ -107,7 +107,7 @@
             var @return = A.Fake<Return>();
             var userId = Guid.NewGuid();
 
-            A.CallTo(() => @return.ReturnStatus).Returns(ReturnStatus.Created);
+            A.CallTo(() => @return.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Created);
             A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).Returns(@return);
             A.CallTo(() => userContext.UserId).Returns(userId);
 
