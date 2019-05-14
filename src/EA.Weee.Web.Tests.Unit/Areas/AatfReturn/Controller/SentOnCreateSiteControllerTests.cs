@@ -19,6 +19,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class SentOnCreateSiteControllerTests
@@ -42,9 +43,15 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteControllerInheritsExternalSiteController()
+        public void SentOnCreateSiteControllerInheritsExternalSiteController()
         {
             typeof(SentOnCreateSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+        }
+
+        [Fact]
+        public void SentOnCreateSiteController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(SentOnCreateSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

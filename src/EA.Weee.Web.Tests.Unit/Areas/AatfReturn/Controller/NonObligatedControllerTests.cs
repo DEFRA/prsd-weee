@@ -18,6 +18,7 @@
     using FluentValidation.Results;
     using Services;
     using Services.Caching;
+    using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
@@ -50,9 +51,15 @@
         }
 
         [Fact]
-        public void CheckNonObligatedControllerInheritsExternalSiteController()
+        public void NonObligatedControllerInheritsExternalSiteController()
         {
             typeof(NonObligatedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void NonObligatedController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(NonObligatedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]
