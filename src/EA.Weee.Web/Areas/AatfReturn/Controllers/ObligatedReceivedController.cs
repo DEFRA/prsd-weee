@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -16,6 +17,7 @@
     using Prsd.Core.Mapper;
     using Weee.Requests.AatfReturn;
 
+    [ValidateReturnActionFilter]
     public class ObligatedReceivedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

@@ -26,7 +26,7 @@
 
         public Operator ReturnOperator { get; private set; }
 
-        public List<ReturnScheme> ReturnSchemes { get; private set; }
+        public virtual List<ReturnScheme> ReturnSchemes { get; private set; }
 
         public List<ReturnReportOn> ReturnReportOns { get; private set; }
 

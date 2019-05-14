@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Attributes;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -14,6 +15,7 @@
     using Services;
     using Services.Caching;
 
+    [ValidateReturnActionFilter]
     public class ReceivedPcsListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
@@ -13,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateReturnActionFilter]
     public class ObligatedSentOnValuesCopyPasteController : AatfReturnBaseController
     {
         private readonly BreadcrumbService breadcrumb;
