@@ -60,6 +60,29 @@
         }
 
         [Fact]
+        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            controller.ModelState.AddModelError("error", "error");
+            var viewModel = new SentOnRemoveSiteViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            await controller.Index(viewModel);
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
         public async void IndexGet_GivenValidViewModel_MapperIsCalled()
         {
             var organisationId = Guid.NewGuid();
