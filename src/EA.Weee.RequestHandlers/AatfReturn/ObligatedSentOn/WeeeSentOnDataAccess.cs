@@ -50,5 +50,10 @@
         {
             return await context.WeeeSentOn.Where(w => w.Id == weeeSentOnId).SingleAsync();
         }
+
+        public async Task<List<WeeeSentOn>> GetWeeeSentOnByReturn(Guid returnId)
+        {
+            return await context.WeeeSentOn.Where(w => w.ReturnId == returnId).ToListAsync();
+        }
     }
 }

@@ -10,7 +10,7 @@
     using Validation;
 
     [Validator(typeof(SelectReportOptionsViewModelValidator))]
-    public class SelectReportOptionsViewModel
+    public class SelectReportOptionsViewModel : SelectReportOptionsModelBase
     {
         public SelectReportOptionsViewModel()
         {
@@ -30,19 +30,7 @@
             Year = year.ToString();
         }
 
-        public Guid OrganisationId { get; set; }
-
-        public Guid ReturnId { get; set; }
-
         public ReturnData ReturnData { get; set; }
-
-        public IList<ReportOnQuestion> ReportOnQuestions { get; set; }
-
-        public bool HasSelectedOptions => SelectedOptions != null && SelectedOptions.Count != 0;
-
-        public List<int> SelectedOptions { get; set; }
-
-        public string DcfSelectedValue { get; set; }
 
         public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
 

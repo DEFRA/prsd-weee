@@ -381,6 +381,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedRemoveSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
@@ -876,6 +877,7 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactData.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_CountryPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReturnsSummary\Index.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -1290,7 +1292,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
   </ItemGroup>
   <PropertyGroup>

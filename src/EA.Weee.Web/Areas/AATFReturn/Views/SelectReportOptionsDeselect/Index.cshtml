@@ -1,0 +1,46 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsDeselectViewModel
+@{
+    ViewBag.Title = "AATF Return - GOV.UK";
+    var message = string.Empty;
+}
+
+    <section id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">Are you sure you want to remove these reporting options?</h1>
+        </header>
+        @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.Deselected == true))
+        {
+            <p class="govuk-body">
+                @deselectedOption.Description
+            </p>
+        }
+
+        @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsDeselectRouteName, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.ReturnId)
+            @Html.HiddenFor(m => m.ReportOnQuestions)
+            @Html.HiddenFor(m => m.DcfSelectedValue)
+            @Html.HiddenFor(m => m.SelectedOptions)
+
+            <div class="govuk-!-padding-bottom-5"></div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeRemoveOptions">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedValue,
+                    Model.PossibleValues,
+                    "Confirm if this you want to remove these reporting options",
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Inline)
+            </div>
+
+            <button type="submit" class="govuk-button">
+                Save and continue
+            </button>
+        }
+    </section>

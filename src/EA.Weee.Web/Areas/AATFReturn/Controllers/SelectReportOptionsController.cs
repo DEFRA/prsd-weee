@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -26,7 +27,6 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
-        private const string pcsQuestion = "PCS";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -73,21 +73,21 @@
             {
                 if (viewModel.HasSelectedOptions)
                 {
-                    if (CheckHasDeselectedOptions(viewModel))
-                    {
-
-                    }
-
                     using (var client = apiClient())
                     {
                         viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
+                        if (CheckHasDeselectedOptions(viewModel))
+                        {
+                            TempData["viewModel"] = viewModel;
+                            return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
+                        }
                         var request = requestCreator.ViewModelToRequest(viewModel);
 
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
                 }
 
-                if (viewModel.ReportOnQuestions.First(r => r.Question == pcsQuestion).Selected)
+                if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected)
                 {
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
                 }
@@ -113,17 +113,20 @@
 
         private bool CheckHasDeselectedOptions(SelectReportOptionsViewModel viewModel)
         {
-            var deselectedOptions = viewModel.SelectedOptions.Except(viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId)).ToList();
-            if (deselectedOptions != null && deselectedOptions.Count != 0)
+            var oldReturnOptions = viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList();
+            if (oldReturnOptions.Count != 0)
             {
-                foreach (var option in deselectedOptions)
+                var deselectedOptions = oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
+                if (deselectedOptions != null && deselectedOptions.Count != 0)
                 {
-                    viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
+                    foreach (var option in deselectedOptions)
+                    {
+                        viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
+                    }
+
+                    return true;
                 }
-
-                return true;
             }
-
             return false;
         }
 

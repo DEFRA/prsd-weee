@@ -14,10 +14,10 @@
 
         public IList<int> SelectedOptions { get; set; }
 
+        public IList<int> DeselectedOptions { get; set; }
+
         public IList<ReportOnQuestion> Options { get; set; }
 
         public string DcfSelectedValue { get; set; }
-
-        public IList<ReturnReportOn> OldReportOptions { get; set; }
     }
 }
