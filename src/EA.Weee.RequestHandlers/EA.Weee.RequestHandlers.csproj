@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\CopyReturnHandler.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
     <Compile Include="AatfReturn\Internal\AatfContactDataAccess.cs" />
     <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
@@ -124,8 +125,6 @@
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandler.cs" />
-    <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccess.cs" />
-    <Compile Include="AatfReturn\CheckYourReturn\IFetchNonObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />

@@ -13,7 +13,7 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post, null))
+                @using (Html.BeginRouteForm(AatfRedirect.ReturnsRouteName, FormMethod.Post, null))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.OrganisationId)
@@ -50,7 +50,8 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue</span></th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Edit</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
@@ -85,6 +86,17 @@
                                     @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
                                 }
                             }
+                        }
+                    </td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @*@using (Html.BeginRouteForm(AatfRedirect.ReturnsCopyRouteName, FormMethod.Post, null))*@
+                        @using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
+                            @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
+
+                            <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit">Edit</button>
                         }
                     </td>
                 </tr>

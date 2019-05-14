@@ -13,6 +13,7 @@
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
 
+    //[RoutePrefix("Users")]
     public class ReturnsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -43,6 +44,19 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}")]
+        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
+
+                return AatfRedirect.ReturnsList(organisationId);
             }
         }
 
