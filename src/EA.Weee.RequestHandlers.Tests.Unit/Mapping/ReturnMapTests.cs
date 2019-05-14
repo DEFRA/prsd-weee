@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Scheme;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.User;
@@ -302,6 +303,37 @@
 
             var result = map.Map(@returnQuarterWindow);
             result.ReturnStatus.Should().Be(Core.AatfReturn.ReturnStatus.Created);
+        }
+
+        [Fact]
+        public void Map_GivenReturnSchemes_ReturnSchemeDataItemsShouldBeMapped()
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = GetReturn();
+
+            var returnSchemes = new List<ReturnScheme>()
+            {
+                new ReturnScheme(A.Fake<DomainScheme>(), @return),
+                new ReturnScheme(A.Fake<DomainScheme>(), @return)
+            };
+
+            var schemeData = new List<SchemeData>()
+            {
+                new SchemeData(),
+                new SchemeData()
+            };
+
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => @returnQuarterWindow.ReturnSchemes).Returns(returnSchemes);
+            A.CallTo(() => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(returnSchemes.ElementAt(0).Scheme)).Returns(schemeData.ElementAt(0));
+            A.CallTo(() => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(returnSchemes.ElementAt(1).Scheme)).Returns(schemeData.ElementAt(1));
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.SchemeDataItems.Should().Contain(schemeData.ElementAt(0));
+            result.SchemeDataItems.Should().Contain(schemeData.ElementAt(1));
+            result.SchemeDataItems.Count().Should().Be(2);
         }
 
         public Return GetReturn()
