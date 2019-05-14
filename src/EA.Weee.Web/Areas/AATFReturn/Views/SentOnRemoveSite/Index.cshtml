@@ -62,6 +62,11 @@
             </div>
         </div>
         <div class="govuk-form-group" style="padding-bottom: 10px">
+            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+            <p class="important">
+                Removing this AATF/ATF will delete all tonnage data associated with it.
+            </p>
+            <div class="govuk-!-padding-bottom-5"></div>
             <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedValue,
@@ -70,10 +75,6 @@
                     RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Inline)
             </div>
-            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-            <p class="important">
-                Removing this AATF/ATF will delete all tonnage data associated with it.
-            </p>
         </div>
 
         <button type="submit" name="save" class="govuk-button" id="site-details">
