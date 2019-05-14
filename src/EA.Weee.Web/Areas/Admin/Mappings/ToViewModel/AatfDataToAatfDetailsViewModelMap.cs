@@ -9,10 +9,8 @@
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
-        private IAddressUtilities addressUtilities;
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities)
+        public AatfDataToAatfDetailsViewModelMap()
         {
-            this.addressUtilities = addressUtilities;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
@@ -31,8 +29,6 @@
                 ContactData = source.ContactData,
                 CanEditContactDetails = source.ContactData.CanEditContactDetails
             };
-
-            viewModel.ContactData.ConcatenatedAddress = addressUtilities.AddressConcatenate(source.ContactData.AddressData);
 
             if (source.AatfData.ApprovalDate != default(DateTime))
             {
