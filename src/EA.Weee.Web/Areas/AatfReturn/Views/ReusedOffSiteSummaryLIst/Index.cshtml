@@ -70,9 +70,12 @@
                             @address.Address
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
-                            @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
-                            <br />
-                            @Html.NavigationRouteLink("Remove", "Remove " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
+                            <div>
+                                @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
+                            </div>
+                            <div style="padding-top: 10px;">
+                                @Html.NavigationRouteLink("Remove", "Remove " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
+                            </div>
                         </div>
                     </div>
                 }
