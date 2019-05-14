@@ -10,7 +10,7 @@
 
     public class ReturnStatus : Enumeration
     {
-        public static readonly ReturnStatus Created = new ReturnStatus(1, "Created");
+        public static readonly ReturnStatus Created = new ReturnStatus(1, "Not Submitted");
         public static readonly ReturnStatus Submitted = new ReturnStatus(2, "Submitted");
 
         protected ReturnStatus()

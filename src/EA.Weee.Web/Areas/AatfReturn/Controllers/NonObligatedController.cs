@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Attributes;
     using Constant;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Requests.AatfReturn;
@@ -15,6 +16,7 @@
     using ViewModels;
     using ViewModels.Validation;
 
+    [ValidateReturnActionFilter]
     public class NonObligatedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

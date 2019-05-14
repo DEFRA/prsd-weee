@@ -16,6 +16,7 @@
     using FluentAssertions;
     using System;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class SentOnRemoveSiteControllerTests
@@ -37,9 +38,15 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteOperatorControllerInheritsExternalSiteController()
+        public void SentOnRemoveSiteOperatorControllerInheritsExternalSiteController()
         {
             typeof(SentOnRemoveSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+        }
+
+        [Fact]
+        public void SentOnRemoveSiteOperatorController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(SentOnRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

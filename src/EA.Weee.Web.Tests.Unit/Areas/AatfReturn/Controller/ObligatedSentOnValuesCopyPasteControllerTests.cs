@@ -14,6 +14,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ObligatedSentOnValuesCopyPasteControllerTests
@@ -33,9 +34,15 @@
         }
 
         [Fact]
-        public void CheckObligatedValueCopyPasteControllerInheritsAatfReturnBaseController()
+        public void ObligatedSentOnValuesCopyPasteControllerInheritsAatfReturnBaseController()
         {
             typeof(ObligatedValuesCopyPasteController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ObligatedSentOnValuesCopyPasteController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ObligatedValuesCopyPasteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

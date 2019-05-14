@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Weee.Requests.AatfReturn;
     using Xunit;
@@ -44,9 +45,15 @@
         }
 
         [Fact]
-        public void CheckObligatedReceivedControllerInheritsExternalSiteController()
+        public void ObligatedReceivedControllerInheritsExternalSiteController()
         {
             typeof(ObligatedReceivedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ObligatedReceivedController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ObligatedReceivedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]
