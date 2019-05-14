@@ -16,6 +16,7 @@
     using FluentAssertions;
     using System;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class SentOnRemoveSiteControllerTests
@@ -37,9 +38,15 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteOperatorControllerInheritsExternalSiteController()
+        public void SentOnRemoveSiteOperatorControllerInheritsExternalSiteController()
         {
             typeof(SentOnRemoveSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+        }
+
+        [Fact]
+        public void SentOnRemoveSiteOperatorController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(SentOnRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]
@@ -120,20 +127,40 @@
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveWeeeSentOn>.That.Matches(r => r.WeeeSentOnId == viewModel.WeeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
         }
-        
+
+        [Fact]
+        public async void IndexPost_ModelStateNotValid_ReturnsView()
+        {
+            SentOnRemoveSiteViewModel viewModel = new SentOnRemoveSiteViewModel()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid()
+            };
+            controller.ModelState.AddModelError("error", "error");
+
+            ViewResult result = await controller.Index(viewModel) as ViewResult;
+
+            SentOnRemoveSiteViewModel outputModel = result.Model as SentOnRemoveSiteViewModel;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Index");
+            Assert.Equal(viewModel, outputModel);
+        }
+
         [Fact]
         public async void IndexPost_GivenSelectedValueIsNo_RedirectToActionIsCalled()
         {
-            var returnId = new Guid();
-            var organisationId = new Guid();
-            var aatfId = new Guid();
-            var model = new SentOnRemoveSiteViewModel()
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+            SentOnRemoveSiteViewModel model = new SentOnRemoveSiteViewModel()
             {
                 ReturnId = returnId,
                 OrganisationId = organisationId,
                 AatfId = aatfId
             };
-            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            RedirectToRouteResult result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
@@ -166,6 +193,27 @@
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
             resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
+        }
+
+        [Fact]
+        public async void IndexGet_WeeeSentOnIdNoLongerExists_RedirectsToSummaryList()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            Guid aatfId = Guid.NewGuid();
+            Guid weeeSentOnId = Guid.NewGuid();
+
+            WeeeSentOnData weeeSentOnResult = null;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>._)).Returns(weeeSentOnResult);
+
+            RedirectToRouteResult result = await controller.Index(organisationId, returnId, aatfId, weeeSentOnId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
         }
     }
 }

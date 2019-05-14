@@ -12,6 +12,7 @@
     using Services;
     using Services.Caching;
     using TestHelpers;
+    using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.ViewModels;
     using Web.Controllers.Base;
@@ -37,7 +38,7 @@
         }
 
         [Fact]
-        public void CheckSubmittedReturnControllerInheritsExternalSiteController()
+        public void SubmittedReturnControllerInheritsExternalSiteController()
         {
             typeof(SubmittedReturnController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
