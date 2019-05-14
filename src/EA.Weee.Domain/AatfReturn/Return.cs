@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
@@ -39,6 +40,25 @@
             ReturnStatus = ReturnStatus.Submitted;
         }
 
+        public virtual void ResetSubmitted(string createdBy, Guid parentId)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
+
+            if (ReturnStatus != ReturnStatus.Submitted)
+            {
+                throw new InvalidOperationException("Return status must be Submitted if being copied");
+            }
+
+            SubmittedById = null;
+            SubmittedBy = null;
+            SubmittedDate = null;
+            CreatedBy = null;
+            CreatedById = createdBy;
+            CreatedDate = SystemTime.UtcNow;
+            ReturnStatus = ReturnStatus.Created;
+            ParentId = parentId;
+        }
+
         public virtual Quarter Quarter { get; private set; }
 
         public Guid OperatorId { get; set; }
@@ -58,5 +78,7 @@
         public virtual User CreatedBy { get; set; }
 
         public virtual User SubmittedBy { get; set; }
+
+        public virtual Guid? ParentId { get; set; }
     }
 }
