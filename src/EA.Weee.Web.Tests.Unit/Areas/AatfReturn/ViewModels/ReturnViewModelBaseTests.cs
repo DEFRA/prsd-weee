@@ -103,6 +103,24 @@
                     $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
         }
 
+        [Fact]
+        public void Constructor_GivenReturnStatus_ReturnStatusShouldBeSet()
+        {
+            foreach (var value in Enum.GetValues(typeof(ReturnStatus)))
+            {
+                var returnData = new ReturnData()
+                {
+                    Quarter = GetQuarter(), 
+                    QuarterWindow = GetQuarterWindow(),
+                    ReturnStatus = (ReturnStatus)value
+                };
+
+                var model = new ReturnViewModelTest(returnData);
+
+                model.ReturnStatus.Should().Be((ReturnStatus)value);
+            }
+        }
+
         private Quarter GetQuarter()
         {
             return new Quarter(2019, QuarterType.Q1);

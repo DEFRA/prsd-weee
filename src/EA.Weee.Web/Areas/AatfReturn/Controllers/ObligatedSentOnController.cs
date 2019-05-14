@@ -14,7 +14,9 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
 
+    [ValidateReturnActionFilter]
     public class ObligatedSentOnController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
