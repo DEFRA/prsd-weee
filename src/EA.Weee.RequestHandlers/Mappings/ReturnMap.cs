@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
@@ -10,6 +11,7 @@
     using Prsd.Core.Mapper;
     using Aatf = Core.AatfReturn.AatfData;
     using ReturnReportOn = Core.AatfReturn.ReturnReportOn;
+    using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
     public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
     {
@@ -35,7 +37,8 @@
                 CreatedDate = source.Return.CreatedDate,
                 SubmittedBy = source.Return.SubmittedBy?.FullName,
                 SubmittedDate = source.Return.SubmittedDate,
-                ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList()
+                ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList(),
+                ReturnStatus = mapper.Map<ReturnStatus>(source.Return.ReturnStatus)
             };
 
             if (source.Aatfs != null)

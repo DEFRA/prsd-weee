@@ -23,6 +23,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ObligatedSentOnControllerTests
@@ -48,9 +49,15 @@
         }
 
         [Fact]
-        public void CheckObligatedReusedControllerInheritsExternalSiteController()
+        public void ObligatedSentOnControllerInheritsExternalSiteController()
         {
             typeof(ObligatedReusedController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ObligatedSentOnController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ObligatedReusedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

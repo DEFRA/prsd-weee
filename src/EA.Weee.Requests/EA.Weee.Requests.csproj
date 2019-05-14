@@ -51,6 +51,7 @@
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\GetReturnStatus.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturns.cs" />
