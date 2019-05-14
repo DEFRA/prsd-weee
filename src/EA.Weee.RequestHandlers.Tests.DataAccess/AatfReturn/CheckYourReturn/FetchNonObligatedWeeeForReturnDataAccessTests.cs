@@ -68,9 +68,9 @@
 
                 await nonObDataAccess.Submit(nonObligatedWee);
 
-                var dataAccess = new FetchNonObligatedWeeeForReturnDataAccess(database.WeeeContext);
+                var dataAccess = new NonObligatedDataAccess(database.WeeeContext);
 
-                List<decimal?> tonnageList = await dataAccess.FetchNonObligatedWeeeForReturn(@return.Id, dcf);
+                var tonnageList = await dataAccess.FetchNonObligatedWeeeForReturn(@return.Id, dcf);
 
                 foreach (var category in nonObligatedWee)
                 {

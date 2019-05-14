@@ -14,5 +14,7 @@
         Task<Return> GetById(Guid id);
 
         Task<IList<Return>> GetByOrganisationId(Guid id);
+
+        Task<Return> GetByIdWithNoTracking(Guid id);
     }
 }

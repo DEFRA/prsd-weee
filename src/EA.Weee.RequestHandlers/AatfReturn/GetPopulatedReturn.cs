@@ -8,6 +8,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Factories;
+    using NonObligated;
     using ObligatedSentOn;
     using Prsd.Core.Mapper;
     using Security;
@@ -19,7 +20,7 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
-        private readonly IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess;
+        private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
         private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
@@ -29,8 +30,8 @@
         public GetPopulatedReturn(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess,  
             IMap<ReturnQuarterWindow, ReturnData> mapper, 
-            IQuarterWindowFactory quarterWindowFactory, 
-            IFetchNonObligatedWeeeForReturnDataAccess nonObligatedDataAccess, 
+            IQuarterWindowFactory quarterWindowFactory,
+            INonObligatedDataAccess nonObligatedDataAccess, 
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
             IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess, 
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
@@ -50,6 +51,13 @@
         }
 
         public async Task<ReturnData> GetReturnData(Guid returnId)
+        {
+            authorization.EnsureCanAccessExternalArea();
+
+            return mapper.Map(await GetReturnQuarterWindow(returnId));
+        }
+
+        public async Task<ReturnQuarterWindow> GetReturnQuarterWindow(Guid returnId)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -73,7 +81,7 @@
 
             var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
 
-            var returnQuarterWindow = new ReturnQuarterWindow(@return,
+            return new ReturnQuarterWindow(@return,
                 quarterWindow,
                 aatfList,
                 returnNonObligatedValues,
@@ -83,8 +91,6 @@
                 sentOn,
                 returnSchemeList,
                 returnReportsOn);
-
-            return mapper.Map(returnQuarterWindow);
         }
     }
 }
