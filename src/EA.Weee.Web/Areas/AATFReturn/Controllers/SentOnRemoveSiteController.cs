@@ -42,7 +42,13 @@
             {
                 var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOnById(weeeSentOnId));
 
+                if (weeeSentOn == null)
+                {
+                    return AatfRedirect.SentOnSummaryList(organisationId, returnId, aatfId);
+                }
+
                 var siteAddress = GenerateAddress(weeeSentOn.SiteAddress);
+
                 var operatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
 
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
