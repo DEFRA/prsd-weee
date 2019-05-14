@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -18,6 +19,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateReturnActionFilter]
     public class SentOnRemoveSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -40,7 +42,13 @@
             {
                 var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOnById(weeeSentOnId));
 
+                if (weeeSentOn == null)
+                {
+                    return AatfRedirect.SentOnSummaryList(organisationId, returnId, aatfId);
+                }
+
                 var siteAddress = GenerateAddress(weeeSentOn.SiteAddress);
+
                 var operatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
 
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
@@ -71,12 +79,10 @@
                     {
                         var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId));
                     }
-
-                    return await Task.Run<ActionResult>(() =>
-                        RedirectToAction("Index", "SentOnSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+                    return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
                 }
             }
-
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
             return View(viewModel);
         }
 
@@ -103,7 +109,12 @@
                 siteAddressLong += "<br/>" + address.CountyOrRegion;
             }
 
-            siteAddressLong += "<br/>" + address.CountryName + "<br/>" + address.Postcode;
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
+
+            siteAddressLong += "<br/>" + address.CountryName;
 
             return siteAddressLong;
         }

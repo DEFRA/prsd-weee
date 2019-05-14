@@ -12,6 +12,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReusedOffSiteControllerTests
@@ -31,9 +32,15 @@
         }
 
         [Fact]
-        public void CheckReusedOffSiteControllerInheritsExternalSiteController()
+        public void ReusedOffSiteControllerInheritsExternalSiteController()
         {
             typeof(ReusedOffSiteController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+        }
+
+        [Fact]
+        public void ReusedOffSiteController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ReusedOffSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]

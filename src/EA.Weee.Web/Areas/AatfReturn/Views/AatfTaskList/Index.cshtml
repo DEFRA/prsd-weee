@@ -142,39 +142,39 @@
             }
         }
 
-        @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
-        {
-            <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
-                <div class="govuk-grid-column-one-third">
+    @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
+    {
+        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-column-one-half">
+                <p>
+                    <b>Non-obligated WEEE</b>
+                </p>
+                <p>
+                    @Html.NavigationRouteLink("Received", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                </p>
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                {
                     <p>
-                        <b>Non-obligated WEEE</b>
+                        @Html.NavigationRouteLink("Retained by a DCF", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
                     </p>
-                    <p>
-                        @Html.NavigationRouteLink("Received", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
-                    </p>
-                    @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                    {
-                        <p>
-                            @Html.NavigationRouteLink("Retained by a DCF", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
-                        </p>
-                    }
-                </div>
-                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                    <p>
-                        <b>Total (tonnes)</b>
-                    </p>
-                    <p>
-                        @Model.NonObligatedTonnageTotal
-                    </p>
-                    @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                    {
-                        <p>
-                            @Model.NonObligatedTonnageTotalDcf
-                        </p>
-                    }
-                </div>
+                }
             </div>
-        }
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                <p>
+                    <b>Total (tonnes)</b>
+                </p>
+                <p>
+                    @Model.NonObligatedTonnageTotal
+                </p>
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                {
+                    <p>
+                        @Model.NonObligatedTonnageTotalDcf
+                    </p>
+                }
+            </div>
+        </div>
+    }
 
         @if (!displayObligatedGroup && !Model.ReportOnDisplayOptions.DisplayNonObligated)
         {

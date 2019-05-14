@@ -48,7 +48,7 @@
 
         public async Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId)
         {
-            return await context.WeeeSentOn.Where(w => w.Id == weeeSentOnId).SingleAsync();
+            return await context.WeeeSentOn.FirstOrDefaultAsync(w => w.Id == weeeSentOnId);
         }
 
         public async Task<List<WeeeSentOn>> GetWeeeSentOnByReturn(Guid returnId)

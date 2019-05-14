@@ -19,6 +19,7 @@
     using EA.Weee.Web.Services.Caching;
 
     [ValidateOrganisationActionFilter]
+    [ValidateReturnActionFilter]
     public class SelectReportOptionsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -97,6 +98,8 @@
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
 
+            viewModel.HasDcfError = GetDcfModelStateError();
+
             return View(viewModel);
         }
 
@@ -135,6 +138,13 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private bool GetDcfModelStateError()
+        {
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+            return allErrors != null && allErrors.Count(p => p.ErrorMessage == "You must tell us whether any of the non-obligated WEEE was retained by a DCF") > 0;
         }
     }
 }
