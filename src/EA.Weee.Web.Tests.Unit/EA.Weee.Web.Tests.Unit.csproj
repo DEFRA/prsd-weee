@@ -179,6 +179,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
@@ -218,12 +219,15 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnRemoveSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnStatusToReturnDisplayOptionsMapperTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnViewModelToReturnsItemViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\TonnageUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreatorTests.cs" />
@@ -255,6 +259,7 @@
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AddAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducersControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsControllerTests.cs" />

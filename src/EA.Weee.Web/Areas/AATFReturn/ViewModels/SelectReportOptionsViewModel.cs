@@ -46,6 +46,8 @@
 
         public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
 
+        public bool HasDcfError { get; set; }
+
         public DateTime QuarterWindowStartDate { get; set; }
 
         public DateTime QuarterWindowEndDate { get; set; }

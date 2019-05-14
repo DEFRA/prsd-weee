@@ -20,6 +20,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReusedRemoveSiteControllerTests
@@ -41,9 +42,15 @@
         }
 
         [Fact]
-        public void CheckSentOnCreateSiteOperatorControllerInheritsAATFReturnBaseController()
+        public void ReusedRemoveSiteControllerInheritsAATFReturnBaseController()
         {
             typeof(ReusedRemoveSiteController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
+        }
+
+        [Fact]
+        public void ReusedRemoveSiteController_ShouldHaveValidateReturnActionFilterAttribute()
+        {
+            typeof(ReusedRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
         }
 
         [Fact]
@@ -69,6 +76,29 @@
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), siteId);
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+            breadcrumb.ExternalOrganisation.Should().Be(orgName);
+            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = A.Fake<SchemePublicInfo>();
+            const string orgName = "orgName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            controller.ModelState.AddModelError("error", "error");
+            var viewModel = new ReusedRemoveSiteViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            await controller.Index(viewModel);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
