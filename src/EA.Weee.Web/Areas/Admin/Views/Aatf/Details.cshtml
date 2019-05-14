@@ -146,12 +146,8 @@
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">First name</th>
-                    <td class="govuk-table__cell">@Model.ContactData.FirstName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Last name</th>
-                    <td class="govuk-table__cell">@Model.ContactData.LastName</td>
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Position</th>
