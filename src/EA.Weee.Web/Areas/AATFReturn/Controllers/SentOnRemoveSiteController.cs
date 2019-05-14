@@ -71,7 +71,7 @@
                     {
                         var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId));
                     }
-                    return AatfRedirect.SentOnSummaryList(viewModel.ReturnId, viewModel.AatfId, viewModel.OrganisationId);
+                    return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
                 }
             }
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
