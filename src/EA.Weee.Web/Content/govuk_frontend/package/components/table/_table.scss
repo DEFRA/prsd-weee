@@ -12,8 +12,15 @@
         border-collapse: collapse;
     }
 
+    .govuk-table__header--large {
+        padding: govuk-spacing(2) govuk-spacing(4) govuk-spacing(2) 0;
+        text-align: left;
+        font-size:xx-large;
+    }
+
     .govuk-table__header,
-    .govuk-table__header--no-line {
+    .govuk-table__header--no-line,
+    .govuk-table__header--large {
         @include govuk-typography-weight-bold;
     }
 

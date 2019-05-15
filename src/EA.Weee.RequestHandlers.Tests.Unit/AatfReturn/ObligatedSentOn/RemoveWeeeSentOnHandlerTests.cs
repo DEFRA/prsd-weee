@@ -65,5 +65,18 @@
             A.CallTo(() => genericDataAccess.Remove(weeeSentOn)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => genericDataAccess.RemoveMany(weeeSentOnAmount)).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task HandleAsync_ProvideNonExistantWeeeSentOnId_ReturnsFalse()
+        {
+            WeeeSentOn returnData = null;
+            var request = new RemoveWeeeSentOn(A.Dummy<Guid>());
+
+            A.CallTo(() => genericDataAccess.GetById<WeeeSentOn>(A.Dummy<Guid>())).Returns(returnData);
+
+            bool result = await handler.HandleAsync(request);
+
+            Assert.False(result);
+        }
     }
 }
