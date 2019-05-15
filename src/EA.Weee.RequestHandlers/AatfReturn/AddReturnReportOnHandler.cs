@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
@@ -16,13 +17,16 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
+        private readonly WeeeContext context;
         private const string DcfYes = "Yes";
 
         public AddReturnReportOnHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess dataAccess)
+            IGenericDataAccess dataAccess,
+            WeeeContext context)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
+            this.context = context;
         }
 
         public async Task<bool> HandleAsync(AddReturnReportOn message)
@@ -83,16 +87,19 @@
         {
             var weeeReceiveds = await dataAccess.GetManyByReturnId<WeeeReceived>(returnId);
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>();
-            var weeeReturnSchemes = (await dataAccess.GetAll<ReturnScheme>()).Where(w => w.ReturnId == returnId);
+            var weeeReturnSchemes = await dataAccess.GetManyByReturnId<ReturnScheme>(returnId);
 
             foreach (var weeeReceived in weeeReceiveds)
             {
-                weeeReceivedAmounts.AddRange((await dataAccess.GetAll<WeeeReceivedAmount>()).Where(w => w.WeeeReceived.Id == weeeReceived.Id));
+                var wra = await dataAccess.GetManyByExpression(new WeeeReceivedAmountByWeeeReceivedIdSpecification(weeeReceived.Id));
+                weeeReceivedAmounts.AddRange(wra);
             }
 
             dataAccess.RemoveMany<WeeeReceivedAmount>(weeeReceivedAmounts);
             dataAccess.RemoveMany<WeeeReceived>(weeeReceiveds);
             dataAccess.RemoveMany<ReturnScheme>(weeeReturnSchemes);
+
+            await context.SaveChangesAsync();
         }
 
         private async void DeleteWeeeReusedData(Guid returnId)
@@ -118,6 +125,8 @@
             dataAccess.RemoveMany<AatfAddress>(addresses);
             dataAccess.RemoveMany<WeeeReusedAmount>(weeeReusedAmounts);
             dataAccess.RemoveMany<WeeeReused>(weeeReuseds);
+
+            await context.SaveChangesAsync();
         }
 
         private async void DeleteWeeeSentOnData(Guid returnId)
@@ -127,8 +136,9 @@
             var weeeSentOnSites = new List<Guid>();
             var addresses = new List<AatfAddress>();
             foreach (var weeeSentOn in weeeSentOns)
-            {
-                weeeSentOnAmounts.AddRange((await dataAccess.GetAll<WeeeSentOnAmount>()).Where(w => w.WeeeSentOn.Id == weeeSentOn.Id));
+            { 
+                var wsa = await dataAccess.GetManyByExpression(new WeeeSentOnAmountByWeeeSentOnIdSpecification(weeeSentOn.Id));
+                weeeSentOnAmounts.AddRange(wsa);
                 addresses.Add(weeeSentOn.OperatorAddress);
                 addresses.Add(weeeSentOn.SiteAddress);
             }
@@ -136,12 +146,16 @@
             dataAccess.RemoveMany<AatfAddress>(addresses);
             dataAccess.RemoveMany<WeeeSentOnAmount>(weeeSentOnAmounts);
             dataAccess.RemoveMany<WeeeSentOn>(weeeSentOns);
+
+            await context.SaveChangesAsync();
         }
 
         private async void DeleteNonObligatedData(Guid returnId)
         {
             var nonObligatedWeees = await dataAccess.GetManyByReturnId<NonObligatedWeee>(returnId);
             dataAccess.RemoveMany<NonObligatedWeee>(nonObligatedWeees);
+
+            await context.SaveChangesAsync();
         }
     }
 }

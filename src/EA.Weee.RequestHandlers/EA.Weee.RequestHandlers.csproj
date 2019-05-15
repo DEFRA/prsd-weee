@@ -81,6 +81,8 @@
     <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedAmountByWeeeReusedIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedSiteByWeeeReusedIdSpecification.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />

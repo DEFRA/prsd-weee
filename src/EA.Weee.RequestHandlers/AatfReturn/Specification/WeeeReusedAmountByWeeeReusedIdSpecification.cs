@@ -15,7 +15,7 @@
 
         public override Expression<Func<WeeeReusedAmount, bool>> ToExpression()
         {
-            return @weeeReused => @weeeReused.WeeeReused.Id == WeeeReusedId;
+            return weeeReceivedAmount => weeeReceivedAmount.WeeeReused.Id == WeeeReusedId;
         }
     }
 }
