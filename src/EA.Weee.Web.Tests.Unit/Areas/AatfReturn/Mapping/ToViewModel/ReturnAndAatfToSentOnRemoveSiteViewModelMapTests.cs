@@ -67,8 +67,8 @@
             result.SiteAddress.Should().Be(siteAddress);
             result.OperatorAddress.Should().Be(operatorAddress);
             result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
-            result.TonnageB2B.Should().Be(decimal.Parse(obligatedTonnage.B2B));
-            result.TonnageB2C.Should().Be(decimal.Parse(obligatedTonnage.B2C));
+            result.TonnageB2B.Should().Be(obligatedTonnage.B2B);
+            result.TonnageB2C.Should().Be(obligatedTonnage.B2C);
         }
 
         [Fact]
@@ -110,8 +110,8 @@
             result.SiteAddress.Should().Be(siteAddress);
             result.OperatorAddress.Should().Be(operatorAddress);
             result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
-            result.TonnageB2B.Should().Be(0.000m);
-            result.TonnageB2C.Should().Be(0.000m);
+            result.TonnageB2B.Should().Be("-");
+            result.TonnageB2C.Should().Be("-");
         }
     }
 }

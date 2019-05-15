@@ -24,16 +24,6 @@
 
             var tonnages = tonnageUtilities.SumObligatedValues(source.WeeeSentOn.Tonnages);
 
-            if (tonnages.B2C == "-")
-            {
-                tonnages.B2C = "0.000";
-            }
-
-            if (tonnages.B2B == "-")
-            {
-                tonnages.B2B = "0.000";
-            }
-
             var viewModel = new SentOnRemoveSiteViewModel()
             {
                 WeeeSentOn = source.WeeeSentOn,
@@ -42,8 +32,8 @@
                 AatfId = source.AatfId,
                 SiteAddress = source.SiteAddress,
                 OperatorAddress = source.OperatorAddress,
-                TonnageB2B = decimal.Parse(tonnages.B2B),
-                TonnageB2C = decimal.Parse(tonnages.B2C)
+                TonnageB2B = tonnages.B2B,
+                TonnageB2C = tonnages.B2C
             };
 
             return viewModel;
