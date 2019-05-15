@@ -6,31 +6,38 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
-    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
+    [ValidateOrganisationActionFilter]
+    [ValidateReturnActionFilter]
     public class SelectReportOptionsDeselectController : AatfReturnBaseController
     { 
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
-        private const string pcsQuestion = "PCS";
+        private readonly IMap<SelectReportOptionsViewModel, SelectReportOptionsDeselectViewModel> mapper;
+        private static string confirmSelectedValue = "Yes";
 
-        public SelectReportOptionsDeselectController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IAddSelectReportOptionsRequestCreator requestCreator)
+        public SelectReportOptionsDeselectController(
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IWeeeCache cache,
+            IAddSelectReportOptionsRequestCreator requestCreator,
+            IMap<SelectReportOptionsViewModel, SelectReportOptionsDeselectViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -40,14 +47,7 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
                 var oldModel = TempData["viewModel"] as SelectReportOptionsViewModel;
-                var viewModel = new SelectReportOptionsDeselectViewModel()
-                {
-                    ReturnId = oldModel.ReturnId,
-                    ReportOnQuestions = oldModel.ReportOnQuestions,
-                    OrganisationId = oldModel.OrganisationId,
-                    SelectedOptions = oldModel.SelectedOptions,
-                    DcfSelectedValue = oldModel.DcfSelectedValue
-                };
+                var viewModel = mapper.Map(oldModel);
                 TempData["viewModel"] = oldModel;
 
                 return View("Index", viewModel);
@@ -59,22 +59,16 @@
         public virtual async Task<ActionResult> Index(SelectReportOptionsDeselectViewModel viewModel)
         {
             var oldModel = TempData["viewModel"] as SelectReportOptionsViewModel;
-            var newViewModel = new SelectReportOptionsDeselectViewModel()
-            {
-                ReturnId = oldModel.ReturnId,
-                ReportOnQuestions = oldModel.ReportOnQuestions,
-                OrganisationId = oldModel.OrganisationId,
-                SelectedOptions = oldModel.SelectedOptions,
-                DcfSelectedValue = oldModel.DcfSelectedValue,
-                SelectedValue = viewModel.SelectedValue,
-                DeselectedOptions = oldModel.ReportOnQuestions.Where(d => d.Deselected == true).Select(d => d.Id).ToList()
-            };
+
+            var newViewModel = mapper.Map(oldModel);
+            newViewModel.SelectedValue = viewModel.SelectedValue;
+            newViewModel.DeselectedOptions = oldModel.ReportOnQuestions.Where(d => d.Deselected == true).Select(d => d.Id).ToList();
             SetSelected(newViewModel);
             TempData["viewModel"] = oldModel;
 
             if (ModelState.IsValid)
             {
-                if (newViewModel.SelectedValue == "Yes")
+                if (newViewModel.SelectedValue == confirmSelectedValue)
                 {
                     if (newViewModel.HasSelectedOptions)
                     {
@@ -86,7 +80,7 @@
                         }
                     }
 
-                    if (newViewModel.ReportOnQuestions.First(r => r.Question == pcsQuestion).Selected)
+                    if (newViewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected)
                     {
                         return AatfRedirect.SelectPcs(newViewModel.OrganisationId, newViewModel.ReturnId);
                     }
