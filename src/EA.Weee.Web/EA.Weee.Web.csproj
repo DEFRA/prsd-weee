@@ -420,6 +420,7 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
