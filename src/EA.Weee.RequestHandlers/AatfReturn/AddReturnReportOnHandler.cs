@@ -40,19 +40,19 @@
                     switch (deselected)
                     {
                         case (int)ReportOnQuestionEnum.WeeeReceived:
-                            DeleteWeeeReceivedData(message.ReturnId);
+                            await DeleteWeeeReceivedData(message.ReturnId);
                             break;
                         case (int)ReportOnQuestionEnum.WeeeSentOn:
-                            DeleteWeeeSentOnData(message.ReturnId);
+                            await DeleteWeeeSentOnData(message.ReturnId);
                             break;
                         case (int)ReportOnQuestionEnum.WeeeReused:
-                            DeleteWeeeReusedData(message.ReturnId);
+                            await DeleteWeeeReusedData(message.ReturnId);
                             break;
                         case (int)ReportOnQuestionEnum.NonObligated:
-                            DeleteNonObligatedData(message.ReturnId);
+                            await DeleteNonObligatedData(message.ReturnId);
                             break;
                         case (int)ReportOnQuestionEnum.NonObligatedDcf:
-                            DeleteNonObligatedData(message.ReturnId);
+                            await DeleteNonObligatedData(message.ReturnId);
                             break;
                         default:
                             break;
@@ -83,7 +83,7 @@
             return true;
         }
 
-        private async void DeleteWeeeReceivedData(Guid returnId)
+        private async Task DeleteWeeeReceivedData(Guid returnId)
         {
             var weeeReceiveds = await dataAccess.GetManyByReturnId<WeeeReceived>(returnId);
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>();
@@ -102,7 +102,7 @@
             await context.SaveChangesAsync();
         }
 
-        private async void DeleteWeeeReusedData(Guid returnId)
+        private async Task DeleteWeeeReusedData(Guid returnId)
         {
             var weeeReuseds = await dataAccess.GetManyByReturnId<WeeeReused>(returnId);
             var weeeReusedAmounts = new List<WeeeReusedAmount>();
@@ -129,7 +129,7 @@
             await context.SaveChangesAsync();
         }
 
-        private async void DeleteWeeeSentOnData(Guid returnId)
+        private async Task DeleteWeeeSentOnData(Guid returnId)
         {
             var weeeSentOns = await dataAccess.GetManyByReturnId<WeeeSentOn>(returnId);
             var weeeSentOnAmounts = new List<WeeeSentOnAmount>();
@@ -150,7 +150,7 @@
             await context.SaveChangesAsync();
         }
 
-        private async void DeleteNonObligatedData(Guid returnId)
+        private async Task DeleteNonObligatedData(Guid returnId)
         {
             var nonObligatedWeees = await dataAccess.GetManyByReturnId<NonObligatedWeee>(returnId);
             dataAccess.RemoveMany<NonObligatedWeee>(nonObligatedWeees);
