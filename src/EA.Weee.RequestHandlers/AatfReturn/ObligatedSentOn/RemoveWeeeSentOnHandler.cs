@@ -31,6 +31,11 @@
 
             var weeeSentOn = await genericDataAccess.GetById<WeeeSentOn>(message.WeeeSentOnId);
 
+            if (weeeSentOn == null)
+            {
+                return false;
+            }
+
             var weeeSentOnAmount = await obligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(message.WeeeSentOnId);
 
             genericDataAccess.Remove(weeeSentOn.SiteAddress);
