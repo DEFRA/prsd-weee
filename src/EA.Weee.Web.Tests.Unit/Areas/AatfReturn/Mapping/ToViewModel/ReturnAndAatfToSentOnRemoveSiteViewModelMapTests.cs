@@ -70,5 +70,48 @@
             result.TonnageB2B.Should().Be(decimal.Parse(obligatedTonnage.B2B));
             result.TonnageB2C.Should().Be(decimal.Parse(obligatedTonnage.B2C));
         }
+
+        [Fact]
+        public void Map_GivenNoTonnages_TonnagesShouldBeSetToZero()
+        {
+            var orgId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                Tonnages = new List<WeeeObligatedData>()
+            };
+            var siteAddress = "SITE ADDRESS";
+            var operatorAddress = "OPERATOR ADDRESS";
+            var obligatedTonnage = new ObligatedCategoryValue()
+            {
+                B2B = "-",
+                B2C = "-",
+                CategoryId = 1
+            };
+
+            var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
+            {
+                ReturnId = returnId,
+                AatfId = aatfId,
+                OrganisationId = orgId,
+                WeeeSentOn = weeeSentOn,
+                SiteAddress = siteAddress,
+                OperatorAddress = operatorAddress
+            };
+
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(weeeSentOn.Tonnages)).Returns(obligatedTonnage);
+
+            var result = mapper.Map(transfer);
+
+            result.OrganisationId.Should().Be(orgId);
+            result.ReturnId.Should().Be(returnId);
+            result.AatfId.Should().Be(aatfId);
+            result.SiteAddress.Should().Be(siteAddress);
+            result.OperatorAddress.Should().Be(operatorAddress);
+            result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
+            result.TonnageB2B.Should().Be(0.000m);
+            result.TonnageB2C.Should().Be(0.000m);
+        }
     }
 }

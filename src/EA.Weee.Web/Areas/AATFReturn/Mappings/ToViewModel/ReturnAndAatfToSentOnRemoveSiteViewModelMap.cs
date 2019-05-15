@@ -24,6 +24,16 @@
 
             var tonnages = tonnageUtilities.SumObligatedValues(source.WeeeSentOn.Tonnages);
 
+            if (tonnages.B2C == "-")
+            {
+                tonnages.B2C = "0.000";
+            }
+
+            if (tonnages.B2B == "-")
+            {
+                tonnages.B2B = "0.000";
+            }
+
             var viewModel = new SentOnRemoveSiteViewModel()
             {
                 WeeeSentOn = source.WeeeSentOn,
