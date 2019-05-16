@@ -127,7 +127,7 @@
             }
         }
 
-        [SuppressMessage("StyleCop.CSharp.Spacing", "SA1009:ClosingGenericBracketsMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
+        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1009:ClosingParenthesisMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
         private static async Task<(List<WeeeSentOn> submittedWeeeSentOn, List<AatfAddress> submittedWeeeSentOnAddresses, List<WeeeSentOnAmount> submittedWeeeSentOnAmounts)> RetrieveSubmittedWeeeSentOnData(WeeeContext context, Return @return,
             GenericDataAccess dataAccess)
         {
@@ -149,7 +149,7 @@
             return (submittedWeeeSentOn, submittedWeeeSentOnAddresses, submittedWeeeSentOnAmounts);
         }
 
-        [SuppressMessage("StyleCop.CSharp.Spacing", "SA1009:ClosingGenericBracketsMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
+        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1009:ClosingParenthesisMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
         private static async Task<(List<WeeeReceived> submittedWeeeReceived, List<ReturnScheme> submittedWeeeReturnScheme, List<WeeeReceivedAmount> submittedWeeeReceivedAmounts)> RetrieveSubmittedWeeeReceivedData(WeeeContext context, Return @return,
             GenericDataAccess dataAccess)
         {
@@ -165,7 +165,7 @@
             return (submittedWeeeReceived, submittedWeeeReturnScheme, submittedWeeeReceivedAmounts);
         }
 
-        [SuppressMessage("StyleCop.CSharp.Spacing", "SA1009:ClosingGenericBracketsMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
+        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1009:ClosingParenthesisMustBeSpacedCorrectly", Justification = "C# 7 Tuple")]
         private static async Task<(List<WeeeReused> submittedWeeeReused, List<AatfAddress> submittedWeeeReusedAddresses, List<WeeeReusedAmount> submittedWeeeReusedAmounts, List<WeeeReusedSite> submittedWeeeReusedSites)> RetrieveSubmittedWeeeReusedData(WeeeContext context, Return @return, GenericDataAccess dataAccess)
         {
             var submittedWeeeReused = context.WeeeReused.Where(w => w.ReturnId == @return.Id).ToList();
