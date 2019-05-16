@@ -8,7 +8,8 @@
     using Core.AatfReturn;
     using DataAccess;
     using Domain.AatfReturn;
-    
+    using Domain.DataReturns;
+
     public class ReturnDataAccess : IReturnDataAccess
     {
         private readonly WeeeContext context;
@@ -41,6 +42,11 @@
                 .Include(r => r.Operator)
                 .Include(r => r.Operator.Organisation)
                 .Where(r => r.Operator.Organisation.Id == id).ToListAsync();
+        }
+
+        public async Task<IList<Return>> GetByComplianceYearAndQuarter(Return @return)
+        {
+            return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Operator.Id == @return.Operator.Id).ToListAsync();
         }
     }
 }
