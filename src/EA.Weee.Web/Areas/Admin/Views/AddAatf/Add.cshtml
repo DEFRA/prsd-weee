@@ -11,7 +11,11 @@
     <section id="main-content">
         <h1 class="govuk-heading-l">Add an AATF to an organisation</h1>
 
-        <h2 class="govuk-heading-m">Organisation</h2>
+        <div>
+            <p>
+                <span class="govuk-heading-m">Organisation: @Model.OrganisationName</span>
+            </p>
+        </div>
 
         @using (Html.BeginForm())
         {

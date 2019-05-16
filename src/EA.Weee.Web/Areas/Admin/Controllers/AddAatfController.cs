@@ -3,8 +3,10 @@
     using EA.Prsd.Core.Domain;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
@@ -65,13 +67,16 @@
                 return View(viewModel);
             }
 
-            return RedirectToAction("Index", "AdminHolding");
+            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> Add()
+        public async Task<ActionResult> Add(Guid organisationId)
         {
-            AddAatfViewModel viewModel = new AddAatfViewModel();
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                OrganisationId = organisationId
+            };
 
             viewModel = await PopulateViewModelLists(viewModel);
 
@@ -97,12 +102,14 @@
             using (var client = apiClient())
             {
                 IList<CountryData> countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                OrganisationData organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.SiteAddressData.Countries = countries;
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
+                viewModel.OrganisationName = organisation.OrganisationName;
             }
 
             return viewModel;
