@@ -31,5 +31,10 @@
         public virtual Guid ReturnId { get; private set; }
 
         public virtual Guid SchemeId { get; private set; }
+
+        public virtual void UpdateReturn(Return @return)
+        {
+            Return = @return;
+        }
     }
 }

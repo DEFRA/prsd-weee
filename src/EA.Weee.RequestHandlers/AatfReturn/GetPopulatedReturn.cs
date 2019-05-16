@@ -54,13 +54,6 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            return mapper.Map(await GetReturnQuarterWindow(returnId));
-        }
-
-        public async Task<ReturnQuarterWindow> GetReturnQuarterWindow(Guid returnId)
-        {
-            authorization.EnsureCanAccessExternalArea();
-
             var @return = await returnDataAccess.GetById(returnId);
 
             authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
@@ -81,7 +74,7 @@
 
             var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
 
-            return new ReturnQuarterWindow(@return,
+            var returnQuarterWindow = new ReturnQuarterWindow(@return,
                 quarterWindow,
                 aatfList,
                 returnNonObligatedValues,
@@ -91,6 +84,8 @@
                 sentOn,
                 returnSchemeList,
                 returnReportsOn);
+
+            return mapper.Map(returnQuarterWindow);
         }
     }
 }
