@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
@@ -11,6 +12,12 @@
         public virtual Aatf Aatf { get; private set; }
         
         public virtual Guid ReturnId { get; private set; }
+
+        public virtual Return Return { get; set; }
+
+        public virtual IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
+
+        public virtual IList<WeeeReusedSite> WeeeReusedSites { get; set; }
 
         public WeeeReused(Guid aatfId, Guid returnId)
         {
@@ -28,6 +35,11 @@
 
         public WeeeReused()
         {
+        }
+
+        public virtual void UpdateReturn(Return @return)
+        {
+            Return = @return;
         }
     }
 }

@@ -35,13 +35,6 @@
                     .SingleOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<Return> GetByIdWithNoTracking(Guid id)
-        {
-            return await context.Returns
-                .AsNoTracking()
-                .SingleOrDefaultAsync(o => o.Id == id);
-        }
-
         public async Task<IList<Return>> GetByOrganisationId(Guid id)
         {
             return await context.Returns

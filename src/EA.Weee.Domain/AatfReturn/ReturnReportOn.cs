@@ -18,5 +18,12 @@
         public Guid ReturnId { get; private set; }
 
         public int ReportOnQuestionId { get; private set; }
+
+        public virtual Return Return { get; private set; }
+
+        public virtual void UpdateReturn(Return @return)
+        {
+            Return = @return;
+        }
     }
 }
