@@ -18,7 +18,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ReusedOffSiteCreateSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

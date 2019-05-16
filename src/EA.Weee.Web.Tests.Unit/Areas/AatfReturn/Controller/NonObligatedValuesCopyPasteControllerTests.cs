@@ -45,7 +45,7 @@
         [Fact]
         public void NonObligatedValuesCopyPasteController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ObligatedValuesCopyPasteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ObligatedValuesCopyPasteController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

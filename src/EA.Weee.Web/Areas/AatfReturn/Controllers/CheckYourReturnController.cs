@@ -15,7 +15,7 @@
     using ViewModels;
     using Web.Controllers.Base;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class CheckYourReturnController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

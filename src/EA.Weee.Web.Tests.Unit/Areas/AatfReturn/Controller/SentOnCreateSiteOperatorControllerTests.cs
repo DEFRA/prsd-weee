@@ -52,7 +52,7 @@
         [Fact]
         public void SentOnCreateSiteOperatorController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(SentOnCreateSiteOperatorController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(SentOnCreateSiteOperatorController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

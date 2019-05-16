@@ -41,7 +41,7 @@
         [Fact]
         public void AatfTaskListController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(AatfTaskListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(AatfTaskListController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

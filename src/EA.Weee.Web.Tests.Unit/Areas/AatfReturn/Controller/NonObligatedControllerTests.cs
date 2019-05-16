@@ -59,7 +59,7 @@
         [Fact]
         public void NonObligatedController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(NonObligatedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(NonObligatedController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
