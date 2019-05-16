@@ -26,6 +26,9 @@
             {
                 var returnViewModelItem = returnItemViewModelMap.Map(@return);
 
+                // get all created, find if any of the return view model 
+                var inProgress = source.Where(r => r.ReturnStatus == ReturnStatus.Created);
+
                 model.Returns.Add(returnViewModelItem);
             }
 
