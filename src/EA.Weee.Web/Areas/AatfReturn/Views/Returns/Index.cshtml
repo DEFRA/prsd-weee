@@ -52,6 +52,7 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Summary</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
@@ -87,6 +88,9 @@
                                 }
                             }
                         }
+                    </td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary",  returnId = @item.ReturnViewModel.ReturnId }, null)
                     </td>
                 </tr>
             }
