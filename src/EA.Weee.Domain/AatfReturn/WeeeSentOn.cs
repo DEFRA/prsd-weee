@@ -21,6 +21,8 @@
 
         public virtual Guid SiteAddressId { get; private set; }
 
+        public IList<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
+
         public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
         {
             OperatorAddress = @operator;
@@ -59,6 +61,11 @@
             this.SiteAddress = siteAddress;
             this.Aatf = aatf;
             this.Return = @return;
+        }
+
+        public virtual void UpdateReturn(Return @return)
+        {
+            Return = @return;
         }
     }
 }

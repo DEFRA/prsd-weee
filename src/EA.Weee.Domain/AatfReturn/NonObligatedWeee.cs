@@ -25,6 +25,13 @@
             Tonnage = tonnage;
         }
 
+        public virtual void UpdateReturn(Return @return)
+        {
+            Guard.ArgumentNotNull(() => @return, @return);
+
+            Return = @return;
+        }
+
         public Guid ReturnId { get; set; }
 
         public int CategoryId { get; set; }
