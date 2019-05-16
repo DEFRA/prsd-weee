@@ -7,6 +7,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core;
@@ -110,6 +111,114 @@
 
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenWeeeReceivedDeselected_DeleteMethodsCalled()
+        {
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = CreateSelectedOptions(),
+                DeselectedOptions = new List<int>() { 1 },
+                Options = CreateReportQuestions(),
+                DcfSelectedValue = DcfYes
+            };
+
+            var weeeReceived = A.Fake<WeeeReceived>();
+            A.CallTo(() => weeeReceived.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => dataAccess.GetManyByReturnId<WeeeReceived>(request.ReturnId)).Returns(new List<WeeeReceived>() { weeeReceived });
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReceivedAmountByWeeeReceivedIdSpecification>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeReceivedAmount>(A<IList<WeeeReceivedAmount>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeReceived>(A<IList<WeeeReceived>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<ReturnScheme>(A<IList<ReturnScheme>>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenWeeeSentOnDeselected_DeleteMethodsCalled()
+        {
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = CreateSelectedOptions(),
+                DeselectedOptions = new List<int>() { 2 },
+                Options = CreateReportQuestions(),
+                DcfSelectedValue = DcfYes
+            };
+
+            var weeeSentOn = A.Fake<WeeeSentOn>();
+            A.CallTo(() => weeeSentOn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => dataAccess.GetManyByReturnId<WeeeSentOn>(request.ReturnId)).Returns(new List<WeeeSentOn>() { weeeSentOn });
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeSentOnAmountByWeeeSentOnIdSpecification>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<AatfAddress>(A<IList<AatfAddress>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeSentOnAmount>(A<IList<WeeeSentOnAmount>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeSentOn>(A<IList<WeeeSentOn>>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenWeeeReusedDeselected_DeleteMethodsCalled()
+        {
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = CreateSelectedOptions(),
+                DeselectedOptions = new List<int>() { 3 },
+                Options = CreateReportQuestions(),
+                DcfSelectedValue = DcfYes
+            };
+
+            var weeeReused = A.Fake<WeeeReused>();
+            A.CallTo(() => weeeReused.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => dataAccess.GetManyByReturnId<WeeeReused>(request.ReturnId)).Returns(new List<WeeeReused>() { weeeReused });
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReusedAmountByWeeeReusedIdSpecification>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReusedSiteByWeeeReusedIdSpecification>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeReusedSite>(A<IList<WeeeReusedSite>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<AatfAddress>(A<IList<AatfAddress>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeReusedAmount>(A<IList<WeeeReusedAmount>>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.RemoveMany<WeeeReused>(A<IList<WeeeReused>>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNonObligatedDeselected_DeleteMethodsCalled()
+        {
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = new List<int> { 1, 2, 3, 4, 5 },
+                DeselectedOptions = new List<int>() { 4 },
+                Options = CreateReportQuestions(),
+                DcfSelectedValue = DcfYes
+            };
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.RemoveMany<NonObligatedWeee>(A<IList<NonObligatedWeee>>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNonObligatedDcfDeselected_DeleteMethodsCalled()
+        {
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = new List<int> { 1, 2, 3, 4, 5 },
+                DeselectedOptions = new List<int>() { 5 },
+                Options = CreateReportQuestions(),
+                DcfSelectedValue = DcfYes
+            };
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.RemoveMany<NonObligatedWeee>(A<IList<NonObligatedWeee>>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private List<int> CreateSelectedOptions()
