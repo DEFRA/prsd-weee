@@ -555,6 +555,17 @@ input[type="file"].form-control {
     text-decoration: underline;
 }
 
+.link-submit:focus {
+    color: #0b0c0c;
+}
+
+.link-submit div {
+    position: relative;
+    top: 0;
+    left: 0;
+    border: 0;
+}
+
 .link-submit:hover {
     color: #2E8ACA;
 }

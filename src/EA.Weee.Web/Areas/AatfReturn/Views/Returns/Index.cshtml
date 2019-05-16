@@ -5,7 +5,7 @@
 @{
     ViewBag.Title = "Manage AATF returns";
 }
-
+    <link href="~/Content/Site.css" rel="stylesheet" />
     <section id="main-content">
         <h1 class="govuk-heading-l">
             @ViewBag.Title
@@ -86,17 +86,17 @@
                                     @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
                                 }
                             }
-                        }
-                    </td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                        @*@using (Html.BeginRouteForm(AatfRedirect.ReturnsCopyRouteName, FormMethod.Post, null))*@
-                        @using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
-                            @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
+                            if (item.ReturnsListDisplayOptions.DisplayEdit)
+                            {
+                                using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
+                                {
+                                     @Html.AntiForgeryToken()
+                                     @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
+                                     @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
 
-                            <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit">Edit</button>
+                                    <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit"><div> Edit</div></button>
+                                 }
+                            }
                         }
                     </td>
                 </tr>
