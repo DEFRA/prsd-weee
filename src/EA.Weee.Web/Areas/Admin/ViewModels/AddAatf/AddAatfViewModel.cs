@@ -10,6 +10,7 @@
     public class AddAatfViewModel
     {
         public Guid OrganisationId { get; set; }
+        public string OrganisationName { get; set; }
 
         [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
