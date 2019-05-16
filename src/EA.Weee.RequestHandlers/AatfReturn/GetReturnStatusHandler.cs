@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.AatfReturn;
     using Prsd.Core.Mapper;
@@ -9,7 +10,7 @@
     using Security;
     using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
-    internal class GetReturnStatusHandler : IRequestHandler<GetReturnStatus, ReturnData>
+    internal class GetReturnStatusHandler : IRequestHandler<GetReturnStatus, ReturnStatusData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
@@ -24,7 +25,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<ReturnData> HandleAsync(GetReturnStatus message)
+        public async Task<ReturnStatusData> HandleAsync(GetReturnStatus message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -37,10 +38,13 @@
 
             authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
 
-            var returnData = new ReturnData
+            var returnsInYear = await returnDataAccess.GetByComplianceYearAndQuarter(@return);
+
+            var returnData = new ReturnStatusData
             {
                 ReturnStatus = mapper.Map<ReturnStatus>(@return.ReturnStatus),
-                OrganisationId = @return.Operator.Organisation.Id
+                OrganisationId = @return.Operator.Organisation.Id,
+                OtherInProgressReturn = returnsInYear.Any(r => r.ReturnStatus == EA.Weee.Domain.AatfReturn.ReturnStatus.Created)
             };
 
             return returnData;

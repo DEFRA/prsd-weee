@@ -12,18 +12,18 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     
-    public class ValidateReturnActionFilterAttribute : ValidateReturnBaseActionFilterAttribute
+    public class ValidateReturnEditActionFilterAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
 
         public ConfigurationService ConfigService { get; set; }
 
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    AsyncHelpers.RunSync(() => OnAuthorizationAsync(context));
-        //}
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            AsyncHelpers.RunSync(() => OnActionExecutingAsyc(context));
+        }
 
-        public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext)
+        public async Task OnActionExecutingAsyc(ActionExecutingContext filterContext)
         {
             if (!ConfigService.CurrentConfiguration.EnableAATFReturns)
             {
@@ -46,7 +46,7 @@
             {
                 var @returnStatus = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
 
-                if (@returnStatus.ReturnStatus != ReturnStatus.Created)
+                if (@returnStatus.ReturnStatus != )
                 {
                     filterContext.Result = AatfRedirect.ReturnsList(@returnStatus.OrganisationId);
                 }

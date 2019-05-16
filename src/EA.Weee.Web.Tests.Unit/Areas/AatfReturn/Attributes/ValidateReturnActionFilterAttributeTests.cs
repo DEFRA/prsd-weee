@@ -68,7 +68,7 @@
         [Fact]
         public void OnActionExecuting_GivenReturnStatusIsNotCreated_ShouldBeRedirectedToTaskList()
         {
-            var returnData = new ReturnData()
+            var returnData = new ReturnStatusData()
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnStatus = ReturnStatus.Submitted
