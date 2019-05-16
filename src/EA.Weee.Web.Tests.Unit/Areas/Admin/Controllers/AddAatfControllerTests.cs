@@ -3,8 +3,10 @@
     using EA.Prsd.Core.Domain;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
@@ -146,7 +148,7 @@
         }
 
         [Fact]
-        public async Task PostSearch_ValidViewModelSelectedOrganisation_RedirectsToAdminHolding()
+        public async Task PostSearch_ValidViewModelSelectedOrganisation_RedirectsToAdd()
         {
             Guid organisationId = Guid.NewGuid();
             string searchTerm = "civica";
@@ -173,8 +175,9 @@
 
             RedirectToRouteResult result = await controller.SearchResults(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AdminHolding");
+            result.RouteValues["action"].Should().Be("Add");
+            result.RouteValues["controller"].Should().Be("AddAatf");
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
         }
 
         [Fact]
@@ -184,7 +187,7 @@
 
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
-            ViewResult result = await controller.Add() as ViewResult;
+            ViewResult result = await controller.Add(viewModel.OrganisationId) as ViewResult;
 
             AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
 
@@ -192,6 +195,7 @@
             Assert.Equal(viewModel.StatusList, resultViewModel.StatusList);
             Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
             Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
+            Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
         }
 
         [Fact]
@@ -223,6 +227,7 @@
             Assert.Equal(viewModel.StatusList, resultViewModel.StatusList);
             Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
             Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
+            Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
         }
 
         private AddAatfViewModel CreateAddViewModel()
@@ -246,7 +251,8 @@
                     }
                 },
                 SizeList = sizeList,
-                StatusList = statusList
+                StatusList = statusList,
+                OrganisationId = Guid.NewGuid()
             };
 
             return viewModel;
