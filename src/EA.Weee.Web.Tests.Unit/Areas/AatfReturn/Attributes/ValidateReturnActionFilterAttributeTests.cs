@@ -81,7 +81,7 @@
 
             var result = context.Result as RedirectToRouteResult;
 
-            result.RouteName.Should().Be(AatfRedirect.OrganisationRouteName);
+            result.RouteName.Should().Be(AatfRedirect.ReturnsRouteName);
             result.RouteValues["controller"].Should().Be("Returns");
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["organisationId"].Should().Be(returnData.OrganisationId);
