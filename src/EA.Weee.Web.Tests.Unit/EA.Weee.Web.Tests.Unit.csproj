@@ -179,8 +179,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnTestActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReturnsControllerTests.cs" />
