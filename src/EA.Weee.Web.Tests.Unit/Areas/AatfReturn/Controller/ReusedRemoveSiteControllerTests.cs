@@ -50,7 +50,7 @@
         [Fact]
         public void ReusedRemoveSiteController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ReusedRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ReusedRemoveSiteController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

@@ -12,7 +12,7 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     
-    public class ValidateReturnEditActionFilterAttribute : ValidateReturnBaseActionFilterAttribute
+    public class ValidateReturnCreatedActionFilterAttribute : ValidateReturnBaseActionFilterAttribute
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid returnId)
         {
@@ -20,7 +20,7 @@
             {
                 var @returnStatus = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
 
-                if (@returnStatus.OtherInProgressReturn)
+                if (@returnStatus.ReturnStatus != ReturnStatus.Created)
                 {
                     filterContext.Result = AatfRedirect.ReturnsList(@returnStatus.OrganisationId);
                 }

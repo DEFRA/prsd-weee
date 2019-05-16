@@ -57,7 +57,7 @@
         [Fact]
         public void ObligatedSentOnController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ObligatedReusedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ObligatedReusedController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
