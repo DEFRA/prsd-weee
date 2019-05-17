@@ -74,15 +74,6 @@
         [Fact]
         public void Map_GivenNoTonnages_TonnagesShouldBeSetToZero()
         {
-            var orgId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var weeeSentOn = new WeeeSentOnData()
-            {
-                Tonnages = new List<WeeeObligatedData>()
-            };
-            var siteAddress = "SITE ADDRESS";
-            var operatorAddress = "OPERATOR ADDRESS";
             var obligatedTonnage = new ObligatedCategoryValue()
             {
                 B2B = "-",
@@ -92,24 +83,21 @@
 
             var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
             {
-                ReturnId = returnId,
-                AatfId = aatfId,
-                OrganisationId = orgId,
-                WeeeSentOn = weeeSentOn,
-                SiteAddress = siteAddress,
-                OperatorAddress = operatorAddress
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOn = new WeeeSentOnData()
+                {
+                    Tonnages = new List<WeeeObligatedData>()
+                },
+                SiteAddress = "TEST",
+                OperatorAddress = "TEST"
             };
 
-            A.CallTo(() => tonnageUtilities.SumObligatedValues(weeeSentOn.Tonnages)).Returns(obligatedTonnage);
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(transfer.WeeeSentOn.Tonnages)).Returns(obligatedTonnage);
 
             var result = mapper.Map(transfer);
 
-            result.OrganisationId.Should().Be(orgId);
-            result.ReturnId.Should().Be(returnId);
-            result.AatfId.Should().Be(aatfId);
-            result.SiteAddress.Should().Be(siteAddress);
-            result.OperatorAddress.Should().Be(operatorAddress);
-            result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
             result.TonnageB2B.Should().Be("-");
             result.TonnageB2C.Should().Be("-");
         }
