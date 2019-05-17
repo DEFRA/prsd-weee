@@ -42,6 +42,7 @@
             Country = country;
             Telephone = telephone;
             Email = email;
+            CountryId = country.Id;
         }
 
         public virtual void UpdateDetails(

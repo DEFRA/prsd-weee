@@ -6,6 +6,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -13,6 +14,7 @@
     using EA.Weee.Web.Infrastructure;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -87,14 +89,26 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(AddAatfViewModel viewModel)
         {
+            viewModel = await PopulateViewModelLists(viewModel);
+
             if (!ModelState.IsValid)
             {
-                viewModel = await PopulateViewModelLists(viewModel);
-
                 return View(viewModel);
             }
 
-            return RedirectToAction("Index", "AdminHolding");
+            using (var client = apiClient())
+            {
+                AddAatf request = new AddAatf()
+                {
+                    Aatf = CreateAatfData(viewModel),
+                    AatfContact = viewModel.ContactData,
+                    OrganisationId = viewModel.OrganisationId
+                };
+
+                await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction("ManageAatfs", "Aatf");
+            }
         }
 
         private async Task<AddAatfViewModel> PopulateViewModelLists(AddAatfViewModel viewModel)
@@ -113,6 +127,19 @@
             }
 
             return viewModel;
+        }
+        
+        private AatfData CreateAatfData(AddAatfViewModel viewModel)
+        {
+            return new AatfData(
+                Guid.NewGuid(),
+                viewModel.AatfName,
+                viewModel.ApprovalNumber,
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                viewModel.SiteAddressData,
+                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                viewModel.ApprovalDate.GetValueOrDefault());
         }
     }
 }
