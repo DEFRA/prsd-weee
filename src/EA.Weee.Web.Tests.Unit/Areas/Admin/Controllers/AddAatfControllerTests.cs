@@ -203,12 +203,16 @@
         {
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
-            AddAatfViewModel viewModel = new AddAatfViewModel();
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1
+            };
 
             RedirectToRouteResult result = await controller.Add(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AdminHolding");
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["controller"].Should().Be("Aatf");
         }
 
         [Fact]
