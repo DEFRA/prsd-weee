@@ -139,7 +139,7 @@
                 SelectedOrganisationId = organisationId
             };
 
-            ViewResult result = await controller.SearchResults(searchTerm) as ViewResult;
+            ViewResult result = await controller.SearchResults(viewModel) as ViewResult;
             SearchResultsViewModel outputModel = result.Model as SearchResultsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SearchResults");
