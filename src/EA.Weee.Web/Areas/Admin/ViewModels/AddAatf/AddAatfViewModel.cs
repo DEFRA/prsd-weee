@@ -44,7 +44,6 @@
         [Display(Name = "Size")]
         public int SelectedSizeValue { get; set; }
 
-        [Required]
         [Display(Name = "Approval date")]
         [DataType(DataType.Date)]
         public DateTime? ApprovalDate { get; set; }
