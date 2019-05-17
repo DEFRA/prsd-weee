@@ -3,6 +3,7 @@
     using System.Linq;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
     public class ReportOptionsToSelectReportOptionsViewModelMap : IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel>
@@ -12,14 +13,6 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReportOnQuestions, source.ReportOnQuestions);
             Guard.ArgumentNotNull(() => source.ReturnData, source.ReturnData);
-
-            if (source.ReturnData.ReturnReportOns != null && source.ReturnData.ReturnReportOns.Count != 0)
-            {
-                foreach (var option in source.ReturnData.ReturnReportOns)
-                {
-                    source.ReportOnQuestions.First(r => r.Id == option.ReportOnQuestionId).Selected = true;
-                }
-            }
 
             var model = new SelectReportOptionsViewModel(
                 source.OrganisationId,
@@ -32,6 +25,18 @@
                 QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
                 Quarter = source.ReturnData.Quarter.Q.ToString()
             };
+
+            if (source.ReturnData.ReturnReportOns != null && source.ReturnData.ReturnReportOns.Count != 0)
+            {
+                foreach (var option in source.ReturnData.ReturnReportOns)
+                {
+                    model.ReportOnQuestions.First(r => r.Id == option.ReportOnQuestionId).Selected = true;
+                }
+                if (!source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligatedDcf) && source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligated))
+                {
+                    model.DcfSelectedValue = "No";
+                }
+            }
 
             return model;
         }

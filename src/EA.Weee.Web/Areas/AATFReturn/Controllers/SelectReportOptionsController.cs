@@ -29,6 +29,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
+        private readonly string dcfConfirm = "Yes";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -73,23 +74,24 @@
 
             if (ModelState.IsValid)
             {
-                if (viewModel.HasSelectedOptions)
+                using (var client = apiClient())
                 {
-                    using (var client = apiClient())
+                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
+                    if (CheckHasDeselectedOptions(viewModel))
                     {
-                        viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
-                        if (CheckHasDeselectedOptions(viewModel))
-                        {
-                            TempData["viewModel"] = viewModel;
-                            return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
-                        }
+                        TempData["viewModel"] = viewModel;
+                        return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
+                    }
+                    if (viewModel.HasSelectedOptions)
+                    {
                         var request = requestCreator.ViewModelToRequest(viewModel);
 
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
                 }
 
-                if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected)
+                if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected
+                    && !viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.WeeeReceived))
                 {
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
                 }
@@ -112,6 +114,13 @@
                 {
                     viewModel.ReportOnQuestions.First(r => r.Id == option).Selected = true;
                 }
+
+                if (viewModel.DcfSelectedValue == dcfConfirm)
+                {
+                    var dcfId = (int)ReportOnQuestionEnum.NonObligatedDcf;
+                    viewModel.ReportOnQuestions.First(r => r.Id == dcfId).Selected = true;
+                    viewModel.SelectedOptions.Add(dcfId);
+                }
             }
         }
 
@@ -120,12 +129,24 @@
             var oldReturnOptions = viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList();
             if (oldReturnOptions.Count != 0)
             {
-                var deselectedOptions = oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
+                var deselectedOptions = new List<int>();
+                if (viewModel.SelectedOptions == null)
+                {
+                    deselectedOptions = oldReturnOptions;
+                }
+                else
+                {
+                    deselectedOptions = oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
+                }
                 if (deselectedOptions != null && deselectedOptions.Count != 0)
                 {
                     foreach (var option in deselectedOptions)
                     {
                         viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
+                        if (option == (int)ReportOnQuestionEnum.NonObligated)
+                        {
+                            viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligatedDcf).Deselected = true;
+                        }
                     }
 
                     return true;

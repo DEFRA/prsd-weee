@@ -184,31 +184,15 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModelWithNoSelectedOption_ApiSendShouldNotBeCalled()
-        {
-            var model = CreateSubmittedViewModel();
-            var request = new AddReturnReportOn();
-
-            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
-
-            controller.TempData["viewModel"] = CreateTempData();
-            await controller.Index(model);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Never);
-        }
-
-        [Fact]
         public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var schemeInfo = A.Fake<SchemePublicInfo>();
             const string orgName = "orgName";
-            var model = new SelectReportOptionsDeselectViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+            var model = CreateSubmittedViewModel();
+            model.ReturnId = returnId;
+            model.OrganisationId = organisationId;
 
             controller.ModelState.AddModelError("error", "error");
             controller.TempData["viewModel"] = CreateTempData();

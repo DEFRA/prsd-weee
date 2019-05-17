@@ -60,26 +60,32 @@
                 }
             }
 
-            var returnReportOn = new List<ReturnReportOn>();
-
-            foreach (var option in message.SelectedOptions)
-            {
-                returnReportOn.Add(new ReturnReportOn(message.ReturnId, option));
-            }
-
-            if (message.DcfSelectedValue == DcfYes)
-            {
-                bool isParentSelected = message.SelectedOptions.Contains((int?)ReportOnQuestionEnum.NonObligated ?? default(int));
-
-                if (isParentSelected)
-                {
-                    returnReportOn.Add(new ReturnReportOn(message.ReturnId, (int)ReportOnQuestionEnum.NonObligatedDcf));
-                }
-            }
             var oldReturnOptions = await dataAccess.GetManyByReturnId<ReturnReportOn>(message.ReturnId);
             dataAccess.RemoveMany<ReturnReportOn>(oldReturnOptions);
-            await dataAccess.AddMany<ReturnReportOn>(returnReportOn);
 
+            await context.SaveChangesAsync();
+
+            if (message.SelectedOptions != null && message.SelectedOptions.Count != 0)
+            {
+                var returnReportOn = new List<ReturnReportOn>();
+
+                foreach (var option in message.SelectedOptions)
+                {
+                    returnReportOn.Add(new ReturnReportOn(message.ReturnId, option));
+                }
+
+                if (message.DcfSelectedValue == DcfYes)
+                {
+                    bool isParentSelected = message.SelectedOptions.Contains((int?)ReportOnQuestionEnum.NonObligated ?? default(int));
+
+                    if (isParentSelected)
+                    {
+                        returnReportOn.Add(new ReturnReportOn(message.ReturnId, (int)ReportOnQuestionEnum.NonObligatedDcf));
+                    }
+                }
+
+                await dataAccess.AddMany<ReturnReportOn>(returnReportOn);
+            }
             return true;
         }
 

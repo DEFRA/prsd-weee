@@ -18,7 +18,7 @@
     [ValidateOrganisationActionFilter]
     [ValidateReturnActionFilter]
     public class SelectReportOptionsDeselectController : AatfReturnBaseController
-    { 
+    {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -70,17 +70,14 @@
             {
                 if (newViewModel.SelectedValue == confirmSelectedValue)
                 {
-                    if (newViewModel.HasSelectedOptions)
+                    using (var client = apiClient())
                     {
-                        using (var client = apiClient())
-                        {
-                            var request = requestCreator.ViewModelToRequest(newViewModel);
+                        var request = requestCreator.ViewModelToRequest(newViewModel);
 
-                            await client.SendAsync(User.GetAccessToken(), request);
-                        }
+                        await client.SendAsync(User.GetAccessToken(), request);
                     }
 
-                    if (newViewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected)
+                    if (newViewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected && !oldModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected)
                     {
                         return AatfRedirect.SelectPcs(newViewModel.OrganisationId, newViewModel.ReturnId);
                     }
@@ -100,14 +97,11 @@
 
         private void SetSelected(SelectReportOptionsDeselectViewModel viewModel)
         {
-            if (viewModel.HasSelectedOptions)
+            foreach (var option in viewModel.ReportOnQuestions)
             {
-                foreach (var option in viewModel.ReportOnQuestions)
+                if (option.Deselected)
                 {
-                    if (option.Deselected)
-                    {
-                        option.Selected = false;
-                    }
+                    option.Selected = false;
                 }
             }
         }
