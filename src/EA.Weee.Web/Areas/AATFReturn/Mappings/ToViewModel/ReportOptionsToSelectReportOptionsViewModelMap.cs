@@ -32,7 +32,8 @@
                 {
                     model.ReportOnQuestions.First(r => r.Id == option.ReportOnQuestionId).Selected = true;
                 }
-                if (!source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligatedDcf) && source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligated))
+                if (!source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligatedDcf)
+                    && source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligated))
                 {
                     model.DcfSelectedValue = "No";
                 }

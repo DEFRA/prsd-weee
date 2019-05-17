@@ -130,7 +130,7 @@
             if (oldReturnOptions.Count != 0)
             {
                 var deselectedOptions = new List<int>();
-                if (viewModel.SelectedOptions == null)
+                if (!viewModel.HasSelectedOptions)
                 {
                     deselectedOptions = oldReturnOptions;
                 }
