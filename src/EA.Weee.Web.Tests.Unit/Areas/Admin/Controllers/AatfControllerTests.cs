@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using System.Web.Routing;
     using Api.Client;
+    using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
@@ -16,7 +17,6 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
@@ -28,24 +28,22 @@
 
     public class AatfControllerTests
     {
+        private readonly Fixture fixture;
         private readonly IWeeeClient weeeClient;
-        private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
         private readonly IEditAatfContactRequestCreator requestCreator;
         private readonly AatfController controller;
-        private readonly UrlHelper urlHelper;
 
         public AatfControllerTests()
         {
+            fixture = new Fixture();
             weeeClient = A.Fake<IWeeeClient>();
-            weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
             requestCreator = A.Fake<IEditAatfContactRequestCreator>();
-            urlHelper = A.Fake<UrlHelper>();
 
-            controller = new AatfController(() => weeeClient, weeeCache, breadcrumbService, mapper, requestCreator);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, requestCreator);
         }
 
         [Fact]
@@ -129,6 +127,64 @@
             var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
+        {
+            var id = fixture.Create<Guid>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, false).Create();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
+            clientCall.Returns(aatf);
+
+            var result = await controller.ManageAatfDetails(id);
+
+            Assert.IsType<HttpForbiddenResult>(result);
+            clientCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsGet_CanEdit_BreadcrumbShouldBeSet()
+        {
+            var id = fixture.Create<Guid>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
+            var aatfViewModel = fixture.Create<AatfEditDetailsViewModel>();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
+            clientCall.Returns(aatf);
+            var mapperCall = A.CallTo(() => mapper.Map<AatfEditDetailsViewModel>(aatf));
+            mapperCall.Returns(aatfViewModel);
+
+            await controller.ManageAatfDetails(id);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            clientCall.MustHaveHappenedOnceExactly();
+            mapperCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsGet_CanEdit_ViewModelShouldBeReturned()
+        {
+            var id = fixture.Create<Guid>();
+            var countries = fixture.CreateMany<CountryData>().ToList();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
+            var aatfViewModel = fixture.Create<AatfEditDetailsViewModel>();
+
+            var clientCallAatf = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
+            clientCallAatf.Returns(aatf);
+            var mapperCall = A.CallTo(() => mapper.Map<AatfEditDetailsViewModel>(aatf));
+            mapperCall.Returns(aatfViewModel);
+            var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
+            clientCallCountries.Returns(countries);
+
+            var result = await controller.ManageAatfDetails(id) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(aatfViewModel);
+            clientCallAatf.MustHaveHappenedOnceExactly();
+            mapperCall.MustHaveHappenedOnceExactly();
+            clientCallCountries.MustHaveHappenedOnceExactly();
         }
 
         [Fact]

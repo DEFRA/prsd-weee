@@ -92,7 +92,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AdminHoldingController>(a => a.Index()))">Edit AATF details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit AATF details</a>
             </p>
         }
     </section>

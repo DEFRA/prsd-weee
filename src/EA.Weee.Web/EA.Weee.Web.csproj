@@ -407,6 +407,7 @@
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToContactDetailsOverview.cs" />
@@ -414,6 +415,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfContactRequestCreator.cs" />
@@ -888,6 +890,8 @@
     <Content Include="Areas\Admin\Views\AddAatf\Search.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\ManageAatfDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AddressData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

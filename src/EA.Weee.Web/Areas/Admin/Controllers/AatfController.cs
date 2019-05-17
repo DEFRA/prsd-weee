@@ -18,20 +18,17 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
 
     public class AatfController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
         private readonly IEditAatfContactRequestCreator requestCreator;
 
-        public AatfController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
+        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
-            this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
             this.requestCreator = requestCreator;
@@ -79,7 +76,27 @@
             else
             {
                 return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
-            }           
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageAatfDetails(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                if (!aatf.CanEdit)
+                {
+                    return new HttpForbiddenResult();
+                }
+
+                var viewModel = mapper.Map<AatfEditDetailsViewModel>(aatf);
+                viewModel.SiteAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                SetBreadcrumb();
+                return View(viewModel);
+            }
         }
 
         [HttpGet]
