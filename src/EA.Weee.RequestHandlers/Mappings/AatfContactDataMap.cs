@@ -9,18 +9,11 @@
 
     public class AatfContactDataMap : IMap<AatfContactData, AatfContact>
     {
-        private readonly WeeeContext context;
-
-        public AatfContactDataMap(WeeeContext context)
-        {
-            this.context = context;
-        }
-
         public AatfContact Map(AatfContactData source)
         {
             if (source != null)
             {
-                Country country = this.context.Countries.FirstOrDefault(p => p.Id == source.AddressData.CountryId);
+                Country country = new Country(source.AddressData.CountryId, source.AddressData.CountryName);
 
                 return new AatfContact(source.FirstName, source.LastName, source.Position, source.AddressData.Address1, source.AddressData.Address2, source.AddressData.TownOrCity, source.AddressData.CountyOrRegion, source.AddressData.Postcode, country, source.Telephone, source.Email);
             }

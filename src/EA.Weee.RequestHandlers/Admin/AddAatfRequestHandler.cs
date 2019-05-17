@@ -49,8 +49,6 @@
             UKCompetentAuthority authority = competentAuthorityMapper.Map(message.Aatf.CompetentAuthority);
             AatfAddress siteAddress = addressMapper.Map(message.Aatf.SiteAddress);
 
-            //Operator organisation = await context.Operators.FirstOrDefaultAsync(p => p.Organisation.Id == message.OrganisationId);
-
             Operator organisation = await dataAccess.GetById<Operator>(message.OrganisationId);
 
             AatfContact contact = contactMapper.Map(message.AatfContact);

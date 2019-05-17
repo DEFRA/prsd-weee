@@ -190,6 +190,8 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
+    <Compile Include="Mapping\AatfAddressDataMapTests.cs" />
+    <Compile Include="Mapping\AatfContactDataMapTests.cs" />
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
