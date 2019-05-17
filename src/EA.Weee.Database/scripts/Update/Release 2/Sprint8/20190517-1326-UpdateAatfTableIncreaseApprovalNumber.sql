@@ -1,0 +1,3 @@
+﻿GO
+ALTER TABLE [AATF].AATF ALTER COLUMN ApprovalNumber nvarchar(20)  NOT NULL;
+GO
