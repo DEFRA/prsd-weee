@@ -87,7 +87,7 @@
             </button>
             <div class="govuk-!-padding-bottom-6"></div>
             <p>
-                <a href="@(Url.Action("Details", new { area = "Admin", Id = Model.AatfName }) + "#contactDetails")">Back</a>
+                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Cancel</a>
             </p>
         }
     </section>
