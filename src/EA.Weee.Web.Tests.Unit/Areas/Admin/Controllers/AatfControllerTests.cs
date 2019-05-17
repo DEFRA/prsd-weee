@@ -168,6 +168,7 @@
         {
             var id = fixture.Create<Guid>();
             var countries = fixture.CreateMany<CountryData>().ToList();
+            var authorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
             var aatfViewModel = fixture.Create<AatfEditDetailsViewModel>();
 
@@ -175,6 +176,8 @@
             clientCallAatf.Returns(aatf);
             var mapperCall = A.CallTo(() => mapper.Map<AatfEditDetailsViewModel>(aatf));
             mapperCall.Returns(aatfViewModel);
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(authorities);
             var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
             clientCallCountries.Returns(countries);
 
@@ -184,6 +187,7 @@
             result.Model.Should().Be(aatfViewModel);
             clientCallAatf.MustHaveHappenedOnceExactly();
             mapperCall.MustHaveHappenedOnceExactly();
+            clientCallAuthorities.MustHaveHappenedOnceExactly();
             clientCallCountries.MustHaveHappenedOnceExactly();
         }
 

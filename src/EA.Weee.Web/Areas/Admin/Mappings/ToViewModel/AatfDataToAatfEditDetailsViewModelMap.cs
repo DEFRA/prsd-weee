@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
 
@@ -22,10 +22,12 @@
                 Id = source.Id,
                 Name = source.Name,
                 ApprovalNumber = source.ApprovalNumber,
-                CompetentAuthority = source.CompetentAuthority.AsEnum,
-                AatfStatus = source.AatfStatus.ToCoreEnumeration<AatfStatusEnum>(),
+                CompetentAuthority = source.CompetentAuthority.Id,
+                AatfStatus = source.AatfStatus.Value,
+                AatfStatusList = Enumeration.GetAll<AatfStatus>(),
                 SiteAddress = source.SiteAddress,
-                Size = source.Size.ToCoreEnumeration<AatfSizeEnum>()
+                Size = source.Size.Value,
+                SizeList = Enumeration.GetAll<AatfSize>()
             };
 
             if (source.ApprovalDate != default(DateTime))

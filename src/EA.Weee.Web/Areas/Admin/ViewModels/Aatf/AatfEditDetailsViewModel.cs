@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
@@ -26,14 +27,20 @@
         public string ApprovalNumber { get; set; }
 
         [Display(Name = "Appropiate authority")]
-        public CompetentAuthority CompetentAuthority { get; set; }
+        public Guid CompetentAuthority { get; set; }
+
+        public IEnumerable<UKCompetentAuthorityData> CompetentAuthorityList { get; set; }
 
         [Display(Name = "Status")]
-        public AatfStatusEnum AatfStatus { get; set; }
+        public int AatfStatus { get; set; }
+
+        public IEnumerable<AatfStatus> AatfStatusList { get; set; }
 
         public AatfAddressData SiteAddress { get; set; }
 
-        public AatfSizeEnum Size { get; set; }
+        public int Size { get; set; }
+
+        public IEnumerable<AatfSize> SizeList { get; set; }
 
         [Display(Name = "Approval date")]
         public DateTime? ApprovalDate { get; set; }

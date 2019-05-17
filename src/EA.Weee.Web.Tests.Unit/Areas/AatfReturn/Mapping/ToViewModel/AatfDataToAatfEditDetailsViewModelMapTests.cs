@@ -31,39 +31,45 @@
         [Fact]
         public void Map_GivenValidSource_WithApprovalDate_PropertiesShouldBeMapped()
         {
-            var aatfData = CreateAatfData();
+            var competentAuthorityId = fixture.Create<Guid>();
+            var aatfData = CreateAatfData(competentAuthorityId);
 
             var result = map.Map(aatfData);
-            AssertResults(aatfData, result);
+            AssertResults(aatfData, result, competentAuthorityId);
             Assert.NotNull(result.ApprovalDate);
         }
 
         [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDateTime()
         {
-            var aatfData = CreateAatfData();
+            var competentAuthorityId = fixture.Create<Guid>();
+            var aatfData = CreateAatfData(competentAuthorityId);
             aatfData.ApprovalDate = default(DateTime);
 
             var result = map.Map(aatfData);
 
-            AssertResults(aatfData, result);
+            AssertResults(aatfData, result, competentAuthorityId);
             Assert.Null(result.ApprovalDate);
         }
 
-        private static void AssertResults(AatfData aatfData, AatfEditDetailsViewModel result)
+        private static void AssertResults(AatfData aatfData, AatfEditDetailsViewModel result, Guid competentAuthorityId)
         {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
-            Assert.Equal(CompetentAuthority.England, result.CompetentAuthority);
-            Assert.Equal(AatfStatusEnum.Approved, result.AatfStatus);
-            Assert.Equal(AatfSizeEnum.Large, result.Size);
+            Assert.Equal(competentAuthorityId, result.CompetentAuthority);
+            Assert.Equal(AatfStatus.Approved.Value, result.AatfStatus);
+            Assert.Equal(AatfSize.Large.Value, result.Size);
         }
 
-        private AatfData CreateAatfData()
+        private AatfData CreateAatfData(Guid competentAuthorityId)
         {
-            var competentAuthority = fixture.Build<UKCompetentAuthorityData>().With(ca => ca.Name, "Environment Agency").Create();
+            var competentAuthority = fixture.Build<UKCompetentAuthorityData>()
+                .With(ca => ca.Id, competentAuthorityId)
+                .With(ca => ca.Name, "Environment Agency")
+                .Create();
+
             return fixture.Build<AatfData>()
                 .With(a => a.CompetentAuthority, competentAuthority)
                 .With(a => a.AatfStatus, AatfStatus.Approved)

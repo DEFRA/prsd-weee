@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Core.Shared
 {
     using System;
-    using EA.Weee.Core.Helpers;
 
     public class UKCompetentAuthorityData
     {
@@ -16,7 +15,5 @@
         public string Email { get; set; }
 
         public decimal? AnnualChargeAmount { get; set; }
-
-        public CompetentAuthority AsEnum => EnumHelper.GetEnumValueFromDisplayString<CompetentAuthority>(Name);
     }
 }

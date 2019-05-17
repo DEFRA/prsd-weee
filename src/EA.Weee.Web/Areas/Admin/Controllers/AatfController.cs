@@ -92,6 +92,7 @@
                 }
 
                 var viewModel = mapper.Map<AatfEditDetailsViewModel>(aatf);
+                viewModel.CompetentAuthorityList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                 viewModel.SiteAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 SetBreadcrumb();

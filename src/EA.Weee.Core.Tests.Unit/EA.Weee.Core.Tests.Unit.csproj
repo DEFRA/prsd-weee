@@ -124,7 +124,6 @@
     <Compile Include="Helpers\ComplexObject.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
-    <Compile Include="Helpers\EnumHelperTests.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

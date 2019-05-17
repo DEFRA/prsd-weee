@@ -80,10 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
-    <Compile Include="AatfReturn\AatfSizeEnum.cs" />
     <Compile Include="AatfReturn\AatfSize.cs" />
     <Compile Include="AatfReturn\AatfStatus.cs" />
-    <Compile Include="AatfReturn\AatfStatusEnum.cs" />
     <Compile Include="AatfReturn\AatfDataList.cs" />
     <Compile Include="AatfReturn\AatfContactData.cs" />
     <Compile Include="AatfReturn\ObligatedType.cs" />
@@ -145,7 +143,6 @@
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatter.cs" />
-    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
     <Compile Include="Helpers\ICategoryValueTotalCalculator.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculator.cs" />

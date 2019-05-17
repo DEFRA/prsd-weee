@@ -1,5 +1,4 @@
-﻿@using EA.Weee.Core.DataStandards
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 @model AatfEditDetailsViewModel
 @{
@@ -34,19 +33,19 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthority)">
                     @Html.Gds().LabelFor(m => m.CompetentAuthority)
                     @Html.Gds().ValidationMessageFor(m => m.CompetentAuthority)
-                    @Html.EnumDropDownListFor(m => m.CompetentAuthority, new { @class = "govuk-!-width-one-third govuk-input" })
+                    @Html.Gds().DropDownListFor(m => m.CompetentAuthority, new SelectList(Model.CompetentAuthorityList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AatfStatus)">
                     @Html.Gds().LabelFor(m => m.AatfStatus)
                     @Html.Gds().ValidationMessageFor(m => m.AatfStatus)
-                    @Html.EnumDropDownListFor(m => m.AatfStatus, new { @class = "govuk-!-width-one-third govuk-input" })
+                    @Html.Gds().DropDownListFor(m => m.AatfStatus, new SelectList(Model.AatfStatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Size)">
                     @Html.Gds().LabelFor(m => m.Size)
                     @Html.Gds().ValidationMessageFor(m => m.Size)
-                    @Html.EnumDropDownListFor(m => m.Size, new { @class = "govuk-!-width-one-third govuk-input" })
+                    @Html.Gds().DropDownListFor(m => m.Size, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
