@@ -128,6 +128,7 @@
     <Compile Include="AatfReturn\ReturnHelper.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfInfoByAatfIdRequestHandlerTests.cs" />
+    <Compile Include="Admin\AddAatfRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandlerTests.cs" />

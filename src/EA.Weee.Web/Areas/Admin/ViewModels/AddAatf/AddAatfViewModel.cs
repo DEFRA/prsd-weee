@@ -32,15 +32,11 @@
         [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
-        public AatfStatus Status { get; set; }
-
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         [Required]
         [Display(Name = "Status")]
         public int SelectedStatusValue { get; set; }
-        
-        public AatfSize Size { get; set; }
 
         public IEnumerable<AatfSize> SizeList { get; set; }
 

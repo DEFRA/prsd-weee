@@ -31,7 +31,8 @@
 
         public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(null), AatfSize.Large, DateTime.Now, contact);
+            Domain.Country country = new Domain.Country(Guid.NewGuid(), "Uk");
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact);
             return aatf;
         }
 
