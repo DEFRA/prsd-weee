@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Attributes;
     using Constant;
     using Infrastructure;
     using Prsd.Core.Mapper;
@@ -49,6 +50,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateReturnEditActionFilter]
         [Route("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}")]
         public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId)
         {

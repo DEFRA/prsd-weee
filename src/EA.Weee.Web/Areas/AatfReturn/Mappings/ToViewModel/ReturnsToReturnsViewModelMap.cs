@@ -24,12 +24,20 @@
             var orderedItems = ordering.Order(source);
             foreach (var @return in orderedItems)
             {
-                var returnViewModelItem = returnItemViewModelMap.Map(@return);
+                var returnViewModelItems = returnItemViewModelMap.Map(@return);
 
-                // get all created, find if any of the return view model 
-                var inProgress = source.Where(r => r.ReturnStatus == ReturnStatus.Created);
+                model.Returns.Add(returnViewModelItems);
+            }
 
-                model.Returns.Add(returnViewModelItem);
+            foreach (var returnsItemViewModel in model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit))
+            {
+                if (model.Returns.Any(r =>
+                    r.ReturnViewModel.Quarter == returnsItemViewModel.ReturnViewModel.Quarter &&
+                    r.ReturnViewModel.Year == returnsItemViewModel.ReturnViewModel.Year &&
+                    r.ReturnsListDisplayOptions.DisplayContinue))
+                {
+                    returnsItemViewModel.ReturnsListDisplayOptions.DisplayEdit = false;
+                }
             }
 
             return model;
