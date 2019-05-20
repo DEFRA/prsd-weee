@@ -81,6 +81,7 @@
     <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
+    <Compile Include="Admin\AddAatfRequestHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnsHandler.cs" />
@@ -229,7 +230,9 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="Mappings\AatfAddressDataMap.cs" />
     <Compile Include="Mappings\AatfAddressMap.cs" />
+    <Compile Include="Mappings\AatfContactDataMap.cs" />
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
