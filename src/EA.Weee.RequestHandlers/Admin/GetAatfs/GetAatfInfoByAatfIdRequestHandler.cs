@@ -3,7 +3,6 @@
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.RequestHandlers.Admin.Aatf;
     using EA.Weee.RequestHandlers.Admin.GetSchemes;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;

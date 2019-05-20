@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
+﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
     using System;
     using System.Collections.Generic;
