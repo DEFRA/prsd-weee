@@ -3,7 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Admin.Aatf;
+    using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;

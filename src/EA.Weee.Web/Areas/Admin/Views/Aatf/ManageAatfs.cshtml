@@ -27,18 +27,18 @@
     @Html.Gds().ValidationSummary()
     <div class="table-hr"></div>
     <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name of AATF</th>
-                    <th class="govuk-table__header" scope="col">Approval number</th>
-                    <th class="govuk-table__header" scope="col">Appropriate authority</th>
-                    <th class="govuk-table__header" scope="col">Status</th>
-                    <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @foreach (var aatf in Model.AatfDataList)
-                {
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name of AATF</th>
+                <th class="govuk-table__header" scope="col">Approval number</th>
+                <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var aatf in Model.AatfDataList)
+            {
                 <tr>
                     <td class="govuk-table__cell" width="100%">@aatf.Name</td>
                     <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
@@ -46,9 +46,13 @@
                     <td class="govuk-table__cell">@aatf.AatfStatusString</td>
                     <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, @aatf.Id)</td>
                 </tr>
-                }
-            </tbody>
-        </table>
-        <br />
-    @(this.WeeeGds().Submit("Continue"))
+            }
+        </tbody>
+    </table>
+    <br />
+    @(this.WeeeGds().Submit("Continue")) 
+
+    <p>
+        <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add AATF</a>
+    </p>
 }

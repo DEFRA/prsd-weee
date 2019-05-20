@@ -10,7 +10,7 @@
             ToTable("AATF", "AATF");
 
             Property(x => x.Name).HasColumnName("Name").IsRequired().HasMaxLength(50);
-            Property(x => x.ApprovalNumber).HasColumnName("ApprovalNumber").IsRequired().HasMaxLength(10);
+            Property(x => x.ApprovalNumber).HasColumnName("ApprovalNumber").IsRequired().HasMaxLength(20);
 
             HasRequired<Operator>(a => a.Operator);
             HasRequired<AatfAddress>(a => a.SiteAddress);
