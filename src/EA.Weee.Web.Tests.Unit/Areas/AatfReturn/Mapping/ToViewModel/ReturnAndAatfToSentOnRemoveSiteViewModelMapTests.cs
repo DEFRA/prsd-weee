@@ -70,5 +70,36 @@
             result.TonnageB2B.Should().Be(obligatedTonnage.B2B);
             result.TonnageB2C.Should().Be(obligatedTonnage.B2C);
         }
+
+        [Fact]
+        public void Map_GivenNoTonnages_TonnagesShouldBeSetToDash()
+        {
+            var obligatedTonnage = new ObligatedCategoryValue()
+            {
+                B2B = "-",
+                B2C = "-",
+                CategoryId = 1
+            };
+
+            var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
+            {
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOn = new WeeeSentOnData()
+                {
+                    Tonnages = new List<WeeeObligatedData>()
+                },
+                SiteAddress = "TEST",
+                OperatorAddress = "TEST"
+            };
+
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(transfer.WeeeSentOn.Tonnages)).Returns(obligatedTonnage);
+
+            var result = mapper.Map(transfer);
+
+            result.TonnageB2B.Should().Be("-");
+            result.TonnageB2C.Should().Be("-");
+        }
     }
 }
