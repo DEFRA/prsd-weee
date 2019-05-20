@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Admin.Aatf;
 
     public class GetAatfsDataAccess : IGetAatfsDataAccess
     {
