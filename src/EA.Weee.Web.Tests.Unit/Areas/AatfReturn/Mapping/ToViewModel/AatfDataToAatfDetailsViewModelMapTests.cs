@@ -33,12 +33,12 @@
         {
             AatfData aatfData = CreateAatfData();
             AatfContactData aatfContactData = CreateAatfContactData();
-            OrganisationData organisationData = new OrganisationData();
+            OrganisationData organisationData = CreateOrganisationData();
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
 
             AatfDetailsViewModel result = map.Map(transfer);
-            AssertResults(aatfData, aatfContactData, result);
+            AssertResults(aatfData, aatfContactData, organisationData, result);
             Assert.NotNull(result.ApprovalDate);
         }
 
@@ -47,18 +47,18 @@
         {
             AatfData aatfData = CreateAatfData();
             AatfContactData aatfContactData = CreateAatfContactData();
-            OrganisationData organisationData = new OrganisationData();
+            OrganisationData organisationData = CreateOrganisationData();
             aatfData.ApprovalDate = default(DateTime);
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
 
             AatfDetailsViewModel result = map.Map(transfer);
 
-            AssertResults(aatfData, aatfContactData, result);
+            AssertResults(aatfData, aatfContactData, organisationData, result);
             Assert.Null(result.ApprovalDate);
         }
 
-        private static void AssertResults(AatfData aatfData, AatfContactData aatfContactData, AatfDetailsViewModel result)
+        private static void AssertResults(AatfData aatfData, AatfContactData aatfContactData, OrganisationData organisationData, AatfDetailsViewModel result)
         {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
@@ -68,6 +68,17 @@
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(aatfData.Size, result.Size);
             Assert.Equal(aatfContactData, result.ContactData);
+            Assert.Equal(organisationData.Name, result.Organisation.Name);
+            Assert.Equal(organisationData.TradingName, result.Organisation.TradingName);
+            Assert.Equal(organisationData.CompanyRegistrationNumber, result.Organisation.CompanyRegistrationNumber);
+            Assert.Equal(organisationData.BusinessAddress.Address1, result.Organisation.BusinessAddress.Address1);
+            Assert.Equal(organisationData.BusinessAddress.Address2, result.Organisation.BusinessAddress.Address2);
+            Assert.Equal(organisationData.BusinessAddress.CountyOrRegion, result.Organisation.BusinessAddress.CountyOrRegion);
+            Assert.Equal(organisationData.BusinessAddress.CountryName, result.Organisation.BusinessAddress.CountryName);
+            Assert.Equal(organisationData.BusinessAddress.TownOrCity, result.Organisation.BusinessAddress.TownOrCity);
+            Assert.Equal(organisationData.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
+            Assert.Equal(organisationData.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
+            Assert.Equal(organisationData.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -93,6 +104,28 @@
         private OperatorData CreateOperatorData()
         {
             return new OperatorData(Guid.NewGuid(), "Operator", Guid.NewGuid());
+        }
+
+        private OrganisationData CreateOrganisationData()
+        {
+            return new OrganisationData()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Name",
+                TradingName = "Trading Name",
+                CompanyRegistrationNumber = "123456",
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    CountryName = "France",
+                    CountyOrRegion = "County",
+                    TownOrCity = "Town",
+                    Postcode = "GU22 7UY",
+                    Telephone = "987654",
+                    Email = "test@test.com"
+                }
+            };
         }
 
         private AatfContactData CreateAatfContactData()
