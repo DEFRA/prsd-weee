@@ -77,6 +77,9 @@
                 case InternalUserActivity.ManageAatfs:
                     return RedirectToAction("ManageAatfs", "Aatf");
 
+                case InternalUserActivity.ManageAes:
+                    return RedirectToAction("ManageAes", "Ae");
+
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");
 

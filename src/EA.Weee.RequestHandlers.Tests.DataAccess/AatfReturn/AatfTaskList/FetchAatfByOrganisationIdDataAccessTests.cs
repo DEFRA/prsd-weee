@@ -74,7 +74,8 @@
                 new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
                 A.Fake<AatfSize>(),
                 DateTime.Now,
-                contact);
+                contact,
+                FacilityType.Aatf);
         }
     }
 }

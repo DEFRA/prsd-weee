@@ -20,7 +20,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    public class AatfController : AdminController
+    public class AeController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
@@ -28,7 +28,7 @@
         private readonly IMapper mapper;
         private readonly IEditAatfContactRequestCreator requestCreator;
 
-        public AatfController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
+        public AeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.cache = cache;
@@ -82,61 +82,11 @@
             }           
         }
 
-        [HttpGet]
-        public async Task<ActionResult> ManageContactDetails(Guid id)
-        {
-            using (var client = apiClient())
-            {
-                var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
-
-                if (!contact.CanEditContactDetails)
-                {
-                    return new HttpForbiddenResult();
-                }
-
-                var viewModel = new AatfEditContactAddressViewModel()
-                {
-                    AatfId = id,
-                    ContactData = contact
-                };
-
-                viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                SetBreadcrumb();
-                return View(viewModel);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageContactDetails(AatfEditContactAddressViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
-
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.AatfId }) + "#contactDetails");
-                }
-            }
-
-            using (var client = apiClient())
-            {
-                viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-            }
-
-            SetBreadcrumb();
-
-            return View(viewModel);
-        }
-
         private async Task<List<AatfDataList>> GetAatfs()
         {
             using (var client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf));
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Ae));
             }
         }
 
