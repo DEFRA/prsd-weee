@@ -7,9 +7,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -46,8 +48,12 @@
             {
                 AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
                 AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
+                OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(aatf.Operator.OrganisationId));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData));
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData, organisationData)
+                {
+                    OrganisationString = GenerateAddress(organisationData.BusinessAddress)
+                });
 
                 return View(viewModel);
             }
@@ -138,6 +144,32 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetAatfs());
             }
+        }
+
+        public virtual string GenerateAddress(Core.Shared.AddressData address)
+        {
+            var siteAddressLong = address.Address1;
+
+            if (address.Address2 != null)
+            {
+                siteAddressLong += "<br/>" + address.Address2;
+            }
+
+            siteAddressLong += "<br/>" + address.TownOrCity;
+
+            if (address.CountyOrRegion != null)
+            {
+                siteAddressLong += "<br/>" + address.CountyOrRegion;
+            }
+
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
+
+            siteAddressLong += "<br/>" + address.CountryName;
+
+            return siteAddressLong;
         }
 
         private void SetBreadcrumb()

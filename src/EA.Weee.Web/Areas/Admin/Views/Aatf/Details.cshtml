@@ -129,27 +129,29 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Company name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Trading name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Company registration number</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">
+                        @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Email address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
                 </tr>
             </tbody>
         </table>
