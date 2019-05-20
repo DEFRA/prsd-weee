@@ -135,6 +135,7 @@
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
+                null,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
                 viewModel.SiteAddressData,

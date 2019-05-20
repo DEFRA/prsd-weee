@@ -7,7 +7,7 @@
 
     public class AatfData
     {
-        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
+        public AatfData(Guid id, string name, string approvalNumber, OperatorData @operator = null, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
         {
             this.Id = id;
             this.Name = name;
@@ -17,9 +17,12 @@
             this.SiteAddress = siteAddress;
             this.Size = size;
             this.ApprovalDate = approvalDate;
+            this.Operator = @operator;
         }
 
         public Guid Id { get; set; }
+
+        public OperatorData @Operator { get; set; }
 
         public virtual string Name { get; set; }
 
