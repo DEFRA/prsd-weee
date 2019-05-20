@@ -32,8 +32,8 @@
                 AatfId = source.AatfId,
                 SiteAddress = source.SiteAddress,
                 OperatorAddress = source.OperatorAddress,
-                TonnageB2B = decimal.Parse(tonnages.B2B),
-                TonnageB2C = decimal.Parse(tonnages.B2C)
+                TonnageB2B = tonnages.B2B,
+                TonnageB2C = tonnages.B2C
             };
 
             return viewModel;
