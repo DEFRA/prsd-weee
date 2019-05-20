@@ -4,12 +4,12 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnsViewModel
 @{
-    ViewBag.Title = "Manage AATF returns";
+    ViewBag.Title = "Manage AATFs - GOV.UK";
 }
-    <link href="~/Content/Site.css" rel="stylesheet" />
+
     <section id="main-content">
         <h1 class="govuk-heading-l">
-            @ViewBag.Title
+            Manage AATF returns
         </h1>
 
         <div class="govuk-grid-row">
@@ -19,25 +19,29 @@
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.OrganisationId)
 
-                    <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
+                <div class="govuk-form-group">
+                    <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
+                </div>
+            }
+
+            <details class="govuk-details govuk-!-font-size-16" role="group">
+                <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                    <span class="govuk-details__summary-text">
+                        I need to submit a return for a different quarter
+                    </span>
+                </summary>
+                <div class="govuk-details__text" id="details-content" aria-hidden="true">
+                    <div class="govuk-body govuk-!-font-size-16">
+                        If you want to start a different return other than the one available, contact your environmental regulator.
                     </div>
-                }
-                
-                <details class="govuk-details govuk-!-font-size-16" role="group">
-                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                        <span class="govuk-details__summary-text">
-                            I need to submit a return for a different quarter
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
-                        <div class="govuk-body govuk-!-font-size-16">
-                            If you want to start a different return other than the one available, contact your environmental regulator.
-                        </div>
-                    </div>
-                </details>
-            </div>
+                </div>
+            </details>
         </div>
+    </div>
+
+    @if (Model.Returns.Count > 0)
+    {
+
 
         <table class="govuk-table prsd-table-collapse">
             <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
@@ -57,9 +61,9 @@
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
 
-            @for (var returnCount = 0; returnCount < Model.Returns.Count; returnCount++)
-            {
-                var item = Model.Returns[returnCount];
+                @for (var returnCount = 0; returnCount < Model.Returns.Count; returnCount++)
+                {
+                    var item = Model.Returns[returnCount];
 
                 <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Year</td>
@@ -108,44 +112,51 @@
 
             </tbody>
         </table>
+    }
+    else
+    {
         <p>
-            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, null)
+            No submissions to report
         </p>
-        <style type="text/css">
+    }
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, null)
+    </p>
+    <style type="text/css">
 
-            @@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
-                td:nth-of-type(1):before {
-                    content: "Year";
-                }
-
-                td:nth-of-type(2):before {
-                    content: "Quarter";
-                }
-
-                td:nth-of-type(3):before {
-                    content: "Total obligated (t)";
-                }
-
-                td:nth-of-type(4):before {
-                    content: "Total non-obligated (t)";
-                }
-
-                td:nth-of-type(5):before {
-                    content: "Created by";
-                }
-
-                td:nth-of-type(6):before {
-                    content: "Submitted date (GMT)";
-                }
-
-                td:nth-of-type(7):before {
-                    content: "Submitted by";
-                }
-
-                td:nth-of-type(8):before {
-                    content: "Status";
-                }
+        @@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+            td:nth-of-type(1):before {
+                content: "Year";
             }
-        </style>
 
-    </section>
+            td:nth-of-type(2):before {
+                content: "Quarter";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Total obligated (t)";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Total non-obligated (t)";
+            }
+
+            td:nth-of-type(5):before {
+                content: "Created by";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Submitted date (GMT)";
+            }
+
+            td:nth-of-type(7):before {
+                content: "Submitted by";
+            }
+
+            td:nth-of-type(8):before {
+                content: "Status";
+            }
+        }
+    </style>
+
+</section>

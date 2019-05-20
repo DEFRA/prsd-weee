@@ -46,7 +46,8 @@
                     WeeeSentOnDataItems = weeeSentOn,
                     AatfId = aatfId,
                     ReturnId = returnId,
-                    OrganisationId = organisationId
+                    OrganisationId = organisationId,
+                    AatfName = (await cache.FetchAatfData(organisationId, aatfId)).Name
                 });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
