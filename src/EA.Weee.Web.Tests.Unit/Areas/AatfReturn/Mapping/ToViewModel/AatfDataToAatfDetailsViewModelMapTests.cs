@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -32,8 +33,9 @@
         {
             AatfData aatfData = CreateAatfData();
             AatfContactData aatfContactData = CreateAatfContactData();
+            OrganisationData organisationData = new OrganisationData();
 
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
 
             AatfDetailsViewModel result = map.Map(transfer);
             AssertResults(aatfData, aatfContactData, result);
@@ -45,9 +47,10 @@
         {
             AatfData aatfData = CreateAatfData();
             AatfContactData aatfContactData = CreateAatfContactData();
+            OrganisationData organisationData = new OrganisationData();
             aatfData.ApprovalDate = default(DateTime);
 
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
 
             AatfDetailsViewModel result = map.Map(transfer);
 
@@ -87,6 +90,11 @@
             return new AatfContactAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
         }
 
+        private OperatorData CreateOperatorData()
+        {
+            return new OperatorData(Guid.NewGuid(), "Operator", Guid.NewGuid());
+        }
+
         private AatfContactData CreateAatfContactData()
         {
             return new AatfContactData(Guid.NewGuid(), "FirstName", "LastName", "Position", CreateContactAddressData(), "Telephone", "Email");
@@ -94,7 +102,7 @@
 
         private AatfData CreateAatfData()
         {
-            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateOperatorData(), CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
         }
     }
 }
