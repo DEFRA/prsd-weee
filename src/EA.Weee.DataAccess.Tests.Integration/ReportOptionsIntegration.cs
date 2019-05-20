@@ -285,7 +285,7 @@
         private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return, Country country)
         {
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Operator, contact);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Operator, contact, country);
 
             context.Aatfs.Add(aatf);
 
