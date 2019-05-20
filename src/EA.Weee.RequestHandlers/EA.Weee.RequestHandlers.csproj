@@ -238,7 +238,6 @@
     <Compile Include="Mappings\AatfDataListMap.cs" />
     <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Mappings\AatfContactMap.cs" />
-    <Compile Include="Mappings\UKCompetentAuthorityDataMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />

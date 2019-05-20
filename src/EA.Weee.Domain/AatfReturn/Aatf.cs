@@ -72,6 +72,7 @@
             SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
             Contact = contact;
+            SiteAddressId = aatfSiteAddress.Id;
         }
     }
 }

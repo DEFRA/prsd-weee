@@ -13,9 +13,7 @@
         {
             if (source != null)
             {
-                Country country = new Country(source.AddressData.CountryId, source.AddressData.CountryName);
-
-                return new AatfContact(source.FirstName, source.LastName, source.Position, source.AddressData.Address1, source.AddressData.Address2, source.AddressData.TownOrCity, source.AddressData.CountyOrRegion, source.AddressData.Postcode, country, source.Telephone, source.Email);
+                return new AatfContact(source.FirstName, source.LastName, source.Position, source.AddressData.Address1, source.AddressData.Address2, source.AddressData.TownOrCity, source.AddressData.CountyOrRegion, source.AddressData.Postcode, source.AddressData.CountryId, source.Telephone, source.Email);
             }
             else
             {
