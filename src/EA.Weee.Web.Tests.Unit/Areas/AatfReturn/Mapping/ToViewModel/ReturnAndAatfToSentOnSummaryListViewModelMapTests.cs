@@ -32,6 +32,7 @@
             var orgId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
+            var aatfName = "Name";
             var weeeList = A.Fake<List<WeeeSentOnData>>();
 
             var transfer = new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
@@ -39,7 +40,8 @@
                 ReturnId = returnId,
                 AatfId = aatfId,
                 OrganisationId = orgId,
-                WeeeSentOnDataItems = weeeList
+                WeeeSentOnDataItems = weeeList,
+                AatfName = aatfName
             };
 
             var result = map.Map(transfer);
@@ -47,6 +49,7 @@
             result.OrganisationId.Should().Be(orgId);
             result.ReturnId.Should().Be(returnId);
             result.AatfId.Should().Be(aatfId);
+            result.AatfName.Should().Be(aatfName);
             result.Sites.Should().BeEquivalentTo(weeeList);
         }
 
@@ -69,6 +72,7 @@
             {
                 ReturnId = Guid.NewGuid(),
                 AatfId = Guid.NewGuid(),
+                AatfName = A.Dummy<string>(),
                 OrganisationId = Guid.NewGuid(),
                 WeeeSentOnDataItems = weeeSentOnList
             };
