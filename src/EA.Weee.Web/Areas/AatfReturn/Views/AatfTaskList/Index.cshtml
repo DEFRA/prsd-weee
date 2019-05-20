@@ -60,7 +60,7 @@
                     <div class="govuk-grid-column-one-half"></div>
                     <div class="govuk-grid-column-one-half">
                         <p>
-                            @Html.NavigationRouteLink("Received on behalf of PCS(s)", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
+                            @Html.NavigationRouteLink("Add received on behalf of PCS(s) data", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
                         </p>
                     </div>
 
@@ -85,11 +85,11 @@
                     <p>
                         @if (item.WeeeSentOn.RedirectToSummary)
                         {
-                            @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
+                            @Html.NavigationRouteLink("Add sent to another AATF / ATF data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
                         }
                         else
                         {
-                            @Html.NavigationRouteLink("Sent to another AATF / ATF", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
+                            @Html.NavigationRouteLink("Add sent to another AATF / ATF data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
                         }
 
                     </p>
@@ -117,11 +117,11 @@
                     <p>
                         @if (item.WeeeReused.RedirectToSummary)
                         {
-                            @Html.NavigationRouteLink("Reused as a whole appliance", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
+                            @Html.NavigationRouteLink("Add reused as a whole appliance data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
                         }
                         else
                         {
-                            @Html.NavigationRouteLink("Reused as a whole appliance", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
+                            @Html.NavigationRouteLink("Add reused as a whole appliance data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
                         }
                     </p>
                 </div>
@@ -150,12 +150,12 @@
                     <b>Non-obligated WEEE</b>
                 </p>
                 <p>
-                    @Html.NavigationRouteLink("Received", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                    @Html.NavigationRouteLink("Add received data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
                 </p>
                 @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                 {
                     <p>
-                        @Html.NavigationRouteLink("Retained by a DCF", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
+                        @Html.NavigationRouteLink("Add retained by a DCF data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
                     </p>
                 }
             </div>
@@ -188,7 +188,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
         <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
-            Check my return
+            Check return
         </button>
     }
     <details class="govuk-details govuk-!-font-size-16" role="group">
