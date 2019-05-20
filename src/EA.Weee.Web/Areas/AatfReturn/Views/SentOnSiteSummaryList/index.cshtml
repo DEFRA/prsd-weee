@@ -44,11 +44,23 @@
             foreach (var address in Model.Sites)
             {
                 <div class="govuk-grid-row govuk-table__cell">
-                    <div class="govuk-grid-column-one-quarter" style="word-break:break-word">
-                        @address.SiteAddressLong
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="word-break:break-all">
+                        @address.SiteAddress.Name<br />
+                        @address.SiteAddress.Address1<br />
+                        @address.SiteAddress.Address2<br />
+                        @address.SiteAddress.TownOrCity<br />
+                        @address.SiteAddress.CountyOrRegion<br />
+                        @address.SiteAddress.Postcode<br />
+                        @address.SiteAddress.CountryName<br />
                     </div>
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="word-break:break-word">
-                        @address.OperatorAddressLong
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="word-break:break-all">
+                        @address.OperatorAddress.Name<br />
+                        @address.OperatorAddress.Address1<br />
+                        @address.OperatorAddress.Address2<br />
+                        @address.OperatorAddress.TownOrCity<br />
+                        @address.OperatorAddress.CountyOrRegion<br />
+                        @address.OperatorAddress.Postcode<br />
+                        @address.OperatorAddress.CountryName<br />
                     </div>
                     <div class="govuk-grid-column-one-half">
                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
