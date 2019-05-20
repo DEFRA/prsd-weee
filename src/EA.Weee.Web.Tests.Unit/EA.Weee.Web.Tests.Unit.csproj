@@ -241,6 +241,7 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedSentOnWeeeRequestCreatorTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\Validation\NonObligatedValuesViewModelValidatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Validation\SelectReportOptionsViewModelValidatorTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReusedViewModelTests.cs" />
