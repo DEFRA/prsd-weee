@@ -892,7 +892,7 @@
     <Content Include="Areas\Admin\Views\AddAatf\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\ManageAatfDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AddressData.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <None Include="Content\remove-site.scss" />

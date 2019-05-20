@@ -7,7 +7,7 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
-            @Html.Gds().TextBoxFor(m => m.FirstName, new {@class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LastName)">
