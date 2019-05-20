@@ -29,9 +29,9 @@
             return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact)
+        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact, Domain.Country country)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(null), AatfSize.Large, DateTime.Now, contact);
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact);
             return aatf;
         }
 

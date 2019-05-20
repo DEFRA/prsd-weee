@@ -424,6 +424,7 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
@@ -892,6 +893,8 @@
     <Content Include="Areas\Admin\Views\AddAatf\Search.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
