@@ -12,6 +12,8 @@
 
         public Guid AatfId { get; set; }
 
+        public String AatfName { get; set; }
+
         public List<WeeeSentOnSummaryListData> Sites { get; set; }
 
         public ObligatedCategoryValue Tonnages { get; set; }
