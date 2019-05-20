@@ -31,7 +31,8 @@
             {
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
-                ReturnId = source.ReturnId
+                ReturnId = source.ReturnId,
+                AatfName = source.AatfName
             };
 
             var siteList = new List<WeeeSentOnSummaryListData>();
