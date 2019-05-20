@@ -72,7 +72,7 @@
         }
 
         [Fact]
-        public void Map_GivenNoTonnages_TonnagesShouldBeSetToZero()
+        public void Map_GivenNoTonnages_TonnagesShouldBeSetToDash()
         {
             var obligatedTonnage = new ObligatedCategoryValue()
             {
