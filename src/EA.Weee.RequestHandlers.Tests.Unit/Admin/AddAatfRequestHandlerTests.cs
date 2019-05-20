@@ -25,18 +25,14 @@
     public class AddAatfRequestHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly WeeeContext context;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
-        private readonly IMap<UKCompetentAuthorityData, UKCompetentAuthority> competentAuthorityMapper;
         private readonly IMap<AatfContactData, AatfContact> contactMapper;
 
         public AddAatfRequestHandlerTests()
         {
             this.authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            context = A.Fake<WeeeContext>();
             this.addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
-            this.competentAuthorityMapper = A.Fake<IMap<UKCompetentAuthorityData, UKCompetentAuthority>>();
             this.contactMapper = A.Fake<IMap<AatfContactData, AatfContact>>();
             this.dataAccess = A.Fake<IGenericDataAccess>();
         }
@@ -50,7 +46,7 @@
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
             UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, context, this.dataAccess, addressMapper, competentAuthorityMapper, contactMapper);
+            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, this.dataAccess, addressMapper, contactMapper);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddAatf>());
 
@@ -67,7 +63,7 @@
 
             UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, context, this.dataAccess, addressMapper, competentAuthorityMapper, contactMapper);
+            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, this.dataAccess, addressMapper, contactMapper);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddAatf>());
 
@@ -83,7 +79,7 @@
 
             Guid aatfId = Guid.NewGuid();
 
-            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, context, this.dataAccess, addressMapper, competentAuthorityMapper, contactMapper);
+            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, this.dataAccess, addressMapper, contactMapper);
 
             AddAatf request = new AddAatf()
             {
@@ -95,8 +91,7 @@
             A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(c => c.Name == aatf.Name))).Returns(aatfId);
             bool result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(c => c.Name == aatf.Name))).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(c => c.Name == aatf.Name))).MustHaveHappened(Repeated.Exactly.Once);
 
             result.Should().Be(true);
         }

@@ -67,8 +67,7 @@
             result.TownOrCity.Should().Be("Town");
             result.CountyOrRegion.Should().Be("County");
             result.Postcode.Should().Be("Postcode");
-            result.Country.Name.Should().Be(countryName);
-            result.Country.Id.Should().Be(countryId);
+            result.CountryId.Should().Be(countryId);
             result.Telephone.Should().Be("01234 567890");
             result.Email.Should().Be("email@email.com");
         }

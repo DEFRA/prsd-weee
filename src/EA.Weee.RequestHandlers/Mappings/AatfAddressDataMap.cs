@@ -11,8 +11,7 @@
         {
             if (source != null)
             {
-                Country country = new Country(source.CountryId, source.CountryName);
-                return new AatfAddress(source.Name, source.Address1, source.Address2, source.TownOrCity, source.CountyOrRegion, source.Postcode, country.Id);
+                return new AatfAddress(source.Name, source.Address1, source.Address2, source.TownOrCity, source.CountyOrRegion, source.Postcode, source.CountryId);
             }
             else
             {
