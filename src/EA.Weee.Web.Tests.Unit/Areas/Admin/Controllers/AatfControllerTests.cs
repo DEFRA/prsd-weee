@@ -8,10 +8,12 @@
     using System.Web.Routing;
     using Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
@@ -96,7 +98,22 @@
         public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet()
         {
             var aatfData = A.Fake<AatfData>();
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
             await controller.Details(A.Dummy<Guid>());
 
@@ -109,7 +126,22 @@
             AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
 
             var aatfData = A.Fake<AatfData>();
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
             var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
 
@@ -124,7 +156,24 @@
 
             var aatfData = A.Fake<AatfData>();
             aatfData.ApprovalDate = default(DateTime);
+            aatfData.Operator.OrganisationId = Guid.NewGuid();
+
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
             var result = await controller.Details(A.Dummy<Guid>()) as ViewResult;
 
