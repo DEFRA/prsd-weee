@@ -24,9 +24,9 @@
         [AllowHtml]
         public string OperatorAddress { get; set; }
 
-        public decimal? TonnageB2B { get; set; }
+        public string TonnageB2B { get; set; }
 
-        public decimal? TonnageB2C { get; set; }
+        public string TonnageB2C { get; set; }
 
         public ObligatedCategoryValue Tonnages { get; set; }
 
