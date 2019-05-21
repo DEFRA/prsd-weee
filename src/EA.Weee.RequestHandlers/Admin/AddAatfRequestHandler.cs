@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
@@ -40,6 +41,15 @@
             AatfAddress siteAddress = addressMapper.Map(message.Aatf.SiteAddress);
 
             Operator @operator = await dataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+
+            if (@operator == null)
+            {
+                Organisation organisation = await dataAccess.GetById<Organisation>(message.OrganisationId);
+
+                @operator = new Operator(organisation);
+
+                await dataAccess.Add<Operator>(@operator);
+            }
 
             AatfContact contact = contactMapper.Map(message.AatfContact);
 

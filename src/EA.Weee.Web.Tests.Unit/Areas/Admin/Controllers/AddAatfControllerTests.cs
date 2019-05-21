@@ -6,6 +6,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
@@ -350,9 +351,8 @@
 
             result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
-            
-            // This check will be used when the request is called and returns a guid
-            //result.RouteValues["organisationId"].Should().Be("Guid");
+
+            result.RouteValues["organisationId"].Should().NotBe(null);
         }
 
         [Fact]
@@ -419,8 +419,7 @@
             result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
 
-            // This check will be used when the request is called and returns a guid
-            //result.RouteValues["organisationId"].Should().Be("Guid");
+            result.RouteValues["organisationId"].Should().NotBe(null);
         }
 
         private AddAatfViewModel CreateAddViewModel()

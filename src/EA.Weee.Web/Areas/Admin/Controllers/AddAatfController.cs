@@ -172,7 +172,19 @@
                 return View(model);
             }
 
-            return RedirectToAction("Add", "AddAatf", new { organisationId = Guid.NewGuid() });
+            using (var client = apiClient())
+            {
+                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
+                {
+                    Address = model.Address,
+                    BusinessName = model.BusinessTradingName,
+                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>()
+                };
+
+                Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction("Add", "AddAatf", new { organisationId = id });
+            }
         }
 
         [HttpGet]
@@ -204,7 +216,21 @@
                 return View(model);
             }
 
-            return RedirectToAction("Add", "AddAatf", new { organisationId = Guid.NewGuid() });
+            using (var client = apiClient())
+            {
+                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
+                {
+                    Address = model.Address,
+                    BusinessName = model.CompanyName,
+                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>(),
+                    RegistrationNumber = model.CompaniesRegistrationNumber,
+                    TradingName = model.BusinessTradingName
+                };
+
+                Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction("Add", "AddAatf", new { organisationId = id });
+            }
         }
 
         private async Task<AddAatfViewModel> PopulateViewModelLists(AddAatfViewModel viewModel)

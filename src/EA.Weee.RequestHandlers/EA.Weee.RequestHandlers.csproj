@@ -82,6 +82,7 @@
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />
+    <Compile Include="Admin\CreateOrganisationAdminHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnsHandler.cs" />
