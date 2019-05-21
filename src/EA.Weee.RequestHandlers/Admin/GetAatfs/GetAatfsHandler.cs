@@ -32,9 +32,11 @@
             switch (message.FacilityType)
             {
                 case FacilityType.Aatf:
-                    return SortAatfs(aatfs, FacilityType.Aatf);
+                    var ret = SortAatfs(aatfs, FacilityType.Aatf);
+                    return ret;
                 case FacilityType.Ae:
-                    return SortAatfs(aatfs, FacilityType.Ae);
+                    var ret2 = SortAatfs(aatfs, FacilityType.Ae);
+                    return ret2;
                 default:
                     return aatfs.OrderBy(a => a.Name).Select(s => aatfmap.Map(s)).ToList();
             }

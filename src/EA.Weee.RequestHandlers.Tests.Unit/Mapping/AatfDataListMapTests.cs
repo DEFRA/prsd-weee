@@ -18,11 +18,14 @@
         private readonly AatfDataListMap map;
         private readonly IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> statusMap;
         private readonly IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap;
+        private readonly IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityTypeMap;
+
         public AatfDataListMapTests()
         {
             statusMap = A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>();
             competentAuthorityMap = A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>();
-            map = new AatfDataListMap(competentAuthorityMap, statusMap);
+            facilityTypeMap = A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>();
+            map = new AatfDataListMap(competentAuthorityMap, statusMap, facilityTypeMap);
         }
 
         [Fact]
@@ -41,12 +44,15 @@
             var @operator = A.Fake<Operator>();
             var approvalNumber = "123456789";
             var status = Domain.AatfReturn.AatfStatus.Approved;
+            var facilityType = Domain.AatfReturn.FacilityType.Aatf;
 
             var returnStatus = Core.AatfReturn.AatfStatus.Approved;
             var returnCompetentAuthority = A.Fake<Core.Shared.UKCompetentAuthorityData>();
+            var returnFacilityType = Core.AatfReturn.FacilityType.Aatf;
 
             A.CallTo(() => statusMap.Map(status)).Returns(returnStatus);
             A.CallTo(() => competentAuthorityMap.Map(competentAuthority)).Returns(returnCompetentAuthority);
+            A.CallTo(() => facilityTypeMap.Map(facilityType)).Returns(returnFacilityType);
 
             var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf);
 
@@ -57,6 +63,7 @@
             result.AatfStatus.Should().Be(returnStatus);
             result.CompetentAuthority.Should().Be(returnCompetentAuthority);
             result.Operator.Should().Be(@operator);
+            result.FacilityType.Should().Be(Core.AatfReturn.FacilityType.Aatf);
         }
     }
 }
