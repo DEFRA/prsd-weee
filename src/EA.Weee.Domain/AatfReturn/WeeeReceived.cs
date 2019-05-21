@@ -34,8 +34,6 @@
             Aatf = aatf;
             ReturnId = returnId;
         }
-
-
         public WeeeReceived()
         {
         }
