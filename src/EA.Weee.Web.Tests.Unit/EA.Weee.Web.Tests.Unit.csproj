@@ -256,6 +256,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />

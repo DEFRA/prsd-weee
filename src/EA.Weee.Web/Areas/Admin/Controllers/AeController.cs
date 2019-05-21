@@ -19,20 +19,15 @@
     public class AeController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IMapper mapper;
-        private readonly IEditAatfContactRequestCreator requestCreator;
 
-        public AeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
+        public AeController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
-            this.cache = cache;
             this.breadcrumb = breadcrumb;
-            this.mapper = mapper;
-            this.requestCreator = requestCreator;
         }
 
+        [HttpGet]
         public async Task<ActionResult> ManageAes()
         {
             SetBreadcrumb();
