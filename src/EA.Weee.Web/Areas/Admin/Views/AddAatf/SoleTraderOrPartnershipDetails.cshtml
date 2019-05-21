@@ -1,0 +1,44 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderOrPartnershipDetailsViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Partnership/soletrader details";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Partnership/soletrader details</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationType)
+
+        <div class="govuk-form-group">
+            @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
+            {
+                <p>
+                    This is either your individual name or your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
+                </p>
+            }
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
+            @Html.EditorFor(m => m.Address)
+        </div>
+
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Save and continue</button>
+        </div>
+    }
+}

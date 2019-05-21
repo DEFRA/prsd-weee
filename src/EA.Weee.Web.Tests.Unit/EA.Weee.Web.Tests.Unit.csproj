@@ -268,6 +268,7 @@
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />
