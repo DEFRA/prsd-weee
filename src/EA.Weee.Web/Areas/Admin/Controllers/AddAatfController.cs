@@ -183,7 +183,7 @@
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id });
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName });
             }
         }
 
@@ -229,8 +229,20 @@
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id });
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName });
             }
+        }
+
+        [HttpGet]
+        public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName)
+        {
+            OrganisationConfirmationViewModel model = new OrganisationConfirmationViewModel()
+            {
+                OrganisationId = organisationId,
+                OrganisationName = organisationName
+            };
+
+            return View(model);
         }
 
         private async Task<AddAatfViewModel> PopulateViewModelLists(AddAatfViewModel viewModel)

@@ -7,7 +7,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Tell us about your registered company</h1>
+        <h1 class="govuk-heading-l">Registered company details</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -15,10 +15,6 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
-
-        <div style="margin-bottom: 1.66667em;">
-            <p>Enter the name of your registered company. For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
-        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
@@ -46,6 +42,10 @@
                     You can search <a href="https://www.gov.uk/get-information-about-a-company" target="_blank" rel="external">Companies House online services</a> to find your CRN.
                 </p>
             }
+        </div>
+
+        <div>
+            <h2 class="govuk-heading-s">Business address</h2>
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">

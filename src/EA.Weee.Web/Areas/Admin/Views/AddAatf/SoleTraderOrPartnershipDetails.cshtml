@@ -33,6 +33,10 @@
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
+        <div>
+            <h2 class="govuk-heading-s">Business address</h2>
+        </div>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
             @Html.EditorFor(m => m.Address)
         </div>

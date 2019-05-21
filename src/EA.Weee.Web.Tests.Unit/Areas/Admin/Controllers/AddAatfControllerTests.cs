@@ -349,10 +349,11 @@
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
             RedirectToRouteResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Add");
+            result.RouteValues["action"].Should().Be("OrganisationConfirmation");
             result.RouteValues["controller"].Should().Be("AddAatf");
 
             result.RouteValues["organisationId"].Should().NotBe(null);
+            result.RouteValues["organisationName"].Should().Be(viewModel.BusinessTradingName);
         }
 
         [Fact]
@@ -416,10 +417,11 @@
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
             RedirectToRouteResult result = await controller.RegisteredCompanyDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Add");
+            result.RouteValues["action"].Should().Be("OrganisationConfirmation");
             result.RouteValues["controller"].Should().Be("AddAatf");
 
             result.RouteValues["organisationId"].Should().NotBe(null);
+            result.RouteValues["organisationName"].Should().Be(viewModel.CompanyName);
         }
 
         private AddAatfViewModel CreateAddViewModel()

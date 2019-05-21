@@ -9,7 +9,7 @@
     {
         public string SearchedText { get; set; }
 
-        [Required(ErrorMessage = "Select the type of organisation that you work for")]
+        [Required(ErrorMessage = "Select the type of organisation")]
         public override string SelectedValue { get; set; }
 
         public OrganisationTypeViewModel()
