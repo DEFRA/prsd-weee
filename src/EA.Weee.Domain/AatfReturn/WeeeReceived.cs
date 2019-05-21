@@ -16,8 +16,6 @@
 
         public virtual Scheme Scheme { get; private set; }
 
-        public Guid ReturnId { get; private set; }
-
         public IList<WeeeReceivedAmount> WeeeReceivedAmounts { get; set; }
 
         public WeeeReceived(Guid schemeId, Guid aatfId, Guid returnId)
@@ -36,6 +34,17 @@
             Aatf = aatf;
             ReturnId = returnId;
         }
+
+        //public WeeeReceived(Scheme scheme, Aatf aatf, Return @return)
+        //{
+        //    Guard.ArgumentNotNull(() => scheme, scheme);
+        //    Guard.ArgumentNotNull(() => aatf, aatf);
+        //    Guard.ArgumentNotNull(() => @return, @return);
+
+        //    Scheme = scheme;
+        //    Aatf = aatf;
+        //    Return = @return;
+        //}
 
         public WeeeReceived()
         {

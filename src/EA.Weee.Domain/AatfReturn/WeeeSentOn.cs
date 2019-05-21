@@ -5,17 +5,13 @@
     using System;
     using System.Collections.Generic;
 
-    public class WeeeSentOn : Entity
+    public class WeeeSentOn : ReturnEntity
     {
         public virtual AatfAddress OperatorAddress { get; private set; }
 
         public virtual AatfAddress SiteAddress { get; private set; }
 
         public virtual Aatf Aatf { get; private set; }
-
-        public virtual Return @Return { get; private set; }
-
-        public virtual Guid ReturnId { get; private set; }
 
         public virtual Guid AatfId { get; private set; }
 
@@ -61,11 +57,6 @@
             this.SiteAddress = siteAddress;
             this.Aatf = aatf;
             this.Return = @return;
-        }
-
-        public virtual void UpdateReturn(Return @return)
-        {
-            Return = @return;
         }
     }
 }
