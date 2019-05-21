@@ -7,14 +7,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
-    using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Ae;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -37,62 +33,24 @@
             this.requestCreator = requestCreator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public async Task<ActionResult> ManageAes()
         {
             SetBreadcrumb();
-
-            using (var client = apiClient())
-            {
-                AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
-                AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
-
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData));
-
-                return View(viewModel);
-            }
+            return View(new ManageAesViewModel { AeDataList = await GetAes() });
         }
         
-        public async Task<ActionResult> ManageAatfs()
-        {
-            SetBreadcrumb();
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
-        {
-            SetBreadcrumb();
-
-            if (!ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    viewModel = new ManageAatfsViewModel
-                    {
-                        AatfDataList = await GetAatfs()
-                    };
-                    return View(viewModel);
-                }    
-            }
-            else
-            {
-                return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
-            }           
-        }
-
-        private async Task<List<AatfDataList>> GetAatfs()
+        private async Task<List<AatfDataList>> GetAes()
         {
             using (var client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Ae));
+                var list = await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Ae));
+                return list;
             }
         }
 
         private void SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAes;
         }
     }
 }

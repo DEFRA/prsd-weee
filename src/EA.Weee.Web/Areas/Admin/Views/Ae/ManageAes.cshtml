@@ -1,0 +1,52 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Ae.ManageAesViewModel
+@{
+    ViewBag.Title = "Approved Exporters - GOV.UK";
+}
+
+@section scripts{
+    <script>
+        $('#idManageAesTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Manage AEs
+    </h1>
+</header>
+@using (Html.BeginForm(actionName: "ManageAes", controllerName: "Ae", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    <div class="table-hr"></div>
+    <table id="idManageAesTable" class="govuk-table prsd-table hover-effect">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name of AE</th>
+                <th class="govuk-table__header" scope="col">Approval number</th>
+                <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var ae in Model.AeDataList)
+            {
+                <tr>
+                    <td class="govuk-table__cell" width="100%">@ae.Name</td>
+                    <td class="govuk-table__cell">@ae.ApprovalNumber</td>
+                    <td class="govuk-table__cell">@ae.CompetentAuthority.Abbreviation</td>
+                    <td class="govuk-table__cell">@ae.AatfStatusString</td>
+                    <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, ae.Id)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
