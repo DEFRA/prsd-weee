@@ -6,7 +6,7 @@
     using EA.Prsd.Core.Domain;
     using Scheme;
 
-    public class WeeeReceived : Entity
+    public class WeeeReceived : ReturnEntity
     {
         public Guid SchemeId { get; private set; }
 
@@ -17,8 +17,6 @@
         public virtual Scheme Scheme { get; private set; }
 
         public Guid ReturnId { get; private set; }
-
-        public Return Return { get; private set; }
 
         public IList<WeeeReceivedAmount> WeeeReceivedAmounts { get; set; }
 
@@ -41,11 +39,6 @@
 
         public WeeeReceived()
         {
-        }
-
-        public virtual void UpdateReturn(Return @return)
-        {
-            Return = @return;
         }
     }
 }

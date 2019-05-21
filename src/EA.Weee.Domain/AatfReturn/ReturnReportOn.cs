@@ -3,7 +3,7 @@
     using System;
     using EA.Prsd.Core.Domain;
 
-    public class ReturnReportOn : Entity
+    public class ReturnReportOn : ReturnEntity
     {
         public ReturnReportOn()
         {
@@ -18,12 +18,5 @@
         public Guid ReturnId { get; private set; }
 
         public int ReportOnQuestionId { get; private set; }
-
-        public virtual Return Return { get; private set; }
-
-        public virtual void UpdateReturn(Return @return)
-        {
-            Return = @return;
-        }
     }
 }
