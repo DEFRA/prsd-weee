@@ -9,6 +9,7 @@
     using Core.AatfReturn;
     using Core.Helpers;
     using DataAccess;
+    using Domain.AatfReturn;
     using NonObligated;
     using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
@@ -45,34 +46,52 @@
 
             authorization.EnsureOrganisationAccess(returnCopy.Operator.Organisation.Id);
 
+            await CopyReturnReportsOn(message, returnCopy);
+
+            await CopyReturnSchemes(message, returnCopy);
+
+            await CopyReturnNonObligated(message, returnCopy);
+
+            CopyReturnReceived(message, returnCopy);
+
+            CopyReturnSentOn(message, returnCopy);
+
+            CopyReturnReused(message, returnCopy);
+
+            CopyReturn(message, returnCopy);
+
+            await context.SaveChangesAsync();
+
+            return @returnCopy.Id;
+        }
+
+        private void CopyReturn(CopyReturn message, Return returnCopy)
+        {
+            returnCopy.ResetSubmitted(userContext.UserId.ToString(), message.ReturnId);
             context.Entry(returnCopy.Operator).State = EntityState.Unchanged;
 
-            var reportsOn = await context.ReturnReportOns.Where(r => r.ReturnId == message.ReturnId).ToListAsync();
-            reportsOn.ForEach(s => s.UpdateReturn(returnCopy));
+            context.Returns.Add(returnCopy);
+        }
 
-            context.ReturnReportOns.AddRange(reportsOn);
-
-            var schemes = await context.ReturnScheme.Where(r => r.ReturnId == message.ReturnId).ToListAsync();
-            schemes.ForEach(s => s.UpdateReturn(returnCopy));
-
-            context.ReturnScheme.AddRange(schemes);
-
-            var nonObligated = await context.NonObligatedWeee.Where(n => n.ReturnId == message.ReturnId).ToListAsync();
-            nonObligated.ForEach(n => n.UpdateReturn(returnCopy));
-
-            context.NonObligatedWeee.AddRange(nonObligated);
-
-            var received = context.WeeeReceived.Where(w => w.ReturnId == message.ReturnId)
-                .Include(w => w.WeeeReceivedAmounts)
+        private void CopyReturnReused(CopyReturn message, Return returnCopy)
+        {
+            var reused = context.WeeeReused.Where(w => w.ReturnId == message.ReturnId)
+                .Include(w => w.WeeeReusedSites.Select(s => s.Address))
+                .Include(w => w.WeeeReusedAmounts)
+                .Include(w => w.Aatf)
                 .ToList();
 
-            received.ForEach(r => r.UpdateReturn(returnCopy));
-            received.ForEach(r => r.WeeeReceivedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-            received.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
-            received.ForEach(s => context.Entry(s.Scheme).State = EntityState.Unchanged);
+            reused.ForEach(s => s.UpdateReturn(returnCopy));
+            reused.ForEach(r => context.Entry(r.Aatf).State = EntityState.Unchanged);
+            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w.Address).State = EntityState.Added));
+            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+            reused.ForEach(r => r.WeeeReusedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
 
-            context.WeeeReceived.AddRange(received);
+            context.WeeeReused.AddRange(reused);
+        }
 
+        private void CopyReturnSentOn(CopyReturn message, Return returnCopy)
+        {
             var sentOn = context.WeeeSentOn.Where(w => w.ReturnId == message.ReturnId)
                 .Include(w => w.WeeeSentOnAmounts)
                 .Include(w => w.OperatorAddress)
@@ -87,28 +106,44 @@
             sentOn.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
 
             context.WeeeSentOn.AddRange(sentOn);
+        }
 
-            var reused = context.WeeeReused.Where(w => w.ReturnId == message.ReturnId)
-                .Include(w => w.WeeeReusedSites.Select(s => s.Address))
-                .Include(w => w.WeeeReusedAmounts)
-                .Include(w => w.Aatf)
+        private void CopyReturnReceived(CopyReturn message, Return returnCopy)
+        {
+            var received = context.WeeeReceived.Where(w => w.ReturnId == message.ReturnId)
+                .Include(w => w.WeeeReceivedAmounts)
                 .ToList();
 
-            reused.ForEach(s => s.UpdateReturn(returnCopy));
-            reused.ForEach(r => context.Entry(r.Aatf).State = EntityState.Unchanged);
-            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w.Address).State = EntityState.Added));
-            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-            reused.ForEach(r => r.WeeeReusedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+            received.ForEach(r => r.UpdateReturn(returnCopy));
+            received.ForEach(r => r.WeeeReceivedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+            received.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
+            received.ForEach(s => context.Entry(s.Scheme).State = EntityState.Unchanged);
 
-            context.WeeeReused.AddRange(reused);
+            context.WeeeReceived.AddRange(received);
+        }
 
-            returnCopy.ResetSubmitted(userContext.UserId.ToString(), message.ReturnId);
+        private async Task CopyReturnNonObligated(CopyReturn message, Return returnCopy)
+        {
+            var nonObligated = await context.NonObligatedWeee.Where(n => n.ReturnId == message.ReturnId).ToListAsync();
+            nonObligated.ForEach(n => n.UpdateReturn(returnCopy));
 
-            context.Returns.Add(returnCopy);
+            context.NonObligatedWeee.AddRange(nonObligated);
+        }
 
-            await context.SaveChangesAsync();
+        private async Task CopyReturnSchemes(CopyReturn message, Return returnCopy)
+        {
+            var schemes = await context.ReturnScheme.Where(r => r.ReturnId == message.ReturnId).ToListAsync();
+            schemes.ForEach(s => s.UpdateReturn(returnCopy));
 
-            return @returnCopy.Id;
+            context.ReturnScheme.AddRange(schemes);
+        }
+
+        private async Task CopyReturnReportsOn(CopyReturn message, Return returnCopy)
+        {
+            var reportsOn = await context.ReturnReportOns.Where(r => r.ReturnId == message.ReturnId).ToListAsync();
+            reportsOn.ForEach(s => s.UpdateReturn(returnCopy));
+
+            context.ReturnReportOns.AddRange(reportsOn);
         }
     }
 }
