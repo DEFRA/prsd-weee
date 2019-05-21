@@ -22,7 +22,6 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetAatfsDataAccess dataAccess;
-        private readonly AatfDataListMap mapper;
         private readonly IMap<Aatf, AatfDataList> fakeMapper;
         private readonly GetAatfsHandler handler;
 
@@ -30,13 +29,9 @@
         {
             authorization = A.Fake<IWeeeAuthorization>();
             dataAccess = A.Fake<IGetAatfsDataAccess>();
-            mapper = new AatfDataListMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(),
-            A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>(),
-            A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>());
+            fakeMapper = A.Dummy<IMap<Aatf, AatfDataList>>();
 
-            fakeMapper = A.Fake<IMap<Aatf, AatfDataList>>();
-
-            handler = new GetAatfsHandler(authorization, mapper, dataAccess);
+            handler = new GetAatfsHandler(authorization, fakeMapper, dataAccess);
         }
 
         [Fact]
