@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
+﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;

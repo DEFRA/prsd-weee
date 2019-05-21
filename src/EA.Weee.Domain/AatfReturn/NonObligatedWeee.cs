@@ -4,7 +4,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;          
 
-    public partial class NonObligatedWeee : ReturnEntity
+    public partial class NonObligatedWeee : ReturnEntity, IReturnOption
     {
         public NonObligatedWeee(Return aatfReturn, int categoryId, bool dcf, decimal? tonnage)
         {

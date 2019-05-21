@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class WeeeSentOn : ReturnEntity
+    public class WeeeSentOn : ReturnEntity, IReturnOption
     {
         public virtual AatfAddress OperatorAddress { get; private set; }
 
