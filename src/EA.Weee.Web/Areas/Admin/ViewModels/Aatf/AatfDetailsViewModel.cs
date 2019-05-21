@@ -4,6 +4,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
 
     public class AatfDetailsViewModel
@@ -31,5 +32,9 @@
         public AatfContactData ContactData { get; set; }
 
         public bool CanEditContactDetails { get; set; }
+
+        public List<AatfDataList> AssociatedAatfs { get; set; }
+
+        public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
     }
 }
