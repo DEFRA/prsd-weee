@@ -199,6 +199,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedRemoveSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsDeselectControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />
