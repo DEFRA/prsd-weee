@@ -131,6 +131,7 @@
     <Compile Include="Admin\AddAatfRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsByOperatorIdHandlerTests.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandlerTests.cs" />
     <Compile Include="Admin\GetRolesHandlerTests.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesByOrganisationIdHandlerTests.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccessTests.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandlerTests.cs" />

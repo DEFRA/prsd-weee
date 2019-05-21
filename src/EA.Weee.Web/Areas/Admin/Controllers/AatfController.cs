@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
@@ -50,9 +51,16 @@
                 AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
                 OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(aatf.Operator.OrganisationId));
 
+                List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
+                associatedAatfs = associatedAatfs.Where(a => a.Id != id).ToList();
+
+                List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
+
                 AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData, organisationData)
                 {
-                    OrganisationString = GenerateAddress(organisationData.BusinessAddress)
+                    OrganisationString = GenerateAddress(organisationData.BusinessAddress),
+                    AssociatedAatfs = associatedAatfs,
+                    AssociatedSchemes = associatedSchemes
                 });
 
                 return View(viewModel);
