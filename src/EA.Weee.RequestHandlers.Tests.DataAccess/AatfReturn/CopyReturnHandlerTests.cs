@@ -2,11 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.Helpers;
+    using Domain;
+    using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -17,11 +22,23 @@
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using AatfSize = Domain.AatfReturn.AatfSize;
+    using AatfStatus = Domain.AatfReturn.AatfStatus;
+    using Country = Domain.Country;
+    using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
     using ReturnStatus = Domain.AatfReturn.ReturnStatus;
+    using Scheme = Domain.Scheme.Scheme;
+    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
+    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
+    using WeeeReused = Domain.AatfReturn.WeeeReused;
+    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
+    using WeeeReusedSite = Domain.AatfReturn.WeeeReusedSite;
+    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
+    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
     public class CopyReturnHandlerTests
     {
@@ -29,8 +46,9 @@
         private DatabaseWrapper database;
         private Return @return;
         private Return copiedReturn;
-        private Organisation organisation;
-        private Guid returnId;
+        private Operator @operator;
+        private Country country;
+        private EA.Weee.Domain.UKCompetentAuthority competentAuthority;
 
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
@@ -111,15 +129,188 @@
         {
             void Action(Guid id)
             {
-                copiedReturn.OperatorId.Should().Be(@return.OperatorId);
-
                 var copiedReportsOn = database.WeeeContext.ReturnReportOns.Where(r => r.ReturnId == copiedReturn.Id).ToList();
 
                 var originalReports = database.WeeeContext.ReturnReportOns.Where(r => r.ReturnId == @return.Id).ToList();
 
+                originalReports.Count().Should().NotBe(0);
                 copiedReportsOn.Count().Should().Be(originalReports.Count());
                 copiedReportsOn.Select(r => r.Id).ToList().Should().NotContain(originalReports.Select(r => r.Id).ToList());
                 copiedReportsOn.Select(r => r.ReportOnQuestionId).ToList().Should().Contain(originalReports.Select(r => r.ReportOnQuestionId).ToList());
+            }
+
+            await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnNonObligated_CopiedReturnShouldHaveSameValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedNonObligated = database.WeeeContext.NonObligatedWeee.Where(r => r.ReturnId == copiedReturn.Id).ToList();
+
+                var originalNonObligated = database.WeeeContext.NonObligatedWeee.Where(r => r.ReturnId == @return.Id).ToList();
+
+                originalNonObligated.Count().Should().NotBe(0);
+                copiedNonObligated.Count().Should().Be(originalNonObligated.Count());
+                copiedNonObligated.Select(r => r.Id).ToList().Should().NotContain(originalNonObligated.Select(r => r.Id).ToList());
+
+                foreach (var copiedNonObligatedWeee in copiedNonObligated)
+                {
+                    originalNonObligated.Where(n =>
+                        n.Tonnage == copiedNonObligatedWeee.Tonnage && n.CategoryId == copiedNonObligatedWeee.CategoryId
+                                                                    && n.Dcf == copiedNonObligatedWeee.Dcf).Should().NotBeNull();
+                }              
+            }
+
+            await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReceived_CopiedReturnShouldHaveSameValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == copiedReturn.Id).Include(w => w.WeeeReceivedAmounts).ToList();
+
+                var originalWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReceivedAmounts).ToList();
+
+                originalWeeeReceived.Count().Should().NotBe(0);
+                copiedWeeeReceived.Count().Should().Be(originalWeeeReceived.Count());
+                copiedWeeeReceived.Select(r => r.Id).ToList().Should().NotContain(originalWeeeReceived.Select(r => r.Id).ToList());
+
+                foreach (var copiedNonObligatedWeee in copiedWeeeReceived)
+                {
+                    originalWeeeReceived.Where(n => n.AatfId == copiedNonObligatedWeee.AatfId && n.SchemeId == copiedNonObligatedWeee.SchemeId).Should().NotBeNull();
+                }
+
+                var originalWeeeReceivedAmounts = originalWeeeReceived.SelectMany(w => w.WeeeReceivedAmounts).ToList();
+                var copiedWeeeReceivedAmounts = copiedWeeeReceived.SelectMany(w => w.WeeeReceivedAmounts).ToList();
+
+                originalWeeeReceivedAmounts.Count().Should().NotBe(0);
+                originalWeeeReceivedAmounts.Count().Should().Be(copiedWeeeReceivedAmounts.Count());
+                originalWeeeReceivedAmounts.Select(w => w.Id).ToList().Should()
+                    .NotContain(copiedWeeeReceivedAmounts.Select(r => r.Id).ToList());
+
+                foreach (var copiedWeeeReceivedAmount in copiedWeeeReceivedAmounts)
+                {
+                    originalWeeeReceivedAmounts.Where(n =>
+                        n.CategoryId == copiedWeeeReceivedAmount.CategoryId &&
+                        n.HouseholdTonnage == copiedWeeeReceivedAmount.HouseholdTonnage &&
+                        n.NonHouseholdTonnage == copiedWeeeReceivedAmount.NonHouseholdTonnage).Should().NotBeNull();
+                }
+            }
+
+            await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeSentOn_CopiedReturnShouldHaveSameValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == copiedReturn.Id).Include(w => w.WeeeSentOnAmounts).ToList();
+
+                var originalWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeSentOnAmounts).ToList();
+
+                originalWeeeSentOn.Count().Should().NotBe(0);
+                copiedWeeeSentOn.Count().Should().Be(originalWeeeSentOn.Count());
+                copiedWeeeSentOn.Select(r => r.Id).ToList().Should().NotContain(originalWeeeSentOn.Select(r => r.Id).ToList());
+                copiedWeeeSentOn.Select(r => r.OperatorAddress.Id).ToList().Should().NotContain(originalWeeeSentOn.Select(r => r.OperatorAddress.Id).ToList());
+                copiedWeeeSentOn.Select(r => r.SiteAddress.Id).ToList().Should().NotContain(originalWeeeSentOn.Select(r => r.SiteAddress.Id).ToList());
+                copiedWeeeSentOn.Select(r => r.OperatorAddress.Id).Should().NotContainNulls();
+                copiedWeeeSentOn.Select(r => r.SiteAddress.Id).Should().NotContainNulls();
+
+                foreach (var copiedNonObligatedWeee in copiedWeeeSentOn)
+                {
+                    originalWeeeSentOn.Where(n => n.AatfId == copiedNonObligatedWeee.AatfId).Should().NotBeNull();
+                }
+
+                var originalWeeeSentOnAmounts = originalWeeeSentOn.SelectMany(w => w.WeeeSentOnAmounts).ToList();
+                var copiedWeeeSentOnAmounts = copiedWeeeSentOn.SelectMany(w => w.WeeeSentOnAmounts).ToList();
+
+                originalWeeeSentOnAmounts.Count().Should().NotBe(0);
+                originalWeeeSentOnAmounts.Count().Should().Be(copiedWeeeSentOnAmounts.Count());
+                originalWeeeSentOnAmounts.Select(w => w.Id).ToList().Should()
+                    .NotContain(copiedWeeeSentOnAmounts.Select(r => r.Id).ToList());
+
+                foreach (var copiedWeeeReceivedAmount in copiedWeeeSentOnAmounts)
+                {
+                    originalWeeeSentOnAmounts.Where(n =>
+                        n.CategoryId == copiedWeeeReceivedAmount.CategoryId &&
+                        n.HouseholdTonnage == copiedWeeeReceivedAmount.HouseholdTonnage &&
+                        n.NonHouseholdTonnage == copiedWeeeReceivedAmount.NonHouseholdTonnage).Should().NotBeNull();
+                }
+            }
+
+            await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReused_CopiedReturnShouldHaveSameValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReusedSites)
+                    .Include(w => w.WeeeReusedAmounts).ToList();
+
+                var originalWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == @return.Id)
+                    .Include(w => w.WeeeReusedSites)
+                    .Include(w => w.WeeeReusedAmounts).ToList();
+
+                originalWeeeReused.Count().Should().NotBe(0);
+                copiedWeeeReused.Count().Should().Be(originalWeeeReused.Count());
+                copiedWeeeReused.Select(r => r.Id).ToList().Should().NotContain(originalWeeeReused.Select(r => r.Id).ToList());
+
+                foreach (var copiedNonObligatedWeee in copiedWeeeReused)
+                {
+                    originalWeeeReused.Where(n => n.AatfId == copiedNonObligatedWeee.AatfId).Should().NotBeNull();
+                }
+
+                var originalWeeeReusedAmounts = originalWeeeReused.SelectMany(w => w.WeeeReusedAmounts).ToList();
+                var copiedWeeeReusedAmounts = copiedWeeeReused.SelectMany(w => w.WeeeReusedAmounts).ToList();
+
+                originalWeeeReusedAmounts.Count().Should().NotBe(0);
+                originalWeeeReusedAmounts.Count().Should().Be(copiedWeeeReusedAmounts.Count());
+                originalWeeeReusedAmounts.Select(w => w.Id).ToList().Should()
+                    .NotContain(copiedWeeeReusedAmounts.Select(r => r.Id).ToList());
+
+                foreach (var copiedWeeeReceivedAmount in copiedWeeeReusedAmounts)
+                {
+                    originalWeeeReusedAmounts.Where(n =>
+                        n.CategoryId == copiedWeeeReceivedAmount.CategoryId &&
+                        n.HouseholdTonnage == copiedWeeeReceivedAmount.HouseholdTonnage &&
+                        n.NonHouseholdTonnage == copiedWeeeReceivedAmount.NonHouseholdTonnage).Should().NotBeNull();
+                }
+
+                var originalWeeeReusedSites = originalWeeeReused.SelectMany(w => w.WeeeReusedSites).ToList();
+                var copiedWeeeReusedSites = copiedWeeeReused.SelectMany(w => w.WeeeReusedSites).ToList();
+
+                originalWeeeReusedSites.Count().Should().NotBe(0);
+                originalWeeeReusedSites.Count().Should().Be(copiedWeeeReusedSites.Count());
+                originalWeeeReusedSites.Select(w => w.Id).ToList().Should()
+                    .NotContain(copiedWeeeReusedSites.Select(r => r.Id).ToList());
+                originalWeeeReusedSites.Select(w => w.Address.Id).ToList().Should()
+                    .NotContain(copiedWeeeReusedSites.Select(r => r.Address.Id).ToList());
+            }
+
+            await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnSchemes_CopiedReturnShouldHaveSameValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedReturnScheme = database.WeeeContext.ReturnScheme.Where(r => r.ReturnId == copiedReturn.Id).ToList();
+
+                var originalReturnScheme = database.WeeeContext.ReturnScheme.Where(r => r.ReturnId == @return.Id).ToList();
+
+                originalReturnScheme.Count().Should().NotBe(0);
+                copiedReturnScheme.Count().Should().Be(originalReturnScheme.Count());
+                copiedReturnScheme.Select(r => r.Id).ToList().Should().NotContain(originalReturnScheme.Select(r => r.Id).ToList());
+                copiedReturnScheme.Select(r => r.SchemeId).ToList().Should().Contain(originalReturnScheme.Select(r => r.SchemeId).ToList());
             }
 
             await ActionAndAssert(Action);
@@ -181,8 +372,11 @@
 
         private async Task CreateReturnToCopy()
         {
-            organisation = Organisation.CreateSoleTrader("Test Organisation");
-            var @operator = new Operator(organisation);
+            country = await database.WeeeContext.Countries.FirstAsync();
+            competentAuthority = await database.WeeeContext.UKCompetentAuthorities.FirstAsync(c => c.Name == "Environment Agency");
+
+            var organisation = Organisation.CreateSoleTrader("Test Organisation");
+            @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
             @return = new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id) { ReturnStatus = ReturnStatus.Submitted };
@@ -191,6 +385,137 @@
 
             await database.WeeeContext.SaveChangesAsync();
 
+            await AddReturnReportsOn();
+
+            await AddReturnScheme();
+
+            await AddNonObligated();
+
+            await AddWeeeReceived(organisation);
+
+            await AddWeeSentOn();
+
+            await AddWeeeReused();
+        }
+
+        private async Task AddWeeeReused()
+        {
+            var weeeReused = new List<WeeeReused>()
+            {
+                new WeeeReused(Aatf(), @return.Id),
+                new WeeeReused(Aatf(), @return.Id)
+            };
+
+            var weeeReusedSites = new List<WeeeReusedSite>()
+            {
+                new WeeeReusedSite(weeeReused.ElementAt(0), AatfSiteAddress()),
+                new WeeeReusedSite(weeeReused.ElementAt(1), AatfSiteAddress())
+            };
+
+            var weeeReusedAmounts = new List<WeeeReusedAmount>()
+            {
+                new WeeeReusedAmount(weeeReused.ElementAt(0), 1, 10, 20),
+                new WeeeReusedAmount(weeeReused.ElementAt(0), 2, 30, 40),
+                new WeeeReusedAmount(weeeReused.ElementAt(1), 3, null, 0),
+                new WeeeReusedAmount(weeeReused.ElementAt(1), 4, 0, null)
+            };
+
+            database.WeeeContext.WeeeReusedSite.AddRange(weeeReusedSites);
+            database.WeeeContext.WeeeReusedAmount.AddRange(weeeReusedAmounts);
+            database.WeeeContext.WeeeReused.AddRange(weeeReused);
+
+            await database.WeeeContext.SaveChangesAsync();
+        }
+
+        private async Task AddWeeSentOn()
+        {
+            var weeeSentOn = new List<WeeeSentOn>()
+            {
+                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), Aatf(), @return),
+                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), Aatf(), @return)
+            };
+
+            var weeSentOnAmounts = new List<WeeeSentOnAmount>()
+            {
+                new WeeeSentOnAmount(weeeSentOn.ElementAt(0), 1, 10, 20),
+                new WeeeSentOnAmount(weeeSentOn.ElementAt(0), 2, 30, 40),
+                new WeeeSentOnAmount(weeeSentOn.ElementAt(1), 3, 0, null),
+                new WeeeSentOnAmount(weeeSentOn.ElementAt(1), 4, null, 0)
+            };
+
+            database.WeeeContext.WeeeSentOnAmount.AddRange(weeSentOnAmounts);
+            database.WeeeContext.WeeeSentOn.AddRange(weeeSentOn);
+
+            await database.WeeeContext.SaveChangesAsync();
+        }
+
+        private async Task AddWeeeReceived(Organisation organisation)
+        {
+            var weeReceived = new List<WeeeReceived>()
+            {
+                new WeeeReceived(new Scheme(organisation), Aatf(), @return.Id),
+                new WeeeReceived(new Scheme(organisation), Aatf(), @return.Id)
+            };
+
+            var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
+            {
+                new WeeeReceivedAmount(weeReceived.ElementAt(0), 1, 100, 200),
+                new WeeeReceivedAmount(weeReceived.ElementAt(0), 2, 300, 400),
+                new WeeeReceivedAmount(weeReceived.ElementAt(1), 3, 0, null),
+                new WeeeReceivedAmount(weeReceived.ElementAt(1), 4, null, 0)
+            };
+
+            database.WeeeContext.WeeeReceivedAmount.AddRange(weeeReceivedAmounts);
+            database.WeeeContext.WeeeReceived.AddRange(weeReceived);
+
+            await database.WeeeContext.SaveChangesAsync();
+        }
+
+        private Aatf Aatf()
+        {
+            var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, @operator,
+                AatfSiteAddress(), AatfSize.Large, DateTime.Now,
+                new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"));
+            return aatf;
+        }
+
+        private AatfContact Contact()
+        {
+            return new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
+        }
+
+        private AatfAddress AatfSiteAddress()
+        {
+            return new AatfAddress("name", "address1", "address2", "town", "county", "postcode", country);
+        }
+
+        private async Task AddNonObligated()
+        {
+            var nonObligated = new List<NonObligatedWeee>()
+            {
+                new NonObligatedWeee(@return, 1, true, 20),
+                new NonObligatedWeee(@return, 2, false, 30)
+            };
+
+            database.WeeeContext.NonObligatedWeee.AddRange(nonObligated);
+
+            await database.WeeeContext.SaveChangesAsync();
+        }
+
+        private async Task AddReturnScheme()
+        {
+            var returnScheme = new List<ReturnScheme>()
+            {
+                new ReturnScheme(new Scheme(@operator.Organisation), @return)
+            };
+
+            database.WeeeContext.ReturnScheme.AddRange(returnScheme);
+
+            await database.WeeeContext.SaveChangesAsync();
+        }
+
+        private async Task AddReturnReportsOn()
+        {
             var reportsOn = new List<ReturnReportOn>()
             {
                 new ReturnReportOn(@return.Id, (int)ReportOnQuestionEnum.WeeeReceived)

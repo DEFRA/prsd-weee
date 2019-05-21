@@ -15,8 +15,6 @@
             this.ReportOnQuestionId = reportOnQuestId;
         }
 
-        public Guid ReturnId { get; private set; }
-
         public int ReportOnQuestionId { get; private set; }
     }
 }

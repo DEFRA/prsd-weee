@@ -20,7 +20,7 @@
         }
 
         [Fact]
-        public void WeeeReceived_GivenValidParameters_WeeeReceivedPropertiesShouldBeSet()
+        public void WeeeReused_GivenValidParameters_WeeeReceivedPropertiesShouldBeSet()
         {
             var aatf = A.Fake<Aatf>();
             var returnId = Guid.NewGuid();
@@ -29,6 +29,12 @@
 
             weeeReceived.Aatf.Should().Be(aatf);
             weeeReceived.ReturnId.Should().Be(returnId);
+        }
+
+        [Fact]
+        public void WeeeReused_ShouldInheritFromReturnEntity()
+        {
+            typeof(WeeeReused).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
         }
     }
 }

@@ -76,7 +76,7 @@
 
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
-                weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage, Guid.NewGuid()));
+                weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
             var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess);
