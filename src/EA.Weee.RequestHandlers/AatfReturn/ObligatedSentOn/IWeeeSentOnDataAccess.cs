@@ -17,6 +17,8 @@
 
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
 
+        Task<List<WeeeSentOn>> GetWeeeSentOnByReturn(Guid returnId);
+
         Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId);
     }
 }

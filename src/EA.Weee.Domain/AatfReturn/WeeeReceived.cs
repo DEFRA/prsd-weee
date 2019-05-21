@@ -5,7 +5,7 @@
     using EA.Prsd.Core.Domain;
     using Scheme;
 
-    public class WeeeReceived : Entity
+    public class WeeeReceived : Entity, IReturnOption
     {
         public Guid SchemeId { get; private set; }
 
