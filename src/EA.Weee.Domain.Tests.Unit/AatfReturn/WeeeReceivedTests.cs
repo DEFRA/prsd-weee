@@ -44,5 +44,11 @@
             weeeReceived.Aatf.Should().Be(aatf);
             weeeReceived.ReturnId.Should().Be(returnId);
         }
+
+        [Fact]
+        public void WeeeReceived_ShouldInheritFromReturnEntity()
+        {
+            typeof(WeeeReceived).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+        }
     }
 }

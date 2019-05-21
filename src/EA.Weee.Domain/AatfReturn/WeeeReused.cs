@@ -5,15 +5,11 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class WeeeReused : Entity
+    public class WeeeReused : ReturnEntity
     {
         public virtual Guid AatfId { get; private set; }
 
-        public virtual Aatf Aatf { get; private set; }
-        
-        public virtual Guid ReturnId { get; private set; }
-
-        public virtual Return Return { get; set; }
+        public virtual Aatf Aatf { get; private set; }      
 
         public virtual IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
 
@@ -35,11 +31,6 @@
 
         public WeeeReused()
         {
-        }
-
-        public virtual void UpdateReturn(Return @return)
-        {
-            Return = @return;
         }
     }
 }

@@ -14,7 +14,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new WeeeSentOnAmount(null, 2, 2, 3, A.Dummy<Guid>());
+                var @return = new WeeeSentOnAmount(null, 2, 2, 3);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -28,7 +28,7 @@
             var household = 1.000m;
             var nonHousehold = 2.000m;
 
-            var weeeReceivedAmount = new WeeeSentOnAmount(weeeSentOn, categoryId, household, nonHousehold, A.Dummy<Guid>());
+            var weeeReceivedAmount = new WeeeSentOnAmount(weeeSentOn, categoryId, household, nonHousehold);
 
             weeeReceivedAmount.WeeeSentOn.Should().Be(weeeSentOn);
             weeeReceivedAmount.CategoryId.Should().Be(categoryId);
@@ -51,7 +51,7 @@
         [MemberData(nameof(GetData))]
         public void UpdateTonnages_GivenTonnages_TonnageValuesShouldBeUpdated(decimal value1, decimal value2)
         {
-            var amount = new WeeeSentOnAmount(A.Fake<WeeeSentOn>(), A.Dummy<int>(), 4.00m, 5.00m, A.Dummy<Guid>());
+            var amount = new WeeeSentOnAmount(A.Fake<WeeeSentOn>(), A.Dummy<int>(), 4.00m, 5.00m);
 
             amount.UpdateTonnages(value1, value2);
 
@@ -62,12 +62,18 @@
         [Fact]
         public void UpdateTonnages_GivenTonnagesZero_TonnageValuesShouldBeUpdated()
         {
-            var amount = new WeeeSentOnAmount(A.Fake<WeeeSentOn>(), A.Dummy<int>(), 4.00m, 5.00m, A.Dummy<Guid>());
+            var amount = new WeeeSentOnAmount(A.Fake<WeeeSentOn>(), A.Dummy<int>(), 4.00m, 5.00m);
 
             amount.UpdateTonnages(0m, 0m);
 
             amount.HouseholdTonnage.Should().Be(0m);
             amount.NonHouseholdTonnage.Should().Be(0m);
+        }
+
+        [Fact]
+        public void WeeeSentOnAmount_ShouldInheritFromObligatedAmount()
+        {
+            typeof(WeeeSentOnAmount).BaseType.Name.Should().Be(typeof(ObligatedAmount).Name);
         }
     }
 }
