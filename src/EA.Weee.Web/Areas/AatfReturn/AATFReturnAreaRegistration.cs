@@ -43,6 +43,12 @@
                 namespaces: new[] { typeof(SelectReportOptionsController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfRedirect.SelectReportOptionsDeselectRouteName,
+                url: "aatf-return/{organisationId}/select-report-options-confirm/{returnId}/{action}",
+                defaults: new { action = "Index", controller = "SelectReportOptionsDeselect" },
+                namespaces: new[] { typeof(SelectReportOptionsDeselectController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfRedirect.AatfSchemeSelectedRoute,
                 url: "aatf-return/{returnId}/{controller}/{aatfId}/scheme/{schemeId}/{action}",
                 defaults: new { action = "Index", controller = "ReceivedPcsList" },

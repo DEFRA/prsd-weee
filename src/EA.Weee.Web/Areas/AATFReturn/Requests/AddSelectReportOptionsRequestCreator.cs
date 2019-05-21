@@ -6,14 +6,15 @@
 
     public class AddSelectReportOptionsRequestCreator : IAddSelectReportOptionsRequestCreator
     {
-        public AddReturnReportOn ViewModelToRequest(SelectReportOptionsViewModel viewModel)
+        public AddReturnReportOn ViewModelToRequest(SelectReportOptionsModelBase viewModel)
         {
             var reportOptions = new AddReturnReportOn()
             {
                 ReturnId = viewModel.ReturnId,
                 SelectedOptions = viewModel.SelectedOptions,
+                DeselectedOptions = viewModel.DeselectedOptions,
                 Options = viewModel.ReportOnQuestions,
-                DcfSelectedValue = viewModel.DcfSelectedValue
+                DcfSelectedValue = viewModel.DcfSelectedValue,
             };
 
             return reportOptions;

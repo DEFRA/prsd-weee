@@ -54,6 +54,7 @@
     <Compile Include="AatfReturn\IObligatedAmount.cs" />
     <Compile Include="AatfReturn\AatfAddress.cs" />
     <Compile Include="AatfReturn\IOperatorEntity.cs" />
+    <Compile Include="AatfReturn\IReturnOption.cs" />
     <Compile Include="AatfReturn\NonObligatedAmount.cs" />
     <Compile Include="AatfReturn\ObligatedAmount.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
