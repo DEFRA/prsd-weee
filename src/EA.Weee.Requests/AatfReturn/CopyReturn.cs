@@ -4,7 +4,7 @@
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
 
-    public class CopyReturn : IRequest<bool>
+    public class CopyReturn : IRequest<Guid>
     {
         public Guid ReturnId { get; private set; }
 

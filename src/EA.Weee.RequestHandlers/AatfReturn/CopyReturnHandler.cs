@@ -17,36 +17,37 @@
     using Security;
     using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
-    internal class CopyReturnHandler : IRequestHandler<CopyReturn, bool>
+    internal class CopyReturnHandler : IRequestHandler<CopyReturn, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IReturnDataAccess returnDataAccess;
         private readonly IUserContext userContext;
         private readonly WeeeContext context;
 
         public CopyReturnHandler(IWeeeAuthorization authorization,
             WeeeContext context,
-            IReturnDataAccess returnDataAccess,
             IUserContext userContext)
         {
             this.authorization = authorization;
-            this.returnDataAccess = returnDataAccess;
             this.userContext = userContext;
             this.context = context;
         }
 
-        public async Task<bool> HandleAsync(CopyReturn message)
+        public async Task<Guid> HandleAsync(CopyReturn message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var @return = await returnDataAccess.GetById(message.ReturnId);
+            var returnCopy = await context.Returns
+                .Include(r => r.Operator.Organisation)
+                .FirstOrDefaultAsync(o => o.Id == message.ReturnId);
 
-            if (@return == null)
+            if (returnCopy == null)
             {
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");
             }
 
-            var returnCopy = await context.Returns.FirstAsync(o => o.Id == message.ReturnId);
+            authorization.EnsureOrganisationAccess(returnCopy.Operator.Organisation.Id);
+
+            context.Entry(returnCopy.Operator).State = EntityState.Unchanged;
 
             var reportsOn = await context.ReturnReportOns.Where(r => r.ReturnId == message.ReturnId).ToListAsync();
             reportsOn.ForEach(s => s.UpdateReturn(@returnCopy));
@@ -97,7 +98,7 @@
 
             await context.SaveChangesAsync();
 
-            return true;
+            return @returnCopy.Id;
         }
     }
 }
