@@ -1,8 +1,13 @@
 ﻿function toggleVisibility(toggle, section) {
     $(document).ready(function () {
+        var attr = $(toggle).attr('checked');
+        console.log(attr);
         if (!$('.govuk-form-group').hasClass('error')) {
-            $(section).css('display', 'none');
+            if (!(attr !== undefined)) {
+                $(section).css('display', 'none');
+            }
         }
+        
         $(toggle).change(function () {
             if (this.checked) {
                 $(section).css('display', 'block');

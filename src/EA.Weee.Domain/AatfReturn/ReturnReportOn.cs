@@ -3,7 +3,7 @@
     using System;
     using EA.Prsd.Core.Domain;
 
-    public class ReturnReportOn : Entity
+    public class ReturnReportOn : Entity, IReturnOption
     {
         public ReturnReportOn()
         {
