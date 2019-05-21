@@ -7,7 +7,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public partial class ReturnScheme : ReturnEntity
+    public partial class ReturnScheme : ReturnEntity, IReturnOption
     {
         protected ReturnScheme()
         {

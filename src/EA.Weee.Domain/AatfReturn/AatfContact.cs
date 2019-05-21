@@ -42,6 +42,41 @@
             Country = country;
             Telephone = telephone;
             Email = email;
+            CountryId = country.Id;
+        }
+
+        public AatfContact(
+            string firstName,
+            string lastName,
+            string position,
+            string address1,
+            string address2,
+            string townOrCity,
+            string countyOrRegion,
+            string postcode,
+            Guid countryId,
+            string telephone,
+            string email)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
+            Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
+            Guard.ArgumentNotNullOrEmpty(() => position, position);
+            Guard.ArgumentNotNullOrEmpty(() => address1, address1);
+            Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
+            Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
+            Guard.ArgumentNotNullOrEmpty(() => email, email);
+
+            FirstName = firstName;
+            LastName = lastName;
+            Position = position;
+            Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            CountyOrRegion = countyOrRegion;
+            Postcode = postcode;
+            Telephone = telephone;
+            Email = email;
+            CountryId = countryId;
         }
 
         public virtual void UpdateDetails(

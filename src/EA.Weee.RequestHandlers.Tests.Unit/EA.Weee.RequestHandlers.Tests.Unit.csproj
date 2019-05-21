@@ -128,6 +128,7 @@
     <Compile Include="AatfReturn\ReturnHelper.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfInfoByAatfIdRequestHandlerTests.cs" />
+    <Compile Include="Admin\AddAatfRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandlerTests.cs" />
@@ -189,6 +190,8 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Factories\QuarterWindowFactoryTests.cs" />
+    <Compile Include="Mapping\AatfAddressDataMapTests.cs" />
+    <Compile Include="Mapping\AatfContactDataMapTests.cs" />
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />

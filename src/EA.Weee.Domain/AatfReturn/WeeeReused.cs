@@ -5,7 +5,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class WeeeReused : ReturnEntity
+    public class WeeeReused : ReturnEntity, IReturnOption
     {
         public virtual Guid AatfId { get; private set; }
 

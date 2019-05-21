@@ -1,6 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using EA.Prsd.Core.Domain;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using FakeItEasy;
@@ -16,16 +23,18 @@
     public class AddAatfControllerTests
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
+        private readonly IWeeeClient weeeClient;
 
         public AddAatfControllerTests()
         {
             this.organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            this.weeeClient = A.Fake<IWeeeClient>();
         }
 
         [Fact]
         public void GetSearch_ReturnsView()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             ViewResult result = controller.Search() as ViewResult;
 
@@ -35,7 +44,7 @@
         [Fact]
         public void PostSearch_InvalidViewModel_ReturnsView()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel()
             {
@@ -54,7 +63,7 @@
         [Fact]
         public void PostSearch_ValidViewModel_RedirectsToSearchResults()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel()
             {
@@ -85,7 +94,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -119,7 +128,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -130,7 +139,7 @@
                 SelectedOrganisationId = organisationId
             };
 
-            ViewResult result = await controller.SearchResults(searchTerm) as ViewResult;
+            ViewResult result = await controller.SearchResults(viewModel) as ViewResult;
             SearchResultsViewModel outputModel = result.Model as SearchResultsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SearchResults");
@@ -139,7 +148,7 @@
         }
 
         [Fact]
-        public async Task PostSearch_ValidViewModelSelectedOrganisation_RedirectsToAdminHolding()
+        public async Task PostSearch_ValidViewModelSelectedOrganisation_RedirectsToAdd()
         {
             Guid organisationId = Guid.NewGuid();
             string searchTerm = "civica";
@@ -155,7 +164,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -166,8 +175,91 @@
 
             RedirectToRouteResult result = await controller.SearchResults(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AdminHolding");
+            result.RouteValues["action"].Should().Be("Add");
+            result.RouteValues["controller"].Should().Be("AddAatf");
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+        }
+
+        [Fact]
+        public async Task AddGet_CreatesViewModel_ListsArePopulated()
+        {
+            AddAatfViewModel viewModel = CreateAddViewModel();
+
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+
+            ViewResult result = await controller.Add(viewModel.OrganisationId) as ViewResult;
+
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            Assert.Equal(viewModel.SizeList, resultViewModel.SizeList);
+            Assert.Equal(viewModel.StatusList, resultViewModel.StatusList);
+            Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
+            Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
+            Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async Task AddPost_ValidViewModel_ReturnsRedirect()
+        {
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1
+            };
+
+            RedirectToRouteResult result = await controller.Add(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["controller"].Should().Be("Aatf");
+        }
+
+        [Fact]
+        public async Task AddPost_InvalidViewModel_ReturnsViewWithViewModelPopulatedWithLists()
+        { 
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+            controller.ModelState.AddModelError("error", "error");
+
+            AddAatfViewModel viewModel = CreateAddViewModel();
+
+            ViewResult result = await controller.Add(viewModel) as ViewResult;
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Add");
+            Assert.Equal(viewModel.SizeList, resultViewModel.SizeList);
+            Assert.Equal(viewModel.StatusList, resultViewModel.StatusList);
+            Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
+            Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
+            Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        private AddAatfViewModel CreateAddViewModel()
+        {
+            IList<UKCompetentAuthorityData> competentAuthoritiesList = A.Dummy<IList<UKCompetentAuthorityData>>();
+            IList<CountryData> countries = A.Dummy<IList<CountryData>>();
+            IEnumerable<AatfSize> sizeList = Enumeration.GetAll<AatfSize>();
+            IEnumerable<AatfStatus> statusList = Enumeration.GetAll<AatfStatus>();
+
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                SiteAddressData = new AatfAddressData()
+                {
+                    Countries = countries
+                },
+                ContactData = new AatfContactData()
+                {
+                    AddressData = new AatfContactAddressData()
+                    {
+                        Countries = countries
+                    }
+                },
+                SizeList = sizeList,
+                StatusList = statusList,
+                OrganisationId = Guid.NewGuid()
+            };
+
+            return viewModel;
         }
     }
 }
