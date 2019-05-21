@@ -205,6 +205,49 @@
         }
     </section>
 
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td>&nbsp;</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col" style="border-bottom: 0px; width: 30%">This organisation also operates</th>
+                @if (Model.AssociatedAatfs.Count != 0)
+                {
+                    <td class="govuk-table__cell" style="border-bottom: 0px; padding-bottom: 0px;">
+                        AATF
+                    </td>
+                }
+            </tr>
+            @foreach (var aatf in Model.AssociatedAatfs)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" style="border-bottom: 0px"></th>
+                    <td class="govuk-table__cell" style="border-bottom: 0px; padding: 5px 0px 0px 0px">
+                        @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
+                    </td>
+                </tr>
+            }
+            @if (Model.AssociatedSchemes.Count != 0)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" style="border-bottom: 0px"></th>
+                    <td class="govuk-table__cell" style="border-bottom: 0px; padding: 30px 0px 0px 0px">
+                        PCS
+                    </td>
+                </tr>
+            }
+            @foreach (var scheme in Model.AssociatedSchemes)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" style="border-bottom: 5px"></th>
+                    <td class="govuk-table__cell" style="border-bottom: 0px">
+                        @Html.ActionLink(scheme.Name, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
     <div>&nbsp;</div>
     <p>
         <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Back</a>

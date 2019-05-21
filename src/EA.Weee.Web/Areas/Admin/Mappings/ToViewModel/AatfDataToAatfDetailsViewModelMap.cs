@@ -29,7 +29,9 @@
                 ContactData = source.ContactData,
                 CanEditContactDetails = source.ContactData.CanEditContactDetails,
                 Organisation = source.OrganisationData,
-                OrganisationAddress = source.OrganisationString
+                OrganisationAddress = source.OrganisationString,
+                AssociatedAatfs = source.AssociatedAatfs,
+                AssociatedSchemes = source.AssociatedSchemes
             };
 
             if (source.AatfData.ApprovalDate != default(DateTime))

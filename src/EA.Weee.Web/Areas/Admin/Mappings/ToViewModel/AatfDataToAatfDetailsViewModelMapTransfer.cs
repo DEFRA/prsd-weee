@@ -6,6 +6,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
+    using System.Collections.Generic;
 
     public class AatfDataToAatfDetailsViewModelMapTransfer
     {
@@ -23,5 +24,9 @@
         public OrganisationData OrganisationData { get; set; }
 
         public string OrganisationString { get; set; }
+
+        public List<AatfDataList> AssociatedAatfs { get; set; }
+
+        public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
     }
 }
