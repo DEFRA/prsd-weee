@@ -21,7 +21,9 @@
 
         public virtual Operator Operator { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator)
+        public virtual FacilityType FacilityType { get; private set; }
+
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, FacilityType facilityType)
         {
             this.Id = id;
             this.Name = name;
@@ -30,6 +32,7 @@
             this.AatfStatusString = aatfStatus.DisplayName;
             this.CompetentAuthority = competentAuthority;
             this.Operator = @operator;
+            this.FacilityType = facilityType;
         }
     }
 }

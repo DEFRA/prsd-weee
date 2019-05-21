@@ -1,27 +1,35 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using FluentAssertions;
     using Requests.Admin;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetAatfsHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetAatfsDataAccess dataAccess;
+        private readonly IMap<Aatf, AatfDataList> mapper;
+        private readonly GetAatfsHandler handler;
+
         public GetAatfsHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            dataAccess = A.Dummy<IGetAatfsDataAccess>();
+            dataAccess = A.Fake<IGetAatfsDataAccess>();
+            mapper = A.Fake<IMap<Aatf, AatfDataList>>();
+
+            handler = new GetAatfsHandler(authorization, mapper, dataAccess);
         }
 
         [Fact]
@@ -37,13 +45,50 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenGetAatfsReturnRequest_DataAccessFetchIsCalled()
+        public async Task HandleAsync_GivenGetAatfRequest_DataAccessFetchIsCalled()
         {
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var handler = new GetAatfsHandler(authorization, A.Dummy<IMap<Aatf, AatfDataList>>(), dataAccess);
-
             await handler.HandleAsync(A.Dummy<GetAatfs>());
             A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf)]
+        [InlineData(FacilityType.Ae)]
+        public async Task HandleAsync_GivenGetAatfRequestWithSpecifiedFacilityType_CorrectFacilityReturned(FacilityType facilityType)
+        {
+            var aatfs = CreateAatfAeList();
+
+            A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
+
+            var request = new GetAatfs(facilityType);
+
+            var result = await handler.HandleAsync(request);
+
+            result.Count.Should().Be(1);
+            result[0].AatfStatus
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenGetAatfRequestWithNoSpecifiedFacilityType_AllFacilitiesReturned()
+        {
+            var aatfs = CreateAatfAeList();
+
+            A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
+
+            var result = await handler.HandleAsync(A.Dummy<GetAatfs>());
+
+            result.Count.Should().Be(2);
+        }
+
+        private static List<Aatf> CreateAatfAeList()
+        {
+            var aatf = A.Fake<Aatf>();
+            var ae = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.FacilityType).Returns(Domain.AatfReturn.FacilityType.Aatf);
+            A.CallTo(() => ae.FacilityType).Returns(Domain.AatfReturn.FacilityType.Ae);
+
+            return new List<Aatf>() { aatf, ae };
         }
     }
 }
