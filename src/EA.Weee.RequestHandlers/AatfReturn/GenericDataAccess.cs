@@ -68,5 +68,10 @@
         {
             return await context.Set<TEntity>().Where(specification.ToExpression()).ToListAsync();
         }
+
+        public async Task<List<TEntity>> GetManyByReturnId<TEntity>(Guid returnId) where TEntity : Entity, IReturnOption
+        {
+            return await context.Set<TEntity>().Where(e => e.ReturnId == returnId).ToListAsync();
+        }
     }
 }

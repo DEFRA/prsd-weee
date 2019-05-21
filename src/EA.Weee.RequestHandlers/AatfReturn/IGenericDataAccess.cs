@@ -22,6 +22,8 @@
 
         Task<List<TEntity>> GetManyByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;
 
+        Task<List<TEntity>> GetManyByReturnId<TEntity>(Guid returnId) where TEntity : Entity, IReturnOption;
+
         void Remove<TEntity>(TEntity entity) where TEntity : Entity;
 
         void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity;

@@ -25,5 +25,7 @@
         public int? ParentId { get; set; }
 
         public bool Selected { get; set; }
+
+        public bool Deselected { get; set; }
     }
 }
