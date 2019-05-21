@@ -29,16 +29,13 @@
 
             List<Aatf> aatfs = await dataAccess.GetAatfs();
 
-            switch (message.FacilityType)
+            if (message.FacilityType == FacilityType.Aatf)
             {
-                case FacilityType.Aatf:
-                    var ret = SortAatfs(aatfs, FacilityType.Aatf);
-                    return ret;
-                case FacilityType.Ae:
-                    var ret2 = SortAatfs(aatfs, FacilityType.Ae);
-                    return ret2;
-                default:
-                    return aatfs.OrderBy(a => a.Name).Select(s => aatfmap.Map(s)).ToList();
+                return SortAatfs(aatfs, FacilityType.Aatf);
+            }
+            else
+            {
+                return SortAatfs(aatfs, FacilityType.Ae);
             }
         }
 

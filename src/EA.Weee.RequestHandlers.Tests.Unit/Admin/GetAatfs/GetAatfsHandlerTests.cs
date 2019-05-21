@@ -73,18 +73,6 @@
             result[0].FacilityType.Should().Be(facilityType);
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenGetAatfRequestWithNoSpecifiedFacilityType_AllFacilitiesReturned()
-        {
-            var aatfs = CreateAatfAeList();
-
-            A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
-
-            var result = await handler.HandleAsync(A.Dummy<GetAatfs>());
-
-            result.Count.Should().Be(2);
-        }
-
         private static List<Aatf> CreateAatfAeList()
         {
             var aatf = A.Dummy<Aatf>();
