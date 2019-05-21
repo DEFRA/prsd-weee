@@ -121,6 +121,84 @@
         }
 
         [Fact]
+        public async void DetailsGet_GivenValidAatfId_AatfsByOperatorIdShouldBeCalled()
+        {
+            var aatfData = A.Fake<AatfData>();
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+
+            await controller.Details(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOperatorId>.That.Matches(a => a.OperatorId == aatfData.Operator.Id))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void DetailsGet_GivenValidAatfId_SchemesByOrganisationIdShouldBeCalled()
+        {
+            var aatfData = A.Fake<AatfData>();
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+
+            await controller.Details(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Operator.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void DetailsGet_GivenValidAatfId_GetOrganisationInfoShouldBeCalled()
+        {
+            var aatfData = A.Fake<AatfData>();
+            var organisationData = new OrganisationData();
+            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country",
+                Telephone = "9367282",
+                Email = "test@test.com"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A.Dummy<GetAatfById>())).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+
+            await controller.Details(A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>.That.Matches(a => a.OrganisationId == aatfData.Operator.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
         {
             AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
