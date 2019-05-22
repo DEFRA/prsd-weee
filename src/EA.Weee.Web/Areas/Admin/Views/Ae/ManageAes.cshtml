@@ -32,8 +32,7 @@
                 <th class="govuk-table__header" scope="col">Name of AE</th>
                 <th class="govuk-table__header" scope="col">Approval number</th>
                 <th class="govuk-table__header" scope="col">Appropriate authority</th>
-                <th class="govuk-table__header" scope="col">Status</th>
-                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Status</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -43,8 +42,7 @@
                     <td class="govuk-table__cell" width="100%">@ae.Name</td>
                     <td class="govuk-table__cell">@ae.ApprovalNumber</td>
                     <td class="govuk-table__cell">@ae.CompetentAuthority.Abbreviation</td>
-                    <td class="govuk-table__cell">@ae.AatfStatusString</td>
-                    <td class="govuk-table__cell">@Html.RadioButtonFor(m => m.Selected, ae.Id)</td>
+                    <td class="govuk-table__cell" style="padding-right: 20px;">@ae.AatfStatusString</td>
                 </tr>
             }
         </tbody>
