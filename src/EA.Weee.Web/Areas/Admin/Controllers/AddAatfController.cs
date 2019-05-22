@@ -12,11 +12,13 @@
     using EA.Weee.Requests.Organisations.Create;
     using EA.Weee.Requests.Organisations.Create.Base;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -24,6 +26,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [AuthorizeClaimsAttribute(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;

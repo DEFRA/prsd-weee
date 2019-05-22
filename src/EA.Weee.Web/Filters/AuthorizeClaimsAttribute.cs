@@ -31,7 +31,8 @@
             if (claimsIdentity != null)
             {
                 if (claims.All(c => claimsIdentity.Claims
-                    .Where(cl => cl.Type == ClaimTypes.AuthenticationMethod).Select(cl => cl.Value).Contains(c)))
+                    .Any(cl => cl.Type == ClaimTypes.AuthenticationMethod)) 
+                    && claims.All(c => claimsIdentity.Claims.Where(cl => cl.Type == ClaimTypes.Role).Select(cl => cl.Value).Contains(c)))
                 {
                     return; // User claims are authorized
                 }
