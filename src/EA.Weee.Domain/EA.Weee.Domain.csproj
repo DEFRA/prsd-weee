@@ -60,6 +60,7 @@
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
     <Compile Include="AatfReturn\ReturnEntity.cs" />
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
+    <Compile Include="AatfReturn\FacilityType.cs" />
     <Compile Include="AatfReturn\WeeeReused.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmount.cs" />
     <Compile Include="AatfReturn\WeeeReceived.cs" />

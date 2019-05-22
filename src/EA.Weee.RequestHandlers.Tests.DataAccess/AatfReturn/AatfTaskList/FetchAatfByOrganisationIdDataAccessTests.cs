@@ -52,17 +52,19 @@
                 var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
-                var aatf = CreateAatf(competentAuthority, @operator, database, contact);
-
-                await genericDataAccess.Add<Aatf>(aatf);
+                var aatf = CreateAatf(competentAuthority, @operator, database, contact, FacilityType.Aatf);
+                var ae = CreateAatf(competentAuthority, @operator, database, contact, FacilityType.Ae);
+                
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf, ae });
 
                 var aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
 
                 aatfList.Should().Contain(aatf);
+                aatfList.Should().NotContain(ae);
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, DatabaseWrapper database, AatfContact contact)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, DatabaseWrapper database, AatfContact contact, FacilityType facilityType)
         {
             var country = database.WeeeContext.Countries.First();
 
@@ -74,7 +76,8 @@
                 new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
                 A.Fake<AatfSize>(),
                 DateTime.Now,
-                contact);
+                contact,
+                facilityType);
         }
     }
 }
