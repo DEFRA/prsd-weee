@@ -188,7 +188,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.OrganisationId)
             <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
-                Check my return
+                Check return
             </button>
             <p>
                 @Html.NavigationRouteLink("Change my reporting options", "Change my reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
