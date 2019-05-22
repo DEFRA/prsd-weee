@@ -92,6 +92,7 @@
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
     <Compile Include="AatfReturn\AatfContactAddressData.cs" />
     <Compile Include="AatfReturn\ReturnsListDisplayOptions.cs" />
+    <Compile Include="AatfReturn\FacilityType.cs" />
     <Compile Include="AatfReturn\ReturnStatus.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />
     <Compile Include="AatfReturn\AatfAddressData.cs" />
