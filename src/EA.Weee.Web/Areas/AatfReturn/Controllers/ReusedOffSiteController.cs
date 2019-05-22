@@ -12,7 +12,7 @@
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ReusedOffSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

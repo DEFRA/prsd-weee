@@ -19,7 +19,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class SentOnRemoveSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

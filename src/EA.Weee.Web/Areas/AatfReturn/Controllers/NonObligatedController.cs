@@ -16,7 +16,7 @@
     using ViewModels;
     using ViewModels.Validation;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class NonObligatedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

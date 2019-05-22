@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
@@ -136,6 +137,39 @@
             var result = await handler.HandleAsync(message);
 
             result.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOtherCreatedReturnsInYearAndQuarter_OtherInProgressReturnShouldBeFalse()
+        {
+            var message = new GetReturnStatus(Guid.NewGuid());
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => returnDataAccess.GetByComplianceYearAndQuarter(@return)).Returns(new List<Return>());
+
+            var result = await handler.HandleAsync(message);
+
+            result.OtherInProgressReturn.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenThereAreOtherCreatedReturnsInYearAndQuarter_OtherInProgressReturnShouldBeTrue()
+        {
+            var message = new GetReturnStatus(Guid.NewGuid());
+            var @return = A.Fake<Return>();
+
+            var returnsForYear = new List<Return>()
+            {
+                GetReturn()
+            };
+
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => returnDataAccess.GetByComplianceYearAndQuarter(@return)).Returns(returnsForYear);
+
+            var result = await handler.HandleAsync(message);
+
+            result.OtherInProgressReturn.Should().BeTrue();
         }
 
         public Return GetReturn()

@@ -71,5 +71,11 @@
             weeeSentOn.Return.Should().Be(@return);
             weeeSentOn.SiteAddress.Should().Be(siteAddress);
         }
+
+        [Fact]
+        public void WeeeSentOn_ShouldInheritFromReturnEntity()
+        {
+            typeof(WeeeSentOn).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+        }
     }
 }

@@ -52,7 +52,7 @@
         [Fact]
         public void SelectYourPcsController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(SelectYourPcsController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(SelectYourPcsController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

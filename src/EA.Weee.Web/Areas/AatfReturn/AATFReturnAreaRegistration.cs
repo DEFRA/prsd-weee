@@ -12,6 +12,8 @@
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
+            context.Routes.MapMvcAttributeRoutes();
+
             context.MapLowercaseDashedRoute(
                 name: "AatfReturn_holding",
                 url: "aatf-return/holding/{organisationId}",
@@ -67,16 +69,22 @@
                 namespaces: new[] { typeof(ReceivedPcsListController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfRedirect.ReturnsCopyRouteName,
+                url: "aatf-return/returns/{organisationId}/copy/{returnId}",
+                defaults: new { action = "Copy", controller = "Returns" },
+                namespaces: new[] { typeof(ReturnsController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfRedirect.ReturnsRouteName,
+                url: "aatf-return/returns/{organisationId}/{action}",
+                defaults: new { action = "Index", controller = "Returns" },
+                namespaces: new[] { typeof(ReturnsController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfRedirect.Default,
                 url: "aatf-return/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "AatfTaskList" },
-                namespaces: new[] { typeof(AatfTaskListController).Namespace });
-
-            context.MapLowercaseDashedRoute(
-                name: AatfRedirect.OrganisationRouteName,
-                url: "aatf-return/{organisationId}/{controller}/{action}",
-                defaults: new { action = "Index", controller = "Returns" },
-                namespaces: new[] { typeof(ReturnsController).Namespace });
+                namespaces: new[] { typeof(AatfTaskListController).Namespace }); 
         }
     }
 }

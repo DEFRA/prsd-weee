@@ -30,7 +30,17 @@
         [Fact]
         public void Map_GivenMappedReturns_ModelShouldBeReturned()
         {
-            var returnsItems = A.CollectionOfFake<ReturnsItemViewModel>(2).ToArray();
+            var returnsItems = new List<ReturnsItemViewModel>()
+            {
+                new ReturnsItemViewModel()
+                {
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions()
+                },
+                new ReturnsItemViewModel()
+                {
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions()
+                }
+            };
 
             var returnData = new List<ReturnData>()
             {
@@ -45,13 +55,100 @@
             };
 
             A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
-            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
             
             var result = returnsMap.Map(returnData);
 
             result.Returns.Should().Contain(returnsItems.ElementAt(0));
             result.Returns.Should().Contain(returnsItems.ElementAt(1));
             result.Returns.Count().Should().Be(2);
+        }
+
+        [Fact]
+        public void Map_GivenMappedReturnsAreEditableButThereIsAnInProgressReturnInComplianceYearAndQuarter_ReturnedShouldNotBeEditable()
+        {
+            var returnData = A.CollectionOfFake<ReturnData>(1).ToList();
+
+            var returnsItems = new List<ReturnsItemViewModel>()
+            {
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayContinue = true }
+                },
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
+                }
+            };
+
+            A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
+
+            var result = returnsMap.Map(returnData);
+
+            result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit).Should().Be(0);
+        }
+
+        [Fact]
+        public void Map_GivenMappedReturnsAreEditableAndThereAreNoInProgressReturnInComplianceYearAndQuarter_ReturnedShouldBeEditable()
+        {
+            var returnData = A.CollectionOfFake<ReturnData>(1).ToList();
+
+            var returnsItems = new List<ReturnsItemViewModel>()
+            {
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true },
+                }
+            };
+
+            A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
+
+            var result = returnsMap.Map(returnData);
+
+            returnsItems.ElementAt(0).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(2018, QuarterType.Q1)]
+        [InlineData(2018, QuarterType.Q2)]
+        [InlineData(2018, QuarterType.Q3)]
+        [InlineData(2018, QuarterType.Q4)]
+        [InlineData(2019, QuarterType.Q2)]
+        [InlineData(2019, QuarterType.Q3)]
+        [InlineData(2019, QuarterType.Q4)]
+        [InlineData(2020, QuarterType.Q1)]
+        [InlineData(2020, QuarterType.Q2)]
+        [InlineData(2020, QuarterType.Q3)]
+        [InlineData(2020, QuarterType.Q4)]
+        public void Map_GivenMappedReturnsAreEditableAndThereIsAnInProgressReturnInDifferentComplianceYearAndQuarter_ReturnedShouldBeEditable(int year, QuarterType quarter)
+        {
+            var returnData = A.CollectionOfFake<ReturnData>(1).ToList();
+
+            var returnsItems = new List<ReturnsItemViewModel>()
+            {
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(year, quarter), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayContinue = true }
+                },
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
+                }
+            };
+
+            A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
+
+            var result = returnsMap.Map(returnData);
+
+            returnsItems.ElementAt(1).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
     }
 }
