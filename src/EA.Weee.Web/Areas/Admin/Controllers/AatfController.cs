@@ -55,7 +55,7 @@
 
                 List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData, organisationData)
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
                     OrganisationString = GenerateAddress(organisationData.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,

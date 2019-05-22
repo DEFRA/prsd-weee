@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using EA.Weee.Core.Organisations;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class OperatorData
     {
-        public OperatorData(Guid id, string operatorName, Guid organisationid)
+        public OperatorData(Guid id, string operatorName, OrganisationData organisation, Guid organisationid)
         {
             this.Id = id;
             this.OperatorName = operatorName;
+            this.Organisation = organisation;
             this.OrganisationId = organisationid;
         }
         public virtual Guid Id { get; set; }
+
+        public OrganisationData Organisation { get; set; }
 
         public virtual Guid OrganisationId { get; set; }
 
