@@ -12,10 +12,10 @@
     public class GetAatfContactHandler : IRequestHandler<GetAatfContact, AatfContactData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfContactDataAccess dataAccess;
+        private readonly IAatfDataAccess dataAccess;
         private readonly IMap<AatfContact, AatfContactData> mapper;
 
-        public GetAatfContactHandler(IWeeeAuthorization authorization, IAatfContactDataAccess dataAccess, IMap<AatfContact, AatfContactData> mapper)
+        public GetAatfContactHandler(IWeeeAuthorization authorization, IAatfDataAccess dataAccess, IMap<AatfContact, AatfContactData> mapper)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;

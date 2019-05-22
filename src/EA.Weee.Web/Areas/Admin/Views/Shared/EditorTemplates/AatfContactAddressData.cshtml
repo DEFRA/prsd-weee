@@ -1,12 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Core.AatfReturn.AatfAddressData
-
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
-    @Html.Gds().LabelFor(m => m.Name)
-    @Html.Gds().ValidationMessageFor(m => m.Name)
-    @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
-</div>
+@model EA.Weee.Core.AatfReturn.AatfContactAddressData
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address1)">
     @Html.Gds().LabelFor(m => m.Address1)
