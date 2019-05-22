@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
@@ -12,6 +13,7 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.ViewModels;
     using Weee.Requests.AatfReturn;
@@ -119,6 +121,19 @@
             redirectResult.RouteValues["action"].Should().Be("Index");
             redirectResult.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             redirectResult.RouteValues["returnId"].Should().Be(returnId);
+        }
+
+        [Fact]
+        public void CopyPost_ShouldBeDecoratedWithValidateReturnEditActionFilterAttribute()
+        {
+            typeof(ReturnsController).GetMethod("Copy").Should().BeDecoratedWith<ValidateReturnEditActionFilterAttribute>();
+        }
+
+        [Fact]
+        public void CopyPost_ShouldBeDecoratedWithRouteAttribute()
+        {
+            typeof(ReturnsController).GetMethod("Copy").Should().BeDecoratedWith<RouteAttribute>()
+                .Which.Template.Should().Be("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}");
         }
     }
 }

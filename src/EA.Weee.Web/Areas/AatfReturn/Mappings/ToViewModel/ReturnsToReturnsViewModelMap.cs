@@ -24,9 +24,20 @@
             var orderedItems = ordering.Order(source);
             foreach (var @return in orderedItems)
             {
-                var returnViewModelItem = returnItemViewModelMap.Map(@return);
+                var returnViewModelItems = returnItemViewModelMap.Map(@return);
 
-                model.Returns.Add(returnViewModelItem);
+                model.Returns.Add(returnViewModelItems);
+            }
+
+            foreach (var returnsItemViewModel in model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit))
+            {
+                if (model.Returns.Any(r =>
+                    r.ReturnViewModel.Quarter == returnsItemViewModel.ReturnViewModel.Quarter &&
+                    r.ReturnViewModel.Year == returnsItemViewModel.ReturnViewModel.Year &&
+                    r.ReturnsListDisplayOptions.DisplayContinue))
+                {
+                    returnsItemViewModel.ReturnsListDisplayOptions.DisplayEdit = false;
+                }
             }
 
             return model;

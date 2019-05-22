@@ -17,7 +17,7 @@
     using Prsd.Core.Mapper;
     using Weee.Requests.AatfReturn;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ObligatedReceivedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

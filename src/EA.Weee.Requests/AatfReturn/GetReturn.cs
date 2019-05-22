@@ -4,7 +4,7 @@
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
 
-    public class GetReturnStatus : IRequest<ReturnData>
+    public class GetReturnStatus : IRequest<ReturnStatusData>
     {
         public Guid ReturnId { get; private set; }
 

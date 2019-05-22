@@ -43,7 +43,7 @@
         [Fact]
         public void ReusedOffSiteSummaryListController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ReusedOffSiteSummaryListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ReusedOffSiteSummaryListController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
