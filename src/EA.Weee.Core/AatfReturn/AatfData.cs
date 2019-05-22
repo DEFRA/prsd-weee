@@ -4,6 +4,7 @@
     using EA.Weee.Domain.AatfReturn;
     using System;
     using Core.Shared;
+    using EA.Weee.Core.Organisations;
 
     public class AatfData
     {
@@ -37,5 +38,9 @@
         public AatfSize Size { get; set; }
       
         public DateTime? ApprovalDate { get; set; }
+
+        public AatfContactData Contact { get; set; }
+
+        public OrganisationData Organisation { get; set; }
     }
 }

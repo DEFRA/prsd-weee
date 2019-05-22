@@ -7,6 +7,8 @@
     using Core.DataReturns;
     using Core.Scheme;
     using Domain.AatfReturn;
+    using EA.Weee.Core.Organisations;
+    using EA.Weee.Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Aatf = Core.AatfReturn.AatfData;
@@ -16,6 +18,7 @@
     public class ReturnMap : IMap<ReturnQuarterWindow, ReturnData>
     {
         private readonly IMapper mapper;
+        private readonly IMap<Organisation, OrganisationData> organisationMapper;
 
         public ReturnMap(IMapper mapper)
         {
@@ -31,7 +34,7 @@
                 Id = source.Return.Id,
                 Quarter = new Quarter(source.Return.Quarter.Year, (QuarterType)source.Return.Quarter.Q),
                 QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate),
-                ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, source.Return.Operator.Organisation.Id),
+                ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, organisationMapper.Map(source.Return.Operator.Organisation), source.Return.Operator.Organisation.Id),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(),
                 CreatedBy = source.Return.CreatedBy.FullName,
                 CreatedDate = source.Return.CreatedDate,

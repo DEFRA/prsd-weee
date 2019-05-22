@@ -33,13 +33,11 @@
         public void Map_GivenValidSource_WithApprovalDate_PropertiesShouldBeMapped()
         {
             AatfData aatfData = CreateAatfData();
-            AatfContactData aatfContactData = CreateAatfContactData();
-            OrganisationData organisationData = CreateOrganisationData();
 
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
 
             AatfDetailsViewModel result = map.Map(transfer);
-            AssertResults(aatfData, aatfContactData, organisationData, result);
+            AssertResults(aatfData, result);
             Assert.NotNull(result.ApprovalDate);
         }
 
@@ -47,13 +45,11 @@
         public void Map_GivenValidSource_WithAatfs_AEListShouldOnlyContainAEsAndAatfListShouldOnlyContainAatfs()
         {
             AatfData aatfData = CreateAatfData();
-            AatfContactData aatfContactData = CreateAatfContactData();
-            OrganisationData organisationData = CreateOrganisationData();
             List<AatfDataList> associatedAatfs = new List<AatfDataList>();
             associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Aatf));
             associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Ae));
 
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData)
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
             {
                 AssociatedAatfs = associatedAatfs
             };
@@ -75,19 +71,17 @@
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDatetime()
         {
             AatfData aatfData = CreateAatfData();
-            AatfContactData aatfContactData = CreateAatfContactData();
-            OrganisationData organisationData = CreateOrganisationData();
             aatfData.ApprovalDate = default(DateTime);
 
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData);
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
 
             AatfDetailsViewModel result = map.Map(transfer);
 
-            AssertResults(aatfData, aatfContactData, organisationData, result);
+            AssertResults(aatfData, result);
             Assert.Null(result.ApprovalDate);
         }
 
-        private static void AssertResults(AatfData aatfData, AatfContactData aatfContactData, OrganisationData organisationData, AatfDetailsViewModel result)
+        private static void AssertResults(AatfData aatfData, AatfDetailsViewModel result)
         {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
@@ -96,18 +90,18 @@
             Assert.Equal(aatfData.AatfStatus, result.AatfStatus);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(aatfData.Size, result.Size);
-            Assert.Equal(aatfContactData, result.ContactData);
-            Assert.Equal(organisationData.Name, result.Organisation.Name);
-            Assert.Equal(organisationData.TradingName, result.Organisation.TradingName);
-            Assert.Equal(organisationData.CompanyRegistrationNumber, result.Organisation.CompanyRegistrationNumber);
-            Assert.Equal(organisationData.BusinessAddress.Address1, result.Organisation.BusinessAddress.Address1);
-            Assert.Equal(organisationData.BusinessAddress.Address2, result.Organisation.BusinessAddress.Address2);
-            Assert.Equal(organisationData.BusinessAddress.CountyOrRegion, result.Organisation.BusinessAddress.CountyOrRegion);
-            Assert.Equal(organisationData.BusinessAddress.CountryName, result.Organisation.BusinessAddress.CountryName);
-            Assert.Equal(organisationData.BusinessAddress.TownOrCity, result.Organisation.BusinessAddress.TownOrCity);
-            Assert.Equal(organisationData.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
-            Assert.Equal(organisationData.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
-            Assert.Equal(organisationData.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
+            Assert.Equal(aatfData.Contact, result.ContactData);
+            Assert.Equal(aatfData.Operator.Organisation.Name, result.Organisation.Name);
+            Assert.Equal(aatfData.Operator.Organisation.TradingName, result.Organisation.TradingName);
+            Assert.Equal(aatfData.Operator.Organisation.CompanyRegistrationNumber, result.Organisation.CompanyRegistrationNumber);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Address1, result.Organisation.BusinessAddress.Address1);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Address2, result.Organisation.BusinessAddress.Address2);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.CountyOrRegion, result.Organisation.BusinessAddress.CountyOrRegion);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.CountryName, result.Organisation.BusinessAddress.CountryName);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.TownOrCity, result.Organisation.BusinessAddress.TownOrCity);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
+            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -132,7 +126,7 @@
 
         private OperatorData CreateOperatorData()
         {
-            return new OperatorData(Guid.NewGuid(), "Operator", Guid.NewGuid());
+            return new OperatorData(Guid.NewGuid(), "Operator", CreateOrganisationData(), Guid.NewGuid());
         }
 
         private OrganisationData CreateOrganisationData()
@@ -164,7 +158,11 @@
 
         private AatfData CreateAatfData()
         {
-            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateOperatorData(), CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now);
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateOperatorData(), CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
+            {
+                Contact = CreateAatfContactData(),
+                Organisation = CreateOrganisationData()
+            };
         }
     }
 }
