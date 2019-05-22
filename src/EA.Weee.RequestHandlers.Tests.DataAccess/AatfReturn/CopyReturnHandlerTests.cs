@@ -25,6 +25,7 @@
     using AatfSize = Domain.AatfReturn.AatfSize;
     using AatfStatus = Domain.AatfReturn.AatfStatus;
     using Country = Domain.Country;
+    using FacilityType = Domain.AatfReturn.FacilityType;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
@@ -475,7 +476,7 @@
         {
             var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, @operator,
                 AatfSiteAddress(), AatfSize.Large, DateTime.Now,
-                new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"));
+                new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"), FacilityType.Aatf);
             return aatf;
         }
 
