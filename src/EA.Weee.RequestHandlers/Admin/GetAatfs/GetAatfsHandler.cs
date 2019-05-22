@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetAatfsHandler : IRequestHandler<GetAatfs, List<AatfDataList>>
     {
@@ -24,14 +25,23 @@
         }
         public async Task<List<AatfDataList>> HandleAsync(GetAatfs message)
         {
-           authorization.EnsureCanAccessInternalArea();
-           
-           List<Aatf> aatfs = await dataAccess.GetAatfs();
-            
-            return aatfs
-                .OrderBy(a => a.Name)
-                .Select(s => aatfmap.Map(s))
-                .ToList();
+            authorization.EnsureCanAccessInternalArea();
+
+            List<Aatf> aatfs = await dataAccess.GetAatfs();
+
+            if (message.FacilityType == FacilityType.Aatf)
+            {
+                return SortAatfs(aatfs, FacilityType.Aatf);
+            }
+            else
+            {
+                return SortAatfs(aatfs, FacilityType.Ae);
+            }
+        }
+
+        private List<Core.AatfReturn.AatfDataList> SortAatfs(List<Aatf> aatfs, FacilityType facilityType)
+        {
+            return aatfs.OrderBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
         }
     }
 }
