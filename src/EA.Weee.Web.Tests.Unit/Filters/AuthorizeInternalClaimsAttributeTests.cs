@@ -5,37 +5,56 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Security.Claims;
+    using System.Security.Principal;
     using System.Web;
     using System.Web.Mvc;
+    using FluentAssertions;
+    using Prsd.Core.Domain;
     using Xunit;
 
     public class AuthorizeInternalClaimsAttributeTests
     {
         private readonly AuthorizationContext context;
-        private readonly string[] claims;
         private readonly AuthorizeInternalClaimsAttribute attribute;
+        private readonly ClaimsIdentity claimsIdentity;
 
         public AuthorizeInternalClaimsAttributeTests()
         {
-            this.context = A.Fake<AuthorizationContext>();
-            this.claims = new string[] { "InternalAdmin" };
-            this.attribute = new AuthorizeInternalClaimsAttribute(claims);
+            this.attribute = new AuthorizeInternalClaimsAttribute(new string[] { "InternalAdmin" });
 
-            this.context.HttpContext = A.Fake<HttpContextBase>();
+            this.context = A.Fake<AuthorizationContext>();
+            HttpContextBase httpContextBase = A.Fake<HttpContextBase>();
+            ClaimsPrincipal principal = A.Fake<ClaimsPrincipal>();
+            this.claimsIdentity = A.Fake<ClaimsIdentity>();
+
+            A.CallTo(() => httpContextBase.User).Returns(principal);
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+            A.CallTo(() => claimsIdentity.IsAuthenticated).Returns(true);
+            A.CallTo(() => this.context.HttpContext).Returns(httpContextBase);
         }
 
-        [Theory]
-        [InlineData("InternalAdmin", false)]
-        [InlineData("Internal", true)]
-        public void AuthoriseUserWithClaims_ReturnsCorrectStatusCode(string claim, bool forbiddenResult)
+        [Fact]
+        public void AuthoriseUserWithClaims_GivenUserDoesNotHaveClaim_HttpStatusCodeShouldBeForbidden()
         {
-            SetUpClaimsPrincipal(claim);
+            SetUpClaimsPrincipal("Internal");
 
             attribute.OnAuthorization(context);
 
             HttpStatusCodeResult result = context.Result as HttpStatusCodeResult;
 
-            Assert.Equal(forbiddenResult, result.StatusCode == (int)HttpStatusCode.Forbidden);
+            result.StatusCode.Should().Be((int)HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public void AuthoriseUserWithClaims_GivenUserHasClaim_ResultShouldBeNull()
+        {
+            SetUpClaimsPrincipal("InternalAdmin");
+
+            attribute.OnAuthorization(context);
+
+            HttpStatusCodeResult result = context.Result as HttpStatusCodeResult;
+
+            result.Should().BeNull();
         }
 
         private void SetUpClaimsPrincipal(string claimValue)
@@ -45,10 +64,7 @@
                 new Claim(ClaimTypes.Role, claimValue)
             };
 
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
-            claimsPrincipal.AddIdentity(new ClaimsIdentity(userClaims));
-
-            A.CallTo(() => context.HttpContext.User).Returns(claimsPrincipal);
+            A.CallTo(() => this.claimsIdentity.Claims).Returns(userClaims);
         }
     }
 }
