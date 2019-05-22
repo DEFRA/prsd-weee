@@ -281,6 +281,7 @@
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAesViewModelTests.cs" />
