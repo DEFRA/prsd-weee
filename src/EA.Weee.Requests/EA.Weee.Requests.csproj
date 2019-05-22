@@ -57,6 +57,7 @@
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfDetails.cs" />
     <Compile Include="AatfReturn\Internal\EditAatfContact.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContact.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />

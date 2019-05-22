@@ -27,7 +27,7 @@
                 SiteAddress = source.AatfData.SiteAddress,
                 Size = source.AatfData.Size,
                 ContactData = source.ContactData,
-                CanEditContactDetails = source.ContactData.CanEditContactDetails
+                CanEdit = source.ContactData.CanEditContactDetails
             };
 
             if (source.AatfData.ApprovalDate != default(DateTime))

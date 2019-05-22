@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
     using System;
     using Core.Shared;
 
@@ -34,5 +32,7 @@
         public AatfSize Size { get; set; }
       
         public DateTime? ApprovalDate { get; set; }
+
+        public bool CanEdit { get; set; }
     }
 }
