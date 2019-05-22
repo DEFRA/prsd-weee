@@ -34,7 +34,7 @@
                 var aatfAddress = CreateAatfSiteAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
