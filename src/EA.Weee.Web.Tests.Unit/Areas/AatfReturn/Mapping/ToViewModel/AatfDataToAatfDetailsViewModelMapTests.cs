@@ -9,6 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
@@ -40,6 +41,34 @@
             AatfDetailsViewModel result = map.Map(transfer);
             AssertResults(aatfData, aatfContactData, organisationData, result);
             Assert.NotNull(result.ApprovalDate);
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_WithAatfs_AEListShouldOnlyContainAEsAndAatfListShouldOnlyContainAatfs()
+        {
+            AatfData aatfData = CreateAatfData();
+            AatfContactData aatfContactData = CreateAatfContactData();
+            OrganisationData organisationData = CreateOrganisationData();
+            List<AatfDataList> associatedAatfs = new List<AatfDataList>();
+            associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Aatf));
+            associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Ae));
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData, aatfContactData, organisationData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            foreach (var ae in result.AssociatedAEs)
+            {
+                ae.FacilityType.Should().Be(FacilityType.Ae);
+            }
+
+            foreach (var aatf in result.AssociatedAatfs)
+            {
+                aatf.FacilityType.Should().Be(FacilityType.Aatf);
+            }
         }
 
         [Fact]

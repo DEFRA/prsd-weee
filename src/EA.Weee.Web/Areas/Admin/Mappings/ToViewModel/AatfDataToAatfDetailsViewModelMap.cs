@@ -6,6 +6,8 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
@@ -29,10 +31,21 @@
                 ContactData = source.ContactData,
                 CanEditContactDetails = source.ContactData.CanEditContactDetails,
                 Organisation = source.OrganisationData,
-                OrganisationAddress = source.OrganisationString,
-                AssociatedAatfs = source.AssociatedAatfs,
-                AssociatedSchemes = source.AssociatedSchemes
+                OrganisationAddress = source.OrganisationString
             };
+
+            if (source.AssociatedAatfs != null)
+            {
+                List<AatfDataList> associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae).ToList();
+                source.AssociatedAatfs = source.AssociatedAatfs.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf).ToList();
+                viewModel.AssociatedAatfs = source.AssociatedAatfs;
+                viewModel.AssociatedAEs = associatedAEs;
+            }
+
+            if (source.AssociatedSchemes != null)
+            {
+                viewModel.AssociatedSchemes = source.AssociatedSchemes;
+            }
 
             if (source.AatfData.ApprovalDate != default(DateTime))
             {

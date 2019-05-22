@@ -52,7 +52,6 @@
                 OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(aatf.Operator.OrganisationId));
 
                 List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
-                associatedAatfs = associatedAatfs.Where(a => a.Id != id).ToList();
 
                 List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
 
