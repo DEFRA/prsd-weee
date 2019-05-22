@@ -14,7 +14,6 @@
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
 
-    //[RoutePrefix("Users")]
     public class ReturnsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
