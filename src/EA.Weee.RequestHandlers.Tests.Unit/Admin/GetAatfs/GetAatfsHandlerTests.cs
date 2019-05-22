@@ -63,7 +63,7 @@
             A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
 
             var request = new GetAatfs(facilityType);
-            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<Operator>(), facilityType);
+            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OperatorData>(), facilityType);
 
             A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(returnDataList);
 
