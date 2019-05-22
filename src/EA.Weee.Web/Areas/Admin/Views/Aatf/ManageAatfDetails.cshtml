@@ -1,13 +1,12 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Aatf
-@model AatfEditDetailsViewModel
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditDetailsViewModel
 @{
     ViewBag.Title = "Edit AATF details - GOV.UK";
 }
 
 <section id="main-content">
     <h1 class="govuk-heading-l">Manage AATF details</h1>
-
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -19,7 +18,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
                     @Html.Gds().LabelFor(m => m.Name)
                     @Html.Gds().ValidationMessageFor(m => m.Name)
-                    @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = AatfEditDetailsViewModel.MaxLengthName })
+                    @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
                 </div>
 
                 @Html.EditorFor(m => m.SiteAddress)
@@ -27,13 +26,13 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
                     @Html.Gds().LabelFor(m => m.ApprovalNumber)
                     @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
-                    @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @class = "govuk-!-width-one-third", @maxlength = AatfEditDetailsViewModel.MaxLengthApprovalNumber })
+                    @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @class = "govuk-!-width-one-third", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthority)">
-                    @Html.Gds().LabelFor(m => m.CompetentAuthority)
-                    @Html.Gds().ValidationMessageFor(m => m.CompetentAuthority)
-                    @Html.Gds().DropDownListFor(m => m.CompetentAuthority, new SelectList(Model.CompetentAuthorityList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+                    @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+                    @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
+                    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AatfStatus)">
@@ -51,7 +50,14 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
                     @Html.Gds().LabelFor(m => m.ApprovalDate)
                     @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
-                    @Html.Gds().TextBoxFor(m => m.ApprovalDate, new { @class = "govuk-!-width-one-third" })
+                    @if (Model.ApprovalDate.HasValue)
+                    {
+                        <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input" value="@Model.ApprovalDate.Value.ToString("yyyy-MM-dd")" />
+                    }
+                    else
+                    {
+                        <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input" />
+                    }
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@
     using Api.Client;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
@@ -32,7 +33,8 @@
         private readonly IWeeeClient weeeClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
-        private readonly IEditAatfContactRequestCreator requestCreator;
+        private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
+        private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly AatfController controller;
 
         public AatfControllerTests()
@@ -41,9 +43,10 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
-            requestCreator = A.Fake<IEditAatfContactRequestCreator>();
+            detailsRequestCreator = A.Fake<IEditAatfDetailsRequestCreator>();
+            contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, requestCreator);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator);
         }
 
         [Fact]
@@ -192,6 +195,58 @@
         }
 
         [Fact]
+        public async void ManageAatfDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
+            var request = fixture.Create<EditAatfDetails>();
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+            var requestCall = A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel));
+            requestCall.Returns(request);
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            var result = await controller.ManageAatfDetails(viewModel) as RedirectResult;
+
+            result.Url.Should().Be(url);
+            clientCallAuthorities.MustHaveHappenedOnceExactly();
+            requestCall.MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappenedOnceExactly();
+            helperCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsPost_InvalidViewModel_ApiShouldBeCalled()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
+            var siteAddress = fixture.Build<AatfAddressData>().With(sa => sa.Countries, countries).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddress, siteAddress).Create();
+
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+            var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
+            clientCallCountries.Returns(Task.FromResult(countries));
+
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.ManageAatfDetails(viewModel) as ViewResult;
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            clientCallAuthorities.MustHaveHappenedOnceExactly();
+            clientCallCountries.MustHaveHappenedOnceExactly();
+
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
         public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var aatfId = Guid.NewGuid();
@@ -255,12 +310,13 @@
 
             var helper = A.Fake<UrlHelper>();
             controller.Url = helper;
+            var url = fixture.Create<string>();
 
-            A.CallTo(() => helper.Action("Details", new { Id = viewModel.AatfId })).Returns("aatfUrl");
+            A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.AatfId))).Returns(url);
 
             var result = await controller.ManageContactDetails(viewModel) as RedirectResult;
 
-            result.Url.Should().Be("#contactDetails");
+            result.Url.Should().Be($"{url}#contactDetails");
         }
 
         [Fact]
@@ -269,7 +325,7 @@
             var model = new AatfEditContactAddressViewModel();
             var request = new EditAatfContact();
 
-            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => contactRequestCreator.ViewModelToRequest(model)).Returns(request);
 
             controller.Url = new UrlHelper(A.Fake<RequestContext>(), A.Fake<RouteCollection>());
 

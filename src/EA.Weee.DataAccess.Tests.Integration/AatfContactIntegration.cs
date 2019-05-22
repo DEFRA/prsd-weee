@@ -32,7 +32,7 @@
 
                 var aatfAddress = new AatfContact("FirstName", "LastName", "Position", "Address1", "Address2", "Town", "County", "PO12ST34", country, "Telephone", "Email");
 
-                var dataAccess = new AatfContactDataAccess(context);
+                var dataAccess = new AatfDataAccess(context);
 
                 var aatfId = await CreateContact(context, aatfAddress);
 
@@ -42,7 +42,7 @@
                 var newContact = new AatfContactData(A.Dummy<Guid>(), "FirstName1", "LastName1", "Position1", newAddressData, "Telephone1", "Email1");
                 var newCountry = await context.Countries.SingleAsync(c => c.Name == "Germany");
 
-                await dataAccess.Update(oldContact, newContact, newCountry);
+                await dataAccess.UpdateContact(oldContact, newContact, newCountry);
 
                 AssertUpdated(context, aatfId, newContact, newCountry);
             }

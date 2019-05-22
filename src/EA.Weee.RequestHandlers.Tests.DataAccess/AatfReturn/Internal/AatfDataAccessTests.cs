@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -13,18 +14,54 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AatfContactDataAccessTests
+    public class AatfDataAccessTests
     {
+        private readonly Fixture fixture;
         private readonly WeeeContext context;
-        private readonly AatfContactDataAccess dataAccess;
+        private readonly AatfDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
 
-        public AatfContactDataAccessTests()
+        public AatfDataAccessTests()
         {
+            fixture = new Fixture();
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
 
-            dataAccess = new AatfContactDataAccess(context);
+            dataAccess = new AatfDataAccess(context);
+        }
+
+        [Fact]
+        public async Task GetDetails_GivenAatfId_ContactShouldBeReturned()
+        {
+            var aatfId = Guid.NewGuid();
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+
+            var result = await dataAccess.GetDetails(aatfId);
+
+            result.Should().BeEquivalentTo(aatf);
+        }
+
+        [Fact]
+        public void UpdateDetails_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
+        {
+            var oldDetails = A.Fake<Aatf>();
+            var newDetails = fixture.Create<Aatf>();
+
+            dataAccess.UpdateDetails(oldDetails, newDetails);
+
+            A.CallTo(() => oldDetails.UpdateDetails(
+                newDetails.Name,
+                newDetails.CompetentAuthority,
+                newDetails.ApprovalNumber,
+                newDetails.AatfStatus,
+                newDetails.Operator,
+                newDetails.SiteAddress,
+                newDetails.Size,
+                newDetails.ApprovalDate)).MustHaveHappenedOnceExactly()
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
         }
 
         [Fact]
@@ -46,13 +83,13 @@
         }
 
         [Fact]
-        public void Update_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
+        public void UpdateContact_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
         {
             var oldSite = A.Fake<AatfContact>();
             var newSite = new AatfContactData() { AddressData = new AatfContactAddressData() };
             var country = A.Fake<Country>();
 
-            dataAccess.Update(oldSite, newSite, country);
+            dataAccess.UpdateContact(oldSite, newSite, country);
 
             A.CallTo(() => oldSite.UpdateDetails(
                 newSite.FirstName,

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -24,14 +25,16 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
-        private readonly IEditAatfContactRequestCreator requestCreator;
+        private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
+        private readonly IEditAatfContactRequestCreator contactRequestCreator;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfContactRequestCreator requestCreator)
+        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
-            this.requestCreator = requestCreator;
+            this.detailsRequestCreator = detailsRequestCreator;
+            this.contactRequestCreator = contactRequestCreator;
         }
 
         [HttpGet]
@@ -49,7 +52,7 @@
                 return View(viewModel);
             }
         }
-        
+
         public async Task<ActionResult> ManageAatfs()
         {
             SetBreadcrumb();
@@ -71,7 +74,7 @@
                         AatfDataList = await GetAatfs()
                     };
                     return View(viewModel);
-                }    
+                }
             }
             else
             {
@@ -92,12 +95,42 @@
                 }
 
                 var viewModel = mapper.Map<AatfEditDetailsViewModel>(aatf);
-                viewModel.CompetentAuthorityList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-                viewModel.SiteAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                var accessToken = User.GetAccessToken();
+                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
                 SetBreadcrumb();
                 return View(viewModel);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                    var request = detailsRequestCreator.ViewModelToRequest(viewModel);
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
+            }
+
+            using (var client = apiClient())
+            {
+                var accessToken = User.GetAccessToken();
+                viewModel.AatfStatusList = Enumeration.GetAll<AatfStatus>();
+                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
+                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
+            }
+
+            SetBreadcrumb();
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -132,7 +165,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
+                    var request = contactRequestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
 

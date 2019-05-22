@@ -19,14 +19,14 @@
     public class GetAatfContactHandlerTests
     {
         private readonly IMap<AatfContact, AatfContactData> mapper;
-        private readonly IAatfContactDataAccess dataAccess;
+        private readonly IAatfDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly GetAatfContactHandler handler;
 
         public GetAatfContactHandlerTests()
         {
             mapper = A.Fake<IMap<AatfContact, AatfContactData>>();
-            dataAccess = A.Fake<IAatfContactDataAccess>();
+            dataAccess = A.Fake<IAatfDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
             handler = new GetAatfContactHandler(authorization, dataAccess, mapper);
         }

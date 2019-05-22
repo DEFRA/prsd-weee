@@ -22,7 +22,7 @@
                 Id = source.Id,
                 Name = source.Name,
                 ApprovalNumber = source.ApprovalNumber,
-                CompetentAuthority = source.CompetentAuthority.Id,
+                CompetentAuthorityId = source.CompetentAuthority.Id,
                 AatfStatus = source.AatfStatus.Value,
                 AatfStatusList = Enumeration.GetAll<AatfStatus>(),
                 SiteAddress = source.SiteAddress,
