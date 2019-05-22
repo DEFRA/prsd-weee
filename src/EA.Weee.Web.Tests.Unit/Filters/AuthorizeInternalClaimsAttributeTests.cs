@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Filters
 {
+    using EA.Weee.Security;
     using EA.Weee.Web.Filters;
     using FakeItEasy;
     using System.Collections.Generic;

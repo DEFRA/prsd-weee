@@ -15,6 +15,8 @@
 
         public async Task<bool> HandleAsync(CheckUserRole message)
         {
+            await Task.CompletedTask;
+
             return authorization.CheckUserInRole(message.Role);
         }
     }
