@@ -81,10 +81,10 @@
             FacilityType = facilityType;
         }
 
-        public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime? approvalDate)
+        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime? approvalDate)
         {
             Name = name;
-            CompetentAuthority = competentAuthority;
+            CompetentAuthorityId = competentAuthorityId;
             ApprovalNumber = approvalNumber;
             AatfStatus = aatfStatus;
             Operator = @operator;

@@ -27,7 +27,7 @@
         {
             oldDetails.UpdateDetails(
                 newDetails.Name,
-                newDetails.CompetentAuthority,
+                newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
                 newDetails.Operator,
