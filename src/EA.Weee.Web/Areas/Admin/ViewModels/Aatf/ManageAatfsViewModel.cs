@@ -12,5 +12,7 @@
 
         [Required(ErrorMessage = "You must select an Aatf to manage")]
         public Guid? Selected { get; set; }
+
+        public bool CanAddAatf { get; set; }
     }
 }

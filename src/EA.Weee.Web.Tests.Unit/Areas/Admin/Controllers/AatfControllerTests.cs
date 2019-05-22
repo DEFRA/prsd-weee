@@ -13,6 +13,8 @@
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Requests.Users;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -90,6 +92,20 @@
             ActionResult result = await controller.ManageAatfs();
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetManageAatfs_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userIsAllowed)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckUserRole>._)).Returns(userIsAllowed);
+
+            var result = await controller.ManageAatfs() as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userIsAllowed, viewModel.CanAddAatf);
         }
 
         [Fact]

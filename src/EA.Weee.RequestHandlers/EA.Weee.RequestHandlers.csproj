@@ -422,6 +422,7 @@
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Test\GetPcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
+    <Compile Include="Users\CheckUserRoleHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetOrganisationUserHandler.cs" />

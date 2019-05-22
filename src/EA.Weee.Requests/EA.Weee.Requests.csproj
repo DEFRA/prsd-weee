@@ -191,6 +191,7 @@
     <Compile Include="Shared\SubmissionsHistoryOrderBy.cs" />
     <Compile Include="Test\GetPcsSubmissionWindowSettings.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettings.cs" />
+    <Compile Include="Users\CheckUserRole.cs" />
     <Compile Include="Users\GetOrganisationUser.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsers.cs" />
     <Compile Include="Users\GetUserData.cs" />

@@ -11,11 +11,14 @@
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Requests.Users;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -52,11 +55,18 @@
                 return View(viewModel);
             }
         }
-        
+
+        [HttpGet]
         public async Task<ActionResult> ManageAatfs()
         {
             SetBreadcrumb();
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
+
+            using (var client = apiClient())
+            {
+                bool canAddAatf = await client.SendAsync(User.GetAccessToken(), new CheckUserRole(Roles.InternalAdmin));
+
+                return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = canAddAatf });
+            }
         }
 
         [HttpPost]
@@ -74,12 +84,12 @@
                         AatfDataList = await GetAatfs()
                     };
                     return View(viewModel);
-                }    
+                }
             }
             else
             {
                 return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
-            }           
+            }
         }
 
         [HttpGet]

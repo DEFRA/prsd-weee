@@ -50,9 +50,12 @@
         </tbody>
     </table>
     <br />
-    @(this.WeeeGds().Submit("Continue")) 
+    @(this.WeeeGds().Submit("Continue"))
 
-    <p>
-        <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add AATF</a>
-    </p>
+    if (Model.CanAddAatf)
+    {
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add AATF</a>
+        </p>
+    }
 }
