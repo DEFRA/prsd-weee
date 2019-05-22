@@ -42,7 +42,7 @@ function InitialStartup() {
             function (e) {
                 e.preventDefault();
                 var ua = window.navigator.userAgent;
-                var isIE = /MSIE|Trident/.test(ua);
+                var isIE = /MSIE|Trident/.test(ua) || ua.indexOf("Edge") > -1;
 
 				var details = document.querySelectorAll(".govuk-details");
 				var openAll = false;

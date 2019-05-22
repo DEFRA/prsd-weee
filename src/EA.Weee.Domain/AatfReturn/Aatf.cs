@@ -20,18 +20,24 @@
         public virtual AatfStatus AatfStatus { get; private set; }
 
         public virtual Operator Operator { get; private set; }
+
         public virtual AatfAddress SiteAddress { get; private set; }
+
         public Guid? SiteAddressId { get; private set; }
+
         public virtual AatfSize Size { get; private set; }
+
         public virtual DateTime? ApprovalDate { get; private set; }
 
         public virtual AatfContact Contact { get; private set; }
+
+        public virtual FacilityType FacilityType { get; private set; }
 
         protected Aatf()
         {
         }
 
-        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact)
+        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact, FacilityType facilityType)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -41,6 +47,7 @@
             Guard.ArgumentNotNull(() => contact, contact);
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
+            Guard.ArgumentNotNull(() => facilityType, facilityType);
 
             Name = name;
             CompetentAuthority = competentAuthority;
@@ -51,9 +58,10 @@
             SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
             Contact = contact;
+            FacilityType = facilityType;
         }
 
-        public Aatf(string name, Guid competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact)
+        public Aatf(string name, Guid competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact, FacilityType facilityType)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -62,6 +70,7 @@
             Guard.ArgumentNotNull(() => contact, contact);
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
+            Guard.ArgumentNotNull(() => facilityType, facilityType);
 
             Name = name;
             CompetentAuthorityId = competentAuthorityId;
@@ -73,6 +82,7 @@
             ApprovalDate = approvalDate;
             Contact = contact;
             SiteAddressId = aatfSiteAddress.Id;
+            FacilityType = facilityType;
         }
     }
 }
