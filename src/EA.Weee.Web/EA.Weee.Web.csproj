@@ -291,6 +291,7 @@
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\SelectReportOptionsDeselectController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedValuesCopyPasteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedSentOnValuesCopyPasteController.cs" />
@@ -337,6 +338,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnOptionsAndViewModelToSelectReportOptionsDeselectViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsOrdering.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnStatusToReturnDisplayOptionsMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnsListRedirectOptionsMap.cs" />
@@ -386,6 +388,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedRemoveSiteViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
@@ -399,6 +402,8 @@
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\Controllers\AeController.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsDeselectViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminHoldingController.cs" />
@@ -414,6 +419,8 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfContactRequestCreator.cs" />
@@ -895,11 +902,13 @@
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
+    <Content Include="Areas\Admin\Views\Ae\ManageAes.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
     <None Include="Content\remove-site.scss" />
+    <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

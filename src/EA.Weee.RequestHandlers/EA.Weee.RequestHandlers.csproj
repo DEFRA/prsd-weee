@@ -82,6 +82,10 @@
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfContactDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedAmountByWeeeReusedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedSiteByWeeeReusedIdSpecification.cs" />
     <Compile Include="Admin\CreateOrganisationAdminHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
@@ -237,6 +241,7 @@
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\FacilityTypeMap.cs" />
     <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
