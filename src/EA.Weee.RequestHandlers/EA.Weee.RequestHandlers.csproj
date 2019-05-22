@@ -240,6 +240,7 @@
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\FacilityTypeMap.cs" />
     <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />

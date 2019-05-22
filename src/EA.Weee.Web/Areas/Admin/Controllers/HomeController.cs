@@ -77,6 +77,9 @@
                 case InternalUserActivity.ManageAatfs:
                     return RedirectToAction("ManageAatfs", "Aatf");
 
+                case InternalUserActivity.ManageAes:
+                    return RedirectToAction("ManageAes", "Ae");
+
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");
 
@@ -115,6 +118,7 @@
 
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageAatfs);
+            viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
