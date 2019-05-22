@@ -187,7 +187,7 @@
         {
             using (var client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs());
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf));
             }
         }
 

@@ -7,7 +7,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public partial class ReturnScheme : Entity
+    public partial class ReturnScheme : ReturnEntity, IReturnOption
     {
         protected ReturnScheme()
         {
@@ -25,10 +25,6 @@
         }
 
         public virtual Scheme Scheme { get; private set; }
-
-        public virtual Return Return { get; private set; }
-
-        public virtual Guid ReturnId { get; private set; }
 
         public virtual Guid SchemeId { get; private set; }
     }

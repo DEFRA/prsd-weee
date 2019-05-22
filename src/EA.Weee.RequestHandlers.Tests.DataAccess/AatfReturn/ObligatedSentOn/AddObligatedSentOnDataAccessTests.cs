@@ -42,7 +42,7 @@
             decimal houseHoldTonnage = 1.000m;
             decimal nonHouseHoldTonnage = 2.000m;
 
-            var obligatedSentOnWeee = new List<WeeeSentOnAmount> { new WeeeSentOnAmount(weeeSentOn, 1, houseHoldTonnage, nonHouseHoldTonnage, weeeSentOnId), new WeeeSentOnAmount(weeeSentOn, 2, houseHoldTonnage, nonHouseHoldTonnage, weeeSentOnId) };
+            var obligatedSentOnWeee = new List<WeeeSentOnAmount> { new WeeeSentOnAmount(weeeSentOn, 1, houseHoldTonnage, nonHouseHoldTonnage), new WeeeSentOnAmount(weeeSentOn, 2, houseHoldTonnage, nonHouseHoldTonnage) };
 
             var obligatedSentOnWeeeDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOnAmount>());
 

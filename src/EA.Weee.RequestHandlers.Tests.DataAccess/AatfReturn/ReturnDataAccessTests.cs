@@ -80,6 +80,45 @@
             }
         }
 
+        [Fact]
+        public async Task GetByComplianceYearAndYear_ReturnsWithMatchingQuarter_ReturnsShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var modelHelper = new ModelHelper(database.Model);
+
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
+                var @operator = new Operator(organisation);
+                var organisation2 = Organisation.CreateSoleTrader("Test Organisation");
+                var @operator2 = new Operator(organisation2);
+
+                var @return1 = CreateReturn(database, @operator);
+                var @return2 = CreateReturn(database, @operator);
+                var @return3 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q2));
+                var @return4 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q3));
+                var @return5 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q4));
+                var @return6 = CreateReturn(database, @operator, new Quarter(2018, QuarterType.Q1));
+                var @return7 = CreateReturn(database, @operator2);
+
+                var dataAccess = new ReturnDataAccess(database.WeeeContext);
+
+                await dataAccess.Submit(@return1);
+                await dataAccess.Submit(@return2);
+                await dataAccess.Submit(@return3);
+                await dataAccess.Submit(@return4);
+                await dataAccess.Submit(@return5);
+                await dataAccess.Submit(@return6);
+                await dataAccess.Submit(@return7);
+
+                var results = await dataAccess.GetByComplianceYearAndQuarter(@return1);
+
+                results.Count.Should().Be(2);
+                results.Count(r => r.Quarter.Year != 2019).Should().Be(0);
+                results.Count(r => r.Id != @return1.Id && r.Id != @return2.Id).Should().Be(0);
+                results.Count(r => r.Operator.Id != @return1.Operator.Id).Should().Be(0);
+            }
+        }
+
         private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
@@ -93,6 +132,11 @@
         { 
             var quarter = new Quarter(2019, QuarterType.Q1);
 
+            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+        }
+
+        private Return CreateReturn(DatabaseWrapper database, Operator @operator, Quarter quarter)
+        {
             return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
         }
     }

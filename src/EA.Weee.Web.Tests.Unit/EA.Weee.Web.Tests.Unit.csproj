@@ -185,8 +185,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttributeTests.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnTestActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReturnsControllerTests.cs" />
@@ -202,6 +205,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedRemoveSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsDeselectControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
@@ -260,8 +264,10 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPCSViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
@@ -276,6 +282,8 @@
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageAesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />

@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -19,7 +20,7 @@
     using EA.Weee.Web.Services.Caching;
 
     [ValidateOrganisationActionFilter]
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class SelectReportOptionsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -28,7 +29,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
-        private const string PcsQuestion = "PCS";
+        private readonly string dcfConfirm = "Yes";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -73,9 +74,15 @@
 
             if (ModelState.IsValid)
             {
-                if (viewModel.HasSelectedOptions)
+                using (var client = apiClient())
                 {
-                    using (var client = apiClient())
+                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
+                    if (CheckHasDeselectedOptions(viewModel))
+                    {
+                        TempData["viewModel"] = viewModel;
+                        return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
+                    }
+                    if (viewModel.HasSelectedOptions)
                     {
                         var request = requestCreator.ViewModelToRequest(viewModel);
 
@@ -83,7 +90,8 @@
                     }
                 }
 
-                if (viewModel.ReportOnQuestions.First(r => r.Question == PcsQuestion).Selected)
+                if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected
+                    && !viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.WeeeReceived))
                 {
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
                 }
@@ -100,13 +108,51 @@
 
         private void SetSelected(SelectReportOptionsViewModel viewModel)
         {
-            if (viewModel.SelectedOptions != null && viewModel.SelectedOptions.Count != 0)
+            if (viewModel.HasSelectedOptions)
             {
                 foreach (var option in viewModel.SelectedOptions)
                 {
-                    viewModel.ReportOnQuestions.Where(r => r.Id == option).FirstOrDefault().Selected = true;
+                    viewModel.ReportOnQuestions.First(r => r.Id == option).Selected = true;
+                }
+
+                if (viewModel.DcfSelectedValue == dcfConfirm)
+                {
+                    var dcfId = (int)ReportOnQuestionEnum.NonObligatedDcf;
+                    viewModel.ReportOnQuestions.First(r => r.Id == dcfId).Selected = true;
+                    viewModel.SelectedOptions.Add(dcfId);
                 }
             }
+        }
+
+        private bool CheckHasDeselectedOptions(SelectReportOptionsViewModel viewModel)
+        {
+            var oldReturnOptions = viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList();
+            if (oldReturnOptions.Count != 0)
+            {
+                var deselectedOptions = new List<int>();
+                if (!viewModel.HasSelectedOptions)
+                {
+                    deselectedOptions = oldReturnOptions;
+                }
+                else
+                {
+                    deselectedOptions = oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
+                }
+                if (deselectedOptions != null && deselectedOptions.Count != 0)
+                {
+                    foreach (var option in deselectedOptions)
+                    {
+                        viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
+                        if (option == (int)ReportOnQuestionEnum.NonObligated)
+                        {
+                            viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligatedDcf).Deselected = true;
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            return false;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

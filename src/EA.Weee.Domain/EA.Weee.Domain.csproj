@@ -54,10 +54,13 @@
     <Compile Include="AatfReturn\IObligatedAmount.cs" />
     <Compile Include="AatfReturn\AatfAddress.cs" />
     <Compile Include="AatfReturn\IOperatorEntity.cs" />
+    <Compile Include="AatfReturn\IReturnOption.cs" />
     <Compile Include="AatfReturn\NonObligatedAmount.cs" />
     <Compile Include="AatfReturn\ObligatedAmount.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\ReturnEntity.cs" />
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
+    <Compile Include="AatfReturn\FacilityType.cs" />
     <Compile Include="AatfReturn\WeeeReused.cs" />
     <Compile Include="AatfReturn\WeeeReceivedAmount.cs" />
     <Compile Include="AatfReturn\WeeeReceived.cs" />

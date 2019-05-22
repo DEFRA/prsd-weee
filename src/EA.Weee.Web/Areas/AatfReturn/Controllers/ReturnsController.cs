@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Attributes;
     using Constant;
     using Infrastructure;
     using Prsd.Core.Mapper;
@@ -43,6 +44,20 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateReturnEditActionFilter]
+        [Route("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}")]
+        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
+
+                return AatfRedirect.ReturnsList(organisationId);
             }
         }
 

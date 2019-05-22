@@ -4,12 +4,11 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;          
 
-    public partial class NonObligatedWeee : Entity
+    public partial class NonObligatedWeee : ReturnEntity, IReturnOption
     {
         public NonObligatedWeee(Return aatfReturn, int categoryId, bool dcf, decimal? tonnage)
         {
             Guard.ArgumentNotNull(() => aatfReturn, aatfReturn);
-
             Return = aatfReturn;
             Dcf = dcf;
             Tonnage = tonnage;
@@ -25,14 +24,10 @@
             Tonnage = tonnage;
         }
 
-        public Guid ReturnId { get; set; }
-
         public int CategoryId { get; set; }
 
         public bool Dcf { get; set; }
 
         public decimal? Tonnage { get; set; }
-
-        public virtual Return Return { get; private set; }
     }
 }

@@ -1,16 +1,19 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class WeeeReused : Entity
+    public class WeeeReused : ReturnEntity, IReturnOption
     {
         public virtual Guid AatfId { get; private set; }
 
-        public virtual Aatf Aatf { get; private set; }
-        
-        public virtual Guid ReturnId { get; private set; }
+        public virtual Aatf Aatf { get; private set; }      
+
+        public virtual IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
+
+        public virtual IList<WeeeReusedSite> WeeeReusedSites { get; set; }
 
         public WeeeReused(Guid aatfId, Guid returnId)
         {

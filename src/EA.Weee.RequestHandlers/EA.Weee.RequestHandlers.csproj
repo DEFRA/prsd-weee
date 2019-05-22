@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\CopyReturnHandler.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
     <Compile Include="AatfReturn\Internal\AatfDataAccess.cs" />
     <Compile Include="AatfReturn\Internal\EditAatfDetailsRequestHandler.cs" />
@@ -83,6 +84,10 @@
     <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedAmountByWeeeReusedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedSiteByWeeeReusedIdSpecification.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
     <Compile Include="AatfReturn\GetReturnsHandler.cs" />
@@ -126,8 +131,6 @@
     <Compile Include="AatfReturn\AddReturnHandler.cs" />
     <Compile Include="AatfReturn\IReturnDataAccess.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandler.cs" />
-    <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccess.cs" />
-    <Compile Include="AatfReturn\CheckYourReturn\IFetchNonObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />
@@ -237,6 +240,7 @@
     <Compile Include="Mappings\AatfSizeMap.cs" />
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\FacilityTypeMap.cs" />
     <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
