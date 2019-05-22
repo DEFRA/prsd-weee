@@ -31,7 +31,7 @@
             TradingName = tradingName;
         }
 
-        protected Organisation()
+        public Organisation()
         {
         }
 

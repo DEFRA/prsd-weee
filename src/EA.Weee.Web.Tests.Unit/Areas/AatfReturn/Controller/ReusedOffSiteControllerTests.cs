@@ -40,7 +40,7 @@
         [Fact]
         public void ReusedOffSiteController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ReusedOffSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ReusedOffSiteController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
