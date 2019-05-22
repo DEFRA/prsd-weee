@@ -42,7 +42,8 @@
                 siteAddress,
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Data.Size.Value),
                 message.Data.ApprovalDate.GetValueOrDefault(),
-                existingAatf.Contact);
+                existingAatf.Contact,
+                existingAatf.FacilityType);
 
             await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf);
 
