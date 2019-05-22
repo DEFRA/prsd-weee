@@ -7,11 +7,11 @@
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-    public class AuthorizeClaimsAttribute : System.Web.Mvc.AuthorizeAttribute
+    public class AuthorizeInternalClaimsAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         private readonly string[] claims;
 
-        public AuthorizeClaimsAttribute(params string[] claims)
+        public AuthorizeInternalClaimsAttribute(params string[] claims)
         {
             this.claims = claims;
         }
@@ -31,7 +31,7 @@
             if (claimsIdentity != null)
             {
                 if (claims.All(c => claimsIdentity.Claims
-                    .Where(cl => cl.Type == ClaimTypes.AuthenticationMethod).Select(cl => cl.Value).Contains(c)))
+                    .Where(cl => cl.Type == ClaimTypes.Role).Select(cl => cl.Value).Contains(c)))
                 {
                     return; // User claims are authorized
                 }

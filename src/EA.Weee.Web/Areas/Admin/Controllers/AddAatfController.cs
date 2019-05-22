@@ -26,7 +26,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [AuthorizeClaimsAttribute(Claims.InternalAdmin)]
+    [AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
