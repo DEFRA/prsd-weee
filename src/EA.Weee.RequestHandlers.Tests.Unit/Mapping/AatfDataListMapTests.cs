@@ -19,13 +19,15 @@
         private readonly IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> statusMap;
         private readonly IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap;
         private readonly IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityTypeMap;
+        private readonly IMap<Domain.AatfReturn.Operator, Core.AatfReturn.OperatorData> operatorMap;
 
         public AatfDataListMapTests()
         {
             statusMap = A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>();
             competentAuthorityMap = A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>();
             facilityTypeMap = A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>();
-            map = new AatfDataListMap(competentAuthorityMap, statusMap, facilityTypeMap);
+            operatorMap = A.Fake<IMap<Domain.AatfReturn.Operator, Core.AatfReturn.OperatorData>>();
+            map = new AatfDataListMap(competentAuthorityMap, statusMap, facilityTypeMap, operatorMap);
         }
 
         [Fact]
@@ -49,10 +51,12 @@
             var returnStatus = Core.AatfReturn.AatfStatus.Approved;
             var returnCompetentAuthority = A.Fake<Core.Shared.UKCompetentAuthorityData>();
             var returnFacilityType = Core.AatfReturn.FacilityType.Aatf;
+            var operatorData = A.Fake<OperatorData>();
 
             A.CallTo(() => statusMap.Map(status)).Returns(returnStatus);
             A.CallTo(() => competentAuthorityMap.Map(competentAuthority)).Returns(returnCompetentAuthority);
             A.CallTo(() => facilityTypeMap.Map(facilityType)).Returns(returnFacilityType);
+            A.CallTo(() => operatorMap.Map(@operator)).Returns(operatorData);
 
             var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf);
 
@@ -62,7 +66,7 @@
             result.ApprovalNumber.Should().Be(approvalNumber);
             result.AatfStatus.Should().Be(returnStatus);
             result.CompetentAuthority.Should().Be(returnCompetentAuthority);
-            result.Operator.Should().Be(@operator);
+            result.Operator.Should().Be(operatorData);
             result.FacilityType.Should().Be(Core.AatfReturn.FacilityType.Aatf);
         }
     }

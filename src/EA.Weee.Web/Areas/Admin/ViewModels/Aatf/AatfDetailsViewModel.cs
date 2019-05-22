@@ -35,6 +35,8 @@
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
+        public List<AatfDataList> AssociatedAEs { get; set; }
+
         public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
     }
 }
