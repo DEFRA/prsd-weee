@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Filters
 {
+    using EA.Weee.Security;
     using EA.Weee.Web.Filters;
     using FakeItEasy;
     using System.Collections.Generic;
@@ -12,21 +13,19 @@
     public class AuthorizeInternalClaimsAttributeTests
     {
         private readonly AuthorizationContext context;
-        private readonly string[] claims;
         private readonly AuthorizeInternalClaimsAttribute attribute;
 
         public AuthorizeInternalClaimsAttributeTests()
         {
             this.context = A.Fake<AuthorizationContext>();
-            this.claims = new string[] { "InternalAdmin" };
-            this.attribute = new AuthorizeInternalClaimsAttribute(claims);
+            this.attribute = new AuthorizeInternalClaimsAttribute(new string[] { Claims.InternalAdmin });
 
             this.context.HttpContext = A.Fake<HttpContextBase>();
         }
 
         [Theory]
-        [InlineData("InternalAdmin", false)]
-        [InlineData("Internal", true)]
+        [InlineData(Claims.InternalAdmin, false)]
+        [InlineData(Claims.CanAccessInternalArea, true)]
         public void AuthoriseUserWithClaims_ReturnsCorrectStatusCode(string claim, bool forbiddenResult)
         {
             SetUpClaimsPrincipal(claim);
