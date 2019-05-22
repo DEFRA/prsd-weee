@@ -28,9 +28,9 @@
                 AatfStatus = source.AatfData.AatfStatus,
                 SiteAddress = source.AatfData.SiteAddress,
                 Size = source.AatfData.Size,
-                ContactData = source.ContactData,
-                CanEditContactDetails = source.ContactData.CanEditContactDetails,
-                Organisation = source.OrganisationData,
+                ContactData = source.AatfData.Contact,
+                CanEditContactDetails = source.AatfData.Contact.CanEditContactDetails,
+                Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString
             };
 
