@@ -6,11 +6,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class ManageAatfsViewModel
+    public class ManageAatfsViewModel : ManageFacilityModelBase
     {
         public List<AatfDataList> AatfDataList { get; set; }
 
-        [Required(ErrorMessage = "You must select an AATF to manage")]
-        public Guid? Selected { get; set; }
+        [Required(ErrorMessage = "You must select an Aatf to manage")]
+        public override Guid? Selected { get; set; }
     }
 }
