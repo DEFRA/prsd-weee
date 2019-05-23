@@ -9,10 +9,12 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
+    using EA.Weee.Web.Filters;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -34,6 +36,18 @@
             this.organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             this.weeeClient = A.Fake<IWeeeClient>();
             this.countries = A.Dummy<IList<CountryData>>();
+        }
+
+        [Fact]
+        public void ControllerMustHaveAuthorizeClaimsAttribute()
+        {
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+
+            Type controllerType = controller.GetType();
+
+            var attributes = controllerType.GetCustomAttributes(typeof(AuthorizeInternalClaimsAttribute), true);
+
+            Assert.True(attributes[0].GetType() == typeof(AuthorizeInternalClaimsAttribute));
         }
 
         [Fact]
