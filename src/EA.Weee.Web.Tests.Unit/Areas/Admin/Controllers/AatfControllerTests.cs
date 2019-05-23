@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Api.Client;
@@ -15,6 +17,8 @@
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Requests.Users;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -88,9 +92,25 @@
         [Fact]
         public async Task GetAatfsList_Always_SetsInternalBreadcrumbToManageAATFs()
         {
+            SetUpControllerContext(true);
+
             ActionResult result = await controller.ManageAatfs();
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetManageAatfs_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            SetUpControllerContext(userHasInternalAdminClaims);
+
+            ViewResult result = await controller.ManageAatfs() as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
         }
 
         [Fact]
@@ -386,6 +406,24 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
                 .Returns(contact);
+        }
+
+        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        {
+            HttpContextBase httpContextBase = A.Fake<HttpContextBase>();
+            ClaimsPrincipal principal = new ClaimsPrincipal(httpContextBase.User);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+            
+            if (hasInternalAdminUserClaims)
+            {
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            }
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+
+            ControllerContext context = new ControllerContext(httpContextBase, new RouteData(), controller);
+            controller.ControllerContext = context;
         }
     }
 }

@@ -434,6 +434,10 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderOrPartnershipDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\OrganisationConfirmationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
@@ -907,6 +911,10 @@
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\Ae\ManageAes.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1007,6 +1015,7 @@
     <Compile Include="Areas\Test\ViewModels\ManagePcsReturnsSubmissionWindow\SettingsModel.cs" />
     <Compile Include="Extensions\DisplayExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
+    <Compile Include="Filters\AuthorizeInternalClaimsAttribute.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />

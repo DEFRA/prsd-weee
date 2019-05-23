@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -8,9 +9,16 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Organisations.Create;
+    using EA.Weee.Requests.Organisations.Create.Base;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
+    using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -18,6 +26,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
@@ -111,11 +120,139 @@
             }
         }
 
+        [HttpGet]
+        public ActionResult Type(string searchedText)
+        {
+            return View(new OrganisationTypeViewModel(searchedText));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Type(OrganisationTypeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var organisationType = model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+
+                switch (organisationType)
+                {
+                    case OrganisationType.SoleTraderOrIndividual:
+                    case OrganisationType.Partnership:
+                        return RedirectToAction("SoleTraderOrPartnershipDetails", "AddAatf", new { organisationType = model.SelectedValue, searchedText = model.SearchedText });
+                    case OrganisationType.RegisteredCompany:
+                        return RedirectToAction("RegisteredCompanyDetails", "AddAatf", new { organisationType = model.SelectedValue, searchedText = model.SearchedText });
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SoleTraderOrPartnershipDetails(string organisationType, string searchedText = null)
+        {
+            IList<CountryData> countries = await GetCountries();
+
+            SoleTraderOrPartnershipDetailsViewModel model = new SoleTraderOrPartnershipDetailsViewModel
+            {
+                BusinessTradingName = searchedText,
+                OrganisationType = organisationType
+            };
+
+            model.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderOrPartnershipDetails(SoleTraderOrPartnershipDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                IList<CountryData> countries = await GetCountries();
+
+                model.Address.Countries = countries;
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
+                {
+                    Address = model.Address,
+                    BusinessName = model.BusinessTradingName,
+                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>()
+                };
+
+                Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        {
+            IList<CountryData> countries = await GetCountries();
+
+            RegisteredCompanyDetailsViewModel model = new RegisteredCompanyDetailsViewModel()
+            {
+                CompanyName = searchedText,
+                OrganisationType = organisationType
+            };
+
+            model.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                IList<CountryData> countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
+                {
+                    Address = model.Address,
+                    BusinessName = model.CompanyName,
+                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>(),
+                    RegistrationNumber = model.CompaniesRegistrationNumber,
+                    TradingName = model.BusinessTradingName
+                };
+
+                Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName)
+        {
+            OrganisationConfirmationViewModel model = new OrganisationConfirmationViewModel()
+            {
+                OrganisationId = organisationId,
+                OrganisationName = organisationName
+            };
+
+            return View(model);
+        }
+
         private async Task<AddAatfViewModel> PopulateViewModelLists(AddAatfViewModel viewModel)
         {
             using (var client = apiClient())
             {
-                IList<CountryData> countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                IList<CountryData> countries = await GetCountries();
                 OrganisationData organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
                 viewModel.ContactData.AddressData.Countries = countries;
@@ -128,7 +265,15 @@
 
             return viewModel;
         }
-        
+
+        private async Task<IList<CountryData>> GetCountries()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+            }
+        }
+
         private AatfData CreateAatfData(AddAatfViewModel viewModel)
         {
             return new AatfData(
