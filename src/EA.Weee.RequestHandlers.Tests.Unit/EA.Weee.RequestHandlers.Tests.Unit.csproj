@@ -137,6 +137,7 @@
     <Compile Include="Admin\Aatf\GetAatfInfoByAatfIdRequestHandlerTests.cs" />
     <Compile Include="Admin\AddAatfRequestHandlerTests.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
+    <Compile Include="Admin\CreateOrganisationAdminHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />

@@ -88,6 +88,7 @@
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\AddAatf.cs" />
+    <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />

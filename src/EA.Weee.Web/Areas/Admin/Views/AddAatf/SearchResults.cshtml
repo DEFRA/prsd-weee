@@ -44,6 +44,9 @@
         <p>
             @Html.ActionLink("Start another search", "Search", "AddAatf")
         </p>
+        <p>
+            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
+        </p>
     }
     else
     {
@@ -63,7 +66,9 @@
         </ul>
         <p>
             @Html.ActionLink("Start another search", "Search", "AddAatf", null, new { @class = "govuk-button" })
-
+        </p>
+        <p>
+            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
         </p>
     }
 
