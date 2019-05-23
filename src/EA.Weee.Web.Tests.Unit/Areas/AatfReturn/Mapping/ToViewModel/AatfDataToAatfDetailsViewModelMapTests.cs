@@ -42,6 +42,62 @@
         }
 
         [Fact]
+        public void Map_GivenValidSource_WithAssociatedAatfs_PropertiesShouldBeMapped()
+        {
+            AatfData aatfData = CreateAatfData();
+            var associatedAatfs = A.Fake<List<AatfDataList>>();
+            
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedAatfs.Should().BeEquivalentTo(associatedAatfs);
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_WithNoAssociatedAatfs_PropertyShouldBeNull()
+        {
+            AatfData aatfData = CreateAatfData();
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedAatfs.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_WithNoAssociatedSchemes_PropertyShouldBeNull()
+        {
+            AatfData aatfData = CreateAatfData();
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedSchemes.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_WithAssociatedSchemes_PropertiesShouldBeMapped()
+        {
+            AatfData aatfData = CreateAatfData();
+            var associatedSchemes = A.Fake<List<Core.Scheme.SchemeData>>();
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedSchemes = associatedSchemes
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedSchemes.Should().BeEquivalentTo(associatedSchemes);
+        }
+
+        [Fact]
         public void Map_GivenValidSource_WithAatfs_AEListShouldOnlyContainAEsAndAatfListShouldOnlyContainAatfs()
         {
             AatfData aatfData = CreateAatfData();
