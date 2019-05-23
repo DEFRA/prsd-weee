@@ -51,11 +51,13 @@
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\CopyReturn.cs" />
     <Compile Include="AatfReturn\GetReturnStatus.cs" />
     <Compile Include="AatfReturn\GetReturn.cs" />
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfDetails.cs" />
     <Compile Include="AatfReturn\Internal\EditAatfContact.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContact.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />

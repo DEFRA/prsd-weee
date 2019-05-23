@@ -20,7 +20,7 @@
     using EA.Weee.Web.Services.Caching;
 
     [ValidateOrganisationActionFilter]
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class SelectReportOptionsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

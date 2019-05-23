@@ -58,6 +58,7 @@
     <Compile Include="AatfReturn\NonObligatedAmount.cs" />
     <Compile Include="AatfReturn\ObligatedAmount.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\ReturnEntity.cs" />
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
     <Compile Include="AatfReturn\FacilityType.cs" />
     <Compile Include="AatfReturn\WeeeReused.cs" />

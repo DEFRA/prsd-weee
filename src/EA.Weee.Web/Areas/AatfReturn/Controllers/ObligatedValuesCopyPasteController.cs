@@ -15,7 +15,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ObligatedValuesCopyPasteController : AatfReturnBaseController
     {
         private readonly BreadcrumbService breadcrumb;

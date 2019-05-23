@@ -3,9 +3,9 @@
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.RequestHandlers.Admin.GetSchemes;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Security;
     using Prsd.Core.Mapper;
     using System;
     using System.Threading.Tasks;
@@ -34,7 +34,10 @@
                 throw new ArgumentException($"Could not find an aatf with Id {message.AatfId}");
             }
 
-            return mapper.Map(aatf);
+            var aatfMapped = mapper.Map(aatf);
+            aatfMapped.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
+
+            return aatfMapped;
         }
     }
 }

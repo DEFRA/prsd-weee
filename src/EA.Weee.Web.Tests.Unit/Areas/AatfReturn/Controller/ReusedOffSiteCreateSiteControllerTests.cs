@@ -52,7 +52,7 @@
         [Fact]
         public void ReusedOffSiteCreateSiteController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ReusedOffSiteCreateSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ReusedOffSiteCreateSiteController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

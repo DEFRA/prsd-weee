@@ -46,7 +46,7 @@
         [Fact]
         public void ReceivedPcsListController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ReceivedPcsListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ReceivedPcsListController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

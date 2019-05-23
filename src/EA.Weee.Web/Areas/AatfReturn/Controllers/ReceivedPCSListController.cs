@@ -15,7 +15,7 @@
     using Services;
     using Services.Caching;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ReceivedPcsListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

@@ -12,12 +12,12 @@
             Manage AATF returns
         </h1>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post, null))
-            {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.OrganisationId)
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                @using (Html.BeginRouteForm(AatfRedirect.ReturnsRouteName, FormMethod.Post, null))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.OrganisationId)
 
                 <div class="govuk-form-group">
                     <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
@@ -55,7 +55,7 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Summary</span></th>
                 </tr>
             </thead>
@@ -65,39 +65,50 @@
                 {
                     var item = Model.Returns[returnCount];
 
-                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Year</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Quarter</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.ObligatedTotal</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.NonObligatedTotal</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @{
-                                if (item.ReturnsListDisplayOptions.DisplayContinue)
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Year</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Quarter</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.ObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.NonObligatedTotal</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @{
+                            if (item.ReturnsListDisplayOptions.DisplayContinue)
+                            {
+                                if (item.ReturnsListRedirectOptions.RedirectTaskList)
                                 {
-                                    if (item.ReturnsListRedirectOptions.RedirectTaskList)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
-                                    }
-                                    else if (item.ReturnsListRedirectOptions.RedirectSelectYourPcs)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
-                                    }
-                                    else if (item.ReturnsListRedirectOptions.RedirectReportingOptions)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
-                                    }
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
+                                }
+                                else if (item.ReturnsListRedirectOptions.RedirectSelectYourPcs)
+                                {
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
+                                }
+                                else if (item.ReturnsListRedirectOptions.RedirectReportingOptions)
+                                {
+                                    @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
                                 }
                             }
-                        </td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
-                        </td>
-                    </tr>
-                }
+                            if (item.ReturnsListDisplayOptions.DisplayEdit)
+                            {
+                                using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
+                                {
+                                     @Html.AntiForgeryToken()
+                                     @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
+                                     @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
+
+                                    <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit"><div> Edit</div></button>
+                                 }
+                            }
+                        }
+                    </td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary",  returnId = @item.ReturnViewModel.ReturnId }, null)
+                    </td>
+                </tr>
+            }
 
             </tbody>
         </table>
