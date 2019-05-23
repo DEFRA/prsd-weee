@@ -54,10 +54,11 @@
 
             OrganisationData organisation = organisationMap.Map(source.Operator.Organisation);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, @operator, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
             {
                 Contact = contact,
-                Organisation = organisation
+                Organisation = organisation,
+                Operator = @operator
             };
         }
     }

@@ -158,10 +158,11 @@
 
         private AatfData CreateAatfData()
         {
-            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateOperatorData(), CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
             {
                 Contact = CreateAatfContactData(),
-                Organisation = CreateOrganisationData()
+                Organisation = CreateOrganisationData(),
+                Operator = CreateOperatorData()
             };
         }
     }

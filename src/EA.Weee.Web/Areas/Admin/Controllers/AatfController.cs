@@ -48,8 +48,6 @@
             using (var client = apiClient())
             {
                 AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
-                AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
-                OrganisationData organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(aatf.Operator.OrganisationId));
 
                 List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
 
@@ -57,7 +55,7 @@
 
                 AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
-                    OrganisationString = GenerateAddress(organisationData.BusinessAddress),
+                    OrganisationString = GenerateAddress(aatf.Operator.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
                 });

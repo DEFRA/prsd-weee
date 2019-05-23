@@ -9,13 +9,18 @@
 
     public class OperatorMap : IMap<Operator, OperatorData>
     {
-        private readonly IMap<Organisation, OrganisationData> operatorMapper;
+        private readonly IMap<Organisation, OrganisationData> organisationMapper;
+
+        public OperatorMap(IMap<Organisation, OrganisationData> organisationMapper)
+        {
+            this.organisationMapper = organisationMapper;
+        }
 
         public OperatorData Map(Operator source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var organisation = operatorMapper.Map(source.Organisation);
+            var organisation = organisationMapper.Map(source.Organisation);
 
             return new OperatorData(source.Id, source.Organisation.Name, organisation, source.Organisation.Id);
         }
