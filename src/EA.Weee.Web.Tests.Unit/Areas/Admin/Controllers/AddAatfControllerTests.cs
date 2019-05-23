@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -24,6 +25,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
+    using AddressData = Core.Shared.AddressData;
 
     public class AddAatfControllerTests
     {
@@ -235,6 +237,49 @@
         }
 
         [Fact]
+        public async Task AddPost_ValidViewModelRequestWithCorrectParametersCreated()
+        {
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                AatfName = "name",
+                ApprovalNumber = "123",
+                ApprovalDate = DateTime.Now,
+                SiteAddressData = A.Fake<AatfAddressData>(),
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1,
+                OrganisationId = Guid.NewGuid(),
+                ContactData = A.Fake<AatfContactData>(),
+                CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
+                CompetentAuthorityId = Guid.NewGuid()
+            };
+
+            AatfData aatfData = new AatfData(
+                Guid.NewGuid(),
+                viewModel.AatfName,
+                viewModel.ApprovalNumber,
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                viewModel.SiteAddressData,
+                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                viewModel.ApprovalDate.GetValueOrDefault());
+
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+
+            await controller.Add(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAatf>.That.Matches(
+                p => p.OrganisationId == viewModel.OrganisationId
+                && p.Aatf.Name == aatfData.Name
+                && p.Aatf.ApprovalNumber == aatfData.ApprovalNumber
+                && p.Aatf.CompetentAuthority == aatfData.CompetentAuthority
+                && p.Aatf.AatfStatus == aatfData.AatfStatus
+                && p.Aatf.SiteAddress == aatfData.SiteAddress
+                && p.Aatf.Size == aatfData.Size
+                && p.Aatf.ApprovalDate == aatfData.ApprovalDate
+                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async Task AddPost_InvalidViewModel_ReturnsViewWithViewModelPopulatedWithLists()
         {
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
@@ -368,6 +413,28 @@
 
             result.RouteValues["organisationId"].Should().NotBe(null);
             result.RouteValues["organisationName"].Should().Be(viewModel.BusinessTradingName);
+        }
+
+        [Fact]
+        public async Task SoleTraderOrPartnershipDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
+        {
+            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
+            {
+                BusinessTradingName = "Company",
+                OrganisationType = "Sole trader or individual",
+                Address = A.Dummy<AddressData>()
+            };
+
+            viewModel.Address.Countries = countries;
+
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
+
+            await controller.SoleTraderOrPartnershipDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateOrganisationAdmin>.That.Matches(
+                p => p.BusinessName == viewModel.BusinessTradingName
+                && p.Address == viewModel.Address
+                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
