@@ -41,7 +41,7 @@
                 {
                     new AatfObligatedData(A.Fake<AatfData>(), new List<AatfSchemeData>()
                     {
-                        new AatfSchemeData(A.Fake<SchemeData>(), A.Fake<ObligatedCategoryValue>(), A.Fake<string>())
+                        new AatfSchemeData(A.Fake<SchemeData>(), A.Fake<ObligatedCategoryValue>(), A.Dummy<string>())
                     })
                 }
             };
