@@ -19,10 +19,10 @@
         [Fact]
         public void RuleFor_NonObligatedSelectedAndNullDcfValueSelected_ErrorShouldOccur()
         {
-            SelectReportOptionsViewModel model = GenerateViewModel();
+            var model = GenerateViewModel();
 
             validator = new SelectReportOptionsViewModelValidator();
-            ValidationResult validationResult = validator.Validate(model);
+            var validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
             validationResult.Errors.Count.Should().Be(1);
@@ -31,12 +31,12 @@
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueIsYes_ErrorShouldNotOccur()
         {
-            SelectReportOptionsViewModel model = GenerateViewModel();
+            var model = GenerateViewModel();
 
             model.DcfSelectedValue = "Yes";
 
             validator = new SelectReportOptionsViewModelValidator();
-            ValidationResult validationResult = validator.Validate(model);
+            var validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeTrue();
         }
@@ -44,14 +44,28 @@
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueIsNo_ErrorShouldNotOccur()
         {
-            SelectReportOptionsViewModel model = GenerateViewModel();
+            var model = GenerateViewModel();
 
             model.DcfSelectedValue = "No";
 
             validator = new SelectReportOptionsViewModelValidator();
-            ValidationResult validationResult = validator.Validate(model);
+            var validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void RuleFor_NonObligatedSelectedAndDcfValueIsYes_ErrorShouldBeValid()
+        {
+            var model = GenerateViewModel();
+
+            validator = new SelectReportOptionsViewModelValidator();
+            var validationResult = validator.Validate(model);
+
+            validationResult.Errors.Should().Contain(v =>
+                v.ErrorMessage.Equals("You must tell us whether any of the non-obligated WEEE was retained by a DCF"));
+            validationResult.Errors.Should().Contain(v =>
+                v.PropertyName.Equals("Option-1"));
         }
 
         private SelectReportOptionsViewModel GenerateViewModel()
