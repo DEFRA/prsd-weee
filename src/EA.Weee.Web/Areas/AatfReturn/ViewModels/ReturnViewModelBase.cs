@@ -38,8 +38,8 @@
             this.year = returnData.Quarter.Year;
             this.CreatedBy = returnData.CreatedBy;
             this.CreatedDate = returnData.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss");
-            this.SubmittedBy = returnData.SubmittedBy;
-            this.SubmittedDate = returnData.SubmittedDate.HasValue ? returnData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
+            this.SubmittedBy = string.IsNullOrWhiteSpace(returnData.SubmittedBy) ? "-" : returnData.SubmittedBy;
+            this.SubmittedDate = returnData.SubmittedDate.HasValue ? returnData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-";
             this.ReturnStatus = returnData.ReturnStatus;
         }
 
