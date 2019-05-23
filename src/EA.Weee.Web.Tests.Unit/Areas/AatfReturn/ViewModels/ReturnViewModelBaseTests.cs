@@ -80,16 +80,6 @@
         }
 
         [Fact]
-        public void Constructor_GivenSubmittedDateIsNull_SubmittedDateShouldBeEmpty()
-        {
-            var returnData = new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow() };
-
-            var model = new ReturnViewModelTest(returnData);
-            
-            model.SubmittedDate.Should().BeEmpty();
-        }
-
-        [Fact]
         public void Constructor_GivenQuarterDetails_QuarterPropertiesShouldBeSet()
         {
             var returnData = new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow() };
@@ -119,6 +109,30 @@
 
                 model.ReturnStatus.Should().Be((ReturnStatus)value);
             }
+        }
+
+        [Fact]
+        public void Constructor_GivenSubmittedDateIsNull_SubmittedDateShouldBeFormattedAsDash()
+        {
+            var model = new ReturnViewModelTest(DefaultReturnData());
+
+            model.SubmittedDate.Should().Be("-");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void Constructor_GivenSubmittedDateEmpty_SubmittedDateShouldBeFormattedAsDash(string submittedBy)
+        {
+            var model = new ReturnViewModelTest(new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow(), SubmittedBy = submittedBy });
+           
+            model.SubmittedBy.Should().Be("-");
+        }
+
+        private ReturnData DefaultReturnData()
+        {
+            return new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow() };
         }
 
         private Quarter GetQuarter()
