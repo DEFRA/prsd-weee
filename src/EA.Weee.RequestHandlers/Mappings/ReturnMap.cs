@@ -20,9 +20,10 @@
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
 
-        public ReturnMap(IMapper mapper)
+        public ReturnMap(IMapper mapper, IMap<Organisation, OrganisationData> organisationMapper)
         {
             this.mapper = mapper;
+            this.organisationMapper = organisationMapper;
         }
 
         public ReturnData Map(ReturnQuarterWindow source)
