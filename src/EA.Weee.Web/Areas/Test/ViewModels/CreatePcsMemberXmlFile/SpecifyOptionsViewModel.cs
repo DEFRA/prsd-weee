@@ -15,17 +15,17 @@
         public MemberRegistrationSchemaVersion SchemaVersion { get; set; }
 
         [Required]
-        [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099.")]
+        [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099")]
         [DisplayName("Compliance Year")]
         public int ComplianceYear { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "The number of new producers must not be negative.")]
+        [Range(0, int.MaxValue, ErrorMessage = "The number of new producers must not be negative")]
         [DisplayName("Number of new producers")]
         public int NumberOfNewProducers { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "The number of existing producers must not be negative.")]
+        [Range(0, int.MaxValue, ErrorMessage = "The number of existing producers must not be negative")]
         [DisplayName("Number of existing producers")]
         public int NumberOfExistingProducers { get; set; }
 

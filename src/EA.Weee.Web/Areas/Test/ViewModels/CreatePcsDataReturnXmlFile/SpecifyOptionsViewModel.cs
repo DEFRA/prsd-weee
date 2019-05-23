@@ -11,7 +11,7 @@
         public Guid OrganisationID { get; set; }
 
         [Required]
-        [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099.")]
+        [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099")]
         [DisplayName("Compliance Year")]
         public int ComplianceYear { get; set; }
 
