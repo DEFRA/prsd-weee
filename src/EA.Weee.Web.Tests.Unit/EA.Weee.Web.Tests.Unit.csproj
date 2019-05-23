@@ -257,6 +257,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReusedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBaseTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelTest.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedRemoveSiteViewModelTests.cs" />

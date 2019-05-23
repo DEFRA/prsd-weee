@@ -64,7 +64,7 @@
             var siteAddress = CreateAatfSiteAddress(country);
             var aatfs = new List<Aatf>()
             {
-                new Aatf("AAAAAA AAAAAAA AAAAAAA AAAAAAAAAAABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf),
+                new Aatf("ABB Ltd Darlaston", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf),
                 new Aatf("ABB Ltd Woking", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf),
                 new Aatf("ABB Ltd Maidenhead", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf),
                 new Aatf("AE Ltd Felixstowe", competentAuthority, "123456789", AatfStatus.Approved, @operator, siteAddress, AatfSize.Large, DateTime.Now, contact, FacilityType.Ae),
