@@ -8,6 +8,7 @@
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn.NonObligated;
     using RequestHandlers.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -21,7 +22,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new FetchNonObligatedWeeeForReturnRequestHandler(A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(), authorization);
+            var handler = new FetchNonObligatedWeeeForReturnRequestHandler(A.Dummy<INonObligatedDataAccess>(), authorization);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<FetchNonObligatedWeeeForReturnRequest>());
 
@@ -33,7 +34,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            var handler = new FetchNonObligatedWeeeForReturnRequestHandler(A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(), authorization);
+            var handler = new FetchNonObligatedWeeeForReturnRequestHandler(A.Dummy<INonObligatedDataAccess>(), authorization);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<FetchNonObligatedWeeeForReturnRequest>());
 
@@ -45,10 +46,10 @@
         [InlineData(false)]
         public async Task HandleAsync_GivenFetchNonObligatedWeeeForReturnRequest_DataAccessFetchIsCalled(bool dcf)
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
             var request = new FetchNonObligatedWeeeForReturnRequest(returnId, organisationId, dcf);
-            var dataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+            var dataAccess = A.Fake<INonObligatedDataAccess>();
 
             A.CallTo(() => dataAccess.FetchNonObligatedWeeeForReturn(returnId, dcf)).Returns(TonnageList);
 

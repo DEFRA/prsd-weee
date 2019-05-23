@@ -18,7 +18,7 @@
     using EA.Weee.Web.Services.Caching;
     using Weee.Requests.AatfReturn;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class ObligatedReusedController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

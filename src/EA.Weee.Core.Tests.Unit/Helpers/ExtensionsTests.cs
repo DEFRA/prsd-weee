@@ -86,7 +86,7 @@
 
             var exception = Record.Exception(() => complexObject.MakeEmptyStringsNull());
 
-            Assert.Null(exception);           
+            Assert.Null(exception);
         }
 
         [Theory]
@@ -185,6 +185,42 @@
             const decimal value = 10000m;
 
             value.ToTonnageEditDisplay().Should().Be("10000.000");
+        }
+
+        [Fact]
+        public void GetPropertyValue_GivenPropertyName_ShouldReturnValue()
+        {
+            var obj = new { One = 1, None = (int?)null };
+            obj.GetPropertyValue<int>("One").Should().Be(1);
+        }
+
+        [Fact]
+        public void GetPropertyValue_GivenNameOfNullPropertyValue_ShouldReturnNullValue()
+        {
+            var obj = new { One = 1, None = (int?)null };
+            obj.GetPropertyValue<int?>("None").Should().Be(null);
+        }
+
+        [Fact]
+        public void GetPropertyValue_GivenIncorrectType_ShouldReturnNullValue()
+        {
+            var obj = new { One = 1, None = (int?)null };
+
+            var exception = Record.Exception(() => obj.GetPropertyValue<string>("One"));
+
+            exception.Should().BeOfType<InvalidCastException>();
+        }
+
+        [Fact]
+        public void GetPropertyValue_GivenIncorrectProperyName_ShouldThrowAnException()
+        {
+            var incorrectName = "Uno";
+            var obj = new { One = 1, None = (int?)null };
+
+            var exception = Record.Exception(() => obj.GetPropertyValue<int>(incorrectName));
+
+            exception.Should().BeOfType<ArgumentException>();
+            exception.Message.Should().Contain(incorrectName);
         }
     }
 }

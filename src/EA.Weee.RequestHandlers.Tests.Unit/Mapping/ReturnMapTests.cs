@@ -197,8 +197,8 @@
 
             var obligated = new List<WeeeSentOnAmount>()
             {
-                new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m, weeeSentOn.Id),
-                new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m, weeeSentOn.Id)
+                new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m),
+                new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m)
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(),

@@ -15,7 +15,7 @@
     using EA.Weee.Web.Services.Caching;
 
     [ValidateOrganisationActionFilter]
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class SelectYourPcsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;

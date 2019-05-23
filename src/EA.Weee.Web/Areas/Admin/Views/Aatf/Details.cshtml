@@ -94,6 +94,12 @@
                 </tr>
             </tbody>
         </table>
+        @if (Model.CanEdit)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit AATF details</a>
+            </p>
+        }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
         <table class="govuk-table">
@@ -197,7 +203,7 @@
             </tbody>
         </table>
 
-        @if (Model.CanEditContactDetails)
+        @if (Model.CanEdit)
         {
             <p>
                 <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
@@ -214,7 +220,7 @@
                 <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="width: 30%">This organisation also operates</th>
                 @if (Model.AssociatedAatfs.Any())
                 {
-                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                    <td class="govuk-table__cell">
                         AATF
                     </td>
                 }

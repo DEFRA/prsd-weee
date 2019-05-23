@@ -1,0 +1,37 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.AatfReturn.AatfContactAddressData
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address1)">
+    @Html.Gds().LabelFor(m => m.Address1)
+    @Html.Gds().ValidationMessageFor(m => m.Address1)
+    @Html.Gds().TextBoxFor(m => m.Address1, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address2)">
+    @Html.Gds().LabelFor(m => m.Address2)
+    @Html.Gds().ValidationMessageFor(m => m.Address2)
+    @Html.Gds().TextBoxFor(m => m.Address2, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TownOrCity)">
+    @Html.Gds().LabelFor(m => m.TownOrCity)
+    @Html.Gds().ValidationMessageFor(m => m.TownOrCity)
+    @Html.Gds().TextBoxFor(m => m.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CountyOrRegion)">
+    @Html.Gds().LabelFor(m => m.CountyOrRegion)
+    @Html.Gds().ValidationMessageFor(m => m.CountyOrRegion)
+    @Html.Gds().TextBoxFor(m => m.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Postcode)">
+    @Html.Gds().LabelFor(m => m.Postcode)
+    @Html.Gds().ValidationMessageFor(m => m.Postcode)
+    @Html.Gds().TextBoxFor(m => m.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
+</div>
+
+<div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list">
+    @Html.Partial("_CountryPartial", Model)
+</div>

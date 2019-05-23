@@ -46,7 +46,7 @@
         [Fact]
         public void CheckSentOnSiteSummaryListController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(SentOnSiteSummaryListController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(SentOnSiteSummaryListController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

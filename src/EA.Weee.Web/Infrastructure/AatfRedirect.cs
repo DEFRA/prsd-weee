@@ -15,6 +15,8 @@
         public static string AatfSchemeSelectedRoute = "aatf-scheme-selected";
         public static string AatfOrganisationSelectedRoute = "aatf-selected-organisation";
         public static string SelectReportOptionsRouteName = "aatf-report-options";
+        public static string ReturnsRouteName = "aatf-returns";
+        public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
         public static string OrganisationRouteName = "aatf-organisation";
 
@@ -75,7 +77,7 @@
 
         public static RedirectToRouteResult ReturnsList(Guid organisationId)
         {
-            return new RedirectToRouteResult(OrganisationRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Index", organisationId = organisationId }));
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Index", organisationId = organisationId }));
         }
 
         public static RedirectToRouteResult ReusedOffSiteSummaryList(Guid returnId, Guid aatfId, Guid organisationId)
