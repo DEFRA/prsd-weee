@@ -28,7 +28,7 @@
         public string ApprovalNumber { get; set; }
 
         [Required]
-        [Display(Name = "Appropiate authority")]
+        [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthoritiesList { get; set; }
