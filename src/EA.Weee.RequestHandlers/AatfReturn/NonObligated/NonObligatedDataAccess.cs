@@ -33,5 +33,15 @@
 
             return context.SaveChangesAsync();
         }
+
+        public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
+        {
+            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Select(now => now).ToListAsync();
+        }
+
+        public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
+        {
+            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Where(now => now.Dcf == dcf).Select(now => (decimal?)now.Tonnage).ToListAsync();
+        }
     }
 }

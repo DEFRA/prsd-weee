@@ -34,5 +34,11 @@
             weeeReceivedAmount.HouseholdTonnage.Should().Be(household);
             weeeReceivedAmount.NonHouseholdTonnage.Should().Be(nonHousehold);
         }
+
+        [Fact]
+        public void WeeeReceived_ShouldInheritFromObligatedAmount()
+        {
+            typeof(WeeeReceivedAmount).BaseType.Name.Should().Be(typeof(ObligatedAmount).Name);
+        }
     }
 }

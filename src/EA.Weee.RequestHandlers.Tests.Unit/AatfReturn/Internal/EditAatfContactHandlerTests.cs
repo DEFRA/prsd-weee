@@ -4,7 +4,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -20,9 +19,8 @@
 
     public class EditAatfContactHandlerTests
     {
-        private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfContactDataAccess aatfContactDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly EditAatfContactHandler handler;
@@ -30,12 +28,11 @@
         public EditAatfContactHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            aatfContactDataAccess = A.Fake<IAatfContactDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
-            context = A.Fake<WeeeContext>();
 
-            handler = new EditAatfContactHandler(context, authorization, aatfContactDataAccess, genericDataAccess, organisationDetailsDataAccess);
+            handler = new EditAatfContactHandler(authorization, aatfDataAccess, genericDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -43,7 +40,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfContactHandler(context, authorization, aatfContactDataAccess, genericDataAccess, organisationDetailsDataAccess);
+            var handler = new EditAatfContactHandler(authorization, aatfDataAccess, genericDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfContact>());
 
@@ -55,7 +52,7 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfContactHandler(context, authorization, aatfContactDataAccess, genericDataAccess, organisationDetailsDataAccess);
+            var handler = new EditAatfContactHandler(authorization, aatfDataAccess, genericDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfContact>());
 
@@ -98,7 +95,7 @@
 
             await handler.HandleAsync(updateRequest);
 
-            A.CallTo(() => aatfContactDataAccess.Update(returnContact, updateRequest.ContactData, country)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => aatfDataAccess.UpdateContact(returnContact, updateRequest.ContactData, country)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

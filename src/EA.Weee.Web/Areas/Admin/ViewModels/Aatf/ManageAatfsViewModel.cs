@@ -10,7 +10,9 @@
     {
         public List<AatfDataList> AatfDataList { get; set; }
 
-        [Required(ErrorMessage = "You must select an Aatf to manage")]
+        [Required(ErrorMessage = "You must select an AATF to manage")]
         public override Guid? Selected { get; set; }
+
+        public bool CanAddAatf { get; set; }
     }
 }

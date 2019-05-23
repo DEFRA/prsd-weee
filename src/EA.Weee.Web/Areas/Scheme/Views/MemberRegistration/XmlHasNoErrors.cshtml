@@ -22,7 +22,7 @@
 
 		@Html.HiddenFor(m => m.TotalCharges)
 
-		<p>Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.</p>
+		<p>Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct</p>
 
 		int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
 		string warningText = numWarnings > 1 ? "warnings" : "warning";
@@ -63,7 +63,7 @@
 	            </div>
 	    </div>
 
-		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
+		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete</p>
 
 		@Html.Partial("_PrivacyPolicy");
 
@@ -92,7 +92,7 @@
                              Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
                              "Member registration loop",
                              "Upload a new file",
-                             "Validation successful")).
+                             "Validation successful"))
 		</p>
 	}
 }

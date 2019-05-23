@@ -29,7 +29,7 @@
                 SiteAddress = source.AatfData.SiteAddress,
                 Size = source.AatfData.Size,
                 ContactData = source.AatfData.Contact,
-                CanEditContactDetails = source.AatfData.Contact.CanEditContactDetails,
+                CanEdit = source.AatfData.Contact.CanEditContactDetails,
                 Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString
             };

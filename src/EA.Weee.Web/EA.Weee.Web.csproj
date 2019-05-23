@@ -287,7 +287,9 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
-    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnActionFilterAttribute.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
+    <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateOrganisationActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfReturnBaseController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\AatfTaskListController.cs" />
@@ -412,6 +414,7 @@
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToContactDetailsOverview.cs" />
@@ -419,8 +422,11 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfContactRequestCreator.cs" />
@@ -428,6 +434,10 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderOrPartnershipDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\OrganisationConfirmationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
@@ -896,9 +906,15 @@
     <Content Include="Areas\Admin\Views\AddAatf\Search.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\ManageAatfDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\Ae\ManageAes.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -999,6 +1015,7 @@
     <Compile Include="Areas\Test\ViewModels\ManagePcsReturnsSubmissionWindow\SettingsModel.cs" />
     <Compile Include="Extensions\DisplayExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
+    <Compile Include="Filters\AuthorizeInternalClaimsAttribute.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
     <Compile Include="Infrastructure\HttpForbiddenResult.cs" />

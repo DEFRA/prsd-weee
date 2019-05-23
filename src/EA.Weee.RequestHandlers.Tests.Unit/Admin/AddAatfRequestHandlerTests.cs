@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
@@ -7,7 +8,9 @@
     using EA.Weee.DataAccess.Identity;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Admin;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
@@ -88,10 +91,87 @@
                 OrganisationId = Guid.NewGuid()
             };
 
-            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(c => c.Name == aatf.Name))).Returns(aatfId);
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
+                c => c.Name == aatf.Name
+                && c.AatfStatus == aatf.AatfStatus
+                && c.ApprovalDate == aatf.ApprovalDate
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
+                && c.Name == aatf.Name
+                && c.SiteAddress.Id == aatf.SiteAddress.Id
+                && c.Size == aatf.Size))).Returns(aatfId);
+
             bool result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(c => c.Name == aatf.Name))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
+                c => c.Name == aatf.Name
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
+                && c.Name == aatf.Name
+                && c.SiteAddress.Id == aatf.SiteAddress.Id
+                && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
+                && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
+                && c.ApprovalDate == aatf.ApprovalDate))).MustHaveHappened(Repeated.Exactly.Once);
+
+            result.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task HandleAsync_OperatorIsNull_NewOperatorCreatedAndAddedToData()
+        {
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+
+            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+
+            Guid aatfId = Guid.NewGuid();
+
+            AddAatfRequestHandler handler = new AddAatfRequestHandler(authorization, this.dataAccess, addressMapper, contactMapper);
+
+            Guid organisationId = Guid.NewGuid();
+
+            AddAatf request = new AddAatf()
+            {
+                Aatf = aatf,
+                AatfContact = A.Dummy<AatfContactData>(),
+                OrganisationId = organisationId
+            };
+
+            Operator @operator = null;
+
+            A.CallTo(() => dataAccess.GetSingleByExpression(A<OperatorByOrganisationIdSpecification>._)).Returns(@operator);
+
+            Organisation organisation = Organisation.CreateSoleTrader("test");
+
+            A.CallTo(() => dataAccess.GetById<Organisation>(organisationId)).Returns(organisation);
+
+            A.CallTo(() => dataAccess.Add<Operator>(A<Operator>.That.Matches(c => c.Organisation == organisation))).Returns(organisationId);
+
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
+                c => c.Name == aatf.Name
+                && c.AatfStatus == aatf.AatfStatus
+                && c.ApprovalDate == aatf.ApprovalDate
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
+                && c.Name == aatf.Name
+                && c.SiteAddress.Id == aatf.SiteAddress.Id
+                && c.Size == aatf.Size))).Returns(aatfId);
+
+            bool result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
+                c => c.Name == aatf.Name
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.ApprovalNumber == aatf.ApprovalNumber
+                && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
+                && c.Name == aatf.Name
+                && c.SiteAddress.Id == aatf.SiteAddress.Id
+                && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
+                && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
+                && c.ApprovalDate == aatf.ApprovalDate))).MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => dataAccess.Add<Operator>(A<Operator>.That.Matches(
+                c => c.Organisation == organisation))).MustHaveHappened(Repeated.Exactly.Once);
 
             result.Should().Be(true);
         }

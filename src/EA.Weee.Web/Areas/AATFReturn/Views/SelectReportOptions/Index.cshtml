@@ -1,9 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
-    ViewBag.Title = "AATF Return";
+    ViewBag.Title = "AATF return reporting options - GOV.UK";
     var message = string.Empty;
 }
 
@@ -44,18 +43,17 @@
                                         @switch (i)
                                         {
                                             case 0:
-                                                message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat.";
+                                                message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat";
                                                 break;
                                             case 1:
-                                                message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.";
+                                                message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere";
                                                 break;
                                             case 2:
-                                                message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste.";
+                                                message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste";
                                                 break;
                                             case 3:
                                                 message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
                                                 break;
-
                                         }
                                         @message
                                     </p>
@@ -72,7 +70,7 @@
                                     @Model.ReportOnQuestions[i].Description?
                                 </h3>
                                 <p class="govuk-body govuk-!-font-size-16">
-                                    This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment.
+                                    This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment
                                 </p>
                                 <div class="govuk-form-group" id="WeeeReusedOptions">
                                     <fieldset class="govuk-fieldset inline">

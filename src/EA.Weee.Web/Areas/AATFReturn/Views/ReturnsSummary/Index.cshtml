@@ -7,6 +7,10 @@
     ViewBag.Title = "AATF return summary - GOV.UK";
 }
 
+@{
+    var hideOpenClass = Model.AnyAatfSchemes ? "" : "hide";
+}
+
 <section id="main-content">
     <header class="hgroup">
         <div>
@@ -37,7 +41,7 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-        <a href="#" id="collapsibleHref">Open all</a>
+        <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
     </span>
 
     <div class="govuk-table govuk-grid-column-full">

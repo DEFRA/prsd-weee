@@ -53,7 +53,7 @@
         [Fact]
         public void ObligatedReceivedController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(ObligatedReceivedController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(ObligatedReceivedController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

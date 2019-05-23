@@ -20,7 +20,7 @@
     using System.Web.Mvc;
     using Attributes;
 
-    [ValidateReturnActionFilter]
+    [ValidateReturnCreatedActionFilter]
     public class SentOnCreateSiteController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;

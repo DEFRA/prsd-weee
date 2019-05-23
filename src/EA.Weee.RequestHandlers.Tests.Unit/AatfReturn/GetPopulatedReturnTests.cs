@@ -15,6 +15,7 @@
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.CheckYourReturn;
+    using RequestHandlers.AatfReturn.NonObligated;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Factories;
     using Requests.AatfReturn;
@@ -29,7 +30,7 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IMap<ReturnQuarterWindow, ReturnData> mapper;
         private readonly IQuarterWindowFactory quarterWindowFactory;
-        private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchNonObligatedWeeeDataAccess;
+        private readonly INonObligatedDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
         private readonly IWeeeSentOnDataAccess sentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
@@ -42,7 +43,7 @@
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             sentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
-            fetchNonObligatedWeeeDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+            fetchNonObligatedWeeeDataAccess = A.Fake<INonObligatedDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
@@ -71,7 +72,7 @@
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IWeeeSentOnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
@@ -93,7 +94,7 @@
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IMap<ReturnQuarterWindow, ReturnData>>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<IFetchNonObligatedWeeeForReturnDataAccess>(),
+                A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IWeeeSentOnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),

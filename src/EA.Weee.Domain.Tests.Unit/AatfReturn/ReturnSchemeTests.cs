@@ -29,5 +29,11 @@
 
             constructor.Should().Throw<ArgumentNullException>();
         }
+
+        [Fact]
+        public void ReturnScheme_ShouldInheritFromReturnEntity()
+        {
+            typeof(ReturnScheme).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+        }
     }
 }
