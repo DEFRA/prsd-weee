@@ -10,9 +10,20 @@
     using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
+    using Dapper;
 
     internal class Program
     {
+        private static readonly string insertOrganisationSql = @"INSERT INTO Organisation.Organisation (Name, OrganisationType, OrganisationStatus, TradingName, CompanyRegistrationNumber, BusinessAddressId) VALUES (@Name, @OrganisationType, @OrganisationStatus, @TradingName, @CompanyRegistrationNumber, @BusinessAddressId)";
+        private static readonly string insertAddressSql = @"DECLARE @InsertedRow AS TABLE (Id uniqueidentifier);
+                                                            INSERT INTO Organisation.Address (Address1, Address2, TownOrCity, CountyOrRegion, Postcode, CountryId, Telephone, Email) OUTPUT Inserted.Id INTO @InsertedRows
+                                                            VALUES (Address1, @Address2, @TownOrCity, @CountyOrRegion, @Postcode, @CountryId, @Telephone, @Email);
+                                                            SELECT Id from @InsertedRows";
+        private static readonly string queryCountrySql = @"SELECT Id FROM Lookup.Country WHERE Name = @CountryName";
+
+        private static readonly string DatabaseName = GetDatabaseName();
+        private static readonly string DbServer = GetDatabaseServer();
+
         private static void Main(string[] args)
         {
             Console.Title = "Organisation Migration Runner";
@@ -21,7 +32,8 @@
             var keySelection = string.Empty;
             string input;
 
-            Console.WriteLine(" Enter filepath:");
+            Console.WriteLine(" ----------------------------------------------------------------------------");
+            Console.WriteLine(" Enter .xlsx filepath:");
             input = Console.ReadLine().Replace("\"", "");
 
             while (!File.Exists(input))
@@ -29,7 +41,7 @@
                 Console.WriteLine(" Could not find file {0}. Please try again", input);
                 input = Console.ReadLine().Replace("\"", "");
             }
-            
+
             IList<OrganisationData> organisations;
 
             if (!XlsxOrganisationDataReader.TryGetOrganisationData(input, out organisations))
@@ -41,7 +53,7 @@
             while (string.Compare(keySelection, "Exit", StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 if (!string.IsNullOrEmpty(keySelection))
-                { 
+                {
                     switch (keySelection)
                     {
                         case ("1"):
@@ -54,7 +66,7 @@
                         case ("3"):
                             CheckDatabaseConnection();
                             LocalValidation(organisations);
-                            DatabaseValidation(organisations);
+                            RunDatabaseMigration(organisations);
                             break;
                         default:
                             break;
@@ -62,7 +74,7 @@
                 }
                 else
                 {
-                    DrawMenu();
+                    DrawMenu(organisations);
                 }
 
                 var key = Console.ReadKey(true);
@@ -75,15 +87,15 @@
             }
         }
 
-        private static void DrawMenu()
+        private static void DrawMenu(IList<OrganisationData> organisations)
         {
-            Console.Clear();
-
-            Console.WriteLine(" Database: ");
-            Console.WriteLine(" Server: ");
             Console.WriteLine(" ----------------------------------------------------------------------------");
-            Console.WriteLine(" 1. Validate local file");
-            Console.WriteLine(" 2. Validate database connection");
+            Console.WriteLine(" Database: " + DatabaseName);
+            Console.WriteLine(" Server: " + DbServer);
+            Console.WriteLine(" Found {0} organisations", organisations.Count);
+            Console.WriteLine(" ----------------------------------------------------------------------------");
+            Console.WriteLine(" 1. Validate data");
+            Console.WriteLine(" 2. Check database connection");
             Console.WriteLine(" 3. Run data migration");
         }
 
@@ -92,33 +104,6 @@
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
             Environment.Exit(exitCode);
-        }
-
-        private static string GetVerbForKeySelection(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.D1:
-                case ConsoleKey.NumPad1:
-                    return "Update";
-                case ConsoleKey.D2:
-                case ConsoleKey.NumPad2:
-                    return "Create";
-                case ConsoleKey.D3:
-                case ConsoleKey.NumPad3:
-                    return "Rebuild";
-                case ConsoleKey.D4:
-                case ConsoleKey.NumPad4:
-                    return "TestData";
-                case ConsoleKey.D5:
-                case ConsoleKey.NumPad5:
-                    return "Baseline";
-                case ConsoleKey.D6:
-                case ConsoleKey.NumPad6:
-                    return "Exit";
-                default:
-                    return string.Empty;
-            }
         }
 
         private static void LocalValidation(IList<OrganisationData> organisations)
@@ -142,9 +127,10 @@
 
                 Console.WriteLine("Trying connection to database {0} on server {1}.", builder.InitialCatalog, builder.DataSource);
 
-                using (var conn = new SqlConnection(builder.ConnectionString))
+                using (var sqlConnection = new SqlConnection(builder.ConnectionString))
                 {
-                    conn.Open();
+                    sqlConnection.Open();
+                    sqlConnection.Close();
                 }
 
                 Console.WriteLine("Connection successful.");
@@ -156,9 +142,69 @@
             }
         }
 
-        private static void DatabaseValidation(IList<OrganisationData> shipments)
+        private static void RunDatabaseMigration(IList<OrganisationData> organisations)
         {
-            Console.WriteLine(" DB is valid");
+            var builder = new SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ConnectionString);
+
+            using (var sqlConnection = new SqlConnection(builder.ConnectionString))
+            {
+                sqlConnection.Open();
+                foreach (var organisation in organisations)
+                {
+                    organisation.AddressData.CountryId = sqlConnection.Query<Guid>(queryCountrySql,
+                        new { CountryName = organisation.AddressData.CountryName }).First();
+                    var addressId = sqlConnection.Execute(insertAddressSql,
+                        new
+                        {
+                            Address1 = organisation.AddressData.Address1,
+                            Address2 = organisation.AddressData.Address2,
+                            TownOrCity = organisation.AddressData.TownOrCity,
+                            CountyOrRegion = organisation.AddressData.CountyOrRegion,
+                            Postcode = organisation.AddressData.Postcode,
+                            CountryId = organisation.AddressData.CountryId,
+                            Telephone = organisation.AddressData.Telephone,
+                            Email = organisation.AddressData.Email
+                        });
+
+                    sqlConnection.Execute(insertOrganisationSql,
+                        new
+                        {
+                            Name = organisation.Name,
+                            OrganisationType = organisation.OrganisationType.Value,
+                            OrganisationStatus = 1,
+                            TradingName = organisation.TradingName,
+                            CompanyRegistrationNumbe = organisation.RegistrationNumber,
+                            BusinessAddressId = addressId,
+                        });
+                }
+                sqlConnection.Close();
+            }
+
+            Console.WriteLine("Connection successful.");
+        }
+
+        private static string GetDatabaseName()
+        {
+            var databasename = ConfigurationManager.AppSettings["DatabaseName"];
+
+            if (string.IsNullOrEmpty(databasename))
+            {
+                var projectname = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
+
+                databasename = projectname.Replace("Database.", String.Empty).Replace(".Database", String.Empty).Replace("Database", String.Empty);
+            }
+            return databasename;
+        }
+
+        private static string GetDatabaseServer()
+        {
+            var servername = ConfigurationManager.AppSettings["DatabaseServer"];
+
+            if (string.IsNullOrEmpty(servername))
+            {
+                servername = ".\\sqlexpress";
+            }
+            return servername;
         }
     }
 }

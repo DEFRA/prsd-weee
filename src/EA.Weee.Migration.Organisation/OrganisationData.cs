@@ -8,6 +8,20 @@
 
     public class OrganisationData
     {
+        public OrganisationData()
+        {
+        }
+
+        public OrganisationData(int rowNumber, string name, string tradingName, OrganisationType? organisationType, string registrationNumber, AddressData addressData)
+        {
+            RowNumber = rowNumber;
+            Name = name;
+            TradingName = tradingName;
+            OrganisationType = organisationType;
+            RegistrationNumber = registrationNumber;
+            AddressData = addressData;
+        }
+
         public int RowNumber { get; set; }
 
         public string Name { get; set; }
@@ -18,20 +32,6 @@
 
         public string RegistrationNumber { get; set; }
 
-        public string AddressLine1 { get; set; }
-
-        public string AddressLine2 { get; set; }
-
-        public string TownOrCity { get; set; }
-
-        public string CountyOrRegion { get; set; }
-
-        public string Postcode { get; set; }
-
-        public string Country { get; set; }
-
-        public string Telephone { get; set; }
-
-        public string Email { get; set; }
+        public AddressData AddressData { get; set; }
     }
 }

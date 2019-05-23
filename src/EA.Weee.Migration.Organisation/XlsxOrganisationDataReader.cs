@@ -46,22 +46,22 @@
 
                 try
                 {
-                    organisations.Add(new OrganisationData()
-                    {
-                        RowNumber = i,
-                        Name = dataTable[i].Field<string>(0),
-                        TradingName = dataTable[i].Field<string>(1),
-                        OrganisationType = TryParseEnum(dataTable[i].Field<string>(2)),
-                        RegistrationNumber = dataTable[i].Field<object>(3).ToString(),
-                        AddressLine1 = dataTable[i].Field<string>(4),
-                        AddressLine2 = dataTable[i].Field<string>(5),
-                        TownOrCity = dataTable[i].Field<string>(6),
-                        CountyOrRegion = dataTable[i].Field<string>(7),
-                        Postcode = dataTable[i].Field<string>(8),
-                        Country = dataTable[i].Field<string>(9),
-                        Telephone = dataTable[i].Field<object>(10).ToString(),
-                        Email = dataTable[i].Field<string>(11),
-                    });
+                    var addressData = new AddressData(dataTable[i].Field<string>(4),
+                        dataTable[i].Field<string>(5),
+                        dataTable[i].Field<string>(6),
+                        dataTable[i].Field<string>(7),
+                        dataTable[i].Field<string>(8),
+                        dataTable[i].Field<string>(9),
+                        dataTable[i].Field<object>(10).ToString(),
+                        dataTable[i].Field<string>(11));
+
+                    organisations.Add(new OrganisationData(
+                        i,
+                        dataTable[i].Field<string>(0),
+                        dataTable[i].Field<string>(1),
+                        TryParseEnum(dataTable[i].Field<string>(2)),
+                        dataTable[i].Field<object>(3).ToString(),
+                        addressData));
                 }
                 catch
                 {
@@ -85,6 +85,7 @@
                     return OrganisationType.SoleTraderOrIndividual;
                 default:
                     return null;
+                    break;
             }
         }
 
