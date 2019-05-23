@@ -66,7 +66,7 @@
         [Fact]
         public void SelectReportOptionsController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(SelectReportOptionsController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(SelectReportOptionsController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

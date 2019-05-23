@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class WeeeSentOn : Entity, IReturnOption
+    public class WeeeSentOn : ReturnEntity, IReturnOption
     {
         public virtual AatfAddress OperatorAddress { get; private set; }
 
@@ -13,13 +13,11 @@
 
         public virtual Aatf Aatf { get; private set; }
 
-        public virtual Return @Return { get; private set; }
-
-        public virtual Guid ReturnId { get; private set; }
-
         public virtual Guid AatfId { get; private set; }
 
         public virtual Guid SiteAddressId { get; private set; }
+
+        public IList<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
 
         public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
         {

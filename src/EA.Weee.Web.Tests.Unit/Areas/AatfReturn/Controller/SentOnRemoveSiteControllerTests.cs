@@ -46,7 +46,7 @@
         [Fact]
         public void SentOnRemoveSiteOperatorController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(SentOnRemoveSiteController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(SentOnRemoveSiteController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]

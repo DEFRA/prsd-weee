@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
     using System;
     using Core.Shared;
     using EA.Weee.Core.Organisations;
@@ -41,5 +39,7 @@
         public AatfContactData Contact { get; set; }
 
         public OrganisationData Organisation { get; set; }
+
+        public bool CanEdit { get; set; }
     }
 }

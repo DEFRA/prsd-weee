@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
+    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
@@ -56,5 +57,23 @@
         public IList<SchemeData> SchemeDataItems { get; set; }
 
         public ReturnData ReturnData { get; set; }
+
+        public bool AnyAatfSchemes
+        {
+            get
+            {
+                if (AatfsData == null || !AatfsData.Any())
+                {
+                    return false;
+                }
+
+                if (AatfsData.Any(a => a.SchemeData.Any()))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

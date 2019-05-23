@@ -6,10 +6,14 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
 
-    public interface IAatfContactDataAccess
+    public interface IAatfDataAccess
     {
+        Task<Aatf> GetDetails(Guid id);
+
+        Task UpdateDetails(Aatf oldDetails, Aatf newDetails);
+
         Task<AatfContact> GetContact(Guid aatfId);
 
-        Task Update(AatfContact oldDetails, AatfContactData newDetails, Country country);
+        Task UpdateContact(AatfContact oldDetails, AatfContactData newDetails, Country country);
     }
 }

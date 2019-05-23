@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Organisations;
@@ -12,21 +11,18 @@
 
     internal class EditAatfContactHandler : IRequestHandler<EditAatfContact, bool>
     {
-        private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfContactDataAccess aatfContactDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public EditAatfContactHandler(WeeeContext context,
-            IWeeeAuthorization authorization,
-            IAatfContactDataAccess aatfContactDataAccess,
+        public EditAatfContactHandler(IWeeeAuthorization authorization,
+            IAatfDataAccess aatfDataAccess,
             IGenericDataAccess genericDataAccess,
             IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {
-            this.context = context;
             this.authorization = authorization;
-            this.aatfContactDataAccess = aatfContactDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
             this.genericDataAccess = genericDataAccess;
             this.organisationDetailsDataAccess = organisationDetailsDataAccess;
         }
@@ -43,7 +39,7 @@
 
             var value = await genericDataAccess.GetById<AatfContact>(message.ContactData.Id);
 
-            await aatfContactDataAccess.Update(value, message.ContactData, country);
+            await aatfDataAccess.UpdateContact(value, message.ContactData, country);
 
             return true;
         }

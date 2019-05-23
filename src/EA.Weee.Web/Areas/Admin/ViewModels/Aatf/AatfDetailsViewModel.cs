@@ -12,6 +12,7 @@
         public Guid Id { get; set; }
 
         public string Name { get; set; }
+
         public string ApprovalNumber { get; set; }
 
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
@@ -31,7 +32,7 @@
 
         public AatfContactData ContactData { get; set; }
 
-        public bool CanEditContactDetails { get; set; }
+        public bool CanEdit { get; set; }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 

@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -33,7 +29,7 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        protected Aatf()
+        public Aatf()
         {
         }
 
@@ -83,6 +79,19 @@
             Contact = contact;
             SiteAddressId = aatfSiteAddress.Id;
             FacilityType = facilityType;
+        }
+
+        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime? approvalDate)
+        {
+            Name = name;
+            CompetentAuthorityId = competentAuthorityId;
+            ApprovalNumber = approvalNumber;
+            AatfStatus = aatfStatus;
+            Operator = @operator;
+            Size = aatfSize;
+            SiteAddress = aatfSiteAddress;
+            ApprovalDate = approvalDate;
+            SiteAddressId = aatfSiteAddress.Id;
         }
     }
 }
