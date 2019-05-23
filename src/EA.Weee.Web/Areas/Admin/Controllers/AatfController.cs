@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
@@ -61,12 +62,11 @@
         {
             SetBreadcrumb();
 
-            using (var client = apiClient())
-            {
-                bool canAddAatf = await client.SendAsync(User.GetAccessToken(), new CheckUserRole(Roles.InternalAdmin));
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
 
-                return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = canAddAatf });
-            }
+            bool isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = isInternalAdmin });
         }
 
         [HttpPost]

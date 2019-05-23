@@ -255,7 +255,6 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
-    <Compile Include="Users\CheckUserInRoleHandlerTests.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccessTests.cs" />
     <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />
