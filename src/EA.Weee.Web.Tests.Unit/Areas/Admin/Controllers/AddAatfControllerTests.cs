@@ -41,13 +41,7 @@
         [Fact]
         public void ControllerMustHaveAuthorizeClaimsAttribute()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient);
-
-            Type controllerType = controller.GetType();
-
-            var attributes = controllerType.GetCustomAttributes(typeof(AuthorizeInternalClaimsAttribute), true);
-
-            Assert.True(attributes[0].GetType() == typeof(AuthorizeInternalClaimsAttribute));
+            typeof(AddAatfController).Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         [Fact]
