@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
@@ -12,11 +13,14 @@
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Requests.Users;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
 
@@ -53,10 +57,16 @@
             }
         }
 
+        [HttpGet]
         public async Task<ActionResult> ManageAatfs()
         {
             SetBreadcrumb();
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs() });
+
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+
+            bool isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = isInternalAdmin });
         }
 
         [HttpPost]
