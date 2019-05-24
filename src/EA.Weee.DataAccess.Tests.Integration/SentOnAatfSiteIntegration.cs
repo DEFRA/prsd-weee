@@ -203,7 +203,7 @@
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                weeeSentOnAmountList.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1, weeeSentOn.Id));
+                weeeSentOnAmountList.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1));
             }
 
             context.WeeeSentOnAmount.AddRange(weeeSentOnAmountList);

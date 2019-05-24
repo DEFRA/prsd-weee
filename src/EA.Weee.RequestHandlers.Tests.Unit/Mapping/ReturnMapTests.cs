@@ -7,6 +7,7 @@
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.User;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
     using FakeItEasy;
     using FluentAssertions;
@@ -26,12 +27,14 @@
         private readonly Organisation organisation;
         private readonly Operator @operator;
         private readonly IMapper mapper;
+        private readonly IMap<Organisation, OrganisationData> organisationMapper;
 
         public ReturnMapTests()
         {
             mapper = A.Fake<IMapper>();
+            organisationMapper = A.Fake<IMap<Organisation, OrganisationData>>();
 
-            map = new ReturnMap(mapper);
+            map = new ReturnMap(mapper, organisationMapper);
             
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
@@ -194,8 +197,8 @@
 
             var obligated = new List<WeeeSentOnAmount>()
             {
-                new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m, weeeSentOn.Id),
-                new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m, weeeSentOn.Id)
+                new WeeeSentOnAmount(weeeSentOn, 1, 1.000m, 2.000m),
+                new WeeeSentOnAmount(weeeSentOn, 2, 3.000m, 4.000m)
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(),

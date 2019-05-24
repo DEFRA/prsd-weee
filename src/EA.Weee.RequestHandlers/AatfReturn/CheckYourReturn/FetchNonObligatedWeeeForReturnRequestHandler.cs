@@ -3,19 +3,20 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
+    using NonObligated;
     using Security;
     using Request = Requests.AatfReturn.NonObligated.FetchNonObligatedWeeeForReturnRequest;
 
     public class FetchNonObligatedWeeeForReturnRequestHandler : IRequestHandler<Request, List<decimal?>>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IFetchNonObligatedWeeeForReturnDataAccess dataAccess;
+        private readonly INonObligatedDataAccess dataAccess;
 
         public FetchNonObligatedWeeeForReturnRequestHandler(
-            IFetchNonObligatedWeeeForReturnDataAccess dataAccess, IWeeeAuthorization authdataaccess)
+            INonObligatedDataAccess dataAccess, IWeeeAuthorization authDataAccess)
         {
             this.dataAccess = dataAccess;
-            this.authorization = authdataaccess;
+            this.authorization = authDataAccess;
         }
 
         public async Task<List<decimal?>> HandleAsync(Request message)

@@ -19,19 +19,17 @@
 
     public class EditNonObligatedHandlerTests
     {
-        private readonly INonObligatedDataAccess addNonObligatedDataAccess;
-        private readonly IFetchNonObligatedWeeeForReturnDataAccess fetchDataAccess;
+        private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly EditNonObligatedHandler handler;
 
         public EditNonObligatedHandlerTests()
         {
             var authorization = A.Fake<IWeeeAuthorization>();
-            this.addNonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
-            this.fetchDataAccess = A.Fake<IFetchNonObligatedWeeeForReturnDataAccess>();
+            this.nonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
             this.genericDataAccess = A.Fake<IGenericDataAccess>();
 
-            handler = new EditNonObligatedHandler(authorization, addNonObligatedDataAccess, fetchDataAccess, genericDataAccess);
+            handler = new EditNonObligatedHandler(authorization, nonObligatedDataAccess, genericDataAccess);
         }
 
         [Fact]
@@ -39,7 +37,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handlerLocal = new EditNonObligatedHandler(authorization, addNonObligatedDataAccess, fetchDataAccess, genericDataAccess);
+            var handlerLocal = new EditNonObligatedHandler(authorization, nonObligatedDataAccess, genericDataAccess);
 
             Func<Task> action = async () => await handlerLocal.HandleAsync(A.Dummy<EditNonObligated>());
 
@@ -71,8 +69,8 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => addNonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(0), 1)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => addNonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(1), 2)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => nonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(0), 1)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => nonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(1), 2)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

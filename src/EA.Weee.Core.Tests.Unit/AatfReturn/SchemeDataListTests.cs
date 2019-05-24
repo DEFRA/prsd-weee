@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Scheme;
@@ -46,7 +47,7 @@
 
         private OperatorData OperatorData()
         {
-            return new OperatorData(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<Guid>());
+            return new OperatorData(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<OrganisationData>(), A.Dummy<Guid>());
         }
     }
 }

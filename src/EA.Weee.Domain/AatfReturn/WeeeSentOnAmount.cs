@@ -11,7 +11,7 @@
 
         public int CategoryId { get; set; }
 
-        public WeeeSentOnAmount(WeeeSentOn aatfWeeeSentOn, int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage, Guid weeeSentOnId)
+        public WeeeSentOnAmount(WeeeSentOn aatfWeeeSentOn, int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage)
         {
             Guard.ArgumentNotNull(() => aatfWeeeSentOn, aatfWeeeSentOn);
 
@@ -19,7 +19,7 @@
             CategoryId = categoryId;
             HouseholdTonnage = householdTonnage;
             NonHouseholdTonnage = nonHouseholdTonnage;
-            WeeeSentOnId = weeeSentOnId;
+            WeeeSentOnId = aatfWeeeSentOn.Id;
         }
 
         public WeeeSentOnAmount(int categoryId, decimal? householdTonnage, decimal? nonHouseholdTonnage, Guid weeeSentOnId)

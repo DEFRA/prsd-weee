@@ -18,9 +18,11 @@ namespace EA.Weee.Api.IdSrv
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using DataAccess;
     using IdentityModel;
     using IdentityServer3.Core.Extensions;
     using IdentityServer3.Core.Models;
@@ -35,15 +37,21 @@ namespace EA.Weee.Api.IdSrv
         protected readonly Func<string, TKey> ConvertSubjectToKey;
 
         protected readonly UserManager<TUser, TKey> UserManager;
+        protected readonly WeeeContext Context;
 
-        public AspNetIdentityUserService(UserManager<TUser, TKey> userManager, Func<string, TKey> parseSubject = null)
+        public AspNetIdentityUserService(UserManager<TUser, TKey> userManager, WeeeContext context, Func<string, TKey> parseSubject = null)
         {
             if (userManager == null)
             {
                 throw new ArgumentNullException("userManager");
             }
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
 
             this.UserManager = userManager;
+            this.Context = context;
 
             if (parseSubject != null)
             {
@@ -196,7 +204,17 @@ namespace EA.Weee.Api.IdSrv
                 var roleClaims =
                     from role in await UserManager.GetRolesAsync(user.Id)
                     select new Claim(Constants.ClaimTypes.Role, role);
+
                 claims.AddRange(roleClaims);
+
+                var internalUser = await Context.CompetentAuthorityUsers
+                    .Include(cau => cau.Role)
+                    .SingleOrDefaultAsync(cau => cau.UserId == user.Id.ToString());
+
+                if (internalUser != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, internalUser.Role.Name));
+                }
             }
 
             return claims;

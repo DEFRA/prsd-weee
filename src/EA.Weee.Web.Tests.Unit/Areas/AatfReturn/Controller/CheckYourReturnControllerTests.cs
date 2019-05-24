@@ -43,7 +43,7 @@
         [Fact]
         public void CheckYourReturnController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(CheckYourReturnController).Should().BeDecoratedWith<ValidateReturnActionFilterAttribute>();
+            typeof(CheckYourReturnController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
