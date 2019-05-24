@@ -44,12 +44,12 @@
 
             Console.WriteLine(" ----------------------------------------------------------------------------");
             Console.WriteLine(" Enter .xlsx filepath:");
-            fileName = Console.ReadLine().Replace("\"", "");
+            fileName = Console.ReadLine().Replace("\"", string.Empty);
 
             while (!File.Exists(fileName))
             {
                 Console.WriteLine(" Could not find file {0}. Please try again", fileName);
-                fileName = Console.ReadLine().Replace("\"", "");
+                fileName = Console.ReadLine().Replace("\"", string.Empty);
             }
 
             IList<Organisation> organisations;
@@ -136,7 +136,7 @@
         private static void LocalValidation(IList<Organisation> organisations)
         {
             Console.WriteLine(Environment.NewLine);
-            if (OrganisationDataListValidator.HasErrors(organisations))
+            if (OrganisationDataListValidator.CheckHasErrors(organisations))
             {
                 Console.WriteLine(" Found errors in organisation data.  Exiting");
                 Exit(-1);
@@ -184,7 +184,8 @@
             using (var sqlConnection = DatabaseHelper.CreateConnection())
             {
                 sqlConnection.Open();
-                using (var transaction = sqlConnection.BeginTransaction()) {
+                using (var transaction = sqlConnection.BeginTransaction())
+                {
                     foreach (var organisation in organisations)
                     {
                         var existingOrganisation = sqlConnection

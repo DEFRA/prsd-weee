@@ -81,6 +81,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A58210D8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Migration.Organisation", "EA.Weee.Migration.Organisation\EA.Weee.Migration.Organisation.csproj", "{1516CD9F-BB70-4FB9-9967-DF507B793CCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Migration.Organisation.Tests", "EA.Weee.Migration.Organisation.Tests\EA.Weee.Migration.Organisation.Tests.csproj", "{E1A5479D-EA46-4746-A710-891B97FA9154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,10 @@ Global
 		{1516CD9F-BB70-4FB9-9967-DF507B793CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1516CD9F-BB70-4FB9-9967-DF507B793CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1516CD9F-BB70-4FB9-9967-DF507B793CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A5479D-EA46-4746-A710-891B97FA9154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A5479D-EA46-4746-A710-891B97FA9154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A5479D-EA46-4746-A710-891B97FA9154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A5479D-EA46-4746-A710-891B97FA9154}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -252,6 +258,7 @@ Global
 		{1DB88549-74A2-4589-B265-7CCF7F27687E} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{5C05870F-5355-4064-8B46-8F748DC89618} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{1516CD9F-BB70-4FB9-9967-DF507B793CCC} = {A58210D8-B33E-4C31-8B2A-55BE3DFA3D4B}
+		{E1A5479D-EA46-4746-A710-891B97FA9154} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EB3B8BA6-8200-4706-9D3D-FD2C042691D2}

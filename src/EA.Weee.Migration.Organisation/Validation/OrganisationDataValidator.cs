@@ -7,12 +7,9 @@
     {
         public OrganisationDataValidator()
         {
-            RuleSet("Organisation", () =>
-            {
-                RuleFor(a => a.Name).NotEmpty().MaximumLength(256);
-                RuleFor(a => a.TradingName).MaximumLength(256);
-                RuleFor(a => a.RegistrationNumber).MaximumLength(15);
-            });
+            RuleFor(a => a.Name).NotEmpty().MaximumLength(256);
+            RuleFor(a => a.TradingName).MaximumLength(256);
+            RuleFor(a => a.RegistrationNumber).MaximumLength(15).MinimumLength(7);
         }
     }
 }

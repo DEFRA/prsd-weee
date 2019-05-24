@@ -11,7 +11,7 @@
         private static readonly OrganisationDataValidator OrganisationValidator = new OrganisationDataValidator();
         private static readonly AddressDataValidator AddressValidator = new AddressDataValidator();
 
-        public static bool HasErrors(IList<Organisation> organisations)
+        public static bool CheckHasErrors(IList<Organisation> organisations)
         {
             var hasErrors = false;
 
