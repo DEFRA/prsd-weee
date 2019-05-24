@@ -101,8 +101,6 @@
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
 
-            viewModel.HasDcfError = GetDcfModelStateError();
-
             return View(viewModel);
         }
 
@@ -129,16 +127,8 @@
             var oldReturnOptions = viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList();
             if (oldReturnOptions.Count != 0)
             {
-                var deselectedOptions = new List<int>();
-                if (!viewModel.HasSelectedOptions)
-                {
-                    deselectedOptions = oldReturnOptions;
-                }
-                else
-                {
-                    deselectedOptions = oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
-                }
-                if (deselectedOptions != null && deselectedOptions.Count != 0)
+                var deselectedOptions = !viewModel.HasSelectedOptions ? oldReturnOptions : oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
+                if (deselectedOptions.Count != 0)
                 {
                     foreach (var option in deselectedOptions)
                     {
@@ -160,13 +150,6 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-        }
-
-        private bool GetDcfModelStateError()
-        {
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-
-            return allErrors != null && allErrors.Count(p => p.ErrorMessage == "You must tell us whether any of the non-obligated WEEE was retained by a DCF") > 0;
         }
     }
 }
