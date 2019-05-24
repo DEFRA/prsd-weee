@@ -83,7 +83,6 @@
                     return OrganisationType.SoleTraderOrIndividual;
                 default:
                     return null;
-                    break;
             }
         }
 
