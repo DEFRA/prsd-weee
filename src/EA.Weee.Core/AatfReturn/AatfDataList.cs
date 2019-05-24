@@ -19,11 +19,11 @@
 
         public virtual string AatfStatusString { get; set; }
 
-        public virtual Operator Operator { get; private set; }
+        public virtual OperatorData Operator { get; private set; }
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, FacilityType facilityType)
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OperatorData @operator, FacilityType facilityType)
         {
             this.Id = id;
             this.Name = name;

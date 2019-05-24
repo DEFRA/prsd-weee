@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Shared;
+    using EA.Weee.Core.Organisations;
 
     public class AatfData
     {
@@ -19,6 +20,8 @@
 
         public Guid Id { get; set; }
 
+        public OperatorData @Operator { get; set; }
+
         public virtual string Name { get; set; }
 
         public string ApprovalNumber { get; set; }
@@ -32,6 +35,10 @@
         public AatfSize Size { get; set; }
       
         public DateTime? ApprovalDate { get; set; }
+
+        public AatfContactData Contact { get; set; }
+
+        public OrganisationData Organisation { get; set; }
 
         public bool CanEdit { get; set; }
     }

@@ -144,6 +144,7 @@
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAddressIdSpecification.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsByOperatorIdHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesByOrganisationIdHandler.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccess.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandler.cs" />
     <Compile Include="Admin\GetSubmissionChanges\IGetSubmissionChangesCsvDataAccess.cs" />

@@ -94,6 +94,7 @@
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
+    <Compile Include="Admin\GetSchemesByOrganisationId.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
+    <Compile Include="Admin\GetAatfsByOperatorId.cs" />
     <Compile Include="Organisations\GetContact.cs" />
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
