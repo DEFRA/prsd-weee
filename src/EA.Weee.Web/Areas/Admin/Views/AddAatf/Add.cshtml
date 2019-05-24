@@ -28,12 +28,6 @@
                 @Html.Gds().TextBoxFor(m => m.AatfName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
             </div>
 
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Name)">
-                @Html.Gds().LabelFor(m => m.SiteAddressData.Name)
-                @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Name)
-                @Html.Gds().TextBoxFor(m => m.SiteAddressData.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
-            </div>
-
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address1)">
                 @Html.Gds().LabelFor(m => m.SiteAddressData.Address1)
                 @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Address1)

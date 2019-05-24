@@ -12,10 +12,25 @@
         public Guid OrganisationId { get; set; }
         public string OrganisationName { get; set; }
 
+        private string aatfName;
+
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
-        public string AatfName { get; set; }
+        public string AatfName
+        {
+            get
+            {
+                return this.aatfName;
+            }
+
+            set
+            {
+                this.aatfName = value;
+
+                this.SiteAddressData.Name = value;
+            }
+        }
 
         public AatfAddressData SiteAddressData { get; set; }
 
