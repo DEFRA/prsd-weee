@@ -57,6 +57,7 @@
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel());
@@ -83,11 +84,27 @@
         [Fact]
         public async Task ManageAatfPost_ModelError_GetAatfsMustBeRun()
         {
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             await controller.ManageAatfs(new ManageAatfsViewModel());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ManageAatfsPost_InvalidModel_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            SetUpControllerContext(userHasInternalAdminClaims);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ViewResult result = await controller.ManageAatfs() as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
         }
 
         [Fact]
