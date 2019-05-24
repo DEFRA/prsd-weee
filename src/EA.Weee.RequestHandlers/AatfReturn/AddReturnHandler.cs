@@ -7,6 +7,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using Domain.User;
     using NonObligated;
     using Organisations;
@@ -46,6 +47,15 @@
             var quarter = new Quarter(2019, QuarterType.Q1);
 
             var aatfOperator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+
+            if (aatfOperator == null)
+            {
+                var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
+
+                aatfOperator = new Operator(organisation);
+
+                await genericDataAccess.Add<Operator>(aatfOperator);
+            }
 
             var aatfReturn = new Return(aatfOperator, quarter, userContext.UserId.ToString());
 
