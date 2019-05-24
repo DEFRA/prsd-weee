@@ -85,7 +85,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\AddressDataValidatorTests.cs" />
-    <Compile Include="Validation\OrganisationDataListValidatorTests.cs" />
     <Compile Include="Validation\OrganisationDataValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
