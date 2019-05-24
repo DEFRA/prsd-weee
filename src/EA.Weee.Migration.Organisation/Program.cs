@@ -11,21 +11,28 @@
     using System.Text;
     using System.Threading.Tasks;
     using Dapper;
+    using DbModel;
+    using NLog;
+    using Validation;
 
     internal class Program
     {
-        private static readonly string insertOrganisationSql = @"INSERT INTO Organisation.Organisation (Name, OrganisationType, OrganisationStatus, TradingName, CompanyRegistrationNumber, BusinessAddressId) VALUES (@Name, @OrganisationType, @OrganisationStatus, @TradingName, @CompanyRegistrationNumber, @BusinessAddressId)";
-        private static readonly string insertAddressSql = @"DECLARE @InsertedRow AS TABLE (Id uniqueidentifier);
-                                                            INSERT INTO Organisation.Address (Address1, Address2, TownOrCity, CountyOrRegion, Postcode, CountryId, Telephone, Email) OUTPUT Inserted.Id INTO @InsertedRows
-                                                            VALUES (Address1, @Address2, @TownOrCity, @CountyOrRegion, @Postcode, @CountryId, @Telephone, @Email);
+        private static readonly string insertOrganisationSql = @"INSERT INTO Organisation.Organisation (Id, Name, OrganisationType, OrganisationStatus, TradingName, CompanyRegistrationNumber, BusinessAddressId)
+                                                                 VALUES (NEWID(), @Name, @OrganisationType, @OrganisationStatus, @TradingName, @CompanyRegistrationNumber, @BusinessAddressId)";
+        private static readonly string insertAddressSql = @"DECLARE @InsertedRows AS TABLE (Id uniqueidentifier);
+                                                            INSERT INTO Organisation.Address (Id, Address1, Address2, TownOrCity, CountyOrRegion, Postcode, CountryId, Telephone, Email) OUTPUT Inserted.Id INTO @InsertedRows
+                                                            VALUES (NEWID(), @Address1, @Address2, @TownOrCity, @CountyOrRegion, @Postcode, @CountryId, @Telephone, @Email);
                                                             SELECT Id from @InsertedRows";
-        private static readonly string queryCountrySql = @"SELECT Id FROM Lookup.Country WHERE Name = @CountryName";
+        private static readonly string queryCountrySql = @"SELECT * FROM Lookup.Country WHERE Name = @CountryName;";
+        private static readonly string checkExistingOrganisationSql = @"SELECT * FROM Organisation.Organisation WHERE Name = @Name;";
 
         private static readonly string DatabaseName = GetDatabaseName();
         private static readonly string DbServer = GetDatabaseServer();
 
         private static void Main(string[] args)
         {
+            var logger = SetupLogger();
+
             Console.Title = "Organisation Migration Runner";
 
             var p = new Process();
@@ -87,6 +94,21 @@
             }
         }
 
+        private static Logger SetupLogger()
+        {
+            var config = new NLog.Config.LoggingConfiguration();
+
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
+            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+
+            NLog.LogManager.Configuration = config;
+            var logger = NLog.LogManager.GetCurrentClassLogger();
+            return logger;
+        }
+
         private static void DrawMenu(IList<OrganisationData> organisations)
         {
             Console.WriteLine(" ----------------------------------------------------------------------------");
@@ -94,7 +116,7 @@
             Console.WriteLine(" Server: " + DbServer);
             Console.WriteLine(" Found {0} organisations", organisations.Count);
             Console.WriteLine(" ----------------------------------------------------------------------------");
-            Console.WriteLine(" 1. Validate data");
+            Console.WriteLine(" 1. Validate datafile");
             Console.WriteLine(" 2. Check database connection");
             Console.WriteLine(" 3. Run data migration");
         }
@@ -108,7 +130,13 @@
 
         private static void LocalValidation(IList<OrganisationData> organisations)
         {
-            Console.WriteLine(" File is valid");
+            if (OrganisationDataListValidator.HasErrors(organisations))
+            {
+                Console.WriteLine("Found errors in organisation data.  Exiting");
+                Exit(-1);
+            }
+
+            Console.WriteLine("No validation errors found");
         }
 
         private static void CheckDatabaseConnection()
@@ -151,9 +179,26 @@
                 sqlConnection.Open();
                 foreach (var organisation in organisations)
                 {
-                    organisation.AddressData.CountryId = sqlConnection.Query<Guid>(queryCountrySql,
-                        new { CountryName = organisation.AddressData.CountryName }).First();
-                    var addressId = sqlConnection.Execute(insertAddressSql,
+                    var existingOrganisation = sqlConnection
+                        .Query<object>(checkExistingOrganisationSql, new { Name = organisation.Name }).FirstOrDefault();
+
+                    if (existingOrganisation != null)
+                    {
+                        Console.WriteLine("Organisation {0} already exists", organisation.Name);
+                        Console.WriteLine("");
+                        continue;
+                    }
+
+                    var country = sqlConnection.Query<Country>(queryCountrySql,
+                        new { CountryName = organisation.AddressData.CountryName }).FirstOrDefault();
+
+                    if (country == null)
+                    {
+                        Console.WriteLine("Could not find a match for database entry for country '{0}'. Exiting.", organisation.AddressData.CountryName);
+                        Exit(-1);
+                    }
+
+                    var addressId = sqlConnection.Query<Guid>(insertAddressSql,
                         new
                         {
                             Address1 = organisation.AddressData.Address1,
@@ -161,10 +206,16 @@
                             TownOrCity = organisation.AddressData.TownOrCity,
                             CountyOrRegion = organisation.AddressData.CountyOrRegion,
                             Postcode = organisation.AddressData.Postcode,
-                            CountryId = organisation.AddressData.CountryId,
+                            CountryId = country.Id,
                             Telephone = organisation.AddressData.Telephone,
                             Email = organisation.AddressData.Email
-                        });
+                        }).FirstOrDefault();
+
+                    if (addressId == null)
+                    {
+                        Console.WriteLine("Could not save address for '{0}'. Exiting.", organisation.Name);
+                        Exit(-1);
+                    }
 
                     sqlConnection.Execute(insertOrganisationSql,
                         new
@@ -173,14 +224,18 @@
                             OrganisationType = organisation.OrganisationType.Value,
                             OrganisationStatus = 1,
                             TradingName = organisation.TradingName,
-                            CompanyRegistrationNumbe = organisation.RegistrationNumber,
+                            CompanyRegistrationNumber = organisation.RegistrationNumber,
                             BusinessAddressId = addressId,
                         });
+
+                    Console.WriteLine("Successfully saved data for {0}", organisation.Name);
+                    Console.WriteLine("");
                 }
                 sqlConnection.Close();
             }
 
-            Console.WriteLine("Connection successful.");
+            Console.WriteLine("Successfully imported data");
+            Exit(0);
         }
 
         private static string GetDatabaseName()
