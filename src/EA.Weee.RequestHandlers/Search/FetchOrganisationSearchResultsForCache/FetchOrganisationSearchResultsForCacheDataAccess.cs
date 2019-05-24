@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using EA.Weee.Core.Search;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
 
     public class FetchOrganisationSearchResultsForCacheDataAccess : IFetchOrganisationSearchResultsForCacheDataAccess
     {
@@ -24,19 +26,25 @@
         /// <returns></returns>
         public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
         {
-            var results = await context
-                .Schemes
-                .Where(s => s.SchemeStatus.Value != Domain.Scheme.SchemeStatus.Rejected.Value)
-                .Select(s => s.Organisation)
-                .Where(o => o.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
-                .AsNoTracking()
+            var organisations = await context.Organisations
+                .Where(p => p.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
                 .ToListAsync();
 
-            return results.Select(r => new OrganisationSearchResult()
+            var schemes = await context.Schemes.ToListAsync();
+
+            foreach (Scheme scheme in schemes)
+            {
+                if (scheme.SchemeStatus.Value == SchemeStatus.Rejected.Value)
                 {
-                    OrganisationId = r.Id,
-                    Name = r.OrganisationName
-                })
+                    organisations.Remove(scheme.Organisation);
+                }
+            }
+
+            return organisations.Select(r => new OrganisationSearchResult()
+            {
+                OrganisationId = r.Id,
+                Name = r.OrganisationName
+            })
                 .OrderBy(r => r.Name)
                 .ToList();
         }
