@@ -31,7 +31,6 @@
                         if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
                         {
                             <div class="govuk-checkboxes__item">
-
                                 @{
                                     var selectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
                                 }
@@ -62,10 +61,11 @@
                         }
                         else
                         {
-                            var errorClass = @Model.HasDcfError == true ? "error" : "";
+                            var errorClass = @Model.ReportOnQuestions[i].HasError ? "dcf-section-error" : "";
                             var yesSelectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
                             var noSelectedOption = @Model.DcfSelectedValue == "No" ? "checked" : "";
-                            <div id="dcfSection" class="dcf-section">
+
+                            <div id="dcfSection" class="dcf-section @errorClass">
                                 <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
                                     @Model.ReportOnQuestions[i].Description?
                                 </h3>
@@ -90,6 +90,7 @@
                                     </fieldset>
                                 </div>
                             </div>
+
                         }
                     }
                 </div>
