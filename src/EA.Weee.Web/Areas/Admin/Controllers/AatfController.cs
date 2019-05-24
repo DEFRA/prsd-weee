@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -9,9 +10,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Requests.Users;
     using EA.Weee.Security;
@@ -49,9 +52,17 @@
             using (var client = apiClient())
             {
                 AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
-                AatfContactData contactData = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf, contactData));
+                List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
+
+                List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
+
+                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
+                {
+                    OrganisationString = GenerateAddress(aatf.Operator.Organisation.BusinessAddress),
+                    AssociatedAatfs = associatedAatfs,
+                    AssociatedSchemes = associatedSchemes
+                });
 
                 return View(viewModel);
             }
@@ -199,6 +210,32 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf));
             }
+        }
+
+        public virtual string GenerateAddress(Core.Shared.AddressData address)
+        {
+            var siteAddressLong = address.Address1;
+
+            if (address.Address2 != null)
+            {
+                siteAddressLong += "<br/>" + address.Address2;
+            }
+
+            siteAddressLong += "<br/>" + address.TownOrCity;
+
+            if (address.CountyOrRegion != null)
+            {
+                siteAddressLong += "<br/>" + address.CountyOrRegion;
+            }
+
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
+
+            siteAddressLong += "<br/>" + address.CountryName;
+
+            return siteAddressLong;
         }
 
         private void SetBreadcrumb()
