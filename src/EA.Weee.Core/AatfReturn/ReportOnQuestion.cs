@@ -27,5 +27,7 @@
         public bool Selected { get; set; }
 
         public bool Deselected { get; set; }
+
+        public bool HasError { get; set; }
     }
 }
