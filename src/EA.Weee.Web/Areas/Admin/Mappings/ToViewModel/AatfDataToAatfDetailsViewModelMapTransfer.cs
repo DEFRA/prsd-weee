@@ -1,21 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using System;
+    using System.Collections.Generic;
 
     public class AatfDataToAatfDetailsViewModelMapTransfer
     {
-        public AatfDataToAatfDetailsViewModelMapTransfer(AatfData aatfData, AatfContactData contactData)
+        public AatfDataToAatfDetailsViewModelMapTransfer(AatfData aatfData)
         {
             AatfData = aatfData;
-            ContactData = contactData;
         }
 
         public AatfData AatfData { get; set; }
 
-        public AatfContactData ContactData { get; set; }
+        public string OrganisationString { get; set; }
+
+        public List<AatfDataList> AssociatedAatfs { get; set; }
+
+        public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
     }
 }
