@@ -25,5 +25,17 @@
         public AatfContactData ContactData { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public string ApprovalDateString
+        {
+            get
+            {
+                if (this.ApprovalDate == null)
+                {
+                    return "-";
+                }
+                return this.ApprovalDate.Value.ToShortDateString();
+            }
+        }
     }
 }

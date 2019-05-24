@@ -13,7 +13,7 @@
         public string OrganisationName { get; set; }
 
         [Required]
-        [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
         public string AatfName { get; set; }
 
