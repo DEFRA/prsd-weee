@@ -14,7 +14,7 @@
 
         [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
-        [Display(Name = "Name of Aatf")]
+        [Display(Name = "Name of AATF")]
         public string AatfName { get; set; }
 
         public AatfAddressData SiteAddressData { get; set; }

@@ -53,10 +53,10 @@
         [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
         public string Telephone { get; set; }
 
-        [Required]
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address")]
         [Display(Name = "E-mail")]
+        [Required(ErrorMessage = "Enter email")]
         public string Email { get; set; }
 
         public AatfContactAddressData AddressData { get; set; }
