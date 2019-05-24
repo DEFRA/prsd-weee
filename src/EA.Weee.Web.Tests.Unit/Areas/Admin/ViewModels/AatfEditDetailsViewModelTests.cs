@@ -61,7 +61,8 @@
                 "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
-                "AatfStatus"
+                "AatfStatus",
+                "Size"
             };
 
             foreach (var property in typeof(AatfEditDetailsViewModel).GetProperties())
