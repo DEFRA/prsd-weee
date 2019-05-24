@@ -55,7 +55,7 @@
 
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
         [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address")]
-        [Display(Name = "E-mail")]
+        [Display(Name = "Email")]
         [Required(ErrorMessage = "Enter email")]
         public string Email { get; set; }
 
