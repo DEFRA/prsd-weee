@@ -184,59 +184,63 @@
             using (var sqlConnection = DatabaseHelper.CreateConnection())
             {
                 sqlConnection.Open();
-                foreach (var organisation in organisations)
-                {
-                    var existingOrganisation = sqlConnection
-                        .Query<object>(checkExistingOrganisationSql, new { Name = organisation.Name }).FirstOrDefault();
-
-                    if (existingOrganisation != null)
+                using (var transaction = sqlConnection.BeginTransaction()) {
+                    foreach (var organisation in organisations)
                     {
-                        Console.WriteLine(" Organisation {0} already exists", organisation.Name);
-                        continue;
-                    }
+                        var existingOrganisation = sqlConnection
+                            .Query<object>(checkExistingOrganisationSql, new { Name = organisation.Name }, transaction: transaction)
+                            .FirstOrDefault();
 
-                    var country = sqlConnection.Query<Country>(queryCountrySql,
-                        new { CountryName = organisation.AddressData.CountryName }).FirstOrDefault();
-
-                    if (country == null)
-                    {
-                        Console.WriteLine(
-                            " Could not find a match for database entry for country {0} for organisation {1}. Exiting.",
-                            organisation.AddressData.CountryName, organisation.Name);
-                        Exit(-1);
-                    }
-
-                    var addressId = sqlConnection.Query<Guid>(insertAddressSql,
-                        new
+                        if (existingOrganisation != null)
                         {
-                            Address1 = organisation.AddressData.Address1,
-                            Address2 = organisation.AddressData.Address2,
-                            TownOrCity = organisation.AddressData.TownOrCity,
-                            CountyOrRegion = organisation.AddressData.CountyOrRegion,
-                            Postcode = organisation.AddressData.Postcode,
-                            CountryId = country.Id,
-                            Telephone = organisation.AddressData.Telephone,
-                            Email = organisation.AddressData.Email
-                        }).FirstOrDefault();
+                            Console.WriteLine(" Organisation {0} already exists", organisation.Name);
+                            continue;
+                        }
 
-                    if (addressId == null)
-                    {
-                        Console.WriteLine(" Could not save address for '{0}'. Exiting.", organisation.Name);
-                        Exit(-1);
+                        var country = sqlConnection.Query<Country>(queryCountrySql,
+                            new { CountryName = organisation.AddressData.CountryName }, transaction: transaction).FirstOrDefault();
+
+                        if (country == null)
+                        {
+                            Console.WriteLine(
+                                " Could not find a match for database entry for country {0} for organisation {1}. Exiting.",
+                                organisation.AddressData.CountryName, organisation.Name);
+                            Exit(-1);
+                        }
+
+                        var addressId = sqlConnection.Query<Guid>(insertAddressSql,
+                            new
+                            {
+                                Address1 = organisation.AddressData.Address1,
+                                Address2 = organisation.AddressData.Address2,
+                                TownOrCity = organisation.AddressData.TownOrCity,
+                                CountyOrRegion = organisation.AddressData.CountyOrRegion,
+                                Postcode = organisation.AddressData.Postcode,
+                                CountryId = country.Id,
+                                Telephone = organisation.AddressData.Telephone,
+                                Email = organisation.AddressData.Email
+                            }, transaction: transaction).FirstOrDefault();
+
+                        if (addressId == null)
+                        {
+                            Console.WriteLine(" Could not save address for '{0}'. Exiting.", organisation.Name);
+                            Exit(-1);
+                        }
+
+                        sqlConnection.Execute(insertOrganisationSql,
+                            new
+                            {
+                                Name = organisation.Name,
+                                OrganisationType = organisation.OrganisationType.Value,
+                                OrganisationStatus = 1,
+                                TradingName = organisation.TradingName,
+                                CompanyRegistrationNumber = organisation.RegistrationNumber,
+                                BusinessAddressId = addressId,
+                            }, transaction: transaction);
+                        Console.WriteLine(" Successfully saved data for {0}", organisation.Name);
                     }
 
-                    sqlConnection.Execute(insertOrganisationSql,
-                        new
-                        {
-                            Name = organisation.Name,
-                            OrganisationType = organisation.OrganisationType.Value,
-                            OrganisationStatus = 1,
-                            TradingName = organisation.TradingName,
-                            CompanyRegistrationNumber = organisation.RegistrationNumber,
-                            BusinessAddressId = addressId,
-                        });
-
-                    Console.WriteLine(" Successfully saved data for {0}", organisation.Name);
+                    transaction.Commit();
                 }
 
                 sqlConnection.Close();
