@@ -7,13 +7,12 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using ExcelDataReader;
+    using Model;
 
     public static class XlsxOrganisationDataReader
     {
-        public static bool TryGetOrganisationData(string fileName, out IList<OrganisationData> organisations)
+        public static bool TryGetOrganisationData(string fileName, out IList<Organisation> organisations)
         {
             if (!File.Exists(fileName))
             {
@@ -31,8 +30,7 @@
                 }
             }
 
-            Console.WriteLine("Found {0} rows to import", result.Tables[0].Rows.Count);
-            organisations = new List<OrganisationData>();
+            organisations = new List<Organisation>();
 
             var dataTable = result.Tables[0].Rows;
 
@@ -46,7 +44,7 @@
 
                 try
                 {
-                    var addressData = new AddressData(dataTable[i].Field<string>(4),
+                    var addressData = new Address(dataTable[i].Field<string>(4),
                         dataTable[i].Field<string>(5),
                         dataTable[i].Field<string>(6),
                         dataTable[i].Field<string>(7),
@@ -55,7 +53,7 @@
                         dataTable[i].Field<object>(10).ToString(),
                         dataTable[i].Field<string>(11));
 
-                    organisations.Add(new OrganisationData(
+                    organisations.Add(new Organisation(
                         i,
                         dataTable[i].Field<string>(0),
                         dataTable[i].Field<string>(1),

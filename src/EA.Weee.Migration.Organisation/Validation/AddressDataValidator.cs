@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Migration.Organisation.Validation
 {
     using FluentValidation;
+    using Model;
 
-    public class AddressDataValidator : AbstractValidator<AddressData>
+    public class AddressDataValidator : AbstractValidator<Address>
     {
         public AddressDataValidator()
         {

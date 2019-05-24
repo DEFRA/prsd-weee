@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Migration.Organisation
+﻿namespace EA.Weee.Migration.Organisation.Model
 {
-    public class AddressData
+    using System;
+
+    public class Address
     {
-        public AddressData()
+        public Address()
         {
         }
 
-        public AddressData(
+        public Address(
             string address1,
             string address2,
             string townOrCity,

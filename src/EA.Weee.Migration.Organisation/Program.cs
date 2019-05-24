@@ -11,9 +11,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using Dapper;
-    using DbModel;
-    using NLog;
+    using Model;
     using Validation;
+    using NLog;
 
     internal class Program
     {
@@ -37,21 +37,21 @@
 
             var p = new Process();
             var keySelection = string.Empty;
-            string input;
+            string fileName;
 
             Console.WriteLine(" ----------------------------------------------------------------------------");
             Console.WriteLine(" Enter .xlsx filepath:");
-            input = Console.ReadLine().Replace("\"", "");
+            fileName = Console.ReadLine().Replace("\"", "");
 
-            while (!File.Exists(input))
+            while (!File.Exists(fileName))
             {
-                Console.WriteLine(" Could not find file {0}. Please try again", input);
-                input = Console.ReadLine().Replace("\"", "");
+                Console.WriteLine(" Could not find file {0}. Please try again", fileName);
+                fileName = Console.ReadLine().Replace("\"", "");
             }
 
-            IList<OrganisationData> organisations;
+            IList<Organisation> organisations;
 
-            if (!XlsxOrganisationDataReader.TryGetOrganisationData(input, out organisations))
+            if (!XlsxOrganisationDataReader.TryGetOrganisationData(fileName, out organisations))
             {
                 Console.WriteLine(" Errors reading spreadsheet.  Exiting.");
                 Exit(-1);
@@ -81,13 +81,13 @@
                 }
                 else
                 {
-                    DrawMenu(organisations);
+                    DrawMenu(organisations, fileName);
                 }
 
                 var key = Console.ReadKey(true);
                 while (!char.IsDigit(key.KeyChar))
                 {
-                    Console.WriteLine(" Input is not valid. Please try again", input);
+                    Console.WriteLine(" Input is not valid. Please try again", fileName);
                 }
 
                 keySelection = key.KeyChar.ToString();
@@ -109,11 +109,13 @@
             return logger;
         }
 
-        private static void DrawMenu(IList<OrganisationData> organisations)
+        private static void DrawMenu(IList<Organisation> organisations, string fileName)
         {
+            Console.Clear();
             Console.WriteLine(" ----------------------------------------------------------------------------");
-            Console.WriteLine(" Database: " + DatabaseName);
-            Console.WriteLine(" Server: " + DbServer);
+            Console.WriteLine(" Database: {0}", DatabaseName);
+            Console.WriteLine(" Server: {0}", DbServer);
+            Console.WriteLine(" File: {0}", fileName);
             Console.WriteLine(" Found {0} organisations", organisations.Count);
             Console.WriteLine(" ----------------------------------------------------------------------------");
             Console.WriteLine(" 1. Validate datafile");
@@ -123,37 +125,39 @@
 
         private static void Exit(int exitCode)
         {
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine(" Press any key to continue...");
             Console.ReadKey();
             Environment.Exit(exitCode);
         }
 
-        private static void LocalValidation(IList<OrganisationData> organisations)
+        private static void LocalValidation(IList<Organisation> organisations)
         {
+            Console.WriteLine(Environment.NewLine);
             if (OrganisationDataListValidator.HasErrors(organisations))
             {
-                Console.WriteLine("Found errors in organisation data.  Exiting");
+                Console.WriteLine(" Found errors in organisation data.  Exiting");
                 Exit(-1);
             }
 
-            Console.WriteLine("No validation errors found");
+            Console.WriteLine(" No validation errors found");
         }
 
         private static void CheckDatabaseConnection()
         {
+            Console.WriteLine(Environment.NewLine);
             try
             {
                 var connectionString = ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"];
 
                 if (connectionString == null)
                 {
-                    Console.WriteLine("Connection string Weee.DefaultConnection not found. Exiting.");
+                    Console.WriteLine(" Connection string Weee.DefaultConnection not found. Exiting.");
                     Exit(-1);
                 }
 
                 var builder = new SqlConnectionStringBuilder(connectionString.ConnectionString);
 
-                Console.WriteLine("Trying connection to database {0} on server {1}.", builder.InitialCatalog, builder.DataSource);
+                Console.WriteLine(" Trying connection to database {0} on server {1}.", builder.InitialCatalog, builder.DataSource);
 
                 using (var sqlConnection = new SqlConnection(builder.ConnectionString))
                 {
@@ -161,20 +165,19 @@
                     sqlConnection.Close();
                 }
 
-                Console.WriteLine("Connection successful.");
+                Console.WriteLine(" Connection successful.");
             }
             catch
             {
-                Console.WriteLine("Connection failed. Exiting.");
+                Console.WriteLine(" Connection failed. Exiting.");
                 Exit(-1);
             }
         }
 
-        private static void RunDatabaseMigration(IList<OrganisationData> organisations)
+        private static void RunDatabaseMigration(IList<Organisation> organisations)
         {
-            var builder = new SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ConnectionString);
-
-            using (var sqlConnection = new SqlConnection(builder.ConnectionString))
+            Console.WriteLine(Environment.NewLine);
+            using (var sqlConnection = DatabaseHelper.CreateConnection())
             {
                 sqlConnection.Open();
                 foreach (var organisation in organisations)
@@ -184,8 +187,7 @@
 
                     if (existingOrganisation != null)
                     {
-                        Console.WriteLine("Organisation {0} already exists", organisation.Name);
-                        Console.WriteLine("");
+                        Console.WriteLine(" Organisation {0} already exists", organisation.Name);
                         continue;
                     }
 
@@ -194,7 +196,7 @@
 
                     if (country == null)
                     {
-                        Console.WriteLine("Could not find a match for database entry for country '{0}'. Exiting.", organisation.AddressData.CountryName);
+                        Console.WriteLine(" Could not find a match for database entry for country {0} for organisation {1}. Exiting.", organisation.AddressData.CountryName, organisation.Name);
                         Exit(-1);
                     }
 
@@ -213,7 +215,7 @@
 
                     if (addressId == null)
                     {
-                        Console.WriteLine("Could not save address for '{0}'. Exiting.", organisation.Name);
+                        Console.WriteLine(" Could not save address for '{0}'. Exiting.", organisation.Name);
                         Exit(-1);
                     }
 
@@ -228,13 +230,12 @@
                             BusinessAddressId = addressId,
                         });
 
-                    Console.WriteLine("Successfully saved data for {0}", organisation.Name);
-                    Console.WriteLine("");
+                    Console.WriteLine(" Successfully saved data for {0}", organisation.Name);
                 }
                 sqlConnection.Close();
             }
 
-            Console.WriteLine("Successfully imported data");
+            Console.WriteLine(" Successfully imported data");
             Exit(0);
         }
 

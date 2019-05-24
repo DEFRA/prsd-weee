@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Migration.Organisation.Validation
 {
     using FluentValidation;
+    using Model;
 
-    public class OrganisationDataValidator : AbstractValidator<OrganisationData>
+    public class OrganisationDataValidator : AbstractValidator<Organisation>
     {
         public OrganisationDataValidator()
         {

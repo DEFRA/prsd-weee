@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Migration.Organisation.DbModel
+﻿namespace EA.Weee.Migration.Organisation.Model
 {
     using System;
 

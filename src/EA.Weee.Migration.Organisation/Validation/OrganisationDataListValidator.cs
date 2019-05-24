@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using FluentValidation;
+    using Model;
     using NLog;
 
     public class OrganisationDataListValidator
@@ -10,7 +11,7 @@
         private static readonly OrganisationDataValidator OrganisationValidator = new OrganisationDataValidator();
         private static readonly AddressDataValidator AddressValidator = new AddressDataValidator();
 
-        public static bool HasErrors(IList<OrganisationData> organisations)
+        public static bool HasErrors(IList<Organisation> organisations)
         {
             var hasErrors = false;
 

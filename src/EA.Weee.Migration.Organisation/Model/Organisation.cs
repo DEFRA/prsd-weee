@@ -1,18 +1,12 @@
-﻿namespace EA.Weee.Migration.Organisation
+﻿namespace EA.Weee.Migration.Organisation.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-    public class OrganisationData
+    public class Organisation
     {
-        public OrganisationData()
+        public Organisation()
         {
         }
 
-        public OrganisationData(int rowNumber, string name, string tradingName, OrganisationType? organisationType, string registrationNumber, AddressData addressData)
+        public Organisation(int rowNumber, string name, string tradingName, OrganisationType? organisationType, string registrationNumber, Address addressData)
         {
             RowNumber = rowNumber;
             Name = name;
@@ -32,6 +26,6 @@
 
         public string RegistrationNumber { get; set; }
 
-        public AddressData AddressData { get; set; }
+        public Address AddressData { get; set; }
     }
 }

@@ -73,13 +73,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddressData.cs" />
-    <Compile Include="DbModel\Country.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Country.cs" />
     <Compile Include="DatabaseHelper.cs" />
-    <Compile Include="Mode.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="OrganisationData.cs" />
-    <Compile Include="OrganisationType.cs" />
+    <Compile Include="Model\Organisation.cs" />
+    <Compile Include="Model\OrganisationType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\AddressDataValidator.cs" />
