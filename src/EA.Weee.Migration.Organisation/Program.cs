@@ -8,23 +8,26 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using Dapper;
     using Model;
-    using Validation;
     using NLog;
+    using Validation;
 
     internal class Program
     {
-        private static readonly string insertOrganisationSql = @"INSERT INTO Organisation.Organisation (Id, Name, OrganisationType, OrganisationStatus, TradingName, CompanyRegistrationNumber, BusinessAddressId)
+        private static readonly string insertOrganisationSql =
+            @"INSERT INTO Organisation.Organisation (Id, Name, OrganisationType, OrganisationStatus, TradingName, CompanyRegistrationNumber, BusinessAddressId)
                                                                  VALUES (NEWID(), @Name, @OrganisationType, @OrganisationStatus, @TradingName, @CompanyRegistrationNumber, @BusinessAddressId)";
+
         private static readonly string insertAddressSql = @"DECLARE @InsertedRows AS TABLE (Id uniqueidentifier);
                                                             INSERT INTO Organisation.Address (Id, Address1, Address2, TownOrCity, CountyOrRegion, Postcode, CountryId, Telephone, Email) OUTPUT Inserted.Id INTO @InsertedRows
                                                             VALUES (NEWID(), @Address1, @Address2, @TownOrCity, @CountyOrRegion, @Postcode, @CountryId, @Telephone, @Email);
                                                             SELECT Id from @InsertedRows";
+
         private static readonly string queryCountrySql = @"SELECT * FROM Lookup.Country WHERE Name = @CountryName;";
-        private static readonly string checkExistingOrganisationSql = @"SELECT * FROM Organisation.Organisation WHERE Name = @Name;";
+
+        private static readonly string checkExistingOrganisationSql =
+            @"SELECT * FROM Organisation.Organisation WHERE Name = @Name;";
 
         private static readonly string DatabaseName = GetDatabaseName();
         private static readonly string DbServer = GetDatabaseServer();
@@ -157,7 +160,8 @@
 
                 var builder = new SqlConnectionStringBuilder(connectionString.ConnectionString);
 
-                Console.WriteLine(" Trying connection to database {0} on server {1}.", builder.InitialCatalog, builder.DataSource);
+                Console.WriteLine(" Trying connection to database {0} on server {1}.", builder.InitialCatalog,
+                    builder.DataSource);
 
                 using (var sqlConnection = new SqlConnection(builder.ConnectionString))
                 {
@@ -196,7 +200,9 @@
 
                     if (country == null)
                     {
-                        Console.WriteLine(" Could not find a match for database entry for country {0} for organisation {1}. Exiting.", organisation.AddressData.CountryName, organisation.Name);
+                        Console.WriteLine(
+                            " Could not find a match for database entry for country {0} for organisation {1}. Exiting.",
+                            organisation.AddressData.CountryName, organisation.Name);
                         Exit(-1);
                     }
 
@@ -232,6 +238,7 @@
 
                     Console.WriteLine(" Successfully saved data for {0}", organisation.Name);
                 }
+
                 sqlConnection.Close();
             }
 
@@ -247,8 +254,10 @@
             {
                 var projectname = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
 
-                databasename = projectname.Replace("Database.", String.Empty).Replace(".Database", String.Empty).Replace("Database", String.Empty);
+                databasename = projectname.Replace("Database.", String.Empty).Replace(".Database", String.Empty)
+                    .Replace("Database", String.Empty);
             }
+
             return databasename;
         }
 
@@ -260,6 +269,7 @@
             {
                 servername = ".\\sqlexpress";
             }
+
             return servername;
         }
     }
