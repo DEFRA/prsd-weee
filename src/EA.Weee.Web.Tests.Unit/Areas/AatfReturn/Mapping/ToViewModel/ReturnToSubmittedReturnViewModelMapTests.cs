@@ -3,6 +3,8 @@
     using System;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Core.Organisations;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
@@ -30,7 +32,7 @@
             var id = Guid.NewGuid();
 
             var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31));
-            var returnData = new ReturnData() { Id = id, Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = quarterWindow, ReturnOperatorData = new OperatorData(Guid.NewGuid(), "operator", Guid.NewGuid()) };
+            var returnData = new ReturnData() { Id = id, Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = quarterWindow, ReturnOperatorData = new OperatorData(Guid.NewGuid(), "operator", A.Fake<OrganisationData>(), Guid.NewGuid()) };
 
             var result = map.Map(returnData);
 

@@ -135,27 +135,29 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Company name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Trading name</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Company registration number</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">
+                        @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Email address</th>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
                 </tr>
             </tbody>
         </table>
@@ -209,6 +211,67 @@
         }
     </section>
 
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td>&nbsp;</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="width: 30%">This organisation also operates</th>
+                @if (Model.AssociatedAatfs.Any())
+                {
+                    <td class="govuk-table__cell">
+                        AATF
+                    </td>
+                }
+            </tr>
+            @foreach (var aatf in Model.AssociatedAatfs)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header aatf-details-associated-table-header" scope="col"></th>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                        @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
+                    </td>
+                </tr>
+            }
+            @if (Model.AssociatedAEs.Any())
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></th>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                        AE
+                    </td>
+                </tr>
+            }
+            @foreach (var aatf in Model.AssociatedAEs)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header aatf-details-associated-table-header" scope="col"></th>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                        @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
+                    </td>
+                </tr>
+            }
+            @if (Model.AssociatedSchemes.Any())
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></th>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                        PCS
+                    </td>
+                </tr>
+            }
+            @foreach (var scheme in Model.AssociatedSchemes)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" style="border-bottom: 5px"></th>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                        @Html.ActionLink(scheme.Name, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
     <div>&nbsp;</div>
     <p>
         <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Back</a>

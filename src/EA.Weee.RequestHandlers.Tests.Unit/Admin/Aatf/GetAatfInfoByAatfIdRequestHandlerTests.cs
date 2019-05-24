@@ -2,9 +2,11 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Mappings;
@@ -35,7 +37,10 @@
             mapper = new AatfMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(),
                 A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>(),
                 A.Fake<IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize>>(),
-                A.Fake<IMap<AatfAddress, AatfAddressData>>());
+                A.Fake<IMap<AatfAddress, AatfAddressData>>(),
+                A.Fake<IMap<Operator, OperatorData>>(),
+                A.Fake<IMap<AatfContact, AatfContactData>>(),
+                A.Fake<IMap<Organisation, OrganisationData>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
 
             fakeMapper = A.Fake<IMap<Aatf, AatfData>>();
