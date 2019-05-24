@@ -64,12 +64,14 @@
 
     // When there is a validation erorr, move the ID from the select element to the auto-complete
     // textbox so that the links in the validation summary will work.
-    if (countryInput.hasClass("input-validation-error")) {
-        var validationInput = countryInput.next("input");
-        var id = countryInput.attr("id");
-        countryInput.removeAttr("id");
-        validationInput.attr("id", id);
-    }
+    countryInput.each(function () {
+        if ($(this).hasClass("input-validation-error")) {
+            var validationInput = $(this).next("input");
+            var id = $(this).attr("id");
+            $(this).removeAttr("id");
+            validationInput.attr("id", id);
+        }
+    });
 
     //fn setCurPosition
     $.fn.setCurPosition = function (pos) {

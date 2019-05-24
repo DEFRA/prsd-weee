@@ -263,32 +263,6 @@
         }
 
         [Fact]
-        public async void NonObligatedWeeSelected_NoDcfOptionSelected_ViewModelShouldHaveDcfError()
-        {
-            SelectReportOptionsViewModel viewModel = new SelectReportOptionsViewModel();
-            controller.ModelState.AddModelError("DcfSelectedValue-0", "You must tell us whether any of the non-obligated WEEE was retained by a DCF");
-
-            var result = await controller.Index(viewModel) as ViewResult;
-
-            var outputModel = result.Model as SelectReportOptionsViewModel;
-
-            Assert.Equal(true, outputModel.HasDcfError);
-        }
-
-        [Fact]
-        public async void NonObligatedWeeNotSelected_ViewModelShouldNotHaveDcfError()
-        {
-            SelectReportOptionsViewModel viewModel = new SelectReportOptionsViewModel();
-            controller.ModelState.AddModelError("error", "error");
-
-            var result = await controller.Index(viewModel) as ViewResult;
-
-            var outputModel = result.Model as SelectReportOptionsViewModel;
-
-            Assert.Equal(false, outputModel.HasDcfError);
-        }
-
-        [Fact]
         public async void IndexPost_OnSubmitWithDeselectedOption_PageRedirectsToSelectReportOptionsDeselect()
         {
             var httpContext = new HttpContextMocker();

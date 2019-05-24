@@ -260,5 +260,36 @@
                 Assert.True(indexOfCompanyB < indexOfCompanyC, "Organisation search results must be returned ordered by organisation name.");
             }
         }
+
+        /// <summary>
+        /// Ensures that search results representing organisations which are partnerships will use
+        /// the 'TradingName' column from the database as the organisation name.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task FetchCompleteOrganisations_OrganisationHasNoScheme_OrganisationReturned()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                Organisation organisation = new Organisation();
+                organisation.Id = new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4");
+                organisation.TradingName = "Trading Name";
+                organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.Partnership.Value;
+                organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
+         
+                database.Model.Organisations.Add(organisation);
+                database.Model.SaveChanges();
+
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+
+                // Act
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+                // Assert
+                Assert.Contains(results,
+                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name");
+            }
+        }
     }
 }

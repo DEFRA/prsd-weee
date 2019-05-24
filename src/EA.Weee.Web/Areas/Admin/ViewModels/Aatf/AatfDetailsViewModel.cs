@@ -34,6 +34,18 @@
 
         public bool CanEdit { get; set; }
 
+        public string ApprovalDateString
+        {
+            get
+            {
+                if (this.ApprovalDate == null)
+                {
+                    return "-";
+                }
+                return this.ApprovalDate.Value.ToShortDateString();
+            }
+        }
+
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
         public List<AatfDataList> AssociatedAEs { get; set; }

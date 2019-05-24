@@ -35,7 +35,10 @@
             }
 
             var aatfMapped = mapper.Map(aatf);
+
             aatfMapped.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
+            
+            aatfMapped.Contact.CanEditContactDetails = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             return aatfMapped;
         }

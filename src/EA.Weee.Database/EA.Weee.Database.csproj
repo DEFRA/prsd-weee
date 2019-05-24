@@ -237,6 +237,7 @@
     <Content Include="scripts\Update\Release 2\Sprint8\20190508-0900-UpdateAATFTable.sql" />
     <Content Include="scripts\Update\Release 2\Sprint8\20190508-1039-UpdateAatfTable.sql" />
     <Content Include="scripts\Update\Release 2\Sprint8\20190517-1326-UpdateAatfTableIncreaseApprovalNumber.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint9\20190524-0951-UpdateAatfTableIncreaseNameLength.sql" />
     <Content Include="scripts\Update\Release 2\Sprint9\20190524-1550-AatfCleardown.sql" />
     <Content Include="scripts\Update\Release 2\Sprint9\20190520-1430-UpdateAatfTableWithFacilityType.sql" />
     <Content Include="scripts\Update\Release 2\Sprint9\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
