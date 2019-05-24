@@ -45,6 +45,15 @@
             Assert.True(isValid);
         }
 
+        [Fact]
+        public void ModelAatfNameIsSet_SiteAddressNameGetsSetAswell()
+        {
+            AddAatfViewModel model = new AddAatfViewModel();
+            model.AatfName = "test name";
+
+            Assert.Equal(model.AatfName, model.SiteAddressData.Name);
+        }
+
         private AddAatfViewModel ValidAddAatfViewModel()
         {
             return new AddAatfViewModel
