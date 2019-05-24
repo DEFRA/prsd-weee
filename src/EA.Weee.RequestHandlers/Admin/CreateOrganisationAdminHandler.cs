@@ -60,6 +60,7 @@
             await dataAccess.Add<Address>(address);
 
             organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
+            organisation.OrganisationStatus = OrganisationStatus.Complete;
 
             Guid id = await dataAccess.Add<Organisation>(organisation);
 
