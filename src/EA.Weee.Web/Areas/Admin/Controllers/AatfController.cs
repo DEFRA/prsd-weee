@@ -59,7 +59,8 @@
 
                 AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
-                    OrganisationString = GenerateAddress(aatf.Operator.Organisation.BusinessAddress),
+                    OrganisationString = GenerateSharedAddress(aatf.Operator.Organisation.BusinessAddress),
+                    SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
                 });
@@ -212,7 +213,33 @@
             }
         }
 
-        public virtual string GenerateAddress(Core.Shared.AddressData address)
+        public virtual string GenerateSharedAddress(Core.Shared.AddressData address)
+        {
+            var siteAddressLong = address.Address1;
+
+            if (address.Address2 != null)
+            {
+                siteAddressLong += "<br/>" + address.Address2;
+            }
+
+            siteAddressLong += "<br/>" + address.TownOrCity;
+
+            if (address.CountyOrRegion != null)
+            {
+                siteAddressLong += "<br/>" + address.CountyOrRegion;
+            }
+
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
+
+            siteAddressLong += "<br/>" + address.CountryName;
+
+            return siteAddressLong;
+        }
+
+        public virtual string GenerateAatfAddress(AddressData address)
         {
             var siteAddressLong = address.Address1;
 
