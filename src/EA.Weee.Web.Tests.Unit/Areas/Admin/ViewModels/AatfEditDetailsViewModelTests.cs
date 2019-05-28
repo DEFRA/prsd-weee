@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Web.Areas.Admin.ViewModels.AddAatf;
     using Xunit;
 
     public class AatfEditDetailsViewModelTests
@@ -72,6 +73,15 @@
             }
 
             requiredProperties.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Name_NameSet_SiteAddressNameGetsSet()
+        {
+            var model = CreateValidAatfEditDetailsViewModel();
+            model.Name = "AATF Name";
+
+            Assert.Equal(model.Name, model.SiteAddress.Name);
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
