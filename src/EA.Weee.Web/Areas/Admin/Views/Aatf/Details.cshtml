@@ -62,12 +62,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Site address</th>
                     <td class="govuk-table__cell">
-                        @Model.SiteAddress.Address1<br />
-                        @Model.SiteAddress.Address2<br />
-                        @Model.SiteAddress.TownOrCity<br />
-                        @Model.SiteAddress.CountyOrRegion<br />
-                        @Model.SiteAddress.Postcode<br />
-                        @Model.SiteAddress.CountryName<br />
+                        @Html.Raw(Model.SiteAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
