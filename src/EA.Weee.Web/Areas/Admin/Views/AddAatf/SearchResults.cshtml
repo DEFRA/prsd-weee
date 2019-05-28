@@ -1,4 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.SearchResultsViewModel
 @{
     ViewBag.Title = "Choose an organisation";
@@ -68,7 +70,7 @@
             @Html.ActionLink("Start another search", "Search", "AddAatf", null, new { @class = "govuk-button" })
         </p>
         <p>
-            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm)))">Create a new organisation</a>
         </p>
     }
 
