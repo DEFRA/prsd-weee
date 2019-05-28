@@ -67,7 +67,7 @@
                     siteAddressBuilder += county;
                 }
 
-                if (siteData.OperatorAddress.Postcode != null)
+                if (siteData.SiteAddress.Postcode != null)
                 {
                     var postCode = siteData.SiteAddress.Postcode + ", ";
                     siteAddressBuilder += postCode;

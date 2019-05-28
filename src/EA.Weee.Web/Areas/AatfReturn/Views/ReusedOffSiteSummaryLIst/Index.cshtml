@@ -64,8 +64,8 @@
                         <div class="govuk-grid-column-one-quarter">
                             @address.Name
                         </div>
-                        <div class="govuk-grid-column-one-half" style="word-break:break-word">
-                            @address.Address
+                        <div class="govuk-grid-column-one-half" style="word-break:break-all">
+                            @Html.Raw(Model.CreateLongAddress(address))
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
                             <div>
