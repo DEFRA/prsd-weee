@@ -18,7 +18,7 @@
 
         private string aatfName;
         [Required]
-        [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
         public string Name
         {
