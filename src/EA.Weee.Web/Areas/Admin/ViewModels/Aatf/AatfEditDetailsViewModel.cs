@@ -41,6 +41,7 @@
 
         public AatfAddressData SiteAddress { get; set; }
 
+        [Required(ErrorMessage = "Enter size")]
         public int Size { get; set; }
 
         public IEnumerable<AatfSize> SizeList { get; set; }
