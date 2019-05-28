@@ -8,7 +8,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Web.Areas.Admin.ViewModels.AddAatf;
     using Xunit;
 
     public class AatfEditDetailsViewModelTests
