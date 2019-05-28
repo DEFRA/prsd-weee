@@ -81,13 +81,52 @@
         }
 
         [Fact]
-        public async Task ManageAatfPost_ModelError_GetAatfsMustBeRun()
+        public async Task ManageAatfsPost_ModelError_WithFilter_GetAatfsMustBeRun()
         {
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             await controller.ManageAatfs(new ManageAatfsViewModel());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ManageAatfsPost_ModelError_GetAatfsMustBeRun()
+        {
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
+            var mappedFilter = fixture.Create<AatfFilter>();
+
+            var mapperCall = A.CallTo(() => mapper.Map<AatfFilter>(filter));
+            mapperCall.Returns(mappedFilter);
+
+            var result = await controller.ManageAatfs(new ManageAatfsViewModel { Filter = filter });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
+            mapperCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_RedirectsToManageView()
+        {
+            var filter = fixture.Create<FilteringViewModel>();
+            var mappedFilter = fixture.Create<AatfFilter>();
+
+            var mapperCall = A.CallTo(() => mapper.Map<AatfFilter>(filter));
+            mapperCall.Returns(mappedFilter);
+
+            var result = await controller.ApplyFilter(filter);
+
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("ManageAatfs", viewResult.ViewName);
+            Assert.IsType<ManageAatfsViewModel>(viewResult.Model);
+
+            var viewResultModel = (ManageAatfsViewModel)viewResult.Model;
+            Assert.Equal(filter, viewResultModel.Filter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -1,6 +1,4 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.Helpers
-@using EA.Weee.Core.Shared
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -16,15 +14,60 @@
         })
     </script>
 }
+
+<style>
+    .aatf-filter {
+        padding: 20px;
+        border: 5px solid #fff;
+        background-color: #dee0e2;
+    }
+
+        .aatf-filter .govuk-label {
+            font-weight: 700;
+        }
+
+        .aatf-filter .govuk-button {
+            margin: 0;
+            background-color: #2b8cc4
+        }
+</style>
+
 <header class="hgroup">
     <h1 class="govuk-heading-l">
         Manage AATFs
     </h1>
 </header>
+@using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
+{
+    <div class="aatf-filter">
+        @Html.AntiForgeryToken()
+        <label class="govuk-label">Filter by:</label>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.Name, false)
+                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
+                        @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @(this.WeeeGds().Submit("Apply"))
+    </div>
+}
+
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
+    @Html.HiddenFor(m => m.Filter.Name)
+    @Html.HiddenFor(m => m.Filter.ApprovalNumber)
     <div class="table-hr"></div>
     <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
         <thead class="govuk-table__head">
