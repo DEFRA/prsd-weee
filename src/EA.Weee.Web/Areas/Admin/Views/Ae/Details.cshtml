@@ -1,0 +1,151 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Home
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Ae.AeDetailsViewModel
+@{
+    ViewBag.Title = "View AE details - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <section class="govuk-grid-column-full" id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l"> @Model.Name</h1>
+        </header>
+    </section>
+</div>
+
+<div class="govuk-tabs" data-module="tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#aeDetails">
+                AE details
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#data">
+                Data
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#organisationDetails">
+                Organisation details
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#contactDetails">
+                Contact details
+            </a>
+        </li>
+    </ul>
+
+    <section class="govuk-tabs__panel" id="aeDetails">
+        <table class="govuk-table">
+            <thead>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header--large">AE details</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>&nbsp;</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name of AE</th>
+                    <td class="govuk-table__cell">@Model.Name</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Site address</th>
+                    <td class="govuk-table__cell">
+                        @Model.SiteAddress.Address1<br />
+                        @Model.SiteAddress.Address2<br />
+                        @Model.SiteAddress.TownOrCity<br />
+                        @Model.SiteAddress.CountyOrRegion<br />
+                        @Model.SiteAddress.Postcode<br />
+                        @Model.SiteAddress.CountryName<br />
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <td class="govuk-table__cell">@Model.ApprovalNumber</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                    <td class="govuk-table__cell">
+                        @Model.CompetentAuthority.Abbreviation <br />
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <td class="govuk-table__cell">@Model.AatfStatus</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Size</th>
+                    <td class="govuk-table__cell">@Model.Size</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval date</th>
+                    <td class="govuk-table__cell">@Model.ApprovalDateString</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
+        <table class="govuk-table">
+            <thead>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header--large">Data</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>&nbsp;</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td>
+                        <h2 class="govuk-table__header">
+                            AE data returns
+                        </h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
+        <table class="govuk-table">
+            <thead>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header--large">Organisation details</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
+        <table class="govuk-table">
+            <thead>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header--large">Contact details</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <div>&nbsp;</div>
+    <p>
+        <a href="@(Url.UrlFor<AeController>(u => u.ManageAes()))">Back</a>
+    </p>
+</div>
