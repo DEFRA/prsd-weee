@@ -74,6 +74,15 @@
             requiredProperties.Should().BeEmpty();
         }
 
+        [Fact]
+        public void Name_NameSet_SiteAddressNameGetsSet()
+        {
+            var model = CreateValidAatfEditDetailsViewModel();
+            model.Name = "AATF Name";
+
+            Assert.Equal(model.Name, model.SiteAddress.Name);
+        }
+
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
         {
             return fixture.Build<AatfEditDetailsViewModel>()

@@ -19,10 +19,7 @@
         [Display(Name = "Name of AATF")]
         public string AatfName
         {
-            get
-            {
-                return this.aatfName;
-            }
+            get => this.aatfName;
 
             set
             {
