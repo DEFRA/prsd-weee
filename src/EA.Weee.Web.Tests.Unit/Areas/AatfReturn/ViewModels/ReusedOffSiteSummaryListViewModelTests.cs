@@ -4,12 +4,12 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 
-    public class SentOnSiteSummaryListViewModelTests
+    public class ReusedOffSiteSummaryListViewModelTests
     {
         [Fact]
         public void CreateLongAddress_WithoutOptionalFields_ReturnsCorrectAddress()
         {
-            AatfAddressData address = new AatfAddressData()
+            SiteAddressData address = new SiteAddressData()
             {
                 Name = "Name",
                 Address1 = "Address 1",
@@ -19,7 +19,7 @@
 
             string expected = "Name,<br/>Address 1,<br/>Town,<br/>Country";
 
-            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+            ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
 
@@ -29,7 +29,7 @@
         [Fact]
         public void CreateLongAddress_WithOptionalAddress2_ReturnsCorrectAddress()
         {
-            AatfAddressData address = new AatfAddressData()
+            SiteAddressData address = new SiteAddressData()
             {
                 Name = "Name",
                 Address1 = "Address 1",
@@ -40,7 +40,7 @@
 
             string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>Country";
 
-            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+            ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
 
@@ -50,7 +50,7 @@
         [Fact]
         public void CreateLongAddress_WithOptionalCounty_ReturnsCorrectAddress()
         {
-            AatfAddressData address = new AatfAddressData()
+            SiteAddressData address = new SiteAddressData()
             {
                 Name = "Name",
                 Address1 = "Address 1",
@@ -61,7 +61,7 @@
 
             string expected = "Name,<br/>Address 1,<br/>Town,<br/>County,<br/>Country";
 
-            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+            ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
 
@@ -71,7 +71,7 @@
         [Fact]
         public void CreateLongAddress_WithOptionalPostcode_ReturnsCorrectAddress()
         {
-            AatfAddressData address = new AatfAddressData()
+            SiteAddressData address = new SiteAddressData()
             {
                 Name = "Name",
                 Address1 = "Address 1",
@@ -82,7 +82,7 @@
 
             string expected = "Name,<br/>Address 1,<br/>Town,<br/>Postcode,<br/>Country";
 
-            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+            ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
 
@@ -92,7 +92,7 @@
         [Fact]
         public void CreateLongAddress_WithAllOptionals_ReturnsCorrectAddress()
         {
-            AatfAddressData address = new AatfAddressData()
+            SiteAddressData address = new SiteAddressData()
             {
                 Name = "Name",
                 Address1 = "Address 1",
@@ -105,7 +105,7 @@
 
             string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>County,<br/>Postcode,<br/>Country";
 
-            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+            ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
 
