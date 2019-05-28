@@ -16,10 +16,20 @@
         }
 
         [Fact]
-        public void ReusedRemoveSiteViewModel_SiteAddressShouldHaveAllowHtmlAttribute()
+        public void AatfDetailsViewModel_OrganisationAddressShouldHaveAllowHtmlAttribute()
         {
             var t = typeof(AatfDetailsViewModel);
             var pi = t.GetProperty("OrganisationAddress");
+            var hasAttribute = Attribute.IsDefined(pi, typeof(AllowHtmlAttribute));
+
+            hasAttribute.Should().Be(true);
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_SiteAddressShouldHaveAllowHtmlAttribute()
+        {
+            var t = typeof(AatfDetailsViewModel);
+            var pi = t.GetProperty("SiteAddressLong");
             var hasAttribute = Attribute.IsDefined(pi, typeof(AllowHtmlAttribute));
 
             hasAttribute.Should().Be(true);
