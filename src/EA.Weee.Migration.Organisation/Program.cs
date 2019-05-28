@@ -233,7 +233,7 @@
                             {
                                 Name = organisation.Name,
                                 OrganisationType = organisation.OrganisationType.Value,
-                                OrganisationStatus = 1,
+                                OrganisationStatus = 2,
                                 TradingName = organisation.TradingName,
                                 CompanyRegistrationNumber = organisation.RegistrationNumber,
                                 BusinessAddressId = addressId,
