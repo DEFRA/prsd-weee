@@ -70,7 +70,7 @@
         public async Task HandleAsync_GivenMessageContainingUpdatedAddress_MapperIsCalled()
         {
             var data = A.Fake<AatfData>();
-            var updateRequest = new EditAatfDetails() { Data = data} ;
+            var updateRequest = new EditAatfDetails() { Data = data };
             var siteAddress = A.Fake<AatfAddress>();
 
             A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
