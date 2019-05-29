@@ -14,6 +14,10 @@
 
         public string OrganisationString { get; set; }
 
+        public string SiteAddressString { get; set; }
+
+        public string ContactAddressString { get; set; }
+
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
         public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }

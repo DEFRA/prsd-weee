@@ -21,6 +21,9 @@
 
         public virtual AatfAddressData SiteAddress { get; set; }
 
+        [AllowHtml]
+        public string SiteAddressLong { get; set; }
+
         public AatfSize Size { get; set; }
 
         public OrganisationData Organisation { get; set; }
@@ -31,6 +34,9 @@
         public DateTime? ApprovalDate { get; set; }
 
         public AatfContactData ContactData { get; set; }
+
+        [AllowHtml]
+        public string ContactAddressLong { get; set; }
 
         public bool CanEdit { get; set; }
 
