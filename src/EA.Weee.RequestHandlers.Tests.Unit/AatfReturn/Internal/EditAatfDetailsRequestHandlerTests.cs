@@ -69,8 +69,8 @@
         [Fact]
         public async Task HandleAsync_GivenMessageContainingUpdatedAddress_MapperIsCalled()
         {
-            var data = A.Fake<AatfData>();
-            var updateRequest = new EditAatfDetails() { Data = data };
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
             var siteAddress = A.Fake<AatfAddress>();
 
             A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
