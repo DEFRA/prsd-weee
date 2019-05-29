@@ -89,7 +89,6 @@
             AatfStatus = aatfStatus;
             Operator = @operator;
             Size = aatfSize;
-            SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
             SiteAddressId = aatfSiteAddress.Id;
         }

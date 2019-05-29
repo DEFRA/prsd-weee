@@ -5,7 +5,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Security;
@@ -16,13 +18,20 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public EditAatfDetailsRequestHandler(IWeeeAuthorization authorization, IAatfDataAccess aatfDataAccess, IGenericDataAccess genericDataAccess, IMap<AatfAddressData, AatfAddress> addressMapper)
+        public EditAatfDetailsRequestHandler(
+            IWeeeAuthorization authorization,
+            IAatfDataAccess aatfDataAccess,
+            IGenericDataAccess genericDataAccess,
+            IMap<AatfAddressData, AatfAddress> addressMapper,
+            IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.addressMapper = addressMapper;
+            this.organisationDetailsDataAccess = organisationDetailsDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditAatfDetails message)
@@ -45,7 +54,9 @@
                 existingAatf.Contact,
                 existingAatf.FacilityType);
 
-            await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf);
+            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.Data.SiteAddress.CountryId);
+
+            await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf, country);
 
             return true;
         }

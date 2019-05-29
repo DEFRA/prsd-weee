@@ -23,8 +23,17 @@
             return await context.Aatfs.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
+        public Task UpdateDetails(Aatf oldDetails, Aatf newDetails, Country country)
         {
+            oldDetails.SiteAddress.UpdateAddress(
+                newDetails.SiteAddress.Name,
+                newDetails.SiteAddress.Address1,
+                newDetails.SiteAddress.Address2,
+                newDetails.SiteAddress.TownOrCity,
+                newDetails.SiteAddress.CountyOrRegion,
+                newDetails.SiteAddress.Postcode,
+                country);
+
             oldDetails.UpdateDetails(
                 newDetails.Name,
                 newDetails.CompetentAuthorityId,

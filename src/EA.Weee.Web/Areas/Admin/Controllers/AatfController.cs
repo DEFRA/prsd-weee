@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -10,20 +9,16 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Requests.Users;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
 
