@@ -1,5 +1,7 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.RegisteredCompanyDetailsViewModel
 @{
     ViewBag.Title = "Registered company";
@@ -45,12 +47,16 @@
         </div>
 
         <div>
-            <h2 class="govuk-heading-s">Business address</h2>
+            <h2 class="govuk-heading-s">Registered office address</h2>
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
             @Html.EditorFor(m => m.Address)
         </div>
+
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.CompanyName)))">Back</a>
+        </p>
 
         <div class="govuk-form-group">
             <button class="govuk-button" type="submit">Save and continue</button>

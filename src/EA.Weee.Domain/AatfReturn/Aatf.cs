@@ -90,9 +90,7 @@
             AatfStatus = aatfStatus;
             Organisation = organisation;
             Size = aatfSize;
-            SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
-            SiteAddressId = aatfSiteAddress.Id;
         }
     }
 }

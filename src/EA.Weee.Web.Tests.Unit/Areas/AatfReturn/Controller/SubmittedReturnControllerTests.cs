@@ -93,7 +93,6 @@
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            var schemeInfo = A.Fake<SchemePublicInfo>();
             var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
@@ -101,7 +100,6 @@
             A.CallTo(() => organisationData.Id).Returns(organisationId);
             A.CallTo(() => @return.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             var returnId = Guid.NewGuid();
 
@@ -109,7 +107,7 @@
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]

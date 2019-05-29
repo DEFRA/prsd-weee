@@ -4,13 +4,13 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
@@ -25,12 +25,14 @@
         private readonly IGetAatfsDataAccess dataAccess;
         private readonly IMap<Aatf, AatfDataList> fakeMapper;
         private readonly GetAatfsHandler handler;
+        private readonly Fixture fixture;
 
         public GetAatfsHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             dataAccess = A.Fake<IGetAatfsDataAccess>();
             fakeMapper = A.Dummy<IMap<Aatf, AatfDataList>>();
+            fixture = new Fixture();
 
             handler = new GetAatfsHandler(authorization, fakeMapper, dataAccess);
         }
@@ -48,10 +50,20 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenGetAatfRequest_DataAccessFetchIsCalled()
+        public async Task HandleAsync_GivenGetAatfRequestWithoutFilter_DataAccessFetchIsCalled()
         {
-            await handler.HandleAsync(A.Dummy<GetAatfs>());
+            var request = new GetAatfs(fixture.Create<FacilityType>());
+            await handler.HandleAsync(request);
             A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenGetAatfRequestWithFilter_DataAccessFetchIsCalled()
+        {
+            var filter = fixture.Create<AatfFilter>();
+            var request = new GetAatfs(fixture.Create<FacilityType>(), filter);
+            await handler.HandleAsync(request);
+            A.CallTo(() => dataAccess.GetFilteredAatfs(filter)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Theory]

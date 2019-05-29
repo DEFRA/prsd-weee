@@ -35,6 +35,9 @@
 
         public AatfContactData ContactData { get; set; }
 
+        [AllowHtml]
+        public string ContactAddressLong { get; set; }
+
         public bool CanEdit { get; set; }
 
         public string ApprovalDateString

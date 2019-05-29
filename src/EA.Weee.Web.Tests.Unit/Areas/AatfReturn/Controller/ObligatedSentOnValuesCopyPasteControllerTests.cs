@@ -84,7 +84,6 @@
         {
             Guid organisationId = Guid.NewGuid();
             ReturnData returnData = A.Fake<ReturnData>();
-            SchemePublicInfo schemeInfo = A.Fake<SchemePublicInfo>();
             OrganisationData organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
@@ -92,13 +91,12 @@
             A.CallTo(() => organisationData.Id).Returns(organisationId);
             A.CallTo(() => returnData.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]
