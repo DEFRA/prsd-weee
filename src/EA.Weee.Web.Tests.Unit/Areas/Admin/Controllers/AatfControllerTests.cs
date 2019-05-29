@@ -57,6 +57,7 @@
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel());
@@ -83,6 +84,7 @@
         [Fact]
         public async Task ManageAatfsPost_ModelError_WithFilter_GetAatfsMustBeRun()
         {
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
             await controller.ManageAatfs(new ManageAatfsViewModel());
@@ -93,6 +95,7 @@
         [Fact]
         public async Task ManageAatfsPost_ModelError_GetAatfsMustBeRun()
         {
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
             var filter = fixture.Create<FilteringViewModel>();
             var mappedFilter = fixture.Create<AatfFilter>();
@@ -100,7 +103,7 @@
             var mapperCall = A.CallTo(() => mapper.Map<AatfFilter>(filter));
             mapperCall.Returns(mappedFilter);
 
-            var result = await controller.ManageAatfs(new ManageAatfsViewModel { Filter = filter });
+            var result = await controller.ManageAatfs(new ManageAatfsViewModel { Filter = filter, CanAddAatf = false });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
             mapperCall.MustHaveHappenedOnceExactly();
@@ -127,6 +130,21 @@
             var viewResultModel = (ManageAatfsViewModel)viewResult.Model;
             Assert.Equal(filter, viewResultModel.Filter);
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ManageAatfsPost_InvalidModel_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            SetUpControllerContext(userHasInternalAdminClaims);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ViewResult result = await controller.ManageAatfs() as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
         }
 
         [Fact]

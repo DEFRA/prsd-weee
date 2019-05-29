@@ -70,11 +70,7 @@
         {
             SetBreadcrumb();
 
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
-
-            bool isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
-
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = isInternalAdmin });
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = IsUserInternalAdmin() });
         }
 
         [HttpPost]
@@ -87,7 +83,11 @@
             {
                 using (var client = apiClient())
                 {
-                    viewModel.AatfDataList = await GetAatfs(viewModel.Filter);
+                    viewModel = new ManageAatfsViewModel
+                    {
+                        AatfDataList = await GetAatfs(viewModel.Filter),
+                        CanAddAatf = IsUserInternalAdmin()
+                    };
                     return View(viewModel);
                 }
             }
@@ -95,6 +95,13 @@
             {
                 return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
             }
+        }
+
+        private bool IsUserInternalAdmin()
+        {
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
 
         [HttpPost]
