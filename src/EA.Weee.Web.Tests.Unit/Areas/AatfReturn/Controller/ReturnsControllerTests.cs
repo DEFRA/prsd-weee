@@ -136,7 +136,7 @@
         }
 
         [Fact]
-        public async void CopyPost_GivenOrganisationId_UserShouldBeRedirectedToTasklist()
+        public async void CopyPost_UserShouldBeRedirectedToTasklist()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
