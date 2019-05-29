@@ -28,7 +28,7 @@
 
         public string CreateLongAddress(SiteAddressData address)
         {
-            string siteAddressLong = address.Name + ",<br/>" + address.Address1;
+            string siteAddressLong = address.Address1;
 
             if (address.Address2 != null)
             {
