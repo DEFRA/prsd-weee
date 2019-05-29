@@ -105,6 +105,14 @@
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel { Filter = filter, CanAddAatf = false });
 
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.IsType<ManageAatfsViewModel>(viewResult.Model);
+
+            var viewResultModel = (ManageAatfsViewModel)viewResult.Model;
+            Assert.Equal(filter, viewResultModel.Filter);
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
             mapperCall.MustHaveHappenedOnceExactly();
         }
@@ -123,7 +131,7 @@
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
 
-            var viewResult = ((ViewResult)result);
+            var viewResult = (ViewResult)result;
             Assert.Equal("ManageAatfs", viewResult.ViewName);
             Assert.IsType<ManageAatfsViewModel>(viewResult.Model);
 
