@@ -77,36 +77,38 @@
 
                 siteData.SiteAddressLong = siteAddressBuilder;
 
-                var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
-
-                if (siteData.OperatorAddress.Address2 != null)
+                if (siteData.OperatorAddress != null)
                 {
-                    var address2 = siteData.OperatorAddress.Address2 + ", ";
-                    operatorAddressBuilder += address2;
+                    var operatorAddressBuilder = siteData.OperatorAddress.Name + ", " + siteData.OperatorAddress.Address1 + ", ";
+
+                    if (siteData.OperatorAddress.Address2 != null)
+                    {
+                        var address2 = siteData.OperatorAddress.Address2 + ", ";
+                        operatorAddressBuilder += address2;
+                    }
+
+                    if (siteData.OperatorAddress.TownOrCity != null)
+                    {
+                        var town = siteData.OperatorAddress.TownOrCity + ", ";
+                        operatorAddressBuilder += town;
+                    }
+
+                    if (siteData.OperatorAddress.CountyOrRegion != null)
+                    {
+                        var county = siteData.OperatorAddress.CountyOrRegion + ", ";
+                        operatorAddressBuilder += county;
+                    }
+
+                    if (siteData.OperatorAddress.Postcode != null)
+                    {
+                        var postCode = siteData.OperatorAddress.Postcode + ", ";
+                        operatorAddressBuilder += postCode;
+                    }
+
+                    operatorAddressBuilder += siteData.OperatorAddress.CountryName;
+
+                    siteData.OperatorAddressLong = operatorAddressBuilder;
                 }
-
-                if (siteData.OperatorAddress.TownOrCity != null)
-                {
-                    var town = siteData.OperatorAddress.TownOrCity + ", ";
-                    operatorAddressBuilder += town;
-                }
-
-                if (siteData.OperatorAddress.CountyOrRegion != null)
-                {
-                    var county = siteData.OperatorAddress.CountyOrRegion + ", ";
-                    operatorAddressBuilder += county;
-                }
-
-                if (siteData.OperatorAddress.Postcode != null)
-                {
-                    var postCode = siteData.OperatorAddress.Postcode + ", ";
-                    operatorAddressBuilder += postCode;
-                }
-
-                operatorAddressBuilder += siteData.OperatorAddress.CountryName;
-
-                siteData.OperatorAddressLong = operatorAddressBuilder;
-
                 siteList.Add(siteData);
             }
 

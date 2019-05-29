@@ -254,7 +254,8 @@
 
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
-            && a.OrganisationString == controller.GenerateAddress(aatfData.Operator.Organisation.BusinessAddress)))).MustHaveHappened(Repeated.Exactly.Once);
+            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Operator.Organisation.BusinessAddress)
+            && a.SiteAddressString == controller.GenerateAatfAddress(aatfData.SiteAddress)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -602,7 +603,7 @@
         }
 
         [Fact]
-        public void GenerateAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
+        public void GenerateSharedAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
         {
             var siteAddress = new Core.Shared.AddressData()
             {
@@ -652,10 +653,72 @@
             };
             var siteAddressWithoutPostcodeLong = "Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
 
-            var result = controller.GenerateAddress(siteAddress);
-            var resultWithoutAddress2 = controller.GenerateAddress(siteAddressWithoutAddress2);
-            var resultWithoutCounty = controller.GenerateAddress(siteAddressWithoutCounty);
-            var resultWithoutPostcode = controller.GenerateAddress(siteAddressWithoutPostcode);
+            var result = controller.GenerateSharedAddress(siteAddress);
+            var resultWithoutAddress2 = controller.GenerateSharedAddress(siteAddressWithoutAddress2);
+            var resultWithoutCounty = controller.GenerateSharedAddress(siteAddressWithoutCounty);
+            var resultWithoutPostcode = controller.GenerateSharedAddress(siteAddressWithoutPostcode);
+
+            result.Should().Be(siteAddressLong);
+            resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
+            resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
+            resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
+        }
+
+        [Fact]
+        public void GenerateAatfAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
+        {
+            var siteAddress = new Core.AatfReturn.AatfAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+            var siteAddressLong = "Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
+
+            var siteAddressWithoutAddress2 = new Core.AatfReturn.AatfAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = null,
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+            var siteAddressWithoutAddress2Long = "Site address 1<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
+
+            var siteAddressWithoutCounty = new Core.AatfReturn.AatfAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = null,
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+            var siteAddressWithoutCountyLong = "Site address 1<br/>Site address 2<br/>Site town<br/>GU22 7UY<br/>Site country";
+
+            var siteAddressWithoutPostcode = new Core.AatfReturn.AatfAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = null,
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+            var siteAddressWithoutPostcodeLong = "Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
+
+            var result = controller.GenerateAatfAddress(siteAddress);
+            var resultWithoutAddress2 = controller.GenerateAatfAddress(siteAddressWithoutAddress2);
+            var resultWithoutCounty = controller.GenerateAatfAddress(siteAddressWithoutCounty);
+            var resultWithoutPostcode = controller.GenerateAatfAddress(siteAddressWithoutPostcode);
 
             result.Should().Be(siteAddressLong);
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
