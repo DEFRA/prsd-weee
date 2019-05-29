@@ -48,13 +48,7 @@
                             @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="word-break:break-all">
-                            @if (address.OperatorAddress != null)
-                            {
-                                @Html.Raw(Model.CreateLongAddress(address.OperatorAddress));
-                            } else
-                            {
-                                @Html.Raw("&nbsp;");
-                            }
+                            @Html.Raw(Model.CreateLongAddress(address.OperatorAddress));
                         </div>
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
