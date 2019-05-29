@@ -362,7 +362,7 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = "Manage EEE/WEEE data";
-            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+            breadcrumb.OrganisationId = organisationId;
         }
 
         private async Task<DataReturnForSubmission> FetchDataReturnUpload(Guid pcsId, Guid dataReturnUploadId)

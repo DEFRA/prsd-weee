@@ -58,7 +58,6 @@
         {
             var organisationId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
-            var schemeInfo = A.Fake<SchemePublicInfo>();
             const string orgName = "orgName";
 
             var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
@@ -73,24 +72,21 @@
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>.Ignored)).Returns(addressTonnage);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), siteId);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
-            var schemeInfo = A.Fake<SchemePublicInfo>();
             const string orgName = "orgName";
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             controller.ModelState.AddModelError("error", "error");
             var viewModel = new ReusedRemoveSiteViewModel()
@@ -102,7 +98,7 @@
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]
