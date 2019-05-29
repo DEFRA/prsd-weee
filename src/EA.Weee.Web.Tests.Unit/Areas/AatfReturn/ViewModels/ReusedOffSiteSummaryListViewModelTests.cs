@@ -17,7 +17,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Country";
+            string expected = "Address 1,<br/>Town,<br/>Country";
 
             ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
@@ -38,7 +38,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>Country";
+            string expected = "Address 1,<br/>Address 2,<br/>Town,<br/>Country";
 
             ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
@@ -59,7 +59,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>County,<br/>Country";
+            string expected = "Address 1,<br/>Town,<br/>County,<br/>Country";
 
             ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
@@ -80,7 +80,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Postcode,<br/>Country";
+            string expected = "Address 1,<br/>Town,<br/>Postcode,<br/>Country";
 
             ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 
@@ -103,7 +103,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>County,<br/>Postcode,<br/>Country";
+            string expected = "Address 1,<br/>Address 2,<br/>Town,<br/>County,<br/>Postcode,<br/>Country";
 
             ReusedOffSiteSummaryListViewModel viewModel = new ReusedOffSiteSummaryListViewModel();
 

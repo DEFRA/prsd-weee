@@ -83,7 +83,7 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
-            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+            breadcrumb.OrganisationId = organisationId;
         }
     }
 }

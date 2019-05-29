@@ -1,4 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type.OrganisationTypeViewModel
 @{
     ViewBag.Title = "Create new organisation";
@@ -49,6 +51,10 @@
             RadioButtonLegend.VisuallyHidden,
             RadioButtonLayout.Stacked)
     </div>
+
+    <p>
+        <a href="@(Url.UrlFor<AddAatfController>(u => u.SearchResults(Model.SearchedText)))">Back</a>
+    </p>
 
     <div class="govuk-form-group">
         <button class="govuk-button" type="submit">Continue</button>

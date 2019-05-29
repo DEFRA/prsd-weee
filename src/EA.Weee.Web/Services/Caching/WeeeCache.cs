@@ -27,11 +27,8 @@
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
         public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
-
         public Cache<Guid, SchemePublicInfo> SchemePublicInfosBySchemeId { get; private set; }
-
         public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
-
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
@@ -265,6 +262,16 @@
         public async Task InvalidateOrganisationSearch()
         {
             await OrganisationSearchResultList.InvalidateCache();
+        }
+
+        public void InvalidateAatfCache()
+        {
+            AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
+                provider,
+                "AatfInfo",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                FetchAatfInfoFromApi);
         }
 
         public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)

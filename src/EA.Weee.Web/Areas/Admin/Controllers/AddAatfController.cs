@@ -17,9 +17,11 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -32,16 +34,19 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private const int maximumSearchResults = 5;
+        private readonly BreadcrumbService breadcrumb;
 
-        public AddAatfController(ISearcher<OrganisationSearchResult> organisationSearcher, Func<IWeeeClient> apiClient)
+        public AddAatfController(ISearcher<OrganisationSearchResult> organisationSearcher, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
+            this.breadcrumb = breadcrumb;
         }
 
         [HttpGet]
         public ActionResult Search()
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
             return View();
         }
 
@@ -49,6 +54,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Search(SearchViewModel viewModel)
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -84,6 +90,8 @@
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm)
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
+
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = searchTerm;
             viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
@@ -95,6 +103,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
+
             if (!ModelState.IsValid)
             {
                 viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
@@ -108,6 +118,8 @@
         [HttpGet]
         public async Task<ActionResult> Add(Guid organisationId)
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
+
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
                 OrganisationId = organisationId
@@ -122,6 +134,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(AddAatfViewModel viewModel)
         {
+            SetBreadcrumb(InternalUserActivity.CreateAatf);
+
             viewModel = await PopulateViewModelLists(viewModel);
 
             if (!ModelState.IsValid)
@@ -147,6 +161,8 @@
         [HttpGet]
         public ActionResult Type(string searchedText)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             return View(new OrganisationTypeViewModel(searchedText));
         }
 
@@ -154,6 +170,8 @@
         [ValidateAntiForgeryToken]
         public ActionResult Type(OrganisationTypeViewModel model)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             if (ModelState.IsValid)
             {
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
@@ -174,6 +192,8 @@
         [HttpGet]
         public async Task<ActionResult> SoleTraderOrPartnershipDetails(string organisationType, string searchedText = null)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             IList<CountryData> countries = await GetCountries();
 
             SoleTraderOrPartnershipDetailsViewModel model = new SoleTraderOrPartnershipDetailsViewModel
@@ -191,6 +211,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SoleTraderOrPartnershipDetails(SoleTraderOrPartnershipDetailsViewModel model)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             if (!ModelState.IsValid)
             {
                 IList<CountryData> countries = await GetCountries();
@@ -217,6 +239,8 @@
         [HttpGet]
         public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             IList<CountryData> countries = await GetCountries();
 
             RegisteredCompanyDetailsViewModel model = new RegisteredCompanyDetailsViewModel()
@@ -234,6 +258,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             if (!ModelState.IsValid)
             {
                 IList<CountryData> countries = await GetCountries();
@@ -263,6 +289,8 @@
         [HttpGet]
         public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName)
         {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
             OrganisationConfirmationViewModel model = new OrganisationConfirmationViewModel()
             {
                 OrganisationId = organisationId,
@@ -309,6 +337,11 @@
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
+        }
+
+        private void SetBreadcrumb(string activity)
+        {
+            breadcrumb.InternalActivity = activity;
         }
     }
 }
