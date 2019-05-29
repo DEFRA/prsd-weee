@@ -136,7 +136,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                await cache.InvalidateAatfCache();
+                cache.InvalidateAatfCache();
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
             }

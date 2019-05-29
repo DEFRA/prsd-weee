@@ -264,7 +264,7 @@
             await OrganisationSearchResultList.InvalidateCache();
         }
 
-        public async Task InvalidateAatfCache()
+        public void InvalidateAatfCache()
         {
             AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
                 provider,
