@@ -82,7 +82,7 @@
             FacilityType = facilityType;
         }
 
-        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime? approvalDate)
+        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate)
         {
             Name = name;
             CompetentAuthorityId = competentAuthorityId;

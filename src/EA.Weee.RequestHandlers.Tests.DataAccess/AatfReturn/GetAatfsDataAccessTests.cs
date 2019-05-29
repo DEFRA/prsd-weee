@@ -55,11 +55,10 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
-                var @operator = new Operator(organisation);
                 var aatfAddress = CreateAatfSiteAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
@@ -84,11 +83,10 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
-                var @operator = new Operator(organisation);
                 var aatfAddress = CreateAatfSiteAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, @operator, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 

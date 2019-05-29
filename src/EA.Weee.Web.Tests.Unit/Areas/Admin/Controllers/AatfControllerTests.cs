@@ -207,7 +207,7 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData
+                Contact = A.Fake<AatfContactData>()
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -250,8 +250,7 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData,
-                Organisation = organisationData
+                Contact = contactData
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -297,7 +296,6 @@
             {
                 Organisation = organisationData,
                 Contact = contactData
-                Organisation = organisationData
             };
 
             var associatedAatfs = new List<AatfDataList>();
@@ -311,7 +309,7 @@
 
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
-            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Operator.Organisation.BusinessAddress)
+            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)
             && a.SiteAddressString == controller.GenerateAatfAddress(aatfData.SiteAddress)
             && a.ContactAddressString == controller.GenerateAatfAddress(aatfData.Contact.AddressData)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -351,8 +349,7 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData,
-                Organisation = organisationData
+                Contact = contactData
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -399,9 +396,7 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData,
-
-                Organisation = organisationData
+                Contact = contactData
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
