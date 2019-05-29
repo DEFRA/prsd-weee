@@ -23,11 +23,12 @@
             this.dataAccess = dataAccess;
             this.aatfmap = map;
         }
+
         public async Task<List<AatfDataList>> HandleAsync(GetAatfs message)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<Aatf> aatfs = await dataAccess.GetAatfs();
+            var aatfs = message.Filter == null ? await dataAccess.GetAatfs() : await dataAccess.GetFilteredAatfs(message.Filter);
 
             if (message.FacilityType == FacilityType.Aatf)
             {
@@ -39,7 +40,7 @@
             }
         }
 
-        private List<Core.AatfReturn.AatfDataList> SortAatfs(List<Aatf> aatfs, FacilityType facilityType)
+        private List<AatfDataList> SortAatfs(List<Aatf> aatfs, FacilityType facilityType)
         {
             return aatfs.OrderBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
         }

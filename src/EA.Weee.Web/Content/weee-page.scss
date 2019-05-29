@@ -17,7 +17,7 @@ p {
     @extend .govuk-body;
 }
 
-a{
+a {
     @extend .govuk-link;
 }
 // ==========================================================================
@@ -70,7 +70,7 @@ a{
     margin: 0 15px;
 }
 
-@media (min-width: 641px){
+@media (min-width: 641px) {
     #global-cookie-message p {
         margin: 0 30px;
     }
@@ -276,7 +276,7 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 
 .swatch-white {
     background-color: govuk-colour('white');
-   border: 1px solid govuk-colour('grey-3');
+    border: 1px solid govuk-colour('grey-3');
 }
 
 .swatch-text-colour {
@@ -361,21 +361,21 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 }
 
 th.sorted-ascending, th.sorted-descending {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 th.sorted-ascending:after {
-	content: "\A0\A0\A0\A0\A0\A0";
-	background-image: url(weee/images/sorted-ascending.png);
-	background-size: 20px 20px;
-	background-repeat: no-repeat;
+    content: "\A0\A0\A0\A0\A0\A0";
+    background-image: url(weee/images/sorted-ascending.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
 }
 
 th.sorted-descending:after {
-	content: "\A0\A0\A0\A0\A0\A0";
-	background-image: url(weee/images/sorted-descending.png);
-	background-size: 20px 20px;
-	background-repeat: no-repeat;
+    content: "\A0\A0\A0\A0\A0\A0";
+    background-image: url(weee/images/sorted-descending.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
 }
 
 p.important {
@@ -416,7 +416,7 @@ p.important {
 }
 
 input[type="file"].form-control {
-	border: 0px;
+    border: 0px;
 }
 
 // 7. Buttons
@@ -479,7 +479,7 @@ input[type="file"].form-control {
     h2.subtitle {
         margin: 0;
         color: $govuk-secondary-text-colour;
-        @include  govuk-font(24);
+        @include govuk-font(24);
     }
 
     margin-bottom: em(5, 3);
@@ -550,8 +550,7 @@ input[type="file"].form-control {
     font-family: $NTA-Light;
     cursor: pointer;
 
-    @include  govuk-font(19);
-
+    @include govuk-font(19);
     text-decoration: underline;
 }
 
@@ -597,7 +596,7 @@ input[type="file"].form-control {
     margin-right: 20px;
     margin-left: 20px;
     margin-top: 20px;
-    display:none;
+    display: none;
 }
 
 .panel-indent-danger {
@@ -621,7 +620,7 @@ input[type="file"].form-control {
 
 .error-details-summary {
     color: govuk-colour('black');
-    width: calc(100% - 25px);   
+    width: calc(100% - 25px);
 }
 
 .warning-details-summary:focus {
@@ -672,6 +671,7 @@ input[type="file"].form-control {
     margin-bottom: 10px;
     padding-left: 5px;
 }
+
 .weee-upload-warning {
     width: 100%;
     background-color: #FFD990;
@@ -714,10 +714,11 @@ details summary::-ms-details-marker {
     /*margin-top: -20px;*/
 }
 
-.error-list-container > ul{
+.error-list-container > ul {
     width: 100%;
     padding-left: 5px;
 }
+
 .error-list-item {
     padding-left: 5px;
     padding-top: 5px;
@@ -761,7 +762,6 @@ details summary::-ms-details-marker {
     }
 
     @include govuk-font(16);
-
 }
 
 .breadcrumb-title-display {
@@ -777,7 +777,7 @@ details summary::-ms-details-marker {
 
 // Used to right-align the registration numbers on the admin's find producer page.
 .ui-autocomplete .ui-menu-item span.registrationNumber {
-    float:right;
+    float: right;
     font-family: monospace;
 }
 
@@ -805,6 +805,7 @@ details summary::-ms-details-marker {
     font-style: normal;
     text-align: left;
 }
+
 .black-text {
     word-wrap: break-word;
     font-size: 16px;
@@ -818,14 +819,14 @@ details summary::-ms-details-marker {
 /* Taken from http://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/ */
 
 .hidden-for-screen-reader {
-	position: absolute;
-	clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
-	clip: rect(1px, 1px, 1px, 1px);
-	padding: 0;
-	border: 0;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
+    position: absolute;
+    clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
 }
 
 .text-area {
@@ -836,25 +837,25 @@ details summary::-ms-details-marker {
     width: 100%;
 }
 
-.checkbox-inherit{
+.checkbox-inherit {
     position: inherit;
 }
 
-.checkbox-inherit input{
+.checkbox-inherit input {
     position: inherit;
 }
 
 #schemeBanner {
-	margin-top: 3px;
-	padding: 5px 10px;
-	background: govuk-colour('grey-3');
-	font-size: 16px;
+    margin-top: 3px;
+    padding: 5px 10px;
+    background: govuk-colour('grey-3');
+    font-size: 16px;
 
     @include govuk-font(16);
 }
 
 .secondaryHeaderContent {
-	margin-top: 45px;
+    margin-top: 45px;
     margin-bottom: 20px;
 }
 
@@ -864,12 +865,12 @@ details summary::-ms-details-marker {
 }
 
 .left-cleared {
-    clear:left;
+    clear: left;
     margin-top: 0.26316em;
     margin-bottom: 0.85263em;
 }
 
-.text-margin{
+.text-margin {
     margin-left: 10px;
 }
 
@@ -886,24 +887,25 @@ details summary::-ms-details-marker {
 }
 
 .btnDisable {
-    display:none;
+    display: none;
 }
 
 #unset-padding {
-    padding-right:0 ;
+    padding-right: 0;
 }
 
 .collapsible-padding-left {
-    padding-left:34px;
+    padding-left: 34px;
 }
 
 .collapsible-padding-right {
-    padding-right:0px;
+    padding-right: 0px;
 }
 
 .collapsible-font-size {
     font-size: 1.0rem;
 }
+
 .section-tabs {
     @include govuk-clearfix;
     border-bottom: 1px solid $govuk-border-colour;
@@ -1046,9 +1048,24 @@ details summary::-ms-details-marker {
     left: -9999px !important;
 }
 
+.aatf-filter {
+    @include govuk-responsive-padding(4);
+    border: 5px solid #fff;
+    background-color: govuk-colour('grey-3');
+
+    .govuk-label {
+        font-weight: $govuk-font-weight-bold;
+    }
+
+    .govuk-button {
+        margin: 0;
+        background-color: govuk-colour('light-blue')
+    }
+}
+
 .aatf-details-associated-table-cell {
-    border-bottom: 0px; 
-    padding: 5px 0px 0px 0px
+    border-bottom: 0px;
+    padding: 10px 0px 10px 0px
 }
 
 .aatf-details-associated-table-cell-title {
