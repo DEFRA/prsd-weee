@@ -28,6 +28,8 @@
 
         Task InvalidateOrganisationSearch();
 
+        Task InvalidateAatfCache();
+
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
 }

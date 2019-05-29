@@ -21,6 +21,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
 
     public class AatfController : AdminController
     {
@@ -29,14 +30,16 @@
         private readonly IMapper mapper;
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
+        private readonly IWeeeCache cache;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator)
+        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -132,6 +135,8 @@
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
+
+                await cache.InvalidateAatfCache();
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
             }

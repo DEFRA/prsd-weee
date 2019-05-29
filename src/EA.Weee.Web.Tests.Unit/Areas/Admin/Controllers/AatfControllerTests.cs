@@ -23,6 +23,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
@@ -40,6 +41,7 @@
         private readonly IMapper mapper;
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
+        private readonly IWeeeCache cache;
         private readonly AatfController controller;
 
         public AatfControllerTests()
@@ -50,8 +52,9 @@
             mapper = A.Fake<IMapper>();
             detailsRequestCreator = A.Fake<IEditAatfDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
+            cache = A.Fake<IWeeeCache>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache);
         }
 
         [Fact]
@@ -176,7 +179,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOperatorId>.That.Matches(a => a.OperatorId == aatfData.Operator.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -432,6 +435,24 @@
         }
 
         [Fact]
+        public async void ManageAatfDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            var viewModel = new AatfEditDetailsViewModel() { Id = Guid.NewGuid() };
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A<GetUKCompetentAuthorities>._)).Returns(A.CollectionOfFake<UKCompetentAuthorityData>(1));
+
+            await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var aatfId = Guid.NewGuid();
@@ -640,7 +661,7 @@
             HttpContextBase httpContextBase = A.Fake<HttpContextBase>();
             ClaimsPrincipal principal = new ClaimsPrincipal(httpContextBase.User);
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
-            
+
             if (hasInternalAdminUserClaims)
             {
                 claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
