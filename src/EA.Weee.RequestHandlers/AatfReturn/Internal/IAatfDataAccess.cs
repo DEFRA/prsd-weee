@@ -12,6 +12,8 @@
 
         Task UpdateDetails(Aatf oldDetails, Aatf newDetails);
 
+        Task UpdateAddress(AatfAddress oldDetails, AatfAddress newDetails, Country country);
+
         Task<AatfContact> GetContact(Guid aatfId);
 
         Task UpdateContact(AatfContact oldDetails, AatfContactData newDetails, Country country);
