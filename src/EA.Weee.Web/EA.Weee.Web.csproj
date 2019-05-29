@@ -414,6 +414,7 @@
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailController.cs" />
+    <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToAatfFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAatfDetailsViewModelMap.cs" />
@@ -424,6 +425,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />

@@ -32,7 +32,8 @@
                 CanEdit = source.AatfData.Contact.CanEditContactDetails,
                 Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString,
-                SiteAddressLong = source.SiteAddressString
+                SiteAddressLong = source.SiteAddressString,
+                ContactAddressLong = source.ContactAddressString
             };
 
             if (source.AssociatedAatfs != null)
