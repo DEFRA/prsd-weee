@@ -11,14 +11,29 @@
     {
         public AatfEditDetailsViewModel()
         {
+            this.SiteAddress = new AatfAddressData();
         }
 
         public Guid Id { get; set; }
 
+        private string aatfName;
         [Required]
-        [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
-        [Display(Name = "Name of Aatf")]
-        public string Name { get; set; }
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [Display(Name = "Name of AATF")]
+        public string Name
+        {
+            get => this.aatfName;
+
+            set
+            {
+                this.aatfName = value;
+
+                if (this.SiteAddress != null)
+                {
+                    this.SiteAddress.Name = value;
+                }
+            }
+        }
 
         [Required]
         [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/ATF", ErrorMessage = "Approval number is not in correct format")]
