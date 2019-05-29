@@ -194,7 +194,6 @@
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var schemeInfo = A.Fake<SchemePublicInfo>();
             const string orgName = "orgName";
             var model = new SelectReportOptionsViewModel()
             {
@@ -205,13 +204,12 @@
             controller.ModelState.AddModelError("error", "error");
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             await controller.Index(model);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
-            breadcrumb.SchemeInfo.Should().Be(schemeInfo);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]

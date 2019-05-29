@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -10,22 +9,19 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Requests.Users;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
 
     public class AatfController : AdminController
     {
@@ -34,14 +30,16 @@
         private readonly IMapper mapper;
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
+        private readonly IWeeeCache cache;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator)
+        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -61,6 +59,7 @@
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Operator.Organisation.BusinessAddress),
                     SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
+                    ContactAddressString = GenerateAatfAddress(aatf.Contact.AddressData), 
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
                 });
@@ -74,11 +73,7 @@
         {
             SetBreadcrumb();
 
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
-
-            bool isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
-
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = isInternalAdmin });
+            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = IsUserInternalAdmin() });
         }
 
         [HttpPost]
@@ -93,7 +88,9 @@
                 {
                     viewModel = new ManageAatfsViewModel
                     {
-                        AatfDataList = await GetAatfs()
+                        AatfDataList = await GetAatfs(viewModel.Filter),
+                        Filter = viewModel.Filter,
+                        CanAddAatf = IsUserInternalAdmin()
                     };
                     return View(viewModel);
                 }
@@ -102,6 +99,21 @@
             {
                 return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
             }
+        }
+
+        private bool IsUserInternalAdmin()
+        {
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
+        {
+            SetBreadcrumb();
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter), Filter = filter });
         }
 
         [HttpGet]
@@ -138,6 +150,8 @@
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
+
+                cache.InvalidateAatfCache();
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
             }
@@ -205,11 +219,12 @@
             return View(viewModel);
         }
 
-        private async Task<List<AatfDataList>> GetAatfs()
+        private async Task<List<AatfDataList>> GetAatfs(FilteringViewModel filter = null)
         {
             using (var client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf));
+                var mappedFilter = filter != null ? mapper.Map<AatfFilter>(filter) : null;
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf, mappedFilter));
             }
         }
 
