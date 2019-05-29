@@ -19,7 +19,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMapper mapper;
+        private readonly IMapper mapper; 
 
         public ReturnsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMapper mapper)
         {
