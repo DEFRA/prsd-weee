@@ -81,7 +81,7 @@
             FacilityType = facilityType;
         }
 
-        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime? approvalDate)
+        public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfSize aatfSize, DateTime? approvalDate)
         {
             Name = name;
             CompetentAuthorityId = competentAuthorityId;
@@ -89,9 +89,7 @@
             AatfStatus = aatfStatus;
             Operator = @operator;
             Size = aatfSize;
-            SiteAddress = aatfSiteAddress;
             ApprovalDate = approvalDate;
-            SiteAddressId = aatfSiteAddress.Id;
         }
     }
 }
