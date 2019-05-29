@@ -94,6 +94,7 @@
     <Compile Include="AatfReturn\ReturnsListDisplayOptions.cs" />
     <Compile Include="AatfReturn\FacilityType.cs" />
     <Compile Include="AatfReturn\ReturnStatus.cs" />
+    <Compile Include="AatfReturn\AatfFilter.cs" />
     <Compile Include="AatfReturn\SiteAddressData.cs" />
     <Compile Include="AatfReturn\AatfAddressData.cs" />
     <Compile Include="AatfReturn\AatfData.cs" />

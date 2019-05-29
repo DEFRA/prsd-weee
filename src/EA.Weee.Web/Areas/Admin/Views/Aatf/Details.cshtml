@@ -11,7 +11,7 @@
 <div class="govuk-grid-row">
     <section class="govuk-grid-column-full" id="main-content">
         <header class="hgroup">
-            <h1 class="govuk-heading-l"> @Model.Name</h1>
+            <h1 class="govuk-heading-l" style="word-break:break-all"> @Model.Name</h1>
         </header>
     </section>
 </div>
@@ -45,19 +45,17 @@
     </ul>
 
     <section class="govuk-tabs__panel" id="aatfDetails">
+        <div class="govuk-table__header--large">
+            AATF details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">AATF details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Name of AATF</th>
-                    <td class="govuk-table__cell">@Model.Name</td>
+                    <td class="govuk-table__cell" style="word-break:break-all">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Site address</th>
@@ -97,12 +95,10 @@
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
+        <div class="govuk-table__header--large">
+            Data
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Data</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
@@ -118,19 +114,30 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
+        <div class="govuk-table__header--large">
+            Organisation details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Organisation details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Organisation type</th>
-                    <td class="govuk-table__cell">@Model.Organisation.OrganisationType</td>
+                    <td class="govuk-table__cell">
+                        @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                        {
+                            @:Sole trader or individual
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                        }
+                    </td>
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
@@ -146,7 +153,7 @@
                     @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                     {
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Company registration number</th>
+                            <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
                             <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                         </tr>
                     }
@@ -168,12 +175,10 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
+        <div class="govuk-table__header--large">
+            Contact details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Contact details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
@@ -189,12 +194,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
-                        @Model.ContactData.AddressData.Address1<br />
-                        @Model.ContactData.AddressData.Address2<br />
-                        @Model.ContactData.AddressData.TownOrCity<br />
-                        @Model.ContactData.AddressData.CountyOrRegion<br />
-                        @Model.ContactData.AddressData.Postcode<br />
-                        @Model.ContactData.AddressData.CountryName<br />
+                        @Html.Raw(Model.ContactAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
