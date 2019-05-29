@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -10,20 +9,16 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Requests.Users;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
 
@@ -92,10 +87,7 @@
             {
                 using (var client = apiClient())
                 {
-                    viewModel = new ManageAatfsViewModel
-                    {
-                        AatfDataList = await GetAatfs()
-                    };
+                    viewModel.AatfDataList = await GetAatfs(viewModel.Filter);
                     return View(viewModel);
                 }
             }
@@ -103,6 +95,14 @@
             {
                 return RedirectToAction("Details", new { Id = viewModel.Selected.Value });
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
+        {
+            SetBreadcrumb();
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter), Filter = filter });
         }
 
         [HttpGet]
@@ -206,11 +206,12 @@
             return View(viewModel);
         }
 
-        private async Task<List<AatfDataList>> GetAatfs()
+        private async Task<List<AatfDataList>> GetAatfs(FilteringViewModel filter = null)
         {
             using (var client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf));
+                var mappedFilter = filter != null ? mapper.Map<AatfFilter>(filter) : null;
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf, mappedFilter));
             }
         }
 
