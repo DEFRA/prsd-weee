@@ -10,6 +10,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Security;
@@ -25,6 +26,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly EditAatfDetailsRequestHandler handler;
 
         public EditAatfDetailsRequestHandlerTests()
@@ -34,8 +36,9 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
+            organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
-            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper);
+            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -43,7 +46,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -55,7 +58,7 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 

@@ -23,26 +23,30 @@
             return await context.Aatfs.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task UpdateDetails(Aatf oldDetails, Aatf newDetails, Country country)
+        public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
         {
-            oldDetails.SiteAddress.UpdateAddress(
-                newDetails.SiteAddress.Name,
-                newDetails.SiteAddress.Address1,
-                newDetails.SiteAddress.Address2,
-                newDetails.SiteAddress.TownOrCity,
-                newDetails.SiteAddress.CountyOrRegion,
-                newDetails.SiteAddress.Postcode,
-                country);
-
             oldDetails.UpdateDetails(
                 newDetails.Name,
                 newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
                 newDetails.Operator,
-                newDetails.SiteAddress,
                 newDetails.Size,
                 newDetails.ApprovalDate);
+
+            return context.SaveChangesAsync();
+        }
+
+        public Task UpdateAddress(AatfAddress oldDetails, AatfAddress newDetails, Country country)
+        {
+            oldDetails.UpdateAddress(
+                newDetails.Name,
+                newDetails.Address1,
+                newDetails.Address2,
+                newDetails.TownOrCity,
+                newDetails.CountyOrRegion,
+                newDetails.Postcode,
+                country);
 
             return context.SaveChangesAsync();
         }

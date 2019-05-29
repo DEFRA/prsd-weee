@@ -10,7 +10,9 @@
     {
         Task<Aatf> GetDetails(Guid id);
 
-        Task UpdateDetails(Aatf oldDetails, Aatf newDetails, Country country);
+        Task UpdateDetails(Aatf oldDetails, Aatf newDetails);
+
+        Task UpdateAddress(AatfAddress oldDetails, AatfAddress newDetails, Country country);
 
         Task<AatfContact> GetContact(Guid aatfId);
 

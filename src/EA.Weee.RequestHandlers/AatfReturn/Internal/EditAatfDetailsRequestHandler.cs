@@ -39,7 +39,7 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var siteAddress = addressMapper.Map(message.Data.SiteAddress);
+            var updatedAddress = addressMapper.Map(message.Data.SiteAddress);
 
             var existingAatf = await genericDataAccess.GetById<Aatf>(message.Data.Id);
             var updatedAatf = new Aatf(
@@ -48,15 +48,19 @@
                 message.Data.ApprovalNumber,
                 Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Data.AatfStatus.Value),
                 existingAatf.Operator,
-                siteAddress,
+                updatedAddress,
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Data.Size.Value),
                 message.Data.ApprovalDate.GetValueOrDefault(),
                 existingAatf.Contact,
                 existingAatf.FacilityType);
 
+            var existingAddress = await genericDataAccess.GetById<AatfAddress>(existingAatf.SiteAddress.Id);
+
             Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.Data.SiteAddress.CountryId);
 
-            await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf, country);
+            await aatfDataAccess.UpdateAddress(existingAddress, updatedAddress, country);
+
+            await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf);
 
             return true;
         }

@@ -58,7 +58,6 @@
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
                 newDetails.Operator,
-                newDetails.SiteAddress,
                 newDetails.Size,
                 newDetails.ApprovalDate)).MustHaveHappenedOnceExactly()
             .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
