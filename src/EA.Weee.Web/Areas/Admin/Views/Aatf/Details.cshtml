@@ -11,7 +11,7 @@
 <div class="govuk-grid-row">
     <section class="govuk-grid-column-full" id="main-content">
         <header class="hgroup">
-            <h1 class="govuk-heading-l"> @Model.Name</h1>
+            <h1 class="govuk-heading-l" style="word-break:break-all"> @Model.Name</h1>
         </header>
     </section>
 </div>
@@ -45,29 +45,22 @@
     </ul>
 
     <section class="govuk-tabs__panel" id="aatfDetails">
+        <div class="govuk-table__header--large">
+            AATF details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">AATF details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Name of AATF</th>
-                    <td class="govuk-table__cell">@Model.Name</td>
+                    <td class="govuk-table__cell" style="word-break:break-all">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Site address</th>
                     <td class="govuk-table__cell">
-                        @Model.SiteAddress.Address1<br />
-                        @Model.SiteAddress.Address2<br />
-                        @Model.SiteAddress.TownOrCity<br />
-                        @Model.SiteAddress.CountyOrRegion<br />
-                        @Model.SiteAddress.Postcode<br />
-                        @Model.SiteAddress.CountryName<br />
+                        @Html.Raw(Model.SiteAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -90,7 +83,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Approval date</th>
-                    <td class="govuk-table__cell">@Model.ApprovalDate</td>
+                    <td class="govuk-table__cell">@Model.ApprovalDateString</td>
                 </tr>
             </tbody>
         </table>
@@ -102,12 +95,10 @@
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
+        <div class="govuk-table__header--large">
+            Data
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Data</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
@@ -123,52 +114,71 @@
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
+        <div class="govuk-table__header--large">
+            Organisation details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Organisation details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company name</th>
-                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Trading name</th>
-                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company registration number</th>
-                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
+                    <th class="govuk-table__header" scope="col">Organisation type</th>
                     <td class="govuk-table__cell">
-                        @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                        @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                        {
+                            @:Sole trader or individual
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                        }
                     </td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Email address</th>
-                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
-                </tr>
-            </tbody>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Business trading name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+                    </tr>
+                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                            <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                        </tr>
+                    }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Address</th>
+                        <td class="govuk-table__cell">
+                            @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Telephone</th>
+                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Email address</th>
+                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
+                    </tr>
+                </tbody>
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
+        <div class="govuk-table__header--large">
+            Contact details
+        </div>
         <table class="govuk-table">
-            <thead>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header--large">Contact details</th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>&nbsp;</td>
@@ -184,12 +194,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
-                        @Model.ContactData.AddressData.Address1<br />
-                        @Model.ContactData.AddressData.Address2<br />
-                        @Model.ContactData.AddressData.TownOrCity<br />
-                        @Model.ContactData.AddressData.CountyOrRegion<br />
-                        @Model.ContactData.AddressData.Postcode<br />
-                        @Model.ContactData.AddressData.CountryName<br />
+                        @Html.Raw(Model.ContactAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -220,7 +225,7 @@
                 <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="width: 30%">This organisation also operates</th>
                 @if (Model.AssociatedAatfs.Any())
                 {
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
                         AATF
                     </td>
                 }
@@ -266,7 +271,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col" style="border-bottom: 5px"></th>
                     <td class="govuk-table__cell aatf-details-associated-table-cell">
-                        @Html.ActionLink(scheme.Name, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
+                        @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
                     </td>
                 </tr>
             }

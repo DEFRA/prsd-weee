@@ -21,6 +21,9 @@
 
         public virtual AatfAddressData SiteAddress { get; set; }
 
+        [AllowHtml]
+        public string SiteAddressLong { get; set; }
+
         public AatfSize Size { get; set; }
 
         public OrganisationData Organisation { get; set; }
@@ -32,7 +35,22 @@
 
         public AatfContactData ContactData { get; set; }
 
+        [AllowHtml]
+        public string ContactAddressLong { get; set; }
+
         public bool CanEdit { get; set; }
+
+        public string ApprovalDateString
+        {
+            get
+            {
+                if (this.ApprovalDate == null)
+                {
+                    return "-";
+                }
+                return this.ApprovalDate.Value.ToShortDateString();
+            }
+        }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 

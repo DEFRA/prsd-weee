@@ -63,6 +63,30 @@
             return RedirectToAction("SearchResults", "AddAatf", new { viewModel.SearchTerm });
         }
 
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
+
+            return Json(searchResults, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm)
         {

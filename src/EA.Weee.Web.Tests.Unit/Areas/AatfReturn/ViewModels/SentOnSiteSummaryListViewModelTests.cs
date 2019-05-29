@@ -17,7 +17,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name<br/>Address 1<br/>Town<br/>Country";
+            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Country";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -38,11 +38,23 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name<br/>Address 1<br/>Address 2<br/>Town<br/>Country";
+            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>Country";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
             string result = viewModel.CreateLongAddress(address);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void CreateLongAddress_OperatorAddressIsNull_ReturnsNonBreakingWhiteSpace()
+        {
+            string expected = "&nbsp";
+
+            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+
+            string result = viewModel.CreateLongAddress(null);
 
             Assert.Equal(expected, result);
         }
@@ -59,7 +71,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name<br/>Address 1<br/>Town<br/>County<br/>Country";
+            string expected = "Name,<br/>Address 1,<br/>Town,<br/>County,<br/>Country";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -80,7 +92,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name<br/>Address 1<br/>Town<br/>Postcode<br/>Country";
+            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Postcode,<br/>Country";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -103,7 +115,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name<br/>Address 1<br/>Address 2<br/>Town<br/>County<br/>Postcode<br/>Country";
+            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>County,<br/>Postcode,<br/>Country";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 

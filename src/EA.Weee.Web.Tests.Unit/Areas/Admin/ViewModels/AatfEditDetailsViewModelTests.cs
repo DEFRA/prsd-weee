@@ -61,7 +61,8 @@
                 "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
-                "AatfStatus"
+                "AatfStatus",
+                "Size"
             };
 
             foreach (var property in typeof(AatfEditDetailsViewModel).GetProperties())
@@ -71,6 +72,15 @@
             }
 
             requiredProperties.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Name_NameSet_SiteAddressNameGetsSet()
+        {
+            var model = CreateValidAatfEditDetailsViewModel();
+            model.Name = "AATF Name";
+
+            Assert.Equal(model.Name, model.SiteAddress.Name);
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
