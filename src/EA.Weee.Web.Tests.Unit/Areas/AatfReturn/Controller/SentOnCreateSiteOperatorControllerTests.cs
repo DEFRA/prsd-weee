@@ -61,12 +61,12 @@
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            var operatorData = A.Fake<OrganisationData>();
+            var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-            A.CallTo(() => operatorData.Id).Returns(organisationId);
-            A.CallTo(() => @return.OrganisationData).Returns(operatorData);
+            A.CallTo(() => organisationData.Id).Returns(organisationId);
+            A.CallTo(() => @return.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             await controller.Index(@return.Id, organisationId, Guid.NewGuid(), Guid.NewGuid(), null);

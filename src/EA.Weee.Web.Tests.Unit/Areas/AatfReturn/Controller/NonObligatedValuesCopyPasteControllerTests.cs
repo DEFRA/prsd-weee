@@ -85,12 +85,12 @@
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
             var schemeInfo = A.Fake<SchemePublicInfo>();
-            var operatorData = A.Fake<OrganisationData>();
+            var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-            A.CallTo(() => operatorData.Id).Returns(organisationId);
-            A.CallTo(() => @return.OrganisationData).Returns(operatorData);
+            A.CallTo(() => organisationData.Id).Returns(organisationId);
+            A.CallTo(() => @return.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
