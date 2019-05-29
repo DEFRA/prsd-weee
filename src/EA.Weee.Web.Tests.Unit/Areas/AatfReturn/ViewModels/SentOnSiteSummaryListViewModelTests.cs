@@ -48,6 +48,18 @@
         }
 
         [Fact]
+        public void CreateLongAddress_OperatorAddressIsNull_ReturnsNonBreakingWhiteSpace()
+        {
+            string expected = "&nbsp";
+
+            SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
+
+            string result = viewModel.CreateLongAddress(null);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         public void CreateLongAddress_WithOptionalCounty_ReturnsCorrectAddress()
         {
             AatfAddressData address = new AatfAddressData()
