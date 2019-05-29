@@ -54,6 +54,35 @@
         }
 
         [Fact]
+        public void Map_GivenNullOperatorAddress_PropertyShouldNotBeMapped()
+        {
+            var weeeSentOnList = new List<WeeeSentOnData>();
+
+            var weeeSentOn = new WeeeSentOnData()
+            {
+                SiteAddress = new AatfAddressData() { Name = "SiteName", Address1 = "SiteAdd1", Address2 = "SiteAdd2", TownOrCity = "SiteTown", CountyOrRegion = "SiteCounty", Postcode = "GU22 7UT", CountryId = Guid.NewGuid(), CountryName = "Germany" }
+            };
+
+            weeeSentOnList.Add(weeeSentOn);
+
+            var transfer = new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
+            {
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                AatfName = A.Dummy<string>(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOnDataItems = weeeSentOnList
+            };
+
+            var result = map.Map(transfer);
+
+            foreach (var site in result.Sites)
+            {
+                site.OperatorAddressLong.Should().Be(null);
+            }
+        }
+
+        [Fact]
         public void Map_GivenValidSource_LongAddressesShouldBeCorrect()
         {
             var weeeSentOnList = new List<WeeeSentOnData>();

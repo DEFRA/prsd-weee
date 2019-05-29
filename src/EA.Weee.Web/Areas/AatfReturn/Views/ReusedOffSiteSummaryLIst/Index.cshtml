@@ -51,7 +51,7 @@
                     <div class="govuk-grid-column-one-quarter">
                         Site name
                     </div>
-                    <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left">
                         Address
                     </div>
                     <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
@@ -61,10 +61,10 @@
                 @foreach (var address in Model.Addresses)
                 {
                     <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
                             @address.Name
                         </div>
-                        <div class="govuk-grid-column-one-half" style="word-break:break-all">
+                        <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="word-break:break-all">
                             @Html.Raw(Model.CreateLongAddress(address))
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
