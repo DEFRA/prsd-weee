@@ -3,10 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
+
     public interface IGetAatfsDataAccess
     {
-        Task<Domain.AatfReturn.Aatf> GetAatfById(Guid id);
+        Task<Aatf> GetAatfById(Guid id);
 
-        Task<List<Domain.AatfReturn.Aatf>> GetAatfs();
+        Task<List<Aatf>> GetAatfs();
+
+        Task<List<Aatf>> GetFilteredAatfs(AatfFilter filter);
     }
 }

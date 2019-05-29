@@ -11,7 +11,7 @@
         public ReusedOffSiteSummaryListViewModel ViewModel = new ReusedOffSiteSummaryListViewModel();
         public List<AddressDataSummary> AddressDataSummaries = new List<AddressDataSummary>();
 
-        private ITonnageUtilities tonnageUtilities;
+        private readonly ITonnageUtilities tonnageUtilities;
         private IAddressUtilities addressUtilities;
 
         public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(
