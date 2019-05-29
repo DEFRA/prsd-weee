@@ -56,7 +56,12 @@
             var result = map.Map(returnData);
 
             result.Addresses[0].Name.Should().Be("Name");
-            result.Addresses[0].Address.Should().Be("Address1, Address2, Town, County, PO12 3ST, Country");
+            result.Addresses[0].Address1.Should().Be("Address1");
+            result.Addresses[0].Address2.Should().Be("Address2");
+            result.Addresses[0].TownOrCity.Should().Be("Town");
+            result.Addresses[0].CountyOrRegion.Should().Be("County");
+            result.Addresses[0].Postcode.Should().Be("PO12 3ST");
+            result.Addresses[0].CountryName.Should().Be("Country");
             result.B2bTotal.Should().Be("1.234");
             result.B2bTotal.Should().Be("1.234");
         }

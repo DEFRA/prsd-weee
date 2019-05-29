@@ -14,12 +14,12 @@
         </div>
     </header>
 
-    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Index(Model.PcsId)))">manage EEE/WEEE data</a>.</p>
+    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Index(Model.PcsId)))">manage EEE/WEEE data</a></p>
 
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
+        <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities</p>
     }
 
     <p>
