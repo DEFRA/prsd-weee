@@ -38,11 +38,11 @@
                 {
                     AatfId = aatfId,
                     ReturnId = returnId,
-                    OrganisationId = returnData.ReturnOperatorData.OrganisationId,
+                    OrganisationId = returnData.OrganisationData.Id,
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
                 };
-                await SetBreadcrumb(returnData.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }
         }

@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -59,12 +60,12 @@
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            var operatorData = A.Fake<OperatorData>();
+            var operatorData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
+            A.CallTo(() => operatorData.Id).Returns(organisationId);
+            A.CallTo(() => @return.OrganisationData).Returns(operatorData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             await controller.Index(Guid.NewGuid(), Guid.NewGuid(), null);

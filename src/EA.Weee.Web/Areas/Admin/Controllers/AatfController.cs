@@ -51,15 +51,15 @@
 
             using (var client = apiClient())
             {
-                AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
+                var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(aatf.Organisation.Id));
 
-                List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
+                var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Organisation.Id));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
+                var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
-                    OrganisationString = GenerateSharedAddress(aatf.Operator.Organisation.BusinessAddress),
+                    OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
@@ -74,9 +74,9 @@
         {
             SetBreadcrumb();
 
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+            var claimsPrincipal = new ClaimsPrincipal(this.User);
 
-            bool isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+            var isInternalAdmin = claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
 
             return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = isInternalAdmin });
         }

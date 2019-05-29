@@ -39,11 +39,11 @@
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
-                viewModel.OrganisationId = @return.ReturnOperatorData.OrganisationId;
+                viewModel.OrganisationId = @return.OrganisationData.Id;
                 viewModel.ReturnId = returnId;
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(@return.ReturnOperatorData.OrganisationId))).OrganisationName;
+                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(@return.OrganisationData.Id))).OrganisationName;
 
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
             }

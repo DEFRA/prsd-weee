@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
@@ -63,7 +64,7 @@
             A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
 
             var request = new GetAatfs(facilityType);
-            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OperatorData>(), facilityType);
+            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType);
 
             A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(returnDataList);
 

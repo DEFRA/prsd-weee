@@ -57,7 +57,7 @@
                 newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
-                newDetails.Operator,
+                newDetails.Organisation,
                 newDetails.SiteAddress,
                 newDetails.Size,
                 newDetails.ApprovalDate)).MustHaveHappenedOnceExactly()

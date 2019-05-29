@@ -40,11 +40,11 @@
                 var viewModel = new NonObligatedValuesCopyPasteViewModel()
                 {
                     ReturnId = returnId,
-                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    OrganisationId = @return.OrganisationData.Id,
                     Dcf = dcf,
                     Typeheading = typeheading
                 };
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }
         }

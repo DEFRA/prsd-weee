@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Core.Organisations;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -55,12 +56,12 @@
             var organisationId = Guid.NewGuid();
             var schemeData = A.Fake<SchemeDataList>();
             var schemeInfo = A.Fake<SchemePublicInfo>();
-            var operatorData = A.Fake<OperatorData>();
+            var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeData);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => schemeData.OperatorData).Returns(operatorData);
+            A.CallTo(() => organisationData.Id).Returns(organisationId);
+            A.CallTo(() => schemeData.OrganisationData).Returns(organisationData);
             A.CallTo(() => schemeData.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
@@ -78,7 +79,7 @@
             var schemeList = A.Fake<SchemeDataList>();
             var returnId = Guid.NewGuid();
 
-            A.CallTo(() => schemeList.OperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => schemeList.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => schemeList.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
 
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
@@ -92,7 +93,7 @@
             var schemeList = A.Fake<SchemeDataList>();
             var returnId = Guid.NewGuid();
 
-            A.CallTo(() => schemeList.OperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => schemeList.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => schemeList.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
 
             await controller.Index(returnId, A.Dummy<Guid>());
@@ -131,7 +132,7 @@
         {
             var @return = A.Fake<ReturnData>();
 
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());

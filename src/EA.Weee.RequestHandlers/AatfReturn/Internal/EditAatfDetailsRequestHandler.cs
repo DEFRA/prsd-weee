@@ -38,7 +38,7 @@
                 message.Data.CompetentAuthority.Id,
                 message.Data.ApprovalNumber,
                 Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Data.AatfStatus.Value),
-                existingAatf.Operator,
+                existingAatf.Organisation,
                 siteAddress,
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Data.Size.Value),
                 message.Data.ApprovalDate.GetValueOrDefault(),

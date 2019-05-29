@@ -2,6 +2,7 @@
 {
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Organisation;
 
     internal class AatfMapping : EntityTypeConfiguration<Aatf>
     {
@@ -12,7 +13,7 @@
             Property(x => x.Name).HasColumnName("Name").IsRequired().HasMaxLength(256);
             Property(x => x.ApprovalNumber).HasColumnName("ApprovalNumber").IsRequired().HasMaxLength(20);
 
-            HasRequired<Operator>(a => a.Operator);
+            HasRequired<Organisation>(a => a.Organisation);
             HasRequired<AatfAddress>(a => a.SiteAddress);
         }
     }

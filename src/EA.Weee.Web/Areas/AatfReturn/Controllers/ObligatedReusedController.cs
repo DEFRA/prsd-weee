@@ -50,13 +50,13 @@
                 var model = mapper.Map(new ReturnToObligatedViewModelMapTransfer()
                 {
                     AatfId = aatfId,
-                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    OrganisationId = @return.OrganisationData.Id,
                     ReturnId = returnId,
                     ReturnData = @return,
                     PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
 
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View(model);
             }

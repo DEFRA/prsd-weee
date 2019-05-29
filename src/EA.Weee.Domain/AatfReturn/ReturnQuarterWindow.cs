@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using DataReturns;
+    using Organisation;
     using Prsd.Core;
 
     public class ReturnQuarterWindow
@@ -24,7 +25,7 @@
 
         public List<WeeeReusedAmount> ObligatedWeeeReusedList { get; private set; }
 
-        public Operator ReturnOperator { get; private set; }
+        public Organisation Organisation { get; private set; }
 
         public virtual List<ReturnScheme> ReturnSchemes { get; private set; }
 
@@ -34,7 +35,7 @@
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,
             List<WeeeReceivedAmount> obligatedReceivedList,
             List<WeeeReusedAmount> obligatedReusedList,
-            Operator returnOperator,
+            Organisation organisation,
             List<WeeeSentOnAmount> obligatedSentOnList,
             List<ReturnScheme> returnSchemes,
             List<ReturnReportOn> returnReportOns)
@@ -49,7 +50,7 @@
             this.NonObligatedWeeeList = nonObligatedWeeeList;
             this.ObligatedWeeeReceivedList = obligatedReceivedList;
             this.ObligatedWeeeReusedList = obligatedReusedList;
-            this.ReturnOperator = returnOperator;
+            this.Organisation = organisation;
             this.ObligatedWeeeSentOnList = obligatedSentOnList;
             this.ReturnSchemes = returnSchemes;
             this.ReturnReportOns = returnReportOns;

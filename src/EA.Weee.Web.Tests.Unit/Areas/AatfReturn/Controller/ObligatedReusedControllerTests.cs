@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -85,13 +86,13 @@
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
             var schemeInfo = A.Fake<SchemePublicInfo>();
-            var operatorData = A.Fake<OperatorData>();
+            var operatorData = A.Fake<OrganisationData>();
 
             const string orgName = "orgName";
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
+            A.CallTo(() => operatorData.Id).Returns(organisationId);
+            A.CallTo(() => @return.OrganisationData).Returns(operatorData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
