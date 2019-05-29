@@ -86,6 +86,7 @@
                     viewModel = new ManageAatfsViewModel
                     {
                         AatfDataList = await GetAatfs(viewModel.Filter),
+                        Filter = viewModel.Filter,
                         CanAddAatf = IsUserInternalAdmin()
                     };
                     return View(viewModel);
