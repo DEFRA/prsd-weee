@@ -134,11 +134,24 @@
                 }
             };
 
+            AatfContactData contactData = new AatfContactData();
+            contactData.AddressData = new AatfContactAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+
             var @operator = new OperatorData(Guid.NewGuid(), "TEST", organisationData, organisationData.Id);
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
+                Contact = contactData,
                 Operator = @operator
             };
 
@@ -167,9 +180,22 @@
                 Email = "test@test.com"
             };
 
+            AatfContactData contactData = new AatfContactData();
+            contactData.AddressData = new AatfContactAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
+                Contact = contactData,
                 Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
             };
 
@@ -251,9 +277,22 @@
                 Email = "test@test.com"
             };
 
+            AatfContactData contactData = new AatfContactData();
+            contactData.AddressData = new AatfContactAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
+                Contact = contactData,
                 Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
             };
 
@@ -284,9 +323,22 @@
                 Email = "test@test.com"
             };
 
+            AatfContactData contactData = new AatfContactData();
+            contactData.AddressData = new AatfContactAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
+                Contact = contactData,
                 Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
             };
 
@@ -318,9 +370,22 @@
                 Email = "test@test.com"
             };
 
+            AatfContactData contactData = new AatfContactData();
+            contactData.AddressData = new AatfContactAddressData()
+            {
+                Address1 = "Site address 1",
+                Address2 = "Site address 2",
+                TownOrCity = "Site town",
+                CountyOrRegion = "Site county",
+                Postcode = "GU22 7UY",
+                CountryId = Guid.NewGuid(),
+                CountryName = "Site country"
+            };
+
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
+                Contact = contactData,
                 Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
                 ApprovalDate = default(DateTime)
             };
