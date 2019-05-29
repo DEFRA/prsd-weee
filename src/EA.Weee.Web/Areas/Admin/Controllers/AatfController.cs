@@ -61,6 +61,7 @@
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Operator.Organisation.BusinessAddress),
                     SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
+                    ContactAddressString = GenerateAatfAddress(aatf.Contact.AddressData), 
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
                 });
