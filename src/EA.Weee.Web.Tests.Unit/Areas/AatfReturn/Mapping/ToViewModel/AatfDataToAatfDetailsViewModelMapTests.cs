@@ -104,9 +104,9 @@
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae)
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019)
             };
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)

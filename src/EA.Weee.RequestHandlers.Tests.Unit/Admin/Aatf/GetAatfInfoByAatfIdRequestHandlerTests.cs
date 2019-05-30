@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -7,20 +10,12 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
-    using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfInfoByAatfIdRequestHandlerTests

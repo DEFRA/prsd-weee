@@ -71,6 +71,7 @@
             result.CompetentAuthority.Should().Be(returnCompetentAuthority);
             result.Organisation.Should().Be(organisationData);
             result.FacilityType.Should().Be(Core.AatfReturn.FacilityType.Aatf);
+            result.ComplianceYear.Should().Be(complianceYear);
         }
     }
 }
