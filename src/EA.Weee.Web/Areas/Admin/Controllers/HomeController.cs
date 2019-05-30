@@ -75,10 +75,10 @@
                     return RedirectToAction("ManageSchemes", "Scheme");
 
                 case InternalUserActivity.ManageAatfs:
-                    return RedirectToAction("ManageAatfs", "Aatf");
+                    return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
 
                 case InternalUserActivity.ManageAes:
-                    return RedirectToAction("ManageAes", "Ae");
+                    return RedirectToAction("ManageAatfs", "Aatf", new { type = "AE" });
 
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");

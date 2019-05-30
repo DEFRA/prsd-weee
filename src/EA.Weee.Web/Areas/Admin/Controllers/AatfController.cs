@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -21,6 +17,11 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     public class AatfController : AdminController
     {
@@ -66,11 +67,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageAatfs()
+        public async Task<ActionResult> ManageAatfs(string type)
         {
             SetBreadcrumb();
 
-            return View(new ManageAatfsViewModel { AatfDataList = await GetAatfs(), CanAddAatf = IsUserInternalAdmin() });
+            FacilityType facilityType = type.GetValueFromDisplayName<FacilityType>();
+
+            return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin() });
         }
 
         [HttpPost]
@@ -85,8 +88,9 @@
                 {
                     viewModel = new ManageAatfsViewModel
                     {
-                        AatfDataList = await GetAatfs(viewModel.Filter),
-                        CanAddAatf = IsUserInternalAdmin()
+                        AatfDataList = await GetAatfs(viewModel.FacilityType, viewModel.Filter),
+                        CanAddAatf = IsUserInternalAdmin(),
+                        FacilityType = viewModel.FacilityType
                     };
                     return View(viewModel);
                 }
@@ -109,7 +113,7 @@
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
             SetBreadcrumb();
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter), Filter = filter });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(FacilityType.Aatf, filter), Filter = filter });
         }
 
         [HttpGet]
@@ -213,12 +217,12 @@
             return View(viewModel);
         }
 
-        private async Task<List<AatfDataList>> GetAatfs(FilteringViewModel filter = null)
+        private async Task<List<AatfDataList>> GetAatfs(FacilityType facilityType, FilteringViewModel filter = null)
         {
             using (var client = apiClient())
             {
                 var mappedFilter = filter != null ? mapper.Map<AatfFilter>(filter) : null;
-                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf, mappedFilter));
+                return await client.SendAsync(User.GetAccessToken(), new GetAatfs(facilityType, mappedFilter));
             }
         }
 

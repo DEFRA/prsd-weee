@@ -140,11 +140,33 @@
             SetUpControllerContext(userHasInternalAdminClaims);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ViewResult result = await controller.ManageAatfs() as ViewResult;
+            ManageAatfsViewModel viewModel = new ManageAatfsViewModel();
 
-            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
 
-            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
+            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanAddAatf);
+        }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf)]
+        [InlineData(FacilityType.Ae)]
+        public async Task ManageAatfsPost_InvalidModel_CheckViewModelFacilityTypeSetCorrectly(FacilityType type)
+        {
+            SetUpControllerContext(false);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ManageAatfsViewModel viewModel = new ManageAatfsViewModel()
+            {
+                FacilityType = type
+            };
+
+            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
+
+            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(type, resultViewModel.FacilityType);
         }
 
         [Fact]
@@ -152,7 +174,7 @@
         {
             SetUpControllerContext(true);
 
-            ActionResult result = await controller.ManageAatfs();
+            ActionResult result = await controller.ManageAatfs("AATF");
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
         }
@@ -164,11 +186,25 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
 
-            ViewResult result = await controller.ManageAatfs() as ViewResult;
+            ViewResult result = await controller.ManageAatfs("AATF") as ViewResult;
 
             ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
+        }
+
+        [Theory]
+        [InlineData("AATF", FacilityType.Aatf)]
+        [InlineData("AE", FacilityType.Ae)]
+        public async Task GetManageAatfs_TypeParameterSent_ViewModelSetCorrectly(string type, FacilityType facilityType)
+        {
+            SetUpControllerContext(false);
+
+            ViewResult result = await controller.ManageAatfs(type) as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(facilityType, viewModel.FacilityType);
         }
 
         [Fact]
