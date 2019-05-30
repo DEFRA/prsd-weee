@@ -2,6 +2,7 @@
 {
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Organisation;
 
     internal class AatfReturnMapping : EntityTypeConfiguration<AatfReturn>
     {

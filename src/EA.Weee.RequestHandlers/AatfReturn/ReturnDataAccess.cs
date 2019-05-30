@@ -31,22 +31,20 @@
         public async Task<Return> GetById(Guid id)
         {
             return await context.Returns
-                    .Include(r => r.Operator)
-                    .Include(r => r.Operator.Organisation)
+                    .Include(r => r.Organisation)
                     .SingleOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<IList<Return>> GetByOrganisationId(Guid id)
         {
             return await context.Returns
-                .Include(r => r.Operator)
-                .Include(r => r.Operator.Organisation)
-                .Where(r => r.Operator.Organisation.Id == id).ToListAsync();
+                .Include(r => r.Organisation)
+                .Where(r => r.Organisation.Id == id).ToListAsync();
         }
 
         public async Task<IList<Return>> GetByComplianceYearAndQuarter(Return @return)
         {
-            return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Operator.Id == @return.Operator.Id).ToListAsync();
+            return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Organisation.Id == @return.Organisation.Id).ToListAsync();
         }
     }
 }

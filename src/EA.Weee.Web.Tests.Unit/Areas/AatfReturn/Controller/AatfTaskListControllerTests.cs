@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -48,7 +49,7 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             await controller.Index(A.Dummy<Guid>());
 
@@ -80,7 +81,7 @@
         {
             var @return = A.Fake<ReturnData>();
 
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>());
@@ -94,7 +95,7 @@
             var model = A.Fake<ReturnViewModel>();
             var @return = A.Fake<ReturnData>();
 
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;

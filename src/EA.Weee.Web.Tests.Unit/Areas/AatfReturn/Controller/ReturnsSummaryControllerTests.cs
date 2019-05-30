@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -43,7 +44,7 @@
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
@@ -55,7 +56,7 @@
         {
             var returnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             await controller.Index(returnId);
 
@@ -67,7 +68,7 @@
         public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeBuilt()
         {
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
@@ -81,7 +82,7 @@
         {
             var returnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             await controller.Index(returnId);
 
@@ -94,7 +95,7 @@
             var model = A.Fake<ReturnViewModel>();
             var @return = A.Fake<ReturnData>();
 
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;

@@ -5,6 +5,7 @@
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using Organisation;
     using User;
 
     public partial class Return : Entity
@@ -13,13 +14,13 @@
         {
         }
 
-        public Return(Operator aatfOperator, Quarter quarter, string createdBy)
+        public Return(Organisation organisation, Quarter quarter, string createdBy)
         {
-            Guard.ArgumentNotNull(() => aatfOperator, aatfOperator);
+            Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => quarter, quarter);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
 
-            Operator = aatfOperator;
+            Organisation = organisation;
             Quarter = quarter;
             ReturnStatus = ReturnStatus.Created;
             CreatedById = createdBy;
@@ -61,11 +62,9 @@
 
         public virtual Quarter Quarter { get; private set; }
 
-        public Guid OperatorId { get; set; }
-
         public virtual ReturnStatus ReturnStatus { get; set; }
 
-        public virtual Operator Operator { get; private set; }
+        public virtual Organisation Organisation { get; private set; }
 
         public virtual DateTime CreatedDate { get; private set; }
 
