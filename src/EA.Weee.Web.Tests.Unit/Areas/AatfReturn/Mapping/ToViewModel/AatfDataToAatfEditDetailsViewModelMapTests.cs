@@ -61,6 +61,7 @@
             Assert.Equal(competentAuthorityId, result.CompetentAuthorityId);
             Assert.Equal(AatfStatus.Approved.Value, result.AatfStatus);
             Assert.Equal(AatfSize.Large.Value, result.Size);
+            Assert.Equal(FacilityType.Aatf, result.FacilityType);
         }
 
         private AatfData CreateAatfData(Guid competentAuthorityId)
@@ -74,6 +75,7 @@
                 .With(a => a.CompetentAuthority, competentAuthority)
                 .With(a => a.AatfStatus, AatfStatus.Approved)
                 .With(a => a.Size, AatfSize.Large)
+                .With(a => a.FacilityType, FacilityType.Aatf)
                 .Create();
         }
     }

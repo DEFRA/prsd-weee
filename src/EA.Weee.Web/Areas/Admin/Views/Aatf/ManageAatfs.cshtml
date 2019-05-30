@@ -2,9 +2,10 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
-    ViewBag.Title = "Manage AATFs - GOV.UK";
+    ViewBag.Title = "Manage "+ Model.FacilityType.ToDisplayString() + " - GOV.UK";
 }
 
 @section scripts{
@@ -17,13 +18,14 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        Manage AATFs
+        Manage @Model.FacilityType.ToDisplayString()
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
 {
     <div class="aatf-filter">
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Filter.FacilityType)
         <label class="govuk-label">Filter by:</label>
         <br />
         <table class="govuk-table">
@@ -81,7 +83,7 @@
     if (Model.CanAddAatf)
     {
         <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add AATF</a>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
         </p>
     }
 }

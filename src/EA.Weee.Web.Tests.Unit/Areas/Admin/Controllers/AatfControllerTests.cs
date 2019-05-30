@@ -629,22 +629,24 @@
             A.CallTo(() => cache.InvalidateAatfCache()).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData("AATF", InternalUserActivity.ManageAatfs)]
+        [InlineData("AE", InternalUserActivity.ManageAes)]
+        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(string type, string activity)
         {
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
-            await controller.ManageContactDetails(aatfId);
+            await controller.ManageContactDetails(aatfId, type);
 
-            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalActivity.Should().Be(activity);
         }
 
         [Fact]
         public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF") as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -654,7 +656,7 @@
         {
             var aatfId = Guid.NewGuid();
 
-            var result = await controller.ManageContactDetails(aatfId);
+            var result = await controller.ManageContactDetails(aatfId, "AATF");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -663,7 +665,7 @@
         public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -671,7 +673,7 @@
         [Fact]
         public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
         {
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF");
 
             Assert.IsType<HttpForbiddenResult>(result);
         }
@@ -748,16 +750,18 @@
             viewModel.ContactData.AddressData.Countries.ElementAt(0).Name.Should().Be(countryName);
         }
 
-        [Fact]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
+        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type, string activity)
         {
             var aatfId = Guid.NewGuid();
-            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData() };
+            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData(), FacilityType = type };
             controller.ModelState.AddModelError("error", "error");
 
             await controller.ManageContactDetails(model);
 
-            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalActivity.Should().Be(activity);
         }
 
         [Fact]

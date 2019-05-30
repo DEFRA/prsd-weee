@@ -76,7 +76,7 @@
 
             SetBreadcrumb(facilityType);
 
-            return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin() });
+            return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel() { FacilityType = facilityType } });
         }
 
         [HttpPost]
@@ -116,8 +116,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
-            SetBreadcrumb(FacilityType.Aatf);
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(FacilityType.Aatf, filter), Filter = filter });
+            SetBreadcrumb(filter.FacilityType);
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), Filter = filter });
         }
 
         [HttpGet]
@@ -137,7 +137,7 @@
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
-                SetBreadcrumb(FacilityType.Aatf);
+                SetBreadcrumb(aatf.FacilityType);
                 return View(viewModel);
             }
         }
@@ -146,6 +146,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
+            SetBreadcrumb(viewModel.FacilityType);
+
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
@@ -169,13 +171,14 @@
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 
-            SetBreadcrumb(FacilityType.Aatf);
             return View(viewModel);
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageContactDetails(Guid id)
+        public async Task<ActionResult> ManageContactDetails(Guid id, string type)
         {
+            FacilityType facilityType = type.GetValueFromDisplayName<FacilityType>();
+
             using (var client = apiClient())
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
@@ -188,11 +191,12 @@
                 var viewModel = new AatfEditContactAddressViewModel()
                 {
                     AatfId = id,
-                    ContactData = contact
+                    ContactData = contact,
+                    FacilityType = facilityType
                 };
 
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                SetBreadcrumb(FacilityType.Aatf);
+                SetBreadcrumb(facilityType);
                 return View(viewModel);
             }
         }
@@ -201,6 +205,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(AatfEditContactAddressViewModel viewModel)
         {
+            SetBreadcrumb(viewModel.FacilityType);
+
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
@@ -217,8 +223,6 @@
             {
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
-
-            SetBreadcrumb(FacilityType.Aatf);
 
             return View(viewModel);
         }

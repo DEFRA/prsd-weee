@@ -64,5 +64,7 @@
         [Display(Name = "Approval date")]
         [DataType(DataType.Date)]
         public DateTime? ApprovalDate { get; set; }
+
+        public FacilityType FacilityType { get; set; }
     }
 }

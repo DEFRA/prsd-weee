@@ -55,7 +55,7 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public string FacilityTypeString
+        /*public string FacilityTypeString
         {
             get
             {
@@ -68,7 +68,7 @@
                     return string.Empty;
                 }
             }
-        }
+        }*/
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
