@@ -5,7 +5,7 @@
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
-    ViewBag.Title = "Manage "+ Model.FacilityType.ToDisplayString() + " - GOV.UK";
+    ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
 }
 
 @section scripts{
@@ -82,8 +82,17 @@
 
     if (Model.CanAddAatf)
     {
-        <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
-        </p>
+        if (Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
+            </p>
+        }
+        else
+        {
+            <p>
+                <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Add @Model.FacilityType.ToDisplayString()</a>
+            </p>
+        }
     }
 }

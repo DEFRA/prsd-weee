@@ -157,7 +157,7 @@
 
                 await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("ManageAatfs", "Aatf");
+                return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
             }
         }
 
