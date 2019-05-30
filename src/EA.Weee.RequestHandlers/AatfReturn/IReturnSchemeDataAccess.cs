@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public interface IReturnSchemeDataAccess
     {
@@ -11,6 +12,6 @@
 
         Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId);
 
-        Task<Operator> GetOperatorByReturnId(Guid returnId);
+        Task<Organisation> GetOrganisationByReturnId(Guid returnId);
     }
 }

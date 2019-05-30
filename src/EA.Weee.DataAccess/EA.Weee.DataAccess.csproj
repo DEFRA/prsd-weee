@@ -105,7 +105,6 @@
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMapping.cs" />
     <Compile Include="Mappings\ReturnMapping.cs" />
-    <Compile Include="Mappings\OperatorMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\AatfStatusMapping.cs" />
     <Compile Include="Mappings\ReturnSchemeMapping.cs" />

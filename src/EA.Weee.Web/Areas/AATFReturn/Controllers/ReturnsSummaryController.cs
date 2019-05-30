@@ -39,9 +39,9 @@
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
 
-                viewModel.OrganisationId = @return.ReturnOperatorData.OrganisationId;
+                viewModel.OrganisationId = @return.OrganisationData.Id;
 
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View("Index", viewModel);
             }

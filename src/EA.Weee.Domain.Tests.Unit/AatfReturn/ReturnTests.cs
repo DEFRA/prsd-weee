@@ -4,6 +4,7 @@
     using System.Runtime.InteropServices;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -12,7 +13,7 @@
     public class ReturnTests
     {
         [Fact]
-        public void Return_GivenOperatorIsNull_ThrowsArgumentNullException()
+        public void Return_GivenOrganisationIsNull_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {
@@ -27,7 +28,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), null, A.Dummy<string>());
+                var @return = new Return(A.Dummy<Organisation>(), null, A.Dummy<string>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -38,7 +39,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), null);
+                var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), null);
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -50,7 +51,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), value);
+                var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), value);
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -59,15 +60,15 @@
         [Fact]
         public void Return_GivenValidParameters_ReturnPropertiesShouldBeSet()
         {
-            var aatfOperator = A.Fake<Operator>();
+            var organisation = A.Fake<Organisation>();
             var quarter = A.Fake<Quarter>();
             var userId = "user";
 
             SystemTime.Freeze(new DateTime(2019, 05, 2));
-            var @return = new Return(aatfOperator, quarter, userId);
+            var @return = new Return(organisation, quarter, userId);
             SystemTime.Unfreeze();
 
-            @return.Operator.Should().Be(aatfOperator);
+            @return.Organisation.Should().Be(organisation);
             @return.Quarter.Should().Be(quarter);
             @return.ReturnStatus.Should().Be(ReturnStatus.Created);
             @return.CreatedById.Should().Be(userId);
@@ -80,7 +81,7 @@
         [InlineData("")]
         public void UpdateSubmitted_GivenSubmittedByIsEmpty_ThrowsArgumentException(string value)
         {
-            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me");
 
             Action update = () =>
             {
@@ -93,7 +94,7 @@
         [Fact]
         public void UpdateSubmitted_GivenSubmittedByIsNull_ThrowsArgumentNullException()
         {
-            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me");
 
             Action update = () =>
             {
@@ -106,7 +107,7 @@
         [Fact]
         public void UpdateSubmitted_GivenSubmittedBy_ReturnSubmittedPropertiesShouldBeSet()
         {
-            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me");
 
             SystemTime.Freeze(new DateTime(2019, 05, 2));
             @return.UpdateSubmitted("me2");
@@ -120,7 +121,7 @@
         [Fact]
         public void UpdateSubmitted_GivenReturnIsNotCreatedStatus_InvalidOperationExceptionExpected()
         {
-            var @return = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me") { ReturnStatus = ReturnStatus.Submitted };
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me") { ReturnStatus = ReturnStatus.Submitted };
 
             Action update = () =>
             {

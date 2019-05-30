@@ -51,13 +51,11 @@
         private async Task<Guid> CreateContact(WeeeContext context, AatfContact aatfAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-            var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, aatfAddress, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, aatfAddress, country);
 
             context.Organisations.Add(organisation);
-            context.Operators.Add(@operator);
             context.Schemes.Add(scheme);
             context.AatfContacts.Add(aatfAddress);
             context.Aatfs.Add(aatf);

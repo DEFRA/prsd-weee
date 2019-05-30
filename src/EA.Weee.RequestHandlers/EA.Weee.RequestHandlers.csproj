@@ -136,14 +136,13 @@
     <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\Specification\ISpecification.cs" />
-    <Compile Include="AatfReturn\Specification\OrganisationByOrganisationIdSpecification.cs" />
-    <Compile Include="AatfReturn\Specification\OperatorByOrganisationIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\AatfsByOrganisationSpecification.cs" />
     <Compile Include="AatfReturn\Specification\ReturnReportOnByReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAddressIdSpecification.cs" />
-    <Compile Include="Admin\GetAatfs\GetAatfsByOperatorIdHandler.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsByOrganisationIdHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
@@ -288,7 +287,6 @@
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
-    <Compile Include="Mappings\OperatorMap.cs" />
     <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />

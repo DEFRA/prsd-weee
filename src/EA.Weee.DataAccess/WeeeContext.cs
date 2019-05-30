@@ -49,8 +49,6 @@
 
         public virtual DbSet<ReturnScheme> ReturnScheme { get; set; }
 
-        public virtual DbSet<Operator> Operators { get; set; }
-
         public virtual DbSet<AatfAddress> AatfAddress { get; set; }
 
         public virtual DbSet<WeeeReusedSite> WeeeReusedSite { get; set; }

@@ -78,19 +78,19 @@
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year };
 
             var @return = A.Dummy<Return>();
-            var @operator = new Operator(A.Fake<Organisation>());
+            var organisation = new Organisation();
             var userId = Guid.NewGuid();
 
             A.CallTo(() => userContext.UserId).Returns(userId);
-            A.CallTo(() => genericDataAccess.GetSingleByExpression(A<OperatorByOrganisationIdSpecification>._)).Returns(@operator);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter && c.Operator.Equals(@operator) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter && c.Organisation.Equals(organisation) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async Task HandleAsync_GivenAddReturnRequest_OperatorShouldBeRetrieved()
+        public async Task HandleAsync_GivenAddReturnRequest_OrganisationShouldBeRetrieved()
         {
             var organisationId = Guid.NewGuid();
             var organisation = A.Fake<Organisation>();
@@ -100,7 +100,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => genericDataAccess.GetSingleByExpression<Operator>(A<OperatorByOrganisationIdSpecification>.That.Matches(c => c.OrganisationId == request.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
