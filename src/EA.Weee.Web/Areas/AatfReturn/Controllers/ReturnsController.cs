@@ -55,9 +55,9 @@
         {
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
+                var newId = await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
 
-                return AatfRedirect.ReturnsList(organisationId);
+                return AatfRedirect.TaskList(newId);
             }
         }
 

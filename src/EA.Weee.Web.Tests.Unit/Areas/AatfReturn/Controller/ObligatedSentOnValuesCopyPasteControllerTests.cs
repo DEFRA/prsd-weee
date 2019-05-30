@@ -4,6 +4,7 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -66,7 +67,7 @@
             string siteName = "site name";
             ReturnData returnData = A.Fake<ReturnData>();
 
-            A.CallTo(() => returnData.ReturnOperatorData.OrganisationId).Returns(organisationId);
+            A.CallTo(() => returnData.OrganisationData.Id).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(returnData);
 
             ViewResult result = await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName) as ViewResult;
@@ -83,12 +84,12 @@
         {
             Guid organisationId = Guid.NewGuid();
             ReturnData returnData = A.Fake<ReturnData>();
-            OperatorData operatorData = A.Fake<OperatorData>();
+            OrganisationData organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => returnData.ReturnOperatorData).Returns(operatorData);
+            A.CallTo(() => organisationData.Id).Returns(organisationId);
+            A.CallTo(() => returnData.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>());

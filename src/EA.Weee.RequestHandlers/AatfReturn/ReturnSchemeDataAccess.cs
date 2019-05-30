@@ -7,6 +7,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public class ReturnSchemeDataAccess : IReturnSchemeDataAccess
     {
@@ -31,11 +32,11 @@
             return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Include(s => s.Scheme).ToListAsync();
         }
 
-        public async Task<Operator> GetOperatorByReturnId(Guid returnId)
+        public async Task<Organisation> GetOrganisationByReturnId(Guid returnId)
         {
             var @return = await context.Returns.FirstOrDefaultAsync(r => r.Id == returnId);
 
-            return @return?.Operator;
+            return @return?.Organisation;
         }
     }
 }

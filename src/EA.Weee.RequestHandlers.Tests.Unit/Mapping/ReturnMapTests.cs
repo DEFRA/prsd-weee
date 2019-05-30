@@ -24,10 +24,9 @@
         private readonly ReturnMap map;
         private readonly DomainAatf aatf;
         private readonly DomainScheme scheme;
-        private readonly Organisation organisation;
-        private readonly Operator @operator;
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
+        private Organisation organisation;
 
         public ReturnMapTests()
         {
@@ -39,7 +38,6 @@
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
             organisation = Organisation.CreatePartnership("trading name");
-            @operator = @operator = new Operator(organisation);
         }
 
         [Fact]
@@ -79,32 +77,32 @@
         }
 
         [Fact]
-        public void Map_GivenSource_OperatorShouldBeMapped()
+        public void Map_GivenSource_OrganisationShouldBeMapped()
         {
-            var @return = GetReturn();
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(),
-                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator,
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), organisation,
                 A.Fake<List<WeeeSentOnAmount>>(),
                 A.Fake<List<ReturnScheme>>(),
                 A.Fake<List<ReturnReportOn>>());
 
+            var organisationData = new OrganisationData() { Name = "name", Id = Guid.NewGuid() };
+
+            A.CallTo(() => organisationMapper.Map(source.Organisation)).Returns(organisationData);
+
             var result = map.Map(source);
 
-            result.ReturnOperatorData.OperatorName.Should().Be(@operator.Organisation.TradingName);
-            result.ReturnOperatorData.OrganisationId.Should().Be(@operator.Organisation.Id);
-            result.ReturnOperatorData.Id.Should().Be(@operator.Id);
+            result.OrganisationData.Should().Be(organisationData);
         }
 
         [Fact]
         public void Map_GivenSource_WeeeSentOnIdShouldBeMapped()
         {
-            var @return = GetReturn();
             var obligatedWeeeSentOn = A.Fake<List<WeeeSentOnAmount>>();
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(),
-                @operator, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
+                organisation, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
 
@@ -150,7 +148,7 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), obligated,
-                A.Fake<List<WeeeReusedAmount>>(), @operator,
+                A.Fake<List<WeeeReusedAmount>>(), organisation,
                 A.Fake<List<WeeeSentOnAmount>>(),
                 A.Fake<List<ReturnScheme>>(),
                 A.Fake<List<ReturnReportOn>>());
@@ -177,7 +175,7 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
-                obligated, @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
+                obligated, organisation, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
                 A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
@@ -202,7 +200,7 @@
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(),
-                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), @operator, obligated, A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), organisation, obligated, A.Fake<List<ReturnScheme>>(),
                 A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
@@ -219,13 +217,13 @@
 
             var aatfs = new List<Aatf>()
             {
-                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf),
-                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf)
+                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf),
+                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf)
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
-                A.Fake<List<WeeeReusedAmount>>(), @operator, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
+                A.Fake<List<WeeeReusedAmount>>(), organisation, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
                 A.Fake<List<ReturnReportOn>>());
 
             var result = map.Map(source);
@@ -342,7 +340,7 @@
         public Return GetReturn()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);
-            var @return = new Return(@operator, quarter, Guid.NewGuid().ToString()) { CreatedBy = new User("id", "first", "surname", "email") };
+            var @return = new Return(organisation, quarter, Guid.NewGuid().ToString()) { CreatedBy = new User("id", "first", "surname", "email") };
 
             return @return;
         }

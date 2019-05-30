@@ -64,7 +64,7 @@
             {
                 AatfId = aatf.Id,
                 ReturnId = aatfReturn.Id,
-                OrganisationId = aatfReturn.Operator.Organisation.Id,
+                OrganisationId = aatfReturn.Organisation.Id,
                 CategoryValues = categoryValues
             };
             
