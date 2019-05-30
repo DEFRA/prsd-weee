@@ -127,16 +127,14 @@
             WeeeSentOnDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-            var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
             var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @operator, aatfContact, country);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, aatfContact, country);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.AatfContacts.Add(aatfContact);
             context.Organisations.Add(organisation);
-            context.Operators.Add(@operator);
             context.Schemes.Add(scheme);
             context.Aatfs.Add(aatf);
             context.Returns.Add(@return);

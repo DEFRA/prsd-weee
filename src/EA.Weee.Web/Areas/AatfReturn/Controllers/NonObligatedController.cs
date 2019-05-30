@@ -54,11 +54,11 @@
                     ReturnId = returnId,
                     Dcf = dcf,
                     ReturnData = @return,
-                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
+                    OrganisationId = @return.OrganisationData.Id,
                     PastedData = TempData["pastedValues"] as String
                 });
 
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View(model);
             }

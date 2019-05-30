@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Core.Scheme;
+    using Organisations;
     using Prsd.Core;
 
     public class SchemeDataList
@@ -10,17 +11,17 @@
         {
         }
 
-        public SchemeDataList(IList<SchemeData> schemeData, OperatorData operatorData)
+        public SchemeDataList(IList<SchemeData> schemeData, OrganisationData organisationData)
         {
             Guard.ArgumentNotNull(() => schemeData, schemeData);
-            Guard.ArgumentNotNull(() => operatorData, operatorData);
+            Guard.ArgumentNotNull(() => organisationData, organisationData);
 
             SchemeDataItems = schemeData;
-            OperatorData = operatorData;
+            OrganisationData = organisationData;
         }
 
         public virtual IList<SchemeData> SchemeDataItems { get; set; }
 
-        public virtual OperatorData OperatorData { get; set; }
+        public virtual OrganisationData OrganisationData { get; set; }
     }
 }

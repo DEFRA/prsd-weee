@@ -8,6 +8,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using FakeItEasy;
     using FluentAssertions;
@@ -119,7 +120,7 @@
         [Fact]
         public async Task GetReturnData_GivenReturn_QuarterWindowShouldBeRetrieved()
         {
-            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), "id");
+            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id");
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
 
@@ -166,7 +167,7 @@
             var aatfList = A.Fake<List<Aatf>>();
 
             A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id)).Returns(aatfList);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id)).Returns(aatfList);
 
             var result = await populatedReturn.GetReturnData(returnId);
 
@@ -211,7 +212,7 @@
         [Fact]
         public async Task GetReturnData_GivenReturn_MapperShouldBeCalled()
         {
-            var @return = new Return(A.Fake<Operator>(), A.Fake<Quarter>(), "id");
+            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id");
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue);
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();

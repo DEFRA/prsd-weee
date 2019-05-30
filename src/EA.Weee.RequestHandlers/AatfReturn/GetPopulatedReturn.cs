@@ -56,7 +56,7 @@
 
             var @return = await returnDataAccess.GetById(returnId);
 
-            authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
+            authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
 
@@ -66,7 +66,7 @@
 
             var returnObligatedReusedValues = await obligatedDataAccess.FetchObligatedWeeeReusedForReturn(returnId);
 
-            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Operator.Organisation.Id);
+            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id);
 
             var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(returnId);
 
@@ -80,7 +80,7 @@
                 returnNonObligatedValues,
                 returnObligatedReceivedValues,
                 returnObligatedReusedValues,
-                @return.Operator,
+                @return.Organisation,
                 sentOn,
                 returnSchemeList,
                 returnReportsOn);

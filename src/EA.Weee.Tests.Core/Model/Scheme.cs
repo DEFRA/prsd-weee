@@ -21,6 +21,7 @@ namespace EA.Weee.Tests.Core.Model
             this.DataReturnUploads = new HashSet<DataReturnUpload>();
             this.MemberUploads = new HashSet<MemberUpload>();
             this.RegisteredProducers = new HashSet<RegisteredProducer>();
+            this.ReturnSchemes = new HashSet<ReturnScheme>();
         }
     
         public System.Guid Id { get; set; }
@@ -43,5 +44,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
         public virtual Address Address { get; set; }
+        public virtual ICollection<ReturnScheme> ReturnSchemes { get; set; }
     }
 }
