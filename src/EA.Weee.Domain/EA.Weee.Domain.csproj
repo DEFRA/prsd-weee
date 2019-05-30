@@ -53,7 +53,6 @@
     <Compile Include="AatfReturn\INonObligatedAmount.cs" />
     <Compile Include="AatfReturn\IObligatedAmount.cs" />
     <Compile Include="AatfReturn\AatfAddress.cs" />
-    <Compile Include="AatfReturn\IOperatorEntity.cs" />
     <Compile Include="AatfReturn\IReturnOption.cs" />
     <Compile Include="AatfReturn\NonObligatedAmount.cs" />
     <Compile Include="AatfReturn\ObligatedAmount.cs" />
@@ -67,7 +66,6 @@
     <Compile Include="AatfReturn\AatfReturn.cs" />
     <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\NonObligatedWeee.cs" />
-    <Compile Include="AatfReturn\Operator.cs" />
     <Compile Include="AatfReturn\Return.cs" />
     <Compile Include="AatfReturn\ReturnQuarterWindow.cs" />
     <Compile Include="AatfReturn\ReturnScheme.cs" />

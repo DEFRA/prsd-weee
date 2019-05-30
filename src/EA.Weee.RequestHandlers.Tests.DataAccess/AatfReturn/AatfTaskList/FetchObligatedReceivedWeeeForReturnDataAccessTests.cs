@@ -18,7 +18,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using Scheme = Domain.Scheme.Scheme;
@@ -29,15 +28,11 @@
 
     public class FetchObligatedReceivedWeeeForReturnDataAccessTests
     {
-        private readonly FetchObligatedWeeeForReturnDataAccess dataAccess;
-        private readonly WeeeContext context;
         private readonly DbContextHelper dbContextHelper;
 
         public FetchObligatedReceivedWeeeForReturnDataAccessTests()
         {
-            context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
-            dataAccess = new FetchObligatedWeeeForReturnDataAccess(context);
         }
 
         [Fact]
@@ -51,12 +46,11 @@
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var scheme = new Scheme(organisation);
-                var operatorTest = new Operator(organisation);
                 var competentAuthority = database.WeeeContext.UKCompetentAuthorities.FirstOrDefault();
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
-                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, operatorTest, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf);
-                var @return = new Return(operatorTest, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
+                var aatf = new Aatf(companyName, competentAuthority, companyRegistrationNumber, AatfStatus.Approved, organisation, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf);
+                var @return = new Return(organisation, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
 
                 database.WeeeContext.Organisations.Add(organisation);
                 database.WeeeContext.Schemes.Add(scheme);

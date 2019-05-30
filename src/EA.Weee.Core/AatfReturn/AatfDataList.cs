@@ -4,6 +4,8 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using System;
+    using Domain.Organisation;
+    using Organisations;
 
     public class AatfDataList
     {
@@ -19,11 +21,11 @@
 
         public virtual string AatfStatusString { get; set; }
 
-        public virtual OperatorData Operator { get; private set; }
+        public virtual OrganisationData Organisation { get; private set; }
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OperatorData @operator, FacilityType facilityType)
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType)
         {
             this.Id = id;
             this.Name = name;
@@ -31,7 +33,7 @@
             this.AatfStatus = aatfStatus;
             this.AatfStatusString = aatfStatus.DisplayName;
             this.CompetentAuthority = competentAuthority;
-            this.Operator = @operator;
+            this.Organisation = organisation;
             this.FacilityType = facilityType;
         }
     }

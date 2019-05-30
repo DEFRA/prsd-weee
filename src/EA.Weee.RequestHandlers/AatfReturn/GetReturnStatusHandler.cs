@@ -36,14 +36,14 @@
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");
             }
 
-            authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
+            authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             var returnsInYear = await returnDataAccess.GetByComplianceYearAndQuarter(@return);
 
             var returnData = new ReturnStatusData
             {
                 ReturnStatus = mapper.Map<ReturnStatus>(@return.ReturnStatus),
-                OrganisationId = @return.Operator.Organisation.Id,
+                OrganisationId = @return.Organisation.Id,
                 OtherInProgressReturn = returnsInYear.Any(r => r.ReturnStatus == EA.Weee.Domain.AatfReturn.ReturnStatus.Created)
             };
 

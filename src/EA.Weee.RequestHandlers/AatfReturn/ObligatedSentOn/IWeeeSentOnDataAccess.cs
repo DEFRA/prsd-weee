@@ -13,7 +13,7 @@
 
         Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id);
 
-        Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator);
+        Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress address);
 
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturnAndAatf(Guid aatfId, Guid returnId);
 
