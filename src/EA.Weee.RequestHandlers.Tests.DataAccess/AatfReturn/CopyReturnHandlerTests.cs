@@ -27,10 +27,10 @@
     using Country = Domain.Country;
     using FacilityType = Domain.AatfReturn.FacilityType;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using ReturnScheme = Domain.AatfReturn.ReturnScheme;
     using ReturnStatus = Domain.AatfReturn.ReturnStatus;
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
@@ -47,9 +47,9 @@
         private DatabaseWrapper database;
         private Return @return;
         private Return copiedReturn;
-        private Operator @operator;
         private Country country;
         private EA.Weee.Domain.UKCompetentAuthority competentAuthority;
+        private Organisation organisation;
 
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
@@ -323,7 +323,7 @@
         {
             void Action(Guid id)
             {
-                copiedReturn.OperatorId.Should().Be(@return.OperatorId);
+                copiedReturn.Organisation.Should().Be(@return.Organisation);
             }
 
             await ActionAndAssert(Action);
@@ -376,11 +376,10 @@
             country = await database.WeeeContext.Countries.FirstAsync();
             competentAuthority = await database.WeeeContext.UKCompetentAuthorities.FirstAsync(c => c.Name == "Environment Agency");
 
-            var organisation = Organisation.CreateSoleTrader("Test Organisation");
-            @operator = new Operator(organisation);
+            organisation = Organisation.CreateSoleTrader("Test Organisation");
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            @return = new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id) { ReturnStatus = ReturnStatus.Submitted };
+            @return = new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id) { ReturnStatus = ReturnStatus.Submitted };
 
             database.WeeeContext.Returns.Add(@return);
 
@@ -392,7 +391,7 @@
 
             await AddNonObligated();
 
-            await AddWeeeReceived(organisation);
+            await AddWeeeReceived();
 
             await AddWeeSentOn();
 
@@ -450,7 +449,7 @@
             await database.WeeeContext.SaveChangesAsync();
         }
 
-        private async Task AddWeeeReceived(Organisation organisation)
+        private async Task AddWeeeReceived()
         {
             var weeReceived = new List<WeeeReceived>()
             {
@@ -474,7 +473,7 @@
 
         private Aatf Aatf()
         {
-            var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, @operator,
+            var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, organisation,
                 AatfSiteAddress(), AatfSize.Large, DateTime.Now,
                 new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"), FacilityType.Aatf, 2019);
             return aatf;
@@ -507,7 +506,7 @@
         {
             var returnScheme = new List<ReturnScheme>()
             {
-                new ReturnScheme(new Scheme(@operator.Organisation), @return)
+                new ReturnScheme(new Scheme(organisation), @return)
             };
 
             database.WeeeContext.ReturnScheme.AddRange(returnScheme);

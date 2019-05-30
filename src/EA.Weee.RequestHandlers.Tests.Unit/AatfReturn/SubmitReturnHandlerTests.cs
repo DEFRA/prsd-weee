@@ -9,6 +9,7 @@
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using FakeItEasy;
     using FluentAssertions;
@@ -119,7 +120,7 @@
 
         public Return GetReturn()
         {
-            return new Return(A.Fake<Operator>(), A.Fake<Quarter>(), "me");
+            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me");
         }
     }
 }

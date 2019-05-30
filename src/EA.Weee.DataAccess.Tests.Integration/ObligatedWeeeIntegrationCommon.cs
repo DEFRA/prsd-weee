@@ -15,7 +15,6 @@
     using RequestHandlers.AatfReturn.ObligatedGeneric;
     using Xunit;
     using Aatf = Domain.AatfReturn.Aatf;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using Scheme = Domain.Scheme.Scheme;
@@ -24,20 +23,15 @@
 
     public static class ObligatedWeeeIntegrationCommon
     {
-        public static Return CreateReturn(Operator operatorTest, string createdById)
+        public static Return CreateReturn(Organisation organisation, string createdById)
         {
-            return new Return(operatorTest, new Quarter(2019, QuarterType.Q1), createdById);
+            return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Operator @operator, AatfContact contact, Domain.Country country)
+        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, AatfContact contact, Domain.Country country)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, @operator, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, organisation, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
             return aatf;
-        }
-
-        public static Operator CreateOperator(Organisation organisation)
-        {
-            return new Operator(organisation);
         }
 
         public static Scheme CreateScheme(Organisation organisation)

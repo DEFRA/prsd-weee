@@ -6,9 +6,11 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.Organisations;
     using Core.Scheme;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -66,7 +68,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.GetOperatorByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.GetOrganisationByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -84,28 +86,28 @@
         [Fact]
         public async Task HandleAsync_GivenOperator_OperatorShouldBeMapped()
         {
-            var @operator = A.Fake<Operator>();
+            var organisation = A.Fake<EA.Weee.Domain.Organisation.Organisation>();
 
-            A.CallTo(() => returnSchemeDataAccess.GetOperatorByReturnId(A<Guid>._)).Returns(@operator);
+            A.CallTo(() => returnSchemeDataAccess.GetOrganisationByReturnId(A<Guid>._)).Returns(organisation);
 
             await handler.HandleAsync(A.Dummy<GetReturnScheme>());
 
-            A.CallTo(() => mapper.Map<Operator, OperatorData>(@operator)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async Task HandleAsync_GivenSchemeListAndOperator_SchemeDataListShouldBeReturned()
         {
-            var @operator = A.Fake<OperatorData>();
+            var organisationData = A.Fake<Core.Organisations.OrganisationData>();
             var schemeList = A.Fake<SchemeData>();
 
-            A.CallTo(() => mapper.Map<Operator, OperatorData>(A<Operator>._)).Returns(@operator);
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._)).Returns(organisationData);
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).Returns(schemeList);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._))
                 .Returns(new List<ReturnScheme>() { A.Fake<ReturnScheme>() });
             var result = await handler.HandleAsync(A.Dummy<GetReturnScheme>());
 
-            result.OperatorData.Should().Be(@operator);
+            result.OrganisationData.Should().Be(organisationData);
             result.SchemeDataItems.Should().Contain(schemeList);
             result.SchemeDataItems.Count().Should().Be(1);
         }

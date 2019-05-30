@@ -19,7 +19,8 @@ namespace EA.Weee.Tests.Core.Model
             this.MemberUploads = new HashSet<MemberUpload>();
             this.OrganisationUsers = new HashSet<OrganisationUser>();
             this.Schemes = new HashSet<Scheme>();
-            this.Operators = new HashSet<Operator>();
+            this.AATFs = new HashSet<AATF>();
+            this.Returns = new HashSet<Return>();
         }
     
         public System.Guid Id { get; set; }
@@ -37,6 +38,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
         public virtual ICollection<Scheme> Schemes { get; set; }
-        public virtual ICollection<Operator> Operators { get; set; }
+        public virtual ICollection<AATF> AATFs { get; set; }
+        public virtual ICollection<Return> Returns { get; set; }
     }
 }

@@ -38,27 +38,18 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            AatfAddress siteAddress = addressMapper.Map(message.Aatf.SiteAddress);
+            var siteAddress = addressMapper.Map(message.Aatf.SiteAddress);
 
-            Operator @operator = await dataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+            var organisation = await dataAccess.GetById<Organisation>(message.OrganisationId);
 
-            if (@operator == null)
-            {
-                Organisation organisation = await dataAccess.GetById<Organisation>(message.OrganisationId);
+            var contact = contactMapper.Map(message.AatfContact);
 
-                @operator = new Operator(organisation);
-
-                await dataAccess.Add<Operator>(@operator);
-            }
-
-            AatfContact contact = contactMapper.Map(message.AatfContact);
-
-            Aatf aatf = new Aatf(
+            var aatf = new Aatf(
                 message.Aatf.Name,
                 message.Aatf.CompetentAuthority.Id,
                 message.Aatf.ApprovalNumber,
                 Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Aatf.AatfStatus.Value),
-                @operator,
+                organisation,
                 siteAddress,
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
                 message.Aatf.ApprovalDate.GetValueOrDefault(),

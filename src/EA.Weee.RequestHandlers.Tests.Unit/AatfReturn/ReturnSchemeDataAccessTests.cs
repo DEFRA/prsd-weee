@@ -65,7 +65,7 @@
             A.CallTo(() => returnMatch.Id).Returns(returnId);
             A.CallTo(() => context.Returns).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Return>() { returnMatch }));
 
-            var result = await dataAccess.GetOperatorByReturnId(returnId);
+            var result = await dataAccess.GetOrganisationByReturnId(returnId);
 
             result.Should().NotBeNull();
         }
@@ -78,7 +78,7 @@
             
             A.CallTo(() => context.Returns).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Return>() { returnMatch }));
 
-            var result = await dataAccess.GetOperatorByReturnId(returnId);
+            var result = await dataAccess.GetOrganisationByReturnId(returnId);
 
             result.Should().BeNull();
         }

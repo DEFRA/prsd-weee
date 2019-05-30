@@ -2,6 +2,7 @@
 {
     using System;
     using Domain.AatfReturn;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -16,7 +17,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf(value, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+                var @return = new Aatf(value, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -27,18 +28,18 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf(null, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+                var @return = new Aatf(null, A.Dummy<UKCompetentAuthority>(), A.Dummy<string>(), AatfStatus.Approved, A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
             };
 
             constructor.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public void Aatf_GivenCompetantAuthorityIsNull_ThrowsArgumentNullException()
+        public void Aatf_GivenCompetentAuthorityIsNull_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", null, "approval", AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+                var @return = new Aatf("name", null, "approval", AatfStatus.Approved, A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -50,7 +51,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", A.Dummy<UKCompetentAuthority>(), value, AatfStatus.Approved, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+                var @return = new Aatf("name", A.Dummy<UKCompetentAuthority>(), value, AatfStatus.Approved, A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -61,14 +62,14 @@
         {
             Action constructor = () =>
             {
-                var @return = new Aatf("name", null, "approvalNumber", null, A.Fake<Operator>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+                var @return = new Aatf("name", null, "approvalNumber", null, A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
             };
 
             constructor.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public void Aatf_GivenOperatorIsNull_ThrowsArgumentNullException()
+        public void Aatf_GivenOrganisationIsNull_ThrowsArgumentNullException()
         {
             Action constructor = () =>
             {
@@ -81,20 +82,20 @@
         [Fact]
         public void Aatf_GivenValidParameters_AatfPropertiesShouldBeSet()
         {
-            var competantAuthority = A.Fake<UKCompetentAuthority>();
-            var @operator = A.Fake<Operator>();
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var organisation = A.Fake<Organisation>();
             const string name = "name";
             const string approvalNumber = "approvalNumber";
             var aatfStatus = AatfStatus.Approved;
             var contact = A.Fake<AatfContact>();
 
-            var aatf = new Aatf(name, competantAuthority, approvalNumber, aatfStatus, @operator, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>()));
 
-            aatf.CompetentAuthority.Should().Be(competantAuthority);
+            aatf.CompetentAuthority.Should().Be(competentAuthority);
             aatf.ApprovalNumber.Should().Be(approvalNumber);
             aatf.AatfStatus.Should().Be(aatfStatus);
             aatf.Name.Should().Be(name);
-            aatf.Operator.Should().Be(@operator);
+            aatf.Organisation.Should().Be(organisation);
             aatf.Contact.Should().Be(contact);
         }
     }

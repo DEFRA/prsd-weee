@@ -10,28 +10,28 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetAatfsByOperatorIdHandler : IRequestHandler<GetAatfsByOperatorId, List<AatfDataList>>
+    public class GetAatfsByOrganisationIdHandler : IRequestHandler<GetAatfsByOrganisationId, List<AatfDataList>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetAatfsDataAccess dataAccess;
         private readonly IMap<Aatf, AatfDataList> aatfmap;
 
-        public GetAatfsByOperatorIdHandler(IWeeeAuthorization authorization, IMap<Aatf, AatfDataList> map, IGetAatfsDataAccess dataAccess)
+        public GetAatfsByOrganisationIdHandler(IWeeeAuthorization authorization, IMap<Aatf, AatfDataList> map, IGetAatfsDataAccess dataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
             this.aatfmap = map;
         }
-        public async Task<List<AatfDataList>> HandleAsync(GetAatfsByOperatorId message)
+        public async Task<List<AatfDataList>> HandleAsync(GetAatfsByOrganisationId message)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<Aatf> aatfs = await dataAccess.GetAatfs();
+            var aatfs = await dataAccess.GetAatfs();
 
             return aatfs
                 .OrderBy(a => a.Name)
+                .Where(s => s.Organisation.Id == message.OrganisationId)
                 .Select(s => aatfmap.Map(s))
-                .Where(s => s.Operator.Id == message.OperatorId)
                 .ToList();
         }
     }
