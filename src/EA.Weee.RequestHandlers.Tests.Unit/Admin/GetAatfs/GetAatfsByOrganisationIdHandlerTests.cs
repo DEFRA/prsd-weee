@@ -107,9 +107,9 @@
 
             A.CallTo(() => matchingOrg.Id).Returns(organisationId);
 
-            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
-            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
-            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
+            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
+            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
+            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
 
             var aatfs = new List<Aatf>()
             {
