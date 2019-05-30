@@ -78,7 +78,7 @@
         {
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
 
-            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
 
             Guid aatfId = Guid.NewGuid();
 

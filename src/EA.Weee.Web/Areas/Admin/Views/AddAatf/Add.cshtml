@@ -103,6 +103,12 @@
                 }
             </div>
 
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+                @Html.Gds().LabelFor(m => m.SelectedComplianceYear)
+                @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+                @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+            </div>
+
             <div>
                 <h2 class="govuk-heading-m">AATF nominated day to day contact details</h2>
             </div>

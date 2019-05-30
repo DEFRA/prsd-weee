@@ -49,7 +49,7 @@
 
             var organisation = organisationMap.Map(source.Organisation);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), source.ComplianceYear)
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
             {
                 Contact = contact,
                 Organisation = organisation

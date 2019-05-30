@@ -204,7 +204,7 @@
 
             var organisation = new OrganisationData() { Id = Guid.NewGuid(), Name = "TEST" };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = A.Fake<AatfContactData>()
@@ -247,7 +247,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -292,7 +292,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -346,7 +346,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -393,7 +393,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -441,7 +441,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData,

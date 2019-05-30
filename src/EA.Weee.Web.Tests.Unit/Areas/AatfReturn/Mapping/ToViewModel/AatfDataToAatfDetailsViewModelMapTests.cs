@@ -213,7 +213,7 @@
 
         private AatfData CreateAatfData()
         {
-            return new AatfData(Guid.NewGuid(), "AatfName", "12345", CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", (Int16)2019, CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
             {
                 Contact = CreateAatfContactData(),
                 Organisation = CreateOrganisationData()

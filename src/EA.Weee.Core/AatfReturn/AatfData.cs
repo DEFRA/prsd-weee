@@ -6,7 +6,7 @@
 
     public class AatfData
     {
-        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime), Int16 complianceYear = 2019)
+        public AatfData(Guid id, string name, string approvalNumber, Int16 complianceYear, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
         {
             this.Id = id;
             this.Name = name;
