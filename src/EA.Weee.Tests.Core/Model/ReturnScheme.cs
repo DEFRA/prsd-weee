@@ -12,22 +12,14 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class WeeeReused
+    public partial class ReturnScheme
     {
-        public WeeeReused()
-        {
-            this.WeeeReusedAmounts = new HashSet<WeeeReusedAmount>();
-            this.WeeeReusedSites = new HashSet<WeeeReusedSite>();
-        }
-    
         public System.Guid Id { get; set; }
-        public byte[] RowVersion { get; set; }
+        public System.Guid SchemeId { get; set; }
         public System.Guid ReturnId { get; set; }
-        public System.Guid AatfId { get; set; }
+        public byte[] RowVersion { get; set; }
     
-        public virtual ICollection<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
-        public virtual ICollection<WeeeReusedSite> WeeeReusedSites { get; set; }
-        public virtual AATF AATF { get; set; }
         public virtual Return Return { get; set; }
+        public virtual Scheme Scheme { get; set; }
     }
 }

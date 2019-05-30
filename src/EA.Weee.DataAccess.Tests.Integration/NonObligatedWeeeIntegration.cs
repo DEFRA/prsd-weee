@@ -15,7 +15,6 @@
     using Weee.Tests.Core.Model;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
 
@@ -39,9 +38,8 @@
 
                 await context.SaveChangesAsync();
 
-                var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(operatorTest, quarter, database.Model.AspNetUsers.First().Id);
+                var aatfReturn = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
 
                 var categoryValues = new List<NonObligatedValue>();
 
@@ -99,11 +97,9 @@
                 const string companyRegistrationNumber = "ABC12345";
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
-                var @operator = new Operator(organisation);
-                var @return = new Return(@operator, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
+                var @return = new Return(organisation, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
 
                 context.Organisations.Add(organisation);
-                context.Operators.Add(@operator);
                 context.Returns.Add(@return);
 
                 await context.SaveChangesAsync();

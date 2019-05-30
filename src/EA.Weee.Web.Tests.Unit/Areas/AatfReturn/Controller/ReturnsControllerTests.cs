@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Web.Mvc;
     using Api.Client;
     using Constant;
@@ -134,6 +133,25 @@
         {
             typeof(ReturnsController).GetMethod("Copy").Should().BeDecoratedWith<RouteAttribute>()
                 .Which.Template.Should().Be("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}");
+        }
+
+        [Fact]
+        public async void CopyPost_UserShouldBeRedirectedToTasklist()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var newId = Guid.NewGuid();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<CopyReturn>.That.Matches(r => r.ReturnId == returnId)));
+            clientCall.Returns(newId);
+
+            var redirectResult = await controller.Copy(returnId, organisationId) as RedirectToRouteResult;
+
+            redirectResult.RouteName.Should().Be(AatfRedirect.Default);
+            redirectResult.RouteValues["action"].Should().Be("Index");
+            redirectResult.RouteValues["returnId"].Should().Be(newId);
+
+            clientCall.MustHaveHappenedOnceExactly();
         }
     }
 }

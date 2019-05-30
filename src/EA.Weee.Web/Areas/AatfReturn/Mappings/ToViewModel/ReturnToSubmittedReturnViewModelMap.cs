@@ -13,7 +13,7 @@
 
             var model = new SubmittedReturnViewModel(source)
             {
-                OrgansationId = source.ReturnOperatorData.OrganisationId
+                OrgansationId = source.OrganisationData.Id
             };
 
             return model;

@@ -11,11 +11,10 @@
     {
         public static Return GetReturn()
         {
-            var organisation = A.Fake<Organisation>();
+            var organisation = new Organisation();
             var scheme = A.Fake<Scheme>();
-            var @operator = new Operator(organisation);
 
-            return new Return(@operator, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
+            return new Return(organisation, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
         }
     }
 }

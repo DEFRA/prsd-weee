@@ -22,6 +22,7 @@
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -33,14 +34,16 @@
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
         private const int maximumSearchResults = 5;
         private readonly BreadcrumbService breadcrumb;
 
-        public AddAatfController(ISearcher<OrganisationSearchResult> organisationSearcher, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
+        public AddAatfController(ISearcher<OrganisationSearchResult> organisationSearcher, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -232,6 +235,8 @@
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
 
+                await cache.InvalidateOrganisationSearch();
+
                 return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName });
             }
         }
@@ -281,6 +286,8 @@
                 };
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName });
             }

@@ -47,13 +47,13 @@
                 {
                     AatfId = aatfId,
                     ReturnId = returnId,
-                    OrganisationId = schemeList.OperatorData.OrganisationId,
-                    AatfName = (await cache.FetchAatfData(schemeList.OperatorData.OrganisationId, aatfId)).Name,
+                    OrganisationId = schemeList.OrganisationData.Id,
+                    AatfName = (await cache.FetchAatfData(schemeList.OrganisationData.Id, aatfId)).Name,
                     ReturnData = @return,
                     SchemeDataItems = schemeList.SchemeDataItems.ToList()
                 });
 
-                await SetBreadcrumb(schemeList.OperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(schemeList.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
             }

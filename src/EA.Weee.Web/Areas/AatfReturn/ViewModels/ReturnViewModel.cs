@@ -7,6 +7,7 @@
     using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
 
     public class ReturnViewModel : ReturnViewModelBase
@@ -15,11 +16,11 @@
         {
         }
 
-        public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OperatorData returnOperator, TaskListDisplayOptions displayOptions) : base(returnData)
+        public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OrganisationData organisationData, TaskListDisplayOptions displayOptions) : base(returnData)
         {
             this.Year = returnData.Quarter.Year.ToString();
             this.AatfsData = obligatedTonnage;
-            this.ReturnOperator = returnOperator;
+            this.Organisation = organisationData;
             this.ReturnId = returnData.Id;
             this.ReportOnDisplayOptions = displayOptions;
         }
@@ -46,7 +47,7 @@
 
         public List<AatfObligatedData> AatfsData { get; set; }
 
-        public OperatorData ReturnOperator { get; set; }
+        public OrganisationData Organisation { get; set; }
 
         public TaskListDisplayOptions ReportOnDisplayOptions { get; set; }
 

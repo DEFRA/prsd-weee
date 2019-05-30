@@ -27,10 +27,15 @@ namespace EA.Weee.Tests.Core.Model
         public string ApprovalNumber { get; set; }
         public int Status { get; set; }
         public byte[] RowVersion { get; set; }
-        public System.Guid OperatorId { get; set; }
+        public System.Guid SiteAddressId { get; set; }
+        public int Size { get; set; }
+        public Nullable<System.DateTime> ApprovalDate { get; set; }
+        public System.Guid ContactId { get; set; }
+        public int FacilityType { get; set; }
+        public System.Guid OrganisationId { get; set; }
     
         public virtual ICollection<WeeeReceived> WeeeReceiveds { get; set; }
-        public virtual Operator Operator { get; set; }
+        public virtual Organisation Organisation { get; set; }
         public virtual ICollection<WeeeReused> WeeeReuseds { get; set; }
         public virtual ICollection<WeeeSentOn> WeeeSentOns { get; set; }
     }

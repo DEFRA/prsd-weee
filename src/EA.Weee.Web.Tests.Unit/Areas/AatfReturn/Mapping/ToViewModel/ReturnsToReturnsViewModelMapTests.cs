@@ -5,6 +5,7 @@
     using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -73,12 +74,12 @@
             {
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayContinue = true }
                 },
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
                 }
             };
@@ -100,7 +101,7 @@
             {
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true },
                 }
             };
@@ -133,12 +134,12 @@
             {
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(year, quarter), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(year, quarter), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayContinue = true }
                 },
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OperatorData>(), new TaskListDisplayOptions()),
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
                 }
             };
