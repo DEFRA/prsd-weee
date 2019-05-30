@@ -158,6 +158,7 @@
             Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
             Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
             Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
+            Assert.Equal(aatfData.FacilityType, result.FacilityType);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -218,7 +219,8 @@
             {
                 Contact = CreateAatfContactData(),
                 Organisation = CreateOrganisationData(),
-                Operator = CreateOperatorData()
+                Operator = CreateOperatorData(),
+                FacilityType = FacilityType.Aatf
             };
         }
     }

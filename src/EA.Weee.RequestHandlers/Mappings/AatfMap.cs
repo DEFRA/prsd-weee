@@ -18,6 +18,7 @@
         private readonly IMap<Operator, OperatorData> operatorMap;
         private readonly IMap<AatfContact, AatfContactData> contactMap;
         private readonly IMap<Organisation, OrganisationData> organisationMap;
+        private readonly IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityMap;
 
         public AatfMap(IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap,
             IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> aatfStatusMap,
@@ -25,7 +26,8 @@
             IMap<AatfAddress, AatfAddressData> aatfAddressMap,
             IMap<Operator, OperatorData> operatorMap,
             IMap<AatfContact, AatfContactData> contactMap,
-            IMap<Organisation, OrganisationData> organisationMap)
+            IMap<Organisation, OrganisationData> organisationMap,
+            IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityMap)
         {
             this.competentAuthorityMap = competentAuthorityMap;
             this.aatfStatusMap = aatfStatusMap;
@@ -34,6 +36,7 @@
             this.operatorMap = operatorMap;
             this.contactMap = contactMap;
             this.organisationMap = organisationMap;
+            this.facilityMap = facilityMap;
         }
 
         public AatfData Map(Aatf source)
@@ -54,11 +57,14 @@
 
             OrganisationData organisation = organisationMap.Map(source.Operator.Organisation);
 
+            Core.AatfReturn.FacilityType facilityType = facilityMap.Map(source.FacilityType);
+
             return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
             {
                 Contact = contact,
                 Organisation = organisation,
-                Operator = @operator
+                Operator = @operator,
+                FacilityType = facilityType
             };
         }
     }

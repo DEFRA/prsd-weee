@@ -52,6 +52,8 @@
             }
         }
 
+        public FacilityType FacilityType { get; set; }
+
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
         public List<AatfDataList> AssociatedAEs { get; set; }

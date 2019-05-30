@@ -40,6 +40,8 @@
 
         public OrganisationData Organisation { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         public bool CanEdit { get; set; }
     }
 }

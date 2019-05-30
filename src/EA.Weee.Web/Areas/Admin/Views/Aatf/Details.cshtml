@@ -3,6 +3,7 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
     ViewBag.Title = "View AATF details - GOV.UK";
@@ -146,32 +147,32 @@
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Business trading name</th>
+                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+                </tr>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Business trading name</th>
-                        <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                        <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                     </tr>
-                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                            <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
-                        </tr>
-                    }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Address</th>
-                        <td class="govuk-table__cell">
-                            @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Telephone</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Email address</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
-                    </tr>
-                </tbody>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell">
+                        @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
+                </tr>
+            </tbody>
         </table>
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
@@ -279,6 +280,6 @@
     </table>
     <div>&nbsp;</div>
     <p>
-        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Back</a>
+        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType.ToDisplayString())))">Back</a>
     </p>
 </div>
