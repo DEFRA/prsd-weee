@@ -54,7 +54,7 @@
 
             OrganisationData organisation = organisationMap.Map(source.Operator.Organisation);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, compentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), source.ComplianceYear)
             {
                 Contact = contact,
                 Organisation = organisation,

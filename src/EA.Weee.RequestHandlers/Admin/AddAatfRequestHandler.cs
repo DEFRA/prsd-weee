@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
@@ -11,8 +13,6 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class AddAatfRequestHandler : IRequestHandler<AddAatf, bool>
     {
@@ -63,7 +63,8 @@
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
                 message.Aatf.ApprovalDate.GetValueOrDefault(),
                 contact,
-                Domain.AatfReturn.FacilityType.Aatf);
+                Domain.AatfReturn.FacilityType.Aatf,
+                message.Aatf.ComplianceYear);
 
             await dataAccess.Add<Aatf>(aatf);
 

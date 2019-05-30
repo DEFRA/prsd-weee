@@ -29,11 +29,23 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
+        public virtual Int16 ComplianceYear { get; private set; }
+
         public Aatf()
         {
         }
 
-        public Aatf(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact, FacilityType facilityType)
+        public Aatf(string name,
+            UKCompetentAuthority competentAuthority,
+            string approvalNumber,
+            AatfStatus aatfStatus,
+            Operator @operator,
+            AatfAddress aatfSiteAddress,
+            AatfSize aatfSize,
+            DateTime approvalDate,
+            AatfContact contact,
+            FacilityType facilityType,
+            Int16 complianceYear)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -55,9 +67,21 @@
             ApprovalDate = approvalDate;
             Contact = contact;
             FacilityType = facilityType;
+            ComplianceYear = complianceYear;
         }
 
-        public Aatf(string name, Guid competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfAddress aatfSiteAddress, AatfSize aatfSize, DateTime approvalDate, AatfContact contact, FacilityType facilityType)
+        public Aatf(
+            string name,
+            Guid competentAuthorityId,
+            string approvalNumber,
+            AatfStatus aatfStatus,
+            Operator @operator,
+            AatfAddress aatfSiteAddress,
+            AatfSize aatfSize,
+            DateTime approvalDate,
+            AatfContact contact,
+            FacilityType facilityType,
+            Int16 complianceYear)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -79,6 +103,7 @@
             Contact = contact;
             SiteAddressId = aatfSiteAddress.Id;
             FacilityType = facilityType;
+            ComplianceYear = complianceYear;
         }
 
         public virtual void UpdateDetails(string name, Guid? competentAuthorityId, string approvalNumber, AatfStatus aatfStatus, Operator @operator, AatfSize aatfSize, DateTime? approvalDate)

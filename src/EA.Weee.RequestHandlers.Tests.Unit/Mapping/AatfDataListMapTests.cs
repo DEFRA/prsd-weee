@@ -47,6 +47,7 @@
             var approvalNumber = "123456789";
             var status = Domain.AatfReturn.AatfStatus.Approved;
             var facilityType = Domain.AatfReturn.FacilityType.Aatf;
+            Int16 complianceYear = 2019;
 
             var returnStatus = Core.AatfReturn.AatfStatus.Approved;
             var returnCompetentAuthority = A.Fake<Core.Shared.UKCompetentAuthorityData>();
@@ -58,7 +59,7 @@
             A.CallTo(() => facilityTypeMap.Map(facilityType)).Returns(returnFacilityType);
             A.CallTo(() => operatorMap.Map(@operator)).Returns(operatorData);
 
-            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf);
+            var source = new Aatf(name, competentAuthority, approvalNumber, status, @operator, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, complianceYear);
 
             var result = map.Map(source);
 

@@ -476,7 +476,7 @@
         {
             var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, @operator,
                 AatfSiteAddress(), AatfSize.Large, DateTime.Now,
-                new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"), FacilityType.Aatf);
+                new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"), FacilityType.Aatf, 2019);
             return aatf;
         }
 
