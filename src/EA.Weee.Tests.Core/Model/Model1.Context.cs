@@ -66,10 +66,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
         public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<AATF> AATFs { get; set; }        
         public virtual DbSet<NonObligatedWeee> NonObligatedWeees { get; set; }
-        public virtual DbSet<Operator> Operators { get; set; }
-        public virtual DbSet<Return> Returns { get; set; }
         public virtual DbSet<WeeeReceived> WeeeReceiveds { get; set; }
         public virtual DbSet<WeeeReceivedAmount> WeeeReceivedAmounts { get; set; }
         public virtual DbSet<WeeeReused> WeeeReuseds { get; set; }
@@ -78,5 +75,11 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<WeeeSentOn> WeeeSentOns { get; set; }
         public virtual DbSet<Organisation> Organisations { get; set; }
         public virtual DbSet<Scheme> Schemes { get; set; }
+        public virtual DbSet<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
+        public virtual DbSet<AATF> AATFs { get; set; }
+        public virtual DbSet<ReportOnQuestion> ReportOnQuestions { get; set; }
+        public virtual DbSet<Return> Returns { get; set; }
+        public virtual DbSet<ReturnReportOn> ReturnReportOns { get; set; }
+        public virtual DbSet<ReturnScheme> ReturnSchemes { get; set; }
     }
 }

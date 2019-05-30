@@ -11,7 +11,6 @@
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
 
@@ -51,8 +50,7 @@
                 var result = await dataAccess.GetById(id);
 
                 result.Should().NotBeNull();
-                result.Operator.Should().NotBeNull();
-                result.Operator.Organisation.Should().NotBeNull();
+                result.Organisation.Should().NotBeNull();
             }
         }
 
@@ -64,9 +62,8 @@
                 var modelHelper = new ModelHelper(database.Model);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var @operator = new Operator(organisation);
-                var @return1 = CreateReturn(database, @operator);
-                var @return2 = CreateReturn(database, @operator);
+                var @return1 = CreateReturn(database, organisation);
+                var @return2 = CreateReturn(database, organisation);
 
                 var dataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -88,17 +85,15 @@
                 var modelHelper = new ModelHelper(database.Model);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var @operator = new Operator(organisation);
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation");
-                var @operator2 = new Operator(organisation2);
 
-                var @return1 = CreateReturn(database, @operator);
-                var @return2 = CreateReturn(database, @operator);
-                var @return3 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q2));
-                var @return4 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q3));
-                var @return5 = CreateReturn(database, @operator, new Quarter(2019, QuarterType.Q4));
-                var @return6 = CreateReturn(database, @operator, new Quarter(2018, QuarterType.Q1));
-                var @return7 = CreateReturn(database, @operator2);
+                var @return1 = CreateReturn(database, organisation);
+                var @return2 = CreateReturn(database, organisation);
+                var @return3 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q2));
+                var @return4 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q3));
+                var @return5 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q4));
+                var @return6 = CreateReturn(database, organisation, new Quarter(2018, QuarterType.Q1));
+                var @return7 = CreateReturn(database, organisation2);
 
                 var dataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -115,29 +110,28 @@
                 results.Count.Should().Be(2);
                 results.Count(r => r.Quarter.Year != 2019).Should().Be(0);
                 results.Count(r => r.Id != @return1.Id && r.Id != @return2.Id).Should().Be(0);
-                results.Count(r => r.Operator.Id != @return1.Operator.Id).Should().Be(0);
+                results.Count(r => r.Organisation.Id != @return1.Organisation.Id).Should().Be(0);
             }
         }
 
         private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
-            var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
         }
 
-        private Return CreateReturn(DatabaseWrapper database, Operator @operator)
+        private Return CreateReturn(DatabaseWrapper database, Organisation organisation)
         { 
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
         }
 
-        private Return CreateReturn(DatabaseWrapper database, Operator @operator, Quarter quarter)
+        private Return CreateReturn(DatabaseWrapper database, Organisation organisation, Quarter quarter)
         {
-            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
         }
     }
 }

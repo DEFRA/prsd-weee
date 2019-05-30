@@ -128,9 +128,8 @@
             var message = new GetReturnStatus(Guid.NewGuid());
             var @return = A.Fake<Return>();
             var organisation = A.Fake<Organisation>();
-            var @operator = new Operator(organisation);
 
-            A.CallTo(() => @return.Operator).Returns(@operator);
+            A.CallTo(() => @return.Organisation).Returns(organisation);
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => returnDataAccess.GetById(message.ReturnId)).Returns(@return);
 
@@ -174,7 +173,7 @@
 
         public Return GetReturn()
         {
-            return new Return(A.Fake<Operator>(), A.Fake<Quarter>(), "me") { ReturnStatus = ReturnStatus.Created };
+            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me") { ReturnStatus = ReturnStatus.Created };
         }
     }
 }

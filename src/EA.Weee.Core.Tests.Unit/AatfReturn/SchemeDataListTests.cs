@@ -16,14 +16,14 @@
         {
             Action act = () =>
             {
-                var schemeDataList = new SchemeDataList(null, OperatorData());
+                var schemeDataList = new SchemeDataList(null, OrganisationData());
             };
 
             act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public void Construct_GivenNullOperatorData_ArgumentNullExceptionExpected()
+        public void Construct_GivenNullOrganisationData_ArgumentNullExceptionExpected()
         {
             Action act = () =>
             {
@@ -36,18 +36,18 @@
         [Fact]
         public void Construct_GivenParameters_PropertiesShouldBeSet()
         {
-            var @operator = OperatorData();
+            var organisationData = OrganisationData();
             var list = new List<SchemeData>();
 
-            var schemeDataList = new SchemeDataList(list, @operator);
+            var schemeDataList = new SchemeDataList(list, organisationData);
 
-            schemeDataList.OperatorData.Should().Be(@operator);
+            schemeDataList.OrganisationData.Should().Be(organisationData);
             schemeDataList.SchemeDataItems.Should().BeSameAs(list);
         }
 
-        private OperatorData OperatorData()
+        private OrganisationData OrganisationData()
         {
-            return new OperatorData(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<OrganisationData>(), A.Dummy<Guid>());
+            return new OrganisationData();
         }
     }
 }

@@ -19,9 +19,9 @@
 
         public IList<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
 
-        public virtual void UpdateWithOperatorAddress(AatfAddress @operator)
+        public virtual void UpdateWithOperatorAddress(AatfAddress address)
         {
-            OperatorAddress = @operator;
+            OperatorAddress = address;
         }
 
         public WeeeSentOn()

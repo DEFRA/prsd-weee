@@ -46,18 +46,9 @@
 
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            var aatfOperator = await genericDataAccess.GetSingleByExpression<Operator>(new OperatorByOrganisationIdSpecification(message.OrganisationId));
+            var aatfOrganisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
 
-            if (aatfOperator == null)
-            {
-                var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
-
-                aatfOperator = new Operator(organisation);
-
-                await genericDataAccess.Add<Operator>(aatfOperator);
-            }
-
-            var aatfReturn = new Return(aatfOperator, quarter, userContext.UserId.ToString());
+            var aatfReturn = new Return(aatfOrganisation, quarter, userContext.UserId.ToString());
 
             await returnDataAccess.Submit(aatfReturn);
 
