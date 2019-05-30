@@ -3,6 +3,7 @@
     using System;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -36,7 +37,7 @@
         [Fact]
         public void UpdateReturn_GivenReturn_ReturnShouldBeUpdated()
         {
-            var newReturn = new Return(A.Dummy<Operator>(), A.Dummy<Quarter>(), "me");
+            var newReturn = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me");
 
             returnEntity.UpdateReturn(newReturn);
 

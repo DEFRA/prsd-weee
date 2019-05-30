@@ -38,7 +38,7 @@
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");
             }
 
-            authorization.EnsureOrganisationAccess(@return.Operator.Organisation.Id);
+            authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             @return.UpdateSubmitted(userContext.UserId.ToString());
 

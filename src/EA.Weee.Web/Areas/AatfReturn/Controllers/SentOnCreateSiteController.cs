@@ -56,9 +56,9 @@
                 }
 
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, SiteAddressId = siteAddressId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.ReturnOperatorData.OrganisationId, SiteAddressData = siteAddress });
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, SiteAddressId = siteAddressId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.OrganisationData.Id, SiteAddressData = siteAddress });
 
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
             }

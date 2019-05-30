@@ -16,7 +16,7 @@
 
         public override Expression<Func<Aatf, bool>> ToExpression()
         {
-            return @operator => @operator.Operator.Organisation.Id == OrganisationId;
+            return aatf => aatf.Organisation.Id == OrganisationId;
         }
     }
 }

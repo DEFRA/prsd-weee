@@ -960,9 +960,7 @@
 
         public Return CreateReturn()
         {
-            var @operator = new Operator { Organisation = CreateOrganisation() };
-
-            return new Return() { Operator = @operator, Quarter = 1, Id = IntegerToGuid(1) };
+            return new Return() { Organisation = CreateOrganisation(), Quarter = 1, Id = IntegerToGuid(1) };
         }
     }
 }

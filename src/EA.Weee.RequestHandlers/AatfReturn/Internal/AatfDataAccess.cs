@@ -30,7 +30,7 @@
                 newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
-                newDetails.Operator,
+                newDetails.Organisation,
                 newDetails.Size,
                 newDetails.ApprovalDate);
 
