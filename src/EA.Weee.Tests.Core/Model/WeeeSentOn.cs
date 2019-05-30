@@ -26,8 +26,8 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid AatfId { get; set; }
         public Nullable<System.Guid> OperatorAddressId { get; set; }
     
-        public virtual Return Return { get; set; }
         public virtual ICollection<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
         public virtual AATF AATF { get; set; }
+        public virtual Return Return { get; set; }
     }
 }

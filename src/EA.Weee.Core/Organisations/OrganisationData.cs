@@ -5,7 +5,7 @@
 
     public class OrganisationData
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         public Guid? SchemeId { get; set; }
 

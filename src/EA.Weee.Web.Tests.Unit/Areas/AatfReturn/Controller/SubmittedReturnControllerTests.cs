@@ -6,6 +6,7 @@
     using Constant;
     using Core.AatfReturn;
     using Core.Scheme;
+    using EA.Weee.Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -66,7 +67,7 @@
         public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
         {
             var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.ReturnOperatorData).Returns(A.Fake<OperatorData>());
+            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
@@ -92,12 +93,12 @@
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
-            var operatorData = A.Fake<OperatorData>();
+            var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-            A.CallTo(() => operatorData.OrganisationId).Returns(organisationId);
-            A.CallTo(() => @return.ReturnOperatorData).Returns(operatorData);
+            A.CallTo(() => organisationData.Id).Returns(organisationId);
+            A.CallTo(() => @return.OrganisationData).Returns(organisationData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             var returnId = Guid.NewGuid();

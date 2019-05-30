@@ -41,8 +41,8 @@
                 {
                     AatfId = aatfId,
                     ReturnId = returnId,
-                    OrganisationId = @return.ReturnOperatorData.OrganisationId,
-                    AatfName = Task.Run(() => cache.FetchAatfData(@return.ReturnOperatorData.OrganisationId, aatfId)).Result.Name,
+                    OrganisationId = @return.OrganisationData.Id,
+                    AatfName = Task.Run(() => cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Result.Name,
                     Type = obligatedType
                 };
 
@@ -51,7 +51,7 @@
                     viewModel.SchemeId = schemeId;
                     viewModel.SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name;
                 }
-                await SetBreadcrumb(@return.ReturnOperatorData.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }
         }

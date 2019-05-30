@@ -12,20 +12,18 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Operator
+    public partial class ReportOnQuestion
     {
-        public Operator()
+        public ReportOnQuestion()
         {
-            this.Returns = new HashSet<Return>();
-            this.AATFs = new HashSet<AATF>();
+            this.ReturnReportOns = new HashSet<ReturnReportOn>();
         }
     
-        public System.Guid Id { get; set; }
-        public System.Guid OrganisationId { get; set; }
-        public byte[] RowVersion { get; set; }
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Description { get; set; }
+        public Nullable<int> ParentId { get; set; }
     
-        public virtual Organisation Organisation { get; set; }
-        public virtual ICollection<Return> Returns { get; set; }
-        public virtual ICollection<AATF> AATFs { get; set; }
+        public virtual ICollection<ReturnReportOn> ReturnReportOns { get; set; }
     }
 }

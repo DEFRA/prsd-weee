@@ -19,7 +19,6 @@
     using Requests.AatfReturn.NonObligated;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
 
@@ -52,7 +51,7 @@
                 var nonObligatedRequest = new AddNonObligated()
                 {
                     ReturnId = @return.Id,
-                    OrganisationId = @return.Operator.Organisation.Id,
+                    OrganisationId = @return.Organisation.Id,
                     Dcf = dcf,
                     CategoryValues = categoryValues
                 };
@@ -82,10 +81,9 @@
         private Return CreateReturn(DatabaseWrapper database)
         {
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
-            var @operator = new Operator(organisation);
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(@operator, quarter, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
         }
     }
 }

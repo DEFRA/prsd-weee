@@ -46,7 +46,7 @@
             return new ReturnViewModel(
                 source,
                 AatfObligatedData,
-                source.ReturnOperatorData,
+                source.OrganisationData,
                 DisplayOptions)
             {
                 NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),

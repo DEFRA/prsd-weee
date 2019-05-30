@@ -24,9 +24,9 @@
             return context.SaveChangesAsync();
         }
 
-        public Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress @operator)
+        public Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress address)
         {
-            weeeSentOn.UpdateWithOperatorAddress(@operator);
+            weeeSentOn.UpdateWithOperatorAddress(address);
 
             return context.SaveChangesAsync();
         }

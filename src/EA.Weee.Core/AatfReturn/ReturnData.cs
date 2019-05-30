@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
@@ -23,7 +24,7 @@
 
         public List<WeeeObligatedData> ObligatedWeeeSentOnData { get; set; }
 
-        public virtual OperatorData ReturnOperatorData { get; set; }
+        public virtual OrganisationData OrganisationData { get; set; }
 
         public IList<SchemeData> SchemeDataItems { get; set; }
 
