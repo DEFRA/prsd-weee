@@ -6,5 +6,7 @@
     {
         string AddressConcatenate(AddressData addressData);
         string StringConcatenate(string address, string input);
+
+        string FormattedAddress(AddressData address);
     }
 }

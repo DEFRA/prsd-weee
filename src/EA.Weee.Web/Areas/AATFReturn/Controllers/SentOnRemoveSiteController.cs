@@ -47,18 +47,12 @@
                     return AatfRedirect.SentOnSummaryList(organisationId, returnId, aatfId);
                 }
 
-                var siteAddress = GenerateAddress(weeeSentOn.SiteAddress);
-
-                var operatorAddress = GenerateAddress(weeeSentOn.OperatorAddress);
-
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
                 {
                     ReturnId = returnId,
                     AatfId = aatfId,
                     OrganisationId = organisationId,
-                    WeeeSentOn = weeeSentOn,
-                    SiteAddress = siteAddress,
-                    OperatorAddress = operatorAddress
+                    WeeeSentOn = weeeSentOn
                 });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
@@ -91,32 +85,6 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
-        }
-
-        public virtual string GenerateAddress(AatfAddressData address)
-        {
-            var siteAddressLong = address.Name + "<br/>" + address.Address1;
-
-            if (address.Address2 != null)
-            {
-                siteAddressLong += "<br/>" + address.Address2;
-            }
-
-            siteAddressLong += "<br/>" + address.TownOrCity;
-
-            if (address.CountyOrRegion != null)
-            {
-                siteAddressLong += "<br/>" + address.CountyOrRegion;
-            }
-
-            if (address.Postcode != null)
-            {
-                siteAddressLong += "<br/>" + address.Postcode;
-            }
-
-            siteAddressLong += "<br/>" + address.CountryName;
-
-            return siteAddressLong;
         }
     }
 }
