@@ -21,9 +21,11 @@
         {
             IEnumerable<OrganisationUser> activeOrganisationUsers = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationId);
 
+            var sender = await dataAccess.FetchUser(@event.UserId.ToString());
+
             foreach (OrganisationUser activeOrganisationUser in activeOrganisationUsers)
             {
-                await emailService.SendOrganisationUserRequest(activeOrganisationUser.User.Email, activeOrganisationUser.Organisation.OrganisationName);
+                await emailService.SendOrganisationUserRequest(activeOrganisationUser.User.Email, activeOrganisationUser.Organisation.OrganisationName, sender.FullName);
             }
         }
     }
