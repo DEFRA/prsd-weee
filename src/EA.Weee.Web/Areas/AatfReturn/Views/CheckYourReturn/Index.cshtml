@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
 @{
-    ViewBag.Title = "Check your AATF return for " + Model.ReturnOperator.OperatorName;
+    ViewBag.Title = "Check your AATF return for " + Model.Organisation.Name;
 }
 
 @{
@@ -14,7 +14,7 @@
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">Check your AATF return for @Model.ReturnOperator.OperatorName</h1>
+            <h1 class="govuk-heading-l">Check your AATF return for @Model.Organisation.Name</h1>
         </div>
     </header>
     <p>Check and review your AATF return before you proceed to submit</p>
