@@ -82,7 +82,6 @@
     <Compile Include="AatfReturn\AatfContactTests.cs" />
     <Compile Include="AatfReturn\AatfTests.cs" />
     <Compile Include="AatfReturn\NonObligatedWeeeTests.cs" />
-    <Compile Include="AatfReturn\OperatorTests.cs" />
     <Compile Include="AatfReturn\ReturnEntityBaseTest.cs" />
     <Compile Include="AatfReturn\ReturnEntityTests.cs" />
     <Compile Include="AatfReturn\ReturnQuarterWindowTests.cs" />

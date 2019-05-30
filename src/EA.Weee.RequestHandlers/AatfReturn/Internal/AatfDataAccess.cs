@@ -30,10 +30,23 @@
                 newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
-                newDetails.Operator,
-                newDetails.SiteAddress,
+                newDetails.Organisation,
                 newDetails.Size,
                 newDetails.ApprovalDate);
+
+            return context.SaveChangesAsync();
+        }
+
+        public Task UpdateAddress(AatfAddress oldDetails, AatfAddress newDetails, Country country)
+        {
+            oldDetails.UpdateAddress(
+                newDetails.Name,
+                newDetails.Address1,
+                newDetails.Address2,
+                newDetails.TownOrCity,
+                newDetails.CountyOrRegion,
+                newDetails.Postcode,
+                country);
 
             return context.SaveChangesAsync();
         }

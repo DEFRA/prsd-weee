@@ -9,7 +9,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.Organisations;
     using Domain.AatfReturn;
+    using Domain.Organisation;
     using Specification;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -38,9 +40,9 @@
 
             var schemeDataList = returnSchemeList.Select(s => mapper.Map<Scheme, SchemeData>(s.Scheme)).ToList();
 
-            var @operator = await returnSchemeDataAccess.GetOperatorByReturnId(message.ReturnId);
+            var organisation = await returnSchemeDataAccess.GetOrganisationByReturnId(message.ReturnId);
 
-            return new SchemeDataList(schemeDataList, mapper.Map<Operator, OperatorData>(@operator));
+            return new SchemeDataList(schemeDataList, mapper.Map<Organisation, OrganisationData>(organisation));
         }
     }
 }

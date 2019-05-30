@@ -24,6 +24,8 @@
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using ReturnScheme = Domain.AatfReturn.ReturnScheme;
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
@@ -197,7 +199,7 @@
         {
             foreach (var item in submittedNonObligatedWeee)
             {
-                context.NonObligatedWeee.Where(n => n.Id == item.Id).Count().Should().Be(0);
+                context.NonObligatedWeee.Count(n => n.Id == item.Id).Should().Be(0);
             }
         }
 
@@ -205,17 +207,17 @@
         {
             foreach (var item in submittedWeeeSentOn)
             {
-                context.WeeeSentOn.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeSentOn.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeSentOnAmounts)
             {
-                context.WeeeSentOnAmount.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeSentOnAmount.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeSentOnAddresses)
             {
-                context.AatfAddress.Where(a => a.Id == item.Id).Count().Should().Be(0);
+                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(0);
             }
         }
 
@@ -223,40 +225,40 @@
         {
             foreach (var item in submittedWeeeReused)
             {
-                context.WeeeReused.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeReused.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeReusedAmounts)
             {
-                context.WeeeReusedAmount.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeReusedAmount.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeReusedSites)
             {
-                context.WeeeReusedSite.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeReusedSite.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeReusedAddresses)
             {
-                context.AatfAddress.Where(a => a.Id == item.Id).Count().Should().Be(0);
+                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(0);
             }
         }
 
-        private static void AssertWeeeReceivedDeletion(WeeeContext context, List<WeeeReceived> submittedWeeeReceived, List<ReturnScheme> submittedWeeeReturnScheme, List<WeeeReceivedAmount> submittedWeeeReceivedAmounts)
+        private static void AssertWeeeReceivedDeletion(WeeeContext context, List<WeeeReceived> submittedWeeeReceived, List<Domain.AatfReturn.ReturnScheme> submittedWeeeReturnScheme, List<WeeeReceivedAmount> submittedWeeeReceivedAmounts)
         {
             foreach (var item in submittedWeeeReceived)
             {
-                context.WeeeReceived.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeReceived.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeReturnScheme)
             {
-                context.ReturnScheme.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.ReturnScheme.Count(w => w.Id == item.Id).Should().Be(0);
             }
 
             foreach (var item in submittedWeeeReceivedAmounts)
             {
-                context.WeeeReceivedAmount.Where(w => w.Id == item.Id).Count().Should().Be(0);
+                context.WeeeReceivedAmount.Count(w => w.Id == item.Id).Should().Be(0);
             }
         }
 
@@ -285,7 +287,7 @@
         private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return, Country country)
         {
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Operator, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Organisation, contact, country);
 
             context.Aatfs.Add(aatf);
 
@@ -296,11 +298,9 @@
 
         private static async Task<Return> CreateReturn(WeeeContext context, DatabaseWrapper database, Organisation organisation)
         {
-            var @operator = ObligatedWeeeIntegrationCommon.CreateOperator(organisation);
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(@operator, database.Model.AspNetUsers.First().Id);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
-            context.Operators.Add(@operator);
             context.Returns.Add(@return);
 
             await context.SaveChangesAsync();

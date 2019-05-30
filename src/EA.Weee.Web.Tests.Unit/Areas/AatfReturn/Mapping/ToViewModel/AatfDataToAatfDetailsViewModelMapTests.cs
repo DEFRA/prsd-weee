@@ -101,9 +101,13 @@
         public void Map_GivenValidSource_WithAatfs_AEListShouldOnlyContainAEsAndAatfListShouldOnlyContainAatfs()
         {
             AatfData aatfData = CreateAatfData();
-            List<AatfDataList> associatedAatfs = new List<AatfDataList>();
-            associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Aatf));
-            associatedAatfs.Add(new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(), A.Fake<OperatorData>(), FacilityType.Ae));
+            List<AatfDataList> associatedAatfs = new List<AatfDataList>
+            {
+                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf),
+                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
+                    A.Fake<OrganisationData>(), FacilityType.Ae)
+            };
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
             {
@@ -147,17 +151,17 @@
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(aatfData.Size, result.Size);
             Assert.Equal(aatfData.Contact, result.ContactData);
-            Assert.Equal(aatfData.Operator.Organisation.Name, result.Organisation.Name);
-            Assert.Equal(aatfData.Operator.Organisation.TradingName, result.Organisation.TradingName);
-            Assert.Equal(aatfData.Operator.Organisation.CompanyRegistrationNumber, result.Organisation.CompanyRegistrationNumber);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Address1, result.Organisation.BusinessAddress.Address1);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Address2, result.Organisation.BusinessAddress.Address2);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.CountyOrRegion, result.Organisation.BusinessAddress.CountyOrRegion);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.CountryName, result.Organisation.BusinessAddress.CountryName);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.TownOrCity, result.Organisation.BusinessAddress.TownOrCity);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
-            Assert.Equal(aatfData.Operator.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
+            Assert.Equal(aatfData.Organisation.Name, result.Organisation.Name);
+            Assert.Equal(aatfData.Organisation.TradingName, result.Organisation.TradingName);
+            Assert.Equal(aatfData.Organisation.CompanyRegistrationNumber, result.Organisation.CompanyRegistrationNumber);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.Address1, result.Organisation.BusinessAddress.Address1);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.Address2, result.Organisation.BusinessAddress.Address2);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.CountyOrRegion, result.Organisation.BusinessAddress.CountyOrRegion);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.CountryName, result.Organisation.BusinessAddress.CountryName);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.TownOrCity, result.Organisation.BusinessAddress.TownOrCity);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
+            Assert.Equal(aatfData.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
             Assert.Equal(aatfData.FacilityType, result.FacilityType);
         }
 
@@ -179,11 +183,6 @@
         private AatfContactAddressData CreateContactAddressData()
         {
             return new AatfContactAddressData("ABC", "Here", "There", "Bath", "BANES", "BA2 2PL", Guid.NewGuid(), "England");
-        }
-
-        private OperatorData CreateOperatorData()
-        {
-            return new OperatorData(Guid.NewGuid(), "Operator", CreateOrganisationData(), Guid.NewGuid());
         }
 
         private OrganisationData CreateOrganisationData()
@@ -219,7 +218,6 @@
             {
                 Contact = CreateAatfContactData(),
                 Organisation = CreateOrganisationData(),
-                Operator = CreateOperatorData(),
                 FacilityType = FacilityType.Aatf
             };
         }

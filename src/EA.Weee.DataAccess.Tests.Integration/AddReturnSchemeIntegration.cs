@@ -14,7 +14,6 @@
     using System.Threading.Tasks;
     using Domain.User;
     using Xunit;
-    using Operator = Domain.AatfReturn.Operator;
     using Organisation = Domain.Organisation;
     using Return = Domain.AatfReturn.Return;
     using ReturnScheme = Domain.AatfReturn.ReturnScheme;
@@ -25,7 +24,7 @@
         [Fact]
         public async Task CanCreateReturnScheme()
         {
-            using (DatabaseWrapper database = new DatabaseWrapper())
+            using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
 
@@ -36,16 +35,13 @@
                 var organisation = Organisation.Organisation.CreateRegisteredCompany(name, crn, tradingName);
                 
                 context.Organisations.Add(organisation);
-
                 await context.SaveChangesAsync();
 
                 var scheme = new Scheme(organisation.Id);
-
                 context.Schemes.Add(scheme);
 
-                var operatorTest = new Operator(organisation);
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var @return = new Return(operatorTest, quarter, database.Model.AspNetUsers.First().Id);
+                var @return = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
 
                 context.Returns.Add(@return);
                 await context.SaveChangesAsync();
@@ -56,7 +52,7 @@
 
                 await dataAccess.Submit(returnScheme);
 
-                var returnSchemeReturned = context.ReturnScheme.Where(o => o.Id == returnScheme.Id).First();
+                var returnSchemeReturned = context.ReturnScheme.First(o => o.Id == returnScheme.Id);
                 returnSchemeReturned.Should().NotBeNull();
                 returnSchemeReturned.ReturnId.Should().Be(@return.Id);
                 returnSchemeReturned.SchemeId.Should().Be(scheme.Id);

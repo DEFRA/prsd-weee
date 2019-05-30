@@ -45,7 +45,7 @@
         }
 
         [Fact]
-        public void UpdateDetails_GivenNewAddressData_SaveChangesAsyncShouldBeCalled()
+        public void UpdateDetails_GivenNewData_SaveChangesAsyncShouldBeCalled()
         {
             var oldDetails = A.Fake<Aatf>();
             var newDetails = fixture.Create<Aatf>();
@@ -57,10 +57,29 @@
                 newDetails.CompetentAuthorityId,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
-                newDetails.Operator,
-                newDetails.SiteAddress,
+                newDetails.Organisation,
                 newDetails.Size,
                 newDetails.ApprovalDate)).MustHaveHappenedOnceExactly()
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
+        }
+
+        [Fact]
+        public void UpdateAddress_GivenNewData_SaveChangesAsyncShouldBeCalled()
+        {
+            var oldDetails = A.Fake<AatfAddress>();
+            var newDetails = new AatfAddress();
+            var country = A.Fake<Country>();
+
+            dataAccess.UpdateAddress(oldDetails, newDetails, country);
+
+            A.CallTo(() => oldDetails.UpdateAddress(
+                newDetails.Name,
+                newDetails.Address1,
+                newDetails.Address2,
+                newDetails.TownOrCity,
+                newDetails.CountyOrRegion,
+                newDetails.Postcode,
+                country)).MustHaveHappenedOnceExactly()
             .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
         }
 

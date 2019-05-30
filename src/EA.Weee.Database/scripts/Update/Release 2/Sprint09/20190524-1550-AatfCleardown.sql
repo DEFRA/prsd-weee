@@ -11,4 +11,7 @@ DELETE FROM [AATF].ReturnReportOn
 DELETE FROM [AATF].AATF
 DELETE FROM [AATF].[Address]
 DELETE FROM [AATF].[Return]
-DELETE FROM [AATF].Operator
+IF EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[AATF].[Operator]') AND type in (N'U')) BEGIN
+	DELETE FROM [AATF].Operator
+END

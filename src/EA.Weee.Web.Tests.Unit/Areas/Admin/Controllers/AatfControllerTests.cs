@@ -23,6 +23,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
@@ -40,6 +41,7 @@
         private readonly IMapper mapper;
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
+        private readonly IWeeeCache cache;
         private readonly AatfController controller;
 
         public AatfControllerTests()
@@ -50,8 +52,9 @@
             mapper = A.Fake<IMapper>();
             detailsRequestCreator = A.Fake<IEditAatfDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
+            cache = A.Fake<IWeeeCache>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache);
         }
 
         [Fact]
@@ -105,6 +108,14 @@
 
             var result = await controller.ManageAatfs(new ManageAatfsViewModel { Filter = filter, CanAddAatf = false });
 
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.IsType<ManageAatfsViewModel>(viewResult.Model);
+
+            var viewResultModel = (ManageAatfsViewModel)viewResult.Model;
+            Assert.Equal(filter, viewResultModel.Filter);
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
             mapperCall.MustHaveHappenedOnceExactly();
         }
@@ -123,7 +134,7 @@
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
 
-            var viewResult = ((ViewResult)result);
+            var viewResult = (ViewResult)result;
             Assert.Equal("ManageAatfs", viewResult.ViewName);
             Assert.IsType<ManageAatfsViewModel>(viewResult.Model);
 
@@ -188,7 +199,7 @@
 
             ViewResult result = await controller.ManageAatfs("AATF") as ViewResult;
 
-            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+            var viewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
         }
@@ -229,25 +240,12 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
-            {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
-            };
-
-            var @operator = new OperatorData(Guid.NewGuid(), "TEST", organisationData, organisationData.Id);
+            var organisation = new OrganisationData() { Id = Guid.NewGuid(), Name = "TEST" };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData,
-                Operator = @operator,
+                Contact = A.Fake<AatfContactData>(),
                 FacilityType = type
             };
 
@@ -292,7 +290,6 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
                 FacilityType = FacilityType.Aatf
             };
 
@@ -300,25 +297,27 @@
 
             await controller.Details(aatfId);
             
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOperatorId>.That.Matches(a => a.OperatorId == aatfData.Operator.Id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void DetailsGet_GivenValidAatfId_MapperShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
-            var organisationData = new OrganisationData();
-            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            var organisationData = new OrganisationData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country",
-                Telephone = "9367282",
-                Email = "test@test.com"
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
             };
 
             AatfContactData contactData = new AatfContactData();
@@ -336,7 +335,6 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
                 Contact = contactData
             };
 
@@ -344,14 +342,14 @@
             var associatedSchemes = new List<Core.Scheme.SchemeData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOperatorId>.That.Matches(a => a.OperatorId == aatfData.Operator.Id))).Returns(associatedAatfs);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).Returns(associatedAatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>._)).Returns(associatedSchemes);
 
             await controller.Details(aatfId);
 
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
-            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Operator.Organisation.BusinessAddress)
+            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)
             && a.SiteAddressString == controller.GenerateAatfAddress(aatfData.SiteAddress)
             && a.ContactAddressString == controller.GenerateAatfAddress(aatfData.Contact.AddressData)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -360,18 +358,20 @@
         public async void DetailsGet_GivenValidAatfId_SchemesByOrganisationIdShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
-            var organisationData = new OrganisationData();
-            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            var organisationData = new OrganisationData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country",
-                Telephone = "9367282",
-                Email = "test@test.com"
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
             };
 
             AatfContactData contactData = new AatfContactData();
@@ -389,35 +389,36 @@
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
+                Contact = contactData
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Operator.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
         {
-            AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
+            var viewModel = A.Fake<AatfDetailsViewModel>();
 
             var aatfId = Guid.NewGuid();
-            var organisationData = new OrganisationData();
-            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            var organisationData = new OrganisationData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country",
-                Telephone = "9367282",
-                Email = "test@test.com"
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
             };
 
             AatfContactData contactData = new AatfContactData();
@@ -436,7 +437,6 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
                 FacilityType = FacilityType.Aatf
             };
 
@@ -450,22 +450,24 @@
         [Fact]
         public async void DetailsGet_GivenValidAatfIdButNoApprovalDate_ViewModelShouldBeCreatedWithNullApprovalDate()
         {
-            AatfDetailsViewModel viewModel = A.Fake<AatfDetailsViewModel>();
+            var viewModel = A.Fake<AatfDetailsViewModel>();
             viewModel.ApprovalDate = null;
 
             var aatfId = Guid.NewGuid();
-            var organisationData = new OrganisationData();
-            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            var organisationData = new OrganisationData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country",
-                Telephone = "9367282",
-                Email = "test@test.com"
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
             };
 
             AatfContactData contactData = new AatfContactData();
@@ -484,7 +486,6 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
                 ApprovalDate = default(DateTime),
                 FacilityType = FacilityType.Aatf
             };
@@ -608,6 +609,24 @@
 
             result.ViewName.Should().BeEmpty();
             result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            var viewModel = new AatfEditDetailsViewModel() { Id = Guid.NewGuid() };
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A<GetUKCompetentAuthorities>._)).Returns(A.CollectionOfFake<UKCompetentAuthorityData>(1));
+
+            await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -881,7 +900,7 @@
             HttpContextBase httpContextBase = A.Fake<HttpContextBase>();
             ClaimsPrincipal principal = new ClaimsPrincipal(httpContextBase.User);
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
-            
+
             if (hasInternalAdminUserClaims)
             {
                 claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
@@ -890,7 +909,7 @@
 
             A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
 
-            ControllerContext context = new ControllerContext(httpContextBase, new RouteData(), controller);
+            var context = new ControllerContext(httpContextBase, new RouteData(), controller);
             controller.ControllerContext = context;
         }
     }

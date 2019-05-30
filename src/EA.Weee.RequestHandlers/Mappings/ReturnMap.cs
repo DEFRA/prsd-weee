@@ -35,7 +35,7 @@
                 Id = source.Return.Id,
                 Quarter = new Quarter(source.Return.Quarter.Year, (QuarterType)source.Return.Quarter.Q),
                 QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate),
-                ReturnOperatorData = new OperatorData(source.Return.OperatorId, source.Return.Operator.Organisation.OrganisationName, organisationMapper.Map(source.Return.Operator.Organisation), source.Return.Operator.Organisation.Id),
+                OrganisationData = organisationMapper.Map(source.Organisation),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(),
                 CreatedBy = source.Return.CreatedBy.FullName,
                 CreatedDate = source.Return.CreatedDate,

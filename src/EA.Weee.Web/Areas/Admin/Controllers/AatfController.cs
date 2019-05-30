@@ -17,6 +17,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Security.Claims;
@@ -30,14 +31,16 @@
         private readonly IMapper mapper;
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
+        private readonly IWeeeCache cache;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator)
+        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -45,15 +48,15 @@
         {
             using (var client = apiClient())
             {
-                AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                List<AatfDataList> associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOperatorId(aatf.Operator.Id));
+                var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(aatf.Organisation.Id));
 
-                List<Core.Scheme.SchemeData> associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Operator.OrganisationId));
+                var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Organisation.Id));
 
-                AatfDetailsViewModel viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
+                var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
-                    OrganisationString = GenerateSharedAddress(aatf.Operator.Organisation.BusinessAddress),
+                    OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
                     ContactAddressString = GenerateAatfAddress(aatf.Contact.AddressData), 
                     AssociatedAatfs = associatedAatfs,
@@ -90,7 +93,8 @@
                     {
                         AatfDataList = await GetAatfs(viewModel.FacilityType, viewModel.Filter),
                         CanAddAatf = IsUserInternalAdmin(),
-                        FacilityType = viewModel.FacilityType
+                        FacilityType = viewModel.FacilityType,
+                        Filter = viewModel.Filter
                     };
                     return View(viewModel);
                 }
@@ -150,6 +154,8 @@
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
+
+                cache.InvalidateAatfCache();
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
             }

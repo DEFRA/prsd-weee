@@ -20,8 +20,6 @@
 
         public Guid Id { get; set; }
 
-        public OperatorData @Operator { get; set; }
-
         public virtual string Name { get; set; }
 
         public string ApprovalNumber { get; set; }

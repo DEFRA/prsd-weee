@@ -50,12 +50,7 @@
         @foreach (var aatf in Model.AatfsData)
         {
             <div class="govuk-grid-row govuk-table__row govuk-table__header--no-line">
-                <div class="govuk-grid-column-three-quarters">
-                    <h1 class="govuk-heading-m">@aatf.Aatf.Name</h1>
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    <h1 class="govuk-heading-m">@aatf.Aatf.ApprovalNumber</h1>
-                </div>
+                <h1 class="govuk-heading-m">@aatf.Aatf.Name &ndash; @aatf.Aatf.ApprovalNumber</h1>
             </div>
 
             <div class="govuk-grid-column-one-half">&nbsp;</div>
@@ -225,7 +220,7 @@
     <div class="govuk-!-padding-bottom-6"></div>
 
     <div class="govuk-grid-row">
-        
+
     </div>
 </section>
 

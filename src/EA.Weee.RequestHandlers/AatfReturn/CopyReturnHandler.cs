@@ -37,14 +37,14 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var returnCopy = await context.Returns.Include(r => r.Operator.Organisation).FirstOrDefaultAsync(r => r.Id == message.ReturnId);
+            var returnCopy = await context.Returns.Include(r => r.Organisation).FirstOrDefaultAsync(r => r.Id == message.ReturnId);
 
             if (returnCopy == null)
             {
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");
             }
 
-            authorization.EnsureOrganisationAccess(returnCopy.Operator.Organisation.Id);
+            authorization.EnsureOrganisationAccess(returnCopy.Organisation.Id);
 
             await CopyReturnReportsOn(message, returnCopy);
 
@@ -68,7 +68,7 @@
         private void CopyReturn(CopyReturn message, Return returnCopy)
         {
             returnCopy.ResetSubmitted(userContext.UserId.ToString(), message.ReturnId);
-            context.Entry(returnCopy.Operator).State = EntityState.Unchanged;
+            context.Entry(returnCopy.Organisation).State = EntityState.Unchanged;
 
             context.Returns.Add(returnCopy);
         }

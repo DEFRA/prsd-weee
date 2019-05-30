@@ -38,13 +38,14 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.DateTime> SubmittedDate { get; set; }
         public string SubmittedByUserId { get; set; }
         public bool HasAnnualCharge { get; set; }
-        public virtual Organisation Organisation { get; set; }
-        public virtual Scheme Scheme { get; set; }
+    
         public virtual ICollection<MemberUploadError> MemberUploadErrors { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual AspNetUser AspNetUser1 { get; set; }
         public virtual AspNetUser AspNetUser2 { get; set; }
         public virtual InvoiceRun InvoiceRun { get; set; }
+        public virtual Organisation Organisation { get; set; }
+        public virtual Scheme Scheme { get; set; }
     }
 }
