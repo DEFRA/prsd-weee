@@ -65,12 +65,13 @@
             }
         }
 
-        public async Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName)
+        public async Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName, string userName)
         {
             var model = new
             {
                 OrganisationName = organisationName,
                 ExternalUserLoginUrl = configuration.ExternalUserLoginUrl,
+                FullName = userName
             };
 
             EmailContent content = new EmailContent()
@@ -92,7 +93,8 @@
             {
                 OrganisationName = organisationUser.Organisation.OrganisationName,
                 Approved = organisationUser.UserStatus == UserStatus.Active,
-                ExternalUserLoginUrl = configuration.ExternalUserLoginUrl
+                ExternalUserLoginUrl = configuration.ExternalUserLoginUrl,
+                FullName = organisationUser.User.FullName
             };
 
             EmailContent content = new EmailContent()
