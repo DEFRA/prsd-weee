@@ -8,8 +8,6 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
@@ -23,7 +21,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
@@ -39,9 +36,9 @@
 
         public AddAatfControllerTests()
         {
-            this.organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            this.weeeClient = A.Fake<IWeeeClient>();
-            this.countries = A.Dummy<IList<CountryData>>();
+            organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            weeeClient = A.Fake<IWeeeClient>();
+            countries = A.Dummy<IList<CountryData>>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
         }
@@ -241,7 +238,7 @@
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
-                AatfName = "name",
+                Name = "name",
                 ApprovalNumber = "123",
                 ApprovalDate = DateTime.Now,
                 SiteAddressData = A.Fake<AatfAddressData>(),
@@ -255,7 +252,7 @@
 
             AatfData aatfData = new AatfData(
                 Guid.NewGuid(),
-                viewModel.AatfName,
+                viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),

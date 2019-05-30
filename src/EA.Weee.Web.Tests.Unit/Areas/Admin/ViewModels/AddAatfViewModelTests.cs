@@ -20,7 +20,7 @@
         [InlineData("WEE/AB123482/SCH")]
         public void ModelWithIncorrectApprovalNumber_IsInvalid(string approvalNumber)
         {
-            AddAatfViewModel model = ValidAddAatfViewModel();
+            var model = ValidAddAatfViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -35,7 +35,7 @@
         [InlineData("WEE/DE8562FG/ATF")]
         public void ModelWithCorrectApprovalNumber_IsValid(string approvalNumber)
         {
-            AddAatfViewModel model = ValidAddAatfViewModel();
+            var model = ValidAddAatfViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -48,18 +48,18 @@
         [Fact]
         public void ModelAatfNameIsSet_SiteAddressNameGetsSetAswell()
         {
-            AddAatfViewModel model = new AddAatfViewModel();
-            model.AatfName = "test name";
+            var model = new AddAatfViewModel();
+            model.Name = "test name";
 
-            Assert.Equal(model.AatfName, model.SiteAddressData.Name);
+            Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
         private AddAatfViewModel ValidAddAatfViewModel()
         {
             return new AddAatfViewModel
             {
-                AatfName = "a name",
-                SiteAddressData = new Core.AatfReturn.AatfAddressData(),
+                Name = "a name",
+                SiteAddressData = new AatfAddressData(),
                 ApprovalNumber = "WEE/AA0123AA/ATF",
                 CompetentAuthoritiesList = new List<UKCompetentAuthorityData>(),
                 CompetentAuthorityId = new Guid(),
@@ -70,7 +70,7 @@
                 ApprovalDate = DateTime.Now,
                 ContactData = new AatfContactData(),
                 OrganisationId = Guid.NewGuid()
-        };
+            };
         }
     }
 }

@@ -337,7 +337,7 @@
         {
             return new AatfData(
                 Guid.NewGuid(),
-                viewModel.AatfName,
+                viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),

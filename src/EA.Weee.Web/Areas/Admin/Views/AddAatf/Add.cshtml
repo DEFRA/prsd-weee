@@ -1,6 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Scheme.ViewModels
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddAatfViewModel
@@ -22,10 +21,10 @@
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AatfName)">
-                @Html.Gds().LabelFor(m => m.AatfName)
-                @Html.Gds().ValidationMessageFor(m => m.AatfName)
-                @Html.Gds().TextBoxFor(m => m.AatfName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+                @Html.Gds().LabelFor(m => m.Name)
+                @Html.Gds().ValidationMessageFor(m => m.Name)
+                @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
             </div>
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address1)">
