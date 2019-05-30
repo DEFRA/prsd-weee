@@ -6,7 +6,7 @@
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
-    ViewBag.Title = "View AATF details - GOV.UK";
+    ViewBag.Title = "View " + Model.FacilityTypeString +  " details - GOV.UK";
 }
 
 <div class="govuk-grid-row">
@@ -25,7 +25,7 @@
     <ul class="govuk-tabs__list">
         <li class="govuk-tabs__list-item">
             <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#aatfDetails">
-                AATF details
+                @Model.FacilityTypeString details
             </a>
         </li>
         <li class="govuk-tabs__list-item">
@@ -47,7 +47,7 @@
 
     <section class="govuk-tabs__panel" id="aatfDetails">
         <div class="govuk-table__header--large">
-            AATF details
+            @Model.FacilityTypeString details
         </div>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
@@ -55,7 +55,7 @@
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name of AATF</th>
+                    <th class="govuk-table__header" scope="col">Name of  @Model.FacilityTypeString</th>
                     <td class="govuk-table__cell" style="word-break:break-all">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -91,7 +91,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit AATF details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityTypeString details</a>
             </p>
         }
     </section>

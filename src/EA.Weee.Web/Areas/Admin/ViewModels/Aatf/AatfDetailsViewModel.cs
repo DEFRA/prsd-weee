@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using System;
@@ -53,6 +54,21 @@
         }
 
         public FacilityType FacilityType { get; set; }
+
+        public string FacilityTypeString
+        {
+            get
+            {
+                if (this.FacilityType != 0)
+                {
+                    return this.FacilityType.ToDisplayString();
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 

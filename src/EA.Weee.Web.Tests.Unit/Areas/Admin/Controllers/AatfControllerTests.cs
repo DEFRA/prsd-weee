@@ -207,8 +207,10 @@
             Assert.Equal(facilityType, viewModel.FacilityType);
         }
 
-        [Fact]
-        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
+        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
+        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type, string activity)
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData()
@@ -245,14 +247,15 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = @operator
+                Operator = @operator,
+                FacilityType = type
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
 
-            Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAatfs);
+            Assert.Equal(breadcrumbService.InternalActivity, activity);
         }
 
         [Fact]
@@ -289,7 +292,8 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
+                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -432,7 +436,8 @@
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id)
+                Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -480,12 +485,13 @@
                 Organisation = organisationData,
                 Contact = contactData,
                 Operator = new OperatorData(Guid.NewGuid(), "Operator", organisationData, organisationData.Id),
-                ApprovalDate = default(DateTime)
+                ApprovalDate = default(DateTime),
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
-            var result = await controller.Details(aatfId) as ViewResult;
+            var result = await controller.Details(aatfId) as ViewResult;       
 
             result.Model.Should().BeEquivalentTo(viewModel);
         }

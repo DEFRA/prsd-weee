@@ -43,8 +43,6 @@
         [HttpGet]
         public async Task<ActionResult> Details(Guid id)
         {
-            SetBreadcrumb();
-
             using (var client = apiClient())
             {
                 AatfData aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
@@ -62,6 +60,8 @@
                     AssociatedSchemes = associatedSchemes
                 });
 
+                SetBreadcrumb(aatf.FacilityType);
+
                 return View(viewModel);
             }
         }
@@ -69,9 +69,9 @@
         [HttpGet]
         public async Task<ActionResult> ManageAatfs(string type)
         {
-            SetBreadcrumb();
-
             FacilityType facilityType = type.GetValueFromDisplayName<FacilityType>();
+
+            SetBreadcrumb(facilityType);
 
             return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin() });
         }
@@ -80,7 +80,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfs(ManageAatfsViewModel viewModel)
         {
-            SetBreadcrumb();
+            SetBreadcrumb(viewModel.FacilityType);
 
             if (!ModelState.IsValid)
             {
@@ -112,7 +112,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
-            SetBreadcrumb();
+            SetBreadcrumb(FacilityType.Aatf);
             return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(FacilityType.Aatf, filter), Filter = filter });
         }
 
@@ -133,7 +133,7 @@
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
-                SetBreadcrumb();
+                SetBreadcrumb(FacilityType.Aatf);
                 return View(viewModel);
             }
         }
@@ -163,7 +163,7 @@
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 
-            SetBreadcrumb();
+            SetBreadcrumb(FacilityType.Aatf);
             return View(viewModel);
         }
 
@@ -186,7 +186,7 @@
                 };
 
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                SetBreadcrumb();
+                SetBreadcrumb(FacilityType.Aatf);
                 return View(viewModel);
             }
         }
@@ -212,7 +212,7 @@
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
-            SetBreadcrumb();
+            SetBreadcrumb(FacilityType.Aatf);
 
             return View(viewModel);
         }
@@ -278,9 +278,19 @@
             return siteAddressLong;
         }
 
-        private void SetBreadcrumb()
+        private void SetBreadcrumb(FacilityType type)
         {
-            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+            switch (type)
+            {
+                case FacilityType.Aatf:
+                    breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+                    break;
+                case FacilityType.Ae:
+                    breadcrumb.InternalActivity = InternalUserActivity.ManageAes;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
