@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Organisation;
+    using EA.Weee.Domain.User;
 
     public interface IOrganisationUserRequestEventHandlerDataAccess
     {
@@ -14,5 +15,7 @@
         /// <param name="organisationId"></param>
         /// <returns></returns>
         Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId);
+
+        Task<User> FetchUser(string userId);
     }
 }
