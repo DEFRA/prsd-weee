@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme
-{
-    using System;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using Core.DataStandards;
-    using Core.Organisations;
-    using Core.Shared;
+﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using EA.Weee.Core.DataStandards;
+using EA.Weee.Core.Organisations;
+using EA.Weee.Core.Shared;
 
+namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
+{
     public class EditRegisteredCompanyOrganisationDetailsViewModel
     {
         public Guid SchemeId { get; set; }

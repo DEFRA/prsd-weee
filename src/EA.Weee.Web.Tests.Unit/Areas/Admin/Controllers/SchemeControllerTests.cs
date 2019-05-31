@@ -1,4 +1,6 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
+﻿using EA.Weee.Web.Areas.Admin.ViewModels.Organisation;
+
+namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
     using System.Collections.Generic;
