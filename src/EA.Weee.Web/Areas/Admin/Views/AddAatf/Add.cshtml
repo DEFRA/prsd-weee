@@ -2,7 +2,8 @@
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddAatfViewModel
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddFacilityViewModelBase
 @{
     ViewBag.Title = "Enter AATF details - GOV.UK";
 }
@@ -22,7 +23,7 @@
             @Html.Gds().ValidationSummary()
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
-                @Html.Gds().LabelFor(m => m.Name)
+                @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
                 @Html.Gds().ValidationMessageFor(m => m.Name)
                 @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
             </div>

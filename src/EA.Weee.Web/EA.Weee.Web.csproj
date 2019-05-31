@@ -426,6 +426,7 @@
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
@@ -472,6 +473,7 @@
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Constant\BreadCrumbConstant.cs" />
     <Compile Include="Constant\ViewDataConstant.cs" />
+    <Compile Include="Extensions\GdsExtensions.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
