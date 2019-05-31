@@ -88,8 +88,9 @@
             const string approvalNumber = "approvalNumber";
             var aatfStatus = AatfStatus.Approved;
             var contact = A.Fake<AatfContact>();
+            var complianceYear = (Int16)2019;
 
-            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Dummy<FacilityType>(), A.Dummy<Int16>());
+            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, contact, A.Dummy<FacilityType>(), complianceYear);
 
             aatf.CompetentAuthority.Should().Be(competentAuthority);
             aatf.ApprovalNumber.Should().Be(approvalNumber);
@@ -97,6 +98,7 @@
             aatf.Name.Should().Be(name);
             aatf.Organisation.Should().Be(organisation);
             aatf.Contact.Should().Be(contact);
+            aatf.ComplianceYear.Should().Be(complianceYear);
         }
     }
 }

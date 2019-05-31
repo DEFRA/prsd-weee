@@ -7,7 +7,6 @@
     using EA.Weee.Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using System;
 
     public class AatfMap : IMap<Aatf, AatfData>
     {

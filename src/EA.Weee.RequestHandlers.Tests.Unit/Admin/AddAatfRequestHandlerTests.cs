@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.Identity;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Admin;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
@@ -19,10 +17,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Microsoft.AspNet.Identity;
-    using System;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class AddAatfRequestHandlerTests
@@ -99,20 +93,21 @@
                 && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
                 && c.Name == aatf.Name
                 && c.SiteAddress.Id == aatf.SiteAddress.Id
-                && c.Size == aatf.Size))).Returns(aatfId);
+                && c.Size == aatf.Size
+                && c.ComplianceYear == aatf.ComplianceYear))).Returns(aatfId);
 
             bool result = await handler.HandleAsync(request);
 
             A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
                 c => c.Name == aatf.Name
                 && c.ApprovalNumber == aatf.ApprovalNumber
-                && c.ApprovalNumber == aatf.ApprovalNumber
                 && c.CompetentAuthorityId == aatf.CompetentAuthority.Id
                 && c.Name == aatf.Name
                 && c.SiteAddress.Id == aatf.SiteAddress.Id
                 && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
                 && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
-                && c.ApprovalDate == aatf.ApprovalDate))).MustHaveHappened(Repeated.Exactly.Once);
+                && c.ApprovalDate == aatf.ApprovalDate
+                && c.ComplianceYear == aatf.ComplianceYear))).MustHaveHappened(Repeated.Exactly.Once);
 
             result.Should().Be(true);
         }
