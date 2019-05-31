@@ -21,17 +21,19 @@
     @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.Deselected == true))
     {
         <p class="govuk-body">
-            @deselectedOption.Description
+            @if (deselectedOption.Id == 5)
+            {
+                @:Non-obligated WEEE - DCF
+            }
+            else
+            {
+                @deselectedOption.Description
+            }
         </p>
     }
 
     @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsDeselectRouteName, FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.ReturnId)
-
         <div class="govuk-!-padding-bottom-5"></div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeRemoveOptions">
