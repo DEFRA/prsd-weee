@@ -41,6 +41,8 @@
 
         public IEnumerable<AatfSize> SizeList { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         [Required]
         [Display(Name = "Size")]
         public int SizeValue { get; set; }
