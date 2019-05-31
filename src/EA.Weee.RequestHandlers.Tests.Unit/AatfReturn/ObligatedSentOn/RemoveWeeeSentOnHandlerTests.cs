@@ -67,7 +67,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ProvideNonExistantWeeeSentOnId_ReturnsFalse()
+        public async Task HandleAsync_ProvideNonExistentWeeeSentOnId_ReturnsFalse()
         {
             WeeeSentOn returnData = null;
             var request = new RemoveWeeeSentOn(A.Dummy<Guid>());

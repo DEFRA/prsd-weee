@@ -13,10 +13,6 @@
 
         public WeeeSentOnData WeeeSentOn { get; set; }
 
-        public string SiteAddress { get; set; }
-
-        public string OperatorAddress { get; set; }
-
         public string SelectedValue { get; set; }
 
         public ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()

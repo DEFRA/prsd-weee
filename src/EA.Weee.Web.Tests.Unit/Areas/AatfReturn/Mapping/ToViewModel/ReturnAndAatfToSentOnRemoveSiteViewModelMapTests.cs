@@ -12,12 +12,15 @@
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMapTests
     {
         private readonly ITonnageUtilities tonnageUtilities;
+        private readonly IAddressUtilities addressUtilities;
         private readonly ReturnAndAatfToSentOnRemoveSiteViewModelMap mapper;
-
+        
         public ReturnAndAatfToSentOnRemoveSiteViewModelMapTests()
         {
-            this.tonnageUtilities = A.Fake<ITonnageUtilities>();
-            mapper = new ReturnAndAatfToSentOnRemoveSiteViewModelMap(A.Fake<IWeeeCache>(), tonnageUtilities);
+            tonnageUtilities = A.Fake<ITonnageUtilities>();
+            addressUtilities = A.Fake<IAddressUtilities>();
+
+            mapper = new ReturnAndAatfToSentOnRemoveSiteViewModelMap(tonnageUtilities, addressUtilities);
         }
 
         [Fact]
@@ -31,15 +34,6 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            var orgId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var weeeSentOn = new WeeeSentOnData()
-            {
-                Tonnages = new List<WeeeObligatedData>()
-            };
-            var siteAddress = "SITE ADDRESS";
-            var operatorAddress = "OPERATOR ADDRESS";
             var obligatedTonnage = new ObligatedCategoryValue()
             {
                 B2B = "20",
@@ -49,24 +43,20 @@
 
             var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
             {
-                ReturnId = returnId,
-                AatfId = aatfId,
-                OrganisationId = orgId,
-                WeeeSentOn = weeeSentOn,
-                SiteAddress = siteAddress,
-                OperatorAddress = operatorAddress
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOn = WeeeSentOn()
             };
 
-            A.CallTo(() => tonnageUtilities.SumObligatedValues(weeeSentOn.Tonnages)).Returns(obligatedTonnage);
+            A.CallTo(() => tonnageUtilities.SumObligatedValues(transfer.WeeeSentOn.Tonnages)).Returns(obligatedTonnage);
 
             var result = mapper.Map(transfer);
 
-            result.OrganisationId.Should().Be(orgId);
-            result.ReturnId.Should().Be(returnId);
-            result.AatfId.Should().Be(aatfId);
-            result.SiteAddress.Should().Be(siteAddress);
-            result.OperatorAddress.Should().Be(operatorAddress);
-            result.WeeeSentOn.Should().BeEquivalentTo(weeeSentOn);
+            result.OrganisationId.Should().Be(transfer.OrganisationId);
+            result.ReturnId.Should().Be(transfer.ReturnId);
+            result.AatfId.Should().Be(transfer.AatfId);
+            result.WeeeSentOn.Should().BeEquivalentTo(transfer.WeeeSentOn);
             result.TonnageB2B.Should().Be(obligatedTonnage.B2B);
             result.TonnageB2C.Should().Be(obligatedTonnage.B2C);
         }
@@ -81,18 +71,7 @@
                 CategoryId = 1
             };
 
-            var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
-            {
-                ReturnId = Guid.NewGuid(),
-                AatfId = Guid.NewGuid(),
-                OrganisationId = Guid.NewGuid(),
-                WeeeSentOn = new WeeeSentOnData()
-                {
-                    Tonnages = new List<WeeeObligatedData>()
-                },
-                SiteAddress = "TEST",
-                OperatorAddress = "TEST"
-            };
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
 
             A.CallTo(() => tonnageUtilities.SumObligatedValues(transfer.WeeeSentOn.Tonnages)).Returns(obligatedTonnage);
 
@@ -100,6 +79,74 @@
 
             result.TonnageB2B.Should().Be("-");
             result.TonnageB2C.Should().Be("-");
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOnSiteAddress_SiteAddressShouldBeMapped()
+        {
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+
+            var result = mapper.Map(transfer);
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOnSiteAddress_MappedSiteAddressShouldBeReturned()
+        {
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+            const string address = "address";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress)).Returns(address);
+
+            var result = mapper.Map(transfer);
+
+            result.SiteAddress.Should().Be(address);
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOnOperatorAddress_OperatorAddressShouldBeMapped()
+        {
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+
+            var result = mapper.Map(transfer);
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOnOperatorAddress_MappedOperatorAddressShouldBeReturned()
+        {
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+            const string address = "address";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress)).Returns(address);
+
+            var result = mapper.Map(transfer);
+
+            result.OperatorAddress.Should().Be(address);
+        }
+
+        private WeeeSentOnData WeeeSentOn()
+        {
+            return new WeeeSentOnData()
+            {
+                Tonnages = new List<WeeeObligatedData>(),
+                SiteAddress = new AatfAddressData(),
+                OperatorAddress = new AatfAddressData(),
+            };
+        }
+
+        private ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
+        {
+            var transfer = new ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
+            {
+                ReturnId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                WeeeSentOn = WeeeSentOn()
+            };
+            return transfer;
         }
     }
 }
