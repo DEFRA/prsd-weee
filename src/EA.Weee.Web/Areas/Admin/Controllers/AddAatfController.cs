@@ -157,6 +157,8 @@
 
                 await client.SendAsync(User.GetAccessToken(), request);
 
+                await cache.InvalidateAatfCache(request.OrganisationId);
+
                 return RedirectToAction("ManageAatfs", "Aatf");
             }
         }

@@ -28,7 +28,7 @@
 
         Task InvalidateOrganisationSearch();
 
-        void InvalidateAatfCache();
+        Task InvalidateAatfCache(Guid id);
 
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
