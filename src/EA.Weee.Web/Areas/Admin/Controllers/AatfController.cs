@@ -19,6 +19,7 @@
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -31,8 +32,16 @@
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
+        private readonly IAatfViewModelValidatorWrapper validator;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator, IWeeeCache cache)
+        public AatfController(
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IMapper mapper,
+            IEditAatfDetailsRequestCreator detailsRequestCreator,
+            IEditAatfContactRequestCreator contactRequestCreator,
+            IWeeeCache cache,
+            IAatfViewModelValidatorWrapper validator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -40,6 +49,7 @@
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
             this.cache = cache;
+            this.validator = validator;
         }
 
         [HttpGet]
@@ -161,7 +171,7 @@
             using (var client = apiClient())
             {
                 var accessToken = User.GetAccessToken();
-                viewModel.AatfStatusList = Enumeration.GetAll<AatfStatus>();
+                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));

@@ -1,13 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Reflection;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using FluentValidation.Attributes;
     using Xunit;
 
     public class AatfEditDetailsViewModelTests
@@ -61,8 +64,10 @@
                 "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
-                "AatfStatus",
-                "Size"
+                "ApprovalDate",
+                "ComplianceYear",
+                "StatusValue",
+                "SizeValue"
             };
 
             foreach (var property in typeof(AatfEditDetailsViewModel).GetProperties())
@@ -83,13 +88,22 @@
             Assert.Equal(model.Name, model.SiteAddress.Name);
         }
 
+        [Fact]
+        public void AatfEditDetailsViewModel_ClassHasValidatorAttribute()
+        {
+            var t = typeof(AatfEditDetailsViewModel);
+            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
+
+            customAttribute.ValidatorType.Should().Be(typeof(AatfViewModelValidator));
+        }
+
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
         {
             return fixture.Build<AatfEditDetailsViewModel>()
-                .With(a => a.AatfStatusList, Enumeration.GetAll<AatfStatus>())
-                .With(a => a.AatfStatus, AatfStatus.Approved.Value)
+                .With(a => a.StatusList, Enumeration.GetAll<AatfStatus>())
+                .With(a => a.StatusValue, AatfStatus.Approved.Value)
                 .With(a => a.SizeList, Enumeration.GetAll<AatfSize>())
-                .With(a => a.Size, AatfSize.Large.Value)
+                .With(a => a.SizeValue, AatfSize.Large.Value)
                 .Create();
         }
     }

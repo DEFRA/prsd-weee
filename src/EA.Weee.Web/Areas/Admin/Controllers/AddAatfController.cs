@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
@@ -9,8 +14,6 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Organisations.Create;
-    using EA.Weee.Requests.Organisations.Create.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -18,16 +21,11 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     [AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
@@ -37,13 +35,20 @@
         private readonly IWeeeCache cache;
         private const int maximumSearchResults = 5;
         private readonly BreadcrumbService breadcrumb;
+        private readonly IAatfViewModelValidatorWrapper validator;
 
-        public AddAatfController(ISearcher<OrganisationSearchResult> organisationSearcher, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
+        public AddAatfController(
+            ISearcher<OrganisationSearchResult> organisationSearcher,
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IWeeeCache cache,
+            IAatfViewModelValidatorWrapper validator)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.validator = validator;
         }
 
         [HttpGet]
@@ -341,11 +346,11 @@
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
-                viewModel.SelectedComplianceYear,
+                viewModel.ComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
-                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
-                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
         }
 

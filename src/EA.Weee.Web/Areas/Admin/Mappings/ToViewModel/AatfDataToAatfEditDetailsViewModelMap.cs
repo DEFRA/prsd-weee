@@ -23,11 +23,12 @@
                 Name = source.Name,
                 ApprovalNumber = source.ApprovalNumber,
                 CompetentAuthorityId = source.CompetentAuthority.Id,
-                AatfStatus = source.AatfStatus.Value,
-                AatfStatusList = Enumeration.GetAll<AatfStatus>(),
+                StatusValue = source.AatfStatus.Value,
+                StatusList = Enumeration.GetAll<AatfStatus>(),
                 SiteAddress = source.SiteAddress,
-                Size = source.Size.Value,
-                SizeList = Enumeration.GetAll<AatfSize>()
+                SizeValue = source.Size.Value,
+                SizeList = Enumeration.GetAll<AatfSize>(),
+                ComplianceYear = source.ComplianceYear
             };
 
             if (source.ApprovalDate != default(DateTime))

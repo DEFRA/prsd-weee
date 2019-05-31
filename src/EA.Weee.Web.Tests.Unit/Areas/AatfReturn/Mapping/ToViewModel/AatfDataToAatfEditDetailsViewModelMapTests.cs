@@ -59,8 +59,9 @@
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddress);
             Assert.Equal(competentAuthorityId, result.CompetentAuthorityId);
-            Assert.Equal(AatfStatus.Approved.Value, result.AatfStatus);
-            Assert.Equal(AatfSize.Large.Value, result.Size);
+            Assert.Equal(AatfStatus.Approved.Value, result.StatusValue);
+            Assert.Equal(AatfSize.Large.Value, result.SizeValue);
+            Assert.Equal(aatfData.ComplianceYear, result.ComplianceYear);
         }
 
         private AatfData CreateAatfData(Guid competentAuthorityId)
@@ -74,6 +75,7 @@
                 .With(a => a.CompetentAuthority, competentAuthority)
                 .With(a => a.AatfStatus, AatfStatus.Approved)
                 .With(a => a.Size, AatfSize.Large)
+                .With(a => a.ComplianceYear, (Int16)2019)
                 .Create();
         }
     }

@@ -425,7 +425,10 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\AatfViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
@@ -447,6 +450,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\IAatfViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
@@ -917,6 +921,7 @@
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
