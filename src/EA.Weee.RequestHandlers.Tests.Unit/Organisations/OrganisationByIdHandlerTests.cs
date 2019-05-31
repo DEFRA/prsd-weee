@@ -146,7 +146,7 @@
 
         private Aatf CreateAatf(Organisation organisation)
         {
-            return new Aatf("name", A.Dummy<UKCompetentAuthority>(), "number", A.Dummy<AatfStatus>(), organisation, A.Dummy<AatfAddress>(), A.Dummy<AatfSize>(), DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>());
+            return new Aatf("name", A.Dummy<UKCompetentAuthority>(), "number", A.Dummy<AatfStatus>(), organisation, A.Dummy<AatfAddress>(), A.Dummy<AatfSize>(), DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), (Int16)2019);
         }
     }
 }
