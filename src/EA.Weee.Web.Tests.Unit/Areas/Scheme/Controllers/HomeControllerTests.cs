@@ -109,17 +109,58 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrue_ReturnsManageEeeWeeeDataOption()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                 SchemeId = Guid.NewGuid()
+              });
+
             var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ManageEeeWeeeData, result);
         }
 
         [Fact]
-        public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrue_ReturnsAATFReturnOption()
+        public async Task GetActivities_HasScheme_ReturnsManagePcsMembersAndManageContactDetailsOptions()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  SchemeId = Guid.NewGuid()
+              });
+
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+
+            Assert.Contains(PcsAction.ManagePcsMembers, result);
+            Assert.Contains(PcsAction.ManageContactDetails, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsAATFReturnOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = true
+              });
+
             var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ManageAatfReturns, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnsAATFReturnOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = false
+              });
+
+            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
+
+            Assert.DoesNotContain(PcsAction.ManageAatfReturns, result);
         }
 
         [Fact]
