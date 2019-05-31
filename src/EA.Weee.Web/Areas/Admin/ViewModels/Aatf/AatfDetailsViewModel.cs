@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using System;
@@ -53,6 +54,8 @@
                 return this.ApprovalDate.Value.ToShortDateString();
             }
         }
+
+        public FacilityType FacilityType { get; set; }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 

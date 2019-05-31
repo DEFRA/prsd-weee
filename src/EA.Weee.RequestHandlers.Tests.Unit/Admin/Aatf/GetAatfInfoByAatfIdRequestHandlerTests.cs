@@ -34,7 +34,8 @@
                 A.Fake<IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize>>(),
                 A.Fake<IMap<AatfAddress, AatfAddressData>>(),
                 A.Fake<IMap<AatfContact, AatfContactData>>(),
-                A.Fake<IMap<Organisation, OrganisationData>>());
+                A.Fake<IMap<Organisation, OrganisationData>>(),
+                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
 
             fakeMapper = A.Fake<IMap<Aatf, AatfData>>();

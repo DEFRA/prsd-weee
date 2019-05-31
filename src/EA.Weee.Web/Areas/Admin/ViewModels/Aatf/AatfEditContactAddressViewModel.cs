@@ -9,6 +9,8 @@
 
         public AatfContactData ContactData { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         public AatfEditContactAddressViewModel()
         {
             this.ContactData = new AatfContactData();
