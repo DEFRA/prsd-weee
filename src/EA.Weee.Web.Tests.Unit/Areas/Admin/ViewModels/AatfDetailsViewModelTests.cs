@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
     using Xunit;
@@ -23,6 +25,19 @@
             AatfDetailsViewModel model = new AatfDetailsViewModel();
 
             Assert.Equal("-", model.ApprovalDateString);
+        }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf, "AATF")]
+        [InlineData(FacilityType.Aatf, "AATF")]
+        public void ViewModel_GetFacilityTypeString(FacilityType type, string expected)
+        {
+            AatfDetailsViewModel model = new AatfDetailsViewModel()
+            {
+                FacilityType = type
+            };
+
+            Assert.Equal(expected, model.FacilityType.ToDisplayString());
         }
     }
 }
