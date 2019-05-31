@@ -30,7 +30,7 @@
 
         public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, AatfContact contact, Domain.Country country)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, organisation, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf);
+            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, organisation, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
             return aatf;
         }
 

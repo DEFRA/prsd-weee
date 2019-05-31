@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -13,11 +18,6 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfsByOrganisationIdHandlerTests
@@ -107,9 +107,9 @@
 
             A.CallTo(() => matchingOrg.Id).Returns(organisationId);
 
-            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
-            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
-            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>());
+            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
+            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
+            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
 
             var aatfs = new List<Aatf>()
             {
@@ -120,9 +120,9 @@
 
             var aatfDatas = new List<AatfDataList>()
             {
-                new AatfDataList(Guid.NewGuid(), "B", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf),
-                new AatfDataList(Guid.NewGuid(), "A", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf),
-                new AatfDataList(Guid.NewGuid(), "C", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf)
+                new AatfDataList(Guid.NewGuid(), "B", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019),
+                new AatfDataList(Guid.NewGuid(), "A", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019),
+                new AatfDataList(Guid.NewGuid(), "C", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019)
             }.ToArray();
 
             A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
