@@ -49,6 +49,12 @@
 
         public AatfContactData ContactData { get; set; }
 
+        public IEnumerable<short> ComplianceYearList => new List<short> { 2019 };
+
+        [Required]
+        [Display(Name = "Compliance year")]
+        public short SelectedComplianceYear { get; set; }
+
         public AddFacilityViewModelBase()
         {
             ContactData = new AatfContactData();

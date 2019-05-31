@@ -1,7 +1,8 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Admin.Controllers
-@using MvcNavigationHelpers
 @using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddFacilityViewModelBase
 @{
@@ -187,7 +188,7 @@
             </button>
             <div class="govuk-!-padding-bottom-6"></div>
             <p>
-                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs("AATF")))">Cancel</a>
+                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(FacilityType.Aatf)))">Cancel</a>
             </p>
         }
     </section>

@@ -9,8 +9,6 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Organisations.Create;
-    using EA.Weee.Requests.Organisations.Create.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -18,7 +16,6 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -29,7 +26,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)]
+    [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
@@ -159,7 +156,7 @@
 
                 await cache.InvalidateAatfCache(request.OrganisationId);
 
-                return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
+                return RedirectToAction("ManageAatfs", "Aatf", new { FacilityType = FacilityType.Aatf });
             }
         }
 
