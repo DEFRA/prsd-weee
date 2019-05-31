@@ -20,5 +20,11 @@
 
         [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/ATF", ErrorMessage = "Approval number is not in correct format")]
         public override string ApprovalNumber { get; set; }
+        public IEnumerable<Int16> ComplianceYearList => new List<Int16> {(Int16)2019};
+
+        [Required]
+        [Display(Name = "Compliance year")]
+        public Int16 SelectedComplianceYear { get; set; }
+
     }
 }

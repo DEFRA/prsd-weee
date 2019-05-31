@@ -51,7 +51,7 @@
 
                 foreach (var sourceAatf in source.Aatfs)
                 {
-                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber));
+                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber, sourceAatf.ComplianceYear));
                 }
 
                 returnData.Aatfs = aatfReturnList;
@@ -66,7 +66,7 @@
             {
                 returnData.ObligatedWeeeReceivedData = source.ObligatedWeeeReceivedList.Select(n => new WeeeObligatedData(n.Id,
                     new Scheme(n.WeeeReceived.Scheme.Id, n.WeeeReceived.Scheme.SchemeName),
-                    new Aatf(n.WeeeReceived.Aatf.Id, n.WeeeReceived.Aatf.Name, n.WeeeReceived.Aatf.ApprovalNumber),
+                    new Aatf(n.WeeeReceived.Aatf.Id, n.WeeeReceived.Aatf.Name, n.WeeeReceived.Aatf.ApprovalNumber, n.WeeeReceived.Aatf.ComplianceYear),
                     n.CategoryId,
                     n.NonHouseholdTonnage,
                     n.HouseholdTonnage)).ToList();
@@ -74,7 +74,7 @@
 
             if (source.ObligatedWeeeSentOnList != null)
             {
-                returnData.ObligatedWeeeSentOnData = source.ObligatedWeeeSentOnList.Select(n => new WeeeObligatedData(n.Id, new Aatf(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage) { WeeeSentOnId = n.WeeeSentOn.Id }).ToList();
+                returnData.ObligatedWeeeSentOnData = source.ObligatedWeeeSentOnList.Select(n => new WeeeObligatedData(n.Id, new Aatf(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber, n.WeeeSentOn.Aatf.ComplianceYear), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage) { WeeeSentOnId = n.WeeeSentOn.Id }).ToList();
             }
 
             if (source.ObligatedWeeeReusedList != null)
@@ -82,7 +82,7 @@
                 returnData.ObligatedWeeeReusedData = source.ObligatedWeeeReusedList.Select(n => new WeeeObligatedData(
                     n.Id,
                     null,
-                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber),
+                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber, n.WeeeReused.Aatf.ComplianceYear),
                     n.CategoryId,
                     n.NonHouseholdTonnage,
                     n.HouseholdTonnage)).ToList();

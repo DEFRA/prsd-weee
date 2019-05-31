@@ -6,9 +6,7 @@
     {
         public string AddressConcatenate(AddressData addressData)
         {
-            var address = string.Empty;
-
-            address = addressData.Address1;
+            var address = addressData.Address1;
 
             address = addressData.Address2 == null ? address : StringConcatenate(address, addressData.Address2);
 
@@ -26,6 +24,37 @@
         public string StringConcatenate(string address, string input)
         {
             return $"{address}, {input}";
+        }
+
+        public string FormattedAddress(AddressData address)
+        {
+            if (address == null)
+            {
+                return string.Empty;
+            }
+
+            var siteAddressLong = address.Name + "<br/>" + address.Address1;
+
+            if (address.Address2 != null)
+            {
+                siteAddressLong += "<br/>" + address.Address2;
+            }
+
+            siteAddressLong += "<br/>" + address.TownOrCity;
+
+            if (address.CountyOrRegion != null)
+            {
+                siteAddressLong += "<br/>" + address.CountyOrRegion;
+            }
+
+            if (address.Postcode != null)
+            {
+                siteAddressLong += "<br/>" + address.Postcode;
+            }
+
+            siteAddressLong += "<br/>" + address.CountryName;
+
+            return siteAddressLong;
         }
     }
 }

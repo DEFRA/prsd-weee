@@ -2,20 +2,20 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
 
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMap : IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel>
     {
-        private readonly IWeeeCache cache;
         private readonly ITonnageUtilities tonnageUtilities;
+        private readonly IAddressUtilities addressUtilities;
 
-        public ReturnAndAatfToSentOnRemoveSiteViewModelMap(
-            IWeeeCache cache,
-            ITonnageUtilities tonnageUtilities)
+        public ReturnAndAatfToSentOnRemoveSiteViewModelMap(ITonnageUtilities tonnageUtilities, 
+            IAddressUtilities addressUtilities)
         {
-            this.cache = cache;
             this.tonnageUtilities = tonnageUtilities;
+            this.addressUtilities = addressUtilities;
         }
 
         public SentOnRemoveSiteViewModel Map(ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer source)
@@ -30,8 +30,8 @@
                 OrganisationId = source.OrganisationId,
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
-                SiteAddress = source.SiteAddress,
-                OperatorAddress = source.OperatorAddress,
+                SiteAddress = addressUtilities.FormattedAddress(source.WeeeSentOn.SiteAddress),
+                OperatorAddress = addressUtilities.FormattedAddress(source.WeeeSentOn.OperatorAddress),
                 TonnageB2B = tonnages.B2B,
                 TonnageB2C = tonnages.B2C
             };
