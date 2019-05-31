@@ -38,7 +38,18 @@
                     query.OrganisationId));
             }
 
-            return organisationMap.Map(org);
+            OrganisationData organisationData = organisationMap.Map(org);
+
+            var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
+
+            if (schemes != null)
+            {
+                organisationData.SchemeId = schemes.Id;
+            }
+
+            organisationData.HasAatfs = await context.Aatfs.CountAsync(o => o.Organisation.Id == query.OrganisationId) > 0;
+
+            return organisationData;
         }
     }
 }
