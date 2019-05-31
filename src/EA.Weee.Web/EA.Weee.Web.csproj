@@ -428,7 +428,6 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AatfViewModelBase.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Ae\ManageAesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
