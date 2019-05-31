@@ -39,7 +39,7 @@
                 summaryData.ObligatedData = source.WeeeReusedAmounts.Select(n => new WeeeObligatedData(
                     n.Id,
                     null,
-                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber),
+                    new Aatf(n.WeeeReused.Aatf.Id, n.WeeeReused.Aatf.Name, n.WeeeReused.Aatf.ApprovalNumber, n.WeeeReused.Aatf.ComplianceYear),
                     n.CategoryId,
                     n.NonHouseholdTonnage,
                     n.HouseholdTonnage)).ToList();

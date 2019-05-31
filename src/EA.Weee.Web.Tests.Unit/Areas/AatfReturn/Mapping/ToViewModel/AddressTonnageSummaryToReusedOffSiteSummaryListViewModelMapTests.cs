@@ -19,7 +19,7 @@
         public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests()
         {
             map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities(), new AddressUtilities());
-            testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
+            testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval", (Int16)2019);
             testAddressDataList = new List<SiteAddressData>();
             testObligatedDataList = new List<WeeeObligatedData>();
         }

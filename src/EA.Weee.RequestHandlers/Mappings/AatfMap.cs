@@ -7,7 +7,6 @@
     using EA.Weee.Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using System;
 
     public class AatfMap : IMap<Aatf, AatfData>
     {
@@ -49,7 +48,7 @@
 
             var organisation = organisationMap.Map(source.Organisation);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
+            return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
             {
                 Contact = contact,
                 Organisation = organisation

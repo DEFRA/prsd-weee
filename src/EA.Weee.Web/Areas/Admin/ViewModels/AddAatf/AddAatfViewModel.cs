@@ -62,6 +62,12 @@
 
         public AatfContactData ContactData { get; set; }
 
+        public IEnumerable<Int16> ComplianceYearList => new List<Int16> {(Int16)2019};
+
+        [Required]
+        [Display(Name = "Compliance year")]
+        public Int16 SelectedComplianceYear { get; set; }
+
         public AddAatfViewModel()
         {
             this.ContactData = new AatfContactData();
