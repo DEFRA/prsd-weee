@@ -404,7 +404,6 @@
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
-    <Compile Include="Areas\Admin\Controllers\AeController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsDeselectViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
@@ -916,7 +915,6 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
-    <Content Include="Areas\Admin\Views\Ae\ManageAes.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />

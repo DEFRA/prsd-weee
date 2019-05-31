@@ -28,7 +28,8 @@
                 SiteAddress = source.SiteAddress,
                 SizeValue = source.Size.Value,
                 SizeList = Enumeration.GetAll<AatfSize>(),
-                ComplianceYear = source.ComplianceYear
+                ComplianceYear = source.ComplianceYear,
+                FacilityType = source.FacilityType
             };
 
             if (source.ApprovalDate != default(DateTime))

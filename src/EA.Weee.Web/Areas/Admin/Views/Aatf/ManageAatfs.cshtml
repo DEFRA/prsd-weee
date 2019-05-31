@@ -2,9 +2,10 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
-    ViewBag.Title = "Manage AATFs - GOV.UK";
+    ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
 }
 
 @section scripts{
@@ -17,20 +18,21 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        Manage AATFs
+        Manage @Model.FacilityType.ToDisplayString()
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
 {
     <div class="aatf-filter">
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Filter.FacilityType)
         <label class="govuk-label">Filter by:</label>
         <br />
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>
-                        @Html.Gds().LabelFor(m => m.Filter.Name, false)
+                        <div class="govuk-label form-label">Name of @Model.FacilityType.ToDisplayString()</div>
                         @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
                     </td>
                     <td>
@@ -55,7 +57,7 @@
     <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Name of AATF</th>
+                <th class="govuk-table__header" scope="col">Name of @Model.FacilityType.ToDisplayString()</th>
                 <th class="govuk-table__header" scope="col">Approval number</th>
                 <th class="govuk-table__header" scope="col">Appropriate authority</th>
                 <th class="govuk-table__header" scope="col">Status</th>
@@ -80,8 +82,17 @@
 
     if (Model.CanAddAatf)
     {
-        <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add AATF</a>
-        </p>
+        if (Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
+            </p>
+        }
+        else
+        {
+            <p>
+                <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Add @Model.FacilityType.ToDisplayString()</a>
+            </p>
+        }
     }
 }

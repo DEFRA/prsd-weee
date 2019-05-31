@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
     using AutoFixture;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentAssertions;
@@ -29,7 +30,7 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            var viewModel = fixture.Create<FilteringViewModel>();
+            var viewModel = fixture.Build<FilteringViewModel>().With(a => a.FacilityType, FacilityType.Aatf).Create();
 
             var result = map.Map(viewModel);
 
