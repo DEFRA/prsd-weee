@@ -18,6 +18,13 @@
             this.context = context;
         }
 
+        public async Task<User> FetchUser(string userId)
+        {
+            return await context.Users
+                .Where(u => u.Id == userId)
+                .SingleOrDefaultAsync();   
+        }
+
         public async Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId)
         {
             return await context.OrganisationUsers

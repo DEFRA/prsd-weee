@@ -9,7 +9,7 @@
 
         Task<bool> SendPasswordResetRequest(string emailAddress, string passwordResetUrl);
 
-        Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName);
+        Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName, string userName);
 
         Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
 
