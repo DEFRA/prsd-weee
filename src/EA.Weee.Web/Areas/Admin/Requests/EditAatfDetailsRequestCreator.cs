@@ -16,6 +16,7 @@
                     viewModel.Id,
                     viewModel.Name,
                     viewModel.ApprovalNumber,
+                    viewModel.ComplianceYear,
                     viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                     Enumeration.FromValue<AatfStatus>(viewModel.AatfStatus),
                     viewModel.SiteAddress,

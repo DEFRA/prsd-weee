@@ -247,13 +247,15 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid()
+                CompetentAuthorityId = Guid.NewGuid(),
+                SelectedComplianceYear = (Int16)2019
             };
 
             AatfData aatfData = new AatfData(
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
+                viewModel.SelectedComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
                 viewModel.SiteAddressData,

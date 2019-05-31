@@ -40,7 +40,7 @@
             mapperTestObligatedReusedData = new List<WeeeObligatedData>();
             mapperTestObligatedSentOnData = new List<WeeeObligatedData>();
             mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
-            mapperTestAatf = new AatfData(mapperTestId, "Test Aatf", "Aatf approval");
+            mapperTestAatf = new AatfData(mapperTestId, "Test Aatf", "Aatf approval", (Int16)2019);
             mapperTestAatfList = new List<AatfData>();
         }
 
@@ -185,7 +185,7 @@
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
-            mapperTestAatfList.Add(new AatfData(Guid.NewGuid(), "Other New Aatf", "123456789"));
+            mapperTestAatfList.Add(new AatfData(Guid.NewGuid(), "Other New Aatf", "123456789", (Int16)2019));
 
             var returnData = new ReturnData()
             {
@@ -234,7 +234,7 @@
             mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
             mapperTestObligatedReusedData.Add(new WeeeObligatedData(mapperTestId, null, mapperTestAatf, 0, b2b, b2c));
             mapperTestObligatedSentOnData.Add(new WeeeObligatedData(mapperTestId, null, mapperTestAatf, 0, b2b, b2c));
-            mapperTestAatfList.Add(new AatfData(mapperTestId, "Other New Aatf", "123456789"));
+            mapperTestAatfList.Add(new AatfData(mapperTestId, "Other New Aatf", "123456789", (Int16)2019));
 
             var returnData = new ReturnData()
             {

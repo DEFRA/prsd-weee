@@ -131,22 +131,22 @@
             {
                 new WeeeObligatedData()
                 {
-                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>()),
+                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Int16>()),
                     Scheme = new Scheme(transfer.SchemeId, A.Dummy<string>())
                 },
                 new WeeeObligatedData()
                 {
-                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>()),
+                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Int16>()),
                     Scheme = new Scheme(transfer.SchemeId, A.Dummy<string>())
                 },
                 new WeeeObligatedData()
                 {
-                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>()),
+                    Aatf = new AatfData(transfer.AatfId, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Int16>()),
                     Scheme = new Scheme(Guid.NewGuid(), A.Dummy<string>())
                 },
                 new WeeeObligatedData()
                 {
-                    Aatf = new AatfData(Guid.NewGuid(), A.Dummy<string>(), A.Dummy<string>()),
+                    Aatf = new AatfData(Guid.NewGuid(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Int16>()),
                     Scheme = new Scheme(Guid.NewGuid(), A.Dummy<string>())
                 },
             };

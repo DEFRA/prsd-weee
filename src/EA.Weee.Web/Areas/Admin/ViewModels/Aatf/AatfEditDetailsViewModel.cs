@@ -64,5 +64,8 @@
         [Display(Name = "Approval date")]
         [DataType(DataType.Date)]
         public DateTime? ApprovalDate { get; set; }
+
+        [Display(Name = "Compliance year")]
+        public Int16 ComplianceYear { get; set; }
     }
 }

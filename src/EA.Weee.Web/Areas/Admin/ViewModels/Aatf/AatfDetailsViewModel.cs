@@ -33,6 +33,8 @@
 
         public DateTime? ApprovalDate { get; set; }
 
+        public Int16 ComplianceYear { get; set; }
+
         public AatfContactData ContactData { get; set; }
 
         [AllowHtml]
