@@ -95,7 +95,7 @@
             A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
 
             var aatf = A.Fake<Aatf>();
-
+            A.CallTo(() => aatf.ComplianceYear).Returns((Int16)2019);
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(aatf);
 
             var result = await handler.HandleAsync(updateRequest);
@@ -107,7 +107,8 @@
                 a.ApprovalNumber == data.ApprovalNumber &&
                 a.AatfStatus == Domain.AatfReturn.AatfStatus.Approved &&
                 a.Size == Domain.AatfReturn.AatfSize.Large &&
-                a.ApprovalDate == data.ApprovalDate.GetValueOrDefault()))).MustHaveHappenedOnceExactly();
+                a.ApprovalDate == data.ApprovalDate.GetValueOrDefault() &&
+                a.ComplianceYear == aatf.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

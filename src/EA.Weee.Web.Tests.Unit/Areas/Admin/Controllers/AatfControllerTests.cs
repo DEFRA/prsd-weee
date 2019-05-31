@@ -240,7 +240,7 @@
 
             var organisation = new OrganisationData() { Id = Guid.NewGuid(), Name = "TEST" };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = A.Fake<AatfContactData>(),
@@ -284,7 +284,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData,
@@ -330,7 +330,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -384,7 +384,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -431,7 +431,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData,
@@ -480,7 +480,7 @@
                 CountryName = "Site country"
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData,
@@ -564,6 +564,14 @@
             var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
             var request = fixture.Create<EditAatfDetails>();
 
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
             var helper = A.Fake<UrlHelper>();
             controller.Url = helper;
             var url = fixture.Create<string>();
@@ -617,6 +625,14 @@
             controller.Url = helper;
             var url = fixture.Create<string>();
 
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
             var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
             helperCall.Returns(url);
 
@@ -624,7 +640,7 @@
 
             await controller.ManageAatfDetails(viewModel);
 
-            A.CallTo(() => cache.InvalidateAatfCache()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

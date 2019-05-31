@@ -66,5 +66,8 @@
         public DateTime? ApprovalDate { get; set; }
 
         public FacilityType FacilityType { get; set; }
+
+        [Display(Name = "Compliance year")]
+        public Int16 ComplianceYear { get; set; }
     }
 }

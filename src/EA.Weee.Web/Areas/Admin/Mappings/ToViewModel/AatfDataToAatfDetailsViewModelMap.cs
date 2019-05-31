@@ -34,7 +34,8 @@
                 OrganisationAddress = source.OrganisationString,
                 SiteAddressLong = source.SiteAddressString,
                 ContactAddressLong = source.ContactAddressString,
-                FacilityType = source.AatfData.FacilityType
+                FacilityType = source.AatfData.FacilityType,
+                ComplianceYear = source.AatfData.ComplianceYear
             };
 
             if (source.AssociatedAatfs != null)

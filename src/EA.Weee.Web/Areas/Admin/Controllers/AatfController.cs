@@ -153,9 +153,11 @@
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
-                }
 
-                cache.InvalidateAatfCache();
+                    var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
+
+                    await cache.InvalidateAatfCache(aatf.Organisation.Id);
+                }
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
             }
