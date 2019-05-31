@@ -27,7 +27,8 @@
                 AatfStatusList = Enumeration.GetAll<AatfStatus>(),
                 SiteAddress = source.SiteAddress,
                 Size = source.Size.Value,
-                SizeList = Enumeration.GetAll<AatfSize>()
+                SizeList = Enumeration.GetAll<AatfSize>(),
+                FacilityType = source.FacilityType
             };
 
             if (source.ApprovalDate != default(DateTime))

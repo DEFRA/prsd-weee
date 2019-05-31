@@ -162,6 +162,7 @@
             Assert.Equal(aatfData.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
             Assert.Equal(aatfData.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
             Assert.Equal(aatfData.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
+            Assert.Equal(aatfData.FacilityType, result.FacilityType);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
@@ -216,7 +217,8 @@
             return new AatfData(Guid.NewGuid(), "AatfName", "12345", (Int16)2019, CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
             {
                 Contact = CreateAatfContactData(),
-                Organisation = CreateOrganisationData()
+                Organisation = CreateOrganisationData(),
+                FacilityType = FacilityType.Aatf
             };
         }
     }

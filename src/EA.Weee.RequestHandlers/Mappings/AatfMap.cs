@@ -16,13 +16,15 @@
         private readonly IMap<AatfAddress, AatfAddressData> aatfAddressMap;
         private readonly IMap<AatfContact, AatfContactData> contactMap;
         private readonly IMap<Organisation, OrganisationData> organisationMap;
+        private readonly IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityMap;
 
         public AatfMap(IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData> competentAuthorityMap,
             IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> aatfStatusMap,
             IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize> aatfSizeMap,
             IMap<AatfAddress, AatfAddressData> aatfAddressMap,
             IMap<AatfContact, AatfContactData> contactMap,
-            IMap<Organisation, OrganisationData> organisationMap)
+            IMap<Organisation, OrganisationData> organisationMap,
+            IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType> facilityMap)
         {
             this.competentAuthorityMap = competentAuthorityMap;
             this.aatfStatusMap = aatfStatusMap;
@@ -30,6 +32,7 @@
             this.aatfAddressMap = aatfAddressMap;
             this.contactMap = contactMap;
             this.organisationMap = organisationMap;
+            this.facilityMap = facilityMap;
         }
 
         public AatfData Map(Aatf source)
@@ -48,10 +51,13 @@
 
             var organisation = organisationMap.Map(source.Organisation);
 
+            Core.AatfReturn.FacilityType facilityType = facilityMap.Map(source.FacilityType);
+
             return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault())
             {
                 Contact = contact,
-                Organisation = organisation
+                Organisation = organisation,
+                FacilityType = facilityType
             };
         }
     }
