@@ -7,7 +7,6 @@
     {
         public Guid OrganisationId { get; private set; }
         public Guid UserId { get; private set; }
-        public Guid SenderId { get; private set; }
 
         internal OrganisationUserRequestEvent(Guid organisationId, Guid userId)
         {
