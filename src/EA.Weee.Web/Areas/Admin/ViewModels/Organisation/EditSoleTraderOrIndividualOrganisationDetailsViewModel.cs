@@ -1,12 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using EA.Weee.Core.DataStandards;
-using EA.Weee.Core.Organisations;
-using EA.Weee.Core.Shared;
-
-namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
 {
+    using System;
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
+
     public class EditSoleTraderOrIndividualOrganisationDetailsViewModel
     {
         public Guid SchemeId { get; set; }
