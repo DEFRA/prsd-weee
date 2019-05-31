@@ -70,10 +70,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageAatfs(string type)
+        public async Task<ActionResult> ManageAatfs(FacilityType facilityType)
         {
-            FacilityType facilityType = type.GetValueFromDisplayName<FacilityType>();
-
             SetBreadcrumb(facilityType);
 
             return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel() { FacilityType = facilityType } });
@@ -117,7 +115,7 @@
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
             SetBreadcrumb(filter.FacilityType);
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), Filter = filter });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), Filter = filter, FacilityType = filter.FacilityType });
         }
 
         [HttpGet]
@@ -175,10 +173,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageContactDetails(Guid id, string type)
+        public async Task<ActionResult> ManageContactDetails(Guid id, FacilityType facilityType)
         {
-            FacilityType facilityType = type.GetValueFromDisplayName<FacilityType>();
-
             using (var client = apiClient())
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));

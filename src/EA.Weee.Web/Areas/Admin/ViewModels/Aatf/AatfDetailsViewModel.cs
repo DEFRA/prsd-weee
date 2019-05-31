@@ -55,21 +55,6 @@
 
         public FacilityType FacilityType { get; set; }
 
-        /*public string FacilityTypeString
-        {
-            get
-            {
-                if (this.FacilityType != 0)
-                {
-                    return this.FacilityType.ToDisplayString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-        }*/
-
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
         public List<AatfDataList> AssociatedAEs { get; set; }

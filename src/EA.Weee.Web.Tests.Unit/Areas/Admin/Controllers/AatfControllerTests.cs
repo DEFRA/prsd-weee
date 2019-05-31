@@ -161,8 +161,7 @@
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf)]
-        [InlineData(FacilityType.Ae)]
+        [MemberData("FacilityTypeEnumValues")]
         public async Task ManageAatfsPost_InvalidModel_CheckViewModelFacilityTypeSetCorrectly(FacilityType type)
         {
             SetUpControllerContext(false);
@@ -185,7 +184,7 @@
         {
             SetUpControllerContext(true);
 
-            ActionResult result = await controller.ManageAatfs("AATF");
+            ActionResult result = await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
         }
@@ -197,7 +196,7 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
 
-            ViewResult result = await controller.ManageAatfs("AATF") as ViewResult;
+            ViewResult result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
 
             var viewModel = result.Model as ManageAatfsViewModel;
 
@@ -205,13 +204,12 @@
         }
 
         [Theory]
-        [InlineData("AATF", FacilityType.Aatf)]
-        [InlineData("AE", FacilityType.Ae)]
-        public async Task GetManageAatfs_TypeParameterSent_ViewModelSetCorrectly(string type, FacilityType facilityType)
+        [MemberData("FacilityTypeEnumValues")]
+        public async Task GetManageAatfs_TypeParameterSent_ViewModelSetCorrectly(FacilityType facilityType)
         {
             SetUpControllerContext(false);
 
-            ViewResult result = await controller.ManageAatfs(type) as ViewResult;
+            ViewResult result = await controller.ManageAatfs(facilityType) as ViewResult;
 
             ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
 
@@ -630,10 +628,11 @@
         }
 
         [Theory]
-        [InlineData("AATF", InternalUserActivity.ManageAatfs)]
-        [InlineData("AE", InternalUserActivity.ManageAes)]
-        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(string type, string activity)
+        [MemberData("FacilityTypeEnumValues")]
+        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
+            string activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
+
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
@@ -646,7 +645,7 @@
         public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF") as ViewResult;
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -656,7 +655,7 @@
         {
             var aatfId = Guid.NewGuid();
 
-            var result = await controller.ManageContactDetails(aatfId, "AATF");
+            var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -665,7 +664,7 @@
         public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF");
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -673,7 +672,7 @@
         [Fact]
         public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
         {
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), "AATF");
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             Assert.IsType<HttpForbiddenResult>(result);
         }
@@ -915,6 +914,14 @@
 
             var context = new ControllerContext(httpContextBase, new RouteData(), controller);
             controller.ControllerContext = context;
+        }
+
+        public static IEnumerable<object[]> FacilityTypeEnumValues()
+        {
+            foreach (var facilityType in Enum.GetValues(typeof(FacilityType)))
+            {
+                yield return new object[] { facilityType };
+            }
         }
     }
 }

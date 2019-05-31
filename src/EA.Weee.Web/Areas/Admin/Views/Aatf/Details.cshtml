@@ -212,7 +212,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType.ToDisplayString())))">Edit contact details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
             </p>
         }
     </section>
@@ -280,6 +280,6 @@
     </table>
     <div>&nbsp;</div>
     <p>
-        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType.ToDisplayString())))">Back</a>
+        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
     </p>
 </div>

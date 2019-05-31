@@ -7,6 +7,7 @@
     using Api.Client;
     using Base;
     using Core.Shared;
+    using EA.Weee.Core.AatfReturn;
     using Infrastructure;
     using Services;
     using ViewModels.Home;
@@ -75,10 +76,10 @@
                     return RedirectToAction("ManageSchemes", "Scheme");
 
                 case InternalUserActivity.ManageAatfs:
-                    return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
+                    return RedirectToAction("ManageAatfs", "Aatf", new { facilityType = FacilityType.Aatf });
 
                 case InternalUserActivity.ManageAes:
-                    return RedirectToAction("ManageAatfs", "Aatf", new { type = "AE" });
+                    return RedirectToAction("ManageAatfs", "Aatf", new { facilityType = FacilityType.Ae });
 
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");
