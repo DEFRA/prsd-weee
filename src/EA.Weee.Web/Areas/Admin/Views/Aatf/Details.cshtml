@@ -119,60 +119,74 @@
         </div>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td>&nbsp;</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Organisation type</th>
-                    <td class="govuk-table__cell">
-                        @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
-                        {
-                            @:Sole trader or individual
-                        }
-                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
-                        {
-                            @:Partnership
-                        }
-                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                        {
-                            @:Registered company
-                        }
-                    </td>
-                </tr>
-                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Company name</th>
-                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
-                    </tr>
-                }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Business trading name</th>
-                        <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
-                    </tr>
-                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+            <tr class="govuk-table__row">
+                <td>&nbsp;</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Organisation type</th>
+                <td class="govuk-table__cell">
+                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                     {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                            <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
-                        </tr>
+                        @:Sole trader or individual
                     }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Address</th>
-                        <td class="govuk-table__cell">
-                            @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Telephone</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Email address</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
-                    </tr>
-                </tbody>
+                    else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                    {
+                        @:Partnership
+                    }
+                    else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                    {
+                        @:Registered company
+                    }
+                </td>
+            </tr>
+            @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company name</th>
+                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                </tr>
+            }
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Business trading name</th>
+                <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+            </tr>
+            @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+            {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                </tr>
+            }
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Address</th>
+                <td class="govuk-table__cell">
+                    @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Telephone</th>
+                <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Email address</th>
+                <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
+            </tr>
+            </tbody>
         </table>
+        @if (Model.CanEdit)
+        {
+            <br />
+            <p>
+                @if (Model.Organisation.IsRegisteredCompany)
+                {
+                    <a href="@(Url.UrlFor<OrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                }
+                else
+                {
+                    <a href="@(Url.UrlFor<OrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                }
+            </p>
+        }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
         <div class="govuk-table__header--large">

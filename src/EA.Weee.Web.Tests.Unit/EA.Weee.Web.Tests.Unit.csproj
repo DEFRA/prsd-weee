@@ -218,8 +218,8 @@
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\NonObligatedDataToNonObligatedValueMapTests.cs" />
@@ -284,6 +284,7 @@
     <Compile Include="Areas\Admin\Controllers\TestEmailControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests_2.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />

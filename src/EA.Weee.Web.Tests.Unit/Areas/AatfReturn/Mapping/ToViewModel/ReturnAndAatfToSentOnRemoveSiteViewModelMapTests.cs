@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -88,7 +89,7 @@
 
             var result = mapper.Map(transfer);
 
-            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress, true)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -97,7 +98,7 @@
             var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
             const string address = "address";
 
-            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress)).Returns(address);
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress, true)).Returns(address);
 
             var result = mapper.Map(transfer);
 
@@ -111,7 +112,7 @@
 
             var result = mapper.Map(transfer);
 
-            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress, true)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -120,7 +121,7 @@
             var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
             const string address = "address";
 
-            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress)).Returns(address);
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress, true)).Returns(address);
 
             var result = mapper.Map(transfer);
 

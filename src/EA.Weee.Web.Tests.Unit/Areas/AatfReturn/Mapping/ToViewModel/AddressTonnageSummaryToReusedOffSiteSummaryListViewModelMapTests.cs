@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -18,7 +19,7 @@
 
         public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests()
         {
-            map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities(), new AddressUtilities());
+            map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities());
             testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
             testAddressDataList = new List<SiteAddressData>();
             testObligatedDataList = new List<WeeeObligatedData>();

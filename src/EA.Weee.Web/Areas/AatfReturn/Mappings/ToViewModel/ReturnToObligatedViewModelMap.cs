@@ -76,10 +76,10 @@
 
             if (source.PastedData != null)
             {
-                var obligatedPastedValues = new ObligatedPastedValues();
-
-                obligatedPastedValues.B2B = pasteProcessor.BuildModel(source.PastedData.B2B);
-                obligatedPastedValues.B2C = pasteProcessor.BuildModel(source.PastedData.B2C);
+                var obligatedPastedValues = new ObligatedPastedValues
+                {
+                    B2B = pasteProcessor.BuildModel(source.PastedData.B2B), B2C = pasteProcessor.BuildModel(source.PastedData.B2C)
+                };
 
                 model.CategoryValues = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
             }

@@ -45,7 +45,7 @@
     {
         <br />
         <p>
-            <a href="@(Url.UrlFor<OrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
+            <a href="@(Url.UrlFor<OrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null)))">Edit organisation details</a>
         </p>
     }
     @Html.Partial("Overview/_OverviewAvailableActions")

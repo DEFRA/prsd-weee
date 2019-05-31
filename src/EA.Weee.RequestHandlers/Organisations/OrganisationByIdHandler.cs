@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using EA.Weee.Security;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -28,17 +29,18 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(query.OrganisationId);
 
-            // Need to materialize EF request before mapping (because mapping parses enums)
-            var org = await context.Organisations
-                .SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
+            var org = await context.Organisations.SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
 
             if (org == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
-                    query.OrganisationId));
+                throw new ArgumentException($"Could not find an organisation with id {query.OrganisationId}");
             }
 
-            return organisationMap.Map(org);
+            var organisationData = organisationMap.Map(org);
+
+            organisationData.CanEditOrganisation = authorization.CheckUserInRole(Roles.InternalAdmin);
+
+            return organisationData;
         }
     }
 }

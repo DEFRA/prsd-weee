@@ -21,24 +21,25 @@
 
         @Html.HiddenFor(m => m.OrgId)
         @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.OrganisationType)
 
         <p>
             <span class="font-bold marginRight">Organisation type:</span> Registered company
         </p>
-        
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
-                @Html.Gds().LabelFor(m => m.CompanyName)
-                @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-                @Html.Gds().TextBoxFor(m => m.CompanyName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
-            </div>
 
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-                @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
-                @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-                @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
-            </div>
-        
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+        </div>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })

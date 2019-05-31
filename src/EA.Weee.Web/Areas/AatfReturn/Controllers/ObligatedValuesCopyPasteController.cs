@@ -42,7 +42,7 @@
                     AatfId = aatfId,
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
-                    AatfName = Task.Run(() => cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Result.Name,
+                    AatfName = (await cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Name,
                     Type = obligatedType
                 };
 

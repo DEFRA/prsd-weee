@@ -318,8 +318,8 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressUtilities.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IAddressUtilities.cs" />
+    <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
+    <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
@@ -448,6 +448,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditOrganisationDetailsViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />

@@ -1,24 +1,30 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
+    using System;
+    using System.Collections.Generic;
+    using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
     {
+        private readonly IAddressUtilities addressUtilities;
         private readonly AatfDataToAatfDetailsViewModelMap map;
+        private readonly Fixture fixture;
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
-            map = new AatfDataToAatfDetailsViewModelMap();
+            addressUtilities = A.Fake<IAddressUtilities>();
+            fixture = new Fixture();
+
+            map = new AatfDataToAatfDetailsViewModelMap(addressUtilities);
         }
 
         [Fact]
@@ -27,6 +33,14 @@
             Action action = () => map.Map(null);
 
             action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNullAaatfData_ArgumentNullExceptionExpected()
+        {
+            var exception = Record.Exception(() => map.Map(new AatfDataToAatfDetailsViewModelMapTransfer(null)));
+
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
@@ -162,6 +176,25 @@
             Assert.Equal(aatfData.Organisation.BusinessAddress.Postcode, result.Organisation.BusinessAddress.Postcode);
             Assert.Equal(aatfData.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
             Assert.Equal(aatfData.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
+        }
+
+        [Fact]
+        public void Map_GivenAddresses_AddressPropertiesShouldBeMapped()
+        {
+            var model = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>()
+                .WithAutoProperties()
+                .Create();
+            const string siteAddress = "address";
+            const string contactAddress = "contactAddress";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(model.AatfData.SiteAddress, false)).Returns(siteAddress);
+            A.CallTo(() => addressUtilities.FormattedAddress(model.AatfData.Contact.AddressData, false)).Returns(contactAddress);
+
+            var result = map.Map(model);
+
+            result.ContactAddressLong.Should().Be(contactAddress);
+            result.SiteAddressLong.Should().Be(siteAddress);
+            result.OrganisationAddress.Should().Be(model.OrganisationString);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()

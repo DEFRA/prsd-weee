@@ -7,19 +7,11 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
 
-    public class EditSoleTraderOrIndividualOrganisationDetailsViewModel
-    {
-        public Guid SchemeId { get; set; }
-
-        public Guid OrgId { get; set; }
-        
-        public OrganisationType OrganisationType { get; set; }
-
+    public class EditSoleTraderOrIndividualOrganisationDetailsViewModel : EditOrganisationDetailsViewModelBase
+    {       
         [Required]
         [DisplayName("Business trading name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public string BusinessTradingName { get; set; }
-
-        public AddressData BusinessAddress { get; set; }
+        public override string BusinessTradingName { get; set; }
     }
 }
