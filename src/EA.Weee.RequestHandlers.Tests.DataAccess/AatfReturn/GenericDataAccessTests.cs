@@ -112,8 +112,8 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf);
-                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, organisation, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf);
+                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019);
+                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, organisation, CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
 
@@ -140,7 +140,7 @@
                 var contact = CreateContact(country);
 
                 database.WeeeContext.Aatfs.Add(new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation,
-                    CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf));
+                    CreateAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019));
 
                 await database.WeeeContext.SaveChangesAsync();
 
