@@ -41,7 +41,7 @@
             const string aatfName = "aatfName";
             var mapperTestScheme = new Scheme(Guid.NewGuid(), "Test Scheme");
             var mapperTestScheme2 = new Scheme(Guid.NewGuid(), "Test Scheme2");
-            var mapperTestAatf = new AatfData(aatfId, aatfName, "Aatf approval");
+            var mapperTestAatf = new AatfData(aatfId, aatfName, "Aatf approval", (Int16)2019);
 
             var obligatedReceivedData = new List<WeeeObligatedData>
             {

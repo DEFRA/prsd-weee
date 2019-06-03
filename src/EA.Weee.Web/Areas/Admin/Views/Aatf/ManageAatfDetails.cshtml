@@ -1,12 +1,13 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditDetailsViewModel
 @{
-    ViewBag.Title = "Edit AATF details - GOV.UK";
+    ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
 }
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">Manage AATF details</h1>
+    <h1 class="govuk-heading-l">Manage @Model.FacilityType.ToDisplayString() details</h1>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -16,7 +17,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
-                    @Html.Gds().LabelFor(m => m.Name)
+                    <div class="govuk-label form-label">Name of @Model.FacilityType.ToDisplayString()</div>
                     @Html.Gds().ValidationMessageFor(m => m.Name)
                     @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
                 </div>
@@ -52,7 +53,7 @@
                     @Html.Gds().ValidationMessageFor(m => m.SiteAddress.Postcode)
                     @Html.Gds().TextBoxFor(m => m.SiteAddress.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
                 </div>
-                
+
                 <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddress.CountryId)" id="country-dropdown-list">
                     @Html.Gds().LabelFor(m => m.SiteAddress.CountryId)
                     @Html.Gds().ValidationMessageFor(m => m.SiteAddress.CountryId)

@@ -9,7 +9,7 @@
 
     public class AddressUtilitiesTests
     {
-        private readonly IAddressUtilities addressUtilities;
+        private readonly AddressUtilities addressUtilities;
 
         public AddressUtilitiesTests()
         {
@@ -58,6 +58,54 @@
             var result = addressUtilities.StringConcatenate("My Current Address, To Be Checked", "Element to Add");
 
             result.Should().Be("My Current Address, To Be Checked, Element to Add");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenFullAddress_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country"));
+
+            result.Should().Be("Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenAddressWithoutAddress2_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", null, "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country"));
+
+            result.Should().Be("Site name<br/>Site address 1<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenAddressWithoutCounty_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", null, "GU22 7UY", Guid.NewGuid(), "Site country"));
+
+            result.Should().Be("Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>GU22 7UY<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenAddressWithoutPostcode_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", null, Guid.NewGuid(), "Site country"));
+
+            result.Should().Be("Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenAddressWithoutAnyOptionFields_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", null, "Site town", null, null, Guid.NewGuid(), "Site country"));
+
+            result.Should().Be("Site name<br/>Site address 1<br/>Site town<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenAddressIsNull_EmptyAddressExpected()
+        {
+            var result = addressUtilities.FormattedAddress(null);
+
+            result.Should().BeEmpty();
         }
     }
 }

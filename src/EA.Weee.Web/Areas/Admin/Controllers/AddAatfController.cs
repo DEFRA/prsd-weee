@@ -157,7 +157,9 @@
 
                 await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("ManageAatfs", "Aatf");
+                await cache.InvalidateAatfCache(request.OrganisationId);
+
+                return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
             }
         }
 
@@ -339,6 +341,7 @@
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
+                viewModel.SelectedComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
                 viewModel.SiteAddressData,

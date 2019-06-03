@@ -378,6 +378,26 @@
                 .MustHaveHappened();
         }
 
+        [Fact]
+        public async Task SendOrganisationUserRequest_SendsCreatedMailMessageWithContinueOnException()
+        {
+            // Arrange
+            var email = "email@civica.co.uk";
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+            var mailMessage = new MailMessage();
+
+            A.CallTo(() => builder.MessageCreator.Create(A<string>.That.IsEqualTo(email), A<string>._, A<EmailContent>._))
+                .Returns(mailMessage);
+
+            // Act
+            await emailService.SendOrganisationUserRequest(email, "TEST", "TEST");
+
+            // Assert
+            A.CallTo(() => builder.Sender.SendAsync(mailMessage, false))
+                .MustHaveHappened();
+        }
+
         private class WeeeEmailServiceBuilder
         {
             public readonly ITemplateExecutor TemplateExecutor;
