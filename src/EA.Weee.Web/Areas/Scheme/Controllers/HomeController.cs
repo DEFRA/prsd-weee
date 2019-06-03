@@ -76,19 +76,31 @@
         internal async Task<List<string>> GetActivities(Guid pcsId)
         {
             string organisationDetailsActivityName;
+
+            bool hasScheme = false;
+            bool hasAatfs = false;
+
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
                 //Get the organisation type based on organisation id
                 organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+
+                hasScheme = organisationDetails.SchemeId != null;
+                hasAatfs = organisationDetails.HasAatfs;
             }
             var organisationOverview = await GetOrganisationOverview(pcsId);
 
-            var activities = new List<string> { PcsAction.ManagePcsMembers };
+            var activities = new List<string>();
 
-            if (configurationService.CurrentConfiguration.EnableDataReturns)
+            if (hasScheme)
             {
-                activities.Add(PcsAction.ManageEeeWeeeData);
+                activities.Add(PcsAction.ManagePcsMembers);
+
+                if (configurationService.CurrentConfiguration.EnableDataReturns)
+                {
+                    activities.Add(PcsAction.ManageEeeWeeeData);
+                }
             }
 
             var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
@@ -98,14 +110,17 @@
             }
 
             activities.Add(organisationDetailsActivityName);
-            activities.Add(PcsAction.ManageContactDetails);
+            if (hasScheme)
+            {
+                activities.Add(PcsAction.ManageContactDetails);
+            }
 
             if (organisationOverview.HasMultipleOrganisationUsers)
             {
                 activities.Add(PcsAction.ManageOrganisationUsers);
             }
 
-            if (configurationService.CurrentConfiguration.EnableAATFReturns)
+            if (configurationService.CurrentConfiguration.EnableAATFReturns && hasAatfs)
             {
                 activities.Add(PcsAction.ManageAatfReturns);
             }

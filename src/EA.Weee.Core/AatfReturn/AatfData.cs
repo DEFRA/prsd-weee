@@ -6,7 +6,7 @@
 
     public class AatfData
     {
-        public AatfData(Guid id, string name, string approvalNumber, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
+        public AatfData(Guid id, string name, string approvalNumber, Int16 complianceYear, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime))
         {
             this.Id = id;
             this.Name = name;
@@ -16,6 +16,11 @@
             this.SiteAddress = siteAddress;
             this.Size = size;
             this.ApprovalDate = approvalDate;
+            this.ComplianceYear = complianceYear;
+        }
+
+        public AatfData()
+        {
         }
 
         public Guid Id { get; set; }
@@ -37,6 +42,10 @@
         public AatfContactData Contact { get; set; }
 
         public OrganisationData Organisation { get; set; }
+
+        public FacilityType FacilityType { get; set; }
+
+        public Int16 ComplianceYear { get; set; }
 
         public bool CanEdit { get; set; }
     }

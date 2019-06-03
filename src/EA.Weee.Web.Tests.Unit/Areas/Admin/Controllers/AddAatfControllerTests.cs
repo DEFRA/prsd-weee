@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
@@ -8,8 +13,6 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
@@ -20,12 +23,6 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
 
@@ -250,13 +247,15 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid()
+                CompetentAuthorityId = Guid.NewGuid(),
+                SelectedComplianceYear = (Int16)2019
             };
 
             AatfData aatfData = new AatfData(
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
+                viewModel.SelectedComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
                 viewModel.SiteAddressData,
@@ -296,6 +295,23 @@
             Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
             Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
             Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async Task AddPost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+
+            AddAatfViewModel viewModel = new AddAatfViewModel()
+            {
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1,
+                OrganisationId = Guid.NewGuid()
+            };
+
+            await controller.Add(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -15,6 +15,8 @@
 
         public string ApprovalNumber { get; set; }
 
+        public Int16 ComplianceYear { get; set; }
+
         public virtual UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
@@ -25,7 +27,7 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType)
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear)
         {
             this.Id = id;
             this.Name = name;
@@ -35,6 +37,7 @@
             this.CompetentAuthority = competentAuthority;
             this.Organisation = organisation;
             this.FacilityType = facilityType;
+            this.ComplianceYear = complianceYear;
         }
     }
 }

@@ -49,6 +49,7 @@
             const string approvalNumber = "123456789";
             var status = Domain.AatfReturn.AatfStatus.Approved;
             var facilityType = Domain.AatfReturn.FacilityType.Aatf;
+            Int16 complianceYear = 2019;
 
             var returnStatus = Core.AatfReturn.AatfStatus.Approved;
             var returnCompetentAuthority = A.Fake<Core.Shared.UKCompetentAuthorityData>();
@@ -60,7 +61,7 @@
             A.CallTo(() => facilityTypeMap.Map(facilityType)).Returns(returnFacilityType);
             A.CallTo(() => organisationMap.Map(organisation)).Returns(organisationData);
 
-            var source = new Aatf(name, competentAuthority, approvalNumber, status, organisation, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf);
+            var source = new Aatf(name, competentAuthority, approvalNumber, status, organisation, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, complianceYear);
 
             var result = map.Map(source);
 
@@ -70,6 +71,7 @@
             result.CompetentAuthority.Should().Be(returnCompetentAuthority);
             result.Organisation.Should().Be(organisationData);
             result.FacilityType.Should().Be(Core.AatfReturn.FacilityType.Aatf);
+            result.ComplianceYear.Should().Be(complianceYear);
         }
     }
 }
