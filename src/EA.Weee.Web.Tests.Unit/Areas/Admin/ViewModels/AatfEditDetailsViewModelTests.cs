@@ -3,18 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Reflection;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using FakeItEasy;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using FluentValidation.Attributes;
     using Xunit;
 
