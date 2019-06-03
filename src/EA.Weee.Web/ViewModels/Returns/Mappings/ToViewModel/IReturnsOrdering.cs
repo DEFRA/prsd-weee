@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
     using System.Collections.Generic;
     using Core.AatfReturn;

@@ -1,13 +1,13 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.DataReturns;
     using EA.Weee.Core.Scheme;
-    using FakeItEasy;
+    using EA.Weee.Web.ViewModels.Returns;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentAssertions;
-    using Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ReturnToReturnViewModelMapTests
@@ -582,7 +582,7 @@
             result.ObligatedTotal.Should().Be("21.000");
         }
 
-        private void ReturnViewModelMapCommonAsserts(Web.Areas.AatfReturn.ViewModels.ReturnViewModel result)
+        private void ReturnViewModelMapCommonAsserts(ReturnViewModel result)
         {
             result.ReturnId.Should().Be(mapperTestId);
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());

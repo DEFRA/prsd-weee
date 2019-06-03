@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Returns
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Linq;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
 

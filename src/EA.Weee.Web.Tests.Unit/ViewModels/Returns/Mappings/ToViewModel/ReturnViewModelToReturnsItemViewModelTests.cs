@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mapping.ToViewModel
 {
     using System;
     using Core.AatfReturn;
+    using EA.Weee.Web.ViewModels.Returns;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
-    using Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 
     public class ReturnViewModelToReturnsItemViewModelTests
