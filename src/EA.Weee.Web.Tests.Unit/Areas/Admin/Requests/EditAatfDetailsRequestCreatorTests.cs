@@ -23,8 +23,8 @@
         public void ViewModelToRequest_GivenValidViewModel_PropertiesShouldBeMapped()
         {
             var viewModel = fixture.Build<AatfEditDetailsViewModel>()
-                .With(e => e.AatfStatus, AatfStatus.Approved.Value)
-                .With(e => e.Size, AatfSize.Large.Value)
+                .With(e => e.StatusValue, AatfStatus.Approved.Value)
+                .With(e => e.SizeValue, AatfSize.Large.Value)
                 .Create();
             viewModel.CompetentAuthorityId = viewModel.CompetentAuthoritiesList.Last().Id;
 

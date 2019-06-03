@@ -8,7 +8,7 @@ To action this request sign in to the WEEE online service at @Model.ExternalUser
 
 This is an automated email; do not reply.
 
-If you have any enquiries, contact your relevant helpline:
+If you have any enquiries, contact your environmental regulator:
 
 - Environment Agency (England): 03708 506506
 
