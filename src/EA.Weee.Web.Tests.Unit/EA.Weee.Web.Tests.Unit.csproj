@@ -288,6 +288,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrIndividualOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
