@@ -21,7 +21,7 @@
                         var startDate = new DateTime(instance.ComplianceYear, 1, 1);
                         var endDate = new DateTime(instance.ComplianceYear, 12, 31);
 
-                        if (input <= startDate || input >= endDate)
+                        if (input < startDate || input > endDate)
                         {
                             context.AddFailure(new ValidationFailure($"ApprovalDate", $"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}"));
                         }

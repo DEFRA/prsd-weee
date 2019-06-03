@@ -25,6 +25,22 @@
             validationResult.Errors.Count.Should().Be(1);
         }
 
+        [Theory]
+        [InlineData("2019/1/1")]
+        [InlineData("2019/12/31")]
+        [InlineData("2019/7/1")]
+        public void RuleFor_ApprovalDateWithinBounds_ErrorShouldNotOccur(string input)
+        {
+            var model = GenerateViewModel();
+            model.ApprovalDate = Convert.ToDateTime(input);
+
+            validator = new AatfViewModelValidator();
+            var validationResult = validator.Validate(model);
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Errors.Count.Should().Be(0);
+        }
+
         private AatfViewModelBase GenerateViewModel()
         {
             var model = new AddAatfViewModel()
