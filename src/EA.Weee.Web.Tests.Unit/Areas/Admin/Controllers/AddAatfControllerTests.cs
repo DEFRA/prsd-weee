@@ -532,7 +532,7 @@
         [Fact]
         public void SearchGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = controller.Search();
+            controller.Search();
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -540,7 +540,7 @@
         [Fact]
         public void SearchPost_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = controller.Search(A.Fake<SearchViewModel>());
+            controller.Search(A.Fake<SearchViewModel>());
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -548,7 +548,7 @@
         [Fact]
         public async Task SearchResultsGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = await controller.SearchResults("test");
+            await controller.SearchResults("test");
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -556,7 +556,7 @@
         [Fact]
         public async Task SearchResultsPost_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = await controller.SearchResults(A.Fake<SearchResultsViewModel>());
+            await controller.SearchResults(A.Fake<SearchResultsViewModel>());
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -564,7 +564,7 @@
         [Fact]
         public async Task AddGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = await controller.Add(Guid.NewGuid());
+            await controller.Add(Guid.NewGuid());
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -578,7 +578,7 @@
                 StatusValue = 1
             };
 
-            ActionResult result = await controller.Add(viewModel);
+            await controller.Add(viewModel);
 
             Assert.Equal("Add new AATF", breadcrumbService.InternalActivity);
         }
@@ -586,7 +586,7 @@
         [Fact]
         public void TypeGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = controller.Type("test");
+            controller.Type("test");
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -600,7 +600,7 @@
                 SelectedValue = "Partnership"
             };
 
-            ActionResult result = controller.Type(viewModel);
+            controller.Type(viewModel);
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -608,7 +608,7 @@
         [Fact]
         public async Task SoleTraderOrPartnershipDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = await controller.SoleTraderOrPartnershipDetails("test");
+            await controller.SoleTraderOrPartnershipDetails("test");
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -623,7 +623,7 @@
                 Address = A.Dummy<AddressData>()
             };
 
-            ActionResult result = await controller.SoleTraderOrPartnershipDetails(viewModel);
+            await controller.SoleTraderOrPartnershipDetails(viewModel);
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -631,7 +631,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = await controller.RegisteredCompanyDetails("test");
+            await controller.RegisteredCompanyDetails("test");
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -649,7 +649,7 @@
 
             viewModel.Address.Countries = countries;
 
-            ActionResult result = await controller.RegisteredCompanyDetails(viewModel);
+            await controller.RegisteredCompanyDetails(viewModel);
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -657,7 +657,7 @@
         [Fact]
         public void OrganisationConfirmationGet_Always_SetsInternalBreadcrumb()
         {
-            ActionResult result = controller.OrganisationConfirmation(Guid.NewGuid(), "test");
+            controller.OrganisationConfirmation(Guid.NewGuid(), "test");
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -727,7 +727,6 @@
 
         private AddAatfViewModel CreateAddViewModel()
         {
-            IList<UKCompetentAuthorityData> competentAuthoritiesList = A.Dummy<IList<UKCompetentAuthorityData>>();
             IEnumerable<AatfSize> sizeList = Enumeration.GetAll<AatfSize>();
             IEnumerable<AatfStatus> statusList = Enumeration.GetAll<AatfStatus>();
 

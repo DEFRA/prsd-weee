@@ -184,11 +184,11 @@
             <p>
                 @if (Model.Organisation.IsRegisteredCompany)
                 {
-                    <a href="@(Url.UrlFor<OrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
                 }
                 else
                 {
-                    <a href="@(Url.UrlFor<OrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
                 }
             </p>
         }

@@ -320,9 +320,6 @@
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
-
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressUtilities.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IAddressUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
@@ -924,6 +921,8 @@
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\AeReturn\Views\AeReturns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1076,8 +1075,6 @@
     <Content Include="Areas\Admin\Views\Scheme\Overview\RegisteredCompanyDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\ContactDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\_OverviewAvailableActions.cshtml" />
-    <Content Include="Areas\Admin\Views\Organisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Organisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />

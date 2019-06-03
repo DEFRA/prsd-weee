@@ -158,23 +158,6 @@
         }
 
         [Fact]
-        public async Task OrganisationByIdHandler_ReturnsTrueForCanEditOrganisation_WhenCurrentUserIsInternalAdmin()
-        {
-            var weeeAuthorization = new AuthorizationBuilder()
-                .AllowInternalAreaAccess()
-                .AllowRole(Roles.InternalAdmin)
-                .Build();
-
-            var message = new GetOrganisationInfo(organisationId);
-
-            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map);
-
-            var result = await handler.HandleAsync(message);
-
-            result.CanEditOrganisation.Should().BeTrue();
-        }
-
-        [Fact]
         public async Task OrganisationByIdHandler_GivenMappedOrganisation_MappedOrganisationShouldBeReturned()
         {
             var message = new GetOrganisationInfo(organisationId);

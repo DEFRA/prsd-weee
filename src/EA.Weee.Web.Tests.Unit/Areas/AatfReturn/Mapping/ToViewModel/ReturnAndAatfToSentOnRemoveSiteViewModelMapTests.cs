@@ -3,8 +3,8 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;

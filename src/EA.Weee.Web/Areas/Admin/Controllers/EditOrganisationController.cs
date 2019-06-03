@@ -9,6 +9,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
@@ -43,7 +44,7 @@
 
             using (var client = apiClient())
             {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetInternalOrganisation(orgId));
                 if (!organisationData.CanEditOrganisation)
                 {
                     return new HttpForbiddenResult();
@@ -73,7 +74,7 @@
 
             using (var client = apiClient())
             {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetInternalOrganisation(orgId));
                 if (!organisationData.CanEditOrganisation)
                 {
                     return new HttpForbiddenResult();

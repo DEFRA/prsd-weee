@@ -13,6 +13,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
@@ -68,7 +69,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._))
                 .Returns(new OrganisationData
                 {
                     OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -91,7 +92,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._))
                 .Returns(new OrganisationData
                 {
                     OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -290,7 +291,7 @@
             var schemeId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._)).Returns(organisationData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
             var result = await controller.EditRegisteredCompanyOrganisationDetails(schemeId, organisationId, aatfId) as ViewResult;
@@ -359,7 +360,7 @@
             var schemeId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._)).Returns(organisationData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
             var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, organisationId, aatfId) as ViewResult;
