@@ -75,7 +75,7 @@
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
         {
-            if (!Request.IsAjaxRequest())
+            if (!this.Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
