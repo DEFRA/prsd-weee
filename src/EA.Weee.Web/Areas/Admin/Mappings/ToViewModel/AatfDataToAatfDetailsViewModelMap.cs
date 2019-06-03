@@ -37,9 +37,8 @@
                 CanEdit = source.AatfData.Contact.CanEditContactDetails,
                 Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString,
-
                 FacilityType = source.AatfData.FacilityType,
-                ComplianceYear = source.AatfData.ComplianceYear
+                ComplianceYear = source.AatfData.ComplianceYear,
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
                 ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false)
             };

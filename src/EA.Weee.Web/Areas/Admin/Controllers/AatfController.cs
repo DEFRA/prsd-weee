@@ -19,6 +19,11 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     public class AatfController : AdminController
     {
@@ -253,8 +258,6 @@
 
             return siteAddressLong;
         }
-
-        
                 
         private void SetBreadcrumb(FacilityType type)
         {

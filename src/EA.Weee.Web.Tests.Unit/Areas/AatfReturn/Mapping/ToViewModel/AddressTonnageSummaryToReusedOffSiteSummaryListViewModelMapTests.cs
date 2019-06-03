@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
+    using AutoFixture;
     using System;
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
@@ -19,8 +20,10 @@
 
         public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests()
         {
+            var fixture = new Fixture();
+
             map = new AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(new TonnageUtilities());
-            testAatf = new AatfData(Guid.NewGuid(), "Test Aatf", "Aatf approval");
+            testAatf = fixture.Build<AatfData>().WithAutoProperties().Create();
             testAddressDataList = new List<SiteAddressData>();
             testObligatedDataList = new List<WeeeObligatedData>();
         }
@@ -87,7 +90,7 @@
         }
 
         [Fact]
-        public void Map_GivenZeroValuelObligatedData_ReturnsZero()
+        public void Map_GivenZeroValueObligatedData_ReturnsZero()
         {
             testAddressDataList.Add(A.Fake<SiteAddressData>());
 

@@ -39,10 +39,6 @@
             }
 
             var organisationData = organisationMap.Map(org);
-
-            organisationData.CanEditOrganisation = authorization.CheckUserInRole(Roles.InternalAdmin);
-
-
             var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
 
             if (schemes != null)
@@ -51,6 +47,7 @@
             }
 
             organisationData.HasAatfs = await context.Aatfs.CountAsync(o => o.Organisation.Id == query.OrganisationId) > 0;
+            organisationData.CanEditOrganisation = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             return organisationData;
         }

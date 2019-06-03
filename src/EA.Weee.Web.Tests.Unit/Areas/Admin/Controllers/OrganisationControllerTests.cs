@@ -280,7 +280,10 @@
         [Fact]
         public async Task GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisation_ViewModelShouldBeReturned()
         {
-            var organisationData = fixture.Build<OrganisationData>().WithAutoProperties().Create();
+            var organisationData = fixture.Build<OrganisationData>()
+                .WithAutoProperties()
+                .With(o => o.CanEditOrganisation, true)
+                .Create();
             var countries = fixture.CreateMany<CountryData>().ToList();
             var organisationId = Guid.NewGuid();
             var schemeId = Guid.NewGuid();
@@ -345,7 +348,11 @@
         [Fact]
         public async Task GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisation_ViewModelShouldBeReturned()
         {
-            var organisationData = fixture.Build<OrganisationData>().WithAutoProperties().Create();
+            var organisationData = fixture.Build<OrganisationData>()
+                .WithAutoProperties()
+                .With(o => o.CanEditOrganisation, true)
+                .Create();
+
             var countries = fixture.CreateMany<CountryData>().ToList();
             var organisationId = Guid.NewGuid();
             var schemeId = Guid.NewGuid();
