@@ -1,9 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Core.Organisations
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.EditSoleTraderOrIndividualOrganisationDetailsViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Organisation.EditSoleTraderOrIndividualOrganisationDetailsViewModel
 @{
-    ViewBag.Title = "Edit organisation details";
+    ViewBag.Title = "Edit organisation details - GOV.UK";
 }
 
 @section main_content {
@@ -18,19 +18,20 @@
 
         @Html.HiddenFor(m => m.OrgId)
         @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.OrganisationType)
 
         <p>
             <span class="font-bold marginRight">Organisation type:</span> @if (Model.OrganisationType == OrganisationType.SoleTraderOrIndividual)
             {
                 @:Sole trader or individual
-                                }
+            }
             else if (Model.OrganisationType == OrganisationType.Partnership)
             {
                 @:Partnership
-                                }
+            }
         </p>
-            
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
