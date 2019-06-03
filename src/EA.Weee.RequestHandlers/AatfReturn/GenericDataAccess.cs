@@ -38,7 +38,10 @@
 
         public void Remove<TEntity>(TEntity entity) where TEntity : Entity
         {
-            context.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
+            if (entity != null)
+            {
+                context.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
+            }
         }
 
         public void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity

@@ -2,9 +2,9 @@
 
 Hello,
 
-You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to access @Model.OrganisationName.
+You have received this message because @Model.FullName has requested to gain access to @Model.OrganisationName via the Waste electrical and Electronic Equipment (WEEE) online service.
 
-Sign in to the WEEE online service to action this request at @Model.ExternalUserLoginUrl
+To action this request sign in to the WEEE online service at @Model.ExternalUserLoginUrl
 
 This is an automated email; do not reply.
 
