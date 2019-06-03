@@ -27,7 +27,6 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
-        private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
         private readonly string dcfConfirm = "Yes";
 
@@ -36,14 +35,12 @@
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
             IAddSelectReportOptionsRequestCreator requestCreator,
-            ISelectReportOptionsViewModelValidatorWrapper validator,
             IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
-            this.validator = validator;
             this.mapper = mapper;
         }
 
