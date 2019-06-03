@@ -12,7 +12,7 @@
 
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [DisplayName("Trading name")]
+        [DisplayName("Business trading name")]
         public string BusinessTradingName { get; set; }
 
         public AddressData Address { get; set; }

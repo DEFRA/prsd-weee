@@ -11,7 +11,16 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Partnership/soletrader details</h1>
+        <h1 class="govuk-heading-l">
+            @if (Model.OrganisationType == "Partnership")
+            {
+                @:Partnership details
+            }
+            else
+            {
+                @:Sole trader or individual details
+            }
+        </h1>
     </header>
 
     @using (Html.BeginForm())
