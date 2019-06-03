@@ -5,7 +5,6 @@
 
     public class FilteringViewModel
     {
-        [Display(Name = "Name of AATF")]
         public string Name { get; set; }
 
         [Display(Name = "Approval number")]

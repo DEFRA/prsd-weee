@@ -22,7 +22,6 @@
         public Guid Id { get; set; }
 
         private string aatfName;
-        [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
         public string Name
@@ -41,5 +40,12 @@
         }
 
         public AatfAddressData SiteAddress { get; set; }
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                yield return new ValidationResult(string.Format("Enter name of {0}", this.FacilityType), new[] { "Name" });
+            }
+        }
     }
 }
