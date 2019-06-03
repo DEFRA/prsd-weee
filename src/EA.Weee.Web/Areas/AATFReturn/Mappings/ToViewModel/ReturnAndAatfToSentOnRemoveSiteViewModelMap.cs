@@ -6,6 +6,7 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
 
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMap : IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel>
     {

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
+    using AutoFixture;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,9 +23,11 @@
         private readonly IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>> categoryMap;
         private readonly ICategoryValueTotalCalculator calculator;
         private readonly IPasteProcessor pasteProcessor;
+        private readonly Fixture fixture;
 
         public ReturnToObligatedViewModelMapTests()
         {
+            fixture = new Fixture();
             cache = A.Fake<IWeeeCache>();
             categoryMap = A.Fake<IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>>>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
@@ -158,6 +161,41 @@
             var result = mapper.Map(transfer);
 
             result.CategoryValues.Should().BeEquivalentTo(returnList);
+        }
+
+        [Fact]
+        public void Map_GiveSourceSiteNameIsNotNullAndSiteIdIsNotDefault_CategoryValuesShouldBeSentOnValues()
+        {
+            var id = Guid.NewGuid();
+
+            var weeSentOn = new List<WeeeObligatedData>()
+            {
+                new WeeeObligatedData() { WeeeSentOnId = id }
+            };
+
+            var returnData = new ReturnData()
+            {
+                ObligatedWeeeSentOnData = weeSentOn
+            };
+
+            var transfer = fixture.Build<ReturnToObligatedViewModelMapTransfer>()
+                .WithAutoProperties()
+                .With(t => t.WeeeSentOnId, id)
+                .With(t => t.ReturnData, returnData)
+                .With(t => t.SchemeId, new Guid())
+                .Create();
+
+            var obligated = new List<ObligatedCategoryValue>();
+            fixture.AddManyTo(obligated);
+
+            var weeDataValues = transfer.ReturnData.ObligatedWeeeSentOnData.Where(ow => ow.WeeeSentOnId.Equals(id));
+
+            A.CallTo(() => categoryMap.Map(A<ObligatedDataToObligatedValueMapTransfer>
+                    .That.Matches(o => o.WeeeDataValues.IsSameOrEqualTo(weeDataValues)))).Returns(obligated);
+
+            var result = mapper.Map(transfer);
+
+            result.CategoryValues.Should().AllBeEquivalentTo(obligated);
         }
     }
 }

@@ -90,6 +90,7 @@
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
+    <Compile Include="Admin\GetInternalOrganisation.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />

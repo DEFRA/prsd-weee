@@ -43,5 +43,7 @@
         public string OrganisationName { get; set; }
 
         public bool CanEditOrganisation { get; set; }
+
+        public bool IsRegisteredCompany => OrganisationType == OrganisationType.RegisteredCompany;
     }
 }
