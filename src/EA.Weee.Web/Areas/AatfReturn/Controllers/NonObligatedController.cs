@@ -23,20 +23,17 @@
         private readonly INonObligatedWeeeRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
 
         public NonObligatedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
             INonObligatedWeeeRequestCreator requestCreator,
-            INonObligatedValuesViewModelValidatorWrapper validator,
             IMap<ReturnToNonObligatedValuesViewModelMapTransfer,
             NonObligatedValuesViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.requestCreator = requestCreator;
-            this.validator = validator;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
@@ -91,19 +88,5 @@
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
         }
-
-        //private async Task ValidateResult(NonObligatedValuesViewModel model, IWeeeClient client)
-        //{
-        //    var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(model.ReturnId));
-        //    var result = await validator.Validate(model, @return);
-
-        //    if (!result.IsValid)
-        //    {
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-        //        }
-        //    }
-        //}
     }
 }
