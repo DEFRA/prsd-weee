@@ -20,6 +20,7 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -144,6 +145,14 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
+            // This is here because we don't display the site address name, but the view model for it makes it required. There is also
+            // custom validation for the AATF/AE name property which copies the value into the SiteAddressName field, so if the name property
+            // is empty, it will display an error for siteAddressName. This removed that error.
+            if (ModelState.ContainsKey("SiteAddress.Name"))
+            {
+                ModelState["SiteAddress.Name"].Errors.Clear();
+            }
+
             SetBreadcrumb(viewModel.FacilityType);
 
             if (ModelState.IsValid)
