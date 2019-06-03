@@ -318,8 +318,8 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressUtilities.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IAddressUtilities.cs" />
+    <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
+    <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
@@ -405,6 +405,7 @@
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminHoldingController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddAatfController.cs" />
+    <Compile Include="Areas\Admin\Controllers\EditOrganisationController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
@@ -443,13 +444,14 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditOrganisationDetailsViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\EditRegisteredCompanyOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditRegisteredCompanyOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\ContactDetails\ContactDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OrganisationDetails\OrganisationDetailsOverviewViewModel.cs" />
@@ -919,6 +921,8 @@
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\AeReturn\Views\AeReturns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1071,8 +1075,6 @@
     <Content Include="Areas\Admin\Views\Scheme\Overview\RegisteredCompanyDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\ContactDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\_OverviewAvailableActions.cshtml" />
-    <Content Include="Areas\Admin\Views\Scheme\EditRegisteredCompanyOrganisationDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Scheme\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />

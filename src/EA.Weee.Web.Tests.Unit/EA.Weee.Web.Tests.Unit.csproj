@@ -140,6 +140,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -218,8 +219,8 @@
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\NonObligatedDataToNonObligatedValueMapTests.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddAatfControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\EditOrganisationControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducersControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsControllerTests.cs" />
@@ -288,6 +290,8 @@
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrIndividualOrganisationDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
