@@ -5,6 +5,7 @@
     using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;

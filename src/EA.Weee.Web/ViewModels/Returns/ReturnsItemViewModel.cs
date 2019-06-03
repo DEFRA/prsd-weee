@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Returns
 {
     using Core.AatfReturn;
-    using Prsd.Core;
 
     public class ReturnsItemViewModel
     {
