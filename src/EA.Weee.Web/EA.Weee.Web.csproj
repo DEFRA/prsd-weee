@@ -342,6 +342,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnDataToSelectReportOptionsNilViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnDataToSelectReportOptionsNilViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnOptionsAndViewModelToSelectReportOptionsDeselectViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsOrdering.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnStatusToReturnDisplayOptionsMap.cs" />

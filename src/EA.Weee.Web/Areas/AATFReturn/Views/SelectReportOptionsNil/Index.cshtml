@@ -22,15 +22,17 @@
         </p>
     </div>
     <div class="govuk-!-padding-bottom-5"></div>
-    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsRouteName, FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsNilRouteName, FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
         <button type="submit" class="govuk-button">
             Save and continue
         </button>
         <p>
-            <a href="@(Url.UrlFor<SelectReportOptionsController>(u => u.Index(Model.OrganisationId, Model.ReturnId)))">Cancel</a>
+            @Html.NavigationRouteLink("Cancel", "Cancel and select reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
         </p>
     }
 </section>

@@ -2,22 +2,23 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
-    public class ReturnDataToSelectReportOptionsNilViewModelMap : IMap<ReturnData, SelectReportOptionsNilViewModel>
+    public class ReturnDataToSelectReportOptionsNilViewModelMap : IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel>
     {
-        public SelectReportOptionsNilViewModel Map(ReturnData source)
+        public SelectReportOptionsNilViewModel Map(ReturnDataToSelectReportOptionsNilViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
+            Guard.ArgumentNotNull(() => source.ReturnData, source.ReturnData);
 
             var model = new SelectReportOptionsNilViewModel()
             {
-                ReturnId = source.Id,
+                ReturnId = source.ReturnId,
                 OrganisationId = source.OrganisationId,
-                QuarterWindowEndDate = source.QuarterWindow.EndDate,
-                QuarterWindowStartDate = source.QuarterWindow.StartDate,
-                Quarter = source.Quarter.Q.ToString()
+                QuarterWindowEndDate = source.ReturnData.QuarterWindow.EndDate,
+                QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
+                Quarter = source.ReturnData.Quarter.Q.ToString(),
+                Year = source.ReturnData.Quarter.Year.ToString()
             };
 
             return model;

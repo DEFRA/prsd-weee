@@ -5,10 +5,11 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -20,13 +21,13 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnData, SelectReportOptionsNilViewModel> mapper;
+        private readonly IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper;
 
         public SelectReportOptionsNilController(
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            IMap<ReturnData, SelectReportOptionsNilViewModel> mapper)
+            IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -40,7 +41,14 @@
             using (var client = apiClient())
             {
                 var returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
-                var viewModel = mapper.Map(returnData);
+                var viewModel = mapper.Map(new ReturnDataToSelectReportOptionsNilViewModelMapTransfer()
+                {
+                    ReturnData = returnData,
+                    OrganisationId = organisationId,
+                    ReturnId = returnId
+                });
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View("Index", viewModel);
             }

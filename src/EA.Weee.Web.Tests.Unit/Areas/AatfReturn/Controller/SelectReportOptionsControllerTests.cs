@@ -44,7 +44,7 @@
         }
 
         [Fact]
-        public void SelectReportOptionsController_InheritsExternalSiteController()
+        public void SelectReportOptionsController_InheritsBaseController()
         {
             typeof(SelectReportOptionsController).BaseType.Name.Should().Be(typeof(AatfReturnBaseController).Name);
         }
@@ -102,6 +102,7 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteName.Should().Be(AatfRedirect.SelectPcsRouteName);
         }
 
         [Fact]

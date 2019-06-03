@@ -106,7 +106,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
         <p>
-            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
+            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId })
         </p>
         <button type="submit" class="govuk-button">
             Continue
