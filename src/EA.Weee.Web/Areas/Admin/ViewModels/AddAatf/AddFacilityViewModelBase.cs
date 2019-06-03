@@ -55,6 +55,8 @@
         [Display(Name = "Compliance year")]
         public short SelectedComplianceYear { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         public AddFacilityViewModelBase()
         {
             ContactData = new AatfContactData();

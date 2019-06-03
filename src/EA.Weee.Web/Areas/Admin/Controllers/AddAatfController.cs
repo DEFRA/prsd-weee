@@ -44,23 +44,23 @@
         }
 
         [HttpGet]
-        public ActionResult Search()
+        public ActionResult Search(FacilityType facilityType)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
-            return View();
+            SetBreadcrumb(facilityType);
+            return View(new SearchViewModel { FacilityType = facilityType });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Search(SearchViewModel viewModel)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
+            SetBreadcrumb(viewModel.FacilityType);
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
 
-            return RedirectToAction("SearchResults", "AddAatf", new { viewModel.SearchTerm });
+            return RedirectToAction("SearchResults", "AddAatf", new { viewModel.SearchTerm, viewModel.FacilityType });
         }
 
         /// <summary>
@@ -88,13 +88,16 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SearchResults(string searchTerm)
+        public async Task<ActionResult> SearchResults(string searchTerm, FacilityType facilityType)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
+            SetBreadcrumb(facilityType);
 
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+            var viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm,
+                FacilityType = facilityType,
+                Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+            };
 
             return View(viewModel);
         }
@@ -103,7 +106,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
+            SetBreadcrumb(viewModel.FacilityType);
 
             if (!ModelState.IsValid)
             {
@@ -112,40 +115,40 @@
                 return View(viewModel);
             }
 
-            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId });
+            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.FacilityType });
         }
 
         [HttpGet]
-        public async Task<ActionResult> Add(Guid organisationId)
+        public async Task<ActionResult> Add(Guid organisationId, FacilityType facilityType)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
+            SetBreadcrumb(facilityType);
 
-            AddAatfViewModel viewModel = new AddAatfViewModel()
+            switch (facilityType)
             {
-                OrganisationId = organisationId
-            };
-
-            viewModel = await PopulateViewModelLists(viewModel);
-
-            return View(viewModel);
+                case FacilityType.Aatf:
+                    return View(await PopulateAndReturnViewModel(new AddAatfViewModel(), organisationId));
+                case FacilityType.Ae:
+                    return View(await PopulateAndReturnViewModel(new AddAeViewModel(), organisationId));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(facilityType));
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(AddAatfViewModel viewModel)
+        public async Task<ActionResult> AddAatf(AddAatfViewModel viewModel)
         {
-            SetBreadcrumb(InternalUserActivity.CreateAatf);
-
+            SetBreadcrumb(viewModel.FacilityType);
             viewModel = await PopulateViewModelLists(viewModel);
 
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                return View(nameof(Add), viewModel);
             }
 
             using (var client = apiClient())
             {
-                AddAatf request = new AddAatf()
+                var request = new AddAatf()
                 {
                     Aatf = CreateAatfData(viewModel),
                     AatfContact = viewModel.ContactData,
@@ -157,6 +160,25 @@
                 await cache.InvalidateAatfCache(request.OrganisationId);
 
                 return RedirectToAction("ManageAatfs", "Aatf", new { FacilityType = FacilityType.Aatf });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddAe(AddAeViewModel viewModel)
+        {
+            SetBreadcrumb(viewModel.FacilityType);
+            viewModel = await PopulateViewModelLists(viewModel);
+
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Add), viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                // TODO: Send request
+                return RedirectToAction("ManageAatfs", "Aatf", new { FacilityType = FacilityType.Ae });
             }
         }
 
@@ -306,12 +328,20 @@
             return View(model);
         }
 
-        private async Task<AddAatfViewModel> PopulateViewModelLists(AddAatfViewModel viewModel)
+        private async Task<T> PopulateAndReturnViewModel<T>(T viewModel, Guid organisationId)
+            where T : AddFacilityViewModelBase
+        {
+            viewModel.OrganisationId = organisationId;
+            return await PopulateViewModelLists(viewModel);
+        }
+
+        private async Task<T> PopulateViewModelLists<T>(T viewModel)
+            where T : AddFacilityViewModelBase
         {
             using (var client = apiClient())
             {
-                IList<CountryData> countries = await GetCountries();
-                OrganisationData organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
+                var countries = await GetCountries();
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.SiteAddressData.Countries = countries;
@@ -344,6 +374,21 @@
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
+        }
+
+        private void SetBreadcrumb(FacilityType type)
+        {
+            switch (type)
+            {
+                case FacilityType.Aatf:
+                    SetBreadcrumb(InternalUserActivity.CreateAatf);
+                    break;
+                case FacilityType.Ae:
+                    SetBreadcrumb(InternalUserActivity.CreateAe);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void SetBreadcrumb(string activity)

@@ -115,7 +115,7 @@
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
             SetBreadcrumb(filter.FacilityType);
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), Filter = filter, FacilityType = filter.FacilityType });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), CanAddAatf = IsUserInternalAdmin(), Filter = filter, FacilityType = filter.FacilityType });
         }
 
         [HttpGet]

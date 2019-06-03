@@ -82,17 +82,8 @@
 
     if (Model.CanAddAatf)
     {
-        if (Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf)
-        {
-            <p>
-                <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
-            </p>
-        }
-        else
-        {
-            <p>
-                <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Add @Model.FacilityType.ToDisplayString()</a>
-            </p>
-        }
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
+        </p>
     }
 }

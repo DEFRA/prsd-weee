@@ -21,6 +21,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.FacilityType)
 
             <p class="govuk-body">If the organisation is not listed, this may be because:</p>
             <ul class="govuk-list govuk-list--bullet">
@@ -44,7 +45,7 @@
         }
 
         <p>
-            @Html.ActionLink("Start another search", "Search", "AddAatf")
+            @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, null)
         </p>
         <p>
             @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = @Model.SearchTerm }, null)
@@ -67,14 +68,12 @@
             <li>you entered something other than the organisation name</li>
         </ul>
         <p>
-            @Html.ActionLink("Start another search", "Search", "AddAatf", null, new { @class = "govuk-button" })
+            @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, new { @class = "govuk-button" })
         </p>
         <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm)))">Create a new organisation</a> 
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm)))">Create a new organisation</a>
         </p>
     }
-
-
 }
 
 @section scripts{
