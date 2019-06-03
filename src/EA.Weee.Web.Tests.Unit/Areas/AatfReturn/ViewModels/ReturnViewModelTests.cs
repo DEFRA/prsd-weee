@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.Scheme;
+    using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;

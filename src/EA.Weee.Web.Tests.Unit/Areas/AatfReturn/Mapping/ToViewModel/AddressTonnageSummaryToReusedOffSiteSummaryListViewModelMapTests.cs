@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
