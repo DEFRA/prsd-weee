@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
     using Core.AatfReturn;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
     public class ReturnToReturnsItemViewModelMapper : IMap<ReturnData, ReturnsItemViewModel>
     {

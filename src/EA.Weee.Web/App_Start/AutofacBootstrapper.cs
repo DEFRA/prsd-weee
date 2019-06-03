@@ -15,6 +15,7 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
     using Infrastructure;
     using Prsd.Core.Autofac;

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Returns
 {
     public interface IReturnViewModel
     {
