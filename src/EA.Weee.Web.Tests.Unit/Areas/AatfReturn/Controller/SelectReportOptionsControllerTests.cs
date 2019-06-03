@@ -36,7 +36,6 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
-        private readonly ISelectReportOptionsViewModelValidatorWrapper validator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
 
         public SelectReportOptionsControllerTests()
@@ -45,10 +44,9 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
-            validator = A.Fake<ISelectReportOptionsViewModelValidatorWrapper>();
             mapper = A.Fake<IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel>>();
 
-            controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, validator, mapper);
+            controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, mapper);
         }
 
         [Fact]
@@ -210,18 +208,6 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
-        }
-
-        [Fact]
-        public async void IndexPost_InvalidViewModel_ValidatorShouldNotBeCalled()
-        {
-            var model = new SelectReportOptionsViewModel();
-
-            controller.ModelState.AddModelError("error", "error");
-
-            await controller.Index(model);
-
-            A.CallTo(() => validator.Validate(model)).MustNotHaveHappened();
         }
 
         [Fact]
