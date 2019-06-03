@@ -283,7 +283,6 @@
     <Compile Include="Areas\Admin\Controllers\TestEmailControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
-    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests_2.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
