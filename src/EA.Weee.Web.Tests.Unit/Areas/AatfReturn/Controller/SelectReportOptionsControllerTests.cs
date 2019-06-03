@@ -243,7 +243,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithDeselectedOption_PageRedirectsToSelectReportOptionsDeselect()
+        public async void IndexPost_OnSubmitWithDeselectedOptionAndSelectedOption_PageRedirectsToSelectReportOptionsDeselect()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -276,6 +276,40 @@
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsDeselectRouteName);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmitWithDeselectedOptionAndNoSelectedOption_PageRedirectsToSelectReportOptionsNil()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var viewModel = CreateSubmittedViewModel();
+            viewModel.ReturnId = returnId;
+            viewModel.OrganisationId = organisationId;
+
+            var returnData = new ReturnData();
+            returnData.ReturnReportOns = new List<ReturnReportOn>();
+
+            for (var i = 0; i < 5; i++)
+            {
+                returnData.ReturnReportOns.Add(new ReturnReportOn(i + 1, returnId));
+            }
+
+            A.CallTo(() => weeeClient.SendAsync(A<String>._, A<GetReturn>._)).Returns(returnData);
+
+            httpContext.RouteData.Values.Add("organisationId", organisationId);
+            httpContext.RouteData.Values.Add("returnId", returnId);
+
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsNilRouteName);
         }
 
         [Fact]

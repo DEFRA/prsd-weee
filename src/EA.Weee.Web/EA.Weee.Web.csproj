@@ -360,6 +360,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetWeeeSentOnRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\DeleteReturnDataRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\IDeleteReturnDataRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IGetWeeeSentOnRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedSentOnWeeeRequestCreator.cs" />

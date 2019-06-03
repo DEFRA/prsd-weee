@@ -8,6 +8,7 @@
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -24,6 +25,7 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper;
         private readonly SelectReportOptionsNilController controller;
+        private readonly IDeleteReturnDataRequestCreator requestCreator;
 
         public SelectReportOptionsNilControllerTests()
         {
@@ -31,8 +33,9 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel>>();
+            requestCreator = A.Fake<IDeleteReturnDataRequestCreator>();
 
-            controller = new SelectReportOptionsNilController(() => weeeClient, breadcrumb, cache, mapper);
+            controller = new SelectReportOptionsNilController(() => weeeClient, breadcrumb, cache, mapper, requestCreator);
         }
 
         [Fact]

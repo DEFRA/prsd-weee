@@ -8,6 +8,7 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -22,17 +23,20 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper;
+        private readonly IDeleteReturnDataRequestCreator requestCreator;
 
         public SelectReportOptionsNilController(
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper)
+            IMap<ReturnDataToSelectReportOptionsNilViewModelMapTransfer, SelectReportOptionsNilViewModel> mapper,
+            IDeleteReturnDataRequestCreator requestCreator)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.requestCreator = requestCreator;
         }
 
         [HttpGet]
@@ -60,6 +64,8 @@
         {
             using (var client = apiClient())
             {
+                var request = requestCreator.ViewModelToRequest(viewModel);
+                await client.SendAsync(User.GetAccessToken(), request);
                 await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
             }
             return await Task.Run<ActionResult>(() => AatfRedirect.SubmittedReturn(viewModel.ReturnId));
