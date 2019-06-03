@@ -17,7 +17,6 @@
         public Guid Id { get; set; }
 
         private string aatfName;
-        //[Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
         public string Name
