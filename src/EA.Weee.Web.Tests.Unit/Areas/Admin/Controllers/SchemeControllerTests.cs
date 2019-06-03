@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using Api.Client;
+    using Core.Organisations;
+    using Core.Scheme;
+    using Core.Shared;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.Organisations;
-    using Core.Scheme;
-    using Core.Shared;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Infrastructure;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Scheme;

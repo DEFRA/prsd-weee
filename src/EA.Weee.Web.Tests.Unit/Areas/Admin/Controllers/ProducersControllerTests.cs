@@ -11,6 +11,7 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using FakeItEasy;
     using Infrastructure;

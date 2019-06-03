@@ -233,6 +233,8 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnStatusToReturnDisplayOptionsMapperTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
+    <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />
+    <Compile Include="Infrastructure\ARedirectTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
