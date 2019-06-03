@@ -1,21 +1,31 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using FluentAssertions;
     using Xunit;
 
     public class ManageAatfsViewModelTests
     {
-        [Fact]
-        public void ManageAatfsViewModel_RequiredVariableShouldHaveRequiredAttribute()
+        [Theory]
+        [InlineData(FacilityType.Aatf)]
+        [InlineData(FacilityType.Ae)]
+        public void Selected_NoSelected_ErrorMessageWithCorrectFacility(FacilityType type)
         {
-            var t = typeof(ManageAatfsViewModel);
-            var pi = t.GetProperty("Selected");
-            var hasAttribute = Attribute.IsDefined(pi, typeof(RequiredAttribute));
+            var model = new ManageAatfsViewModel()
+            {
+                FacilityType = type
+            };
 
-            hasAttribute.Should().Be(true);
+            ValidationContext validationContext = new ValidationContext(model, null, null);
+
+            IList<ValidationResult> result = model.Validate(validationContext).ToList();
+
+            Assert.True(result.Count() > 0);
+            Assert.Equal(string.Format("You must select an {0} to manage", type), result[0].ErrorMessage);
         }
     }
 }
