@@ -60,6 +60,8 @@
             }
             else if (source.SiteName != null)
             {
+                model.SiteName = source.SiteName;
+
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeSentOnData.Where(w => w.WeeeSentOnId == source.WeeeSentOnId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
             }
@@ -67,11 +69,6 @@
             {
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeReusedData.Where(w => w.Aatf.Id == source.AatfId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
-            }
-
-            if (source.SiteName != null)
-            {
-                model.SiteName = source.SiteName;
             }
 
             if (source.PastedData != null)

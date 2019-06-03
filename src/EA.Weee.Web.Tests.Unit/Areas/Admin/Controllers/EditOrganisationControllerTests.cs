@@ -30,16 +30,16 @@
     using FluentAssertions;
     using Xunit;
 
-    public class OrganisationControllerTests
+    public class EditOrganisationControllerTests
     {
         private readonly IWeeeClient weeeClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        private readonly OrganisationController controller;
+        private readonly EditOrganisationController controller;
         private readonly Fixture fixture;
         private readonly UrlHelper urlHelper;
 
-        public OrganisationControllerTests()
+        public EditOrganisationControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             cache = A.Fake<IWeeeCache>();
@@ -47,19 +47,19 @@
             fixture = new Fixture();
             urlHelper = A.Fake<UrlHelper>();
 
-            controller = new OrganisationController(() => weeeClient, cache, breadcrumb) { Url = urlHelper };
+            controller = new EditOrganisationController(() => weeeClient, cache, breadcrumb) { Url = urlHelper };
         }
 
         [Fact]
         public void OrganisationControllerInheritsAdminController()
         {
-            typeof(OrganisationController).BaseType.Name.Should().Be(typeof(AdminController).Name);
+            typeof(EditOrganisationController).BaseType.Name.Should().Be(typeof(AdminController).Name);
         }
 
         [Fact]
         public void OrganisationControllerMustHaveAuthorizeClaimsAttribute()
         {
-            typeof(OrganisationController).Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+            typeof(EditOrganisationController).Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         [Fact]

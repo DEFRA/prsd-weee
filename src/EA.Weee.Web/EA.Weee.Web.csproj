@@ -409,7 +409,7 @@
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminHoldingController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddAatfController.cs" />
-    <Compile Include="Areas\Admin\Controllers\OrganisationController.cs" />
+    <Compile Include="Areas\Admin\Controllers\EditOrganisationController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SmokeTestController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />

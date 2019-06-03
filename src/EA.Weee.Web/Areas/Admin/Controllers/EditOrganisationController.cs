@@ -23,13 +23,13 @@
     using EA.Weee.Web.Services.Caching;
     
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
-    public class OrganisationController : AdminController
+    public class EditOrganisationController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
 
-        public OrganisationController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
+        public EditOrganisationController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
             this.cache = cache;
