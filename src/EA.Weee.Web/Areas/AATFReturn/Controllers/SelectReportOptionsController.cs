@@ -88,6 +88,10 @@
 
                         await client.SendAsync(User.GetAccessToken(), request);
                     }
+                    else
+                    {
+                        return AatfRedirect.SelectReportOptionsNil(viewModel.OrganisationId, viewModel.ReturnId);
+                    }
                 }
 
                 if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected

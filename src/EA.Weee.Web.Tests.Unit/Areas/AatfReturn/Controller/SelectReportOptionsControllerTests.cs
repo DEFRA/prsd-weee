@@ -4,14 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
-    using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -19,15 +15,13 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentValidation.Results;
     using Xunit;
-    using ValidationResult = FluentValidation.Results.ValidationResult;
 
     public class SelectReportOptionsControllerTests
     {
@@ -140,7 +134,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithoutPcsOptionSelected_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmitWithoutPcsOptionSelected_PageRedirectsToSelectReportOptionsNil()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -158,8 +152,9 @@
             var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsNilRouteName);
         }
 
         [Fact]
@@ -293,6 +288,7 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsDeselectRouteName);
         }
 
         [Fact]

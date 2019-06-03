@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
     ViewBag.Title = "AATF return reporting options - GOV.UK";
@@ -104,6 +105,9 @@
         @Html.HiddenFor(m => m.DcfSelectedValue)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
+        <p>
+            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
+        </p>
         <button type="submit" class="govuk-button">
             Continue
         </button>
