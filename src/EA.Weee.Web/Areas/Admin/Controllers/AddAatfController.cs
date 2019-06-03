@@ -159,7 +159,7 @@
 
                 await cache.InvalidateAatfCache(request.OrganisationId);
 
-                return RedirectToAction("ManageAatfs", "Aatf", new { type = "AATF" });
+                return RedirectToAction("ManageAatfs", "Aatf", new { facilityType = FacilityType.Aatf });
             }
         }
 
