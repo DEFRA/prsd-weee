@@ -13,6 +13,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Organisation;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
@@ -193,15 +194,17 @@
 
         private async Task SetBreadcrumb(Guid? schemeId, Guid? aatfId, Guid organisationId)
         {
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = string.Empty;
             breadcrumb.InternalOrganisation = string.Empty;
 
             if (schemeId.HasValue && !aatfId.HasValue)
             {
+                breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
                 breadcrumb.InternalOrganisation = await cache.FetchSchemeName(schemeId.Value);
             }
             if (!schemeId.HasValue && aatfId.HasValue)
             {
+                breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
                 breadcrumb.InternalOrganisation = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
             }
         }

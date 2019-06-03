@@ -27,7 +27,9 @@
                 var organisation = new OrganisationData()
                 {
                     OrganisationType = (OrganisationType)value
-                };                
+                };
+
+                organisation.IsRegisteredCompany.Should().BeFalse();
             }
         }
     }

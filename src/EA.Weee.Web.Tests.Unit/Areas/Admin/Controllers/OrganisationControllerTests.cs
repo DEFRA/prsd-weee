@@ -18,6 +18,7 @@
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Organisation;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Filters;
@@ -316,7 +317,7 @@
             A.CallTo(() => cache.FetchSchemeName(schemeId)).Returns(organisation);
             await controller.EditRegisteredCompanyOrganisationDetails(schemeId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
@@ -327,7 +328,7 @@
         {
             await controller.EditRegisteredCompanyOrganisationDetails(schemeId, A.Dummy<Guid>(), aatfId);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
@@ -341,7 +342,7 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatf);
             await controller.EditRegisteredCompanyOrganisationDetails(A.Dummy<Guid>(), organisationId, aatfId);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
@@ -383,7 +384,7 @@
             A.CallTo(() => cache.FetchSchemeName(schemeId)).Returns(organisation);
             await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
@@ -393,7 +394,7 @@
         {
             await controller.EditSoleTraderOrIndividualOrganisationDetails(null, A.Dummy<Guid>(), null);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
@@ -407,7 +408,7 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatf);
             await controller.EditSoleTraderOrIndividualOrganisationDetails(A.Dummy<Guid>(), organisationId, aatfId);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
@@ -435,7 +436,7 @@
 
             await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
@@ -447,7 +448,7 @@
 
             await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
@@ -461,7 +462,7 @@
 
             await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
@@ -565,7 +566,7 @@
 
             await controller.EditRegisteredCompanyOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
@@ -579,7 +580,7 @@
 
             await controller.EditRegisteredCompanyOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
@@ -593,7 +594,7 @@
 
             await controller.EditRegisteredCompanyOrganisationDetails(model);
 
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
