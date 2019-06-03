@@ -1,12 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {

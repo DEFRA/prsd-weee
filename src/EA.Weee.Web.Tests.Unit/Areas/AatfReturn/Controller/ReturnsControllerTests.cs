@@ -6,6 +6,7 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
     using Infrastructure;

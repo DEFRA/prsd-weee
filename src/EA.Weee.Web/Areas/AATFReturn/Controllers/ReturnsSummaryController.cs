@@ -3,6 +3,7 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
@@ -10,7 +11,6 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using ViewModels;
 
     public class ReturnsSummaryController : AatfReturnBaseController
     {
