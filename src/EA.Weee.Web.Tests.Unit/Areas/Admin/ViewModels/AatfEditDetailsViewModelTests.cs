@@ -4,10 +4,12 @@
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using Xunit;
 
     public class AatfEditDetailsViewModelTests
@@ -58,7 +60,6 @@
         {
             var requiredProperties = new List<string>
             {
-                "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
                 "AatfStatus",
@@ -81,6 +82,23 @@
             model.Name = "AATF Name";
 
             Assert.Equal(model.Name, model.SiteAddress.Name);
+        }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf)]
+        [InlineData(FacilityType.Ae)]
+        public void Name_NoNameSet_ErrorMessageWithCorrectFacility(FacilityType type)
+        {
+            var model = CreateValidAatfEditDetailsViewModel();
+            model.Name = null;
+            model.FacilityType = type;
+
+            ValidationContext validationContext = new ValidationContext(model, null, null);
+
+            IList<ValidationResult> result = model.Validate(validationContext).ToList();
+
+            Assert.True(result.Count() > 0);
+            Assert.Equal(string.Format("Enter name of {0}", type), result[0].ErrorMessage);
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()

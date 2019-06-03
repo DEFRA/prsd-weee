@@ -7,7 +7,7 @@
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
 
-    public class AatfEditDetailsViewModel
+    public class AatfEditDetailsViewModel : IValidatableObject
     {
         public AatfEditDetailsViewModel()
         {
@@ -17,7 +17,6 @@
         public Guid Id { get; set; }
 
         private string aatfName;
-        [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
         public string Name
@@ -69,5 +68,13 @@
 
         [Display(Name = "Compliance year")]
         public Int16 ComplianceYear { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                yield return new ValidationResult(string.Format("Enter name of {0}", this.FacilityType), new[] { "Name" });
+            }
+        }
     }
 }
