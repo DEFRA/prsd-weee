@@ -97,7 +97,6 @@
 
             IList<ValidationResult> result = model.Validate(validationContext).ToList();
 
-            Console.WriteLine(result);
             Assert.True(result.Count() > 0);
             Assert.Equal(string.Format("Enter name of {0}", type), result[0].ErrorMessage);
         }
