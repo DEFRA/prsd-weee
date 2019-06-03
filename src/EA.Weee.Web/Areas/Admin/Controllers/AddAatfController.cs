@@ -35,20 +35,17 @@
         private readonly IWeeeCache cache;
         private const int maximumSearchResults = 5;
         private readonly BreadcrumbService breadcrumb;
-        private readonly IAatfViewModelValidatorWrapper validator;
 
         public AddAatfController(
             ISearcher<OrganisationSearchResult> organisationSearcher,
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
-            IWeeeCache cache,
-            IAatfViewModelValidatorWrapper validator)
+            IWeeeCache cache)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-            this.validator = validator;
         }
 
         [HttpGet]

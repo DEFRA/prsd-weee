@@ -44,7 +44,6 @@
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
         private readonly AatfController controller;
-        private readonly IAatfViewModelValidatorWrapper validator;
 
         public AatfControllerTests()
         {
@@ -55,9 +54,8 @@
             detailsRequestCreator = A.Fake<IEditAatfDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
             cache = A.Fake<IWeeeCache>();
-            validator = A.Fake<IAatfViewModelValidatorWrapper>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache, validator);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache);
         }
 
         [Fact]

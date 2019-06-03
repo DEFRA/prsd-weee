@@ -33,7 +33,6 @@
         private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
-        private readonly IAatfViewModelValidatorWrapper validator;
 
         public AatfController(
             Func<IWeeeClient> apiClient,
@@ -41,8 +40,7 @@
             IMapper mapper,
             IEditAatfDetailsRequestCreator detailsRequestCreator,
             IEditAatfContactRequestCreator contactRequestCreator,
-            IWeeeCache cache,
-            IAatfViewModelValidatorWrapper validator)
+            IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -50,7 +48,6 @@
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
             this.cache = cache;
-            this.validator = validator;
         }
 
         [HttpGet]

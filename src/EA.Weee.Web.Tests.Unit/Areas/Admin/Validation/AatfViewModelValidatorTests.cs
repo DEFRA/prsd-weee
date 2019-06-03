@@ -23,6 +23,7 @@
 
             validationResult.IsValid.Should().BeFalse();
             validationResult.Errors.Count.Should().Be(1);
+            validationResult.Errors[0].ErrorMessage.Should().Be("Approval date must be between 01/01/2019 and 31/12/2019");
         }
 
         [Theory]

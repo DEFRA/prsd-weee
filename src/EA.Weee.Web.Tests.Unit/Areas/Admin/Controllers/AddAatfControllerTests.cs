@@ -34,14 +34,12 @@
         private readonly IList<CountryData> countries;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache cache;
-        private readonly IAatfViewModelValidatorWrapper validator;
 
         public AddAatfControllerTests()
         {
             this.organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             this.weeeClient = A.Fake<IWeeeClient>();
             this.countries = A.Dummy<IList<CountryData>>();
-            this.validator = A.Fake<IAatfViewModelValidatorWrapper>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
         }
@@ -55,7 +53,7 @@
         [Fact]
         public void GetSearch_ReturnsView()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ViewResult result = controller.Search() as ViewResult;
 
@@ -65,7 +63,7 @@
         [Fact]
         public void PostSearch_InvalidViewModel_ReturnsView()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             SearchViewModel viewModel = new SearchViewModel()
             {
@@ -84,7 +82,7 @@
         [Fact]
         public void PostSearch_ValidViewModel_RedirectsToSearchResults()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             SearchViewModel viewModel = new SearchViewModel()
             {
@@ -115,7 +113,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -149,7 +147,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -185,7 +183,7 @@
 
             A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -206,7 +204,7 @@
         {
             AddAatfViewModel viewModel = CreateAddViewModel();
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ViewResult result = await controller.Add(viewModel.OrganisationId) as ViewResult;
 
@@ -222,7 +220,7 @@
         [Fact]
         public async Task AddPost_ValidViewModel_ReturnsRedirect()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
@@ -265,7 +263,7 @@
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             await controller.Add(viewModel);
 
@@ -284,7 +282,7 @@
         [Fact]
         public async Task AddPost_InvalidViewModel_ReturnsViewWithViewModelPopulatedWithLists()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
             AddAatfViewModel viewModel = CreateAddViewModel();
@@ -303,7 +301,7 @@
         [Fact]
         public async Task AddPost_ValidViewModel_CacheShouldBeInvalidated()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
@@ -322,7 +320,7 @@
         {
             string searchText = "Company";
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ViewResult result = controller.Type(searchText) as ViewResult;
 
@@ -340,7 +338,7 @@
                 SearchedText = "Company"
             };
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
             ViewResult result = controller.Type(viewModel) as ViewResult;
@@ -363,7 +361,7 @@
                 SelectedValue = selectedValue
             };
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             RedirectToRouteResult result = controller.Type(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be(action);
@@ -378,7 +376,7 @@
             string searchText = "Company";
             string organisationType = "Sole trader or individual";
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ViewResult result = await controller.SoleTraderOrPartnershipDetails(organisationType, searchText) as ViewResult;
 
@@ -401,7 +399,7 @@
             };
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
             ViewResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as ViewResult;
@@ -424,7 +422,7 @@
 
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             RedirectToRouteResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("OrganisationConfirmation");
@@ -446,7 +444,7 @@
 
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             await controller.SoleTraderOrPartnershipDetails(viewModel);
 
@@ -462,7 +460,7 @@
             string searchText = "Company";
             string organisationType = "Registered company";
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ViewResult result = await controller.RegisteredCompanyDetails(organisationType, searchText) as ViewResult;
 
@@ -487,7 +485,7 @@
             };
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             await controller.RegisteredCompanyDetails(viewModel);
 
@@ -506,7 +504,7 @@
 
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             await controller.SoleTraderOrPartnershipDetails(viewModel);
 
@@ -525,7 +523,7 @@
             };
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
             ViewResult result = await controller.RegisteredCompanyDetails(viewModel) as ViewResult;
@@ -552,7 +550,7 @@
 
             viewModel.Address.Countries = countries;
 
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             RedirectToRouteResult result = await controller.RegisteredCompanyDetails(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("OrganisationConfirmation");
@@ -565,7 +563,7 @@
         [Fact]
         public void SearchGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = controller.Search();
 
@@ -575,7 +573,7 @@
         [Fact]
         public void SearchPost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = controller.Search(A.Fake<SearchViewModel>());
 
@@ -585,7 +583,7 @@
         [Fact]
         public async Task SearchResultsGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = await controller.SearchResults("test");
 
@@ -595,7 +593,7 @@
         [Fact]
         public async Task SearchResultsPost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = await controller.SearchResults(A.Fake<SearchResultsViewModel>());
 
@@ -605,7 +603,7 @@
         [Fact]
         public async Task AddGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = await controller.Add(Guid.NewGuid());
 
@@ -615,7 +613,7 @@
         [Fact]
         public async Task AddPost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
@@ -631,7 +629,7 @@
         [Fact]
         public void TypeGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = controller.Type("test");
 
@@ -641,7 +639,7 @@
         [Fact]
         public void TypePost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             OrganisationTypeViewModel viewModel = new OrganisationTypeViewModel()
             {
@@ -657,7 +655,7 @@
         [Fact]
         public async Task SoleTraderOrPartnershipDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = await controller.SoleTraderOrPartnershipDetails("test");
 
@@ -667,7 +665,7 @@
         [Fact]
         public async Task SoleTraderOrPartnershipDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
             {
@@ -684,7 +682,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = await controller.RegisteredCompanyDetails("test");
 
@@ -694,7 +692,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             RegisteredCompanyDetailsViewModel viewModel = new RegisteredCompanyDetailsViewModel()
             {
@@ -714,7 +712,7 @@
         [Fact]
         public void OrganisationConfirmationGet_Always_SetsInternalBreadcrumb()
         {
-            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, validator);
+            AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
             ActionResult result = controller.OrganisationConfirmation(Guid.NewGuid(), "test");
 

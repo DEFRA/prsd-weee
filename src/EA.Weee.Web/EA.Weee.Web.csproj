@@ -398,12 +398,8 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidatorWrapper.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsDeselectViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
@@ -425,7 +421,6 @@
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidator.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AatfViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
@@ -448,7 +443,6 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Validation\IAatfViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
