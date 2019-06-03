@@ -13,7 +13,7 @@
     </header>
 
     <p class="govuk-body">
-        This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first
+        This is WEEE that has been refurbished or repaired to the point it is no longer waste.
     </p>
 
     <div class="govuk-table">
@@ -41,6 +41,12 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="govuk-grid-column-full govuk-!-padding-left-0">
+        <div class="govuk-!-padding-bottom-8"></div>
+        <p class="govuk-body">
+            A reuse site is where WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first. If WEEE has been received at another site, enter the site details.
+        </p>
     </div>
     <div class="govuk-table govuk-grid-column-full govuk-!-padding-left-0">
         @if (Model.Addresses.Count > 0)
@@ -82,7 +88,7 @@
         else
         {
             <div class="govuk-!-padding-bottom-8"></div>
-            <p>You have not entered any reuse sites. If WEEE has been received at another site, enter the site details.</p>
+            <p>You have not entered any reuse sites</p>
         }
     </div>
     <div style="clear: both">

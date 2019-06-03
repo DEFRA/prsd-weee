@@ -264,14 +264,9 @@
             await OrganisationSearchResultList.InvalidateCache();
         }
 
-        public void InvalidateAatfCache()
+        public async Task InvalidateAatfCache(Guid id)
         {
-            AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
-                provider,
-                "AatfInfo",
-                TimeSpan.FromMinutes(15),
-                (key) => key.ToString(),
-                FetchAatfInfoFromApi);
+            await AatfPublicInfo.InvalidateCache(id);
         }
 
         public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)

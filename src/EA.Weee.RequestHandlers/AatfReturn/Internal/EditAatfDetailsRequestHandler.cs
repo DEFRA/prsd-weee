@@ -52,7 +52,8 @@
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Data.Size.Value),
                 message.Data.ApprovalDate.GetValueOrDefault(),
                 existingAatf.Contact,
-                existingAatf.FacilityType);
+                existingAatf.FacilityType,
+                existingAatf.ComplianceYear);
 
             var existingAddress = await genericDataAccess.GetById<AatfAddress>(existingAatf.SiteAddress.Id);
 

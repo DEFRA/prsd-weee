@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Scheme.ViewModels
 @using EA.Weee.Web.Areas.Admin.Controllers
@@ -58,7 +59,7 @@
                 @Html.Gds().TextBoxFor(m => m.SiteAddressData.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
             </div>
 
-            <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountryId)">
+            <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountryId)" id="site-address-country-dropdown-list">
                 @Html.Gds().LabelFor(m => m.SiteAddressData.CountryId)
                 @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountryId)
                 @Html.DropDownListFor(m => m.SiteAddressData.CountryId, new SelectList(Model.SiteAddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "true", aria_labelledby = "site-address-country-dropdown-list" })
@@ -101,6 +102,14 @@
                 {
                     <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input" />
                 }
+            </div>
+
+            <div class="govuk-form-group">
+                @Html.Gds().LabelFor(m => m.SelectedComplianceYear)
+                @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+                <select class="govuk-!-width-one-third govuk-!-width-one-half form-control govuk-select" id="SelectedComplianceYear" name="SelectedComplianceYear">
+                    <option selected="selected">@Model.ComplianceYearList.First()</option>
+                </select>
             </div>
 
             <div>
@@ -155,10 +164,10 @@
                 @Html.Gds().TextBoxFor(m => m.ContactData.AddressData.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
             </div>
 
-            <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.ContactData.AddressData.CountryId)">
+            <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.ContactData.AddressData.CountryId)" id="contact-country-dropdown-list">
                 @Html.Gds().LabelFor(m => m.ContactData.AddressData.CountryId)
                 @Html.Gds().ValidationMessageFor(m => m.ContactData.AddressData.CountryId)
-                @Html.DropDownListFor(m => m.ContactData.AddressData.CountryId, new SelectList(Model.ContactData.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "true", aria_labelledby = "contact-data-country-dropdown-list" })
+                @Html.DropDownListFor(m => m.ContactData.AddressData.CountryId, new SelectList(Model.ContactData.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "true", aria_labelledby = "contact-country-dropdown-list" })
             </div>
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactData.Telephone)">
@@ -179,7 +188,7 @@
             </button>
             <div class="govuk-!-padding-bottom-6"></div>
             <p>
-                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Cancel</a>
+                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(FacilityType.Aatf)))">Cancel</a>
             </p>
         }
     </section>

@@ -4,6 +4,8 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
@@ -83,6 +85,7 @@
         [InlineData(InternalUserActivity.ManageUsers, "Index")]
         [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
         [InlineData(InternalUserActivity.ManageAatfs, "ManageAatfs")]
+        [InlineData(InternalUserActivity.ManageAes, "ManageAatfs")]
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
@@ -100,6 +103,16 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
+
+            if (selection == InternalUserActivity.ManageAatfs)
+            {
+                Assert.Equal(FacilityType.Aatf, redirectToRouteResult.RouteValues["facilityType"]);
+            }
+
+            if (selection == InternalUserActivity.ManageAes)
+            {
+                Assert.Equal(FacilityType.Ae, redirectToRouteResult.RouteValues["facilityType"]);
+            }
         }
 
         /// <summary>

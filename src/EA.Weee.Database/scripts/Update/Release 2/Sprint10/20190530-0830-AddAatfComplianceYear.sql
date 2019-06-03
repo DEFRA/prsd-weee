@@ -1,0 +1,1 @@
+ALTER TABLE [AATF].AATF ADD ComplianceYear smallint NOT NULL DEFAULT (2019);

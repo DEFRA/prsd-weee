@@ -152,11 +152,32 @@
             SetUpControllerContext(userHasInternalAdminClaims);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ViewResult result = await controller.ManageAatfs() as ViewResult;
+            ManageAatfsViewModel viewModel = new ManageAatfsViewModel();
 
-            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
 
-            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
+            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanAddAatf);
+        }
+
+        [Theory]
+        [MemberData("FacilityTypeEnumValues")]
+        public async Task ManageAatfsPost_InvalidModel_CheckViewModelFacilityTypeSetCorrectly(FacilityType type)
+        {
+            SetUpControllerContext(false);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ManageAatfsViewModel viewModel = new ManageAatfsViewModel()
+            {
+                FacilityType = type
+            };
+
+            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
+
+            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(type, resultViewModel.FacilityType);
         }
 
         [Fact]
@@ -164,7 +185,7 @@
         {
             SetUpControllerContext(true);
 
-            await controller.ManageAatfs();
+            ActionResult result = await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
         }
@@ -176,15 +197,30 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
 
-            var result = await controller.ManageAatfs() as ViewResult;
+            ViewResult result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
 
             var viewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddAatf);
         }
 
-        [Fact]
-        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet()
+        [Theory]
+        [MemberData("FacilityTypeEnumValues")]
+        public async Task GetManageAatfs_TypeParameterSent_ViewModelSetCorrectly(FacilityType facilityType)
+        {
+            SetUpControllerContext(false);
+
+            ViewResult result = await controller.ManageAatfs(facilityType) as ViewResult;
+
+            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+
+            Assert.Equal(facilityType, viewModel.FacilityType);
+        }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
+        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
+        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type, string activity)
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData()
@@ -205,17 +241,18 @@
 
             var organisation = new OrganisationData() { Id = Guid.NewGuid(), Name = "TEST" };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = A.Fake<AatfContactData>()
+                Contact = A.Fake<AatfContactData>(),
+                FacilityType = type
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
 
-            Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAatfs);
+            Assert.Equal(breadcrumbService.InternalActivity, activity);
         }
 
         [Fact]
@@ -252,10 +289,11 @@
                 }
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData
+                Contact = contactData,
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -299,7 +337,7 @@
                 }
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -353,7 +391,7 @@
                 }
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData
@@ -402,10 +440,11 @@
                 }
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
-                Contact = contactData
+                Contact = contactData,
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
@@ -452,17 +491,17 @@
                 }
             };
 
-            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
             {
                 Organisation = organisationData,
                 Contact = contactData,
-                
-                ApprovalDate = default(DateTime)
+                ApprovalDate = default(DateTime),
+                FacilityType = FacilityType.Aatf
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
-            var result = await controller.Details(aatfId) as ViewResult;
+            var result = await controller.Details(aatfId) as ViewResult;       
 
             result.Model.Should().BeEquivalentTo(viewModel);
         }
@@ -536,6 +575,14 @@
             var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
             var request = fixture.Create<EditAatfDetails>();
 
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
             var helper = A.Fake<UrlHelper>();
             controller.Url = helper;
             var url = fixture.Create<string>();
@@ -589,6 +636,14 @@
             controller.Url = helper;
             var url = fixture.Create<string>();
 
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
             var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
             helperCall.Returns(url);
 
@@ -596,25 +651,28 @@
 
             await controller.ManageAatfDetails(viewModel);
 
-            A.CallTo(() => cache.InvalidateAatfCache()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [MemberData("FacilityTypeEnumValues")]
+        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
+            string activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
+
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
-            await controller.ManageContactDetails(aatfId);
+            await controller.ManageContactDetails(aatfId, type);
 
-            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalActivity.Should().Be(activity);
         }
 
         [Fact]
         public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -624,7 +682,7 @@
         {
             var aatfId = Guid.NewGuid();
 
-            var result = await controller.ManageContactDetails(aatfId);
+            var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -633,7 +691,7 @@
         public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -641,7 +699,7 @@
         [Fact]
         public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
         {
-            var result = await controller.ManageContactDetails(A.Dummy<Guid>());
+            var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             Assert.IsType<HttpForbiddenResult>(result);
         }
@@ -718,16 +776,18 @@
             viewModel.ContactData.AddressData.Countries.ElementAt(0).Name.Should().Be(countryName);
         }
 
-        [Fact]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
+        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type, string activity)
         {
             var aatfId = Guid.NewGuid();
-            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData() };
+            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData(), FacilityType = type };
             controller.ModelState.AddModelError("error", "error");
 
             await controller.ManageContactDetails(model);
 
-            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalActivity.Should().Be(activity);
         }
 
         [Fact]
@@ -819,6 +879,14 @@
 
             var context = new ControllerContext(httpContextBase, new RouteData(), controller);
             controller.ControllerContext = context;
+        }
+
+        public static IEnumerable<object[]> FacilityTypeEnumValues()
+        {
+            foreach (var facilityType in Enum.GetValues(typeof(FacilityType)))
+            {
+                yield return new object[] { facilityType };
+            }
         }
     }
 }

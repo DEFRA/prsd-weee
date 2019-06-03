@@ -29,7 +29,9 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(query.OrganisationId);
 
-            var org = await context.Organisations.SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
+            // Need to materialize EF request before mapping (because mapping parses enums)
+            var org = await context.Organisations
+                .SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
 
             if (org == null)
             {
@@ -39,6 +41,16 @@
             var organisationData = organisationMap.Map(org);
 
             organisationData.CanEditOrganisation = authorization.CheckUserInRole(Roles.InternalAdmin);
+
+
+            var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
+
+            if (schemes != null)
+            {
+                organisationData.SchemeId = schemes.Id;
+            }
+
+            organisationData.HasAatfs = await context.Aatfs.CountAsync(o => o.Organisation.Id == query.OrganisationId) > 0;
 
             return organisationData;
         }

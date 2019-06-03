@@ -3,9 +3,10 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
-    ViewBag.Title = "View AATF details - GOV.UK";
+    ViewBag.Title = "View " + Model.FacilityType.ToDisplayString() +  " details - GOV.UK";
 }
 
 <div class="govuk-grid-row">
@@ -24,7 +25,7 @@
     <ul class="govuk-tabs__list">
         <li class="govuk-tabs__list-item">
             <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#aatfDetails">
-                AATF details
+                @Model.FacilityType.ToDisplayString() details
             </a>
         </li>
         <li class="govuk-tabs__list-item">
@@ -46,7 +47,7 @@
 
     <section class="govuk-tabs__panel" id="aatfDetails">
         <div class="govuk-table__header--large">
-            AATF details
+            @Model.FacilityType.ToDisplayString() details
         </div>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
@@ -54,7 +55,7 @@
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name of AATF</th>
+                    <th class="govuk-table__header" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
                     <td class="govuk-table__cell" style="word-break:break-all">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -85,12 +86,16 @@
                     <th class="govuk-table__header" scope="col">Approval date</th>
                     <td class="govuk-table__cell">@Model.ApprovalDateString</td>
                 </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Compliance Year</th>
+                    <td class="govuk-table__cell">@Model.ComplianceYear</td>
+                </tr>
             </tbody>
         </table>
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit AATF details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
             </p>
         }
     </section>
@@ -119,58 +124,58 @@
         </div>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td>&nbsp;</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Organisation type</th>
-                <td class="govuk-table__cell">
-                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
-                    {
-                        @:Sole trader or individual
-                    }
-                    else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
-                    {
-                        @:Partnership
-                    }
-                    else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                    {
-                        @:Registered company
-                    }
-                </td>
-            </tr>
-            @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-            {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company name</th>
-                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    <td>&nbsp;</td>
                 </tr>
-            }
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Business trading name</th>
-                <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
-            </tr>
-            @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-            {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                    <th class="govuk-table__header" scope="col">Organisation type</th>
+                    <td class="govuk-table__cell">
+                        @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                        {
+                            @:Sole trader
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                        }
+                    </td>
                 </tr>
-            }
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Address</th>
-                <td class="govuk-table__cell">
-                    @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Telephone</th>
-                <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Email address</th>
-                <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
-            </tr>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Business trading name</th>
+                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+                </tr>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                        <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell">
+                        @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
+                </tr>
             </tbody>
         </table>
         @if (Model.CanEdit)
@@ -225,7 +230,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id)))">Edit contact details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
             </p>
         }
     </section>
@@ -293,6 +298,6 @@
     </table>
     <div>&nbsp;</div>
     <p>
-        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs()))">Back</a>
+        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
     </p>
 </div>
