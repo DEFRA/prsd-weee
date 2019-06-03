@@ -20,6 +20,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -215,8 +216,8 @@
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1
+                SizeValue = 1,
+                StatusValue = 1
             };
 
             RedirectToRouteResult result = await controller.Add(viewModel) as RedirectToRouteResult;
@@ -234,24 +235,24 @@
                 ApprovalNumber = "123",
                 ApprovalDate = DateTime.Now,
                 SiteAddressData = A.Fake<AatfAddressData>(),
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1,
+                SizeValue = 1,
+                StatusValue = 1,
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
                 CompetentAuthorityId = Guid.NewGuid(),
-                SelectedComplianceYear = (Int16)2019
+                ComplianceYear = (Int16)2019
             };
 
             AatfData aatfData = new AatfData(
                 Guid.NewGuid(),
                 viewModel.AatfName,
                 viewModel.ApprovalNumber,
-                viewModel.SelectedComplianceYear,
+                viewModel.ComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
-                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
-                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
 
             await controller.Add(viewModel);
@@ -291,8 +292,8 @@
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1,
+                SizeValue = 1,
+                StatusValue = 1,
                 OrganisationId = Guid.NewGuid()
             };
 
@@ -573,8 +574,8 @@
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1
+                SizeValue = 1,
+                StatusValue = 1
             };
 
             ActionResult result = await controller.Add(viewModel);

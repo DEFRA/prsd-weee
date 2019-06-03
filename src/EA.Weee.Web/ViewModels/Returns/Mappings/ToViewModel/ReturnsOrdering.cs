@@ -1,10 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System.Collections;
+    using Core.AatfReturn;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Core.AatfReturn;
 
     public class ReturnsOrdering : IReturnsOrdering
     {

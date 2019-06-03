@@ -320,8 +320,11 @@
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IReturnsOrdering.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ITonnageUtilities.cs" />
+
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressUtilities.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\IAddressUtilities.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap.cs" />
@@ -341,20 +344,20 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnOptionsAndViewModelToSelectReportOptionsDeselectViewModelMap.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsOrdering.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsOrdering.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnStatusToReturnDisplayOptionsMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnsListRedirectOptionsMap.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnsItemViewModelMapper.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnsToReturnsViewModelMap.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnsItemViewModelMapper.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToNonObligatedValuesViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToObligatedViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToObligatedViewModelMapTransfer.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\TonnageUtilities.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetWeeeSentOnRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSelectReportOptionsRequestCreator.cs" />
@@ -381,11 +384,11 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReceivedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReturnsItemViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReturnsViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\IReturnViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReturnViewModelBase.cs" />
+    <Compile Include="ViewModels\Returns\ReturnsItemViewModel.cs" />
+    <Compile Include="ViewModels\Returns\ReturnsViewModel.cs" />
+    <Compile Include="ViewModels\Returns\ReturnViewModel.cs" />
+    <Compile Include="ViewModels\Returns\IReturnViewModel.cs" />
+    <Compile Include="ViewModels\Returns\ReturnViewModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReusedOffSiteViewModel.cs" />
@@ -398,12 +401,8 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\INonObligatedValuesViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidatorWrapper.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\ISelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidatorWrapper.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsDeselectViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfController.cs" />
     <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
@@ -425,7 +424,9 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditAatfDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\AatfViewModelValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\AatfViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
@@ -466,6 +467,8 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionsResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionsResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\TestEmail\TestEmailViewModel.cs" />
+    <Compile Include="Areas\AeReturn\AeReturnAreaRegistration.cs" />
+    <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
@@ -916,6 +919,11 @@
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
+    <Content Include="Areas\AeReturn\Views\web.config" />
+    <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\AeReturn\Views\AeReturns\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1334,6 +1342,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
+    <Folder Include="Areas\AeReturn\ViewModels\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

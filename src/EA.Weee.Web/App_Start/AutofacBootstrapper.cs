@@ -13,9 +13,11 @@
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
     using Infrastructure;
     using Prsd.Core.Autofac;
@@ -89,10 +91,6 @@
             builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces().InstancePerRequest();
-
-            // AATF Return Validators
-            builder.RegisterType<NonObligatedValuesViewModelValidatorWrapper>().As<INonObligatedValuesViewModelValidatorWrapper>();
-            builder.RegisterType<SelectReportOptionsViewModelValidatorWrapper>().As<ISelectReportOptionsViewModelValidatorWrapper>();
 
             // AATF View Model Mapping Utilties
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();

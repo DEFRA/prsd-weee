@@ -33,7 +33,6 @@
         private readonly INonObligatedWeeeRequestCreator requestCreator;
         private readonly NonObligatedController controller;
         private readonly BreadcrumbService breadcrumb;
-        private readonly INonObligatedValuesViewModelValidatorWrapper validator;
         private readonly IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel> mapper;
         private readonly IWeeeCache cache;
         private readonly ICategoryValueTotalCalculator calculator;
@@ -43,12 +42,11 @@
             weeeClient = A.Fake<IWeeeClient>();
             requestCreator = A.Fake<INonObligatedWeeeRequestCreator>();
             breadcrumb = A.Fake<BreadcrumbService>();
-            validator = A.Fake<INonObligatedValuesViewModelValidatorWrapper>();
             cache = A.Fake<IWeeeCache>();
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             mapper = A.Fake<IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel>>();
-            controller = new NonObligatedController(cache, breadcrumb, () => weeeClient, requestCreator, validator, mapper);
+            controller = new NonObligatedController(cache, breadcrumb, () => weeeClient, requestCreator, mapper);
         }
 
         [Fact]
@@ -139,18 +137,6 @@
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<bool>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async void IndexPost_GivenValidViewModel_ValidatorShouldReturnAValidResult()
-        {
-            var result = new ValidationResult();
-
-            A.CallTo(() => validator.Validate(A<NonObligatedValuesViewModel>._, A<ReturnData>._)).Returns(result);
-
-            await controller.Index(A.Fake<NonObligatedValuesViewModel>());
-
-            controller.ModelState.IsValid.Should().BeTrue();
         }
 
         [Fact]

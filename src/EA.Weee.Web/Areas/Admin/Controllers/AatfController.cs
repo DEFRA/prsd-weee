@@ -15,12 +15,14 @@
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -34,7 +36,13 @@
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
 
-        public AatfController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, IEditAatfDetailsRequestCreator detailsRequestCreator, IEditAatfContactRequestCreator contactRequestCreator, IWeeeCache cache)
+        public AatfController(
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IMapper mapper,
+            IEditAatfDetailsRequestCreator detailsRequestCreator,
+            IEditAatfContactRequestCreator contactRequestCreator,
+            IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -143,6 +151,14 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
+            // This is here because we don't display the site address name, but the view model for it makes it required. There is also
+            // custom validation for the AATF/AE name property which copies the value into the SiteAddressName field, so if the name property
+            // is empty, it will display an error for siteAddressName. This removed that error.
+            if (ModelState.ContainsKey("SiteAddress.Name"))
+            {
+                ModelState["SiteAddress.Name"].Errors.Clear();
+            }
+
             SetBreadcrumb(viewModel.FacilityType);
 
             if (ModelState.IsValid)
@@ -164,7 +180,7 @@
             using (var client = apiClient())
             {
                 var accessToken = User.GetAccessToken();
-                viewModel.AatfStatusList = Enumeration.GetAll<AatfStatus>();
+                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
                 viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
