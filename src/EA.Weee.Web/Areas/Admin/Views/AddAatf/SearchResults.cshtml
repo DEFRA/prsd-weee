@@ -48,7 +48,7 @@
             @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, null)
         </p>
         <p>
-            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = @Model.SearchTerm }, null)
+            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = Model.SearchTerm, facilityType = Model.FacilityType }, null)
         </p>
     }
     else
@@ -71,7 +71,7 @@
             @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, new { @class = "govuk-button" })
         </p>
         <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm)))">Create a new organisation</a>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm, Model.FacilityType)))">Create a new organisation</a>
         </p>
     }
 }

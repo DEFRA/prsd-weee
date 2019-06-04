@@ -11,6 +11,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.SearchedText)
+    @Html.HiddenFor(m => m.FacilityType)
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             Organisation type

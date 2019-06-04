@@ -19,9 +19,10 @@
         {
         }
 
-        public OrganisationTypeViewModel(string searchText) : this()
+        public OrganisationTypeViewModel(string searchText, FacilityType facilityType) : this()
         {
             SearchedText = searchText;
+            FacilityType = facilityType;
         }
     }
 }

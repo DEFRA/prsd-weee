@@ -21,7 +21,6 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -154,11 +153,11 @@
         }
 
         [HttpGet]
-        public ActionResult Type(string searchedText)
+        public ActionResult Type(string searchedText, FacilityType facilityType)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
-            return View(new OrganisationTypeViewModel(searchedText));
+            return View(new OrganisationTypeViewModel(searchedText, facilityType));
         }
 
         [HttpPost]
@@ -175,9 +174,9 @@
                 {
                     case OrganisationType.SoleTraderOrIndividual:
                     case OrganisationType.Partnership:
-                        return RedirectToAction("SoleTraderOrPartnershipDetails", "AddAatf", new { organisationType = model.SelectedValue, searchedText = model.SearchedText });
+                        return RedirectToAction("SoleTraderOrPartnershipDetails", "AddAatf", new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText });
                     case OrganisationType.RegisteredCompany:
-                        return RedirectToAction("RegisteredCompanyDetails", "AddAatf", new { organisationType = model.SelectedValue, searchedText = model.SearchedText });
+                        return RedirectToAction("RegisteredCompanyDetails", "AddAatf", new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText });
                 }
             }
 
@@ -185,7 +184,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderOrPartnershipDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> SoleTraderOrPartnershipDetails(string organisationType, FacilityType facilityType, string searchedText = null)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
@@ -194,7 +193,8 @@
             SoleTraderOrPartnershipDetailsViewModel model = new SoleTraderOrPartnershipDetailsViewModel
             {
                 BusinessTradingName = searchedText,
-                OrganisationType = organisationType
+                OrganisationType = organisationType,
+                FacilityType = facilityType
             };
 
             model.Address.Countries = countries;
@@ -229,12 +229,12 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName });
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName, facilityType = model.FacilityType });
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, FacilityType facilityType, string searchedText = null)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
@@ -243,7 +243,8 @@
             RegisteredCompanyDetailsViewModel model = new RegisteredCompanyDetailsViewModel()
             {
                 CompanyName = searchedText,
-                OrganisationType = organisationType
+                OrganisationType = organisationType,
+                FacilityType = facilityType
             };
 
             model.Address.Countries = countries;
@@ -281,19 +282,20 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName });
+                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName, facilityType = model.FacilityType });
             }
         }
 
         [HttpGet]
-        public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName)
+        public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName, FacilityType facilityType)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
             OrganisationConfirmationViewModel model = new OrganisationConfirmationViewModel()
             {
                 OrganisationId = organisationId,
-                OrganisationName = organisationName
+                OrganisationName = organisationName,
+                FacilityType = facilityType
             };
 
             return View(model);

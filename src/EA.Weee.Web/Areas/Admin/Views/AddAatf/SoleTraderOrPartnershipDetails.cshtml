@@ -4,8 +4,6 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderOrPartnershipDetailsViewModel
 @{
-    /**/
-
     ViewBag.Title = "Partnership/soletrader details";
 }
 @section main_content
@@ -28,13 +26,14 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
+        @Html.HiddenFor(m => m.FacilityType)
 
         <div class="govuk-form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
             {
-            <p>
-                This is either your individual name of your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
-            </p>
+                <p>
+                    This is either your individual name of your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
+                </p>
             }
         </div>
 
@@ -53,7 +52,7 @@
         </div>
 
         <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.BusinessTradingName)))">Back</a>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.BusinessTradingName, Model.FacilityType)))">Back</a>
         </p>
 
         <div class="govuk-form-group">

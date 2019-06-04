@@ -412,12 +412,14 @@
         public void TypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             string searchText = "Company";
+            var facilityType = fixture.Create<FacilityType>();
 
-            ViewResult result = controller.Type(searchText) as ViewResult;
+            ViewResult result = controller.Type(searchText, facilityType) as ViewResult;
 
             OrganisationTypeViewModel resultViewModel = result.Model as OrganisationTypeViewModel;
 
             Assert.Equal(searchText, resultViewModel.SearchedText);
+            Assert.Equal(facilityType, resultViewModel.FacilityType);
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
         }
 
@@ -464,14 +466,16 @@
         {
             string searchText = "Company";
             string organisationType = "Sole trader or individual";
+            var facilityType = fixture.Create<FacilityType>();
 
-            ViewResult result = await controller.SoleTraderOrPartnershipDetails(organisationType, searchText) as ViewResult;
+            ViewResult result = await controller.SoleTraderOrPartnershipDetails(organisationType, facilityType, searchText) as ViewResult;
 
             SoleTraderOrPartnershipDetailsViewModel resultViewModel = result.Model as SoleTraderOrPartnershipDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.BusinessTradingName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
             Assert.Equal(countries, resultViewModel.Address.Countries);
+            Assert.Equal(facilityType, resultViewModel.FacilityType);
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
         }
@@ -542,14 +546,16 @@
         {
             string searchText = "Company";
             string organisationType = "Registered company";
+            var facilityType = fixture.Create<FacilityType>();
 
-            ViewResult result = await controller.RegisteredCompanyDetails(organisationType, searchText) as ViewResult;
+            ViewResult result = await controller.RegisteredCompanyDetails(organisationType, facilityType, searchText) as ViewResult;
 
             RegisteredCompanyDetailsViewModel resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
             Assert.Equal(countries, resultViewModel.Address.Countries);
+            Assert.Equal(facilityType, resultViewModel.FacilityType);
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "RegisteredCompanyDetails");
         }
@@ -707,7 +713,7 @@
         [Fact]
         public void TypeGet_Always_SetsInternalBreadcrumb()
         {
-            controller.Type("test");
+            controller.Type("test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -729,7 +735,7 @@
         [Fact]
         public async Task SoleTraderOrPartnershipDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            await controller.SoleTraderOrPartnershipDetails("test");
+            await controller.SoleTraderOrPartnershipDetails("test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -752,7 +758,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            await controller.RegisteredCompanyDetails("test");
+            await controller.RegisteredCompanyDetails("test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
@@ -778,7 +784,7 @@
         [Fact]
         public void OrganisationConfirmationGet_Always_SetsInternalBreadcrumb()
         {
-            controller.OrganisationConfirmation(Guid.NewGuid(), "test");
+            controller.OrganisationConfirmation(Guid.NewGuid(), "test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
