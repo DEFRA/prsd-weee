@@ -81,7 +81,7 @@
 
     @if (hasErrors)
     {
-        <details class="govuk-details weee-upload-error">
+        <details class="govuk-details weee-upload-error" aria-live="polite">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary error-details-summary error-details-summary-title govuk-!-font-weight-bold", "Data return errors", "View data return errors");
