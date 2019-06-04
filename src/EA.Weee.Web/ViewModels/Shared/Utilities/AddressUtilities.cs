@@ -1,6 +1,7 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Utilities
 {
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
 
     public class AddressUtilities : IAddressUtilities
     {
@@ -26,14 +27,14 @@
             return $"{address}, {input}";
         }
 
-        public string FormattedAddress(AddressData address)
+        public string FormattedAddress(AddressData address, bool includeSiteName = true)
         {
             if (address == null)
             {
                 return string.Empty;
             }
 
-            var siteAddressLong = address.Name + "<br/>" + address.Address1;
+            var siteAddressLong = includeSiteName ? address.Name + "<br/>" + address.Address1 : address.Address1;
 
             if (address.Address2 != null)
             {

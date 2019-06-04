@@ -3,6 +3,7 @@
     using System;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -66,6 +67,14 @@
             var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country"));
 
             result.Should().Be("Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country");
+        }
+
+        [Fact]
+        public void FormattedAddress_GivenFullAddressWithoutSiteName_AddressShouldBeFormattedCorrectly()
+        {
+            var result = addressUtilities.FormattedAddress(new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", Guid.NewGuid(), "Site country"), false);
+
+            result.Should().Be("Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country");
         }
 
         [Fact]

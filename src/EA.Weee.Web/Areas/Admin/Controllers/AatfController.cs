@@ -19,6 +19,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,8 +66,6 @@
                 var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
-                    SiteAddressString = GenerateAatfAddress(aatf.SiteAddress),
-                    ContactAddressString = GenerateAatfAddress(aatf.Contact.AddressData), 
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes
                 });
@@ -275,33 +274,7 @@
 
             return siteAddressLong;
         }
-
-        public virtual string GenerateAatfAddress(AddressData address)
-        {
-            var siteAddressLong = address.Address1;
-
-            if (address.Address2 != null)
-            {
-                siteAddressLong += "<br/>" + address.Address2;
-            }
-
-            siteAddressLong += "<br/>" + address.TownOrCity;
-
-            if (address.CountyOrRegion != null)
-            {
-                siteAddressLong += "<br/>" + address.CountyOrRegion;
-            }
-
-            if (address.Postcode != null)
-            {
-                siteAddressLong += "<br/>" + address.Postcode;
-            }
-
-            siteAddressLong += "<br/>" + address.CountryName;
-
-            return siteAddressLong;
-        }
-
+                
         private void SetBreadcrumb(FacilityType type)
         {
             switch (type)
