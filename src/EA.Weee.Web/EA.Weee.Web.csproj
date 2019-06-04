@@ -425,7 +425,6 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\ApprovalDateValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAeViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\AatfViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
