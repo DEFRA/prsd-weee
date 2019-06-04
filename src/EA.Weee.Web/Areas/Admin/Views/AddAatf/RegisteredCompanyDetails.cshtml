@@ -43,12 +43,12 @@
             @Html.EditorFor(m => m.Address)
         </div>
 
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Save and continue</button>
+        </div>
         <p>
             <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.CompanyName)))">Back</a>
         </p>
 
-        <div class="govuk-form-group">
-            <button class="govuk-button" type="submit">Save and continue</button>
-        </div>
     }
 }
