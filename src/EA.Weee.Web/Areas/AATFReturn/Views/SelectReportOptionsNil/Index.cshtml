@@ -1,0 +1,39 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsNilViewModel
+@{
+    ViewBag.Title = "Confirm nothing to report - GOV.UK";
+}
+
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Are you sure you have nothing to report for @Model.Year @Model.Period?</h1>
+        </div>
+    </header>
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div>
+        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+        <p class="important">
+            You have stated you have nothing to report for any of your AATFs this quarter.<br/>
+            Any data previously submitted for this return will be deleted.
+        </p>
+    </div>
+    <div class="govuk-!-padding-bottom-5"></div>
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsNilRouteName, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        <button type="submit" class="govuk-button">
+            Save and continue
+        </button>
+        <p>
+            @Html.NavigationRouteLink("Cancel", "Cancel and select reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
+        </p>
+    }
+</section>

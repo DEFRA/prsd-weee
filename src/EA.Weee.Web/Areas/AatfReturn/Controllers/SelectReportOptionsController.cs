@@ -76,6 +76,10 @@
                     viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
                     if (CheckHasDeselectedOptions(viewModel))
                     {
+                        if (!viewModel.HasSelectedOptions)
+                        {
+                            return AatfRedirect.SelectReportOptionsNil(viewModel.OrganisationId, viewModel.ReturnId);
+                        }
                         TempData["viewModel"] = viewModel;
                         return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
                     }
@@ -84,6 +88,10 @@
                         var request = requestCreator.ViewModelToRequest(viewModel);
 
                         await client.SendAsync(User.GetAccessToken(), request);
+                    }
+                    else
+                    {
+                        return AatfRedirect.SelectReportOptionsNil(viewModel.OrganisationId, viewModel.ReturnId);
                     }
                 }
 
