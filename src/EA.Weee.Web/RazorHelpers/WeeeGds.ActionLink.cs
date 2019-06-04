@@ -60,7 +60,7 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", url, attributes.ToString(), linkText);
+            string link = string.Format(@"<a href=""{0}"" {1}><span class=""hidden-for-screen-reader"">This link opens in a new browser window</span>{2}</a>", url, attributes.ToString(), linkText);
 
             return new MvcHtmlString(link);
         }

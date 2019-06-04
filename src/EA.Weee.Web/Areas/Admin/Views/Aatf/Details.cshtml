@@ -241,10 +241,10 @@
                 <td>&nbsp;</td>
             </tr>
             <tr class="govuk-table__row">
-                <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="width: 30%">This organisation also operates</th>
+                <td class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="width: 30%">This organisation also operates</td>
                 @if (Model.AssociatedAatfs.Any())
                 {
-                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title" scope="col">
                         AATF
                     </td>
                 }
@@ -252,8 +252,8 @@
             @foreach (var aatf in Model.AssociatedAatfs)
             {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header aatf-details-associated-table-header" scope="col"></th>
-                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                    <td class="govuk-table__header aatf-details-associated-table-header" scope="col"></td>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell" scope="row">
                         @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
                     </td>
                 </tr>
@@ -261,8 +261,8 @@
             @if (Model.AssociatedAEs.Any())
             {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></th>
-                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                    <td class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></td>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title" scope="col">
                         AE
                     </td>
                 </tr>
@@ -270,8 +270,8 @@
             @foreach (var aatf in Model.AssociatedAEs)
             {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header aatf-details-associated-table-header" scope="col"></th>
-                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                    <td class="govuk-table__header aatf-details-associated-table-header" scope="col"></td>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell" scope="row">
                         @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
                     </td>
                 </tr>
@@ -279,8 +279,8 @@
             @if (Model.AssociatedSchemes.Any())
             {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></th>
-                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">
+                    <td class="govuk-table__header aatf-details-associated-table-header-title" scope="col"></td>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell-title" scope="col">
                         PCS
                     </td>
                 </tr>
@@ -288,8 +288,8 @@
             @foreach (var scheme in Model.AssociatedSchemes)
             {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col" style="border-bottom: 5px"></th>
-                    <td class="govuk-table__cell aatf-details-associated-table-cell">
+                    <td class="govuk-table__header" scope="col" style="border-bottom: 5px"></td>
+                    <td class="govuk-table__cell aatf-details-associated-table-cell" scope="row">
                         @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
                     </td>
                 </tr>
