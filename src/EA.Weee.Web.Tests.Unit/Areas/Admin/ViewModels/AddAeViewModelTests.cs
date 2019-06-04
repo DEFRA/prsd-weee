@@ -1,12 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Reflection;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
+    using FluentAssertions;
+    using FluentValidation.Attributes;
     using Xunit;
 
     public class AddAeViewModelTests
@@ -57,6 +61,15 @@
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
+        [Fact]
+        public void AddAeViewModel_ClassHasValidatorAttribute()
+        {
+            var t = typeof(AddAeViewModel);
+            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as ValidatorAttribute;
+
+            customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
+        }
+
         private AddAeViewModel ValidAddAeViewModel()
         {
             return new AddAeViewModel
@@ -67,9 +80,9 @@
                 CompetentAuthoritiesList = new List<UKCompetentAuthorityData>(),
                 CompetentAuthorityId = new Guid(),
                 StatusList = Enumeration.GetAll<AatfStatus>(),
-                SelectedStatusValue = 1,
+                StatusValue = 1,
                 SizeList = Enumeration.GetAll<AatfSize>(),
-                SelectedSizeValue = 1,
+                SizeValue = 1,
                 ApprovalDate = DateTime.Now,
                 ContactData = new AatfContactData(),
                 OrganisationId = Guid.NewGuid()

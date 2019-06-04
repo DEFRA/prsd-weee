@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
-    using EA.Weee.Core.Validation;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using FluentValidation.Attributes;
     using System.ComponentModel.DataAnnotations;
     using Core.AatfReturn;
 
-    [Validator(typeof(AatfViewModelValidator))]
-    public class AddAatfViewModel : AatfViewModelBase, AddFacilityViewModelBase
+    public class AddAatfViewModel : AddFacilityViewModelBase
     {
         private string aatfName;
 

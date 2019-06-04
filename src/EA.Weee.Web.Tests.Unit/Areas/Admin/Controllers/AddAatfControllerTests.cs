@@ -317,8 +317,8 @@
 
             var viewModel = new AddAeViewModel()
             {
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1
+                SizeValue = 1,
+                StatusValue = 1
             };
 
             var result = await controller.AddAe(viewModel) as RedirectToRouteResult;
@@ -336,24 +336,24 @@
                 ApprovalNumber = "123",
                 ApprovalDate = DateTime.Now,
                 SiteAddressData = A.Fake<AatfAddressData>(),
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1,
+                SizeValue = 1,
+                StatusValue = 1,
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
                 CompetentAuthorityId = Guid.NewGuid(),
-                SelectedComplianceYear = (Int16)2019
+                ComplianceYear = (Int16)2019
             };
 
             var aatfData = new AatfData(
                 Guid.NewGuid(),
                 viewModel.Name,
                 viewModel.ApprovalNumber,
-                viewModel.SelectedComplianceYear,
+                viewModel.ComplianceYear,
                 viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
-                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
-                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
 
             var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
@@ -398,8 +398,8 @@
 
             var viewModel = new AddAeViewModel()
             {
-                SelectedSizeValue = 1,
-                SelectedStatusValue = 1,
+                SizeValue = 1,
+                StatusValue = 1,
                 OrganisationId = Guid.NewGuid()
             };
 
@@ -640,7 +640,7 @@
         [InlineData(FacilityType.Ae, "Add new AE")]
         public void SearchGet_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
-            controller.Search();
+            controller.Search(facilityType);
 
             Assert.Equal(expectedBreadcrumb, breadcrumbService.InternalActivity);
         }

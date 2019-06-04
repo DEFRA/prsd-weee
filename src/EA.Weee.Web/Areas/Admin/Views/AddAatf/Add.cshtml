@@ -1,6 +1,5 @@
 ﻿@using MvcNavigationHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Extensions
@@ -22,7 +21,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-            @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
@@ -190,13 +189,13 @@
             @Html.Gds().TextBoxFor(m => m.ContactData.Email, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
 
-            <div class="govuk-!-padding-bottom-6"></div>
-            <button type="submit" name="save" class="govuk-button" id="site-details">
-                Save and continue
-            </button>
-            <div class="govuk-!-padding-bottom-6"></div>
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Cancel</a>
-            </p>
-        }
-    </section>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Cancel</a>
+        </p>
+    }
+</section>

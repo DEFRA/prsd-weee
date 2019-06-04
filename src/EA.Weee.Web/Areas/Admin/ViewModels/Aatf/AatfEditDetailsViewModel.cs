@@ -5,13 +5,8 @@
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Core.Validation;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using FluentValidation.Attributes;
 
-    [Validator(typeof(AatfViewModelValidator))]
     public class AatfEditDetailsViewModel : AatfViewModelBase
     {
         public AatfEditDetailsViewModel()
