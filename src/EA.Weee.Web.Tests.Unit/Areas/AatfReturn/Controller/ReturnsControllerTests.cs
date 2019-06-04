@@ -44,6 +44,7 @@
         [Fact]
         public void ReturnsController_ShouldHaveValidateOrganisationActionFilterAttribute()
         {
+            typeof(ReturnsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
         }
 
         [Fact]
