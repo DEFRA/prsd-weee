@@ -21,14 +21,12 @@
 
     public class AddAatfRequestHandlerTests
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IMap<AatfContactData, AatfContact> contactMapper;
 
         public AddAatfRequestHandlerTests()
         {
-            this.authorization = AuthorizationBuilder.CreateUserWithAllRights();
             this.addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
             this.contactMapper = A.Fake<IMap<AatfContactData, AatfContact>>();
             this.dataAccess = A.Fake<IGenericDataAccess>();
@@ -73,6 +71,7 @@
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
 
             AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+            aatf.FacilityType = Core.AatfReturn.FacilityType.Ae;
 
             Guid aatfId = Guid.NewGuid();
 
@@ -94,7 +93,8 @@
                 && c.Name == aatf.Name
                 && c.SiteAddress.Id == aatf.SiteAddress.Id
                 && c.Size == aatf.Size
-                && c.ComplianceYear == aatf.ComplianceYear))).Returns(aatfId);
+                && c.ComplianceYear == aatf.ComplianceYear
+                && c.FacilityType == Domain.AatfReturn.FacilityType.Ae))).Returns(aatfId);
 
             bool result = await handler.HandleAsync(request);
 
@@ -107,7 +107,8 @@
                 && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
                 && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
                 && c.ApprovalDate == aatf.ApprovalDate
-                && c.ComplianceYear == aatf.ComplianceYear))).MustHaveHappened(Repeated.Exactly.Once);
+                && c.ComplianceYear == aatf.ComplianceYear
+                && c.FacilityType == Domain.AatfReturn.FacilityType.Ae))).MustHaveHappened(Repeated.Exactly.Once);
 
             result.Should().Be(true);
         }

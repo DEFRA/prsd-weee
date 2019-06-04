@@ -207,7 +207,7 @@
         public async Task AddGet_CreatesViewModel_ListsArePopulated()
         {
             var facilityType = fixture.Create<FacilityType>();
-            AddAatfViewModel viewModel = CreateAddViewModel();
+            AddAatfViewModel viewModel = CreateAddAatfViewModel();
 
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
 
@@ -291,7 +291,7 @@
             AddAatfController controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
-            AddAatfViewModel viewModel = CreateAddViewModel();
+            AddAatfViewModel viewModel = CreateAddAatfViewModel();
 
             ViewResult result = await controller.AddAatf(viewModel) as ViewResult;
             AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
@@ -317,6 +317,105 @@
             };
 
             await controller.AddAatf(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task AddAePost_ValidViewModel_ReturnsRedirect()
+        {
+            var facilityType = fixture.Create<FacilityType>();
+            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+
+            var viewModel = new AddAeViewModel()
+            {
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1
+            };
+
+            var result = await controller.AddAe(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["controller"].Should().Be("Aatf");
+        }
+
+        [Fact]
+        public async Task AddAePost_ValidViewModelRequestWithCorrectParametersCreated()
+        {
+            var viewModel = new AddAeViewModel()
+            {
+                Name = "name",
+                ApprovalNumber = "123",
+                ApprovalDate = DateTime.Now,
+                SiteAddressData = A.Fake<AatfAddressData>(),
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1,
+                OrganisationId = Guid.NewGuid(),
+                ContactData = A.Fake<AatfContactData>(),
+                CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
+                CompetentAuthorityId = Guid.NewGuid(),
+                SelectedComplianceYear = (Int16)2019
+            };
+
+            var aatfData = new AatfData(
+                Guid.NewGuid(),
+                viewModel.Name,
+                viewModel.ApprovalNumber,
+                viewModel.SelectedComplianceYear,
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                Enumeration.FromValue<AatfStatus>(viewModel.SelectedStatusValue),
+                viewModel.SiteAddressData,
+                Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
+                viewModel.ApprovalDate.GetValueOrDefault());
+
+            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+
+            await controller.AddAe(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAatf>.That.Matches(
+                p => p.OrganisationId == viewModel.OrganisationId
+                && p.Aatf.Name == aatfData.Name
+                && p.Aatf.ApprovalNumber == aatfData.ApprovalNumber
+                && p.Aatf.CompetentAuthority == aatfData.CompetentAuthority
+                && p.Aatf.AatfStatus == aatfData.AatfStatus
+                && p.Aatf.SiteAddress == aatfData.SiteAddress
+                && p.Aatf.Size == aatfData.Size
+                && p.Aatf.ApprovalDate == aatfData.ApprovalDate
+                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task AddAePost_InvalidViewModel_ReturnsViewWithViewModelPopulatedWithLists()
+        {
+            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+            controller.ModelState.AddModelError("error", "error");
+
+            var viewModel = CreateAddAeViewModel();
+
+            var result = await controller.AddAe(viewModel) as ViewResult;
+            var resultViewModel = result.Model as AddAeViewModel;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Add");
+            Assert.Equal(viewModel.SizeList, resultViewModel.SizeList);
+            Assert.Equal(viewModel.StatusList, resultViewModel.StatusList);
+            Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
+            Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
+            Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async Task AddAePost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+
+            var viewModel = new AddAeViewModel()
+            {
+                SelectedSizeValue = 1,
+                SelectedStatusValue = 1,
+                OrganisationId = Guid.NewGuid()
+            };
+
+            await controller.AddAe(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
@@ -740,29 +839,34 @@
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
 
-        private AddAatfViewModel CreateAddViewModel()
+        private AddAatfViewModel CreateAddAatfViewModel()
         {
-            IList<UKCompetentAuthorityData> competentAuthoritiesList = A.Dummy<IList<UKCompetentAuthorityData>>();
-            IEnumerable<AatfSize> sizeList = Enumeration.GetAll<AatfSize>();
-            IEnumerable<AatfStatus> statusList = Enumeration.GetAll<AatfStatus>();
+            return CreateAddFacilityViewModel(new AddAatfViewModel());
+        }
 
-            AddAatfViewModel viewModel = new AddAatfViewModel()
+        private AddAeViewModel CreateAddAeViewModel()
+        {
+            return CreateAddFacilityViewModel(new AddAeViewModel());
+        }
+
+        private T CreateAddFacilityViewModel<T>(T viewModel)
+            where T : AddFacilityViewModelBase
+        {
+            var sizeList = Enumeration.GetAll<AatfSize>();
+            var statusList = Enumeration.GetAll<AatfStatus>();
+
+            viewModel.ContactData = new AatfContactData
             {
-                SiteAddressData = new AatfAddressData()
+                AddressData = new AatfContactAddressData
                 {
                     Countries = countries
-                },
-                ContactData = new AatfContactData()
-                {
-                    AddressData = new AatfContactAddressData()
-                    {
-                        Countries = countries
-                    }
-                },
-                SizeList = sizeList,
-                StatusList = statusList,
-                OrganisationId = Guid.NewGuid()
+                }
             };
+
+            viewModel.SiteAddressData = new AatfAddressData { Countries = countries };
+            viewModel.SizeList = sizeList;
+            viewModel.StatusList = statusList;
+            viewModel.OrganisationId = Guid.NewGuid();
 
             return viewModel;
         }

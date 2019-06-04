@@ -138,48 +138,14 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddAatf(AddAatfViewModel viewModel)
         {
-            SetBreadcrumb(viewModel.FacilityType);
-            viewModel = await PopulateViewModelLists(viewModel);
-
-            if (!ModelState.IsValid)
-            {
-                return View(nameof(Add), viewModel);
-            }
-
-            using (var client = apiClient())
-            {
-                var request = new AddAatf()
-                {
-                    Aatf = CreateAatfData(viewModel),
-                    AatfContact = viewModel.ContactData,
-                    OrganisationId = viewModel.OrganisationId
-                };
-
-                await client.SendAsync(User.GetAccessToken(), request);
-
-                await cache.InvalidateAatfCache(request.OrganisationId);
-
-                return RedirectToAction("ManageAatfs", "Aatf", new { FacilityType = FacilityType.Aatf });
-            }
+            return await AddFacility(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddAe(AddAeViewModel viewModel)
         {
-            SetBreadcrumb(viewModel.FacilityType);
-            viewModel = await PopulateViewModelLists(viewModel);
-
-            if (!ModelState.IsValid)
-            {
-                return View(nameof(Add), viewModel);
-            }
-
-            using (var client = apiClient())
-            {
-                // TODO: Send request
-                return RedirectToAction("ManageAatfs", "Aatf", new { FacilityType = FacilityType.Ae });
-            }
+            return await AddFacility(viewModel);
         }
 
         [HttpGet]
@@ -362,9 +328,37 @@
             }
         }
 
-        private AatfData CreateAatfData(AddAatfViewModel viewModel)
+        private async Task<ActionResult> AddFacility(AddFacilityViewModelBase viewModel)
         {
-            return new AatfData(
+            SetBreadcrumb(viewModel.FacilityType);
+            viewModel = await PopulateViewModelLists(viewModel);
+
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Add), viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                var request = new AddAatf()
+                {
+                    Aatf = CreateFacilityData(viewModel),
+                    AatfContact = viewModel.ContactData,
+                    OrganisationId = viewModel.OrganisationId,
+                };
+
+                await client.SendAsync(User.GetAccessToken(), request);
+
+                await cache.InvalidateAatfCache(request.OrganisationId);
+
+                return RedirectToAction("ManageAatfs", "Aatf", new { viewModel.FacilityType });
+            }
+        }
+
+        private AatfData CreateFacilityData<T>(T viewModel)
+            where T : AddFacilityViewModelBase
+        {
+            var data = new AatfData(
                 Guid.NewGuid(),
                 viewModel.Name,
                 viewModel.ApprovalNumber,
@@ -374,6 +368,9 @@
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SelectedSizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
+
+            data.FacilityType = viewModel.FacilityType;
+            return data;
         }
 
         private void SetBreadcrumb(FacilityType type)

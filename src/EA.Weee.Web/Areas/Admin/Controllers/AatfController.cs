@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
