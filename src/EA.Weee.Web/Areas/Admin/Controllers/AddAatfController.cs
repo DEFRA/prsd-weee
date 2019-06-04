@@ -77,7 +77,7 @@
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
         {
-            if (!Request.IsAjaxRequest())
+            if (!this.Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -97,9 +97,10 @@
         {
             SetBreadcrumb(InternalUserActivity.CreateAatf);
 
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+            SearchResultsViewModel viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm, Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+            };
 
             return View(viewModel);
         }

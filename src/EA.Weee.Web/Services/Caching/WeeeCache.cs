@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Search;
@@ -71,7 +72,7 @@
                 "UserActiveCompleteOrganisationCount",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchUserActiveCompleteOrganisationCountFromApi(key));
+                (key) => FetchUserActiveCompleteOrganisationCountFromApi());
 
             SchemePublicInfos = new Cache<Guid, SchemePublicInfo>(
                 provider,
@@ -140,7 +141,7 @@
             }
         }
 
-        private async Task<int> FetchUserActiveCompleteOrganisationCountFromApi(Guid key)
+        private async Task<int> FetchUserActiveCompleteOrganisationCountFromApi()
         {
             using (var client = apiClient())
             {
@@ -148,9 +149,8 @@
                 var result = await client.SendAsync(accessToken, request);
 
                 return result
-                    .Where(o => o.UserStatus == Core.Shared.UserStatus.Active)
-                    .Where(o => o.Organisation.OrganisationStatus == Core.Shared.OrganisationStatus.Complete)
-                    .Count();
+                    .Where(o => o.UserStatus == UserStatus.Active)
+                    .Count(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete);
             }
         }
 

@@ -11,7 +11,16 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Partnership/soletrader details</h1>
+        <h1 class="govuk-heading-l">
+            @if (Model.OrganisationType == "Partnership")
+            {
+                @:Partnership details
+            }
+            else
+            {
+                @:Sole trader or individual details
+            }
+        </h1>
     </header>
 
     @using (Html.BeginForm())
@@ -23,9 +32,9 @@
         <div class="govuk-form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
             {
-                <p>
-                    This is either your individual name or your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
-                </p>
+            <p>
+                This is either your individual name of your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
+            </p>
             }
         </div>
 
