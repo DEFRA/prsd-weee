@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using EA.Weee.Security;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -34,11 +35,10 @@
 
             if (org == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
-                    query.OrganisationId));
+                throw new ArgumentException($"Could not find an organisation with id {query.OrganisationId}");
             }
 
-            OrganisationData organisationData = organisationMap.Map(org);
+            var organisationData = organisationMap.Map(org);
 
             var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
 

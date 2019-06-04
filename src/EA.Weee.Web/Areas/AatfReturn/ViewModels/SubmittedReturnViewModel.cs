@@ -2,7 +2,7 @@
 {
     using System;
     using Core.AatfReturn;
-    using Core.DataReturns;
+    using EA.Weee.Web.ViewModels.Returns;
 
     public class SubmittedReturnViewModel : ReturnViewModelBase
     {

@@ -5,6 +5,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
 
     public class AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap : IMap<AddressTonnageSummary, ReusedOffSiteSummaryListViewModel>
     {
@@ -12,13 +14,10 @@
         public List<AddressDataSummary> AddressDataSummaries = new List<AddressDataSummary>();
 
         private readonly ITonnageUtilities tonnageUtilities;
-        private IAddressUtilities addressUtilities;
 
-        public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(
-            ITonnageUtilities tonnageUtilities, IAddressUtilities addressUtilities)
+        public AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMap(ITonnageUtilities tonnageUtilities)
         {
             this.tonnageUtilities = tonnageUtilities;
-            this.addressUtilities = addressUtilities;
         }
 
         public ReusedOffSiteSummaryListViewModel Map(AddressTonnageSummary source)

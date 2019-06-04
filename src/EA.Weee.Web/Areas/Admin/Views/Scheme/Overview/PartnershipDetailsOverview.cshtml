@@ -46,7 +46,7 @@
     {
         <br />
         <p>
-            <a href="@(Url.UrlFor<SchemeController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null)))">Edit organisation details</a>
         </p>
     }
 

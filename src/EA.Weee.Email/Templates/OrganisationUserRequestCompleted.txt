@@ -1,4 +1,4 @@
-﻿Your request to access a WEEE organisation
+﻿Your request to access @Model.OrganisationName
 
 Dear @Model.FullName,
 
@@ -10,7 +10,7 @@ Your request to access the Waste Electrical and Electronic Equipment (WEEE) onli
 
 This is an automated email; do not reply.
 
-@(Model.Approved ? "If you have any enquiries, contact your relevant helpline:" : "If you have any other enquiries, contact your relevant helpline:") 
+@(Model.Approved ? "If you have any enquiries, contact your environmental regulator:" : "If you have any other enquiries, contact your environmental regulator:") 
 
 - Environment Agency (England): 03708 506506
 
