@@ -11,14 +11,10 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReturnData, source.ReturnData);
 
-            var model = new SelectReportOptionsNilViewModel()
+            var model = new SelectReportOptionsNilViewModel(source.ReturnData)
             {
                 ReturnId = source.ReturnId,
                 OrganisationId = source.OrganisationId,
-                QuarterWindowEndDate = source.ReturnData.QuarterWindow.EndDate,
-                QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
-                Quarter = source.ReturnData.Quarter.Q.ToString(),
-                Year = source.ReturnData.Quarter.Year.ToString()
             };
 
             return model;

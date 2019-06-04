@@ -2,21 +2,22 @@
 {
     using System;
     using System.Globalization;
+    using EA.Weee.Core.AatfReturn;
 
-    public class SelectReportOptionsNilViewModel
+    public class SelectReportOptionsNilViewModel : ReturnViewModelBase
     {
+        public SelectReportOptionsNilViewModel()
+        {
+        }
+
+        public SelectReportOptionsNilViewModel(ReturnData returnData) : base(returnData)
+        {
+        }
+
         public Guid ReturnId { get; set; }
 
         public Guid OrganisationId { get; set; }
 
-        public DateTime QuarterWindowStartDate { get; set; }
-
-        public DateTime QuarterWindowEndDate { get; set; }
-
-        public string Quarter { get; set; }
-
-        public string Period => $"{Quarter} {QuarterWindowStartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindowEndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
-
-        public string Year { get; set; }
+        public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
     }
 }

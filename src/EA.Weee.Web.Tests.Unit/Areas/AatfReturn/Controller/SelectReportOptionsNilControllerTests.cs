@@ -4,6 +4,8 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -73,6 +75,27 @@
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 12, 31)),
+                Quarter = new Quarter(2019, QuarterType.Q1)
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId == returnId))).Returns(returnData);
+            
+            await controller.Index(organisationId, returnId);
+
+            A.CallTo(() => mapper.Map(A<ReturnDataToSelectReportOptionsNilViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
+                                                                                                               && t.ReturnId == returnId
+                                                                                                               && t.ReturnData == returnData))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
