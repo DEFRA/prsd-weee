@@ -19,7 +19,7 @@
         {
             if (this.Selected == null)
             {
-                yield return new ValidationResult(string.Format("You must select an {0} to manage", this.FacilityType), new[] { "Selected" });
+                yield return new ValidationResult(string.Format("You must select an {0} to manage", this.FacilityType.ToString().ToUpper()), new[] { "Selected" });
             }
         }
     }
