@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Constant;
@@ -33,7 +34,7 @@
         {
             using (var client = apiClient())
             {
-                var @returns = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId));
+                var @returns = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Ae));
 
                 var viewModel = mapper.Map<ReturnsViewModel>(@returns);
 

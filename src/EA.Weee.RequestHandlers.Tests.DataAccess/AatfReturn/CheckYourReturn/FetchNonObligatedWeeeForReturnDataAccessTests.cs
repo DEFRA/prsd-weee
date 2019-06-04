@@ -83,7 +83,7 @@
             var organisation = Organisation.CreateSoleTrader("Test Organisation");
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
         }
     }
 }

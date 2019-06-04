@@ -23,9 +23,13 @@
 
     public static class ObligatedWeeeIntegrationCommon
     {
-        public static Return CreateReturn(Organisation organisation, string createdById)
+        public static Return CreateReturn(Organisation organisation, string createdById, FacilityType facilityType = null)
         {
-            return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById);
+            if (facilityType == null)
+            {
+                facilityType = FacilityType.Aatf;
+            }
+            return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
         public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, AatfContact contact, Domain.Country country)

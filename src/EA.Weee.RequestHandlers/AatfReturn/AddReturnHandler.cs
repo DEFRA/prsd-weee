@@ -48,7 +48,7 @@
 
             var aatfOrganisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
 
-            var aatfReturn = new Return(aatfOrganisation, quarter, userContext.UserId.ToString());
+            var aatfReturn = new Return(aatfOrganisation, quarter, userContext.UserId.ToString(), FacilityType.Aatf);
 
             await returnDataAccess.Submit(aatfReturn);
 

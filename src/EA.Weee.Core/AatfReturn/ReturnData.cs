@@ -42,6 +42,8 @@
 
         public Guid OrganisationId { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();
