@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.ViewModels.Returns;
 
     public class SelectReportOptionsNilViewModel : ReturnViewModelBase
     {
