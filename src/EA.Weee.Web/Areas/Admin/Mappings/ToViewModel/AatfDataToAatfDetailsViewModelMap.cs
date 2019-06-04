@@ -48,7 +48,7 @@
                 var associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae).ToList();
                 source.AssociatedAatfs = source.AssociatedAatfs.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf).ToList();
                 viewModel.AssociatedAatfs = source.AssociatedAatfs;
-                viewModel.AssociatedAEs = associatedAEs;
+                viewModel.AssociatedAes = associatedAEs;
             }
 
             if (source.AssociatedSchemes != null)
