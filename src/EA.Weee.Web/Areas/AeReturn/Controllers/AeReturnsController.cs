@@ -25,25 +25,6 @@
             this.mapper = mapper;
         }
 
-        [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
-        {
-            using (var client = apiClient())
-            {
-                /*var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId));
-
-                var viewModel = mapper.Map<ReturnsViewModel>(@return);
-
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
-                viewModel.OrganisationId = organisationId;
-
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
-
-                return View(viewModel);*/
-                return View();
-            }
-        }
-
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
