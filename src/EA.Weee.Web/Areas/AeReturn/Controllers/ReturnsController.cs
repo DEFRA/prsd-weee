@@ -5,6 +5,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.AeReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -45,6 +46,34 @@
 
                 return View(viewModel);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(ReturnsViewModel viewModel)
+        {
+            return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId)
+        {
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
+
+            ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExportedWholeWeee(Guid organisationId, ExportedWholeWeeeViewModel viewModel)
+        {
+            if (viewModel.WeeeSelectedValue == "yes")
+            {
+                return AeRedirect.ReturnsList(organisationId);
+            }
+
+            return AeRedirect.NilReturn(organisationId);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

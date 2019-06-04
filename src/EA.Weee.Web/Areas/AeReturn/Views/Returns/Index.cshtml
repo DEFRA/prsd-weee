@@ -15,7 +15,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            @using (Html.BeginForm("Index", "Holding", FormMethod.Post, new { organisationId = Model.OrganisationId }))
+            @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.OrganisationId)

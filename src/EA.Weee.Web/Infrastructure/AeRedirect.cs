@@ -12,5 +12,15 @@
         {
             return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Index", organisationId = organisationId }));
         }
+
+        public static RedirectToRouteResult ExportedWholeWeee(Guid organisationId)
+        {
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId }));
+        }
+
+        public static RedirectToRouteResult NilReturn(Guid organisationId)
+        {
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "NilReturn", organisationId = organisationId }));
+        }
     }
 }
