@@ -1,15 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using Requests.AatfReturn;
+    using System;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -18,17 +20,23 @@
         private GetReturnsHandler handler;
         private readonly IGetPopulatedReturn populatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
+        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
+        private readonly IQuarterWindowTemplateDataAccess quarterWindowTemplateDataAccess;
 
         public GetReturnsHandlerTests()
         {
             populatedReturn = A.Fake<IGetPopulatedReturn>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
+            aatfDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
+            quarterWindowTemplateDataAccess = A.Fake<IQuarterWindowTemplateDataAccess>();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
                 .AllowOrganisationAccess().Build(),
                 populatedReturn,
-                returnDataAccess);
+                returnDataAccess,
+                aatfDataAccess,
+                quarterWindowTemplateDataAccess);
         }
 
         [Fact]
@@ -38,7 +46,9 @@
 
             handler = new GetReturnsHandler(authorization,
                 A.Dummy<IGetPopulatedReturn>(),
-                A.Dummy<IReturnDataAccess>());
+                A.Dummy<IReturnDataAccess>(),
+                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<IQuarterWindowTemplateDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 
@@ -86,6 +96,24 @@
             result.Should().Contain(returnData.ElementAt(0));
             result.Should().Contain(returnData.ElementAt(1));
             result.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisation_OrganisationAatfsShouldBeRetrieved()
+        {
+            var organisationId = Guid.NewGuid();
+
+            var result = await handler.HandleAsync(new GetReturns(organisationId));
+
+            A.CallTo(() => aatfDataAccess.FetchAatfByOrganisationId(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_QuarterWindowsShouldBeRetrieved()
+        {
+            var result = await handler.HandleAsync(A.Dummy<GetReturns>());
+
+            A.CallTo(() => quarterWindowTemplateDataAccess.GetAll()).MustHaveHappenedOnceExactly();
         }
     }
 }
