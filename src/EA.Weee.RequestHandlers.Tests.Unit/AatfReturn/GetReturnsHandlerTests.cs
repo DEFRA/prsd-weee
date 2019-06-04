@@ -11,7 +11,11 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using DataAccess.DataAccess;
+    using Domain;
+    using Prsd.Core;
+    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -21,14 +25,18 @@
         private readonly IGetPopulatedReturn populatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
-        private readonly IQuarterWindowTemplateDataAccess quarterWindowTemplateDataAccess;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly Fixture fixture;
 
         public GetReturnsHandlerTests()
         {
             populatedReturn = A.Fake<IGetPopulatedReturn>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
             aatfDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
-            quarterWindowTemplateDataAccess = A.Fake<IQuarterWindowTemplateDataAccess>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            fixture = new Fixture();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -36,7 +44,8 @@
                 populatedReturn,
                 returnDataAccess,
                 aatfDataAccess,
-                quarterWindowTemplateDataAccess);
+                quarterWindowFactory,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -48,7 +57,8 @@
                 A.Dummy<IGetPopulatedReturn>(),
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IQuarterWindowTemplateDataAccess>());
+                A.Dummy<IQuarterWindowFactory>(),
+                A.Dummy<ISystemDataDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 
@@ -109,11 +119,62 @@
         }
 
         [Fact]
-        public async Task HandleAsync_QuarterWindowsShouldBeRetrieved()
+        public async Task HandleAsync_GivenNoUsingFixedSystemTime_QuarterWindowsShouldBeRetrievedUsingCurrentDate()
         {
+            SystemTime.Freeze(new DateTime(2019, 1, 2));
+
+            var testSystemData = new TestSystemData();
+
+            testSystemData.ToggleFixedCurrentDateUsage(false);
+
             var result = await handler.HandleAsync(A.Dummy<GetReturns>());
 
-            A.CallTo(() => quarterWindowTemplateDataAccess.GetAll()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(testSystemData);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>.That.Matches(d => d.Year.Equals(2019)
+            && d.Month.Equals(1) && d.Day.Equals(2)))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNotUsingFixedSystemTime_QuarterWindowsShouldBeRetrievedUsingCurrentDate()
+        {
+            SystemTime.Freeze(new DateTime(2019, 1, 2));
+
+            var testSystemData = new TestSystemData();
+            testSystemData.ToggleFixedCurrentDateUsage(false);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(testSystemData);
+
+            var result = await handler.HandleAsync(A.Dummy<GetReturns>());
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>.That.Matches(d => d.Year.Equals(2019)
+                                                                                                       && d.Month.Equals(1) && d.Day.Equals(2)))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenUsingFixedSystemTime_QuarterWindowsShouldBeRetrievedUsingFixedSystemDate()
+        {
+            SystemTime.Freeze(new DateTime(2019, 1, 2));
+
+            var testSystemData = new TestSystemData();
+            testSystemData.ToggleFixedCurrentDateUsage(true);
+            testSystemData.UpdateFixedCurrentDate(new DateTime(2019, 1, 3));
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(testSystemData);
+
+            var result = await handler.HandleAsync(A.Dummy<GetReturns>());
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>.That.Matches(d => d.Year.Equals(2019)
+                                                                                                       && d.Month.Equals(1) && d.Day.Equals(3)))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        public class TestSystemData : SystemData
+        {
         }
     }
 }

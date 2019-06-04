@@ -11,6 +11,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using Factories;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
@@ -23,19 +24,22 @@
         private readonly IGetPopulatedReturn getPopulatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
-        private readonly IQuarterWindowTemplateDataAccess quarterWindowTemplateDataAccess;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetReturnsHandler(IWeeeAuthorization authorization,
             IGetPopulatedReturn getPopulatedReturn, 
             IReturnDataAccess returnDataAccess, 
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
-            IQuarterWindowTemplateDataAccess quarterWindowTemplateDataAccess)
+            IQuarterWindowFactory quarterWindowFactory, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.getPopulatedReturn = getPopulatedReturn;
             this.returnDataAccess = returnDataAccess;
             this.aatfDataAccess = aatfDataAccess;
-            this.quarterWindowTemplateDataAccess = quarterWindowTemplateDataAccess;
+            this.quarterWindowFactory = quarterWindowFactory;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<IList<ReturnData>> HandleAsync(GetReturns message)
@@ -46,7 +50,15 @@
 
             var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(message.OrganisationId);
 
-            var quarterWindows = await quarterWindowTemplateDataAccess.GetAll();
+            var currentDate = SystemTime.Now;
+            var systemSettings = await systemDataDataAccess.Get();
+
+            if (systemSettings.UseFixedCurrentDate)
+            {
+                currentDate = systemSettings.FixedCurrentDate;
+            }
+
+            var availableQuarterWindows = await quarterWindowFactory.GetQuarterWindowsForDate(currentDate);
 
             var returnsData = new List<ReturnData>();
 

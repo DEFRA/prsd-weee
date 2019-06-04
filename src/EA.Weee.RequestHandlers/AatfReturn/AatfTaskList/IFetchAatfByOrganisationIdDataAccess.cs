@@ -8,5 +8,7 @@
     public interface IFetchAatfByOrganisationIdDataAccess
     {
         Task<List<Aatf>> FetchAatfByOrganisationId(Guid organisationId);
+
+        Task<List<Aatf>> FetchAatfByOrganisationIdFacilityTypeAndComplianceYear(Guid organisationId, int complianceYear, FacilityType facilityType);
     }
 }
