@@ -178,6 +178,20 @@
                 </tr>
             </tbody>
         </table>
+        @if (Model.CanEdit)
+        {
+            <br />
+            <p>
+                @if (Model.Organisation.IsRegisteredCompany)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                }
+                else
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                }
+            </p>
+        }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
         <div class="govuk-table__header--large">

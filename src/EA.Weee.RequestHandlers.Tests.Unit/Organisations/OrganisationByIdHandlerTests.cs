@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
+    using EA.Weee.Security;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,14 +23,37 @@
 
     public class OrganisationByIdHandlerTests
     {
+        private readonly WeeeContext context;
+        private readonly IMap<Organisation, OrganisationData> map;
         private readonly DbContextHelper dbHelper = new DbContextHelper();
+        private readonly OrganisationByIdHandler handler;
+        private readonly Guid organisationId;
+
+        public OrganisationByIdHandlerTests()
+        {
+            map = A.Fake<IMap<Organisation, OrganisationData>>();
+            context = A.Fake<WeeeContext>();
+            organisationId = Guid.NewGuid();
+
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
+            {
+                GetOrganisationWithId(organisationId)
+            }));
+
+            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
+            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+
+            handler = new OrganisationByIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(),
+                context,
+                map);
+        }
 
         [Fact]
         public async Task OrganisationByIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new OrganisationByIdHandler(authorization, A.Dummy<WeeeContext>(), A.Dummy<OrganisationMap>());
+            var handler = new OrganisationByIdHandler(authorization, context, map);
             var message = new GetOrganisationInfo(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -39,11 +64,9 @@
         {
             var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
-            var organisationId = Guid.NewGuid();
-            var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new OrganisationByIdHandler(authorization, context, A.Dummy<OrganisationMap>());
+            var handler = new OrganisationByIdHandler(authorization, context, map);
             var message = new GetOrganisationInfo(organisationId);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
@@ -58,33 +81,25 @@
         {
             var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
-            var organisationId = Guid.NewGuid();
-            var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
             {
                 GetOrganisationWithId(organisationId)
             }));
 
-            List<Aatf> aatfs = new List<Aatf>();
-            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme> { new Domain.Scheme.Scheme(organisationId) };
+            var aatfs = new List<Aatf>();
+            var schemes = new List<Domain.Scheme.Scheme> { new Domain.Scheme.Scheme(organisationId) };
 
             A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
             A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(aatfs));
 
-            OrganisationData expectedReturnValue = new OrganisationData();
-            Organisation mappedOrganisation = null;
-            var organisationMap = A.Fake<IMap<Organisation, OrganisationData>>();
-            A.CallTo(() => organisationMap.Map(A<Organisation>._))
-                .Invokes((Organisation o) => mappedOrganisation = o)
-                .Returns(expectedReturnValue);
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
 
-            var handler = new OrganisationByIdHandler(authorization, context, organisationMap);
             var message = new GetOrganisationInfo(organisationId);
 
             var result = await handler.HandleAsync(message);
 
-            Assert.NotNull(mappedOrganisation);
-            Assert.Equal(organisationId, mappedOrganisation.Id);
+            Assert.NotNull(expectedReturnValue);
             Assert.Same(expectedReturnValue, result);
         }
 
@@ -95,24 +110,13 @@
         {
             var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
-            var organisationId = Guid.NewGuid();
-            var context = A.Fake<WeeeContext>();
-            Organisation organisation = GetOrganisationWithId(organisationId);
+            var organisation = GetOrganisationWithId(organisationId);
 
-            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
-            {
-                organisation
-            }));
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
 
-            OrganisationData expectedReturnValue = new OrganisationData();
-            Organisation mappedOrganisation = null;
-            var organisationMap = A.Fake<IMap<Organisation, OrganisationData>>();
-            A.CallTo(() => organisationMap.Map(A<Organisation>._))
-                .Invokes((Organisation o) => mappedOrganisation = o)
-                .Returns(expectedReturnValue);
-
-            List<Aatf> aatfs = new List<Aatf>();
-            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme>();
+            var aatfs = new List<Aatf>();
+            var schemes = new List<Domain.Scheme.Scheme>();
 
             if (hasAatfOrScheme)
             {
@@ -123,7 +127,6 @@
             A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
             A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(aatfs));
 
-            var handler = new OrganisationByIdHandler(authorization, context, organisationMap);
             var message = new GetOrganisationInfo(organisationId);
 
             var result = await handler.HandleAsync(message);
@@ -135,6 +138,36 @@
             {
                 Assert.Equal(schemes.FirstOrDefault().Id, result.SchemeId);
             }
+        }
+
+        [Fact]
+        public async Task OrganisationByIdHandler_ReturnsFalseForCanEditOrganisation_WhenCurrentUserIsNotInternalAdmin()
+        {
+            var weeeAuthorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map);
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.CanEditOrganisation.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task OrganisationByIdHandler_GivenMappedOrganisation_MappedOrganisationShouldBeReturned()
+        {
+            var message = new GetOrganisationInfo(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+
+            var result = await handler.HandleAsync(message);
+
+            result.Should().Be(expectedReturnValue);
         }
 
         private Organisation GetOrganisationWithId(Guid id)

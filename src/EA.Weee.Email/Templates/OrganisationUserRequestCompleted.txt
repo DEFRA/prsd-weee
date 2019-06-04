@@ -1,4 +1,4 @@
-﻿Your request to access a WEEE organisation
+﻿Your request to access @Model.OrganisationName
 
 Dear @Model.FullName,
 
