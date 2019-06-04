@@ -154,6 +154,7 @@
     <Compile Include="Admin\GetSchemes\GetSchemesByOrganisationIdHandlerTests.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccessTests.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandlerTests.cs" />
+    <Compile Include="Admin\OrganisationInternalByIdHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetSchemesHandlerTests.cs" />

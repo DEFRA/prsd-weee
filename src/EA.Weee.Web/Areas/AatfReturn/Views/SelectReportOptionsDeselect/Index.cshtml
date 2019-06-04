@@ -1,0 +1,57 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsDeselectViewModel
+@{
+    ViewBag.Title = "Confirm removal of reporting options - GOV.UK";
+}
+
+<section id="main-content">
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Are you sure you want to remove these reporting options?</h1>
+    </header>
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div>
+        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+        <p class="important">
+            Any data entered against these options will be deleted
+        </p>
+    </div>
+    <div class="govuk-!-padding-bottom-5"></div>
+    @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.Deselected == true))
+    {
+        <p class="govuk-body">
+            @if (deselectedOption.Id == 5)
+            {
+                @:Non-obligated WEEE - DCF
+            }
+            else
+            {
+                @deselectedOption.Description
+            }
+        </p>
+    }
+
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsDeselectRouteName, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+
+        <div class="govuk-!-padding-bottom-5"></div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeRemoveOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Confirm if this you want to remove these reporting options",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+
+        <button type="submit" class="govuk-button">
+            Save and continue
+        </button>
+    }
+</section>

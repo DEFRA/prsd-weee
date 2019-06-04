@@ -4,7 +4,7 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReturnViewModel
+@model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
 @{
     ViewBag.Title = "AATF task list";
     var displayObligatedGroup = Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedSentOn || Model.ReportOnDisplayOptions.DisplayObligatedReused;
@@ -39,7 +39,7 @@
                 <div class="govuk-grid-row govuk-table__cell" style="padding-top: 20px">
                     <div class="govuk-grid-column-one-half">
                         <p>
-                            <b>Obligated WEEE - @item.Aatf.Name</b>
+                            <b>Obligated WEEE - @item.Aatf.Name (@item.Aatf.ApprovalNumber)</b>
                         </p>
                     </div>
                     <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
