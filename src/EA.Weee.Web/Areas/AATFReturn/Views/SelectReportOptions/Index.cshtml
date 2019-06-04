@@ -7,19 +7,20 @@
 }
 
 <section id="main-content">
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">What do you need to report for @Model.Year @Model.Period?</h1>
-    </header>
-    <p class="govuk-body">
-        Select all that apply
-    </p>
-
     @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsRouteName))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-heading-l govuk-fieldset__heading">
+                        What do you need to report for @Model.Year @Model.Period?
+                    </h1>
+                </legend>
+                <span id="all-apply-hint" class="govuk-hint">
+                    Select all that apply
+                </span>
                 <div class="govuk-checkboxes">
                     @for (var i = 0; i < Model.ReportOnQuestions.Count; i++)
                     {
@@ -34,7 +35,7 @@
                                 @{
                                     var selectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
                                 }
-                                <input type="checkbox" name="SelectedOptions" value="@Model.ReportOnQuestions[i].Id" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption />
+                                <input type="checkbox" name="SelectedOptions" value="@Model.ReportOnQuestions[i].Id" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption/>
                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
                                     @Model.ReportOnQuestions[i].Description
 
