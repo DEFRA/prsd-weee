@@ -96,6 +96,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult NilReturnConfirm(Guid organisationId)
         {
             return AeRedirect.Confirmation(organisationId);
