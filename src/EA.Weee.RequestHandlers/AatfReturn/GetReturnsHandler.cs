@@ -48,18 +48,6 @@
 
             var @returns = await returnDataAccess.GetByOrganisationId(message.OrganisationId);
 
-            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(message.OrganisationId);
-
-            var currentDate = SystemTime.Now;
-            var systemSettings = await systemDataDataAccess.Get();
-
-            if (systemSettings.UseFixedCurrentDate)
-            {
-                currentDate = systemSettings.FixedCurrentDate;
-            }
-
-            var availableQuarterWindows = await quarterWindowFactory.GetQuarterWindowsForDate(currentDate);
-
             var returnsData = new List<ReturnData>();
 
             foreach (var @return in @returns)

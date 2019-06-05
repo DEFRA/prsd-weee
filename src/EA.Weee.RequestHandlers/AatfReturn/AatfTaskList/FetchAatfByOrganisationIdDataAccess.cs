@@ -21,10 +21,5 @@
         {
             return await context.Aatfs.Where(a => a.Organisation.Id == organisationId && a.FacilityType.Value == FacilityType.Aatf.Value).Select(a => a).ToListAsync();
         }
-
-        public async Task<List<Aatf>> FetchAatfByOrganisationIdFacilityTypeAndComplianceYear(Guid organisationId, int complianceYear, FacilityType facilityType)
-        {
-            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId && a.FacilityType.Value == facilityType.Value).Select(a => a).ToListAsync();
-        }
     }
 }
