@@ -53,6 +53,7 @@
     @Html.Gds().ValidationSummary()
     @Html.HiddenFor(m => m.Filter.Name)
     @Html.HiddenFor(m => m.Filter.ApprovalNumber)
+    @Html.HiddenFor(m => m.Filter.FacilityType)
     @Html.HiddenFor(m => m.FacilityType)
     <div class="table-hr"></div>
     <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
@@ -87,17 +88,8 @@
 
     if (Model.CanAddAatf)
     {
-        if (Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf)
-        {
-            <p>
-                <a href="@(Url.UrlFor<AddAatfController>(u => u.Search()))">Add @Model.FacilityType.ToDisplayString()</a>
-            </p>
-        }
-        else
-        {
-            <p>
-                <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Add @Model.FacilityType.ToDisplayString()</a>
-            </p>
-        }
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
+        </p>
     }
 }

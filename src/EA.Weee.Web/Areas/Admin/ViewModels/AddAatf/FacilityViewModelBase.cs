@@ -3,20 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
+    using FluentValidation.Attributes;
 
-    public abstract class AatfViewModelBase
+    [Validator(typeof(ApprovalDateValidator))]
+    public abstract class FacilityViewModelBase
     {
         [Required]
-        [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/ATF", ErrorMessage = "Approval number is not in correct format")]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber)]
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
-        public string ApprovalNumber { get; set; }
+        public abstract string ApprovalNumber { get; set; }
 
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthoritiesList { get; set; }
 
@@ -31,7 +31,7 @@
 
         [Required]
         [Display(Name = "Compliance year")]
-        public Int16 ComplianceYear { get; set; }
+        public short ComplianceYear { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 

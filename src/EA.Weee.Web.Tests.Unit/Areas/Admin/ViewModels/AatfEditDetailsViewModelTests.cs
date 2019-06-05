@@ -111,7 +111,7 @@
             var t = typeof(AatfEditDetailsViewModel);
             var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
 
-            customAttribute.ValidatorType.Should().Be(typeof(AatfViewModelValidator));
+            customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()

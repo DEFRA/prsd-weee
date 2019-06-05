@@ -25,6 +25,8 @@
 
         public AddressData Address { get; set; }
 
+        public Core.AatfReturn.FacilityType FacilityType { get; set; }
+
         public RegisteredCompanyDetailsViewModel()
         {
             this.Address = new AddressData();
