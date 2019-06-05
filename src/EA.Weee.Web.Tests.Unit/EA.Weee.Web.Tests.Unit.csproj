@@ -289,9 +289,10 @@
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
-    <Compile Include="Areas\Admin\Validation\AatfViewModelValidatorTests.cs" />
+    <Compile Include="Areas\Admin\Validation\ApprovalDateValidatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAeViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrIndividualOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
@@ -307,6 +308,7 @@
     <Compile Include="Controllers\ErrorsControllerTests.cs" />
     <Compile Include="Controllers\OrganisationControllerTests.cs" />
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
+    <Compile Include="Extensions\GdsExtensionsTests.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensionsTests.cs" />
     <Compile Include="Filters\AuthorizeInternalClaimsAttributeTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
@@ -314,6 +316,8 @@
     <Compile Include="Controllers\NewUserControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValueViewModelTests.cs" />
     <Compile Include="TestHelpers\ActionExecutingContextHelper.cs" />
+    <Compile Include="TestHelpers\Classes\TestViewModel.cs" />
+    <Compile Include="TestHelpers\Classes\TestViewModelBase.cs" />
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />

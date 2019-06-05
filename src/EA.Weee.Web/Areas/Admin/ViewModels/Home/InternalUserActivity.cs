@@ -11,6 +11,7 @@
         public const string ViewReports = "View reports";
         public const string ManagePcsCharges = "Manage PCS charges";
         public const string CreateAatf = "Add new AATF";
+        public const string CreateAe = "Add new AE";
         public const string CreateOrganisation = "Add new organisation";
     }
 }

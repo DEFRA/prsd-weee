@@ -125,6 +125,7 @@
         [Fact]
         public async Task ApplyFilterPost_RedirectsToManageView()
         {
+            SetUpControllerContext(fixture.Create<bool>());
             var filter = fixture.Create<FilteringViewModel>();
             var mappedFilter = fixture.Create<AatfFilter>();
 

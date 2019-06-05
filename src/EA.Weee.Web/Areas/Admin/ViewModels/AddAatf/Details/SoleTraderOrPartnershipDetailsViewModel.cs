@@ -4,7 +4,6 @@
     using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Core.Validation;
 
     public class SoleTraderOrPartnershipDetailsViewModel
     {
@@ -16,6 +15,8 @@
         public string BusinessTradingName { get; set; }
 
         public AddressData Address { get; set; }
+
+        public Core.AatfReturn.FacilityType FacilityType { get; set; }
 
         public SoleTraderOrPartnershipDetailsViewModel()
         {
