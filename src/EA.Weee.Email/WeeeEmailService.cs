@@ -104,7 +104,7 @@
             };
 
             using (MailMessage message = messageCreator.Create(organisationUser.User.Email,
-                "Your request to access a WEEE organisation", content))
+                "Your request to access " + organisationUser.Organisation.OrganisationName, content))
             {
                 return await sender.SendAsync(message);
             }
