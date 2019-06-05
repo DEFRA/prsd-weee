@@ -62,6 +62,7 @@
         {
             var requiredProperties = new List<string>
             {
+                "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
                 "ApprovalDate",
@@ -85,7 +86,7 @@
             var model = CreateValidAatfEditDetailsViewModel();
             model.Name = "AATF Name";
 
-            Assert.Equal(model.Name, model.SiteAddress.Name);
+            Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
         [Theory]
