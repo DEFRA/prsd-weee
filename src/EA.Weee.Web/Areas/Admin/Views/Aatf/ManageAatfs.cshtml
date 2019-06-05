@@ -5,7 +5,7 @@
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
-    ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
+    ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + "s - GOV.UK";
 }
 
 @section scripts{
@@ -18,7 +18,7 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        Manage @Model.FacilityType.ToDisplayString()
+        @Html.Raw("Manage " + @Model.FacilityType.ToDisplayString() + "s")
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
