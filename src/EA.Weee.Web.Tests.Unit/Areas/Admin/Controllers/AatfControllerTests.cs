@@ -611,7 +611,7 @@
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
             var siteAddress = fixture.Build<AatfAddressData>().With(sa => sa.Countries, countries).Create();
-            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddress, siteAddress).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddressData, siteAddress).Create();
 
             var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
             clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
