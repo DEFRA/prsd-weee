@@ -130,7 +130,7 @@
 
             AatfDetailsViewModel result = map.Map(transfer);
 
-            foreach (var ae in result.AssociatedAEs)
+            foreach (var ae in result.AssociatedAes)
             {
                 ae.FacilityType.Should().Be(FacilityType.Ae);
             }
