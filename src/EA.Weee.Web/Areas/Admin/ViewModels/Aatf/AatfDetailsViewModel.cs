@@ -55,6 +55,19 @@
             }
         }
 
+        public string AddressHeadingName
+        {
+            get
+            {
+                if (this.FacilityType == FacilityType.Aatf)
+                {
+                    return "Site address";
+                }
+
+                return "AE address";
+            }
+        }
+
         public FacilityType FacilityType { get; set; }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
