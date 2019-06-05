@@ -18,6 +18,7 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.Gds().ValidationSummary()
+                @Html.HiddenFor(m => m.ReturnId)
 
                 <div class="govuk-form-group" id="ExportedWeeeOptions">
                     <fieldset class="govuk-fieldset inline">

@@ -8,5 +8,6 @@
     public class NilReturnViewModel
     {
         public Guid OrganisationId { get; set; }
+        public Guid ReturnId { get; set; }
     }
 }

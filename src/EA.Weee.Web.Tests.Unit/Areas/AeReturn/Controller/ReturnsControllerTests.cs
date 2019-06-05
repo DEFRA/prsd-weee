@@ -103,6 +103,34 @@
         }
 
         [Fact]
+        public async void GetExportedWholeWeee_NoReturnIdProvided_ReturnCreated_ViewModelReturnIdShouldBePopulated()
+        {
+            Guid returnId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
+
+            ViewResult result = await controller.ExportedWholeWeee(organisationId) as ViewResult;
+
+            ExportedWholeWeeeViewModel viewModel = result.Model as ExportedWholeWeeeViewModel;
+
+            Assert.Equal(returnId, viewModel.ReturnId);
+        }
+
+        [Fact]
+        public async void GetExportedWholeWeee_ReturnIdProvided_ReturnNotCreated_ViewModelReturnIdShouldBePopulated()
+        {
+            Guid returnId = Guid.NewGuid();
+
+            ViewResult result = await controller.ExportedWholeWeee(organisationId, returnId) as ViewResult;
+
+            ExportedWholeWeeeViewModel viewModel = result.Model as ExportedWholeWeeeViewModel;
+
+            Assert.Equal(returnId, viewModel.ReturnId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
         public async void GetExportedWholeWeee_BreadCrumbShouldBeSet()
         {
             await controller.ExportedWholeWeee(A.Dummy<Guid>());
@@ -117,7 +145,8 @@
         {
             ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel()
             {
-                WeeeSelectedValue = selectedValue
+                WeeeSelectedValue = selectedValue,
+                ReturnId = Guid.NewGuid()
             };
 
             RedirectToRouteResult result = await controller.ExportedWholeWeee(organisationId, viewModel) as RedirectToRouteResult;
@@ -126,6 +155,11 @@
             result.RouteValues["controller"].Should().Be("Returns");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
+            
+            if (selectedValue == YesNoEnum.No)
+            {
+                result.RouteValues["returnId"].Should().Be(viewModel.ReturnId);
+            }
         }
 
         [Fact]
@@ -143,24 +177,48 @@
 
         [Fact]
         public async void GetNilResult_BreadCrumbSet_ViewReturnedWithModel()
-        { 
-            ViewResult result = await controller.NilReturn(organisationId) as ViewResult;
+        {
+            Guid returnId = Guid.NewGuid();
+
+            ViewResult result = await controller.NilReturn(organisationId, returnId) as ViewResult;
 
             NilReturnViewModel viewModel = result.Model as NilReturnViewModel;
 
             Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(returnId, viewModel.ReturnId);
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
         }
 
         [Fact]
-        public void PostNilResult_RedirectToReturnsList()
+        public async void PostNilResult_RedirectToReturnsList()
         {
-            RedirectToRouteResult result = controller.NilReturnConfirm(organisationId) as RedirectToRouteResult;
+            NilReturnViewModel viewModel = new NilReturnViewModel()
+            {
+                OrganisationId = organisationId,
+                ReturnId = Guid.NewGuid()
+            };
+
+            RedirectToRouteResult result = await controller.NilReturnConfirm(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Confirmation");
             result.RouteValues["controller"].Should().Be("Returns");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
+        }
+
+        [Fact]
+        public async void PostNilResult_SubmitReturnShouldBeCalled()
+        {
+            NilReturnViewModel viewModel = new NilReturnViewModel()
+            {
+                OrganisationId = organisationId,
+                ReturnId = Guid.NewGuid()
+            };
+
+            await controller.NilReturnConfirm(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(viewModel.ReturnId))))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

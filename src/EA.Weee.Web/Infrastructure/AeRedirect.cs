@@ -19,13 +19,13 @@
             return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId }));
         }
 
-        public static RedirectToRouteResult NilReturn(Guid organisationId)
+        public static RedirectToRouteResult NilReturn(Guid organisationId, Guid returnId)
         {
-            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "NilReturn", organisationId = organisationId }));
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "NilReturn", organisationId = organisationId, returnId = returnId }));
         }
         public static RedirectToRouteResult Confirmation(Guid organisationId)
         {
-            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Confirmation", organisationId = organisationId }));
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Confirmation", organisationId = organisationId}));
         }
     }
 }

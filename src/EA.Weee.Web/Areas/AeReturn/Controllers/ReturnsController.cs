@@ -56,12 +56,30 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId)
+        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId, Guid? returnId = null)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel();
-            return View(model);
+            using (var client = apiClient())
+            {
+                if (returnId == null)
+                {
+                    AddReturn request = new AddReturn()
+                    {
+                        OrganisationId = organisationId,
+                        FacilityType = FacilityType.Ae
+                    };
+
+                    returnId = await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
+                {
+                    ReturnId = returnId.GetValueOrDefault()
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -79,17 +97,18 @@
                 return AeRedirect.ReturnsList(organisationId);
             }
 
-            return AeRedirect.NilReturn(organisationId);
+            return AeRedirect.NilReturn(organisationId, viewModel.ReturnId);
         }
 
         [HttpGet]
-        public async Task<ActionResult> NilReturn(Guid organisationId)
+        public async Task<ActionResult> NilReturn(Guid organisationId, Guid returnId)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
             NilReturnViewModel viewModel = new NilReturnViewModel()
             {
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                ReturnId = returnId
             };
 
             return View(viewModel);
@@ -97,9 +116,14 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NilReturnConfirm(Guid organisationId)
+        public async Task<ActionResult> NilReturnConfirm(NilReturnViewModel viewModel)
         {
-            return AeRedirect.Confirmation(organisationId);
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
+            }
+
+            return AeRedirect.Confirmation(viewModel.OrganisationId);
         }
 
         [HttpGet]

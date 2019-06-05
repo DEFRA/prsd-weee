@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web;
 
     public class ExportedWholeWeeeViewModel : IValidatableObject
     {
         public YesNoEnum WeeeSelectedValue { get; set; }
+
+        public Guid ReturnId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

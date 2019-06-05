@@ -24,6 +24,8 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.Gds().ValidationSummary()
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.ReturnId)
 
                 <div class="govuk-form-group">
                     <button class="govuk-button" type="submit">Continue</button>
@@ -31,7 +33,7 @@
             }
 
             <p>
-                <a href="@(Url.UrlFor<ReturnsController>(u => u.ExportedWholeWeee(Model.OrganisationId)))">Cancel</a>
+                <a href="@(Url.UrlFor<ReturnsController>(u => u.ExportedWholeWeee(Model.OrganisationId, Model.ReturnId)))">Cancel</a>
             </p>
         </div>
     </div>

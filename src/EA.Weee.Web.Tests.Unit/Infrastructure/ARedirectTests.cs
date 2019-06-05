@@ -37,19 +37,22 @@
         public void NilReturnRedirectCalled_ShouldReturnCorrectRoute()
         {
             Guid orgId = Guid.NewGuid();
+            Guid returnId = Guid.NewGuid();
 
-            RedirectToRouteResult newRoute = AeRedirect.NilReturn(orgId);
+            RedirectToRouteResult newRoute = AeRedirect.NilReturn(orgId, returnId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
             Assert.Equal("NilReturn", newRoute.RouteValues["action"]);
             Assert.Equal(orgId, newRoute.RouteValues["organisationId"]);
+            Assert.Equal(returnId, newRoute.RouteValues["returnId"]);
         }
 
         [Fact]
         public void ConfirmationRedirectCalled_ShouldReturnCorrectRoute()
         {
             Guid orgId = Guid.NewGuid();
+            Guid returnId = Guid.NewGuid();
 
             RedirectToRouteResult newRoute = AeRedirect.Confirmation(orgId);
 
