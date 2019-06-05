@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +12,8 @@
     [Validator(typeof(ApprovalDateValidator))]
     public abstract class FacilityViewModelBase
     {
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public abstract string Name { get; set; }
@@ -50,5 +52,12 @@
         [Required]
         [Display(Name = "Size")]
         public int SizeValue { get; set; }
+
+        public AatfAddressData SiteAddressData { get; set; }
+
+        public FacilityViewModelBase()
+        {
+            SiteAddressData = new AatfAddressData();
+        }
     }
 }

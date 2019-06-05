@@ -5,16 +5,16 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
 
-    public class AatfDataToAatfEditDetailsViewModelMap : IMap<AatfData, AatfEditDetailsViewModel>
+    public class AatfDataToAeEditDetailsViewModelMap : IMap<AatfData, AeEditDetailsViewModel>
     {
-        public AatfDataToAatfEditDetailsViewModelMap()
+        public AatfDataToAeEditDetailsViewModelMap()
         {
         }
 
-        public AatfEditDetailsViewModel Map(AatfData source)
+        public AeEditDetailsViewModel Map(AatfData source)
         {
             Guard.ArgumentNotNull(() => source, source);
-            return MappingHelper.MapFacility(new AatfEditDetailsViewModel(), source);
+            return MappingHelper.MapFacility(new AeEditDetailsViewModel(), source);
         }
     }
 }

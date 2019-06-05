@@ -14,11 +14,11 @@
     using FluentValidation.Attributes;
     using Xunit;
 
-    public class AatfEditDetailsViewModelTests
+    public class AeEditDetailsViewModelTests
     {
         private readonly Fixture fixture;
 
-        public AatfEditDetailsViewModelTests()
+        public AeEditDetailsViewModelTests()
         {
             fixture = new Fixture();
         }
@@ -30,11 +30,10 @@
         [InlineData("WEE/891234CD/SCH")]
         [InlineData("WEE/AB1DF4CD/SCH")]
         [InlineData("WEE/AB123482/SCH")]
-        [InlineData("WEE/AB1234CD/AE")]
-        [InlineData("WEE/AB1234CD/EXP")]
+        [InlineData("WEE/AB1234CD/ATF")]
         public void ModelWithIncorrectApprovalNumber_IsInvalid(string approvalNumber)
         {
-            var model = CreateValidAatfEditDetailsViewModel();
+            var model = CreateValidAeEditDetailsViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -45,11 +44,11 @@
         }
 
         [Theory]
-        [InlineData("WEE/AB1234CD/ATF")]
-        [InlineData("WEE/DE8562FG/ATF")]
+        [InlineData("WEE/AB1234CD/AE")]
+        [InlineData("WEE/DE8562FG/EXP")]
         public void ModelWithCorrectApprovalNumber_IsValid(string approvalNumber)
         {
-            var model = CreateValidAatfEditDetailsViewModel();
+            var model = CreateValidAeEditDetailsViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -85,8 +84,8 @@
         [Fact]
         public void Name_NameSet_SiteAddressNameGetsSet()
         {
-            var model = CreateValidAatfEditDetailsViewModel();
-            model.Name = "AATF Name";
+            var model = CreateValidAeEditDetailsViewModel();
+            model.Name = "AE Name";
 
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
@@ -96,7 +95,7 @@
         [InlineData(FacilityType.Ae)]
         public void Name_NoNameSet_ErrorMessageWithCorrectFacility(FacilityType type)
         {
-            var model = CreateValidAatfEditDetailsViewModel();
+            var model = CreateValidAeEditDetailsViewModel();
             model.Name = null;
             model.FacilityType = type;
 
@@ -117,9 +116,9 @@
             customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
         }
 
-        private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
+        private AeEditDetailsViewModel CreateValidAeEditDetailsViewModel()
         {
-            return fixture.Build<AatfEditDetailsViewModel>()
+            return fixture.Build<AeEditDetailsViewModel>()
                 .With(a => a.StatusList, Enumeration.GetAll<AatfStatus>())
                 .With(a => a.StatusValue, AatfStatus.Approved.Value)
                 .With(a => a.SizeList, Enumeration.GetAll<AatfSize>())
