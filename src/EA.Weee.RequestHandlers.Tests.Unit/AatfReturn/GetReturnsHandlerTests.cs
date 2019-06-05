@@ -109,9 +109,14 @@
 
             var result = await handler.HandleAsync(A.Dummy<GetReturns>());
 
-            result.Should().Contain(returnData.ElementAt(0));
-            result.Should().Contain(returnData.ElementAt(1));
-            result.Should().HaveCount(2);
+            result.ReturnsList.Should().Contain(returnData.ElementAt(0));
+            result.ReturnsList.Should().Contain(returnData.ElementAt(1));
+            result.ReturnsList.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void Task_HandleAsync_GivenOrganisation_ReturnQuarterShouldBeRetrieved()
+        {
         }
     }
 }

@@ -19,7 +19,11 @@
 
         public async Task<IList<Aatf>> FetchAatfsByOrganisationFacilityTypeListAndYear(Guid organisationId, int year, EA.Weee.Core.AatfReturn.FacilityType facilityType)
         {
-            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId && a.FacilityType.Value == (int)facilityType && a.ComplianceYear == year).ToListAsync();
+            return await context.Aatfs
+                .Where(a => a.Organisation.Id == organisationId 
+                            && a.FacilityType.Value == (int)facilityType 
+                            && a.ComplianceYear == year 
+                            && a.ApprovalDate.HasValue).ToListAsync();
         }
     }
 }

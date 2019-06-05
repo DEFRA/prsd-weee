@@ -34,13 +34,14 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
                 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019);
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2020);
-                await CreateAatf(database, organisation, FacilityType.Ae, 2019);
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2020, DateTime.Now);
+                await CreateAatf(database, organisation, FacilityType.Ae, 2019, DateTime.Now);
+                await CreateAatf(database, organisation, FacilityType.Ae, 2019, null);
 
                 var organisation2 = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation2, FacilityType.Aatf, 2019);
+                await CreateAatf(database, organisation2, FacilityType.Aatf, 2019, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -49,10 +50,11 @@
                 aatfs.Count.Should().Be(1);
                 aatfs.Count(a => a.FacilityType != FacilityType.Aatf).Should().Be(0);
                 aatfs.Count(a => a.ComplianceYear != 2019).Should().Be(0);
+                aatfs.Count(a => !a.ApprovalDate.HasValue).Should().Be(0);
             }
         }
 
-        private async Task<Aatf> CreateAatf(DatabaseWrapper database, Organisation organisation, FacilityType facilityType, short year)
+        private async Task<Aatf> CreateAatf(DatabaseWrapper database, Organisation organisation, FacilityType facilityType, short year, DateTime? approvalDate)
         {
             var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
             var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
@@ -69,6 +71,11 @@
                 new AatfContact("first", "last", "position", "adress1", "address2", "town", "county", "postcode", country, "telephone", "email"), 
                 facilityType,
                 year);
+
+            if (!approvalDate.HasValue)
+            {
+                aatf.UpdateDetails("name", competentAuthority.Id, "12345678", AatfStatus.Approved, organisation, AatfSize.Large, null);
+            }
 
             database.WeeeContext.Aatfs.Add(aatf);
 

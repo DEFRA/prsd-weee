@@ -19,7 +19,7 @@
     using FacilityType = Core.AatfReturn.FacilityType;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
-    internal class GetReturnsHandler : IRequestHandler<GetReturns, IList<ReturnData>>
+    internal class GetReturnsHandler : IRequestHandler<GetReturns, ReturnsData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetPopulatedReturn getPopulatedReturn;
@@ -46,21 +46,21 @@
             this.returnFactory = returnFactory;
         }
 
-        public async Task<IList<ReturnData>> HandleAsync(GetReturns message)
+        public async Task<ReturnsData> HandleAsync(GetReturns message)
         {
             authorization.EnsureCanAccessExternalArea();
 
             var @returns = await returnDataAccess.GetByOrganisationId(message.OrganisationId);
 
-            var returnsData = new List<ReturnData>();
+            var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, FacilityType.Aatf);
 
-            await returnFactory.GetReturnQuarter(message.OrganisationId, FacilityType.Aatf);
+            var returnsData = new List<ReturnData>();
             foreach (var @return in @returns)
             {
                 returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
             }
 
-            return returnsData;
+            return new ReturnsData(returnsData, quarter);
         }
     }
 }

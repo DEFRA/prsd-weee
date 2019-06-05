@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.DataReturns;
     using DataAccess.DataAccess;
     using Prsd.Core;
 
@@ -33,9 +35,19 @@
 
             var aatfs = await returnFactoryDataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(organisationId, currentDate.Year, facilityType);
 
+            if (!aatfs.Any())
+            {
+                return null;
+            }
+
             var availableQuarterWindows = await quarterWindowFactory.GetQuarterWindowsForDate(currentDate);
 
-            return null;
+            if (!availableQuarterWindows.Any())
+            {
+                return null;
+            }
+
+            return new ReturnQuarter(2010, QuarterType.Q1);
         }
     }
 }

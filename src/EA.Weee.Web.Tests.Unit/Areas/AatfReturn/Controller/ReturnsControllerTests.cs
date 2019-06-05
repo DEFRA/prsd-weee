@@ -77,7 +77,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new List<ReturnData>();
+            var returns = new ReturnsData(A.Fake<IList<ReturnData>>(), A.Fake<ReturnQuarter>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
@@ -143,7 +143,7 @@
         }
 
         [Fact]
-        public async void CopyPost_UserShouldBeRedirectedToTasklist()
+        public async void CopyPost_UserShouldBeRedirectedToTaskList()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
