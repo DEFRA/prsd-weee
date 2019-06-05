@@ -22,11 +22,11 @@
         public string Address2 { get; set; }
 
         [Required]
-        [StringLength(CommonMaxFieldLengths.AddressLine)]
+        [StringLength(CommonMaxFieldLengths.TownCounty)]
         [Display(Name = "Town or city")]
         public string TownOrCity { get; set; }
 
-        [StringLength(CommonMaxFieldLengths.AddressLine)]
+        [StringLength(CommonMaxFieldLengths.TownCounty)]
         [Display(Name = "County or region")]
         public string CountyOrRegion { get; set; }
         
