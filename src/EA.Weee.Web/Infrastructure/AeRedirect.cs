@@ -7,6 +7,7 @@
     public static class AeRedirect
     {
         public static string ReturnsRouteName = "ae-returns";
+        public static string SchemesRouteName = "scheme";
 
         public static RedirectToRouteResult ReturnsList(Guid organisationId)
         {
@@ -21,6 +22,10 @@
         public static RedirectToRouteResult NilReturn(Guid organisationId)
         {
             return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "NilReturn", organisationId = organisationId }));
+        }
+        public static RedirectToRouteResult Confirmation(Guid organisationId)
+        {
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Confirmation", organisationId = organisationId }));
         }
     }
 }

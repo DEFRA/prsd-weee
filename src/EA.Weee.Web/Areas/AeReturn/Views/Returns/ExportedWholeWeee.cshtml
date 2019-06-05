@@ -1,39 +1,38 @@
-﻿@using EA.Weee.Web.Extensions
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.AeReturn.Controllers
-@using MvcNavigationHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @model EA.Weee.Web.Areas.AeReturn.ViewModels.ExportedWholeWeeeViewModel
 @{
     ViewBag.Title = "Have you exported any whole WEEE? - GOV.UK";
 }
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">
-        Have you exported any whole WEEE?
-    </h1>
-
-    <p class="govuk-body">
-        This should not include any WEEE treated or partially treated, either by you or another AATF
-    </p>
-
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column">
+            <h1 class="govuk-heading-l">
+                Have you exported any whole WEEE?
+            </h1>
+
+            <p class="govuk-body">
+                This should not include any WEEE treated or partially treated, either by you or another AATF
+            </p>
             @using (Html.BeginForm("ExportedWholeWeee", "Returns", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
+                @Html.Gds().ValidationSummary()
 
                 <div class="govuk-form-group" id="ExportedWeeeOptions">
                     <fieldset class="govuk-fieldset inline">
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
                                 <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes">
-                                <input class="govuk-radios__input" id="WeeeSelectedValue-0" name="WeeeSelectedValue" type="radio" value="Yes">
+                                <input class="govuk-radios__input" id="WeeeSelectedValue-0" name="WeeeSelectedValue" type="radio" value="Yes" onClick="showWarning(true)">
                                 <label for="WeeeSelectedValue-0" class="govuk-label govuk-radios__label">Yes</label>
+                            </div>
+                            <div class="dcf-section hidden" id="yes-warning" aria-hidden="true">
+                                <label class="govuk-label">Contact your environmental regulator to disclose what kind of whole WEEE you have exported</label>
                             </div>
                             <div class="govuk-radios__item">
                                 <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No">
-                                <input class="govuk-radios__input" id="WeeeSelectedValue-1" name="WeeeSelectedValue" type="radio" value="No">
+                                <input class="govuk-radios__input" id="WeeeSelectedValue-1" name="WeeeSelectedValue" type="radio" value="No" onClick="showWarning(false)">
                                 <label for="WeeeSelectedValue-1" class="govuk-label govuk-radios__label">No</label>
                             </div>
                         </div>
@@ -47,3 +46,20 @@
         </div>
     </div>
 </section>
+
+
+@section scripts
+{
+    <script>
+        function showWarning(show) {
+
+            var warningText = $("#yes-warning");
+
+            if (show == true) {
+                warningText.removeClass('hidden');
+            } else {
+                warningText.addClass('hidden');
+            }
+        }
+    </script>
+}

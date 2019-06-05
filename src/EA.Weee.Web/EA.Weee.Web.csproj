@@ -323,6 +323,8 @@
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
     <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
+    <Compile Include="Areas\AeReturn\ViewModels\NilReturnViewModel.cs" />
+    <Compile Include="Areas\AeReturn\ViewModels\ConfirmationViewModel.cs" />
     <Compile Include="Infrastructure\AeRedirect.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
@@ -925,6 +927,8 @@
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AeReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\ExportedWholeWeee.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

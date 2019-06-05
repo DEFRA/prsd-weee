@@ -66,14 +66,60 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExportedWholeWeee(Guid organisationId, ExportedWholeWeeeViewModel viewModel)
+        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId, ExportedWholeWeeeViewModel viewModel)
         {
-            if (viewModel.WeeeSelectedValue == "yes")
+            if (!ModelState.IsValid)
+            {
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
+                return View(viewModel);
+            }
+
+            if (viewModel.WeeeSelectedValue == YesNoEnum.Yes)
             {
                 return AeRedirect.ReturnsList(organisationId);
             }
 
             return AeRedirect.NilReturn(organisationId);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> NilReturn(Guid organisationId)
+        {
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
+
+            NilReturnViewModel viewModel = new NilReturnViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult NilReturnConfirm(Guid organisationId)
+        {
+            return AeRedirect.Confirmation(organisationId);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Confirmation(Guid organisationId)
+        {
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
+
+            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Confirmation(ConfirmationViewModel model)
+        {
+            return await Task.Run<ActionResult>(() =>
+                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.OrganisationId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

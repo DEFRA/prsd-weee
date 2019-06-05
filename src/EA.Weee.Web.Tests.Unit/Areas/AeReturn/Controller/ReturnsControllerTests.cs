@@ -5,7 +5,9 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AeReturn.Controllers;
+    using EA.Weee.Web.Areas.AeReturn.ViewModels;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns;
@@ -22,12 +24,14 @@
         private readonly ReturnsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
+        private readonly Guid organisationId;
 
         public ReturnsControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
+            organisationId = Guid.NewGuid();
 
             controller = new ReturnsController(() => weeeClient, breadcrumb, A.Fake<IWeeeCache>(), mapper);
         }
@@ -41,7 +45,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
+            ViewResult result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -57,8 +61,6 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
         {
-            var organisationId = Guid.NewGuid();
-
             await controller.Index(organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>.That.Matches(r => r.OrganisationId.Equals(organisationId))))
@@ -68,7 +70,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new List<ReturnData>();
+            List<ReturnData> returns = new List<ReturnData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
@@ -80,17 +82,112 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
         {
-            var model = new ReturnsViewModel();
-            var organisationId = Guid.NewGuid();
+            ReturnsViewModel model = new ReturnsViewModel();
 
             A.CallTo(() => mapper.Map<ReturnsViewModel>(A<IList<ReturnData>>._)).Returns(model);
 
-            var result = await controller.Index(organisationId) as ViewResult;
+            ViewResult result = await controller.Index(organisationId) as ViewResult;
 
             var returnedModel = (ReturnsViewModel)model;
             
             returnedModel.Should().Be(model);
             returnedModel.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async void GetExportedWholeWeee_GivenOrganisation_DefaultViewShouldBeReturned()
+        {
+            ViewResult result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void GetExportedWholeWeee_BreadCrumbShouldBeSet()
+        {
+            await controller.ExportedWholeWeee(A.Dummy<Guid>());
+
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
+        }
+
+        [Theory]
+        [InlineData(YesNoEnum.Yes, "Index")]
+        [InlineData(YesNoEnum.No, "NilReturn")]
+        public async void PostExportedWholeWeee_SelectedValueGiven_CorrectRedirectHappens(YesNoEnum selectedValue, string action)
+        {
+            ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel()
+            {
+                WeeeSelectedValue = selectedValue
+            };
+
+            RedirectToRouteResult result = await controller.ExportedWholeWeee(organisationId, viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be(action);
+            result.RouteValues["controller"].Should().Be("Returns");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
+        }
+
+        [Fact]
+        public async void PostExportedWholeWeee_NoValueSelected_ReturnsViewWithViewModelAndBreadCrumbSet()
+        {
+            ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel();
+
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ViewResult result = await controller.ExportedWholeWeee(organisationId, viewModel) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
+        }
+
+        [Fact]
+        public async void GetNilResult_BreadCrumbSet_ViewReturnedWithModel()
+        { 
+            ViewResult result = await controller.NilReturn(organisationId) as ViewResult;
+
+            NilReturnViewModel viewModel = result.Model as NilReturnViewModel;
+
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
+        }
+
+        [Fact]
+        public void PostNilResult_RedirectToReturnsList()
+        {
+            RedirectToRouteResult result = controller.NilReturnConfirm(organisationId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Confirmation");
+            result.RouteValues["controller"].Should().Be("Returns");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
+        }
+
+        [Fact]
+        public async void GetConfirmation_BreadCrumbIsSet_ReturnedWithViewModel()
+        {
+            ViewResult result = await controller.Confirmation(organisationId) as ViewResult;
+
+            ConfirmationViewModel viewModel = result.Model as ConfirmationViewModel;
+
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
+        }
+
+        [Fact]
+        public async void PostConfirmation_RedirectsToChooseActivity()
+        {
+            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            RedirectToRouteResult result = await controller.Confirmation(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ChooseActivity");
+            result.RouteValues["controller"].Should().Be("Home");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["area"].Should().Be("Scheme");
         }
     }
 }
