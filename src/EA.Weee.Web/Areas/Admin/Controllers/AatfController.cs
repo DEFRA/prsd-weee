@@ -136,7 +136,7 @@
                 var viewModel = mapper.Map<AatfEditDetailsViewModel>(aatf);
                 var accessToken = User.GetAccessToken();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
-                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
+                viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
                 SetBreadcrumb(aatf.FacilityType);
                 return View(viewModel);
@@ -147,14 +147,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
-            // This is here because we don't display the site address name, but the view model for it makes it required. There is also
-            // custom validation for the AATF/AE name property which copies the value into the SiteAddressName field, so if the name property
-            // is empty, it will display an error for siteAddressName. This removed that error.
-            if (ModelState.ContainsKey("SiteAddress.Name"))
-            {
-                ModelState["SiteAddress.Name"].Errors.Clear();
-            }
-
+            PreventSiteAddressNameValidationErrors();
             SetBreadcrumb(viewModel.FacilityType);
 
             if (ModelState.IsValid)
@@ -179,7 +172,7 @@
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
-                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
+                viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 
             return View(viewModel);
