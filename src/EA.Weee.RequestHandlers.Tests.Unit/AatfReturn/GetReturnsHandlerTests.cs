@@ -27,6 +27,8 @@
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IReturnFactory returnFactory;
+
         private readonly Fixture fixture;
 
         public GetReturnsHandlerTests()
@@ -36,6 +38,8 @@
             aatfDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            returnFactory = A.Fake<IReturnFactory>();
+
             fixture = new Fixture();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
@@ -45,7 +49,8 @@
                 returnDataAccess,
                 aatfDataAccess,
                 quarterWindowFactory,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                returnFactory);
         }
 
         [Fact]
@@ -58,7 +63,8 @@
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
                 A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<ISystemDataDataAccess>());
+                A.Dummy<ISystemDataDataAccess>(),
+                A.Dummy<IReturnFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 

@@ -98,7 +98,7 @@
   <ItemGroup>
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
-    <Compile Include="AatfReturn\Factory\ReturnFactoryTests.cs" />
+    <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandlerTests.cs" />
@@ -361,7 +361,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AatfReturn\Factory\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

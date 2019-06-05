@@ -1,25 +1,18 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.Factory
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Factories
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Validation;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
     using Charges;
-    using Domain;
     using Domain.AatfReturn;
-    using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.AatfTaskList;
-    using RequestHandlers.AatfReturn.Factory;
+    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
-    using Country = Weee.Tests.Core.Model.Country;
     using Organisation = Domain.Organisation.Organisation;
 
     public class ReturnFactoryDataAccessTests
@@ -51,7 +44,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var aatfs = await dataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(organisation.Id, 2019, FacilityType.Aatf);
+                var aatfs = await dataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(organisation.Id, 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
                 aatfs.Count.Should().Be(1);
                 aatfs.Count(a => a.FacilityType != FacilityType.Aatf).Should().Be(0);

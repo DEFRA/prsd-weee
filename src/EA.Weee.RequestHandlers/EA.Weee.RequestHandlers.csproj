@@ -73,8 +73,10 @@
     <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
-    <Compile Include="AatfReturn\Factory\ReturnFactory.cs" />
-    <Compile Include="AatfReturn\Factory\ReturnFactoryDataAccess.cs" />
+    <Compile Include="Factories\IReturnFactory.cs" />
+    <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
+    <Compile Include="Factories\ReturnFactory.cs" />
+    <Compile Include="Factories\ReturnFactoryDataAccess.cs" />
     <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
     <Compile Include="AatfReturn\CopyReturnHandler.cs" />
@@ -483,6 +485,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AatfReturn\Factory\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

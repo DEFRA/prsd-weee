@@ -16,6 +16,7 @@
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
+    using FacilityType = Core.AatfReturn.FacilityType;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, IList<ReturnData>>
@@ -26,13 +27,15 @@
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IReturnFactory returnFactory;
 
         public GetReturnsHandler(IWeeeAuthorization authorization,
             IGetPopulatedReturn getPopulatedReturn, 
             IReturnDataAccess returnDataAccess, 
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
             IQuarterWindowFactory quarterWindowFactory, 
-            ISystemDataDataAccess systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess, 
+            IReturnFactory returnFactory)
         {
             this.authorization = authorization;
             this.getPopulatedReturn = getPopulatedReturn;
@@ -40,6 +43,7 @@
             this.aatfDataAccess = aatfDataAccess;
             this.quarterWindowFactory = quarterWindowFactory;
             this.systemDataDataAccess = systemDataDataAccess;
+            this.returnFactory = returnFactory;
         }
 
         public async Task<IList<ReturnData>> HandleAsync(GetReturns message)
@@ -50,6 +54,7 @@
 
             var returnsData = new List<ReturnData>();
 
+            await returnFactory.GetReturnQuarter(message.OrganisationId, FacilityType.Aatf);
             foreach (var @return in @returns)
             {
                 returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
