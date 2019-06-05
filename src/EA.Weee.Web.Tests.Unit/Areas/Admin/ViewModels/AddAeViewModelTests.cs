@@ -13,7 +13,7 @@
     using FluentValidation.Attributes;
     using Xunit;
 
-    public class AddAatfViewModelTests
+    public class AddAeViewModelTests
     {
         [Theory]
         [InlineData("Wee/AB1234CD/SCH")]
@@ -22,11 +22,10 @@
         [InlineData("WEE/891234CD/SCH")]
         [InlineData("WEE/AB1DF4CD/SCH")]
         [InlineData("WEE/AB123482/SCH")]
-        [InlineData("WEE/AB1234CD/AE")]
-        [InlineData("WEE/AB1234CD/EXP")]
+        [InlineData("WEE/AB1234CD/ATF")]
         public void ModelWithIncorrectApprovalNumber_IsInvalid(string approvalNumber)
         {
-            var model = ValidAddAatfViewModel();
+            var model = ValidAddAeViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -37,11 +36,11 @@
         }
 
         [Theory]
-        [InlineData("WEE/AB1234CD/ATF")]
-        [InlineData("WEE/DE8562FG/ATF")]
+        [InlineData("WEE/AB1234CD/AE")]
+        [InlineData("WEE/DE8562FG/EXP")]
         public void ModelWithCorrectApprovalNumber_IsValid(string approvalNumber)
         {
-            var model = ValidAddAatfViewModel();
+            var model = ValidAddAeViewModel();
             model.ApprovalNumber = approvalNumber;
 
             var context = new ValidationContext(model, null, null);
@@ -52,30 +51,32 @@
         }
 
         [Fact]
-        public void ModelAatfNameIsSet_SiteAddressNameGetsSetAswell()
+        public void ModelAeNameIsSet_SiteAddressNameGetsSetAswell()
         {
-            var model = new AddAatfViewModel();
-            model.Name = "test name";
+            var model = new AddAeViewModel
+            {
+                Name = "test name"
+            };
 
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
         [Fact]
-        public void AddAatfViewModel_ClassHasValidatorAttribute()
+        public void AddAeViewModel_ClassHasValidatorAttribute()
         {
-            var t = typeof(AddAatfViewModel);
-            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
+            var t = typeof(AddAeViewModel);
+            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as ValidatorAttribute;
 
             customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
         }
 
-        private AddAatfViewModel ValidAddAatfViewModel()
+        private AddAeViewModel ValidAddAeViewModel()
         {
-            return new AddAatfViewModel
+            return new AddAeViewModel
             {
                 Name = "a name",
                 SiteAddressData = new AatfAddressData(),
-                ApprovalNumber = "WEE/AA0123AA/ATF",
+                ApprovalNumber = "WEE/AA0123AA/AE",
                 CompetentAuthoritiesList = new List<UKCompetentAuthorityData>(),
                 CompetentAuthorityId = new Guid(),
                 StatusList = Enumeration.GetAll<AatfStatus>(),
