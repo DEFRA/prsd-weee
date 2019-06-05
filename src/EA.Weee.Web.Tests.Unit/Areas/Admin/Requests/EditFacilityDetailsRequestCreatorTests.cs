@@ -8,15 +8,15 @@
     using FluentAssertions;
     using Xunit;
 
-    public class EditAatfDetailsRequestCreatorTests
+    public class EditFacilityDetailsRequestCreatorTests
     {
         private readonly Fixture fixture;
-        private readonly IEditAatfDetailsRequestCreator requestCreator;
+        private readonly IEditFacilityDetailsRequestCreator requestCreator;
 
-        public EditAatfDetailsRequestCreatorTests()
+        public EditFacilityDetailsRequestCreatorTests()
         {
             fixture = new Fixture();
-            requestCreator = new EditAatfDetailsRequestCreator();
+            requestCreator = new EditFacilityDetailsRequestCreator();
         }
 
         [Fact]
@@ -38,6 +38,7 @@
             result.Data.AatfStatus.Should().Be(AatfStatus.Approved);
             result.Data.SiteAddress.Should().Be(viewModel.SiteAddressData);
             result.Data.Size.Should().Be(AatfSize.Large);
+            result.Data.FacilityType.Should().Be(viewModel.FacilityType);
             result.Data.ApprovalDate.Should().Be(viewModel.ApprovalDate.GetValueOrDefault());
         }
     }
