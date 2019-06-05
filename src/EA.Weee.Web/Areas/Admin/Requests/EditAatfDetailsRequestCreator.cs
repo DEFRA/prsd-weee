@@ -19,7 +19,7 @@
                     viewModel.ComplianceYear,
                     viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
                     Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
-                    viewModel.SiteAddress,
+                    viewModel.SiteAddressData,
                     Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                     viewModel.ApprovalDate.GetValueOrDefault())
             };

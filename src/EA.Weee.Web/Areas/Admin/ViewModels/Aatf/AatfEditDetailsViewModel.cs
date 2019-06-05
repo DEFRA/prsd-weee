@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataStandards;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
 
     public class AatfEditDetailsViewModel : FacilityViewModelBase
@@ -12,7 +11,7 @@
         public AatfEditDetailsViewModel()
         {
             FacilityType = FacilityType.Aatf;
-            this.SiteAddress = new AatfAddressData();
+            this.SiteAddressData = new AatfAddressData();
         }
 
         [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/ATF", ErrorMessage = "Approval number is not in correct format")]
@@ -21,9 +20,8 @@
         public Guid Id { get; set; }
 
         private string aatfName;
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "Name of AATF")]
-        public string Name
+        public override string Name
         {
             get => this.aatfName;
 
@@ -31,14 +29,14 @@
             {
                 this.aatfName = value;
 
-                if (this.SiteAddress != null)
+                if (this.SiteAddressData != null)
                 {
-                    this.SiteAddress.Name = value;
+                    this.SiteAddressData.Name = value;
                 }
             }
         }
 
-        public AatfAddressData SiteAddress { get; set; }
+        public AatfAddressData SiteAddressData { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
