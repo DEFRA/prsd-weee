@@ -62,19 +62,19 @@
         }
 
         [Fact]
-        public void CreateAddress_AddressLine1Is36Characters_ShouldThrowInvalidOperationException()
+        public void CreateAddress_AddressLine1Is61Characters_ShouldThrowInvalidOperationException()
         {
             var countrydata = GetTestCountry(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address(CharacterString(36), "NR", "R", "NR", "NR", countrydata, "R", "R"));
+                () => new Address(CharacterString(61), "NR", "R", "NR", "NR", countrydata, "R", "R"));
         }
 
         [Fact]
-        public void CreateAddress_AddressLine2Is36Characters_ShouldThrowInvalidOperationException()
+        public void CreateAddress_AddressLine2Is61Characters_ShouldThrowInvalidOperationException()
         {
             var countrydata = GetTestCountry(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", CharacterString(36), "R", "NR", "NR", countrydata, "R", "R"));
+                () => new Address("R", CharacterString(61), "R", "NR", "NR", countrydata, "R", "R"));
         }
 
         [Fact]

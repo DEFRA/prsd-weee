@@ -6,7 +6,8 @@
         public const int LastName = 35;
         public const int Position = 35;
         public const int FullName = 70;
-        public const int AddressLine = 35;
+        public const int AddressLine = 60;
+        public const int TownCounty = 35;
         public const int DefaultString = 256;
         public const int EmailAddress = 256;
         public const int Postcode = 10;
