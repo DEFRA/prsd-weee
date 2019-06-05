@@ -5,14 +5,14 @@
     using FluentValidation;
     using FluentValidation.Results;
 
-    public class AatfViewModelValidator : AbstractValidator<AatfViewModelBase>
+    public class ApprovalDateValidator : AbstractValidator<FacilityViewModelBase>
     {
-        public AatfViewModelValidator()
+        public ApprovalDateValidator()
         {
             RuleFor(o => o.ApprovalDate)
                 .Custom((o, context) =>
                 {
-                    var instance = context.InstanceToValidate as AatfViewModelBase;
+                    var instance = context.InstanceToValidate as FacilityViewModelBase;
 
                     if (instance?.ApprovalDate != null)
                     {

@@ -25,7 +25,7 @@
             IList<ValidationResult> result = model.Validate(validationContext).ToList();
 
             Assert.True(result.Count() > 0);
-            Assert.Equal(string.Format("You must select an {0} to manage", type), result[0].ErrorMessage);
+            Assert.Equal(string.Format("You must select an {0} to manage", type.ToString().ToUpper()), result[0].ErrorMessage);
         }
     }
 }

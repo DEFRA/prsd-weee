@@ -42,6 +42,12 @@
         }
 
         [Fact]
+        public void ReturnsController_ShouldHaveValidateOrganisationActionFilterAttribute()
+        {
+            typeof(ReturnsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
+        }
+
+        [Fact]
         public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;

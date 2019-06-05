@@ -6,9 +6,9 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AatfViewModelValidatorTests
+    public class ApprovalDateValidatorTests
     {
-        private AatfViewModelValidator validator;
+        private ApprovalDateValidator validator;
 
         [Theory]
         [InlineData("2018/12/31")]
@@ -18,7 +18,7 @@
             var model = GenerateViewModel();
             model.ApprovalDate = Convert.ToDateTime(input);
 
-            validator = new AatfViewModelValidator();
+            validator = new ApprovalDateValidator();
             var validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
@@ -35,20 +35,20 @@
             var model = GenerateViewModel();
             model.ApprovalDate = Convert.ToDateTime(input);
 
-            validator = new AatfViewModelValidator();
+            validator = new ApprovalDateValidator();
             var validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeTrue();
             validationResult.Errors.Count.Should().Be(0);
         }
 
-        private AatfViewModelBase GenerateViewModel()
+        private FacilityViewModelBase GenerateViewModel()
         {
-            var model = new AddAatfViewModel()
+            var model = new AddAatfViewModel
             {
-                ComplianceYear = (Int16)2019
+                ComplianceYear = 2019
             };
-            return model as AatfViewModelBase;
+            return model as FacilityViewModelBase;
         }
     }
 }

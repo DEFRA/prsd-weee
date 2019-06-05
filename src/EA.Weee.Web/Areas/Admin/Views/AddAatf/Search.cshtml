@@ -1,24 +1,25 @@
-﻿@using EA.Weee.Core.AatfReturn
-@using EA.Weee.Core.DataStandards
+﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.SearchViewModel
 @{
-    ViewBag.Title = "Add Organisation to AATF";
+    ViewBag.Title = "Add Organisation to " +  Model.FacilityType.ToDisplayString();
 }
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Add an AATF to an organisation</h1>
+        <h1 class="govuk-heading-l">Add an @Model.FacilityType.ToDisplayString() to an organisation</h1>
     </header>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.FacilityType)
 
         <p>
-            Search for an organisation that you wish to add an AATF to
+            Search for an organisation that you wish to add an @Model.FacilityType.ToDisplayString() to
         </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
@@ -31,7 +32,7 @@
         </div>
 
         <p>
-            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(FacilityType.Aatf)))">Back</a>
+            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
         </p>
 
         <p>
