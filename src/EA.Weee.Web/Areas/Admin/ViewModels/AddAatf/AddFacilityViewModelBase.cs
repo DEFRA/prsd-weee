@@ -3,14 +3,13 @@
     using System;
     using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
 
     public abstract class AddFacilityViewModelBase : FacilityViewModelBase
     {
         public Guid OrganisationId { get; set; }
 
         public string OrganisationName { get; set; }
-
-        public AatfAddressData SiteAddressData { get; set; }
 
         public AatfContactData ContactData { get; set; }
 
