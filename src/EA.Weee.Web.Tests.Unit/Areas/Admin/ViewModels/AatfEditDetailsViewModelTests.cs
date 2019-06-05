@@ -62,6 +62,7 @@
         {
             var requiredProperties = new List<string>
             {
+                "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
                 "ApprovalDate",
