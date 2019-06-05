@@ -43,9 +43,9 @@
             private set
             {
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 35)
+                if (value.Length > 60)
                 {
-                    throw new InvalidOperationException(string.Format(("Address1 cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(string.Format(("Address1 cannot be greater than 60 characters")));
                 }
                 address1 = value;
             }
@@ -56,9 +56,9 @@
             get => address2;
             private set
             {
-                if (value != null && value.Length > 35)
+                if (value != null && value.Length > 60)
                 {
-                    throw new InvalidOperationException(string.Format(("Address2 cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(string.Format(("Address2 cannot be greater than 60 characters")));
                 }
                 address2 = value;
             }

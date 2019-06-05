@@ -8,70 +8,97 @@
 
     public class AatfAddressTests
     {
-        [Theory]
-        [InlineData("")]
-        public void Aatf_GivenNameIsEmpty_ThrowsArgumentException(string value)
+        [Fact]
+        public void AatfAddress_GivenNameIsGreaterThan256Characters_ThrowsArgumentException()
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
+                var @return = new AatfAddress(new string('*', 257), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
         }
 
         [Fact]
-        public void Aatf_GivenNameIsNull_ThrowsArgumentNullException()
+        public void AatfAddress_GivenAddress1IsGreaterThan60Characters_ThrowsArgumentException()
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
-            };
-
-            constructor.Should().Throw<ArgumentException>();
-        }
-
-        [Theory]
-        [InlineData("")]
-        public void Aatf_GiveAddress1IsEmpty_ThrowsArgumentException(string value)
-        {
-            Action constructor = () =>
-            {
-                var @return = new AatfAddress(A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
+                var @return = new AatfAddress(A.Dummy<string>(), new string('*', 61), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
         }
 
         [Fact]
-        public void Aatf_GivenAddress1IsNull_ThrowsArgumentNullException()
+        public void AatfAddress_GivenAddress2IsGreaterThan60Characters_ThrowsArgumentException()
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
-            };
-
-            constructor.Should().Throw<ArgumentException>();
-        }
-
-        [Theory]
-        [InlineData("")]
-        public void Aatf_GiveTownOrCityIsEmpty_ThrowsArgumentException(string value)
-        {
-            Action constructor = () =>
-            {
-                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), value, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), new string('*', 61), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
         }
 
         [Fact]
-        public void Aatf_GivenTownOrCityIsNull_ThrowsArgumentNullException()
+        public void AatfAddress_GivenTownOrCityIsGreaterThan35Characters_ThrowsArgumentException()
         {
             Action constructor = () =>
             {
-                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), new string('*', 36), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
+            };
+
+            constructor.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void AatfAddress_GivenCountyOrRegionIsGreaterThan35Characters_ThrowsArgumentException()
+        {
+            Action constructor = () =>
+            {
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), new string('*', 36), A.Dummy<string>(), A.Dummy<Country>());
+            };
+
+            constructor.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void AatfAddress_GivenPostcodeIsGreaterThan10Characters_ThrowsArgumentException()
+        {
+            Action constructor = () =>
+            {
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), new string('*', 11), A.Dummy<Country>());
+            };
+
+            constructor.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void AatfAddress_GiveCountryIsNull_ThrowsArgumentException()
+        {
+            Action constructor = () =>
+            {
+                var @return = new AatfAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), null);
+            };
+
+            constructor.Should().Throw<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("", "-", "-")]
+        [InlineData(null, "-", "-")]
+
+        [InlineData("-", "", "-")]
+        [InlineData("-", null, "-")]
+
+        [InlineData("-", "-", "")]
+        [InlineData("-", "-", null)]
+        public void AatfContact_GivenNullOrEmptyRequiredParameters_ThrowsArgumentException(string name, string address, string town)
+        {
+            Action constructor = () =>
+            {
+                var @return = new AatfAddress(name, address, A.Dummy<string>(), town, A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>());
             };
 
             constructor.Should().Throw<ArgumentException>();
