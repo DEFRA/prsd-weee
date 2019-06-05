@@ -337,6 +337,7 @@
 
         private async Task<ActionResult> AddFacility(AddFacilityViewModelBase viewModel)
         {
+            PreventSiteAddressNameValidationErrors();
             SetBreadcrumb(viewModel.FacilityType);
             viewModel = await PopulateViewModelLists(viewModel);
 

@@ -85,7 +85,7 @@
             var model = CreateValidAatfEditDetailsViewModel();
             model.Name = "AATF Name";
 
-            Assert.Equal(model.Name, model.SiteAddress.Name);
+            Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
         [Theory]

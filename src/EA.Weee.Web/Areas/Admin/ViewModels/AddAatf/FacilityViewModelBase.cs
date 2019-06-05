@@ -13,6 +13,10 @@
     public abstract class FacilityViewModelBase
     {
         [Required]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        public abstract string Name { get; set; }
+
+        [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber)]
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
