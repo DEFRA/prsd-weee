@@ -1,21 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
-    using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
-    using Factories;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, IList<ReturnData>>
     {
@@ -40,7 +31,7 @@
 
             var returnsData = new List<ReturnData>();
 
-            foreach (var @return in @returns)
+            foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
             {
                 returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
             }
