@@ -18,15 +18,6 @@
         @Html.HiddenFor(m => m.AddressId)
         @Html.HiddenFor(m => m.OrganisationId)
 
-        <div class="govuk-form-group">
-            @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
-            {
-                <p>
-                    This is either your individual name or your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
-                </p> 
-            }
-        </div>
-        
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
