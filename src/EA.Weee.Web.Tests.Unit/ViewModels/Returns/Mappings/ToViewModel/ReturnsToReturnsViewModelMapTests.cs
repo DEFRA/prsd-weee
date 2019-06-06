@@ -1,31 +1,28 @@
-﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mappings.ToViewModel
 {
-    using Core.AatfReturn;
-    using Core.DataReturns;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Web.ViewModels.Returns;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Prsd.Core.Mapper;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AutoFixture;
+    using Core.AatfReturn;
+    using Core.DataReturns;
+    using Core.Organisations;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core.Mapper;
+    using Web.ViewModels.Returns;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Xunit;
 
     public class ReturnsToReturnsViewModelMapTests
     {
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
-        private readonly Fixture fixture;
         private readonly ReturnsToReturnsViewModelMap returnsMap;
 
         public ReturnsToReturnsViewModelMapTests()
         {
             returnItemViewModelMap = A.Fake<IMap<ReturnData, ReturnsItemViewModel>>();
             ordering = A.Fake<IReturnsOrdering>();
-            fixture = new Fixture();
 
             returnsMap = new ReturnsToReturnsViewModelMap(ordering, returnItemViewModelMap);
         }

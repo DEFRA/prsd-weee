@@ -40,20 +40,12 @@
         {
             SystemTime.Freeze(new DateTime(2019, 1, 2));
 
-            SetupDefaultAaatf();
-
             var result = await returnFactory.GetReturnQuarter(A.Dummy<Guid>(), A.Dummy<FacilityType>());
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>.That.Matches(d => d.Year.Equals(2019)
             && d.Month.Equals(1) && d.Day.Equals(2)))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
-        }
-
-        private void SetupDefaultAaatf()
-        {
-            A.CallTo(() => returnFactoryDataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(A<Guid>._, A<int>._, A<FacilityType>._))
-                .Returns(new List<Aatf>() { A.Fake<Aatf>() });
         }
 
         [Fact]
@@ -64,7 +56,6 @@
             var date = new DateTime(2020, 1, 3);
 
             SetupFixedDate(date);
-            SetupDefaultAaatf();
 
             var result = await returnFactory.GetReturnQuarter(A.Dummy<Guid>(), A.Dummy<FacilityType>());
 
@@ -72,17 +63,6 @@
                                                                                                        && d.Month.Equals(1) && d.Day.Equals(3)))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
-        }
-
-        [Fact]
-        public async Task GetReturnQuarter_GivenNoAatfs_NullShouldBeReturned()
-        {
-            A.CallTo(() => returnFactoryDataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(A<Guid>._, A<int>._, A<FacilityType>._))
-                .Returns(new List<Aatf>());
-
-            var result = await returnFactory.GetReturnQuarter(A.Dummy<Guid>(), A.Dummy<FacilityType>());
-
-            result.Should().BeNull();
         }
 
         [Fact]

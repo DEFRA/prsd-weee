@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
     using System;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using Prsd.Core.Mediator;
 
@@ -11,5 +12,7 @@
         public int Year { get; set; }
 
         public QuarterType Quarter { get; set; }
+
+        public FacilityType FacilityType { get; set; }
     }
 }

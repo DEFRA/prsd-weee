@@ -13,10 +13,12 @@
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
+    using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Requests.AatfReturn;
     using Weee.Tests.Core;
     using Xunit;
+    using FacilityType = Core.AatfReturn.FacilityType;
     using Organisation = Domain.Organisation.Organisation;
 
     public class AddReturnUploadHandlerTests
@@ -24,6 +26,8 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
+        private readonly IReturnFactoryDataAccess returnFactoryDataAccess;
+
         private AddReturnHandler handler;
 
         public AddReturnUploadHandlerTests()
@@ -32,8 +36,9 @@
             returnDataAccess = A.Fake<IReturnDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             userContext = A.Fake<IUserContext>();
+            returnFactoryDataAccess = A.Fake<IReturnFactoryDataAccess>();
 
-            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext);
+            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext, returnFactoryDataAccess);
         }
 
         [Fact]
@@ -44,7 +49,8 @@
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
-                A.Dummy<IUserContext>());
+                A.Dummy<IUserContext>(), 
+                A.Dummy<IReturnFactoryDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -59,7 +65,8 @@
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
-                A.Dummy<IUserContext>());
+                A.Dummy<IUserContext>(),
+                A.Dummy<IReturnFactoryDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -99,6 +106,19 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAddReturnRequestAndReturnAlreadyExists_InvalidOperationExceptionExpected()
+        {
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = 2019, Quarter = QuarterType.Q1, FacilityType = FacilityType.Aatf };
+
+            A.CallTo(() => returnFactoryDataAccess.ValidateReturnQuarter(request.OrganisationId, request.Year, (Domain.DataReturns.QuarterType)request.Quarter, request.FacilityType))
+                .Returns(true);
+
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            result.Should().BeOfType<InvalidOperationException>();
         }
     }
 }

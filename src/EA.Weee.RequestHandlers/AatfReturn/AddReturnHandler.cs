@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using Domain.Organisation;
     using Domain.User;
+    using Factories;
     using NonObligated;
     using Organisations;
     using Prsd.Core.Domain;
@@ -17,6 +18,7 @@
     using Requests.AatfReturn.NonObligated;
     using Security;
     using Specification;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     internal class AddReturnHandler : IRequestHandler<AddReturn, Guid>
     {
@@ -24,23 +26,33 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
+        private readonly IReturnFactoryDataAccess returnFactoryDataAccess;
 
         public AddReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
             IGenericDataAccess genericDataAccess, 
-            IUserContext userContext)
+            IUserContext userContext, 
+            IReturnFactoryDataAccess returnFactoryDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.genericDataAccess = genericDataAccess;
             this.userContext = userContext;
+            this.returnFactoryDataAccess = returnFactoryDataAccess;
         }
 
         public async Task<Guid> HandleAsync(AddReturn message)
         {
-            /* validate that return has not been already been created */
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
+
+            var existingReturn =
+                await returnFactoryDataAccess.ValidateReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
+
+            if (existingReturn)
+            {
+                throw new InvalidOperationException("Return already exists");
+            }
 
             var quarter = new Quarter(message.Year, (QuarterType)message.Quarter);
 
