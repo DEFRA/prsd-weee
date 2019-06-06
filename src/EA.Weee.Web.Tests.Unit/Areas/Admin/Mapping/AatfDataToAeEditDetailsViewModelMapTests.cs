@@ -9,15 +9,15 @@
     using FluentAssertions;
     using Xunit;
 
-    public class AatfDataToAatfEditDetailsViewModelMapTests
+    public class AatfDataToAeEditDetailsViewModelMapTests
     {
         private readonly Fixture fixture;
-        private readonly AatfDataToAatfEditDetailsViewModelMap map;
+        private readonly AatfDataToAeEditDetailsViewModelMap map;
 
-        public AatfDataToAatfEditDetailsViewModelMapTests()
+        public AatfDataToAeEditDetailsViewModelMapTests()
         {
             fixture = new Fixture();
-            map = new AatfDataToAatfEditDetailsViewModelMap();
+            map = new AatfDataToAeEditDetailsViewModelMap();
         }
 
         [Fact]
@@ -52,7 +52,7 @@
             Assert.Null(result.ApprovalDate);
         }
 
-        private static void AssertResults(AatfData aatfData, AatfEditDetailsViewModel result, Guid competentAuthorityId)
+        private static void AssertResults(AatfData aatfData, AeEditDetailsViewModel result, Guid competentAuthorityId)
         {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
