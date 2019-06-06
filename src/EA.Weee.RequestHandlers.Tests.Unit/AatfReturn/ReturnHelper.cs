@@ -14,7 +14,7 @@
             var organisation = new Organisation();
             var scheme = A.Fake<Scheme>();
 
-            return new Return(organisation, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
+            return new Return(organisation, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString(), FacilityType.Aatf);
         }
     }
 }

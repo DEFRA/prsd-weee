@@ -41,7 +41,7 @@
                 context.Schemes.Add(scheme);
 
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var @return = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
+                var @return = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
 
                 context.Returns.Add(@return);
                 await context.SaveChangesAsync();

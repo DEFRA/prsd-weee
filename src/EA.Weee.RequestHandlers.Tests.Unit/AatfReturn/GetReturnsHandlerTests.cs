@@ -50,7 +50,7 @@
         {
             var organisationId = Guid.NewGuid();
 
-            var result = await handler.HandleAsync(new GetReturns(organisationId));
+            var result = await handler.HandleAsync(new GetReturns(organisationId, Core.AatfReturn.FacilityType.Aatf));
 
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -61,12 +61,17 @@
             var organisationId = Guid.NewGuid();
             var returns = A.CollectionOfFake<Return>(2);
 
+            foreach (var @return in returns)
+            {
+                @return.FacilityType = Domain.AatfReturn.FacilityType.Aatf;
+            }
+
             A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
 
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).Returns(returns);
 
-            var result = await handler.HandleAsync(new GetReturns(organisationId));
+            var result = await handler.HandleAsync(new GetReturns(organisationId, Core.AatfReturn.FacilityType.Aatf));
 
             A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id))).MustHaveHappened(Repeated.Exactly.Once);
@@ -86,6 +91,43 @@
             result.Should().Contain(returnData.ElementAt(0));
             result.Should().Contain(returnData.ElementAt(1));
             result.Should().HaveCount(2);
+        }
+
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        public async Task HandleAsync_GivenFacilityType_CorrectReturnsReturned(Core.AatfReturn.FacilityType facilityType)
+        {
+            var organisationId = Guid.NewGuid();
+            var returns = A.CollectionOfFake<Return>(2);
+
+            foreach (var @return in returns)
+            {
+                @return.FacilityType = Domain.AatfReturn.FacilityType.Ae;
+            }
+
+            Return aatfReturn = A.Fake<Return>();
+            aatfReturn.FacilityType = Domain.AatfReturn.FacilityType.Aatf;
+            returns.Add(aatfReturn);
+
+            A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
+            A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
+            A.CallTo(() => returns.ElementAt(2).Id).Returns(Guid.NewGuid());
+
+            A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).Returns(returns);
+
+            var result = await handler.HandleAsync(new GetReturns(organisationId, facilityType));
+
+            if (facilityType == Core.AatfReturn.FacilityType.Ae)
+            {
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id))).MustHaveHappened(Repeated.Exactly.Once);
+            }
+
+            if (facilityType == Core.AatfReturn.FacilityType.Aatf)
+            {
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(2).Id))).MustHaveHappened(Repeated.Exactly.Once);
+            }
         }
     }
 }
