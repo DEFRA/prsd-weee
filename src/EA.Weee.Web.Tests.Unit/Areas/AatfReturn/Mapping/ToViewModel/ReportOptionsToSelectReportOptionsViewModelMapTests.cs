@@ -56,7 +56,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
             }
 
             var result = map.Map(new ReportOptionsToSelectReportOptionsViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReportOnQuestions = questions, ReturnData = @return });
@@ -76,7 +76,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
                 returnReportOns.Add(new ReturnReportOn(i + 1, @return.Id));
             }
 
@@ -99,7 +99,7 @@
 
             for (var i = 0; i < 4; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
                 returnReportOns.Add(new ReturnReportOn(i + 1, @return.Id));
             }
 
