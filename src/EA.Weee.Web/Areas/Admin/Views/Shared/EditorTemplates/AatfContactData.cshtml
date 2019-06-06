@@ -37,13 +37,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.TownOrCity)">
             @Html.Gds().LabelFor(m => m.AddressData.TownOrCity)
             @Html.Gds().ValidationMessageFor(m => m.AddressData.TownOrCity)
-            @Html.Gds().TextBoxFor(m => m.AddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.AddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.CountyOrRegion)">
             @Html.Gds().LabelFor(m => m.AddressData.CountyOrRegion)
             @Html.Gds().ValidationMessageFor(m => m.AddressData.CountyOrRegion)
-            @Html.Gds().TextBoxFor(m => m.AddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.AddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
