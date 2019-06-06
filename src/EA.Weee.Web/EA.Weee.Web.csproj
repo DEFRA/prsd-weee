@@ -323,6 +323,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
+    <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
@@ -431,7 +432,6 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Requests\EditFacilityDetailsRequestCreator.cs" />
     <Compile Include="Areas\Admin\Requests\IEditFacilityDetailsRequestCreator.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Validation\ApprovalDateValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddFacilityViewModelBase.cs" />

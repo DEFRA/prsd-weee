@@ -83,8 +83,8 @@
 
         private SelectReportOptionsViewModel GenerateViewModel()
         {
-            var nonObligatedQuestion = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), default(int));
-            var dcfQuestion = new ReportOnQuestion(DcfQuestionId, A.Dummy<string>(), A.Dummy<string>(), 1);
+            var nonObligatedQuestion = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
+            var dcfQuestion = new ReportOnQuestion(DcfQuestionId, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>());
 
             var model = new SelectReportOptionsViewModel()
             {

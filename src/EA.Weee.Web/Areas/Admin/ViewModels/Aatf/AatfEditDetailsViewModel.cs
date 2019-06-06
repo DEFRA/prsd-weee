@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
 
@@ -29,14 +28,6 @@
                 {
                     SiteAddressData.Name = value;
                 }
-            }
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                yield return new ValidationResult(string.Format("Enter name of {0}", FacilityType), new[] { "Name" });
             }
         }
     }
