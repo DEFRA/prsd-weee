@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Attributes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Core.AatfReturn;
+    using EA.Weee.Web.Infrastructure;
     using FakeItEasy;
     using FluentAssertions;
-    using Infrastructure;
     using Services;
+    using System;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
     using Xunit;

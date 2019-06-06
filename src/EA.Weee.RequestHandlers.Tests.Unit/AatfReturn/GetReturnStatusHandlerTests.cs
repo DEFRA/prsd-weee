@@ -173,7 +173,7 @@
 
         public Return GetReturn()
         {
-            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me") { ReturnStatus = ReturnStatus.Created };
+            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", A.Fake<FacilityType>()) { ReturnStatus = ReturnStatus.Created };
         }
     }
 }

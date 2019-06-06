@@ -46,6 +46,8 @@
 
             bundles.Add(new ScriptBundle("~/bundles/weee-checkbox-toggle-visibility").Include(
                 "~/Scripts/weee-checkbox-toggle-visibility.js"));
+            bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
+                "~/Scripts/show-warning.js"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
