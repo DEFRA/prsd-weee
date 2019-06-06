@@ -322,17 +322,6 @@
             breadcrumb.InternalOrganisation = organisation;
         }
 
-        [Theory]
-        [MemberData(nameof(Guids))]
-        
-        public async Task GetEditRegisteredCompanyOrganisationDetails_GivenSchemeIdAndAatfId_BreadCrumbShouldNotBeSet(Guid? schemeId, Guid? aatfId)
-        {
-            await controller.EditRegisteredCompanyOrganisationDetails(schemeId, A.Dummy<Guid>(), aatfId);
-
-            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
-            breadcrumb.InternalOrganisation.Should().BeEmpty();
-        }
-
         [Fact]
         public async Task GetEditRegisteredCompanyOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
         {
@@ -389,16 +378,6 @@
             breadcrumb.InternalOrganisation = organisation;
         }
 
-        [Theory]
-        [MemberData(nameof(Guids))]
-        public async Task GetEditEditSoleTraderOrIndividualOrganisationDetails_GivenSchemeIdAndAatfId_BreadCrumbShouldNotBeSet(Guid? schemeId, Guid? aatfId)
-        {
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(null, A.Dummy<Guid>(), null);
-
-            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
-            breadcrumb.InternalOrganisation.Should().BeEmpty();
-        }
-
         [Fact]
         public async Task GetEditEditSoleTraderOrIndividualOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
         {
@@ -439,18 +418,6 @@
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
-        }
-
-        [Theory]
-        [MemberData(nameof(Guids))]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenSchemeIdAndAatfId_BreadCrumbShouldNotBeSet(Guid? schemeId, Guid? aatfId)
-        {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>().WithAutoProperties().Create();
-
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
-
-            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
-            breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
         [Fact]
@@ -557,18 +524,6 @@
             var result = await controller.EditRegisteredCompanyOrganisationDetails(model) as ViewResult;
 
             result.ViewData.Should().BeEmpty();
-        }
-
-        [Theory]
-        [MemberData(nameof(Guids))]
-        public async Task PostEditRegisteredCompanyOrganisationDetails_GivenSchemeIdAndAatfId_BreadCrumbShouldNotBeSet(Guid? schemeId, Guid? aatfId)
-        {
-            var model = fixture.Build<EditRegisteredCompanyOrganisationDetailsViewModel>().WithAutoProperties().Create();
-
-            await controller.EditRegisteredCompanyOrganisationDetails(model);
-
-            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
-            breadcrumb.InternalOrganisation.Should().BeEmpty();
         }
 
         [Fact]
