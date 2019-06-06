@@ -87,21 +87,19 @@
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
-        [Theory]
-        [InlineData(FacilityType.Aatf)]
-        [InlineData(FacilityType.Ae)]
-        public void Name_NoNameSet_ErrorMessageWithCorrectFacility(FacilityType type)
+        [Fact]
+        public void Name_NoNameSet_ErrorMessageWithCorrectFacility()
         {
             var model = CreateValidAeEditDetailsViewModel();
             model.Name = null;
-            model.FacilityType = type;
 
-            ValidationContext validationContext = new ValidationContext(model, null, null);
+            var validationContext = new ValidationContext(model, null, null);
 
-            IList<ValidationResult> result = model.Validate(validationContext).ToList();
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(model, validationContext, results, true);
 
-            Assert.True(result.Count() > 0);
-            Assert.Equal(string.Format("Enter name of {0}", type), result[0].ErrorMessage);
+            Assert.False(isValid);
+            Assert.Equal("Enter name of AE", results[0].ErrorMessage);
         }
 
         private AeEditDetailsViewModel CreateValidAeEditDetailsViewModel()
