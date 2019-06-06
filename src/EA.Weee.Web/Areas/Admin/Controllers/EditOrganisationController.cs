@@ -195,9 +195,6 @@
 
         private async Task SetBreadcrumb(Guid? schemeId, Guid? aatfId, Guid organisationId)
         {
-            breadcrumb.InternalActivity = string.Empty;
-            breadcrumb.InternalOrganisation = string.Empty;
-
             if (schemeId.HasValue && !aatfId.HasValue)
             {
                 breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
@@ -206,7 +203,7 @@
             if (!schemeId.HasValue && aatfId.HasValue)
             {
                 breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
-                breadcrumb.InternalOrganisation = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
+                // leaving this here as suspect it will come back in breadcrumb.InternalOrganisation = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
             }
         }
     }

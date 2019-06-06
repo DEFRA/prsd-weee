@@ -28,7 +28,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
-        private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
+        private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
 
@@ -36,7 +36,7 @@
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IMapper mapper,
-            IEditAatfDetailsRequestCreator detailsRequestCreator,
+            IEditFacilityDetailsRequestCreator detailsRequestCreator,
             IEditAatfContactRequestCreator contactRequestCreator,
             IWeeeCache cache)
         {
@@ -133,13 +133,17 @@
                     return new HttpForbiddenResult();
                 }
 
-                var viewModel = mapper.Map<AatfEditDetailsViewModel>(aatf);
-                var accessToken = User.GetAccessToken();
-                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
-                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
-
                 SetBreadcrumb(aatf.FacilityType);
-                return View(viewModel);
+
+                switch (aatf.FacilityType)
+                {
+                    case FacilityType.Aatf:
+                        return View(await PopulateAndReturnViewModel<AatfEditDetailsViewModel>(aatf, client));
+                    case FacilityType.Ae:
+                        return View(await PopulateAndReturnViewModel<AeEditDetailsViewModel>(aatf, client));
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(aatf.FacilityType));
+                }
             }
         }
 
@@ -147,42 +151,14 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
-            // This is here because we don't display the site address name, but the view model for it makes it required. There is also
-            // custom validation for the AATF/AE name property which copies the value into the SiteAddressName field, so if the name property
-            // is empty, it will display an error for siteAddressName. This removed that error.
-            if (ModelState.ContainsKey("SiteAddress.Name"))
-            {
-                ModelState["SiteAddress.Name"].Errors.Clear();
-            }
+            return await ManageFacilityDetails(viewModel);
+        }
 
-            SetBreadcrumb(viewModel.FacilityType);
-
-            if (ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-                    var request = detailsRequestCreator.ViewModelToRequest(viewModel);
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
-
-                    await cache.InvalidateAatfCache(aatf.Organisation.Id);
-                }
-
-                return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
-            }
-
-            using (var client = apiClient())
-            {
-                var accessToken = User.GetAccessToken();
-                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
-                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
-                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
-                viewModel.SiteAddress.Countries = await client.SendAsync(accessToken, new GetCountries(false));
-            }
-
-            return View(viewModel);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageAeDetails(AeEditDetailsViewModel viewModel)
+        {
+            return await ManageFacilityDetails(viewModel);
         }
 
         [HttpGet]
@@ -245,6 +221,51 @@
             }
         }
 
+        private async Task<T> PopulateAndReturnViewModel<T>(AatfData facility, IWeeeClient client)
+            where T : FacilityViewModelBase
+        {
+            var viewModel = mapper.Map<T>(facility);
+
+            var accessToken = User.GetAccessToken();
+            viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+            viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
+
+            return viewModel;
+        }
+
+        private async Task<ActionResult> ManageFacilityDetails(FacilityViewModelBase viewModel)
+        {
+            PreventSiteAddressNameValidationErrors();
+            SetBreadcrumb(viewModel.FacilityType);
+
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                    var request = detailsRequestCreator.ViewModelToRequest(viewModel);
+                    await client.SendAsync(User.GetAccessToken(), request);
+
+                    var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
+
+                    await cache.InvalidateAatfCache(aatf.Organisation.Id);
+                }
+
+                return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
+            }
+
+            using (var client = apiClient())
+            {
+                var accessToken = User.GetAccessToken();
+                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
+                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
+                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
+            }
+
+            return View(nameof(ManageAatfDetails), viewModel);
+        }
+
         public virtual string GenerateSharedAddress(Core.Shared.AddressData address)
         {
             var siteAddressLong = address.Address1;
@@ -270,7 +291,7 @@
 
             return siteAddressLong;
         }
-                
+
         private void SetBreadcrumb(FacilityType type)
         {
             switch (type)
