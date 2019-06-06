@@ -340,7 +340,7 @@
         public Return GetReturn()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);
-            var @return = new Return(organisation, quarter, Guid.NewGuid().ToString()) { CreatedBy = new User("id", "first", "surname", "email") };
+            var @return = new Return(organisation, quarter, Guid.NewGuid().ToString(), FacilityType.Aatf) { CreatedBy = new User("id", "first", "surname", "email") };
 
             return @return;
         }

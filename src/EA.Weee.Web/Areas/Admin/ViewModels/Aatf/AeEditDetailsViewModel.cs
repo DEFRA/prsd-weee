@@ -31,13 +31,5 @@
                 }
             }
         }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                yield return new ValidationResult(string.Format("Enter name of {0}", FacilityType), new[] { "Name" });
-            }
-        }
     }
 }

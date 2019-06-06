@@ -39,7 +39,7 @@
                 await context.SaveChangesAsync();
 
                 var quarter = new Quarter(2019, QuarterType.Q1);
-                var aatfReturn = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id);
+                var aatfReturn = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
 
                 var categoryValues = new List<NonObligatedValue>();
 
@@ -97,7 +97,7 @@
                 const string companyRegistrationNumber = "ABC12345";
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
-                var @return = new Return(organisation, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id);
+                var @return = new Return(organisation, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
 
                 context.Organisations.Add(organisation);
                 context.Returns.Add(@return);

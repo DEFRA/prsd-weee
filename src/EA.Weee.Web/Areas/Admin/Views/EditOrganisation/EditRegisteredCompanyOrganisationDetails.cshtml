@@ -51,7 +51,7 @@
             <button class="govuk-button">Save and Continue</button>
         </div>
         <p>
-            <a href="javascript:history.back();">Back</a>
+            <a href="@(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = Model.AatfId }) + "#organisationDetails")">Back</a>
         </p>
     }
 

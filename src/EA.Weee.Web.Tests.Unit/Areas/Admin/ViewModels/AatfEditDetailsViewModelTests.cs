@@ -4,14 +4,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Reflection;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using FluentAssertions;
-    using FluentValidation.Attributes;
     using Xunit;
 
     public class AatfEditDetailsViewModelTests
@@ -91,30 +88,19 @@
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
-        [Theory]
-        [InlineData(FacilityType.Aatf)]
-        [InlineData(FacilityType.Ae)]
-        public void Name_NoNameSet_ErrorMessageWithCorrectFacility(FacilityType type)
+        [Fact]
+        public void Name_NoNameSet_ErrorMessageWithCorrectFacility()
         {
             var model = CreateValidAatfEditDetailsViewModel();
             model.Name = null;
-            model.FacilityType = type;
 
-            ValidationContext validationContext = new ValidationContext(model, null, null);
+            var validationContext = new ValidationContext(model, null, null);
 
-            IList<ValidationResult> result = model.Validate(validationContext).ToList();
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(model, validationContext, results, true);
 
-            Assert.True(result.Count() > 0);
-            Assert.Equal(string.Format("Enter name of {0}", type), result[0].ErrorMessage);
-        }
-
-        [Fact]
-        public void AatfEditDetailsViewModel_ClassHasValidatorAttribute()
-        {
-            var t = typeof(AatfEditDetailsViewModel);
-            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
-
-            customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
+            Assert.False(isValid);
+            Assert.Equal("Enter name of AATF", results[0].ErrorMessage);
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()
@@ -124,6 +110,8 @@
                 .With(a => a.StatusValue, AatfStatus.Approved.Value)
                 .With(a => a.SizeList, Enumeration.GetAll<AatfSize>())
                 .With(a => a.SizeValue, AatfSize.Large.Value)
+                .With(a => a.ApprovalDate, new DateTime(1991, 06, 01))
+                .With(a => a.ComplianceYear, 1991)
                 .Create();
         }
     }

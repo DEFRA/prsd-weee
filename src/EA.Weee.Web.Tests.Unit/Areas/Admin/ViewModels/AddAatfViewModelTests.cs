@@ -3,14 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Reflection;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using FluentAssertions;
-    using FluentValidation.Attributes;
     using Xunit;
 
     public class AddAatfViewModelTests
@@ -60,15 +56,6 @@
             Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
-        [Fact]
-        public void AddAatfViewModel_ClassHasValidatorAttribute()
-        {
-            var t = typeof(AddAatfViewModel);
-            var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
-
-            customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
-        }
-
         private AddAatfViewModel ValidAddAatfViewModel()
         {
             return new AddAatfViewModel
@@ -82,7 +69,8 @@
                 StatusValue = 1,
                 SizeList = Enumeration.GetAll<AatfSize>(),
                 SizeValue = 1,
-                ApprovalDate = DateTime.Now,
+                ApprovalDate = new DateTime(1991, 06, 01),
+                ComplianceYear = 1991,
                 ContactData = new AatfContactData(),
                 OrganisationId = Guid.NewGuid()
             };

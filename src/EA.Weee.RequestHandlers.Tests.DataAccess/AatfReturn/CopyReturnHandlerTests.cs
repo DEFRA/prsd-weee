@@ -379,7 +379,7 @@
             organisation = Organisation.CreateSoleTrader("Test Organisation");
             var quarter = new Quarter(2019, QuarterType.Q1);
 
-            @return = new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id) { ReturnStatus = ReturnStatus.Submitted };
+            @return = new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf) { ReturnStatus = ReturnStatus.Submitted };
 
             database.WeeeContext.Returns.Add(@return);
 

@@ -9,9 +9,12 @@
     {
         public Guid OrganisationId { get; private set; }
 
-        public GetReturns(Guid organisationId)
+        public FacilityType Facility { get; private set; }
+
+        public GetReturns(Guid organisationId, FacilityType facility)
         {
             this.OrganisationId = organisationId;
+            this.Facility = facility;
         }
     }
 }

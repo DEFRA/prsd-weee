@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -18,6 +15,9 @@
     using Security;
     using FacilityType = Core.AatfReturn.FacilityType;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, ReturnsData>
     {
@@ -55,7 +55,8 @@
             var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, FacilityType.Aatf);
 
             var returnsData = new List<ReturnData>();
-            foreach (var @return in @returns)
+
+            foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
             {
                 returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
             }

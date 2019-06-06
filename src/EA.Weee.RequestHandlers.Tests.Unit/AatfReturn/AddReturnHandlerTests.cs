@@ -80,7 +80,10 @@
         [InlineData(QuarterType.Q4)]
         public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType)
         {
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = 2019 };
+            const int year = 2019;
+            const int quarter = 1;
+
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = year, FacilityType = Core.AatfReturn.FacilityType.Aatf };
 
             var @return = A.Dummy<Return>();
             var organisation = new Organisation();
@@ -99,7 +102,7 @@
         {
             var organisationId = Guid.NewGuid();
             var organisation = A.Fake<Organisation>();
-            var request = new AddReturn { OrganisationId = organisationId, Year = 2019, Quarter = QuarterType.Q1 };
+            var request = new AddReturn { OrganisationId = organisationId, FacilityType = Core.AatfReturn.FacilityType.Aatf, Year = 2019, QuarterType = quarterType };
 
             A.CallTo(() => organisation.Id).Returns(organisationId);
 

@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.Web
 {
     using System.Reflection;
-    using System.Web;
     using Areas.AatfReturn.Attributes;
-    using Areas.AatfReturn.ViewModels.Validation;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
@@ -12,14 +10,11 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FluentValidation;
-    using Infrastructure;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;

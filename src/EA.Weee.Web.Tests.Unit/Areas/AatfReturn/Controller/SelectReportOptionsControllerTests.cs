@@ -376,7 +376,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
             }
 
             return model;
