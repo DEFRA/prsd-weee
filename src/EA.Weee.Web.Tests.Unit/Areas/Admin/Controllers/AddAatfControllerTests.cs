@@ -21,15 +21,12 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
 
