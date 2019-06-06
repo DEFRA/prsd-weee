@@ -2,9 +2,11 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using Charges;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.Factories;
     using Weee.Tests.Core;
@@ -12,6 +14,7 @@
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Organisation = Domain.Organisation.Organisation;
+    using Return = Domain.AatfReturn.Return;
 
     public class ReturnFactoryDataAccessTests
     {
@@ -117,6 +120,37 @@
 
                 result.Should().BeFalse();
             }
+        }
+
+        [Fact]
+        public async Task ValidateReturnQuarter_MatchingParameters_ResultShouldBeTrue()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateReturn(database, organisation, 2019, QuarterType.Q1, FacilityType.Aatf);
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateReturnQuarter(organisation.Id, 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeTrue();
+            }
+        }
+
+        private async Task<Return> CreateReturn(DatabaseWrapper database, Organisation organisation, int year, QuarterType quarter, FacilityType facilityType)
+        {
+            var @return = new Domain.AatfReturn.Return(organisation, new Quarter(year, quarter), database.Model.AspNetUsers.First().Id);
+
+            database.WeeeContext.Returns.Add(@return);
+
+            await database.WeeeContext.SaveChangesAsync();
+
+            return @return;
         }
 
         private async Task<Aatf> CreateAatf(DatabaseWrapper database, Organisation organisation, FacilityType facilityType, short year, DateTime? approvalDate)
