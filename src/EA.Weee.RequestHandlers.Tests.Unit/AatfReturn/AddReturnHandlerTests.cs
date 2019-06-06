@@ -92,7 +92,7 @@
         {
             var organisationId = Guid.NewGuid();
             var organisation = A.Fake<Organisation>();
-            var request = new AddReturn { OrganisationId = organisationId };
+            var request = new AddReturn { OrganisationId = organisationId, Year = 2019, Quarter = QuarterType.Q1 };
 
             A.CallTo(() => organisation.Id).Returns(organisationId);
 
