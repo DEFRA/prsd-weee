@@ -1,0 +1,40 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.AeReturn.Controllers
+@model EA.Weee.Web.Areas.AeReturn.ViewModels.NilReturnViewModel
+@{
+    ViewBag.Title = "Confirm no whole WEEE exported - GOV.UK";
+}
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column">
+            <h1 class="govuk-heading-l">
+                You have stated that no whole WEEE has been exported in 2019 Q1 Jan - Mar
+            </h1>
+
+            <div>
+                <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+                <p class="important">
+                    By submitting you confirm that you have no whole WEEE to report
+                </p>
+            </div>
+
+            @using (Html.BeginForm("NilReturnConfirm", "Returns", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Gds().ValidationSummary()
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.ReturnId)
+
+                <div class="govuk-form-group">
+                    <button class="govuk-button" type="submit">Continue</button>
+                </div>
+            }
+
+            <p>
+                <a href="@(Url.UrlFor<ReturnsController>(u => u.ExportedWholeWeee(Model.OrganisationId, Model.ReturnId)))">Cancel</a>
+            </p>
+        </div>
+    </div>
+</section>

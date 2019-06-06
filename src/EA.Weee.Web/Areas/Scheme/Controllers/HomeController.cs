@@ -123,6 +123,7 @@
             if (configurationService.CurrentConfiguration.EnableAATFReturns && hasAatfs)
             {
                 activities.Add(PcsAction.ManageAatfReturns);
+                activities.Add(PcsAction.ManageAeReturns);
             }
 
             return activities;
@@ -195,6 +196,10 @@
                 if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
                 {
                     return AatfRedirect.ReturnsList(viewModel.OrganisationId);
+                }
+                if (viewModel.SelectedValue == PcsAction.ManageAeReturns)
+                {
+                    return AeRedirect.ReturnsList(viewModel.OrganisationId);
                 }
             }
 

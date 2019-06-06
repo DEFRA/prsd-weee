@@ -48,7 +48,7 @@
             var organisation = A.Fake<Organisation>();
             var aatf = A.Fake<Aatf>();
             var scheme = A.Fake<Scheme>();
-            var aatfReturn = new Return(organisation, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString());
+            var aatfReturn = new Return(organisation, new Quarter(2019, QuarterType.Q1), Guid.NewGuid().ToString(), FacilityType.Aatf);
 
             var weeeReceived = new WeeeReceived(
                 scheme.Id,
