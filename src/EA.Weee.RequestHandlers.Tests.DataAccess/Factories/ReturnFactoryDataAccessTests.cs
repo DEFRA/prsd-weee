@@ -2,9 +2,7 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
-    using AutoFixture;
     using Charges;
     using Domain.AatfReturn;
     using FluentAssertions;
@@ -17,15 +15,12 @@
 
     public class ReturnFactoryDataAccessTests
     {
-        private readonly Fixture fixture;
-
         public ReturnFactoryDataAccessTests()
         {
-            fixture = new Fixture();
         }
 
         [Fact]
-        public async Task FetchAatfByOrganisationIdFacilityTypeAndComplianceYear_ReturnedListContainsExpectedAatfs()
+        public async Task ValidateAatfApprovalDate_MatchingParameters_ResultShouldBeTrue()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -35,22 +30,92 @@
                 var organisation = Organisation.CreatePartnership("Dummy");
                 
                 await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2020, DateTime.Now);
-                await CreateAatf(database, organisation, FacilityType.Ae, 2019, DateTime.Now);
-                await CreateAatf(database, organisation, FacilityType.Ae, 2019, null);
-
-                var organisation2 = Organisation.CreatePartnership("Dummy");
-
-                await CreateAatf(database, organisation2, FacilityType.Aatf, 2019, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var aatfs = await dataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(organisation.Id, 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
-                aatfs.Count.Should().Be(1);
-                aatfs.Count(a => a.FacilityType != FacilityType.Aatf).Should().Be(0);
-                aatfs.Count(a => a.ComplianceYear != 2019).Should().Be(0);
-                aatfs.Count(a => !a.ApprovalDate.HasValue).Should().Be(0);
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateAatfApprovalDate_GivenOrganisationDoesNotMatch_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateAatfApprovalDate(Guid.NewGuid(), new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateAatfApprovalDate_GivenFacilityDoesNotMatch_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Ae);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateAatfApprovalDate_GivenApprovalDateIsNull_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, null);
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateAatfApprovalDate_GivenApprovalDateIsAfterDate_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, new DateTime(2019).AddDays(1));
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeFalse();
             }
         }
 

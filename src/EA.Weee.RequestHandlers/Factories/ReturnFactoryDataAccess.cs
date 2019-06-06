@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
+    using EA.Weee.Domain.DataReturns;
     using FacilityType = Core.AatfReturn.FacilityType;
 
     public class ReturnFactoryDataAccess : IReturnFactoryDataAccess
@@ -39,9 +40,13 @@
                             && a.ApprovalDate != default(DateTime));
         }
 
-        public async Task<bool> ValidateReturnQuarter(Guid organisationId, FacilityType facilityType)
+        public async Task<bool> ValidateReturnQuarter(Guid organisationId, int year, QuarterType quarterType, EA.Weee.Core.AatfReturn.FacilityType facilityType)
         {
-            return true;
+            return await context.Returns
+                .AnyAsync(r => r.Organisation.Id == organisationId
+                               //&& r.FacilityType.Value == (int)facilityType
+                               && r.Quarter.Year == year
+                               && (int)r.Quarter.Q == (int)quarterType);
         }
     }
 }
