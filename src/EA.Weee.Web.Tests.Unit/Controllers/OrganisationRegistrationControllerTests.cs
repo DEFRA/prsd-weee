@@ -44,14 +44,15 @@
         public async Task GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ReturnsViewWithModel()
         {
             // Arrange
-            var addressData = new AddressData();
-            addressData.Address1 = "Address Line 1";
+            var addressData = new AddressData {Address1 = "Address Line 1"};
 
-            var organisationData = new OrganisationData();
-            organisationData.Id = new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10");
-            organisationData.OrganisationType = OrganisationType.RegisteredCompany;
-            organisationData.HasBusinessAddress = true;
-            organisationData.BusinessAddress = addressData;
+            var organisationData = new OrganisationData
+            {
+                Id = new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"),
+                OrganisationType = OrganisationType.RegisteredCompany,
+                HasBusinessAddress = true,
+                BusinessAddress = addressData
+            };
 
             var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
@@ -339,8 +340,7 @@
                 () => weeeClient,
                 organisationSearcher);
 
-            var model = new AddressPrepopulateViewModel();
-            model.SelectedValue = "No";
+            var model = new AddressPrepopulateViewModel {SelectedValue = "No"};
 
             // Act
             var result = await controller.RegisteredOfficeAddressPrepopulate(model);
@@ -410,9 +410,7 @@
                 () => weeeClient,
                 organisationSearcher);
 
-            var model = new OrganisationTypeViewModel();
-            model.SelectedValue = selection;
-            model.OrganisationId = null;
+            var model = new OrganisationTypeViewModel {SelectedValue = selection, OrganisationId = null};
 
             // Act
             var result = await controller.Type(model);
@@ -756,8 +754,7 @@
                 () => weeeClient,
                 organisationSearcher);
 
-            var model = new JoinOrganisationViewModel();
-            model.SelectedValue = "No";
+            var model = new JoinOrganisationViewModel {SelectedValue = "No"};
 
             // Act
             var result = await controller.JoinOrganisation(model);
@@ -782,8 +779,7 @@
                 () => weeeClient,
                 organisationSearcher);
 
-            var model = new JoinOrganisationViewModel();
-            model.SelectedValue = "Yes - join xyz";
+            var model = new JoinOrganisationViewModel {SelectedValue = "Yes - join xyz"};
 
             // Act
             var result = await controller.JoinOrganisation(model);
@@ -972,9 +968,7 @@
                 weeeClient,
                 organisationSearcher);
 
-            var viewModel = new SearchViewModel();
-            viewModel.SearchTerm = "testSearchTerm";
-            viewModel.SelectedOrganisationId = null;
+            var viewModel = new SearchViewModel {SearchTerm = "testSearchTerm", SelectedOrganisationId = null};
 
             // Act
             var result = await controller.Search(viewModel);
@@ -998,9 +992,10 @@
                 weeeClient,
                 organisationSearcher);
 
-            var viewModel = new SearchViewModel();
-            viewModel.SearchTerm = "Test Company";
-            viewModel.SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8");
+            var viewModel = new SearchViewModel
+            {
+                SearchTerm = "Test Company", SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
+            };
 
             // Act
             var result = await controller.Search(viewModel);
@@ -1074,8 +1069,7 @@
                 weeeClient,
                 organisationSearcher);
 
-            var viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = "testSearchTerm";
+            var viewModel = new SearchResultsViewModel {SearchTerm = "testSearchTerm"};
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
             // Act

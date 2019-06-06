@@ -479,11 +479,6 @@
             return aatf;
         }
 
-        private AatfContact Contact()
-        {
-            return new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
-        }
-
         private AatfAddress AatfSiteAddress()
         {
             return new AatfAddress("name", "address1", "address2", "town", "county", "postcode", country);

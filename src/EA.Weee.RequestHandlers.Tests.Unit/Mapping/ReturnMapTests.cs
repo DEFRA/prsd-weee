@@ -26,7 +26,7 @@
         private readonly DomainScheme scheme;
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
-        private Organisation organisation;
+        private readonly Organisation organisation;
 
         public ReturnMapTests()
         {
