@@ -86,9 +86,10 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExportedWholeWeee(Guid organisationId, ExportedWholeWeeeViewModel viewModel)
         {
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
+
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
                 return View(viewModel);
             }
 

@@ -163,6 +163,24 @@
         }
 
         [Fact]
+        public void IndexPost_RedirectToExportedWholeWeee()
+        {
+            var organisationId = Guid.NewGuid();
+
+            ReturnsViewModel viewModel = new ReturnsViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            RedirectToRouteResult result = controller.Index(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ExportedWholeWeee");
+            result.RouteValues["controller"].Should().Be("Returns");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
+        }
+
+        [Fact]
         public async void PostExportedWholeWeee_NoValueSelected_ReturnsViewWithViewModelAndBreadCrumbSet()
         {
             ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel();
