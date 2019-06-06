@@ -120,7 +120,7 @@
 
         public Return GetReturn()
         {
-            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me");
+            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", A.Fake<Domain.AatfReturn.FacilityType>());
         }
     }
 }

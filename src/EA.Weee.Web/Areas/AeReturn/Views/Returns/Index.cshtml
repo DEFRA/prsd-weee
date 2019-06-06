@@ -1,7 +1,9 @@
 ﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.AeReturn.ViewModels.AeReturnsViewModel
+@using EA.Weee.Web.Areas.AeReturn.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
 @{
     ViewBag.Title = "Manage AE returns - GOV.UK";
 }
@@ -13,7 +15,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            @using (Html.BeginRouteForm(AatfRedirect.ReturnsRouteName, FormMethod.Post, null))
+            @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.OrganisationId)
@@ -43,7 +45,7 @@
 
 
         <table class="govuk-table prsd-table-collapse">
-            <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
+            <caption class="govuk-table__caption govuk-visually-hidden">Manage AE returns</caption>
             <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
                 <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
@@ -70,34 +72,9 @@
                             @{
                                 if (item.ReturnsListDisplayOptions.DisplayContinue)
                                 {
-                                    if (item.ReturnsListRedirectOptions.RedirectTaskList)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
-                                    }
-                                    else if (item.ReturnsListRedirectOptions.RedirectSelectYourPcs)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
-                                    }
-                                    else if (item.ReturnsListRedirectOptions.RedirectReportingOptions)
-                                    {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
-                                    }
-                                }
-                                if (item.ReturnsListDisplayOptions.DisplayEdit)
-                                {
-                                    using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
-                                        @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
-
-                                        <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit"><div> Edit</div></button>
-                                    }
+                                    @Html.ActionLink("Continue", "Index", "Holding", new { organisationId = @Model.OrganisationId }, null)
                                 }
                             }
-                        </td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
                         </td>
                     </tr>
                 }

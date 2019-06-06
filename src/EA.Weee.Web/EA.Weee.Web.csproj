@@ -326,6 +326,12 @@
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
+    <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
+    <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
+    <Compile Include="Areas\AeReturn\ViewModels\NilReturnViewModel.cs" />
+    <Compile Include="Areas\AeReturn\ViewModels\ConfirmationViewModel.cs" />
+    <Compile Include="Infrastructure\AeRedirect.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\NonObligatedDataToNonObligatedValueMap.cs" />
@@ -476,7 +482,7 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionsResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\TestEmail\TestEmailViewModel.cs" />
     <Compile Include="Areas\AeReturn\AeReturnAreaRegistration.cs" />
-    <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
+    <Compile Include="Areas\AeReturn\Controllers\ReturnsController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
@@ -931,11 +937,15 @@
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\AeReturn\Views\AeReturns\Index.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsNil\Index.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Holding\Index.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\ExportedWholeWeee.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
+    <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -959,6 +969,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
+    <Content Include="Scripts\show-warning.js" />
     <Content Include="Scripts\weee-collapsible-link.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
@@ -1352,7 +1363,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
-    <Folder Include="Areas\AeReturn\ViewModels\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
