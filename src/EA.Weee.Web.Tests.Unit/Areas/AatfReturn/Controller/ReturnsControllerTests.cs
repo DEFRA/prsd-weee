@@ -6,6 +6,7 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using Core.DataReturns;
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
@@ -102,15 +103,21 @@
             returnedModel.OrganisationId.Should().Be(organisationId);
         }
 
-        [Fact]
-        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated()
+        [Theory]
+        [InlineData(QuarterType.Q1)]
+        [InlineData(QuarterType.Q2)]
+        [InlineData(QuarterType.Q3)]
+        [InlineData(QuarterType.Q4)]
+        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated(QuarterType quarterType)
         {
-            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid() };
+            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid(), ComplianceYear = 2019, Quarter = quarterType };
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(c => c.OrganisationId.Equals(model.OrganisationId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That
+                    .Matches(c => c.OrganisationId.Equals(model.OrganisationId)
+                    && c.Quarter.Equals(model.Quarter)
+                    && c.Year.Equals(model.ComplianceYear)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

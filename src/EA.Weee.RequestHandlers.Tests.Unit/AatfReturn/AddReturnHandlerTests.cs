@@ -3,6 +3,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.DataReturns;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Organisation;
@@ -21,7 +22,6 @@
     public class AddReturnUploadHandlerTests
     {
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
         private AddReturnHandler handler;
@@ -30,11 +30,10 @@
         {
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             userContext = A.Fake<IUserContext>();
 
-            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, organisationDataAccess, genericDataAccess, userContext);
+            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext);
         }
 
         [Fact]
@@ -44,7 +43,6 @@
 
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
-                A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
                 A.Dummy<IUserContext>());
 
@@ -60,7 +58,6 @@
 
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
-                A.Dummy<IOrganisationDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
                 A.Dummy<IUserContext>());
 
@@ -69,13 +66,14 @@
             await action.Should().ThrowAsync<SecurityException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled()
+        [Theory]
+        [InlineData(QuarterType.Q1)]
+        [InlineData(QuarterType.Q2)]
+        [InlineData(QuarterType.Q3)]
+        [InlineData(QuarterType.Q4)]
+        public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType)
         {
-            const int year = 2019;
-            const int quarter = 1;
-
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year };
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = 2019 };
 
             var @return = A.Dummy<Return>();
             var organisation = new Organisation();
@@ -86,7 +84,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == year && (int)c.Quarter.Q == quarter && c.Organisation.Equals(organisation) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == request.Year && (int)c.Quarter.Q == (int)quarterType && c.Organisation.Equals(organisation) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

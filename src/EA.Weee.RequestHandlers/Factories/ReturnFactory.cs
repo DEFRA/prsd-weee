@@ -33,12 +33,10 @@
                 currentDate = systemSettings.FixedCurrentDate;
             }
 
-            var aatfs = await returnFactoryDataAccess.FetchAatfsByOrganisationFacilityTypeListAndYear(organisationId, currentDate.Year, facilityType);
-
-            if (!aatfs.Any())
-            {
-                return null;
-            }
+            //if (!aatfs.Any())
+            //{
+            //    return null;
+            //}
 
             var availableQuarterWindows = await quarterWindowFactory.GetQuarterWindowsForDate(currentDate);
 
@@ -47,7 +45,24 @@
                 return null;
             }
 
-            return new ReturnQuarter(2010, QuarterType.Q1);
+            var windowDates = availableQuarterWindows.OrderBy(a => a.StartDate);
+
+            //var found = false;
+            foreach (var quarterWindow in windowDates)
+            {
+                var date = quarterWindow.StartDate;
+
+                var hasAatfWithApprovalDate = await returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, date, facilityType);
+
+                if (hasAatfWithApprovalDate)
+                {
+                    // validate no returns this year and quarter
+                    // need to check the approval date is less than the date start date
+                    return new ReturnQuarter(date.Year, (QuarterType)quarterWindow.QuarterType);
+                }
+            }
+
+            return null;
         }
     }
 }

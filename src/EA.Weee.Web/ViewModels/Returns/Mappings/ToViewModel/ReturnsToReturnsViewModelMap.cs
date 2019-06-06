@@ -42,6 +42,13 @@
                 }
             }
 
+            if (source.ReturnQuarter != null)
+            {
+                model.DisplayCreateReturn = true;
+                model.ComplianceYear = source.ReturnQuarter.ComplianceYear;
+                model.Quarter = source.ReturnQuarter.Quarter;
+            }
+
             return model;
         }
     }

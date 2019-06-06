@@ -22,29 +22,27 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
 
         public AddReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
-            IOrganisationDataAccess organisationDataAccess, 
             IGenericDataAccess genericDataAccess, 
             IUserContext userContext)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
-            this.organisationDataAccess = organisationDataAccess;
             this.genericDataAccess = genericDataAccess;
             this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(AddReturn message)
         {
+            /* validate that return has not been already been created */
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var quarter = new Quarter(2019, QuarterType.Q1);
+            var quarter = new Quarter(message.Year, (QuarterType)message.Quarter);
 
             var aatfOrganisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
 

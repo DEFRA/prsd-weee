@@ -11,19 +11,21 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoFixture;
     using Xunit;
 
     public class ReturnsToReturnsViewModelMapTests
     {
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
-
+        private readonly Fixture fixture;
         private readonly ReturnsToReturnsViewModelMap returnsMap;
 
         public ReturnsToReturnsViewModelMapTests()
         {
             returnItemViewModelMap = A.Fake<IMap<ReturnData, ReturnsItemViewModel>>();
             ordering = A.Fake<IReturnsOrdering>();
+            fixture = new Fixture();
 
             returnsMap = new ReturnsToReturnsViewModelMap(ordering, returnItemViewModelMap);
         }
@@ -160,6 +162,41 @@
             var exception = Record.Exception(() => returnsMap.Map(null));
 
             exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenNullReturnQuarter_DisplayCreateButtonShouldBeFalse()
+        {
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), null);
+
+            var result = returnsMap.Map(returnsData);
+
+            result.DisplayCreateReturn.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenReturnQuarter_DisplayCreateButtonShouldBeTrue()
+        {
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new ReturnQuarter(2019, QuarterType.Q1));
+
+            var result = returnsMap.Map(returnsData);
+
+            result.DisplayCreateReturn.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(QuarterType.Q1)]
+        [InlineData(QuarterType.Q2)]
+        [InlineData(QuarterType.Q3)]
+        [InlineData(QuarterType.Q4)]
+        public void Map_GivenReturnQuarter_ComplianceReturnPropertiesShouldBeSet(QuarterType quarter)
+        {
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new ReturnQuarter(2019, quarter));
+
+            var result = returnsMap.Map(returnsData);
+
+            result.ComplianceYear.Should().Be(2019);
+            result.Quarter.Should().Be(quarter);
         }
     }
 }
