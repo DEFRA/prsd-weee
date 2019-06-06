@@ -75,7 +75,7 @@
             const int year = 2019;
             const int quarter = 1;
 
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year };
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarter, Year = year, FacilityType = Core.AatfReturn.FacilityType.Aatf };
 
             var @return = A.Dummy<Return>();
             var organisation = new Organisation();
@@ -94,7 +94,7 @@
         {
             var organisationId = Guid.NewGuid();
             var organisation = A.Fake<Organisation>();
-            var request = new AddReturn { OrganisationId = organisationId };
+            var request = new AddReturn { OrganisationId = organisationId, FacilityType = Core.AatfReturn.FacilityType.Aatf };
 
             A.CallTo(() => organisation.Id).Returns(organisationId);
 
