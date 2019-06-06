@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Validation
 {
     using System;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentValidation;
     using FluentValidation.Results;
 

@@ -10,8 +10,8 @@
             ToTable("Address", "AATF");
 
             Property(x => x.Name).HasColumnName("Name").IsRequired().HasMaxLength(256);
-            Property(x => x.Address1).HasColumnName("Address1").IsRequired().HasMaxLength(35);
-            Property(x => x.Address2).HasColumnName("Address2").HasMaxLength(35);
+            Property(x => x.Address1).HasColumnName("Address1").IsRequired().HasMaxLength(60);
+            Property(x => x.Address2).HasColumnName("Address2").HasMaxLength(60);
             Property(x => x.TownOrCity).HasColumnName("TownOrCity").IsRequired().HasMaxLength(35);
             Property(x => x.CountyOrRegion).HasColumnName("CountyOrRegion").HasMaxLength(35);
             Property(x => x.Postcode).HasColumnName("Postcode").HasMaxLength(10);

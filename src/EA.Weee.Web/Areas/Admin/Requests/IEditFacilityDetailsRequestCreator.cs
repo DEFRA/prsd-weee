@@ -4,7 +4,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Requests.Base;
 
-    public interface IEditAatfDetailsRequestCreator : IRequestCreator<AatfEditDetailsViewModel, EditAatfDetails>
+    public interface IEditFacilityDetailsRequestCreator : IRequestCreator<FacilityViewModelBase, EditAatfDetails>
     {
     }
 }
