@@ -6,11 +6,8 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using FluentValidation.Attributes;
 
-    [Validator(typeof(ApprovalDateValidator))]
-    public abstract class FacilityViewModelBase
+    public abstract class FacilityViewModelBase : IValidatableObject
     {
         public Guid Id { get; set; }
 
@@ -58,6 +55,32 @@
         public FacilityViewModelBase()
         {
             SiteAddressData = new AatfAddressData();
+        }
+
+        public bool ModelValidated { get; private set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var validationResults = new List<ValidationResult>();
+            var instance = validationContext.ObjectInstance as FacilityViewModelBase;
+
+            if (instance?.ApprovalDate != null)
+            {
+                var input = instance.ApprovalDate.Value;
+
+                var startDate = new DateTime(instance.ComplianceYear, 1, 1);
+                var endDate = new DateTime(instance.ComplianceYear, 12, 31);
+
+                if (input < startDate || input > endDate)
+                {
+                    validationResults.Add(
+                        new ValidationResult($"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}",
+                        new List<string> { nameof(instance.ApprovalDate) }));
+                }
+            }
+
+            ModelValidated = true;
+            return validationResults;
         }
     }
 }
