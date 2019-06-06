@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentAssertions.Common;
     using Prsd.Core;
     using RequestHandlers.Factories;
     using Requests.AatfReturn;
@@ -73,6 +74,55 @@
             var result = await returnFactory.GetReturnQuarter(A.Dummy<Guid>(), A.Dummy<FacilityType>());
 
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetReturnQuarter_GivenQuarter1OpenWindow_ValidateAatfApprovalDateIsFalse_NullShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var startDate = new DateTime(2019, 4, 1);
+            var quarterWindow = new QuarterWindow(startDate, new DateTime(2019, 7, 16), QuarterType.Q1);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarterWindow });
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, startDate, FacilityType.Aatf)).Returns(false);
+            A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(A<Guid>._, A<int>._, A<QuarterType>._, A<FacilityType>._)).Returns(false);
+
+            var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetReturnQuarter_GivenQuarter1OpenWindow_HasReturnQuarterIsTrue_NullShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var startDate = new DateTime(2019, 4, 1);
+            var quarterWindow = new QuarterWindow(startDate, new DateTime(2019, 7, 16), QuarterType.Q1);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarterWindow });
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(A<Guid>._, A<DateTime>._, A<FacilityType>._)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(true);
+
+            var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetReturnQuarter_GivenQuarter1OpenWindow_NoPreviousReturnExists_AatfApprovalDateIsPreWindow_QuarterWindowShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var startDate = new DateTime(2019, 4, 1);
+            var quarterWindow = new QuarterWindow(startDate, new DateTime(2019, 7, 16), QuarterType.Q1);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarterWindow });
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, startDate, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(false);
+
+            var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
+
+            result.ComplianceYear.Should().Be(2019);
+            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q1);
         }
 
         //[Theory]

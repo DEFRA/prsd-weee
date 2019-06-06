@@ -136,7 +136,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateReturnQuarter(organisation.Id, 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeTrue();
             }
@@ -156,7 +156,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateReturnQuarter(Guid.NewGuid(), 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.HasReturnQuarter(Guid.NewGuid(), 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }
@@ -176,7 +176,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateReturnQuarter(organisation.Id, 2019, QuarterType.Q2, Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2019, QuarterType.Q2, Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }
@@ -196,7 +196,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateReturnQuarter(organisation.Id, 2020, QuarterType.Q2, Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2020, QuarterType.Q2, Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }

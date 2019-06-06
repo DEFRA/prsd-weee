@@ -113,12 +113,14 @@
         {
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = 2019, Quarter = QuarterType.Q1, FacilityType = FacilityType.Aatf };
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateReturnQuarter(request.OrganisationId, request.Year, (Domain.DataReturns.QuarterType)request.Quarter, request.FacilityType))
+            A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(request.OrganisationId, request.Year, (Domain.DataReturns.QuarterType)request.Quarter, request.FacilityType))
                 .Returns(true);
 
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
             result.Should().BeOfType<InvalidOperationException>();
+
+            A.CallTo(() => returnDataAccess.Submit(A<Return>._)).MustNotHaveHappened();
         }
     }
 }

@@ -30,7 +30,7 @@
                             && a.ApprovalDate != default(DateTime));
         }
 
-        public async Task<bool> ValidateReturnQuarter(Guid organisationId, int year, QuarterType quarterType, EA.Weee.Core.AatfReturn.FacilityType facilityType)
+        public async Task<bool> HasReturnQuarter(Guid organisationId, int year, QuarterType quarterType, EA.Weee.Core.AatfReturn.FacilityType facilityType)
         {
             return await context.Returns
                 .AnyAsync(r => r.Organisation.Id == organisationId

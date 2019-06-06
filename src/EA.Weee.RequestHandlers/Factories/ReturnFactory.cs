@@ -47,8 +47,7 @@
                 var date = quarterWindow.StartDate;
 
                 var hasAatfWithApprovalDate = await returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, date, facilityType);
-                var hasReturnExists =
-                    await returnFactoryDataAccess.ValidateReturnQuarter(organisationId, date.Year, quarterWindow.QuarterType, facilityType);
+                var hasReturnExists = await returnFactoryDataAccess.HasReturnQuarter(organisationId, date.Year, quarterWindow.QuarterType, facilityType);
 
                 if (hasAatfWithApprovalDate && !hasReturnExists)
                 {

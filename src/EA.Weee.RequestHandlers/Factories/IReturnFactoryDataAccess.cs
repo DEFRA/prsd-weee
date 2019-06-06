@@ -10,6 +10,6 @@
     {
         Task<bool> ValidateAatfApprovalDate(Guid organisationId, DateTime date, EA.Weee.Core.AatfReturn.FacilityType facilityType);
 
-        Task<bool> ValidateReturnQuarter(Guid organisationId, int year, QuarterType quarterType, EA.Weee.Core.AatfReturn.FacilityType facilityType);
+        Task<bool> HasReturnQuarter(Guid organisationId, int year, QuarterType quarterType, EA.Weee.Core.AatfReturn.FacilityType facilityType);
     }
 }

@@ -47,7 +47,7 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var existingReturn =
-                await returnFactoryDataAccess.ValidateReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
+                await returnFactoryDataAccess.HasReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
 
             if (existingReturn)
             {
