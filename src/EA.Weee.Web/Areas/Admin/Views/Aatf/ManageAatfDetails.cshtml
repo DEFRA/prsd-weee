@@ -1,14 +1,14 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@using EA.Weee.Core.Helpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditDetailsViewModel
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.FacilityViewModelBase
 @{
     ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
 }
 
 <section id="main-content">
     <h1 class="govuk-heading-l">Manage @Model.FacilityType.ToDisplayString() details</h1>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(actionName: Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf ? "ManageAatfDetails" : "ManageAeDetails", controllerName: "Aatf", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -19,47 +19,47 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
-                    <div class="govuk-label form-label">Name of @Model.FacilityType.ToDisplayString()</div>
+                    @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
                     @Html.Gds().ValidationMessageFor(m => m.Name)
                     @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
                 </div>
 
-                @Html.HiddenFor(m => m.SiteAddress.Id)
+                @Html.HiddenFor(m => m.SiteAddressData.Id)
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddress.Address1)">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.Address1)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.Address1)
-                    @Html.Gds().TextBoxFor(m => m.SiteAddress.Address1, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address1)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Address1)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Address1)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Address1, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddress.Address2)">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.Address2)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.Address2)
-                    @Html.Gds().TextBoxFor(m => m.SiteAddress.Address2, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address2)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Address2)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Address2)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Address2, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddress.TownOrCity)">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.TownOrCity)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.TownOrCity)
-                    @Html.Gds().TextBoxFor(m => m.SiteAddress.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.TownOrCity)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.TownOrCity)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.TownOrCity)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddress.CountyOrRegion)">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.CountyOrRegion)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.CountyOrRegion)
-                    @Html.Gds().TextBoxFor(m => m.SiteAddress.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountyOrRegion)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.CountyOrRegion)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountyOrRegion)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddress.Postcode)">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.Postcode)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.Postcode)
-                    @Html.Gds().TextBoxFor(m => m.SiteAddress.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Postcode)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Postcode)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Postcode)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
                 </div>
 
-                <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddress.CountryId)" id="country-dropdown-list">
-                    @Html.Gds().LabelFor(m => m.SiteAddress.CountryId)
-                    @Html.Gds().ValidationMessageFor(m => m.SiteAddress.CountryId)
-                    @Html.DropDownListFor(m => m.SiteAddress.CountryId, new SelectList(Model.SiteAddress.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "false", aria_labelledby = "country-dropdown-list" })
+                <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountryId)" id="country-dropdown-list">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.CountryId)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountryId)
+                    @Html.DropDownListFor(m => m.SiteAddressData.CountryId, new SelectList(Model.SiteAddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "false", aria_labelledby = "country-dropdown-list" })
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
-                    <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group">
+                    <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group" aria-live="polite">
                         <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
                             <span class="govuk-details__summary-text govuk-label form-label" id="ApprovalDateLabel">
                                 @Html.DisplayNameFor(m => m.ApprovalDate)

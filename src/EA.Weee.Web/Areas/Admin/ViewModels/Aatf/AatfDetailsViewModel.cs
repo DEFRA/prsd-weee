@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
 
     public class AatfDetailsViewModel
     {
@@ -55,12 +55,32 @@
             }
         }
 
+        public string AddressHeadingName
+        {
+            get
+            {
+                if (this.FacilityType == FacilityType.Aatf)
+                {
+                    return "Site address";
+                }
+
+                return "AE address";
+            }
+        }
+
         public FacilityType FacilityType { get; set; }
 
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
-        public List<AatfDataList> AssociatedAEs { get; set; }
+        public List<AatfDataList> AssociatedAes { get; set; }
 
         public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
+
+        public bool HasAnyRelatedEntities => IsNotNullOrEmpty(AssociatedAatfs) || IsNotNullOrEmpty(AssociatedAes) || IsNotNullOrEmpty(AssociatedSchemes);
+
+        private bool IsNotNullOrEmpty<T>(IList<T> entityList)
+        {
+            return entityList != null && entityList.Any();
+        }
     }
 }

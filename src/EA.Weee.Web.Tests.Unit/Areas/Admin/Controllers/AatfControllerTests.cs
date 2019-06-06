@@ -21,7 +21,6 @@
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -40,7 +39,7 @@
         private readonly IWeeeClient weeeClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
-        private readonly IEditAatfDetailsRequestCreator detailsRequestCreator;
+        private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
         private readonly AatfController controller;
@@ -51,7 +50,7 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
-            detailsRequestCreator = A.Fake<IEditAatfDetailsRequestCreator>();
+            detailsRequestCreator = A.Fake<IEditFacilityDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
             cache = A.Fake<IWeeeCache>();
 
@@ -124,6 +123,7 @@
         [Fact]
         public async Task ApplyFilterPost_RedirectsToManageView()
         {
+            SetUpControllerContext(fixture.Create<bool>());
             var filter = fixture.Create<FilteringViewModel>();
             var mappedFilter = fixture.Create<AatfFilter>();
 
@@ -259,30 +259,34 @@
         public async void DetailsGet_GivenValidAatfId_AatfsByOperatorIdShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
-            var organisationData = new OrganisationData();
-            organisationData.BusinessAddress = new Core.Shared.AddressData()
+            var organisationData = new OrganisationData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country",
-                Telephone = "9367282",
-                Email = "test@test.com"
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
+            AatfContactData contactData = new AatfContactData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
             };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
@@ -319,16 +323,18 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
+            AatfContactData contactData = new AatfContactData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
             };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
@@ -348,9 +354,7 @@
 
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
-            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)
-            && a.SiteAddressString == controller.GenerateAatfAddress(aatfData.SiteAddress)
-            && a.ContactAddressString == controller.GenerateAatfAddress(aatfData.Contact.AddressData)))).MustHaveHappened(Repeated.Exactly.Once);
+            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -373,16 +377,18 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
+            AatfContactData contactData = new AatfContactData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
             };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
@@ -420,16 +426,18 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
+            AatfContactData contactData = new AatfContactData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
             };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
@@ -469,16 +477,18 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData();
-            contactData.AddressData = new AatfContactAddressData()
+            AatfContactData contactData = new AatfContactData
             {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
             };
 
             var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
@@ -599,7 +609,7 @@
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
             var siteAddress = fixture.Build<AatfAddressData>().With(sa => sa.Countries, countries).Create();
-            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddress, siteAddress).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddressData, siteAddress).Create();
 
             var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
             clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
@@ -614,7 +624,7 @@
             clientCallAuthorities.MustHaveHappenedOnceExactly();
             clientCallCountries.MustHaveHappenedOnceExactly();
 
-            result.ViewName.Should().BeEmpty();
+            result.ViewName.Should().Be("ManageAatfDetails");
             result.Model.Should().Be(viewModel);
         }
 
@@ -640,6 +650,92 @@
             A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A<GetUKCompetentAuthorities>._)).Returns(A.CollectionOfFake<UKCompetentAuthorityData>(1));
 
             await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAeDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
+            var request = fixture.Create<EditAatfDetails>();
+
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+            var requestCall = A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel));
+            requestCall.Returns(request);
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            var result = await controller.ManageAeDetails(viewModel) as RedirectResult;
+
+            result.Url.Should().Be(url);
+            clientCallAuthorities.MustHaveHappenedOnceExactly();
+            requestCall.MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappenedOnceExactly();
+            helperCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAeDetailsPost_InvalidViewModel_ApiShouldBeCalled()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
+            var siteAddress = fixture.Build<AatfAddressData>().With(sa => sa.Countries, countries).Create();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.SiteAddressData, siteAddress).Create();
+
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+            var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
+            clientCallCountries.Returns(Task.FromResult(countries));
+
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.ManageAeDetails(viewModel) as ViewResult;
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            clientCallAuthorities.MustHaveHappenedOnceExactly();
+            clientCallCountries.MustHaveHappenedOnceExactly();
+
+            result.ViewName.Should().Be("ManageAatfDetails");
+            result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async void ManageAeDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            var viewModel = new AeEditDetailsViewModel() { Id = Guid.NewGuid() };
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            A.CallTo(() => weeeClient.SendAsync(A.Dummy<string>(), A<GetUKCompetentAuthorities>._)).Returns(A.CollectionOfFake<UKCompetentAuthorityData>(1));
+
+            await controller.ManageAeDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
         }
@@ -835,68 +931,6 @@
             var resultWithoutAddress2 = controller.GenerateSharedAddress(siteAddressWithoutAddress2);
             var resultWithoutCounty = controller.GenerateSharedAddress(siteAddressWithoutCounty);
             var resultWithoutPostcode = controller.GenerateSharedAddress(siteAddressWithoutPostcode);
-
-            result.Should().Be(siteAddressLong);
-            resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
-            resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
-            resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
-        }
-
-        [Fact]
-        public void GenerateAatfAddress_GivenAddressData_LongAddressNameShouldBeCreatedCorrectly()
-        {
-            var siteAddress = new Core.AatfReturn.AatfAddressData()
-            {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
-            };
-            var siteAddressLong = "Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
-
-            var siteAddressWithoutAddress2 = new Core.AatfReturn.AatfAddressData()
-            {
-                Address1 = "Site address 1",
-                Address2 = null,
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
-            };
-            var siteAddressWithoutAddress2Long = "Site address 1<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
-
-            var siteAddressWithoutCounty = new Core.AatfReturn.AatfAddressData()
-            {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = null,
-                Postcode = "GU22 7UY",
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
-            };
-            var siteAddressWithoutCountyLong = "Site address 1<br/>Site address 2<br/>Site town<br/>GU22 7UY<br/>Site country";
-
-            var siteAddressWithoutPostcode = new Core.AatfReturn.AatfAddressData()
-            {
-                Address1 = "Site address 1",
-                Address2 = "Site address 2",
-                TownOrCity = "Site town",
-                CountyOrRegion = "Site county",
-                Postcode = null,
-                CountryId = Guid.NewGuid(),
-                CountryName = "Site country"
-            };
-            var siteAddressWithoutPostcodeLong = "Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>Site country";
-
-            var result = controller.GenerateAatfAddress(siteAddress);
-            var resultWithoutAddress2 = controller.GenerateAatfAddress(siteAddressWithoutAddress2);
-            var resultWithoutCounty = controller.GenerateAatfAddress(siteAddressWithoutCounty);
-            var resultWithoutPostcode = controller.GenerateAatfAddress(siteAddressWithoutPostcode);
 
             result.Should().Be(siteAddressLong);
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);

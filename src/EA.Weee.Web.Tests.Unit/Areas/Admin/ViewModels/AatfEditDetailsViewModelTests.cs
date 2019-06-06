@@ -30,6 +30,8 @@
         [InlineData("WEE/891234CD/SCH")]
         [InlineData("WEE/AB1DF4CD/SCH")]
         [InlineData("WEE/AB123482/SCH")]
+        [InlineData("WEE/AB1234CD/AE")]
+        [InlineData("WEE/AB1234CD/EXP")]
         public void ModelWithIncorrectApprovalNumber_IsInvalid(string approvalNumber)
         {
             var model = CreateValidAatfEditDetailsViewModel();
@@ -62,6 +64,7 @@
         {
             var requiredProperties = new List<string>
             {
+                "Name",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
                 "ApprovalDate",
@@ -85,7 +88,7 @@
             var model = CreateValidAatfEditDetailsViewModel();
             model.Name = "AATF Name";
 
-            Assert.Equal(model.Name, model.SiteAddress.Name);
+            Assert.Equal(model.Name, model.SiteAddressData.Name);
         }
 
         [Theory]
@@ -111,7 +114,7 @@
             var t = typeof(AatfEditDetailsViewModel);
             var customAttribute = t.GetCustomAttribute(typeof(ValidatorAttribute)) as FluentValidation.Attributes.ValidatorAttribute;
 
-            customAttribute.ValidatorType.Should().Be(typeof(AatfViewModelValidator));
+            customAttribute.ValidatorType.Should().Be(typeof(ApprovalDateValidator));
         }
 
         private AatfEditDetailsViewModel CreateValidAatfEditDetailsViewModel()

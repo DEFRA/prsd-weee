@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
@@ -54,7 +53,7 @@
                 Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
                 message.Aatf.ApprovalDate.GetValueOrDefault(),
                 contact,
-                Domain.AatfReturn.FacilityType.Aatf,
+                message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
                 message.Aatf.ComplianceYear);
 
             await dataAccess.Add<Aatf>(aatf);

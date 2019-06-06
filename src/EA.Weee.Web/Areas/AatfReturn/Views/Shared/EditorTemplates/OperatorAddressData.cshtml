@@ -25,13 +25,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TownOrCity)">
             @Html.Gds().LabelFor(m => m.TownOrCity)
             @Html.Gds().ValidationMessageFor(m => m.TownOrCity)
-            @Html.Gds().TextBoxFor(m => m.TownOrCity, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.TownOrCity, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CountyOrRegion)">
             @Html.Gds().LabelFor(m => m.CountyOrRegion)
             @Html.Gds().ValidationMessageFor(m => m.CountyOrRegion)
-            @Html.Gds().TextBoxFor(m => m.CountyOrRegion, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.CountyOrRegion, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Postcode)">

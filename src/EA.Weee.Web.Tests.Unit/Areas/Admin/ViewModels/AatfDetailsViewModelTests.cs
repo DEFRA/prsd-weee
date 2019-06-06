@@ -39,5 +39,17 @@
 
             Assert.Equal(expected, model.FacilityType.ToDisplayString());
         }
+
+        [Theory]
+        [InlineData(FacilityType.Aatf, "Site address")]
+        [InlineData(FacilityType.Ae, "AE address")]
+        public void DetailViewModel_FacilityTypeSet_AddressLabelSetCorrectly(FacilityType type, string expected)
+        {
+            AatfDetailsViewModel model = new AatfDetailsViewModel();
+
+            model.FacilityType = type;
+
+            Assert.Equal(expected, model.AddressHeadingName);
+        }
     }
 }

@@ -1,48 +1,31 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Core.Validation;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using FluentValidation.Attributes;
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Core.AatfReturn;
 
-    [Validator(typeof(AatfViewModelValidator))]
-    public class AddAatfViewModel : AatfViewModelBase
+    public class AddAatfViewModel : AddFacilityViewModelBase
     {
-        public Guid OrganisationId { get; set; }
-        public string OrganisationName { get; set; }
-
         private string aatfName;
 
-        [Required]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [Required(ErrorMessage = "Enter name of AATF")]
         [Display(Name = "Name of AATF")]
-        public string AatfName
+        public override string Name
         {
-            get => this.aatfName;
+            get => aatfName;
 
             set
             {
-                this.aatfName = value;
-
-                this.SiteAddressData.Name = value;
+                aatfName = value;
+                SiteAddressData.Name = value;
             }
         }
 
-        public AatfAddressData SiteAddressData { get; set; }
-
-        public AatfContactData ContactData { get; set; }
-
-        public IEnumerable<Int16> ComplianceYearList => new List<Int16> {(Int16)2019};
+        [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/ATF", ErrorMessage = "Approval number is not in correct format")]
+        public override string ApprovalNumber { get; set; }
 
         public AddAatfViewModel()
         {
-            this.ContactData = new AatfContactData();
-            this.SiteAddressData = new AatfAddressData();
+            FacilityType = FacilityType.Aatf;
         }
     }
 }

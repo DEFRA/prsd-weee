@@ -5,19 +5,24 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
-        public AatfDataToAatfDetailsViewModelMap()
+        private readonly IAddressUtilities addressUtilities;
+
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities)
         {
+            this.addressUtilities = addressUtilities;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
+            Guard.ArgumentNotNull(() => source.AatfData, source.AatfData);
 
             AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
             {
@@ -32,18 +37,18 @@
                 CanEdit = source.AatfData.Contact.CanEditContactDetails,
                 Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString,
-                SiteAddressLong = source.SiteAddressString,
-                ContactAddressLong = source.ContactAddressString,
                 FacilityType = source.AatfData.FacilityType,
-                ComplianceYear = source.AatfData.ComplianceYear
+                ComplianceYear = source.AatfData.ComplianceYear,
+                SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
+                ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false)
             };
 
             if (source.AssociatedAatfs != null)
             {
-                List<AatfDataList> associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae).ToList();
+                var associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae).ToList();
                 source.AssociatedAatfs = source.AssociatedAatfs.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf).ToList();
                 viewModel.AssociatedAatfs = source.AssociatedAatfs;
-                viewModel.AssociatedAEs = associatedAEs;
+                viewModel.AssociatedAes = associatedAEs;
             }
 
             if (source.AssociatedSchemes != null)

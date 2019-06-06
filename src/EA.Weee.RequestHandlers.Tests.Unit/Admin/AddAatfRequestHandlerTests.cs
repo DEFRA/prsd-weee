@@ -6,6 +6,7 @@
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.Identity;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -21,14 +22,12 @@
 
     public class AddAatfRequestHandlerTests
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IMap<AatfContactData, AatfContact> contactMapper;
 
         public AddAatfRequestHandlerTests()
         {
-            this.authorization = AuthorizationBuilder.CreateUserWithAllRights();
             this.addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
             this.contactMapper = A.Fake<IMap<AatfContactData, AatfContact>>();
             this.dataAccess = A.Fake<IGenericDataAccess>();
@@ -67,12 +66,15 @@
             await Assert.ThrowsAsync<SecurityException>(action);
         }
 
-        [Fact]
-        public async Task HandleAsync_ValidInput_AddsAatf()
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        public async Task HandleAsync_ValidInput_AddsAatf(Core.AatfReturn.FacilityType facilityType)
         {
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
 
-            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+            aatf.FacilityType = facilityType;
 
             Guid aatfId = Guid.NewGuid();
 
@@ -85,6 +87,7 @@
                 OrganisationId = Guid.NewGuid()
             };
 
+            var expectedFacilityType = facilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>();
             A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
                 c => c.Name == aatf.Name
                 && c.AatfStatus == aatf.AatfStatus
@@ -94,7 +97,8 @@
                 && c.Name == aatf.Name
                 && c.SiteAddress.Id == aatf.SiteAddress.Id
                 && c.Size == aatf.Size
-                && c.ComplianceYear == aatf.ComplianceYear))).Returns(aatfId);
+                && c.ComplianceYear == aatf.ComplianceYear
+                && c.FacilityType == expectedFacilityType))).Returns(aatfId);
 
             bool result = await handler.HandleAsync(request);
 
@@ -107,7 +111,8 @@
                 && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
                 && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
                 && c.ApprovalDate == aatf.ApprovalDate
-                && c.ComplianceYear == aatf.ComplianceYear))).MustHaveHappened(Repeated.Exactly.Once);
+                && c.ComplianceYear == aatf.ComplianceYear
+                && c.FacilityType == expectedFacilityType))).MustHaveHappened(Repeated.Exactly.Once);
 
             result.Should().Be(true);
         }

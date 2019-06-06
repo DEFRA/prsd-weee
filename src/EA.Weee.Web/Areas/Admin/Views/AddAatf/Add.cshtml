@@ -1,16 +1,15 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Scheme.ViewModels
 @using EA.Weee.Web.Areas.Admin.Controllers
-@using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddAatfViewModel
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddFacilityViewModelBase
 @{
-    ViewBag.Title = "Enter AATF details - GOV.UK";
+    ViewBag.Title = "Enter " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
 }
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">Add an AATF to an organisation</h1>
+    <h1 class="govuk-heading-l">Add an @Model.FacilityType.ToDisplayString() to an organisation</h1>
 
     <div>
         <p>
@@ -18,15 +17,16 @@
         </p>
     </div>
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(actionName: Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf ? "AddAatf" : "AddAe", controllerName: "AddAatf", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AatfName)">
-            @Html.Gds().LabelFor(m => m.AatfName)
-            @Html.Gds().ValidationMessageFor(m => m.AatfName)
-            @Html.Gds().TextBoxFor(m => m.AatfName, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+            @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
+            @Html.Gds().ValidationMessageFor(m => m.Name)
+            @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address1)">
@@ -44,13 +44,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.TownOrCity)">
             @Html.Gds().LabelFor(m => m.SiteAddressData.TownOrCity)
             @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.TownOrCity)
-            @Html.Gds().TextBoxFor(m => m.SiteAddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.SiteAddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountyOrRegion)">
             @Html.Gds().LabelFor(m => m.SiteAddressData.CountyOrRegion)
             @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountyOrRegion)
-            @Html.Gds().TextBoxFor(m => m.SiteAddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.SiteAddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Postcode)">
@@ -92,7 +92,7 @@
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
-            <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group">
+            <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group" aria-live="polite">
                 <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
                     <span class="govuk-details__summary-text govuk-label form-label" id="ApprovalDateLabel">
                         @Html.DisplayNameFor(m => m.ApprovalDate)
@@ -120,7 +120,7 @@
         </div>
 
         <div>
-            <h2 class="govuk-heading-m">AATF nominated day to day contact details</h2>
+            <h2 class="govuk-heading-m">@Model.FacilityType.ToDisplayString() nominated day to day contact details</h2>
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactData.FirstName)">
@@ -156,13 +156,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactData.AddressData.TownOrCity)">
             @Html.Gds().LabelFor(m => m.ContactData.AddressData.TownOrCity)
             @Html.Gds().ValidationMessageFor(m => m.ContactData.AddressData.TownOrCity)
-            @Html.Gds().TextBoxFor(m => m.ContactData.AddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.ContactData.AddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactData.AddressData.CountyOrRegion)">
             @Html.Gds().LabelFor(m => m.ContactData.AddressData.CountyOrRegion)
             @Html.Gds().ValidationMessageFor(m => m.ContactData.AddressData.CountyOrRegion)
-            @Html.Gds().TextBoxFor(m => m.ContactData.AddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+            @Html.Gds().TextBoxFor(m => m.ContactData.AddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactData.AddressData.Postcode)">
@@ -189,13 +189,13 @@
             @Html.Gds().TextBoxFor(m => m.ContactData.Email, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
 
-            <div class="govuk-!-padding-bottom-6"></div>
-            <button type="submit" name="save" class="govuk-button" id="site-details">
-                Save and continue
-            </button>
-            <div class="govuk-!-padding-bottom-6"></div>
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(FacilityType.Aatf)))">Cancel</a>
-            </p>
-        }
-    </section>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Cancel</a>
+        </p>
+    }
+</section>

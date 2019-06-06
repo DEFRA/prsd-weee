@@ -140,6 +140,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -206,6 +207,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReusedRemoveSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsDeselectControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsNilControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
@@ -218,8 +220,9 @@
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AatfDataToAatfDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressTonnageSummaryToReusedOffSiteSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AddressUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\NonObligatedDataToNonObligatedValueMapTests.cs" />
@@ -231,11 +234,13 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnRemoveSiteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndAatfToSentOnSummaryListViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnDataToSelectReportOptionsNilViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnStatusToReturnDisplayOptionsMapperTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
     <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModelTests.cs" />
     <Compile Include="Infrastructure\ARedirectTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
@@ -246,6 +251,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilitiesTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSelectReportOptionsRequestCreatorTests.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\DeleteReturnDataRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\GetWeeeSentOnRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreatorTests.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreatorTests.cs" />
@@ -279,18 +285,22 @@
     <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddAatfControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\EditOrganisationControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducersControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\TestEmailControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
-    <Compile Include="Areas\Admin\Requests\EditAatfDetailsRequestCreatorTests.cs" />
+    <Compile Include="Areas\Admin\Requests\EditFacilityDetailsRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
-    <Compile Include="Areas\Admin\Validation\AatfViewModelValidatorTests.cs" />
+    <Compile Include="Areas\Admin\Validation\ApprovalDateValidatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAeViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrIndividualOrganisationDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
@@ -303,6 +313,7 @@
     <Compile Include="Controllers\ErrorsControllerTests.cs" />
     <Compile Include="Controllers\OrganisationControllerTests.cs" />
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
+    <Compile Include="Extensions\GdsExtensionsTests.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensionsTests.cs" />
     <Compile Include="Filters\AuthorizeInternalClaimsAttributeTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
@@ -310,6 +321,8 @@
     <Compile Include="Controllers\NewUserControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValueViewModelTests.cs" />
     <Compile Include="TestHelpers\ActionExecutingContextHelper.cs" />
+    <Compile Include="TestHelpers\Classes\TestViewModel.cs" />
+    <Compile Include="TestHelpers\Classes\TestViewModelBase.cs" />
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />

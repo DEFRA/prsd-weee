@@ -23,7 +23,7 @@
                 </div>
             }
 
-            <details class="govuk-details govuk-!-font-size-16" role="group">
+            <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
                 <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
                     <span class="govuk-details__summary-text">
                         I need to submit a return for a different quarter
@@ -98,7 +98,7 @@
                                      @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
                                      @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
 
-                                    <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit"><div> Edit</div></button>
+                                    <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit"><span class="govuk-visually-hidden">Edit return</span><div> Edit</div></button>
                                  }
                             }
                         }
@@ -115,7 +115,7 @@
     else
     {
     <p>
-        You have not yet started any AATF returns.
+        You have not yet started any AATF returns
     </p>
     }
     <p>

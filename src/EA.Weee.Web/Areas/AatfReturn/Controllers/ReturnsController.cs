@@ -15,6 +15,7 @@
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
 
+    [ValidateOrganisationActionFilterAttribute]
     public class ReturnsController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
