@@ -12,7 +12,7 @@
 <div class="govuk-grid-row">
     <section class="govuk-grid-column-full" id="main-content">
         <header class="hgroup">
-            <h1 class="govuk-heading-l" style="word-break:break-all"> @Model.Name</h1>
+            <h1 class="govuk-heading-l" style="word-break: break-all"> @Model.Name</h1>
         </header>
     </section>
 </div>
@@ -56,7 +56,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
-                    <td class="govuk-table__cell" style="word-break:break-all">@Model.Name</td>
+                    <td class="govuk-table__cell" style="word-break: break-all">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">@Model.AddressHeadingName</th>
@@ -179,7 +179,7 @@
                 @if (Model.HasAnyRelatedEntities)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="vertical-align: text-top">
+                        <th class="govuk-table__header aatf-details-associated-table-header-title govuk-!-width-two-thirds" scope="col" style="vertical-align: text-top">
                             This organisation also operates
                         </th>
                         <td>
@@ -193,8 +193,8 @@
                                         foreach (var aatf in Model.AssociatedAatfs)
                                         {
                                             <tr class="govuk-table__row">
-                                                <td class="govuk-table__cell aatf-details-associated-table-cell">
-                                                    @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { style="word-wrap: normal" })
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
                                                 </td>
                                             </tr>
                                         }
@@ -216,8 +216,8 @@
                                         foreach (var ae in Model.AssociatedAes)
                                         {
                                             <tr class="govuk-table__row">
-                                                <td class="govuk-table__cell aatf-details-associated-table-cell">
-                                                    @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { style = "word-wrap: normal" })
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
                                                 </td>
                                             </tr>
                                         }
@@ -239,8 +239,8 @@
                                         foreach (var scheme in Model.AssociatedSchemes)
                                         {
                                             <tr class="govuk-table__row">
-                                                <td class="govuk-table__cell aatf-details-associated-table-cell">
-                                                    @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { style = "word-wrap: normal" })
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
                                                 </td>
                                             </tr>
                                         }
