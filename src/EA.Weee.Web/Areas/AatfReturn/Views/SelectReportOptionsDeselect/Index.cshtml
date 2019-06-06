@@ -21,9 +21,9 @@
     @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.Deselected == true))
     {
         <p class="govuk-body">
-            @if (deselectedOption.Id == 5)
+            @if (deselectedOption.AlternativeDescription != null)
             {
-                @:Non-obligated WEEE - DCF
+                @deselectedOption.AlternativeDescription
             }
             else
             {

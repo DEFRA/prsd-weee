@@ -245,6 +245,7 @@
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1550-AatfCleardown.sql" />
     <Content Include="scripts\Update\Release 2\Sprint09\20190520-1430-UpdateAatfTableWithFacilityType.sql" />
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint10\20190606-1150-ReportOnQuestionAddAlternativeDescription.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
