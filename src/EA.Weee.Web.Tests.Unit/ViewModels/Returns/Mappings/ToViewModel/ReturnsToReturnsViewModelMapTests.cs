@@ -55,10 +55,12 @@
                 }
             };
 
-            A.CallTo(() => ordering.Order(returnData)).Returns(returnData);
+            var returnsData = new ReturnsData(returnData, null);
+
+            A.CallTo(() => ordering.Order(returnsData.ReturnsList)).Returns(returnsData.ReturnsList.AsEnumerable());
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
             
-            var result = returnsMap.Map(returnData);
+            var result = returnsMap.Map(returnsData);
 
             result.Returns.Should().Contain(returnsItems.ElementAt(0));
             result.Returns.Should().Contain(returnsItems.ElementAt(1));
@@ -87,7 +89,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(returnData);
+            var result = returnsMap.Map(new ReturnsData(returnData, null));
 
             result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit).Should().Be(0);
         }
@@ -109,7 +111,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(returnData);
+            var result = returnsMap.Map(new ReturnsData(returnData, null));
 
             returnsItems.ElementAt(0).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
@@ -147,9 +149,17 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(returnData);
+            var result = returnsMap.Map(new ReturnsData(returnData, null));
 
             returnsItems.ElementAt(1).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNullSource_ArgumentNullExceptionExpected()
+        {
+            var exception = Record.Exception(() => returnsMap.Map(null));
+
+            exception.Should().BeOfType<ArgumentNullException>();
         }
     }
 }

@@ -5,11 +5,11 @@
 
     public class ReturnsData
     {
-        public IList<ReturnData> ReturnsList { get; private set; }
+        public List<ReturnData> ReturnsList { get; private set; }
 
         public ReturnQuarter ReturnQuarter { get; private set; }
 
-        public ReturnsData(IList<ReturnData> returnsList,
+        public ReturnsData(List<ReturnData> returnsList,
             ReturnQuarter returnQuarter)
         {
             Guard.ArgumentNotNull(() => returnsList, returnsList);

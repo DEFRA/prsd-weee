@@ -77,7 +77,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new ReturnsData(A.Fake<IList<ReturnData>>(), A.Fake<ReturnQuarter>());
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), A.Fake<ReturnQuarter>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
@@ -92,7 +92,7 @@
             var model = new ReturnsViewModel();
             var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<IList<ReturnData>>._)).Returns(model);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnsData>._)).Returns(model);
 
             var result = await controller.Index(organisationId) as ViewResult;
 

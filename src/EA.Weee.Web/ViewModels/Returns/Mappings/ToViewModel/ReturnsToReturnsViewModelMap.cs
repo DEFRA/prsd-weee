@@ -4,8 +4,9 @@
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;
+    using Prsd.Core;
 
-    public class ReturnsToReturnsViewModelMap : IMap<List<ReturnData>, ReturnsViewModel>
+    public class ReturnsToReturnsViewModelMap : IMap<ReturnsData, ReturnsViewModel>
     {
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
@@ -16,11 +17,13 @@
             this.returnItemViewModelMap = returnItemViewModelMap;
         }
 
-        public ReturnsViewModel Map(List<ReturnData> source)
+        public ReturnsViewModel Map(ReturnsData source)
         {
+            Guard.ArgumentNotNull(() => source, source);
+
             var model = new ReturnsViewModel();
 
-            var orderedItems = ordering.Order(source);
+            var orderedItems = ordering.Order(source.ReturnsList);
             foreach (var @return in orderedItems)
             {
                 var returnViewModelItems = returnItemViewModelMap.Map(@return);
