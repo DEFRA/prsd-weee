@@ -239,7 +239,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null) { Selected = true });
+                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()) { Selected = true });
             }
 
             return model;
@@ -253,7 +253,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null));
+                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
             }
 
             return model;

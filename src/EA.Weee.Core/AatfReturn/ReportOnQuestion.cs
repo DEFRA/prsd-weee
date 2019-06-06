@@ -4,12 +4,13 @@
 
     public class ReportOnQuestion
     {
-        public ReportOnQuestion(int id, string question, string description, int? parentId)
+        public ReportOnQuestion(int id, string question, string description, int? parentId, string alternativeDescription)
         {
             Id = id;
             Question = question;
             Description = description;
             ParentId = parentId;
+            AlternativeDescription = alternativeDescription;
         }
 
         public ReportOnQuestion()
@@ -23,6 +24,8 @@
         public string Description { get; set; }
 
         public int? ParentId { get; set; }
+
+        public string AlternativeDescription { get; set; }
 
         public bool Selected { get; set; }
 

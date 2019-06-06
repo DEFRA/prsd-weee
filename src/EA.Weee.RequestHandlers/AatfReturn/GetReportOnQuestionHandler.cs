@@ -25,7 +25,7 @@
 
             var questions = await dataAccess.GetAll<Domain.AatfReturn.ReportOnQuestion>();
 
-            return questions.Select(s => new ReportOnQuestion(s.Id, s.Question, s.Description, s.ParentId ?? default(int))).ToList();
+            return questions.Select(s => new ReportOnQuestion(s.Id, s.Question, s.Description, s.ParentId ?? default(int), s.AlternativeDescription)).ToList();
         }
     }
 }

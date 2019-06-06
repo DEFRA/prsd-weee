@@ -240,7 +240,7 @@
             var output = new List<ReportOnQuestion>();
             for (var i = 1; i <= 5; i++)
             {
-                output.Add(new ReportOnQuestion(i, A.Dummy<string>(), A.Dummy<string>(), default(int)));
+                output.Add(new ReportOnQuestion(i, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>()));
             }
 
             output[4].ParentId = 4;
