@@ -61,15 +61,6 @@
                     AatfId = aatfId
                 };
 
-                if (aatfId == null)
-                {
-                    model.PreviousController = "Scheme";
-                }
-                else
-                {
-                    model.PreviousController = "Aatf";
-                }
-
                 model.BusinessAddress.Countries = countries;
                 
                 return View("EditSoleTraderOrIndividualOrganisationDetails", model);
@@ -101,15 +92,6 @@
                     OrgId = orgId,
                     AatfId = aatfId
                 };
-
-                if (aatfId == null)
-                {
-                    model.PreviousController = "Scheme";
-                }
-                else
-                {
-                    model.PreviousController = "Aatf";
-                }
 
                 model.BusinessAddress.Countries = countries;
 
