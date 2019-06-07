@@ -174,7 +174,7 @@
         [Fact]
         public void Map_GivenReturnQuarter_DisplayCreateButtonShouldBeTrue()
         {
-            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new ReturnQuarter(2019, QuarterType.Q1));
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, QuarterType.Q1));
 
             var result = returnsMap.Map(returnsData);
 
@@ -188,7 +188,7 @@
         [InlineData(QuarterType.Q4)]
         public void Map_GivenReturnQuarter_ComplianceReturnPropertiesShouldBeSet(QuarterType quarter)
         {
-            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new ReturnQuarter(2019, quarter));
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, quarter));
 
             var result = returnsMap.Map(returnsData);
 

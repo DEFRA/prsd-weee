@@ -16,6 +16,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Core.DataReturns;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -70,7 +71,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), A.Fake<ReturnQuarter>());
+            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1));
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returnsData);
 

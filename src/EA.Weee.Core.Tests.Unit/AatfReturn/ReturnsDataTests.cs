@@ -13,7 +13,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnsList_ArgumentNullExceptionExpected()
         {
-            var exception = Record.Exception(() => new ReturnsData(null, A.Dummy<ReturnQuarter>()));
+            var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1)));
 
             exception.Should().BeOfType<ArgumentNullException>();
         }
@@ -22,7 +22,7 @@
         public void ReturnsData_GivenConstructorParameters_PropertiesShouldBeMapped()
         {
             var returnsList = new List<ReturnData>();
-            var returnQuarter = new ReturnQuarter(2019, QuarterType.Q1);
+            var returnQuarter = new Quarter(2019, QuarterType.Q1);
 
             var returnsData = new ReturnsData(returnsList, returnQuarter);
 
@@ -33,8 +33,6 @@
         [Fact]
         public void ReturnsData_GivenNullReturnQuarter_ReturnQuarterPropertiesShouldBeNull()
         {
-            var returnQuarter = new ReturnQuarter(2019, QuarterType.Q1);
-
             var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null);
 
             returnsData.ReturnQuarter.Should().BeNull();

@@ -43,7 +43,7 @@
             returnFactory = A.Fake<IReturnFactory>();
 
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(A<Guid>._, A<int>._, A<EA.Weee.Domain.DataReturns.QuarterType>._, A<FacilityType>._)).Returns(false);
-            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new ReturnQuarter(year, quarter));
+            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new Quarter(year, quarter));
 
             handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext, returnFactoryDataAccess, returnFactory);
         }
@@ -97,7 +97,7 @@
 
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new ReturnQuarter(year, quarterType));
+            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new Quarter(year, quarterType));
 
             await handler.HandleAsync(request);
 
@@ -138,7 +138,7 @@
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = year, Quarter = quarter, FacilityType = FacilityType.Aatf };
 
             A.CallTo(() => returnFactory.GetReturnQuarter(request.OrganisationId, request.FacilityType))
-                .Returns(new ReturnQuarter(2020, QuarterType.Q1));
+                .Returns(new Quarter(2020, QuarterType.Q1));
 
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
             result.Should().BeOfType<InvalidOperationException>();
@@ -151,7 +151,7 @@
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = year, Quarter = quarter, FacilityType = FacilityType.Aatf };
 
             A.CallTo(() => returnFactory.GetReturnQuarter(request.OrganisationId, request.FacilityType))
-                .Returns(new ReturnQuarter(year, QuarterType.Q2));
+                .Returns(new Quarter(year, QuarterType.Q2));
 
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
             result.Should().BeOfType<InvalidOperationException>();

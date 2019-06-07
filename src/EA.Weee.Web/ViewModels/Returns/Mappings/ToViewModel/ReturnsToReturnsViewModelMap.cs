@@ -58,8 +58,8 @@
             if (source.ReturnQuarter != null)
             {
                 model.DisplayCreateReturn = true;
-                model.ComplianceYear = source.ReturnQuarter.ComplianceYear;
-                model.Quarter = source.ReturnQuarter.Quarter;
+                model.ComplianceYear = source.ReturnQuarter.Year;
+                model.Quarter = source.ReturnQuarter.Q;
             }
 
             return model;

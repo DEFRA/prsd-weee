@@ -3,9 +3,10 @@
     using System;
     using System.Threading.Tasks;
     using Core.AatfReturn;
+    using Core.DataReturns;
 
     public interface IReturnFactory
     {
-        Task<ReturnQuarter> GetReturnQuarter(Guid organisationId, FacilityType facilityType);
+        Task<Quarter> GetReturnQuarter(Guid organisationId, FacilityType facilityType);
     }
 }

@@ -23,7 +23,7 @@
             this.quarterWindowFactory = quarterWindowFactory;
         }
 
-        public async Task<ReturnQuarter> GetReturnQuarter(Guid organisationId, FacilityType facilityType)
+        public async Task<Quarter> GetReturnQuarter(Guid organisationId, FacilityType facilityType)
         {
             var currentDate = SystemTime.Now;
             var systemSettings = await systemDataDataAccess.Get();
@@ -53,7 +53,7 @@
 
                 if (hasAatfWithApprovalDate && !hasReturnExists)
                 {
-                    return new ReturnQuarter(year, (QuarterType)quarterWindow.QuarterType);
+                    return new Quarter(year, (QuarterType)quarterWindow.QuarterType);
                 }
             }
 

@@ -71,7 +71,7 @@
 
             var returnWindow = await returnFactory.GetReturnQuarter(message.OrganisationId, message.FacilityType);
 
-            if (existingReturn || returnWindow.Quarter != message.Quarter || returnWindow.ComplianceYear != message.Year)
+            if (existingReturn || returnWindow.Q != message.Quarter || returnWindow.Year != message.Year)
             {
                 throw new InvalidOperationException("Return already exists");
             }

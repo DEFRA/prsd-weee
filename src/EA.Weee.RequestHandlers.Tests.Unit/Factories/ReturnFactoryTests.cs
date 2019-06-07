@@ -120,8 +120,8 @@
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
 
-            result.ComplianceYear.Should().Be(2019);
-            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q1);
+            result.Year.Should().Be(2019);
+            result.Q.Should().Be(Core.DataReturns.QuarterType.Q1);
         }
 
         [Fact]
@@ -138,8 +138,8 @@
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
 
-            result.ComplianceYear.Should().Be(2019);
-            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q1);
+            result.Year.Should().Be(2019);
+            result.Q.Should().Be(Core.DataReturns.QuarterType.Q1);
         }
 
         [Fact]
@@ -158,8 +158,8 @@
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
 
-            result.ComplianceYear.Should().Be(2019);
-            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q2);
+            result.Year.Should().Be(2019);
+            result.Q.Should().Be(Core.DataReturns.QuarterType.Q2);
         }
 
         [Fact]
@@ -197,8 +197,8 @@
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
 
-            result.ComplianceYear.Should().Be(2019);
-            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q1);
+            result.Year.Should().Be(2019);
+            result.Q.Should().Be(Core.DataReturns.QuarterType.Q1);
         }
 
         [Fact]
@@ -214,8 +214,8 @@
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
 
-            result.ComplianceYear.Should().Be(2019);
-            result.Quarter.Should().Be(Core.DataReturns.QuarterType.Q4);
+            result.Year.Should().Be(2019);
+            result.Q.Should().Be(Core.DataReturns.QuarterType.Q4);
         }
 
         private QuarterWindow QuarterWindow(int quarter)

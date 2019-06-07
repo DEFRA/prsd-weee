@@ -123,7 +123,7 @@
         public async Task HandleAsync_GivenOrganisation_ReturnQuarterShouldBeMapped(Core.AatfReturn.FacilityType facilityType)
         {
             var message = new GetReturns(Guid.NewGuid(), facilityType);
-            var returnQuarter = new ReturnQuarter(2019, QuarterType.Q1);
+            var returnQuarter = new Quarter(2019, QuarterType.Q1);
 
             A.CallTo(() => returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility)).Returns(returnQuarter);
 
