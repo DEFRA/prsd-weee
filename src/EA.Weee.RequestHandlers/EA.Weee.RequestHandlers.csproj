@@ -87,6 +87,7 @@
     <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedAmountByWeeeReusedIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedSiteByWeeeReusedIdSpecification.cs" />
+    <Compile Include="Admin\CompleteOrganisationAdminHandler.cs" />
     <Compile Include="Admin\CreateOrganisationAdminHandler.cs" />
     <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
