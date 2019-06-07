@@ -228,9 +228,7 @@
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
 
-                await cache.InvalidateOrganisationSearch();
-
-                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.BusinessTradingName, facilityType = model.FacilityType });
+                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
             }
         }
 
@@ -283,23 +281,8 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction("OrganisationConfirmation", "AddAatf", new { organisationId = id, organisationName = model.CompanyName, facilityType = model.FacilityType });
+                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
             }
-        }
-
-        [HttpGet]
-        public ActionResult OrganisationConfirmation(Guid organisationId, string organisationName, FacilityType facilityType)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            OrganisationConfirmationViewModel model = new OrganisationConfirmationViewModel()
-            {
-                OrganisationId = organisationId,
-                OrganisationName = organisationName,
-                FacilityType = facilityType
-            };
-
-            return View(model);
         }
 
         private async Task<T> PopulateAndReturnViewModel<T>(T viewModel, Guid organisationId)
@@ -365,6 +348,9 @@
                 await client.SendAsync(User.GetAccessToken(), request);
 
                 await cache.InvalidateAatfCache(request.OrganisationId);
+
+                await client.SendAsync(User.GetAccessToken(), new CompleteOrganisationAdmin() { OrganisationId = viewModel.OrganisationId });
+                await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction("ManageAatfs", "Aatf", new { viewModel.FacilityType });
             }
