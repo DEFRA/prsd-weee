@@ -17,5 +17,7 @@
         public abstract string BusinessTradingName { get; set; }
 
         public AddressData BusinessAddress { get; set; }
+
+        public string PreviousController { get; set; }
     }
 }

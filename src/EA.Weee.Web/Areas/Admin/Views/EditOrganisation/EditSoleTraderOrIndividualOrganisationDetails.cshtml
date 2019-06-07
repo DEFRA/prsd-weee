@@ -23,13 +23,13 @@
 
         <p>
             <span class="font-bold marginRight">Organisation type:</span> @if (Model.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                                                                          {
-                                                                              @:Sole trader or individual
-                                                                          }
-                                                                          else if (Model.OrganisationType == OrganisationType.Partnership)
-                                                                          {
-                                                                              @:Partnership
-                                                                          }
+            {
+                @:Sole trader or individual
+            }
+            else if (Model.OrganisationType == OrganisationType.Partnership)
+            {
+                @:Partnership
+            }
         </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
@@ -44,7 +44,14 @@
             <button class="govuk-button">Save and Continue</button>
         </div>
         <p>
-            <a href="@(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = Model.AatfId }) + "#organisationDetails")">Back</a>
+            @if (Model.PreviousController == "Scheme")
+            {
+                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId }) + "#organisationDetails")">Back</a>
+            }
+            else
+            {
+                <a href="@(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = Model.AatfId }) + "#organisationDetails")">Back</a>
+            }
         </p>
     }
 
