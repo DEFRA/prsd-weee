@@ -145,35 +145,44 @@
     @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
     {
         <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-three-quarters">
                 <p>
                     <b>Non-obligated WEEE</b>
                 </p>
-                <p>
-                    @Html.NavigationRouteLink("Add received data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
-                </p>
-                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                {
-                    <p>
-                        @Html.NavigationRouteLink("Add retained by a DCF data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
-                    </p>
-                }
             </div>
-            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
                 <p>
                     <b>Total (tonnes)</b>
                 </p>
+            </div>
+        </div>
+        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-column-three-quarters">
+                <p>
+                    @Html.NavigationRouteLink("Add received data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
                 <p>
                     @Model.NonObligatedTonnageTotal
                 </p>
-                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                {
+            </div>
+        </div>
+        if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+        {
+            <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+                <div class="govuk-grid-column-three-quarters">
+                    <p>
+                        @Html.NavigationRouteLink("Add retained by a DCF data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
                     <p>
                         @Model.NonObligatedTonnageTotalDcf
                     </p>
-                }
+                </div>
             </div>
-        </div>
+        }
     }
 
     @if (!displayObligatedGroup && !Model.ReportOnDisplayOptions.DisplayNonObligated)
@@ -195,13 +204,13 @@
         </p>
     }
 
-        <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
-            <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                <span class="govuk-details__summary-text">
-                    Some of my AATFs are missing
-                </span>
-            </summary>
-            @Html.Partial("_ContactProgressiveDisclosure")
-        </details>
+    <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+            <span class="govuk-details__summary-text">
+                Some of my AATFs are missing
+            </span>
+        </summary>
+        @Html.Partial("_ContactProgressiveDisclosure")
+    </details>
 
 </section>
