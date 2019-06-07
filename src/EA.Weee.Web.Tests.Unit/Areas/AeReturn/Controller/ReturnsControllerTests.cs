@@ -45,7 +45,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
-            ViewResult result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -70,23 +70,23 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            List<ReturnData> returns = new List<ReturnData>();
+            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), A.Fake<ReturnQuarter>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returnsData);
 
             await controller.Index(A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(returns)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(returnsData)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
         {
-            ReturnsViewModel model = new ReturnsViewModel();
+            var model = new ReturnsViewModel();
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<IList<ReturnData>>._)).Returns(model);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnsData>._)).Returns(model);
 
-            ViewResult result = await controller.Index(organisationId) as ViewResult;
+            var result = await controller.Index(organisationId) as ViewResult;
 
             var returnedModel = (ReturnsViewModel)model;
             
@@ -97,7 +97,7 @@
         [Fact]
         public async void GetExportedWholeWeee_GivenOrganisation_DefaultViewShouldBeReturned()
         {
-            ViewResult result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -105,13 +105,13 @@
         [Fact]
         public async void GetExportedWholeWeee_NoReturnIdProvided_ReturnCreated_ViewModelReturnIdShouldBePopulated()
         {
-            Guid returnId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
 
-            ViewResult result = await controller.ExportedWholeWeee(organisationId) as ViewResult;
+            var result = await controller.ExportedWholeWeee(organisationId) as ViewResult;
 
-            ExportedWholeWeeeViewModel viewModel = result.Model as ExportedWholeWeeeViewModel;
+            var viewModel = result.Model as ExportedWholeWeeeViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
         }
@@ -119,11 +119,11 @@
         [Fact]
         public async void GetExportedWholeWeee_ReturnIdProvided_ReturnNotCreated_ViewModelReturnIdShouldBePopulated()
         {
-            Guid returnId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            ViewResult result = await controller.ExportedWholeWeee(organisationId, returnId) as ViewResult;
+            var result = await controller.ExportedWholeWeee(organisationId, returnId) as ViewResult;
 
-            ExportedWholeWeeeViewModel viewModel = result.Model as ExportedWholeWeeeViewModel;
+            var viewModel = result.Model as ExportedWholeWeeeViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
 
@@ -143,13 +143,13 @@
         [InlineData(YesNoEnum.No, "NilReturn")]
         public async void PostExportedWholeWeee_SelectedValueGiven_CorrectRedirectHappens(YesNoEnum selectedValue, string action)
         {
-            ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel()
+            var viewModel = new ExportedWholeWeeeViewModel()
             {
                 WeeeSelectedValue = selectedValue,
                 ReturnId = Guid.NewGuid()
             };
 
-            RedirectToRouteResult result = await controller.ExportedWholeWeee(organisationId, viewModel) as RedirectToRouteResult;
+            var result = await controller.ExportedWholeWeee(organisationId, viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be("Returns");
@@ -167,12 +167,12 @@
         {
             var organisationId = Guid.NewGuid();
 
-            ReturnsViewModel viewModel = new ReturnsViewModel()
+            var viewModel = new ReturnsViewModel()
             {
                 OrganisationId = organisationId
             };
 
-            RedirectToRouteResult result = controller.Index(viewModel) as RedirectToRouteResult;
+            var result = controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ExportedWholeWeee");
             result.RouteValues["controller"].Should().Be("Returns");
@@ -183,11 +183,11 @@
         [Fact]
         public async void PostExportedWholeWeee_NoValueSelected_ReturnsViewWithViewModelAndBreadCrumbSet()
         {
-            ExportedWholeWeeeViewModel viewModel = new ExportedWholeWeeeViewModel();
+            var viewModel = new ExportedWholeWeeeViewModel();
 
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ViewResult result = await controller.ExportedWholeWeee(organisationId, viewModel) as ViewResult;
+            var result = await controller.ExportedWholeWeee(organisationId, viewModel) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
@@ -196,11 +196,11 @@
         [Fact]
         public async void GetNilResult_BreadCrumbSet_ViewReturnedWithModel()
         {
-            Guid returnId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            ViewResult result = await controller.NilReturn(organisationId, returnId) as ViewResult;
+            var result = await controller.NilReturn(organisationId, returnId) as ViewResult;
 
-            NilReturnViewModel viewModel = result.Model as NilReturnViewModel;
+            var viewModel = result.Model as NilReturnViewModel;
 
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(returnId, viewModel.ReturnId);
@@ -210,13 +210,13 @@
         [Fact]
         public async void PostNilResult_RedirectToReturnsList()
         {
-            NilReturnViewModel viewModel = new NilReturnViewModel()
+            var viewModel = new NilReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()
             };
 
-            RedirectToRouteResult result = await controller.NilReturnConfirm(viewModel) as RedirectToRouteResult;
+            var result = await controller.NilReturnConfirm(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Confirmation");
             result.RouteValues["controller"].Should().Be("Returns");
@@ -227,7 +227,7 @@
         [Fact]
         public async void PostNilResult_SubmitReturnShouldBeCalled()
         {
-            NilReturnViewModel viewModel = new NilReturnViewModel()
+            var viewModel = new NilReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()
@@ -242,9 +242,9 @@
         [Fact]
         public async void GetConfirmation_BreadCrumbIsSet_ReturnedWithViewModel()
         {
-            ViewResult result = await controller.Confirmation(organisationId) as ViewResult;
+            var result = await controller.Confirmation(organisationId) as ViewResult;
 
-            ConfirmationViewModel viewModel = result.Model as ConfirmationViewModel;
+            var viewModel = result.Model as ConfirmationViewModel;
 
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
@@ -253,12 +253,12 @@
         [Fact]
         public async void PostConfirmation_RedirectsToChooseActivity()
         {
-            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            var viewModel = new ConfirmationViewModel()
             {
                 OrganisationId = organisationId
             };
 
-            RedirectToRouteResult result = await controller.Confirmation(viewModel) as RedirectToRouteResult;
+            var result = await controller.Confirmation(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ChooseActivity");
             result.RouteValues["controller"].Should().Be("Home");

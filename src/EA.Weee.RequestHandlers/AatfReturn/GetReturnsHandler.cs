@@ -13,36 +13,26 @@
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
-    using FacilityType = Core.AatfReturn.FacilityType;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, ReturnsData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetPopulatedReturn getPopulatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
-        private readonly IQuarterWindowFactory quarterWindowFactory;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IReturnFactory returnFactory;
 
         public GetReturnsHandler(IWeeeAuthorization authorization,
             IGetPopulatedReturn getPopulatedReturn, 
             IReturnDataAccess returnDataAccess, 
-            IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
-            IQuarterWindowFactory quarterWindowFactory, 
-            ISystemDataDataAccess systemDataDataAccess, 
             IReturnFactory returnFactory)
         {
             this.authorization = authorization;
             this.getPopulatedReturn = getPopulatedReturn;
             this.returnDataAccess = returnDataAccess;
-            this.aatfDataAccess = aatfDataAccess;
-            this.quarterWindowFactory = quarterWindowFactory;
-            this.systemDataDataAccess = systemDataDataAccess;
             this.returnFactory = returnFactory;
         }
 
@@ -52,7 +42,7 @@
 
             var @returns = await returnDataAccess.GetByOrganisationId(message.OrganisationId);
 
-            var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, FacilityType.Aatf);
+            var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility);
 
             var returnsData = new List<ReturnData>();
 

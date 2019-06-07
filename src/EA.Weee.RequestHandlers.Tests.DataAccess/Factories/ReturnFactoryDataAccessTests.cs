@@ -36,7 +36,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeTrue();
             }
@@ -56,7 +56,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateAatfApprovalDate(Guid.NewGuid(), new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.ValidateAatfApprovalDate(Guid.NewGuid(), DateTime.Now.AddDays(1), 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }
@@ -76,7 +76,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Ae);
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), 2019, EA.Weee.Core.AatfReturn.FacilityType.Ae);
 
                 result.Should().BeFalse();
             }
@@ -96,7 +96,7 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }
@@ -116,7 +116,27 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, new DateTime(2019), 2019, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateAatfApprovalDate_GivenYearDoesNotMatch_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, new DateTime(2019));
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.ValidateAatfApprovalDate(organisation.Id, DateTime.Now.AddDays(1), 2020, EA.Weee.Core.AatfReturn.FacilityType.Aatf);
 
                 result.Should().BeFalse();
             }
@@ -196,7 +216,27 @@
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2020, QuarterType.Q2, Core.AatfReturn.FacilityType.Aatf);
+                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2020, QuarterType.Q1, Core.AatfReturn.FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task ValidateReturnQuarter_GivenFacilityTypeDoesNotMatch_ResultShouldBeFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = Organisation.CreatePartnership("Dummy");
+
+                await CreateReturn(database, organisation, 2019, QuarterType.Q1, FacilityType.Aatf);
+
+                var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.HasReturnQuarter(organisation.Id, 2019, QuarterType.Q1, Core.AatfReturn.FacilityType.Ae);
 
                 result.Should().BeFalse();
             }
@@ -204,7 +244,7 @@
 
         private async Task<Return> CreateReturn(DatabaseWrapper database, Organisation organisation, int year, QuarterType quarter, FacilityType facilityType)
         {
-            var @return = new Domain.AatfReturn.Return(organisation, new Quarter(year, quarter), database.Model.AspNetUsers.First().Id);
+            var @return = new Domain.AatfReturn.Return(organisation, new Quarter(year, quarter), database.Model.AspNetUsers.First().Id, facilityType);
 
             database.WeeeContext.Returns.Add(@return);
 

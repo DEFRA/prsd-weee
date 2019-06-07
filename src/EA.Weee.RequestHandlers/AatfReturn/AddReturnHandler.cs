@@ -27,18 +27,21 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
         private readonly IReturnFactoryDataAccess returnFactoryDataAccess;
+        private readonly IReturnFactory returnFactory;
 
         public AddReturnHandler(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess, 
             IGenericDataAccess genericDataAccess, 
             IUserContext userContext, 
-            IReturnFactoryDataAccess returnFactoryDataAccess)
+            IReturnFactoryDataAccess returnFactoryDataAccess, 
+            IReturnFactory returnFactory)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.genericDataAccess = genericDataAccess;
             this.userContext = userContext;
             this.returnFactoryDataAccess = returnFactoryDataAccess;
+            this.returnFactory = returnFactory;
         }
 
         public async Task<Guid> HandleAsync(AddReturn message)
@@ -46,25 +49,32 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var existingReturn =
-                await returnFactoryDataAccess.HasReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
-
-            if (existingReturn)
-            {
-                throw new InvalidOperationException("Return already exists");
-            }
+            await ValidateReturnMessage(message);
 
             var quarter = new Quarter(message.Year, (QuarterType)message.Quarter);
 
             var aatfOrganisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
 
-            FacilityType type = Enumeration.FromValue<FacilityType>((int)message.FacilityType);
+            var type = Enumeration.FromValue<EA.Weee.Domain.AatfReturn.FacilityType>((int)message.FacilityType);
 
             var aatfReturn = new Return(aatfOrganisation, quarter, userContext.UserId.ToString(), type);
 
             await returnDataAccess.Submit(aatfReturn);
 
             return aatfReturn.Id;
+        }
+
+        private async Task ValidateReturnMessage(AddReturn message)
+        {
+            var existingReturn =
+                await returnFactoryDataAccess.HasReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
+
+            var returnWindow = await returnFactory.GetReturnQuarter(message.OrganisationId, message.FacilityType);
+
+            if (existingReturn || returnWindow.Quarter != message.Quarter || returnWindow.ComplianceYear != message.Year)
+            {
+                throw new InvalidOperationException("Return already exists");
+            }
         }
     }
 }

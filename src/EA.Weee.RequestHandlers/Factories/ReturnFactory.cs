@@ -44,14 +44,16 @@
 
             foreach (var quarterWindow in windowDates)
             {
-                var date = quarterWindow.StartDate;
+                var year = quarterWindow.QuarterType == Domain.DataReturns.QuarterType.Q4
+                    ? quarterWindow.StartDate.Year - 1
+                    : quarterWindow.StartDate.Year;
 
-                var hasAatfWithApprovalDate = await returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, date, facilityType);
-                var hasReturnExists = await returnFactoryDataAccess.HasReturnQuarter(organisationId, date.Year, quarterWindow.QuarterType, facilityType);
+                var hasAatfWithApprovalDate = await returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarterWindow.EndDate, year, facilityType);
+                var hasReturnExists = await returnFactoryDataAccess.HasReturnQuarter(organisationId, year, quarterWindow.QuarterType, facilityType);
 
                 if (hasAatfWithApprovalDate && !hasReturnExists)
                 {
-                    return new ReturnQuarter(date.Year, (QuarterType)quarterWindow.QuarterType);
+                    return new ReturnQuarter(year, (QuarterType)quarterWindow.QuarterType);
                 }
             }
 

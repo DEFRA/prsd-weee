@@ -19,12 +19,12 @@
             this.context = context;
         }
 
-        public async Task<bool> ValidateAatfApprovalDate(Guid organisationId, DateTime date, EA.Weee.Core.AatfReturn.FacilityType facilityType)
+        public async Task<bool> ValidateAatfApprovalDate(Guid organisationId, DateTime date, int year, EA.Weee.Core.AatfReturn.FacilityType facilityType)
         {
             return await context.Aatfs
                 .AnyAsync(a => a.Organisation.Id == organisationId
                             && a.FacilityType.Value == (int)facilityType
-                            && a.ComplianceYear == date.Year
+                            && a.ComplianceYear == year
                             && a.ApprovalDate.HasValue
                             && a.ApprovalDate < date.Date
                             && a.ApprovalDate != default(DateTime));
@@ -34,7 +34,7 @@
         {
             return await context.Returns
                 .AnyAsync(r => r.Organisation.Id == organisationId
-                               //&& r.FacilityType.Value == (int)facilityType
+                               && r.FacilityType.Value == (int)facilityType
                                && r.Quarter.Year == year
                                && (int)r.Quarter.Q == (int)quarterType);
         }

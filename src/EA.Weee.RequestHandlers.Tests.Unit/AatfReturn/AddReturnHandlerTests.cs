@@ -3,6 +3,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -27,8 +28,10 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
         private readonly IReturnFactoryDataAccess returnFactoryDataAccess;
-
+        private readonly IReturnFactory returnFactory;
         private AddReturnHandler handler;
+        private const int year = 2019;
+        private const QuarterType quarter = QuarterType.Q1;
 
         public AddReturnUploadHandlerTests()
         {
@@ -37,8 +40,12 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             userContext = A.Fake<IUserContext>();
             returnFactoryDataAccess = A.Fake<IReturnFactoryDataAccess>();
+            returnFactory = A.Fake<IReturnFactory>();
 
-            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext, returnFactoryDataAccess);
+            A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(A<Guid>._, A<int>._, A<EA.Weee.Domain.DataReturns.QuarterType>._, A<FacilityType>._)).Returns(false);
+            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new ReturnQuarter(year, quarter));
+
+            handler = new AddReturnHandler(weeeAuthorization, returnDataAccess, genericDataAccess, userContext, returnFactoryDataAccess, returnFactory);
         }
 
         [Fact]
@@ -50,7 +57,8 @@
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
                 A.Dummy<IUserContext>(), 
-                A.Dummy<IReturnFactoryDataAccess>());
+                A.Dummy<IReturnFactoryDataAccess>(),
+                A.Dummy<IReturnFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -66,7 +74,8 @@
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
                 A.Dummy<IUserContext>(),
-                A.Dummy<IReturnFactoryDataAccess>());
+                A.Dummy<IReturnFactoryDataAccess>(),
+                A.Dummy<IReturnFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturn>());
 
@@ -80,9 +89,6 @@
         [InlineData(QuarterType.Q4)]
         public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType)
         {
-            const int year = 2019;
-            const int quarter = 1;
-
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = year, FacilityType = Core.AatfReturn.FacilityType.Aatf };
 
             var @return = A.Dummy<Return>();
@@ -91,6 +97,7 @@
 
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => returnFactory.GetReturnQuarter(A<Guid>._, A<FacilityType>._)).Returns(new ReturnQuarter(year, quarterType));
 
             await handler.HandleAsync(request);
 
@@ -102,7 +109,7 @@
         {
             var organisationId = Guid.NewGuid();
             var organisation = A.Fake<Organisation>();
-            var request = new AddReturn { OrganisationId = organisationId, FacilityType = Core.AatfReturn.FacilityType.Aatf, Year = 2019, QuarterType = quarterType };
+            var request = new AddReturn { OrganisationId = organisationId, FacilityType = Core.AatfReturn.FacilityType.Aatf, Year = year, Quarter = quarter };
 
             A.CallTo(() => organisation.Id).Returns(organisationId);
 
@@ -114,7 +121,7 @@
         [Fact]
         public async Task HandleAsync_GivenAddReturnRequestAndReturnAlreadyExists_InvalidOperationExceptionExpected()
         {
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = 2019, Quarter = QuarterType.Q1, FacilityType = FacilityType.Aatf };
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = year, Quarter = quarter, FacilityType = FacilityType.Aatf };
 
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(request.OrganisationId, request.Year, (Domain.DataReturns.QuarterType)request.Quarter, request.FacilityType))
                 .Returns(true);
@@ -122,7 +129,32 @@
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
             result.Should().BeOfType<InvalidOperationException>();
+            A.CallTo(() => returnDataAccess.Submit(A<Return>._)).MustNotHaveHappened();
+        }
 
+        [Fact]
+        public async Task HandleAsync_GivenAddReturnRequestAndReturnYearThatShouldBeCreatedDoesNotMatch_InvalidOperationExceptionExpected()
+        {
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = year, Quarter = quarter, FacilityType = FacilityType.Aatf };
+
+            A.CallTo(() => returnFactory.GetReturnQuarter(request.OrganisationId, request.FacilityType))
+                .Returns(new ReturnQuarter(2020, QuarterType.Q1));
+
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+            result.Should().BeOfType<InvalidOperationException>();
+            A.CallTo(() => returnDataAccess.Submit(A<Return>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAddReturnRequestAndQuarterThatShouldBeCreatedDoesNotMatch_InvalidOperationExceptionExpected()
+        {
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Year = year, Quarter = quarter, FacilityType = FacilityType.Aatf };
+
+            A.CallTo(() => returnFactory.GetReturnQuarter(request.OrganisationId, request.FacilityType))
+                .Returns(new ReturnQuarter(year, QuarterType.Q2));
+
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+            result.Should().BeOfType<InvalidOperationException>();
             A.CallTo(() => returnDataAccess.Submit(A<Return>._)).MustNotHaveHappened();
         }
     }

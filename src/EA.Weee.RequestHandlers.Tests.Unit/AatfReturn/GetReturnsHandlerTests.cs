@@ -12,44 +12,33 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.DataReturns;
     using DataAccess.DataAccess;
     using Domain;
     using Prsd.Core;
     using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetReturnsHandlerTests
     {
         private GetReturnsHandler handler;
         private readonly IGetPopulatedReturn populatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
-        private readonly IQuarterWindowFactory quarterWindowFactory;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IReturnFactory returnFactory;
-
-        private readonly Fixture fixture;
 
         public GetReturnsHandlerTests()
         {
             populatedReturn = A.Fake<IGetPopulatedReturn>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-            aatfDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
-            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             returnFactory = A.Fake<IReturnFactory>();
-
-            fixture = new Fixture();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
                 .AllowOrganisationAccess().Build(),
                 populatedReturn,
                 returnDataAccess,
-                aatfDataAccess,
-                quarterWindowFactory,
-                systemDataDataAccess,
                 returnFactory);
         }
 
@@ -61,9 +50,6 @@
             handler = new GetReturnsHandler(authorization,
                 A.Dummy<IGetPopulatedReturn>(),
                 A.Dummy<IReturnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
-                A.Dummy<IQuarterWindowFactory>(),
-                A.Dummy<ISystemDataDataAccess>(),
                 A.Dummy<IReturnFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
@@ -119,9 +105,31 @@
             result.ReturnsList.Should().HaveCount(2);
         }
 
-        [Fact]
-        public void Task_HandleAsync_GivenOrganisation_ReturnQuarterShouldBeRetrieved()
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        public async Task HandleAsync_GivenOrganisation_ReturnQuarterShouldBeRetrieved(Core.AatfReturn.FacilityType facilityType)
         {
+            var message = new GetReturns(Guid.NewGuid(), facilityType);
+
+            var result = await handler.HandleAsync(message);
+
+            A.CallTo(() => returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        public async Task HandleAsync_GivenOrganisation_ReturnQuarterShouldBeMapped(Core.AatfReturn.FacilityType facilityType)
+        {
+            var message = new GetReturns(Guid.NewGuid(), facilityType);
+            var returnQuarter = new ReturnQuarter(2019, QuarterType.Q1);
+
+            A.CallTo(() => returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility)).Returns(returnQuarter);
+
+            var result = await handler.HandleAsync(message);
+
+            result.ReturnQuarter.Should().Be(returnQuarter);
         }
 
         [Theory]
@@ -137,7 +145,7 @@
                 @return.FacilityType = Domain.AatfReturn.FacilityType.Ae;
             }
 
-            Return aatfReturn = A.Fake<Return>();
+            var aatfReturn = A.Fake<Return>();
             aatfReturn.FacilityType = Domain.AatfReturn.FacilityType.Aatf;
             returns.Add(aatfReturn);
 
