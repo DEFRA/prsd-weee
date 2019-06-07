@@ -6,7 +6,7 @@
 
     public class AatfAddressData : AddressData
     {
-        [Required]
+        [Required(ErrorMessage = "Enter AATF/ATF site name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [Display(Name = "AATF/ATF site name")]
         public override string Name { get; set; }
