@@ -110,7 +110,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("3003c625-967e-4322-98e1-fe139ebe95ee")]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_AatfIdIsSet_PreviousControllerIsSetCorrectly(Guid aatfId)
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_AatfIdIsSet_PreviousControllerIsSetCorrectly(Guid schemeId)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
@@ -124,11 +124,11 @@
                     CanEditOrganisation = true
                 });
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), aatfId) as ViewResult;
+            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, Guid.NewGuid(), Guid.NewGuid()) as ViewResult;
 
             var model = result.Model as EditSoleTraderOrIndividualOrganisationDetailsViewModel;
 
-            if (aatfId == null)
+            if (schemeId == null)
             {
                 model.PreviousController.Should().Be("Scheme");
             }
