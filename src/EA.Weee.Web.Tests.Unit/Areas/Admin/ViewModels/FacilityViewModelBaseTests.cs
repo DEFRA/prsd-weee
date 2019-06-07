@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using FluentAssertions;
     using Xunit;
@@ -33,6 +35,31 @@
             var validationResult = model.Validate(new ValidationContext(model));
 
             validationResult.Count().Should().Be(0);
+        }
+
+        [Fact]
+        public void ValidationMessageDisplayOrder_IsAsExpected()
+        {
+            var expectedOrdering = new List<string>
+            {
+                "Name",
+                "SiteAddressData.Address1",
+                "SiteAddressData.Address2",
+                "SiteAddressData.TownOrCity",
+                "SiteAddressData.CountyOrRegion",
+                "SiteAddressData.Postcode",
+                "SiteAddressData.CountryId",
+                "ApprovalNumber",
+                "CompetentAuthorityId",
+                "StatusValue",
+                "SizeValue",
+                "ApprovalDate"
+            };
+
+            var actualOrdering = FacilityViewModelBase.ValidationMessageDisplayOrder.ToList();
+
+            Assert.Equal(expectedOrdering.Count, actualOrdering.Count);
+            Assert.Equal(expectedOrdering, actualOrdering);
         }
     }
 }
