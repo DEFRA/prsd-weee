@@ -21,6 +21,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -343,6 +344,11 @@
 
             if (!ModelState.IsValid)
             {
+                if (!viewModel.ModelValidated)
+                {
+                    ModelState.RunCustomValidation(viewModel);
+                }
+
                 return View(nameof(Add), viewModel);
             }
 

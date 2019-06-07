@@ -14,11 +14,14 @@
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -252,6 +255,11 @@
                 }
 
                 return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
+            }
+
+            if (!viewModel.ModelValidated)
+            {
+                ModelState.RunCustomValidation(viewModel);
             }
 
             using (var client = apiClient())

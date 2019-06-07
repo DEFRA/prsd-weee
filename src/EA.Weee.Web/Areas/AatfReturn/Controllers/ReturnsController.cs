@@ -3,6 +3,7 @@
     using Api.Client;
     using Attributes;
     using Constant;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
     using Prsd.Core.Mapper;
@@ -35,7 +36,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
                 var viewModel = mapper.Map<ReturnsViewModel>(@return);
 
@@ -68,7 +69,13 @@
         {
             using (var client = apiClient())
             {
-                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn() { OrganisationId = model.OrganisationId });
+                AddReturn request = new AddReturn()
+                {
+                    OrganisationId = model.OrganisationId,
+                    FacilityType = FacilityType.Aatf
+                };
+
+                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), request);
 
                 return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }

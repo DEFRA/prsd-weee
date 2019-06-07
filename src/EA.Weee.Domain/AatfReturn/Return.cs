@@ -14,17 +14,19 @@
         {
         }
 
-        public Return(Organisation organisation, Quarter quarter, string createdBy)
+        public Return(Organisation organisation, Quarter quarter, string createdBy, FacilityType facilityType)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => quarter, quarter);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
+            Guard.ArgumentNotNull(() => facilityType, facilityType);
 
             Organisation = organisation;
             Quarter = quarter;
             ReturnStatus = ReturnStatus.Created;
             CreatedById = createdBy;
             CreatedDate = SystemTime.UtcNow;
+            FacilityType = facilityType;
         }
 
         public virtual void UpdateSubmitted(string submittedBy)
@@ -79,5 +81,7 @@
         public virtual User SubmittedBy { get; set; }
 
         public virtual Guid? ParentId { get; set; }
+
+        public virtual FacilityType FacilityType { get; set; }
     }
 }

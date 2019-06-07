@@ -10,5 +10,6 @@
         public static string ManageContactDetails = "Manage PCS contact details";
         public static string ManageOrganisationUsers = "Manage organisation users";
         public static string ManageAatfReturns = "Manage AATF returns";
+        public static string ManageAeReturns = "Manage AE returns";
     }
 }
