@@ -271,6 +271,9 @@
                 && p.Aatf.Size == aatfData.Size
                 && p.Aatf.ApprovalDate == aatfData.ApprovalDate
                 && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteOrganisationAdmin>.That.Matches(
+                 p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -304,6 +307,7 @@
             await controller.AddAatf(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -367,6 +371,9 @@
                 && p.Aatf.Size == aatfData.Size
                 && p.Aatf.ApprovalDate == aatfData.ApprovalDate
                 && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteOrganisationAdmin>.That.Matches(
+                p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -403,6 +410,7 @@
             await controller.AddAe(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -504,18 +512,19 @@
             SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
-                OrganisationType = "Sole trader or individual"
+                OrganisationType = "Sole trader or individual",
+                FacilityType = FacilityType.Aatf
             };
 
             viewModel.Address.Countries = countries;
 
             RedirectToRouteResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("OrganisationConfirmation");
+            result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
 
             result.RouteValues["organisationId"].Should().NotBe(null);
-            result.RouteValues["organisationName"].Should().Be(viewModel.BusinessTradingName);
+            result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
         }
 
         [Fact]
@@ -575,23 +584,6 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsPost_InvalidateCacheMustBeRun()
-        {
-            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
-            {
-                BusinessTradingName = "Company",
-                OrganisationType = "Sole trader or individual",
-                Address = A.Dummy<AddressData>()
-            };
-
-            viewModel.Address.Countries = countries;
-
-            await controller.SoleTraderOrPartnershipDetails(viewModel);
-
-            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
         public async Task RegisteredCompanyDetailsPost_ModelNotValid_ReturnsView()
         {
             RegisteredCompanyDetailsViewModel viewModel = new RegisteredCompanyDetailsViewModel()
@@ -624,18 +616,19 @@
                 BusinessTradingName = "name",
                 OrganisationType = "Registered company",
                 CompaniesRegistrationNumber = "1234567",
-                CompanyName = "Name"
+                CompanyName = "Name",
+                FacilityType = FacilityType.Aatf
             };
 
             viewModel.Address.Countries = countries;
 
             RedirectToRouteResult result = await controller.RegisteredCompanyDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("OrganisationConfirmation");
+            result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
 
             result.RouteValues["organisationId"].Should().NotBe(null);
-            result.RouteValues["organisationName"].Should().Be(viewModel.CompanyName);
+            result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
         }
 
         [Theory]
@@ -774,14 +767,6 @@
             viewModel.Address.Countries = countries;
 
             await controller.RegisteredCompanyDetails(viewModel);
-
-            Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
-        }
-
-        [Fact]
-        public void OrganisationConfirmationGet_Always_SetsInternalBreadcrumb()
-        {
-            controller.OrganisationConfirmation(Guid.NewGuid(), "test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
