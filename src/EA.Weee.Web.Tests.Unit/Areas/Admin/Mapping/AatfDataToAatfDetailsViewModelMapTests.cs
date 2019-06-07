@@ -142,6 +142,58 @@
         }
 
         [Fact]
+        public void Map_GivenValidSource_WithAatfs_AatfListShouldNotContainAatfFoundInSource()
+        {
+            AatfData aatfData = CreateAatfData();
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear);
+
+            List<AatfDataList> associatedAatfs = new List<AatfDataList>
+            {
+                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
+                aatfDataReplica
+            };
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            foreach (var aatf in result.AssociatedAatfs)
+            {
+                aatf.Id.Should().NotBe(aatfDataReplica.Id);
+            }
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_WithAatfs_AeListShouldNotContainAatfFoundInSource()
+        {
+            AatfData aatfData = CreateAatfData();
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear);
+
+            List<AatfDataList> associatedAatfs = new List<AatfDataList>
+            {
+                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019),
+                aatfDataReplica
+            };
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            foreach (var ae in result.AssociatedAes)
+            {
+                ae.Id.Should().NotBe(aatfDataReplica.Id);
+            }
+        }
+
+        [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDatetime()
         {
             AatfData aatfData = CreateAatfData();
