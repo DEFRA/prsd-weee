@@ -112,7 +112,7 @@
 
             var result = returnsMap.Map(new ReturnsData(returnData, null));
 
-            returnsItems.ElementAt(0).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
+            result.Returns.ElementAt(0).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
 
         [Theory]
@@ -129,7 +129,7 @@
         [InlineData(2020, QuarterType.Q4)]
         public void Map_GivenMappedReturnsAreEditableAndThereIsAnInProgressReturnInDifferentComplianceYearAndQuarter_ReturnedShouldBeEditable(int year, QuarterType quarter)
         {
-            var returnData = A.CollectionOfFake<ReturnData>(1).ToList();
+            var returnData = A.CollectionOfFake<ReturnData>(2).ToList();
 
             var returnsItems = new List<ReturnsItemViewModel>()
             {
@@ -150,7 +150,7 @@
 
             var result = returnsMap.Map(new ReturnsData(returnData, null));
 
-            returnsItems.ElementAt(1).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
+            result.Returns.ElementAt(1).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
 
         [Fact]
@@ -194,6 +194,42 @@
 
             result.ComplianceYear.Should().Be(2019);
             result.Quarter.Should().Be(quarter);
+        }
+
+        [Fact]
+        public void Map_GivenMappedReturnsAreForQuarterAndYearAreEditable_OnlyTheMostRecentRecordForYearAndQuarterShouldBeEditable()
+        {
+            var returnData = A.CollectionOfFake<ReturnData>(3).ToList();
+
+            var dateNow = DateTime.Now;
+            var idToFind = Guid.NewGuid();
+
+            var returnsItems = new List<ReturnsItemViewModel>()
+            {
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { CreatedDate = dateNow, Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
+                },
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { CreatedDate = dateNow.AddDays(1), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()) { ReturnId = idToFind },
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
+                },
+                new ReturnsItemViewModel()
+                {
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { CreatedDate = dateNow.AddDays(-1), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
+                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
+                }
+            };
+
+            A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
+            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
+
+            var result = returnsMap.Map(new ReturnsData(returnData, null));
+
+            result.Returns.First(r => r.ReturnViewModel.ReturnId.Equals(idToFind)).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
+            result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit.Equals(false)).Should().Be(2);
         }
     }
 }
