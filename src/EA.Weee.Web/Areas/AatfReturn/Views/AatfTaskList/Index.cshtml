@@ -42,38 +42,54 @@
                         <b>Obligated WEEE - @item.Aatf.Name (@item.Aatf.ApprovalNumber)</b>
                     </p>
                 </div>
-                <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                    <p>
-                        <b>B2C (tonnes)</b>
-                    </p>
-                </div>
-                <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                    <p>
-                        <b>B2B (tonnes)</b>
-                    </p>
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-quarter">
+                        &nbsp;
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        <p>
+                            <b>B2C (tonnes)</b>
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        <p>
+                            <b>B2B (tonnes)</b>
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+
+                    </div>
                 </div>
             </div>
 
             if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
             {
                 <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
-                    <div class="govuk-grid-column-one-half"></div>
                     <div class="govuk-grid-column-one-half">
                         <p>
-                            @Html.NavigationRouteLink("Add received on behalf of PCS(s) data", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
+                            Received on behalf of PCS(s) data
                         </p>
                     </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-quarter">
+                            &nbsp;
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeReceived.B2C
+                            </p>
+                        </div>
 
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeReceived.B2C
-                        </p>
-                    </div>
-
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeReceived.B2B
-                        </p>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeReceived.B2B
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <p>
+                                @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
+                            </p>
+                        </div>
                     </div>
                 </div>
             }
@@ -83,30 +99,39 @@
                 <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
                     <div class="govuk-grid-column-one-half">
                         <p>
-                            @if (item.WeeeSentOn.RedirectToSummary)
-                            {
-                                @Html.NavigationRouteLink("Add sent to another AATF / ATF data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
-                            }
-                            else
-                            {
-                                @Html.NavigationRouteLink("Add sent to another AATF / ATF data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
-                            }
-
+                            Sent to another AATF / ATF data
                         </p>
-                    </div>
 
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeSentOn.B2C
-                        </p>
                     </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-quarter">
+                            &nbsp;
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeSentOn.B2C
+                            </p>
+                        </div>
 
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeSentOn.B2B
-                        </p>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeSentOn.B2B
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <p>
+                                @if (item.WeeeSentOn.RedirectToSummary)
+                                {
+                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
+                                }
+
+                            </p>
+                        </div>
                     </div>
-
                 </div>
             }
 
@@ -115,27 +140,36 @@
                 <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
                     <div class="govuk-grid-column-one-half">
                         <p>
-                            @if (item.WeeeReused.RedirectToSummary)
-                            {
-                                @Html.NavigationRouteLink("Add reused as a whole appliance data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
-                            }
-                            else
-                            {
-                                @Html.NavigationRouteLink("Add reused as a whole appliance data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
-                            }
+                            Reused as a whole appliance data
                         </p>
                     </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-quarter">
+                            &nbsp;
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeReused.B2C
+                            </p>
+                        </div>
 
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeReused.B2C
-                        </p>
-                    </div>
-
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                        <p>
-                            @item.WeeeReused.B2B
-                        </p>
+                        <div class="govuk-grid-column-one-quarter">
+                            <p>
+                                @item.WeeeReused.B2B
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <p>
+                                @if (item.WeeeReused.RedirectToSummary)
+                                {
+                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
+                                }
+                            </p>
+                        </div>
                     </div>
                 </div>
             }
@@ -149,31 +183,74 @@
                 <p>
                     <b>Non-obligated WEEE</b>
                 </p>
-                <p>
-                    @Html.NavigationRouteLink("Add received data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
-                </p>
-                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                {
-                    <p>
-                        @Html.NavigationRouteLink("Add retained by a DCF data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
-                    </p>
-                }
             </div>
-            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
-                <p>
-                    <b>Total (tonnes)</b>
-                </p>
-                <p>
-                    @Model.NonObligatedTonnageTotal
-                </p>
-                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                {
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-grid-column-one-quarter">
+                    &nbsp;
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    &nbsp;
+                </div>
+                <div class="govuk-grid-column-one-quarter">
                     <p>
-                        @Model.NonObligatedTonnageTotalDcf
+                        <b>Total (tonnes)</b>
                     </p>
-                }
+                </div>
             </div>
         </div>
+        <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-column-one-third">
+                <p>
+                    Received data
+                </p>
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-one-quarter">
+                    &nbsp;
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    &nbsp;
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                    <p>
+                        @Model.NonObligatedTonnageTotal
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                    <p>
+                        @Html.NavigationRouteLink("Add data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                    </p>
+                </div>
+            </div>
+        </div>
+        if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+        {
+            <div class="govuk-grid-row govuk-table__cell weee-tonnage-top-aligned-display">
+                <div class="govuk-grid-column-one-third">
+                    <p>
+                        Retained by a DCF data
+                    </p>
+                </div>
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-grid-column-one-quarter">
+                        &nbsp;
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                        &nbsp;
+                    </div>
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                        <p>
+                            @Model.NonObligatedTonnageTotalDcf
+                        </p>
+                    </div>
+                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                        <p>
+                            @Html.NavigationRouteLink("Add data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
     }
 
     @if (!displayObligatedGroup && !Model.ReportOnDisplayOptions.DisplayNonObligated)
@@ -191,17 +268,17 @@
             Check return
         </button>
         <p>
-            @Html.NavigationRouteLink("Change reporting options", "Change reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
+            @Html.NavigationRouteLink("Change what you want to report on", "Change reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
         </p>
     }
 
-        <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
-            <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                <span class="govuk-details__summary-text">
-                    Some of my AATFs are missing
-                </span>
-            </summary>
-            @Html.Partial("_ContactProgressiveDisclosure")
-        </details>
+    <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+            <span class="govuk-details__summary-text">
+                Some of my AATFs are missing
+            </span>
+        </summary>
+        @Html.Partial("_ContactProgressiveDisclosure")
+    </details>
 
 </section>

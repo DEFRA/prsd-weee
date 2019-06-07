@@ -64,18 +64,22 @@
             var validationResults = new List<ValidationResult>();
             var instance = validationContext.ObjectInstance as FacilityViewModelBase;
 
-            if (instance?.ApprovalDate != null)
+            if (instance != null)
             {
-                var input = instance.ApprovalDate.Value;
-
-                var startDate = new DateTime(instance.ComplianceYear, 1, 1);
-                var endDate = new DateTime(instance.ComplianceYear, 12, 31);
-
-                if (input < startDate || input > endDate)
+                if (instance.ApprovalDate.HasValue && instance.ComplianceYear != default(short))
                 {
-                    validationResults.Add(
-                        new ValidationResult($"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}",
-                        new List<string> { nameof(instance.ApprovalDate) }));
+                    var inputDate = instance.ApprovalDate.Value;
+                    var inputComplianceYear = instance.ComplianceYear;
+
+                    var startDate = new DateTime(inputComplianceYear, 1, 1);
+                    var endDate = new DateTime(inputComplianceYear, 12, 31);
+
+                    if (inputDate < startDate || inputDate > endDate)
+                    {
+                        validationResults.Add(
+                            new ValidationResult($"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}",
+                            new List<string> { nameof(instance.ApprovalDate) }));
+                    }
                 }
             }
 
