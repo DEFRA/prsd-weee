@@ -47,6 +47,8 @@
         [Display(Name = "Position")]
         public string Position { get; set; }
 
+        public AatfContactAddressData AddressData { get; set; }
+
         [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
         [Display(Name = "Phone")]
@@ -58,8 +60,6 @@
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Enter email")]
         public string Email { get; set; }
-
-        public AatfContactAddressData AddressData { get; set; }
 
         public bool CanEditContactDetails { get; set; }
     }
