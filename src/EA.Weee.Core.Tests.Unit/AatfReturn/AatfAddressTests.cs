@@ -2,6 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Reflection;
     using EA.Weee.Core.AatfReturn;
     using FluentAssertions;
     using Xunit;
@@ -36,6 +38,20 @@
             var hasAttribute = Attribute.IsDefined(pi, typeof(StringLengthAttribute));
 
             hasAttribute.Should().Be(true);
+        }
+
+        [Fact]
+        public void AatfAddressData_SiteName_ErrorMessage()
+        {
+            Type t = typeof(AatfAddressData);
+            PropertyInfo pi = t.GetProperty("Name");
+
+            Attribute[] attrs = Attribute.GetCustomAttributes(pi);
+
+            RequiredAttribute attr = attrs.FirstOrDefault(p => p is RequiredAttribute) as RequiredAttribute;
+
+            Assert.NotNull(attr);
+            Assert.Equal("Enter AATF/ATF site name", attr.ErrorMessage);
         }
     }
 }
