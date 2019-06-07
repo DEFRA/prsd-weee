@@ -107,37 +107,6 @@
             ((ViewResult)result).ViewName.Should().Be("EditSoleTraderOrIndividualOrganisationDetails");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("3003c625-967e-4322-98e1-fe139ebe95ee")]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_AatfIdIsSet_PreviousControllerIsSetCorrectly(Guid schemeId)
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(new List<CountryData>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                    TradingName = "TradingName",
-                    BusinessAddress = new Core.Shared.AddressData(),
-                    CanEditOrganisation = true
-                });
-
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, Guid.NewGuid(), Guid.NewGuid()) as ViewResult;
-
-            var model = result.Model as EditSoleTraderOrIndividualOrganisationDetailsViewModel;
-
-            if (schemeId == null)
-            {
-                model.PreviousController.Should().Be("Scheme");
-            }
-            else
-            {
-                model.PreviousController.Should().Be("Aatf");
-            }
-        }
-
         [Fact]
         public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
         {
