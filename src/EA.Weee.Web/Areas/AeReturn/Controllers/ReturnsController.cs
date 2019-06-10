@@ -14,7 +14,10 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using AatfReturn.Attributes;
+    using Core.DataReturns;
 
+    [ValidateOrganisationActionFilter]
     public class ReturnsController : AeReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -52,11 +55,11 @@
         [ValidateAntiForgeryToken]
         public ActionResult Index(ReturnsViewModel viewModel)
         {
-            return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId);
+            return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId, viewModel.ComplianceYear, viewModel.Quarter);
         }
 
         [HttpGet]
-        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId, Guid? returnId = null)
+        public async Task<ActionResult> ExportedWholeWeee(Guid organisationId, int complianceYear, QuarterType quarter, Guid? returnId = null)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
@@ -64,16 +67,18 @@
             {
                 if (returnId == null)
                 {
-                    AddReturn request = new AddReturn()
+                    var request = new AddReturn()
                     {
                         OrganisationId = organisationId,
-                        FacilityType = FacilityType.Ae
+                        FacilityType = FacilityType.Ae,
+                        Quarter = quarter,
+                        Year = complianceYear
                     };
 
                     returnId = await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
+                var model = new ExportedWholeWeeeViewModel()
                 {
                     ReturnId = returnId.GetValueOrDefault()
                 };
@@ -106,7 +111,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            NilReturnViewModel viewModel = new NilReturnViewModel()
+            var viewModel = new NilReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId
@@ -132,7 +137,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            var viewModel = new ConfirmationViewModel()
             {
                 OrganisationId = organisationId
             };
