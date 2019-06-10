@@ -611,14 +611,7 @@
     <Content Include="Content\themes\base\spinner.css" />
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
-    <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Content\themes\datepicker-themes\classic.css" />
-    <Content Include="Content\themes\datepicker-themes\classic.date.css" />
-    <Content Include="Content\themes\datepicker-themes\classic.time.css" />
-    <Content Include="Content\themes\datepicker-themes\default.css" />
-    <Content Include="Content\themes\datepicker-themes\default.date.css" />
-    <Content Include="Content\themes\datepicker-themes\default.time.css" />
-    <Content Include="Content\themes\datepicker-themes\rtl.css" />
+    <Content Include="Content\themes\base\tooltip.css" />    
     <Content Include="Content\weee\images\icon-search-2x.png" />
     <Content Include="Content\weee\images\icon-search.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
