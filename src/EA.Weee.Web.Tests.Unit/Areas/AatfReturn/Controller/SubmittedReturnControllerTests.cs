@@ -113,8 +113,6 @@
         [Fact]
         public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
         {
-            var organsationId = Guid.NewGuid();
-
             var model = new SubmittedReturnViewModel() { OrgansationId = Guid.NewGuid() };
             var redirect = await controller.Index(model) as RedirectToRouteResult;
 

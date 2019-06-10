@@ -26,7 +26,7 @@
         private readonly DomainScheme scheme;
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
-        private Organisation organisation;
+        private readonly Organisation organisation;
 
         public ReturnMapTests()
         {
@@ -65,7 +65,7 @@
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime, QuarterType.Q1);
 
             var source = new ReturnQuarterWindow(GetReturn(), quarterWindow,
                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
@@ -370,16 +370,7 @@
         {
             var startTime = DateTime.Now;
             var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
-
-            return quarterWindow;
-        }
-
-        public Domain.DataReturns.QuarterWindow GetQuarterWindowWithOperator()
-        {
-            var startTime = DateTime.Now;
-            var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime);
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime, QuarterType.Q1);
 
             return quarterWindow;
         }

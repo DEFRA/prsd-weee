@@ -35,7 +35,7 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
-            <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
+            <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number</p>
             @Html.Gds().PasswordFor(m => m.Password, new {  @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">

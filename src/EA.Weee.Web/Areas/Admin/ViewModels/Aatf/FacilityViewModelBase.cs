@@ -15,6 +15,8 @@
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public abstract string Name { get; set; }
 
+        public AatfAddressData SiteAddressData { get; set; }
+
         [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber)]
         [DataType(DataType.Text)]
@@ -27,6 +29,18 @@
         [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
+        public IEnumerable<AatfStatus> StatusList { get; set; }
+
+        [Required]
+        [Display(Name = "Status")]
+        public int StatusValue { get; set; }
+
+        public IEnumerable<AatfSize> SizeList { get; set; }
+
+        [Required]
+        [Display(Name = "Size")]
+        public int SizeValue { get; set; }
+
         [Display(Name = "Approval date")]
         [DataType(DataType.Date)]
         [Required]
@@ -36,28 +50,30 @@
         [Display(Name = "Compliance year")]
         public short ComplianceYear { get; set; }
 
-        public IEnumerable<AatfStatus> StatusList { get; set; }
-
-        [Required]
-        [Display(Name = "Status")]
-        public int StatusValue { get; set; }
-
-        public IEnumerable<AatfSize> SizeList { get; set; }
-
         public FacilityType FacilityType { get; set; }
 
-        [Required]
-        [Display(Name = "Size")]
-        public int SizeValue { get; set; }
+        public bool ModelValidated { get; private set; }
 
-        public AatfAddressData SiteAddressData { get; set; }
+        public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
+        {
+            nameof(Name),
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.Address1)}",
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.Address2)}",
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.TownOrCity)}",
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.CountyOrRegion)}",
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.Postcode)}",
+            $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.CountryId)}",
+            nameof(ApprovalNumber),
+            nameof(CompetentAuthorityId),
+            nameof(StatusValue),
+            nameof(SizeValue),
+            nameof(ApprovalDate)
+        };
 
         public FacilityViewModelBase()
         {
             SiteAddressData = new AatfAddressData();
         }
-
-        public bool ModelValidated { get; private set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

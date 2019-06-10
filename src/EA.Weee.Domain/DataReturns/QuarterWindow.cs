@@ -8,10 +8,13 @@
 
         public DateTime EndDate { get; private set; }
 
-        public QuarterWindow(DateTime startDate, DateTime endDate)
+        public QuarterType QuarterType { get; private set; } 
+
+        public QuarterWindow(DateTime startDate, DateTime endDate, QuarterType quarterType)
         {
             StartDate = startDate;
             EndDate = endDate;
+            QuarterType = quarterType;
         }
 
         public bool IsBeforeWindow(DateTime date)

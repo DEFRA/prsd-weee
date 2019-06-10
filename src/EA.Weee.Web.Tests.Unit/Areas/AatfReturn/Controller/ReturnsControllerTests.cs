@@ -3,6 +3,7 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
+    using Core.DataReturns;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
@@ -76,7 +77,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new List<ReturnData>();
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1));
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
@@ -91,7 +92,7 @@
             var model = new ReturnsViewModel();
             var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<IList<ReturnData>>._)).Returns(model);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnsData>._)).Returns(model);
 
             var result = await controller.Index(organisationId) as ViewResult;
 
@@ -101,15 +102,21 @@
             returnedModel.OrganisationId.Should().Be(organisationId);
         }
 
-        [Fact]
-        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated()
+        [Theory]
+        [InlineData(QuarterType.Q1)]
+        [InlineData(QuarterType.Q2)]
+        [InlineData(QuarterType.Q3)]
+        [InlineData(QuarterType.Q4)]
+        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated(QuarterType quarterType)
         {
-            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid() };
+            var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid(), ComplianceYear = 2019, Quarter = quarterType };
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(c => c.OrganisationId.Equals(model.OrganisationId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That
+                    .Matches(c => c.OrganisationId.Equals(model.OrganisationId)
+                    && c.Quarter.Equals(model.Quarter)
+                    && c.Year.Equals(model.ComplianceYear)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -142,7 +149,7 @@
         }
 
         [Fact]
-        public async void CopyPost_UserShouldBeRedirectedToTasklist()
+        public async void CopyPost_UserShouldBeRedirectedToTaskList()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();

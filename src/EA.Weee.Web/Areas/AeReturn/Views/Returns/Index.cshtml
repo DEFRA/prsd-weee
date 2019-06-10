@@ -12,34 +12,37 @@
     <h1 class="govuk-heading-l">
         Manage AE returns
     </h1>
+    @if (Model.DisplayCreateReturn)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.OrganisationId)
+                    @Html.HiddenFor(m => m.ComplianceYear)
+                    @Html.HiddenFor(m => m.Quarter)
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.OrganisationId)
-
-                <div class="govuk-form-group">
-                    <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
-                </div>
-            }
-
-            <details class="govuk-details govuk-!-font-size-16" role="group" aria-live="polite">
-                <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                    <span class="govuk-details__summary-text">
-                        I need to submit a return for a different quarter
-                    </span>
-                </summary>
-                <div class="govuk-details__text" id="details-content" aria-hidden="true">
-                    <div class="govuk-body govuk-!-font-size-16">
-                        If you want to start a different return other than the one available, contact your environmental regulator
+                    <div class="govuk-form-group">
+                        <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
                     </div>
-                </div>
-            </details>
-        </div>
-    </div>
+                }
 
+                <details class="govuk-details govuk-!-font-size-16" role="group" aria-live="polite">
+                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text">
+                            I need to submit a return for a different quarter
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
+                        <div class="govuk-body govuk-!-font-size-16">
+                            If you want to start a different return other than the one available, contact your environmental regulator
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    }
     @if (Model.Returns.Count > 0)
     {
 
