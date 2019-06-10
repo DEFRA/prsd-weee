@@ -65,8 +65,6 @@
             @Html.DropDownListFor(m => m.SiteAddressData.CountryId, new SelectList(Model.SiteAddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "true", aria_labelledby = "site-address-country-dropdown-list" })
         </div>
 
-        <div class="govuk-!-padding-bottom-6"></div>
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
             @Html.Gds().LabelFor(m => m.ApprovalNumber)
             @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
@@ -103,11 +101,11 @@
             @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
             @if (Model.ApprovalDate.HasValue)
             {
-                <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("yyyy-MM-dd")" />
+                <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("yyyy-MM-dd")" />
             }
             else
             {
-                <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input" aria-labelledby="ApprovalDateLabel" />
+                <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
             }
         </div>
 
