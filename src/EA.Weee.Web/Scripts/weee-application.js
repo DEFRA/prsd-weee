@@ -100,6 +100,13 @@
 
         return false;
     });
+
+    $(".date-picker").flatpickr({
+        enableTime: false,
+        allowInput: true,
+		dateFormat: "d/m/Y"
+	    }
+    );
 });
 
 //USAGE: $("#form").serializeFiles();
