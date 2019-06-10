@@ -88,6 +88,7 @@
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
     <Compile Include="AatfReturn\ReportOnQuestionEnum.cs" />
+    <Compile Include="AatfReturn\ReturnsData.cs" />
     <Compile Include="AatfReturn\ReturnStatusData.cs" />
     <Compile Include="AatfReturn\ReturnReportOn.cs" />
     <Compile Include="AatfReturn\AatfContactAddressData.cs" />

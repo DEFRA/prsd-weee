@@ -5,7 +5,7 @@
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
 
-    public class GetReturns : IRequest<IList<ReturnData>>
+    public class GetReturns : IRequest<ReturnsData>
     {
         public Guid OrganisationId { get; private set; }
 

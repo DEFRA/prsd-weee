@@ -332,6 +332,7 @@
                     ModelState.RunCustomValidation(viewModel);
                 }
 
+                ModelState.ApplyCustomValidationSummaryOrdering(AddFacilityViewModelBase.ValidationMessageDisplayOrder);
                 return View(nameof(Add), viewModel);
             }
 
@@ -367,9 +368,8 @@
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault());
+                viewModel.ApprovalDate.GetValueOrDefault()) {FacilityType = viewModel.FacilityType};
 
-            data.FacilityType = viewModel.FacilityType;
             return data;
         }
 

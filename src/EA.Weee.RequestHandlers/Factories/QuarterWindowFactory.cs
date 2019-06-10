@@ -23,7 +23,7 @@
             var startDate = new DateTime(quarter.Year + quarterWindowTemplate.AddStartYears, quarterWindowTemplate.StartMonth, quarterWindowTemplate.StartDay);
             var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);
 
-            return new QuarterWindow(startDate, endDate);
+            return new QuarterWindow(startDate, endDate, quarter.Q);
         }
 
         public async Task<QuarterWindow> GetAnnualQuarter(Quarter quarter)
@@ -45,7 +45,7 @@
             var endDateYear = startDate.Year + quarterWindowTemplate.AddStartYears;
             var endDate = new DateTime(quarter.Year, endDateMonth, DateTime.DaysInMonth(endDateYear, endDateMonth));
 
-            return new QuarterWindow(startDate, endDate);
+            return new QuarterWindow(startDate, endDate, quarter.Q);
         }
 
         public async Task<List<QuarterWindow>> GetQuarterWindowsForDate(DateTime date)
@@ -62,11 +62,11 @@
                     var startDate = new DateTime(possibleComplianceYear + item.AddStartYears, item.StartMonth, item.StartDay);
                     var endDate = new DateTime(possibleComplianceYear + item.AddEndYears, item.EndMonth, item.EndDay);
 
-                    var quarterWindow = new QuarterWindow(startDate, endDate);
+                    var quarterWindow = new QuarterWindow(startDate, endDate, (QuarterType)item.Quarter);
 
                     if (quarterWindow.IsInWindow(date))
                     {
-                        possibleQuarterWindows.Add(new QuarterWindow(startDate, endDate));
+                        possibleQuarterWindows.Add(new QuarterWindow(startDate, endDate, (QuarterType)item.Quarter));
                     }
                 }
             }
