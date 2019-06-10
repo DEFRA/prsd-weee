@@ -452,7 +452,6 @@
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\RegisteredCompanyDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderOrPartnershipDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\OrganisationConfirmationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
@@ -933,7 +932,6 @@
     <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\OrganisationConfirmation.cshtml" />
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
