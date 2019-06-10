@@ -111,6 +111,7 @@
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
     <Compile Include="AatfReturn\AatfContactDataTests.cs" />
     <Compile Include="AatfReturn\OperatorAddressDataTests.cs" />
+    <Compile Include="AatfReturn\ReturnsDataTests.cs" />
     <Compile Include="AatfReturn\SiteAddressDataTests.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValueTests.cs" />
     <Compile Include="AatfReturn\NonObligatedCategoryValueTests.cs" />

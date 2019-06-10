@@ -53,7 +53,7 @@
         <p>
             @if (Model.SchemeId.HasValue)
             {
-                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId }) + "#organisationDetails")">Back</a>
+                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId, OverviewDisplayOption = "OrganisationDetails" }) + "#organisationDetails")">Back</a>
             }
             else
             {
