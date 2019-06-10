@@ -16,7 +16,7 @@
                     "~/Scripts/jquery.validate*",
                     "~/Scripts/custom-validation.js"));
 
-            // JQuery 3.x.x is used for allother browsers.
+            // JQuery 3.x.x is used for all other browsers.
             bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
                     "~/Scripts/jquery-3.3.1.js",
                     "~/Scripts/jquery-migrate-3.0.0.js",
@@ -33,6 +33,7 @@
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                     "~/Scripts/vendor/modernizr.custom.77028.js",
+                    "~/Scripts/flatpickr.js",
                     "~/Scripts/weee-application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
@@ -46,6 +47,7 @@
 
             bundles.Add(new ScriptBundle("~/bundles/weee-checkbox-toggle-visibility").Include(
                 "~/Scripts/weee-checkbox-toggle-visibility.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
 
@@ -59,10 +61,11 @@
                       "~/Content/weee-page-ie8.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
-                      "~/Content/weee-page.css"));
+                            "~/Content/flatpickr.css",
+                            "~/Content/weee-page.css"));
 
             bundles.Add(new StyleBundle("~/Content/remove-site").Include(
-                    "~/Content/remove-site.css"));
+                "~/Content/remove-site.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

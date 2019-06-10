@@ -517,6 +517,7 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\images\favicon.ico" />
@@ -611,6 +612,13 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\themes\datepicker-themes\classic.css" />
+    <Content Include="Content\themes\datepicker-themes\classic.date.css" />
+    <Content Include="Content\themes\datepicker-themes\classic.time.css" />
+    <Content Include="Content\themes\datepicker-themes\default.css" />
+    <Content Include="Content\themes\datepicker-themes\default.date.css" />
+    <Content Include="Content\themes\datepicker-themes\default.time.css" />
+    <Content Include="Content\themes\datepicker-themes\rtl.css" />
     <Content Include="Content\weee\images\icon-search-2x.png" />
     <Content Include="Content\weee\images\icon-search.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
@@ -636,6 +644,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />
+    <Content Include="Scripts\flatpickr.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -965,6 +974,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\picker.date.js" />
+    <Content Include="Scripts\picker.js" />
+    <Content Include="Scripts\picker.time.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\show-warning.js" />
