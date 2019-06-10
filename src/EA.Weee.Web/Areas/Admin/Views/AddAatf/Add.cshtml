@@ -65,8 +65,6 @@
             @Html.DropDownListFor(m => m.SiteAddressData.CountryId, new SelectList(Model.SiteAddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "true", aria_labelledby = "site-address-country-dropdown-list" })
         </div>
 
-        <div class="govuk-!-padding-bottom-6"></div>
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
             @Html.Gds().LabelFor(m => m.ApprovalNumber)
             @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)

@@ -967,6 +967,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\picker.date.js" />
+    <Content Include="Scripts\picker.js" />
+    <Content Include="Scripts\picker.time.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\show-warning.js" />
