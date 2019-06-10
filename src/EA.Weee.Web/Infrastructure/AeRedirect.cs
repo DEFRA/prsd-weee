@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Core.DataReturns;
 
     public static class AeRedirect
     {
@@ -14,9 +15,9 @@
             return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Index", organisationId = organisationId }));
         }
 
-        public static RedirectToRouteResult ExportedWholeWeee(Guid organisationId)
+        public static RedirectToRouteResult ExportedWholeWeee(Guid organisationId, int year, QuarterType quarter)
         {
-            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId }));
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId, complianceYear = year, quarter = quarter }));
         }
 
         public static RedirectToRouteResult NilReturn(Guid organisationId, Guid returnId)
