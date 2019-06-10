@@ -118,17 +118,18 @@
             viewModel.PossibleValues = new List<string>();
 
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageAatfs);
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
-            viewModel.PossibleValues.Add(InternalUserActivity.ViewReports);
 
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
             }
+
+            viewModel.PossibleValues.Add(InternalUserActivity.ManageAatfs);
+            viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
+            viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
+            viewModel.PossibleValues.Add(InternalUserActivity.ViewReports);
         }
     }
 }
