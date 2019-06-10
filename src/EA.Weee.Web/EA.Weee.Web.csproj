@@ -323,6 +323,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
+    <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
@@ -517,6 +518,7 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\images\favicon.ico" />
@@ -636,6 +638,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />
+    <Content Include="Scripts\flatpickr.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
