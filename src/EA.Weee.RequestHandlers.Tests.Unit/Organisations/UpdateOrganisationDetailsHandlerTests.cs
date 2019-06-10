@@ -65,21 +65,25 @@
         public async Task UpdateOrganisationDetailsHandler_WithValidData_FetchesOrganisationAndUpdatesAndSaves()
         {
             // Arrange
-            var organisationData = new OrganisationData();
-            organisationData.Id = new Guid("9a310218-311b-460d-bd50-9d246c237dcc");
-            organisationData.OrganisationType = OrganisationType.RegisteredCompany;
-            organisationData.Name = "CompanyName";
-            organisationData.CompanyRegistrationNumber = "123456789";
-            organisationData.OrganisationName = "CompanyName";
-            organisationData.BusinessAddress = new Core.Shared.AddressData();
-            organisationData.BusinessAddress.Address1 = "Address1";
-            organisationData.BusinessAddress.Address2 = "Address2";
-            organisationData.BusinessAddress.TownOrCity = "Town";
-            organisationData.BusinessAddress.CountyOrRegion = "County";
-            organisationData.BusinessAddress.Postcode = "Postcode";
-            organisationData.BusinessAddress.CountryId = new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4");
-            organisationData.BusinessAddress.Telephone = "012345678";
-            organisationData.BusinessAddress.Email = "email@domain.com";
+            var organisationData = new OrganisationData
+            {
+                Id = new Guid("9a310218-311b-460d-bd50-9d246c237dcc"),
+                OrganisationType = OrganisationType.RegisteredCompany,
+                Name = "CompanyName",
+                CompanyRegistrationNumber = "123456789",
+                OrganisationName = "CompanyName",
+                BusinessAddress = new Core.Shared.AddressData
+                {
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "Postcode",
+                    CountryId = new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4"),
+                    Telephone = "012345678",
+                    Email = "email@domain.com"
+                }
+            };
 
             var request = new UpdateOrganisationDetails(organisationData);
 

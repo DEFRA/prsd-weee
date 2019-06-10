@@ -69,13 +69,13 @@
         {
             using (var client = apiClient())
             {
-                AddReturn request = new AddReturn()
+                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()
                 {
                     OrganisationId = model.OrganisationId,
+                    Year = model.ComplianceYear,
+                    Quarter = model.Quarter,
                     FacilityType = FacilityType.Aatf
-                };
-
-                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), request);
+                });
 
                 return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }
