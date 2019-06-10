@@ -24,13 +24,15 @@
         public void ExportedWholeWeeeRedirectCalled_ShouldReturnCorrectRoute()
         {
             Guid orgId = Guid.NewGuid();
+            Guid returnId = Guid.NewGuid();
 
-            RedirectToRouteResult newRoute = AeRedirect.ExportedWholeWeee(orgId);
+            RedirectToRouteResult newRoute = AeRedirect.ExportedWholeWeee(orgId, returnId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
             Assert.Equal("ExportedWholeWeee", newRoute.RouteValues["action"]);
             Assert.Equal(orgId, newRoute.RouteValues["organisationId"]);
+            Assert.Equal(returnId, newRoute.RouteValues["returnId"]);
         }
 
         [Fact]

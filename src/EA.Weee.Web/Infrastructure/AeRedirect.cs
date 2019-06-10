@@ -14,9 +14,9 @@
             return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "Index", organisationId = organisationId }));
         }
 
-        public static RedirectToRouteResult ExportedWholeWeee(Guid organisationId)
+        public static RedirectToRouteResult ExportedWholeWeee(Guid organisationId, Guid returnId)
         {
-            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId }));
+            return new RedirectToRouteResult(ReturnsRouteName, new RouteValueDictionary(new { controller = "Returns", action = "ExportedWholeWeee", organisationId = organisationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult NilReturn(Guid organisationId, Guid returnId)

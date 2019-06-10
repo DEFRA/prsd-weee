@@ -24,7 +24,7 @@
                     @Html.HiddenFor(m => m.Quarter)
 
                     <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Start a new return for Q1 2019</button>
+                        <button class="govuk-button" type="submit">Start a new return for @Model.Quarter.ToDisplayString() @Model.ComplianceYear</button>
                     </div>
                 }
 

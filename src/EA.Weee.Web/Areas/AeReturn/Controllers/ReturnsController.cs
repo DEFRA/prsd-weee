@@ -50,9 +50,22 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(ReturnsViewModel viewModel)
+        public async Task<ActionResult> Index(ReturnsViewModel viewModel)
         {
-            return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId);
+            using (var client = apiClient())
+            {
+                AddReturn request = new AddReturn()
+                {
+                    OrganisationId = viewModel.OrganisationId,
+                    FacilityType = FacilityType.Ae,
+                    Quarter = viewModel.Quarter,
+                    Year = viewModel.ComplianceYear
+                };
+
+                Guid returnId = await client.SendAsync(User.GetAccessToken(), request);
+
+                return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId, returnId);
+            }
         }
 
         [HttpGet]
@@ -60,26 +73,12 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            using (var client = apiClient())
+            ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
             {
-                if (returnId == null)
-                {
-                    AddReturn request = new AddReturn()
-                    {
-                        OrganisationId = organisationId,
-                        FacilityType = FacilityType.Ae
-                    };
+                ReturnId = returnId.GetValueOrDefault(),
+            };
 
-                    returnId = await client.SendAsync(User.GetAccessToken(), request);
-                }
-
-                ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
-                {
-                    ReturnId = returnId.GetValueOrDefault()
-                };
-
-                return View(model);
-            }
+            return View(model);
         }
 
         [HttpPost]
