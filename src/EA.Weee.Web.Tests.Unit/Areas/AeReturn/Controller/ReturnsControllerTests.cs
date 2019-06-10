@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Core.DataReturns;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -49,6 +50,12 @@
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ReturnsController_ShouldHaveValidateOrganisationActionFilterAttribute()
+        {
+            typeof(ReturnsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
         }
 
         [Fact]
@@ -98,7 +105,7 @@
         [Fact]
         public async void GetExportedWholeWeee_GivenOrganisation_DefaultViewShouldBeReturned()
         {
-            var result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.ExportedWholeWeee(A.Dummy<Guid>(), A.Dummy<int>(), A.Dummy<QuarterType>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -107,10 +114,15 @@
         public async void GetExportedWholeWeee_NoReturnIdProvided_ReturnCreated_ViewModelReturnIdShouldBePopulated()
         {
             var returnId = Guid.NewGuid();
+            var quarter = QuarterType.Q1;
+            const int year = 2019;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(a => a.FacilityType.Equals(FacilityType.Ae)
+            && a.OrganisationId.Equals(organisationId)
+            && a.Quarter.Equals(quarter)
+            && a.Year.Equals(year)))).Returns(returnId);
 
-            var result = await controller.ExportedWholeWeee(organisationId) as ViewResult;
+            var result = await controller.ExportedWholeWeee(organisationId, year, quarter, null) as ViewResult;
 
             var viewModel = result.Model as ExportedWholeWeeeViewModel;
 
@@ -122,7 +134,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await controller.ExportedWholeWeee(organisationId, returnId) as ViewResult;
+            var result = await controller.ExportedWholeWeee(organisationId, A.Dummy<int>(), A.Dummy<QuarterType>(), returnId) as ViewResult;
 
             var viewModel = result.Model as ExportedWholeWeeeViewModel;
 
@@ -134,7 +146,7 @@
         [Fact]
         public async void GetExportedWholeWeee_BreadCrumbShouldBeSet()
         {
-            await controller.ExportedWholeWeee(A.Dummy<Guid>());
+            await controller.ExportedWholeWeee(A.Dummy<Guid>(), A.Dummy<int>(), A.Dummy<QuarterType>());
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AeReturn);
         }

@@ -3,6 +3,8 @@
     using EA.Weee.Web.Infrastructure;
     using System;
     using System.Web.Mvc;
+    using Core.DataReturns;
+    using FakeItEasy;
     using Xunit;
 
     public class ARedirectTests
@@ -10,9 +12,9 @@
         [Fact]
         public void ReturnsListRedirectCalled_ShouldReturnCorrectRoute()
         {
-            Guid orgId = Guid.NewGuid();
+            var orgId = Guid.NewGuid();
 
-            RedirectToRouteResult newRoute = AeRedirect.ReturnsList(orgId);
+            var newRoute = AeRedirect.ReturnsList(orgId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
@@ -23,23 +25,27 @@
         [Fact]
         public void ExportedWholeWeeeRedirectCalled_ShouldReturnCorrectRoute()
         {
-            Guid orgId = Guid.NewGuid();
+            var orgId = Guid.NewGuid();
+            const int year = 2019;
+            const QuarterType quarterType = QuarterType.Q1;
 
-            RedirectToRouteResult newRoute = AeRedirect.ExportedWholeWeee(orgId);
+            var newRoute = AeRedirect.ExportedWholeWeee(orgId, year, quarterType);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
             Assert.Equal("ExportedWholeWeee", newRoute.RouteValues["action"]);
             Assert.Equal(orgId, newRoute.RouteValues["organisationId"]);
+            Assert.Equal(year, newRoute.RouteValues["complianceYear"]);
+            Assert.Equal(quarterType, newRoute.RouteValues["quarter"]);
         }
 
         [Fact]
         public void NilReturnRedirectCalled_ShouldReturnCorrectRoute()
         {
-            Guid orgId = Guid.NewGuid();
-            Guid returnId = Guid.NewGuid();
+            var orgId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            RedirectToRouteResult newRoute = AeRedirect.NilReturn(orgId, returnId);
+            var newRoute = AeRedirect.NilReturn(orgId, returnId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
@@ -51,10 +57,10 @@
         [Fact]
         public void ConfirmationRedirectCalled_ShouldReturnCorrectRoute()
         {
-            Guid orgId = Guid.NewGuid();
-            Guid returnId = Guid.NewGuid();
+            var orgId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            RedirectToRouteResult newRoute = AeRedirect.Confirmation(orgId);
+            var newRoute = AeRedirect.Confirmation(orgId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
