@@ -120,12 +120,10 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
-
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
             }
-
             viewModel.PossibleValues.Add(InternalUserActivity.ManageAatfs);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
