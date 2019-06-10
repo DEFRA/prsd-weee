@@ -611,7 +611,7 @@
     <Content Include="Content\themes\base\spinner.css" />
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
-    <Content Include="Content\themes\base\tooltip.css" />    
+    <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\weee\images\icon-search-2x.png" />
     <Content Include="Content\weee\images\icon-search.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
@@ -967,9 +967,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\picker.date.js" />
-    <Content Include="Scripts\picker.js" />
-    <Content Include="Scripts\picker.time.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
     <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\show-warning.js" />
