@@ -271,6 +271,7 @@
                 viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 
+            ModelState.ApplyCustomValidationSummaryOrdering(FacilityViewModelBase.ValidationMessageDisplayOrder);
             return View(nameof(ManageAatfDetails), viewModel);
         }
 

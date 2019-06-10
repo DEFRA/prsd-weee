@@ -332,6 +332,7 @@
                     ModelState.RunCustomValidation(viewModel);
                 }
 
+                ModelState.ApplyCustomValidationSummaryOrdering(AddFacilityViewModelBase.ValidationMessageDisplayOrder);
                 return View(nameof(Add), viewModel);
             }
 
