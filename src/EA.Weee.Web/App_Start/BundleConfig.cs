@@ -34,6 +34,7 @@
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                     "~/Scripts/vendor/modernizr.custom.77028.js",
                     "~/Scripts/flatpickr.js",
+                    "~/Scripts/flatpickr.uk.js",
                     "~/Scripts/weee-application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
