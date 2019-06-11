@@ -83,11 +83,15 @@
         }
 
         [Theory]
-        [InlineData(QuarterType.Q1)]
-        [InlineData(QuarterType.Q2)]
-        [InlineData(QuarterType.Q3)]
-        [InlineData(QuarterType.Q4)]
-        public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType)
+        [InlineData(QuarterType.Q1, FacilityType.Aatf)]
+        [InlineData(QuarterType.Q2, FacilityType.Aatf)]
+        [InlineData(QuarterType.Q3, FacilityType.Aatf)]
+        [InlineData(QuarterType.Q4, FacilityType.Aatf)]
+        [InlineData(QuarterType.Q1, FacilityType.Ae)]
+        [InlineData(QuarterType.Q2, FacilityType.Ae)]
+        [InlineData(QuarterType.Q3, FacilityType.Ae)]
+        [InlineData(QuarterType.Q4, FacilityType.Ae)]
+        public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType, FacilityType facility)
         {
             var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = year, FacilityType = Core.AatfReturn.FacilityType.Aatf };
 

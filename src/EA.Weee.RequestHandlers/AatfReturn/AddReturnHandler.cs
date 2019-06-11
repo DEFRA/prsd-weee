@@ -67,7 +67,7 @@
         private async Task ValidateReturnMessage(AddReturn message)
         {
             var existingReturn =
-                await returnFactoryDataAccess.HasReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, FacilityType.Aatf);
+                await returnFactoryDataAccess.HasReturnQuarter(message.OrganisationId, message.Year, (QuarterType)message.Quarter, message.FacilityType);
 
             var returnWindow = await returnFactory.GetReturnQuarter(message.OrganisationId, message.FacilityType);
 
