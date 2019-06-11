@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Core.DataReturns;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -49,6 +50,12 @@
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ReturnsController_ShouldHaveValidateOrganisationActionFilterAttribute()
+        {
+            typeof(ReturnsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
         }
 
         [Fact]
@@ -99,12 +106,19 @@
         public async void PostIndex_ReturnCreated_RedirectWithReturnIdShouldHappen()
         {
             var returnId = Guid.NewGuid();
+            var quarter = QuarterType.Q1;
+            const int year = 2019;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(a => a.FacilityType.Equals(FacilityType.Ae)
+            && a.OrganisationId.Equals(organisationId)
+            && a.Quarter.Equals(quarter)
+            && a.Year.Equals(year)))).Returns(returnId);
 
             ReturnsViewModel viewModel = A.Dummy<ReturnsViewModel>();
 
             viewModel.OrganisationId = organisationId;
+            viewModel.Quarter = quarter;
+            viewModel.ComplianceYear = year;
 
             var result = await controller.Index(viewModel) as RedirectToRouteResult;
 

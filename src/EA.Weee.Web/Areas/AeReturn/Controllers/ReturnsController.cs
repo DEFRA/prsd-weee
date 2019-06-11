@@ -15,6 +15,8 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using AatfReturn.Attributes;
+    using Core.DataReturns;
 
     [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
     public class ReturnsController : AeReturnBaseController
@@ -107,7 +109,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            NilReturnViewModel viewModel = new NilReturnViewModel()
+            var viewModel = new NilReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId
@@ -133,7 +135,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            var viewModel = new ConfirmationViewModel()
             {
                 OrganisationId = organisationId
             };
