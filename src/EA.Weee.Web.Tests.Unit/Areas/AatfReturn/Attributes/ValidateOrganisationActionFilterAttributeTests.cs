@@ -2,8 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -14,10 +18,12 @@
     {
         private readonly ValidateOrganisationActionFilterAttribute attribute;
         private readonly ActionExecutingContext context;
+        private readonly IWeeeClient client;
 
         public ValidateOrganisationActionFilterAttributeTests()
         {
-            attribute = new ValidateOrganisationActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>() };
+            client = A.Fake<IWeeeClient>();
+            attribute = new ValidateOrganisationActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client, FacilityType = FacilityType.Aatf};
             context = A.Fake<ActionExecutingContext>();
             
             var routeData = new RouteData();
@@ -58,6 +64,22 @@
             A.CallTo(() => context.RouteData).Returns(routeData);
 
             action.Should().Throw<ArgumentException>().WithMessage("The specified organisation ID is not valid.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_NoAATFsOrAE_ArgumentExceptionExpected()
+        {
+            Action action = () => attribute.OnActionExecuting(context);
+
+            Guid orgId = Guid.NewGuid();
+
+            var routeData = new RouteData();
+            routeData.Values.Add("organisationId", orgId);
+
+            A.CallTo(() => context.RouteData).Returns(routeData);
+            A.CallTo(() => client.SendAsync(A<string>._, new GetAatfByOrganisation(orgId))).Returns(new List<AatfData>());
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("No AATF found for this organisation.");
         }
     }
 }

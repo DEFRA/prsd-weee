@@ -330,7 +330,6 @@
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
     <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
-    <Compile Include="Areas\AeReturn\ViewModels\NilReturnViewModel.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ConfirmationViewModel.cs" />
     <Compile Include="Infrastructure\AeRedirect.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
