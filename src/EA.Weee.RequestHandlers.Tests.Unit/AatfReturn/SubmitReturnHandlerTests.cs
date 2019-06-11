@@ -118,6 +118,24 @@
                 .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenReturnThatsAlreadySubmitted_StatusUpadateMustNotHaveHappened()
+        {
+            var message = new SubmitReturn(Guid.NewGuid());
+            var @return = A.Dummy<Return>();
+
+            var userId = Guid.NewGuid();
+
+            A.CallTo(() => @return.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
+            A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).Returns(@return);
+            A.CallTo(() => userContext.UserId).Returns(userId);
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString())).MustNotHaveHappened();
+            A.CallTo(() => weeeContext.SaveChangesAsync()).MustNotHaveHappened();
+        }
+
         public Return GetReturn()
         {
             return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", A.Fake<Domain.AatfReturn.FacilityType>());
