@@ -5,6 +5,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AeReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -15,6 +16,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
     public class ReturnsController : AeReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
