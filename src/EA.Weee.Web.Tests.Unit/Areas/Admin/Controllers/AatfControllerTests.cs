@@ -803,6 +803,16 @@
         }
 
         [Fact]
+        public async void ManageContactDetailsGet_GivenActionExecutes_AatfShouldBeRetrieved()
+        {
+            ContactDataAccessSetup(true);
+            var aatfId = Guid.NewGuid();
+            var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(c => c.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
         {
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
