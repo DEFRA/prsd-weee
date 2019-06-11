@@ -104,7 +104,8 @@
     $(".date-picker").flatpickr({
         enableTime: false,
         allowInput: true,
-		dateFormat: "d/m/Y"
+        dateFormat: "d/m/Y",
+        locale: "en"
 	    }
     );
 });
