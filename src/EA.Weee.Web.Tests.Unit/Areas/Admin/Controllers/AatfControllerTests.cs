@@ -253,6 +253,14 @@
             await controller.Details(aatfId);
 
             Assert.Equal(breadcrumbService.InternalActivity, activity);
+            if (type == FacilityType.Aatf)
+            {
+                Assert.Equal(breadcrumbService.InternalAatf, aatfData.Name);
+            }
+            else
+            {
+                Assert.Equal(breadcrumbService.InternalAe, aatfData.Name);
+            }
         }
 
         [Fact]
@@ -749,9 +757,21 @@
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
+            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+
             await controller.ManageContactDetails(aatfId, type);
 
             breadcrumbService.InternalActivity.Should().Be(activity);
+            if (type == FacilityType.Aatf)
+            {
+                breadcrumbService.InternalAatf.Should().Be(aatf.Name);
+            }
+            else
+            {
+                breadcrumbService.InternalAe.Should().Be(aatf.Name);
+            }
         }
 
         [Fact]
