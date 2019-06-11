@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.AeReturn.Controllers
-@model EA.Weee.Web.Areas.AeReturn.ViewModels.NilReturnViewModel
+@model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
 @{
     ViewBag.Title = "Confirm no whole WEEE exported - GOV.UK";
 }
@@ -28,7 +28,7 @@
                 @Html.HiddenFor(m => m.ReturnId)
 
                 <div class="govuk-form-group">
-                    <button class="govuk-button" type="submit">Continue</button>
+                    <button class="govuk-button" type="submit">Submit</button>
                 </div>
             }
 
