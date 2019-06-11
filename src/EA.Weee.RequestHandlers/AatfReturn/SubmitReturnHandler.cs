@@ -38,6 +38,11 @@
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");
             }
 
+            if (@return.ReturnStatus == ReturnStatus.Submitted)
+            {
+                return true;
+            }
+
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             @return.UpdateSubmitted(userContext.UserId.ToString());

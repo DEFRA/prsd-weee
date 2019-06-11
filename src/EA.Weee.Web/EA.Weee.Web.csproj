@@ -330,7 +330,6 @@
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
     <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
-    <Compile Include="Areas\AeReturn\ViewModels\NilReturnViewModel.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ConfirmationViewModel.cs" />
     <Compile Include="Infrastructure\AeRedirect.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
@@ -639,6 +638,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />
     <Content Include="Scripts\flatpickr.js" />
+    <Content Include="Scripts\flatpickr.uk.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />

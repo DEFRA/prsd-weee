@@ -5,6 +5,9 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.Infrastructure;
     using Services;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
@@ -14,6 +17,8 @@
         public Func<IWeeeClient> Client { get; set; }
 
         public ConfigurationService ConfigService { get; set; }
+
+        public FacilityType FacilityType { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -33,6 +38,16 @@
             }
 
             var organisationId = (Guid)guidOrganisationIdActionParameter;
+
+            using (var client = Client())
+            {
+                var aatfData = client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+
+                if (aatfData.Result.Count == 0)
+                {
+                    throw new InvalidOperationException(string.Format("No {0} found for this organisation.", this.FacilityType.ToString().ToUpper()));
+                }
+            }
 
             base.OnActionExecuting(context);
         }

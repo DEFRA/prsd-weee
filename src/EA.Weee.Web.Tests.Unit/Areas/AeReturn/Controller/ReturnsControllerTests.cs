@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Core.DataReturns;
+    using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -49,6 +50,12 @@
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ReturnsController_ShouldHaveValidateOrganisationActionFilterAttribute()
+        {
+            typeof(ReturnsController).Should().BeDecoratedWith<ValidateOrganisationActionFilterAttribute>();
         }
 
         [Fact]
@@ -90,9 +97,36 @@
             var result = await controller.Index(organisationId) as ViewResult;
 
             var returnedModel = (ReturnsViewModel)model;
-            
+
             returnedModel.Should().Be(model);
             returnedModel.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async void PostIndex_ReturnCreated_RedirectWithReturnIdShouldHappen()
+        {
+            var returnId = Guid.NewGuid();
+            var quarter = QuarterType.Q1;
+            const int year = 2019;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That.Matches(a => a.FacilityType.Equals(FacilityType.Ae)
+            && a.OrganisationId.Equals(organisationId)
+            && a.Quarter.Equals(quarter)
+            && a.Year.Equals(year)))).Returns(returnId);
+
+            ReturnsViewModel viewModel = A.Dummy<ReturnsViewModel>();
+
+            viewModel.OrganisationId = organisationId;
+            viewModel.Quarter = quarter;
+            viewModel.ComplianceYear = year;
+
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ExportedWholeWeee");
+            result.RouteValues["controller"].Should().Be("Returns");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
         }
 
         [Fact]
@@ -101,34 +135,6 @@
             var result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async void GetExportedWholeWeee_NoReturnIdProvided_ReturnCreated_ViewModelReturnIdShouldBePopulated()
-        {
-            var returnId = Guid.NewGuid();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).Returns(returnId);
-
-            var result = await controller.ExportedWholeWeee(organisationId) as ViewResult;
-
-            var viewModel = result.Model as ExportedWholeWeeeViewModel;
-
-            Assert.Equal(returnId, viewModel.ReturnId);
-        }
-
-        [Fact]
-        public async void GetExportedWholeWeee_ReturnIdProvided_ReturnNotCreated_ViewModelReturnIdShouldBePopulated()
-        {
-            var returnId = Guid.NewGuid();
-
-            var result = await controller.ExportedWholeWeee(organisationId, returnId) as ViewResult;
-
-            var viewModel = result.Model as ExportedWholeWeeeViewModel;
-
-            Assert.Equal(returnId, viewModel.ReturnId);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -156,7 +162,7 @@
             result.RouteValues["controller"].Should().Be("Returns");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
-            
+
             if (selectedValue == YesNoEnum.No)
             {
                 result.RouteValues["returnId"].Should().Be(viewModel.ReturnId);
@@ -164,7 +170,7 @@
         }
 
         [Fact]
-        public void IndexPost_RedirectToExportedWholeWeee()
+        public async void IndexPost_RedirectToExportedWholeWeee()
         {
             var organisationId = Guid.NewGuid();
 
@@ -173,7 +179,7 @@
                 OrganisationId = organisationId
             };
 
-            var result = controller.Index(viewModel) as RedirectToRouteResult;
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ExportedWholeWeee");
             result.RouteValues["controller"].Should().Be("Returns");
@@ -201,7 +207,7 @@
 
             var result = await controller.NilReturn(organisationId, returnId) as ViewResult;
 
-            var viewModel = result.Model as NilReturnViewModel;
+            var viewModel = result.Model as ReturnViewModel;
 
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(returnId, viewModel.ReturnId);
@@ -211,7 +217,7 @@
         [Fact]
         public async void PostNilResult_RedirectToReturnsList()
         {
-            var viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()
@@ -228,7 +234,7 @@
         [Fact]
         public async void PostNilResult_SubmitReturnShouldBeCalled()
         {
-            var viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()

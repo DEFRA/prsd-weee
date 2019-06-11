@@ -98,11 +98,11 @@
                     @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
                     @if (Model.ApprovalDate.HasValue)
                     {
-                        <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("yyyy-MM-dd")" />
+                        <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("dd/MM/yyyy")" />
                     }
                     else
                     {
-                        <input id="ApprovalDate" name="ApprovalDate" type="date" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
+                        <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
                     }
                 </div>
             </div>

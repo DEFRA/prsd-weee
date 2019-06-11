@@ -5,6 +5,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AeReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -14,7 +15,9 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.DataReturns;
 
+    [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
     public class ReturnsController : AeReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -50,9 +53,22 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(ReturnsViewModel viewModel)
+        public async Task<ActionResult> Index(ReturnsViewModel viewModel)
         {
-            return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId);
+            using (var client = apiClient())
+            {
+                AddReturn request = new AddReturn()
+                {
+                    OrganisationId = viewModel.OrganisationId,
+                    FacilityType = FacilityType.Ae,
+                    Quarter = viewModel.Quarter,
+                    Year = viewModel.ComplianceYear
+                };
+
+                Guid returnId = await client.SendAsync(User.GetAccessToken(), request);
+
+                return AeRedirect.ExportedWholeWeee(viewModel.OrganisationId, returnId);
+            }
         }
 
         [HttpGet]
@@ -60,26 +76,12 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            using (var client = apiClient())
+            ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
             {
-                if (returnId == null)
-                {
-                    AddReturn request = new AddReturn()
-                    {
-                        OrganisationId = organisationId,
-                        FacilityType = FacilityType.Ae
-                    };
+                ReturnId = returnId.GetValueOrDefault(),
+            };
 
-                    returnId = await client.SendAsync(User.GetAccessToken(), request);
-                }
-
-                ExportedWholeWeeeViewModel model = new ExportedWholeWeeeViewModel()
-                {
-                    ReturnId = returnId.GetValueOrDefault()
-                };
-
-                return View(model);
-            }
+            return View(model);
         }
 
         [HttpPost]
@@ -106,7 +108,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            NilReturnViewModel viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId
@@ -117,7 +119,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> NilReturnConfirm(NilReturnViewModel viewModel)
+        public async Task<ActionResult> NilReturnConfirm(ReturnViewModel viewModel)
         {
             using (var client = apiClient())
             {
@@ -132,7 +134,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            ConfirmationViewModel viewModel = new ConfirmationViewModel()
+            var viewModel = new ConfirmationViewModel()
             {
                 OrganisationId = organisationId
             };

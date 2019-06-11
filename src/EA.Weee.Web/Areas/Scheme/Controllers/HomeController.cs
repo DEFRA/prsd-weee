@@ -65,7 +65,7 @@
 
                 var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
 
-                await SetBreadcrumb(pcsId, null);
+                await SetBreadcrumb(pcsId, null, false);
 
                 await SetShowLinkToCreateOrJoinOrganisation(model);
 
@@ -203,7 +203,7 @@
                 }
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, null);
+            await SetBreadcrumb(viewModel.OrganisationId, null, false);
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
             await SetShowLinkToCreateOrJoinOrganisation(viewModel);
             return View(viewModel);
@@ -318,7 +318,7 @@
                                 ou.User.FirstName + " " + ou.User.Surname + " (" +
                                 ou.UserStatus.ToString() + ")", ou.Id));
 
-                await SetBreadcrumb(pcsId, "Manage organisation users");
+                await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
                 var model = new OrganisationUsersViewModel
                 {
@@ -333,7 +333,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, OrganisationUsersViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation users");
+            await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
             if (!ModelState.IsValid)
             {
@@ -360,7 +360,7 @@
         {
             if (organisationUserId.HasValue)
             {
-                await SetBreadcrumb(pcsId, "Manage organisation users");
+                await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
                 using (var client = apiClient())
                 {
@@ -390,7 +390,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, OrganisationUserViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation users");
+            await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
             if (!ModelState.IsValid)
             {
@@ -431,7 +431,7 @@
                     OrganisationData = orgDetails
                 };
                 var organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
-                await SetBreadcrumb(pcsId, organisationDetailsActivityName);
+                await SetBreadcrumb(pcsId, organisationDetailsActivityName, false);
                 return View("ViewOrganisationDetails", model);
             }
         }
@@ -611,11 +611,15 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, bool setScheme = true)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            if (setScheme)
+            {
+                breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+            }
         }
     }
 }
