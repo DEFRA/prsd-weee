@@ -109,7 +109,7 @@
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
-            var viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = returnId
@@ -120,7 +120,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> NilReturnConfirm(NilReturnViewModel viewModel)
+        public async Task<ActionResult> NilReturnConfirm(ReturnViewModel viewModel)
         {
             using (var client = apiClient())
             {

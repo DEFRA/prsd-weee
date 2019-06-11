@@ -207,7 +207,7 @@
 
             var result = await controller.NilReturn(organisationId, returnId) as ViewResult;
 
-            var viewModel = result.Model as NilReturnViewModel;
+            var viewModel = result.Model as ReturnViewModel;
 
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(returnId, viewModel.ReturnId);
@@ -217,7 +217,7 @@
         [Fact]
         public async void PostNilResult_RedirectToReturnsList()
         {
-            var viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()
@@ -234,7 +234,7 @@
         [Fact]
         public async void PostNilResult_SubmitReturnShouldBeCalled()
         {
-            var viewModel = new NilReturnViewModel()
+            var viewModel = new ReturnViewModel()
             {
                 OrganisationId = organisationId,
                 ReturnId = Guid.NewGuid()
