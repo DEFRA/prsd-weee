@@ -15,7 +15,6 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AatfReturn.Attributes;
     using Core.DataReturns;
 
     [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
