@@ -25,18 +25,16 @@
         [Fact]
         public void ExportedWholeWeeeRedirectCalled_ShouldReturnCorrectRoute()
         {
-            var orgId = Guid.NewGuid();
-            const int year = 2019;
-            const QuarterType quarterType = QuarterType.Q1;
+            Guid orgId = Guid.NewGuid();
+            Guid returnId = Guid.NewGuid();
 
-            var newRoute = AeRedirect.ExportedWholeWeee(orgId, year, quarterType);
+            RedirectToRouteResult newRoute = AeRedirect.ExportedWholeWeee(orgId, returnId);
 
             Assert.Equal(AeRedirect.ReturnsRouteName, newRoute.RouteName);
             Assert.Equal("Returns", newRoute.RouteValues["controller"]);
             Assert.Equal("ExportedWholeWeee", newRoute.RouteValues["action"]);
             Assert.Equal(orgId, newRoute.RouteValues["organisationId"]);
-            Assert.Equal(year, newRoute.RouteValues["complianceYear"]);
-            Assert.Equal(quarterType, newRoute.RouteValues["quarter"]);
+            Assert.Equal(returnId, newRoute.RouteValues["returnId"]);
         }
 
         [Fact]
