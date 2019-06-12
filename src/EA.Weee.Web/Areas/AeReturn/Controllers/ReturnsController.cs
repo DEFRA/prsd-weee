@@ -100,51 +100,50 @@
                 return AeRedirect.ReturnsList(organisationId);
             }
 
-            return AeRedirect.NilReturn(organisationId, viewModel.ReturnId);
+            return AeRedirect.NilReturn(viewModel.ReturnId);
         }
 
         [HttpGet]
-        public async Task<ActionResult> NilReturn(Guid organisationId, Guid returnId)
+        public async Task<ActionResult> NilReturn(Guid returnId)
         {
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
-
-            var viewModel = new ReturnViewModel()
+            using (var client = apiClient())
             {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-            return View(viewModel);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AeReturn);
+
+                return View(mapper.Map<SubmittedReturnViewModel>(@return));
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> NilReturnConfirm(ReturnViewModel viewModel)
+        public async Task<ActionResult> NilReturnConfirm(SubmittedReturnViewModel viewModel)
         {
             using (var client = apiClient())
             {
                 await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
-            }
 
-            return AeRedirect.Confirmation(viewModel.OrganisationId);
+                return AeRedirect.Confirmation(viewModel.ReturnId);
+            }
         }
 
         [HttpGet]
-        public async Task<ActionResult> Confirmation(Guid organisationId)
+        public async Task<ActionResult> Confirmation(Guid returnId)
         {
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
-
-            var viewModel = new ConfirmationViewModel()
+            using (var client = apiClient())
             {
-                OrganisationId = organisationId
-            };
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
 
-            return View(viewModel);
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AeReturn);
+
+                return View(mapper.Map<SubmittedReturnViewModel>(@return));
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Confirmation(ConfirmationViewModel model)
+        public virtual async Task<ActionResult> Confirmation(SubmittedReturnViewModel model)
         {
             return await Task.Run<ActionResult>(() =>
                 RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.OrganisationId }));
