@@ -8,6 +8,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using FluentAssertions;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using System;
@@ -728,6 +729,64 @@
 
             Assert.IsType<PcsDetailsOverviewViewModel>(viewResult.Model);
             Assert.Equal("Overview/PcsDetailsOverview", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpGet_Overview_BreadcrumbShouldBeSet()
+        {
+            var schemeName = "schemeName";
+            var schemeId = Guid.NewGuid();
+
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await SchemeController().Overview(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void HttpGet_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+
+            var controller = SchemeController();
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void HttpPost_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+
+            var controller = SchemeController();
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
         }
 
         [Theory]
