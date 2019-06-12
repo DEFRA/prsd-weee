@@ -1,12 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Returns
 {
     using System;
     using Core.AatfReturn;
-    using EA.Weee.Web.ViewModels.Returns;
 
     public class SubmittedReturnViewModel : ReturnViewModelBase
     {
-        public Guid OrgansationId { get; set; }
+        public Guid OrganisationId { get; set; }
 
         public SubmittedReturnViewModel()
         {

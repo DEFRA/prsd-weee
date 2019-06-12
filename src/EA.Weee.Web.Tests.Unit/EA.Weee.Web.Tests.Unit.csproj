@@ -250,7 +250,7 @@
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnViewModelToReturnsItemViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilitiesTests.cs" />
@@ -282,7 +282,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModelTests.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
+    <Compile Include="ViewModels\Returns\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
