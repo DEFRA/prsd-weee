@@ -252,6 +252,7 @@
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1225-fix-sole-trader-name.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-0938-add-localarea.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1344-create-pan-area-table.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191306-1420-add-aatf-area-columns.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
