@@ -54,7 +54,7 @@
         }
 
         [Fact]
-        public async Task CanCreateSoleTrader()
+        public async Task CanCreatePartnership()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -63,12 +63,12 @@
 
                 string tradingName = "Test Trading Name" + Guid.NewGuid();
                 var status = OrganisationStatus.Incomplete;
-                var type = OrganisationType.SoleTraderOrIndividual;
+                var type = OrganisationType.Partnership;
 
                 var businessAddress = await MakeUKAddress(context, "B");
                 var notificationAddress = await MakeInternationalAddress(context, "N");
 
-                var organisation = Organisation.CreateSoleTrader(tradingName);
+                var organisation = Organisation.CreatePartnership(tradingName);
 
                 organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
                 organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
@@ -86,6 +86,43 @@
                 var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
                 VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
+                VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
+            }
+        }
+
+        [Fact]
+        public async Task CanCreateSoleTrader()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var contact = MakeContact();
+
+                string companyName = "Test Trading Name" + Guid.NewGuid();
+                var status = OrganisationStatus.Incomplete;
+                var type = OrganisationType.SoleTraderOrIndividual;
+
+                var businessAddress = await MakeUKAddress(context, "B");
+                var notificationAddress = await MakeInternationalAddress(context, "N");
+
+                var organisation = Organisation.CreateSoleTrader(companyName);
+
+                organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+                organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+
+                context.Organisations.Add(organisation);
+
+                await context.SaveChangesAsync();
+
+                var thisTestOrganisationArray =
+                    context.Organisations.Where(o => o.Name == companyName).ToArray();
+
+                Assert.NotNull(thisTestOrganisationArray);
+                Assert.NotEmpty(thisTestOrganisationArray);
+
+                var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+                VerifyOrganisation(companyName, null, null, status, type, thisTestOrganisation);
                 VerifyAddress(businessAddress, thisTestOrganisation.BusinessAddress);
             }
         }

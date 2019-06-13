@@ -4,7 +4,7 @@
 @using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.SearchViewModel
 @{
-    ViewBag.Title = "Add Organisation to " +  Model.FacilityType.ToDisplayString();
+    ViewBag.Title = "Add Organisation to " + Model.FacilityType.ToDisplayString();
 }
 @section main_content
 {
@@ -32,11 +32,11 @@
         </div>
 
         <p>
-            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
+            <a class="govuk-button" href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Perform another activity</a>
         </p>
 
         <p>
-            @Html.ActionLink("Perform another activity", "Index", "Home")
+            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
         </p>
     }
 }

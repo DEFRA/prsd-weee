@@ -4,10 +4,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
@@ -83,11 +81,11 @@
             var result = await controller.EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             result.Should().BeOfType<ViewResult>();
-            ((ViewResult)result).ViewName.Should().Be("EditRegisteredCompanyOrganisationDetails");
+            ((ViewResult)result).Model.Should().BeOfType<EditRegisteredCompanyOrganisationDetailsViewModel>();
         }
 
         [Fact]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        public async void EditSoleTraderOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
@@ -101,10 +99,31 @@
                     CanEditOrganisation = true
                 });
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var result = await controller.EditSoleTraderOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             result.Should().BeOfType<ViewResult>();
-            ((ViewResult)result).ViewName.Should().Be("EditSoleTraderOrIndividualOrganisationDetails");
+            ((ViewResult)result).Model.Should().BeOfType<EditSoleTraderOrganisationDetailsViewModel>();
+        }
+
+        [Fact]
+        public async void EditPartnershipOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(new List<CountryData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new Core.Shared.AddressData(),
+                    CanEditOrganisation = true
+                });
+
+            var result = await controller.EditPartnershipOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+
+            result.Should().BeOfType<ViewResult>();
+            ((ViewResult)result).Model.Should().BeOfType<EditPartnershipOrganisationDetailsViewModel>();
         }
 
         [Fact]
@@ -197,7 +216,7 @@
         }
 
         [Fact]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        public async void EditPartnershipOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
@@ -208,14 +227,14 @@
                     CanEditOrganisation = false
                 });
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var result = await controller.EditPartnershipOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             result.Should().NotBeNull();
             result.Should().BeOfType<HttpForbiddenResult>();
         }
 
         [Fact]
-        public async void PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        public async void EditPartnershipOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
         {
             var countries = new List<CountryData>();
 
@@ -226,7 +245,7 @@
 
             controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
 
-            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            var viewModel = new EditPartnershipOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 BusinessAddress = new Core.Shared.AddressData(),
@@ -234,7 +253,7 @@
                 OrgId = Guid.NewGuid(),
                 SchemeId = Guid.NewGuid()
             };
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+            var result = await controller.EditPartnershipOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -251,9 +270,9 @@
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        public async Task EditPartnershipOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
         {
-            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            var viewModel = new EditPartnershipOrganisationDetailsViewModel
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 BusinessAddress = new Core.Shared.AddressData(),
@@ -266,7 +285,90 @@
             
             new HttpContextMocker().AttachToController(controller);
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+            var result = await controller.EditPartnershipOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<RedirectToRouteResult>();
+
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["Action"].Should().Be("Overview");
+            redirectResult.RouteValues["overviewDisplayOption"].Should().Be(OverviewDisplayOption.OrganisationDetails);
+        }
+
+        [Fact]
+        public async void EditSoleTraderOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new Core.Shared.AddressData(),
+                    CanEditOrganisation = false
+                });
+
+            var result = await controller.EditSoleTraderOrganisationDetails(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<HttpForbiddenResult>();
+        }
+
+        [Fact]
+        public async void EditSoleTraderOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        {
+            var countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            new HttpContextMocker().AttachToController(controller);
+
+            controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var viewModel = new EditSoleTraderOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinessAddress = new Core.Shared.AddressData(),
+                CompanyName = "CompanyName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            var result = await controller.EditSoleTraderOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            countries.Should().BeSameAs(viewModel.BusinessAddress.Countries);
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<ViewResult>();
+
+            var viewResult = (ViewResult)result;
+
+            viewResult.ViewName.Should().BeEmpty();
+            viewResult.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async Task EditSoleTraderOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        {
+            var viewModel = new EditSoleTraderOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinessAddress = new Core.Shared.AddressData(),
+                CompanyName = "CompanyName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .Returns(true);
+
+            new HttpContextMocker().AttachToController(controller);
+
+            var result = await controller.EditSoleTraderOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -337,7 +439,7 @@
         }
 
         [Fact]
-        public async Task GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisation_ViewModelShouldBeReturned()
+        public async Task EditPartnershipOrganisationDetails_CanEditOrganisation_ViewModelShouldBeReturned()
         {
             var organisationData = fixture.Build<OrganisationData>()
                 .WithAutoProperties()
@@ -352,9 +454,9 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._)).Returns(organisationData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, organisationId, aatfId) as ViewResult;
+            var result = await controller.EditPartnershipOrganisationDetails(schemeId, organisationId, aatfId) as ViewResult;
 
-            var model = result.Model as EditSoleTraderOrIndividualOrganisationDetailsViewModel;
+            var model = result.Model as EditPartnershipOrganisationDetailsViewModel;
 
             model.OrganisationType.Should().Be(organisationData.OrganisationType);            
             model.BusinessTradingName.Should().Be(organisationData.TradingName);
@@ -366,38 +468,38 @@
         }
 
         [Fact]
-        public async Task GetEditEditSoleTraderOrIndividualOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
+        public async Task EditPartnershipOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
         {
             var schemeId = Guid.NewGuid();
             const string organisation = "organisation";
 
             A.CallTo(() => cache.FetchSchemeName(schemeId)).Returns(organisation);
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(schemeId, A.Dummy<Guid>(), A.Dummy<Guid>());
+            await controller.EditPartnershipOrganisationDetails(schemeId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
         [Fact]
-        public async Task GetEditEditSoleTraderOrIndividualOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
+        public async Task EditPartnershipOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
         {
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
             var aatf = fixture.Build<AatfData>().WithAutoProperties().Create();
 
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatf);
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(A.Dummy<Guid>(), organisationId, aatfId);
+            await controller.EditPartnershipOrganisationDetails(A.Dummy<Guid>(), organisationId, aatfId);
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsValid_UpdateOrganisationDetailsRequestSent()
+        public async Task PostEditPartnershipOrganisationDetails_ModelIsValid_UpdateOrganisationDetailsRequestSent()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>().WithAutoProperties().Create();
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>().WithAutoProperties().Create();
 
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
+            await controller.EditPartnershipOrganisationDetails(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>.That.Matches(
                 u => u.OrganisationData.Id.Equals(model.OrgId)
@@ -407,41 +509,41 @@
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
+        public async Task PostEditPartnershipOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>().WithAutoProperties().Create();
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>().WithAutoProperties().Create();
             const string organisation = "organisation";
 
             A.CallTo(() => cache.FetchSchemeName(model.SchemeId.Value)).Returns(organisation);
 
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
+            await controller.EditPartnershipOrganisationDetails(model);
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
             breadcrumb.InternalOrganisation = organisation;
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
+        public async Task PostEditPartnershipOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>().WithAutoProperties().Create();
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>().WithAutoProperties().Create();
             var aatf = fixture.Build<AatfData>().WithAutoProperties().Create();
 
             A.CallTo(() => cache.FetchAatfData(model.OrgId, model.AatfId.Value)).Returns(aatf);
 
-            await controller.EditSoleTraderOrIndividualOrganisationDetails(model);
+            await controller.EditPartnershipOrganisationDetails(model);
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenUpdateAndScheme_ShouldBeRedirectToSchemeOverview()
+        public async Task PostEditPartnershipOrganisationDetails_GivenUpdateAndScheme_ShouldBeRedirectToSchemeOverview()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>()
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>()
                 .WithAutoProperties()
                 .Create();
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(model) as RedirectToRouteResult;
+            var result = await controller.EditPartnershipOrganisationDetails(model) as RedirectToRouteResult;
 
             result.RouteValues["controller"].Should().Be("Scheme");
             result.RouteValues["action"].Should().Be("Overview");
@@ -450,9 +552,9 @@
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenUpdateAndAatf_ShouldBeRedirectToAatfOrganisationDetails()
+        public async Task PostEditPartnershipOrganisationDetails_GivenUpdateAndAatf_ShouldBeRedirectToAatfOrganisationDetails()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>()
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>()
                 .WithAutoProperties()
                 .Without(c => c.SchemeId)
                 .Create();
@@ -461,21 +563,165 @@
 
             A.CallTo(() => urlHelper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == model.AatfId && o.GetPropertyValue<string>("controller") == "Aatf"))).Returns(url);
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(model) as RedirectResult;
+            var result = await controller.EditPartnershipOrganisationDetails(model) as RedirectResult;
 
             result.Url.Should().Be($"{url}#organisationDetails");
         }
 
         [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_GivenNoAatfOrSchemeId_ViewShouldBeReturned()
+        public async Task PostEditPartnershipOrganisationDetails_GivenNoAatfOrSchemeId_ViewShouldBeReturned()
         {
-            var model = fixture.Build<EditSoleTraderOrIndividualOrganisationDetailsViewModel>()
+            var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>()
                 .WithAutoProperties()
                 .Without(c => c.AatfId)
                 .Without(c => c.SchemeId)
                 .Create();
 
-            var result = await controller.EditSoleTraderOrIndividualOrganisationDetails(model) as ViewResult;
+            var result = await controller.EditPartnershipOrganisationDetails(model) as ViewResult;
+
+            result.ViewData.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task EditSoleTraderOrganisationDetails_CanEditOrganisation_ViewModelShouldBeReturned()
+        {
+            var organisationData = fixture.Build<OrganisationData>()
+                .WithAutoProperties()
+                .With(o => o.CanEditOrganisation, true)
+                .Create();
+
+            var countries = fixture.CreateMany<CountryData>().ToList();
+            var organisationId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetInternalOrganisation>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
+
+            var result = await controller.EditSoleTraderOrganisationDetails(schemeId, organisationId, aatfId) as ViewResult;
+
+            var model = result.Model as EditSoleTraderOrganisationDetailsViewModel;
+
+            model.OrganisationType.Should().Be(organisationData.OrganisationType);
+            model.BusinessTradingName.Should().Be(organisationData.TradingName);
+            model.BusinessAddress.Should().Be(organisationData.BusinessAddress);
+            model.BusinessAddress.Countries.Should().BeEquivalentTo(countries);
+            model.SchemeId.Should().Be(schemeId);
+            model.OrgId.Should().Be(organisationId);
+            model.AatfId.Should().Be(aatfId);
+        }
+
+        [Fact]
+        public async Task EditSoleTraderOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+            const string organisation = "organisation";
+
+            A.CallTo(() => cache.FetchSchemeName(schemeId)).Returns(organisation);
+            await controller.EditSoleTraderOrganisationDetails(schemeId, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
+            breadcrumb.InternalOrganisation = organisation;
+        }
+
+        [Fact]
+        public async Task EditSoleTraderOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
+        {
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var aatf = fixture.Build<AatfData>().WithAutoProperties().Create();
+
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatf);
+            await controller.EditSoleTraderOrganisationDetails(A.Dummy<Guid>(), organisationId, aatfId);
+
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+            breadcrumb.InternalOrganisation = aatf.Name;
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_ModelIsValid_UpdateOrganisationDetailsRequestSent()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>().WithAutoProperties().Create();
+
+            await controller.EditSoleTraderOrganisationDetails(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>.That.Matches(
+                u => u.OrganisationData.Id.Equals(model.OrgId)
+                     && u.OrganisationData.OrganisationType.Equals(model.OrganisationType)
+                     && u.OrganisationData.TradingName.Equals(model.BusinessTradingName)
+                     && u.OrganisationData.BusinessAddress.Equals(model.BusinessAddress)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_GivenSchemeId_BreadCrumbShouldBeSet()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>().WithAutoProperties().Create();
+            const string organisation = "organisation";
+
+            A.CallTo(() => cache.FetchSchemeName(model.SchemeId.Value)).Returns(organisation);
+
+            await controller.EditSoleTraderOrganisationDetails(model);
+
+            breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
+            breadcrumb.InternalOrganisation = organisation;
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_GivenAatfId_BreadCrumbShouldBeSet()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>().WithAutoProperties().Create();
+            var aatf = fixture.Build<AatfData>().WithAutoProperties().Create();
+
+            A.CallTo(() => cache.FetchAatfData(model.OrgId, model.AatfId.Value)).Returns(aatf);
+
+            await controller.EditSoleTraderOrganisationDetails(model);
+
+            breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+            breadcrumb.InternalOrganisation = aatf.Name;
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_GivenUpdateAndScheme_ShouldBeRedirectToSchemeOverview()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>()
+                .WithAutoProperties()
+                .Create();
+
+            var result = await controller.EditSoleTraderOrganisationDetails(model) as RedirectToRouteResult;
+
+            result.RouteValues["controller"].Should().Be("Scheme");
+            result.RouteValues["action"].Should().Be("Overview");
+            result.RouteValues["overviewDisplayOption"].Should().Be(OverviewDisplayOption.OrganisationDetails);
+            result.RouteValues["schemeId"].Should().Be(model.SchemeId);
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_GivenUpdateAndAatf_ShouldBeRedirectToAatfOrganisationDetails()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>()
+                .WithAutoProperties()
+                .Without(c => c.SchemeId)
+                .Create();
+
+            var url = fixture.Create<string>();
+
+            A.CallTo(() => urlHelper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == model.AatfId && o.GetPropertyValue<string>("controller") == "Aatf"))).Returns(url);
+
+            var result = await controller.EditSoleTraderOrganisationDetails(model) as RedirectResult;
+
+            result.Url.Should().Be($"{url}#organisationDetails");
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_GivenNoAatfOrSchemeId_ViewShouldBeReturned()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>()
+                .WithAutoProperties()
+                .Without(c => c.AatfId)
+                .Without(c => c.SchemeId)
+                .Create();
+
+            var result = await controller.EditSoleTraderOrganisationDetails(model) as ViewResult;
 
             result.ViewData.Should().BeEmpty();
         }
