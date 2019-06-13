@@ -6,9 +6,7 @@
     using EA.Weee.Web.ViewModels.Returns;
 
     public class ReceivedPcsListViewModel : ReturnViewModelBase
-    {
-        public Guid ReturnId { get; set; }
-        
+    {       
         public Guid OrganisationId { get; set; }
 
         public Guid AatfId { get; set; }
