@@ -1057,9 +1057,17 @@ details summary::-ms-details-marker {
         font-weight: $govuk-font-weight-bold;
     }
 
-    .govuk-button {
-        margin: 0;
-        background-color: govuk-colour('light-blue')
+    .buttons {
+        .govuk-button {
+            margin: 0;
+            background-color: govuk-colour('light-blue')
+        }
+
+        .cancel {
+            background-color: govuk-colour('grey-1')
+        }
+
+        margin-bottom: 0;
     }
 }
 
