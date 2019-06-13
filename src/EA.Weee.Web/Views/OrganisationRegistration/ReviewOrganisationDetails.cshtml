@@ -73,16 +73,26 @@
                     </span>
                 </div>
 
-                @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                 {
                     <div class="govuk-grid-row form-detail">
                         <span class="govuk-grid-column-two-thirds font-bold">
-                            Company name
+                            @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                            {
+                                @:Company name
+                            }
+                            else
+                            {
+                                @:Sole trader name
+                            }
                         </span>
                         <span class="column-third">
                             @Model.OrganisationData.Name
                         </span>
                     </div>
+                }
+                @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                {
                     <div class="govuk-grid-row form-detail">
                         <span class="govuk-grid-column-two-thirds font-bold">
                             Company registration number
