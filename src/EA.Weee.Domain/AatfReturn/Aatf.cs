@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System;
+    using Lookup;
     using Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
@@ -31,6 +32,10 @@
         public virtual FacilityType FacilityType { get; private set; }
 
         public virtual Int16 ComplianceYear { get; private set; }
+
+        public virtual PanArea PanArea { get; set; }
+
+        public virtual LocalArea LocalArea { get; set; }
 
         public Aatf()
         {
