@@ -11,6 +11,8 @@
 
         public FacilityType FacilityType { get; set; }
 
+        public string AatfName { get; set; }
+
         public AatfEditContactAddressViewModel()
         {
             this.ContactData = new AatfContactData();
