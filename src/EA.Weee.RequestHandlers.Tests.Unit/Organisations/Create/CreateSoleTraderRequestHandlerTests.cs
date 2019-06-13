@@ -26,13 +26,16 @@
             var context = GetPreparedContext();
             var userContext = GetPreparedUserContext();
 
+            const string BusinessName = "Some business name";
             const string TradingName = "Some trading name";
 
             var handler = new CreateSoleTraderRequestHandler(permissiveAuthorization, context, userContext);
-            await handler.HandleAsync(new CreateSoleTraderRequest { TradingName = TradingName });
+            await handler.HandleAsync(new CreateSoleTraderRequest { BusinessName = BusinessName, TradingName = TradingName });
 
             DoSharedAssertions(TradingName);
             Assert.Equal(OrganisationType.SoleTraderOrIndividual, addedOrganisation.OrganisationType);
+            Assert.Equal(BusinessName, addedOrganisation.Name);
+            Assert.Equal(BusinessName, addedOrganisation.OrganisationName);
         }
     }
 }
