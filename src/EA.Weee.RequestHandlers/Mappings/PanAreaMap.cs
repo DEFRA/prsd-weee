@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;

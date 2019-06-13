@@ -32,9 +32,9 @@
 
         public virtual Int16 ComplianceYear { get; private set; }
 
-        public virtual PanArea PanArea { get; set; }
+        public virtual PanArea PanArea { get; private set; }
 
-        public virtual LocalArea LocalArea { get; set; }
+        public virtual LocalArea LocalArea { get; private set; }
 
         public Aatf()
         {
@@ -50,7 +50,9 @@
             DateTime approvalDate,
             AatfContact contact,
             FacilityType facilityType,
-            Int16 complianceYear)
+            Int16 complianceYear,
+            LocalArea localArea,
+            PanArea panArea)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -61,6 +63,8 @@
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
             Guard.ArgumentNotNull(() => facilityType, facilityType);
+            Guard.ArgumentNotNull(() => localArea, localArea);
+            Guard.ArgumentNotNull(() => panArea, panArea);
 
             Name = name;
             CompetentAuthority = competentAuthority;
@@ -73,9 +77,11 @@
             Contact = contact;
             FacilityType = facilityType;
             ComplianceYear = complianceYear;
+            LocalArea = localArea;
+            PanArea = panArea;
         }
 
-        public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate)
+        public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate, LocalArea localArea, PanArea panArea)
         {
             Name = name;
             CompetentAuthority = competentAuthority;
@@ -84,6 +90,8 @@
             Organisation = organisation;
             Size = aatfSize;
             ApprovalDate = approvalDate;
+            LocalArea = localArea;
+            PanArea = panArea;
         }
     }
 }

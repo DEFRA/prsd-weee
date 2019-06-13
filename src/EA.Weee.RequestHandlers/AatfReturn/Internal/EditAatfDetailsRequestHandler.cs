@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
+    using System;
     using System.Threading.Tasks;
+    using Domain.Lookup;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
@@ -12,6 +14,7 @@
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Security;
     using Shared;
+    using PanArea = Domain.Lookup.PanArea;
 
     internal class EditAatfDetailsRequestHandler : IRequestHandler<EditAatfDetails, bool>
     {
@@ -49,6 +52,10 @@
 
             var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Data.CompetentAuthority.Id);
 
+            var localArea = await commonDataAccess.FetchLookup<LocalArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+
+            var panArea = await commonDataAccess.FetchLookup<PanArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+
             var updatedAatf = new Aatf(
                 message.Data.Name,
                 competentAuthority,
@@ -60,7 +67,9 @@
                 message.Data.ApprovalDate.GetValueOrDefault(),
                 existingAatf.Contact,
                 existingAatf.FacilityType,
-                existingAatf.ComplianceYear);
+                existingAatf.ComplianceYear,
+                localArea,
+                panArea);
 
             var existingAddress = await genericDataAccess.GetById<AatfAddress>(existingAatf.SiteAddress.Id);
 
