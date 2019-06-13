@@ -51,6 +51,7 @@
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\0008-InsertLocalAreaData.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
@@ -247,6 +248,7 @@
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190606-1150-ReportOnQuestionAddAlternativeDescription.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190607-0955-ReportOnQuestionUpdateDescription.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191306-0938-add-localarea.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
