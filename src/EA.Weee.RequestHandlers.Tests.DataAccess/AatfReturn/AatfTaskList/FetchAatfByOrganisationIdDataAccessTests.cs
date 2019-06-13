@@ -23,11 +23,8 @@
 
     public class FetchAatfByOrganisationIdDataAccessTests
     {
-        private readonly DbContextHelper dbContextHelper;
-
         public FetchAatfByOrganisationIdDataAccessTests()
         {
-            dbContextHelper = new DbContextHelper();
         }
 
         [Fact]
@@ -71,7 +68,9 @@
                 DateTime.Now,
                 contact,
                 facilityType,
-                2019);
+                2019,
+                database.WeeeContext.LocalAreas.First(),
+                database.WeeeContext.PanAreas.First());
         }
     }
 }

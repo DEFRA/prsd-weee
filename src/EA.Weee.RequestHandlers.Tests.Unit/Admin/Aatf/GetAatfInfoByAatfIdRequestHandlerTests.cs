@@ -3,6 +3,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -57,7 +58,7 @@
             // Act
             Func<Task> testCode = async () => await handler.HandleAsync(A.Dummy<GetAatfById>());
 
-            // Asert
+            // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
         }
 
@@ -66,7 +67,8 @@
         {
             DateTime date = DateTime.Now;
 
-            Aatf aatf = new Aatf("name", A.Dummy<UKCompetentAuthority>(), "1234", Domain.AatfReturn.AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), Domain.AatfReturn.AatfSize.Large, date, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, 2019);
+            Aatf aatf = new Aatf("name", A.Dummy<UKCompetentAuthority>(), "1234", Domain.AatfReturn.AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), Domain.AatfReturn.AatfSize.Large, date, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
+
             A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(aatf);
 
             AatfData aatfData = new AatfData(Guid.Empty, "name", "1234", (Int16)2019, A.Dummy<UKCompetentAuthorityData>(), A.Fake<Core.AatfReturn.AatfStatus>(), A.Dummy<AatfAddressData>(), A.Fake<Core.AatfReturn.AatfSize>(), date);
