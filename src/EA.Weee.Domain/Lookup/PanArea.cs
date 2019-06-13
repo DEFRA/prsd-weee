@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.Domain.Admin
+﻿namespace EA.Weee.Domain.Lookup
 {
     using System;
 
-    public class LocalArea
+    public class PanArea
     {
-        protected LocalArea()
+        protected PanArea()
         {
         }
 

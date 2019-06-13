@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using EA.Weee.Domain;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Lookup;
 
     internal class PanAreaMapping : EntityTypeConfiguration<PanArea>
     {

@@ -2,6 +2,7 @@
 {
     using System.Data.Entity.ModelConfiguration;
     using Domain.Admin;
+    using Domain.Lookup;
 
     internal class LocalAreaMapping : EntityTypeConfiguration<LocalArea>
     {
