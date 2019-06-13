@@ -4,5 +4,6 @@
 
     public class CreateSoleTraderRequest : CreateOrganisationRequest
     {
+        public string BusinessName { get; set; }
     }
 }
