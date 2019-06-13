@@ -161,6 +161,19 @@
             Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanAddAatf);
         }
 
+        [Fact]
+        public async Task ManageAatfsPost_Always_SetsInternalBreadcrumbToManageAATFs()
+        {
+            var selectedGuid = Guid.NewGuid();
+
+            var result = await controller.ManageAatfs(new ManageAatfsViewModel { Selected = selectedGuid, FacilityType = FacilityType.Aatf });
+
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToRouteResult>(result);
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(null);
+        }
+
         [Theory]
         [MemberData("FacilityTypeEnumValues")]
         public async Task ManageAatfsPost_InvalidModel_CheckViewModelFacilityTypeSetCorrectly(FacilityType type)
@@ -188,6 +201,7 @@
             ActionResult result = await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
+            Assert.Equal(null, breadcrumbService.InternalAatf);
         }
 
         [Theory]
@@ -218,9 +232,9 @@
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
-        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
-        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type, string activity)
+        [MemberData("FacilityTypeEnumValues")]
+        [MemberData("FacilityTypeEnumValues")]
+        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData()
@@ -252,7 +266,16 @@
 
             await controller.Details(aatfId);
 
-            Assert.Equal(breadcrumbService.InternalActivity, activity);
+            if (type == FacilityType.Aatf)
+            {
+                Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAatfs);
+                Assert.Equal(breadcrumbService.InternalAatf, aatfData.Name);
+            }
+            else
+            {
+                Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAes);
+                Assert.Equal(breadcrumbService.InternalAe, aatfData.Name);
+            }
         }
 
         [Fact]
@@ -536,6 +559,7 @@
             await controller.ManageAatfDetails(id);
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(aatf.Name);
             clientCall.MustHaveHappenedOnceExactly();
             mapperCall.MustHaveHappenedOnceExactly();
         }
@@ -621,6 +645,7 @@
             var result = await controller.ManageAatfDetails(viewModel) as ViewResult;
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(null);
             clientCallAuthorities.MustHaveHappenedOnceExactly();
             clientCallCountries.MustHaveHappenedOnceExactly();
 
@@ -707,6 +732,7 @@
             var result = await controller.ManageAeDetails(viewModel) as ViewResult;
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAe.Should().Be(null);
             clientCallAuthorities.MustHaveHappenedOnceExactly();
             clientCallCountries.MustHaveHappenedOnceExactly();
 
@@ -749,9 +775,21 @@
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
+            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+
             await controller.ManageContactDetails(aatfId, type);
 
             breadcrumbService.InternalActivity.Should().Be(activity);
+            if (type == FacilityType.Aatf)
+            {
+                breadcrumbService.InternalAatf.Should().Be(aatf.Name);
+            }
+            else
+            {
+                breadcrumbService.InternalAe.Should().Be(aatf.Name);
+            }
         }
 
         [Fact]
@@ -780,6 +818,16 @@
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageContactDetailsGet_GivenActionExecutes_AatfShouldBeRetrieved()
+        {
+            ContactDataAccessSetup(true);
+            var aatfId = Guid.NewGuid();
+            var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(c => c.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -863,9 +911,8 @@
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf, InternalUserActivity.ManageAatfs)]
-        [InlineData(FacilityType.Ae, InternalUserActivity.ManageAes)]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type, string activity)
+        [MemberData("FacilityTypeEnumValues")]
+        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
             var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData(), FacilityType = type };
@@ -873,7 +920,16 @@
 
             await controller.ManageContactDetails(model);
 
-            breadcrumbService.InternalActivity.Should().Be(activity);
+            if (type == FacilityType.Aatf)
+            {
+                breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+                breadcrumbService.InternalAatf.Should().Be(null);
+            }
+            else
+            {
+                breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAes);
+                breadcrumbService.InternalAatf.Should().Be(null);
+            }
         }
 
         [Fact]
