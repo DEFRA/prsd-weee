@@ -4,6 +4,7 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
     ViewBag.Title = "View " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
@@ -255,16 +256,20 @@
 
         @if (Model.CanEdit)
         {
-            <p>
-                @if (Model.Organisation.IsRegisteredCompany)
-                {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
-                }
-                else
-                {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
-                }
-            </p>
+    <p>
+        @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+        }
+        else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+        }
+        else
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+        }
+    </p>
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
