@@ -77,6 +77,8 @@
 
         public virtual DbSet<Address> Addresses { get; set; }
 
+        public virtual DbSet<LocalArea> LocalAreas { get; set; }
+
         /// <summary>
         /// Registered producers including items marked as removed.
         /// </summary>
