@@ -303,6 +303,7 @@
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.SiteAddressData.Countries = countries;
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.OrganisationName = organisation.OrganisationName;
