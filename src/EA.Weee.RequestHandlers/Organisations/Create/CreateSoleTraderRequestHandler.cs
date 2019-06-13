@@ -26,7 +26,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var organisation = Organisation.CreateSoleTrader(message.TradingName);
+            var organisation = Organisation.CreateSoleTrader(message.BusinessName, message.TradingName);
             db.Organisations.Add(organisation);
 
             await db.SaveChangesAsync();
