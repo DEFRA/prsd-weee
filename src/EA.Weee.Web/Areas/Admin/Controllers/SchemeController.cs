@@ -469,7 +469,7 @@
 
             if (schemeId.HasValue)
             {
-                breadcrumb.InternalOrganisation = await cache.FetchSchemeName(schemeId.Value);
+                breadcrumb.InternalScheme = await cache.FetchSchemeName(schemeId.Value);
             }
         }
     }

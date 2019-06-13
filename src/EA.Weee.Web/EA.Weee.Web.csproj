@@ -323,8 +323,10 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
@@ -466,7 +468,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditPartnershipOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditRegisteredCompanyOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\ContactDetails\ContactDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
@@ -942,11 +944,12 @@
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsNil\Index.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditPartnershipOrganisationDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\ExportedWholeWeee.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
