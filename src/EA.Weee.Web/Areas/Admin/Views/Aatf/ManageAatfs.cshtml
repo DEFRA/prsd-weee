@@ -18,7 +18,7 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        @Html.Raw("Manage " + @Model.FacilityType.ToDisplayString() + "s")
+        @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage")
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
@@ -96,13 +96,16 @@
             }
         </tbody>
     </table>
-    <br />
-    @(this.WeeeGds().Submit("Continue"))
-
     if (Model.CanAddAatf)
     {
         <p>
             <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
         </p>
     }
+    <br />
+    @(this.WeeeGds().Submit("Continue"))
+
+    <p>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+    </p>
 }
