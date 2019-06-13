@@ -11,11 +11,11 @@
 
         public AddressData Address { get; set; }
 
-        public string AddressString
+        public string NameWithAddress
         {
             get
             {
-                return string.Format("({0}, {1}, {2})", this.Address.Address1, this.Address.TownOrCity, this.Address.CountryName);
+                return string.Format("{0} ({1}, {2}, {3})", this.Name, this.Address.Address1, this.Address.TownOrCity, this.Address.CountryName);
             }
         }
     }
