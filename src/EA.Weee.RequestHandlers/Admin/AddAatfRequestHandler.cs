@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System;
     using System.Threading.Tasks;
     using Charges;
+    using Domain.Lookup;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
@@ -50,6 +52,10 @@
 
             var contact = contactMapper.Map(message.AatfContact);
 
+            var localArea = await commonDataAccess.FetchLookup<LocalArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+
+            var panArea = await commonDataAccess.FetchLookup<PanArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+
             var aatf = new Aatf(
                 message.Aatf.Name,
                 competentAuthority,
@@ -61,7 +67,9 @@
                 message.Aatf.ApprovalDate.GetValueOrDefault(),
                 contact,
                 message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
-                message.Aatf.ComplianceYear);
+                message.Aatf.ComplianceYear,
+                localArea,
+                panArea);
 
             await dataAccess.Add<Aatf>(aatf);
 

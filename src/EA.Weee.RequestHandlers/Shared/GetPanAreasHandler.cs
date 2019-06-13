@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain.Lookup;
 
     public class GetPanAreasHandler : IRequestHandler<GetPanAreas, IList<PanAreaData>>
     {
