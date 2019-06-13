@@ -144,6 +144,21 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task ClearFilter_TypeParameterSent_ViewModelSetCorrectlyAndFilterCleared()
+        {
+            SetUpControllerContext(false);
+            var facilityType = fixture.Create<FacilityType>();
+
+            var result = await controller.ClearFilter(facilityType) as ViewResult;
+
+            Assert.IsType<ManageAatfsViewModel>(result.Model);
+            var viewModel = result.Model as ManageAatfsViewModel;
+            Assert.Equal(facilityType, viewModel.FacilityType);
+            Assert.Equal(null, viewModel.Filter.Name);
+            Assert.Equal(null, viewModel.Filter.ApprovalNumber);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
