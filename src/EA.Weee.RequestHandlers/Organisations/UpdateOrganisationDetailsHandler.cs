@@ -33,8 +33,10 @@
                     organisation.UpdateRegisteredCompanyDetails(message.OrganisationData.Name, message.OrganisationData.CompanyRegistrationNumber, message.OrganisationData.TradingName);
                     break;
                 case Core.Organisations.OrganisationType.Partnership:
+                    organisation.UpdatePartnershipDetails(message.OrganisationData.TradingName);
+                    break;
                 case Core.Organisations.OrganisationType.SoleTraderOrIndividual:
-                    organisation.UpdateSoleTraderOrIndividualDetails(message.OrganisationData.TradingName);
+                    organisation.UpdateSoleTraderDetails(message.OrganisationData.Name, message.OrganisationData.TradingName);
                     break;
             }
             
