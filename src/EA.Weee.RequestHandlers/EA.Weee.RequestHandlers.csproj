@@ -390,6 +390,7 @@
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
+    <Compile Include="Shared\GetLocalAreasHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
