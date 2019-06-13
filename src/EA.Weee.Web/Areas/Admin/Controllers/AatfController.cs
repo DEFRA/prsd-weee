@@ -80,7 +80,7 @@
         {
             SetBreadcrumb(facilityType, null);
 
-            return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel() { FacilityType = facilityType } });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel { FacilityType = facilityType } });
         }
 
         [HttpPost]
@@ -122,6 +122,12 @@
         {
             SetBreadcrumb(filter.FacilityType, null);
             return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), CanAddAatf = IsUserInternalAdmin(), Filter = filter, FacilityType = filter.FacilityType });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ClearFilter(FacilityType facilityType)
+        {
+            return await ManageAatfs(facilityType);
         }
 
         [HttpGet]
