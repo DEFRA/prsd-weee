@@ -13,6 +13,7 @@
     using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
+    using Web.ViewModels.Returns;
 
     public class SubmittedReturnController : AatfReturnBaseController
     {
@@ -50,7 +51,7 @@
         public virtual async Task<ActionResult> Index(SubmittedReturnViewModel model)
         {
             return await Task.Run<ActionResult>(() =>
-                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.OrgansationId }));
+                RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.OrganisationId }));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

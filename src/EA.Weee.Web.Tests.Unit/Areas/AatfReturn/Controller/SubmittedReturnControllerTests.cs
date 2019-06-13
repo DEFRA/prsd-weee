@@ -17,6 +17,7 @@
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.ViewModels;
     using Web.Controllers.Base;
+    using Web.ViewModels.Returns;
     using Weee.Requests.AatfReturn;
     using Xunit;
 
@@ -113,13 +114,13 @@
         [Fact]
         public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
         {
-            var model = new SubmittedReturnViewModel() { OrgansationId = Guid.NewGuid() };
+            var model = new SubmittedReturnViewModel() { OrganisationId = Guid.NewGuid() };
             var redirect = await controller.Index(model) as RedirectToRouteResult;
 
             redirect.RouteValues["action"].Should().Be("ChooseActivity");
             redirect.RouteValues["controller"].Should().Be("Home");
             redirect.RouteValues["area"].Should().Be("Scheme");
-            redirect.RouteValues["pcsId"].Should().Be(model.OrgansationId);
+            redirect.RouteValues["pcsId"].Should().Be(model.OrganisationId);
         }
     }
 }
