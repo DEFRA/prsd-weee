@@ -249,9 +249,9 @@
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190606-1150-ReportOnQuestionAddAlternativeDescription.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190607-0955-ReportOnQuestionUpdateDescription.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint11-release\20191306-1225-fix-sole-trader-name.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint11-release\20191306-1344-create-pan-area-table.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191306-1225-fix-sole-trader-name.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-0938-add-localarea.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191306-1344-create-pan-area-table.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
