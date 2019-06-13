@@ -29,6 +29,11 @@
         [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
+        public IEnumerable<PanAreaData> PanAreaList { get; set; }
+
+        [Display(Name = "PAN Area")]
+        public Guid PanAreaId { get; set; }
+
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         [Required]
