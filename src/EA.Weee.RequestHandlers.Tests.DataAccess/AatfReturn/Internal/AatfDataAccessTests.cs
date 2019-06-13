@@ -54,7 +54,7 @@
 
             A.CallTo(() => oldDetails.UpdateDetails(
                 newDetails.Name,
-                newDetails.CompetentAuthorityId,
+                newDetails.CompetentAuthority,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
                 newDetails.Organisation,

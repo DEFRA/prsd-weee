@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.Factories;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -273,7 +274,7 @@
 
             if (!approvalDate.HasValue)
             {
-                aatf.UpdateDetails("name", competentAuthority.Id, "12345678", AatfStatus.Approved, organisation, AatfSize.Large, null);
+                aatf.UpdateDetails("name", competentAuthority, "12345678", AatfStatus.Approved, organisation, AatfSize.Large, null);
             }
 
             database.WeeeContext.Aatfs.Add(aatf);

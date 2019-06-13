@@ -18,6 +18,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Shared;
     using Xunit;
 
     public class EditAatfDetailsRequestHandlerTests
@@ -29,6 +30,7 @@
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly EditAatfDetailsRequestHandler handler;
+        private readonly ICommonDataAccess commonDataAccess;
 
         public EditAatfDetailsRequestHandlerTests()
         {
@@ -38,8 +40,9 @@
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+            commonDataAccess = A.Fake<ICommonDataAccess>();
 
-            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
+            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
         }
 
         [Fact]
@@ -47,7 +50,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -59,7 +62,7 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -87,23 +90,23 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenMessageContainingUpdatedAddress_DetailsAreUpdatedCorrectly()
+        public async Task HandleAsync_GivenMessage_DetailsAreUpdatedCorrectly()
         {
             var data = CreateAatfData(out var competentAuthority);
             var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
             var siteAddress = fixture.Create<AatfAddress>();
-            A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
-
             var aatf = A.Fake<Aatf>();
+            var competentAuthorityDomain = A.Fake<UKCompetentAuthority>();
+
+            A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
             A.CallTo(() => aatf.ComplianceYear).Returns((Int16)2019);
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(aatf);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(updateRequest.Data.CompetentAuthority.Id)).Returns(competentAuthorityDomain);
 
             var result = await handler.HandleAsync(updateRequest);
 
-            Assert.True(result);
-
             A.CallTo(() => aatfDataAccess.UpdateDetails(aatf, A<Aatf>.That.Matches(a => a.Name == data.Name &&
-                a.CompetentAuthorityId == competentAuthority.Id &&
+                a.CompetentAuthority.Equals(competentAuthorityDomain) &&
                 a.ApprovalNumber == data.ApprovalNumber &&
                 a.AatfStatus == Domain.AatfReturn.AatfStatus.Approved &&
                 a.Size == Domain.AatfReturn.AatfSize.Large &&

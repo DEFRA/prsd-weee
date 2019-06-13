@@ -7,6 +7,7 @@
     using DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Charges;
+    using Shared;
 
     public class FetchInvoiceRunsDataAccess : CommonDataAccess, IFetchInvoiceRunsDataAccess
     {

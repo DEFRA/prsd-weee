@@ -11,6 +11,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Security;
+    using Shared;
 
     internal class EditAatfDetailsRequestHandler : IRequestHandler<EditAatfDetails, bool>
     {
@@ -19,19 +20,22 @@
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
+        private readonly ICommonDataAccess commonDataAccess;
 
         public EditAatfDetailsRequestHandler(
             IWeeeAuthorization authorization,
             IAatfDataAccess aatfDataAccess,
             IGenericDataAccess genericDataAccess,
             IMap<AatfAddressData, AatfAddress> addressMapper,
-            IOrganisationDetailsDataAccess organisationDetailsDataAccess)
+            IOrganisationDetailsDataAccess organisationDetailsDataAccess, 
+            ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.addressMapper = addressMapper;
             this.organisationDetailsDataAccess = organisationDetailsDataAccess;
+            this.commonDataAccess = commonDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditAatfDetails message)
@@ -42,9 +46,12 @@
             var updatedAddress = addressMapper.Map(message.Data.SiteAddress);
 
             var existingAatf = await genericDataAccess.GetById<Aatf>(message.Data.Id);
+
+            var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Data.CompetentAuthority.Id);
+
             var updatedAatf = new Aatf(
                 message.Data.Name,
-                message.Data.CompetentAuthority.Id,
+                competentAuthority,
                 message.Data.ApprovalNumber,
                 Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Data.AatfStatus.Value),
                 existingAatf.Organisation,
@@ -57,7 +64,7 @@
 
             var existingAddress = await genericDataAccess.GetById<AatfAddress>(existingAatf.SiteAddress.Id);
 
-            Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.Data.SiteAddress.CountryId);
+            var country = await organisationDetailsDataAccess.FetchCountryAsync(message.Data.SiteAddress.CountryId);
 
             await aatfDataAccess.UpdateAddress(existingAddress, updatedAddress, country);
 
