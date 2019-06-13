@@ -9,19 +9,32 @@
     using System.Reflection;
     using Xunit;
 
-    public class EditSoleTraderOrIndividualOrganisationDetailsViewModelTests
+    public class EditSoleTraderOrganisationDetailsViewModelTests
     {
         private readonly Type modelType;
 
-        public EditSoleTraderOrIndividualOrganisationDetailsViewModelTests()
+        public EditSoleTraderOrganisationDetailsViewModelTests()
         {
-            modelType = typeof(EditSoleTraderOrIndividualOrganisationDetailsViewModel);
+            modelType = typeof(EditSoleTraderOrganisationDetailsViewModel);
         }
 
         [Fact]
-        public void GivenModel_BusinessTradingNameShouldHaveRequiredFieldAttribute()
+        public void GivenModel_CompanyNameShouldHaveRequiredFieldAttribute()
         {
-            GetProperty("BusinessTradingName").Should().BeDecoratedWith<RequiredAttribute>();
+            GetProperty("CompanyName").Should().BeDecoratedWith<RequiredAttribute>();
+        }
+
+        [Fact]
+        public void GivenModel_BusinessTradingNameShouldNotHaveRequiredFieldAttribute()
+        {
+            GetProperty("BusinessTradingName").Should().NotBeDecoratedWith<RequiredAttribute>();
+        }
+
+        [Fact]
+        public void GivenModel_CompanyNameShouldHaveDisplayNameAttribute()
+        {
+            var property = GetProperty("CompanyName");
+            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Sole trader name");
         }
 
         [Fact]
@@ -29,6 +42,13 @@
         {
             var property = GetProperty("BusinessTradingName");
             GetProperty("BusinessTradingName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Business trading name");
+        }
+
+        [Fact]
+        public void GivenModel_CompanyNameShouldHaveStringLengthAttribute()
+        {
+            GetProperty("CompanyName").Should().BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength
+                .Equals(CommonMaxFieldLengths.DefaultString);
         }
 
         [Fact]

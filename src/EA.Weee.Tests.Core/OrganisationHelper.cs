@@ -25,7 +25,7 @@
             }
             else
             {
-                organisation = Organisation.CreateSoleTrader(tradingName);
+                organisation = Organisation.CreateSoleTrader(name, tradingName);
             }
 
             if (status == OrganisationStatus.Complete)

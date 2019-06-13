@@ -2,5 +2,6 @@
 {
     public class SoleTraderDetailsOverviewViewModel : OrganisationDetailsOverviewViewModel
     {
+        public string CompanyName { get; set; }
     }
 }

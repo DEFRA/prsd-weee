@@ -123,7 +123,7 @@
 
         /// <summary>
         /// Ensures that search results representing organisations which are sole traders or individuals will use
-        /// the 'TradingName' column from the database as the organisation name.
+        /// the 'Name' column from the database as the organisation name.
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -134,7 +134,7 @@
                 // Arrange
                 Organisation organisation = new Organisation();
                 organisation.Id = new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4");
-                organisation.TradingName = "Trading Name";
+                organisation.Name = "Name";
                 organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual.Value;
                 organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
 
@@ -154,7 +154,7 @@
 
                 // Assert
                 Assert.Contains(results,
-                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name");
+                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Name");
             }
         }
 
