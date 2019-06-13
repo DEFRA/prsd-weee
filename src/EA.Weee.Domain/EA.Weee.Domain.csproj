@@ -75,7 +75,8 @@
     <Compile Include="AatfReturn\WeeeSentOn.cs" />
     <Compile Include="AatfReturn\WeeeSentOnAmount.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
-    <Compile Include="Admin\LocalArea.cs" />
+    <Compile Include="Lookup\LocalArea.cs" />
+    <Compile Include="Lookup\PanArea.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
     <Compile Include="DataReturns\DataReturnVersionAssociativeEntity.cs" />
