@@ -213,7 +213,7 @@
                 },
                 new ReturnsItemViewModel()
                 {
-                    ReturnViewModel = new ReturnViewModel(new ReturnData() { CreatedDate = dateNow.AddDays(1), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()) { ReturnId = idToFind },
+                    ReturnViewModel = new ReturnViewModel(new ReturnData() { Id = idToFind, CreatedDate = dateNow.AddDays(1), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = A.Fake<QuarterWindow>() }, new List<AatfObligatedData>(), A.Fake<OrganisationData>(), new TaskListDisplayOptions()),
                     ReturnsListDisplayOptions = new ReturnsListDisplayOptions() { DisplayEdit = true }
                 },
                 new ReturnsItemViewModel()

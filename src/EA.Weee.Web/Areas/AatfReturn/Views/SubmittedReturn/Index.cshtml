@@ -1,8 +1,8 @@
 ﻿@using System.Web.Mvc.Html
 @using EA.Weee.Web.Infrastructure
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SubmittedReturnViewModel
+@model EA.Weee.Web.ViewModels.Returns.SubmittedReturnViewModel
 @{
-    ViewBag.Title = "Submitted Return";
+    ViewBag.Title = "Submitted Return - GOV.UK";
 }
 
 <section id="main-content">
@@ -35,7 +35,7 @@
     @using (Html.BeginRouteForm(AatfRedirect.Default))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.OrgansationId)
+        @Html.HiddenFor(m => m.OrganisationId)
         <button type="submit" class="govuk-button">
             Perform another activity
         </button>
