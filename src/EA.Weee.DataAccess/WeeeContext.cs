@@ -67,8 +67,6 @@
 
         public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
 
-        public virtual DbSet<PanArea> PanAreas { get; set; }
-
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
 
         public virtual DbSet<MemberUploadError> MemberUploadErrors { get; set; }
