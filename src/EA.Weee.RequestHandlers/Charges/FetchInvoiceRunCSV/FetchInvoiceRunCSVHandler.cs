@@ -8,6 +8,7 @@
     using Prsd.Core.Mediator;
     using Requests.Charges;
     using Security;
+    using Shared;
 
     public class FetchInvoiceRunCsvHandler : IRequestHandler<FetchInvoiceRunCsv, CSVFileData>
     {

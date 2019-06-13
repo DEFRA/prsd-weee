@@ -199,7 +199,7 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
-    <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
@@ -211,7 +211,7 @@
     <Compile Include="Charges\FetchIssuedChargesCsv\IFetchIssuedChargesCsvDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandler.cs" />
-    <Compile Include="Charges\ICommonDataAccess.cs" />
+    <Compile Include="Shared\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
