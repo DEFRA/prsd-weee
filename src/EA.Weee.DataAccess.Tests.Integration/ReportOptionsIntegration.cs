@@ -19,6 +19,7 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
     using Country = Domain.Country;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
@@ -90,7 +91,7 @@
                     returnReportOn.Add(new ReturnReportOn(@return.Id, question.Id));
                 }
 
-                var aatf = await CreateAatf(context, @return, country);
+                var aatf = await CreateAatf(context, @return);
                 var scheme = await CreateScheme(context, organisation);
                 var sentOnSiteAddress = await CreateAddress(context, country);
                 var sentOnSOperatorAddress = await CreateAddress(context, country);
@@ -190,11 +191,6 @@
             return (submittedWeeeReused, submittedWeeeReusedAddresses, submittedWeeeReusedAmounts, submittedWeeeReusedSites);
         }
 
-        private void RetrieveWeeeReusedValues(WeeeContext weeeContext, WeeeContext context, GenericDataAccess genericDataAccess, GenericDataAccess dataAccess, out List<WeeeReused> submittedWeeeReused, out List<AatfAddress> submittedWeeeReusedAddresses, out List<WeeeReusedAmount> submittedWeeeReusedAmounts, out List<WeeeReusedSite> submittedWeeeReusedSites)
-        {
-            throw new NotImplementedException();
-        }
-
         private static void AssertNonObligatedWeeeDeletion(WeeeContext context, List<NonObligatedWeee> submittedNonObligatedWeee)
         {
             foreach (var item in submittedNonObligatedWeee)
@@ -284,10 +280,9 @@
             return scheme;
         }
 
-        private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return, Country country)
+        private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return)
         {
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, @return.Organisation);
 
             context.Aatfs.Add(aatf);
 
