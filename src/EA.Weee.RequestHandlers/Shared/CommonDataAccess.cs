@@ -1,15 +1,17 @@
-﻿namespace EA.Weee.RequestHandlers.Charges
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Charges;
     using Core.Shared;
+    using DataAccess;
     using Domain;
     using Domain.Charges;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Scheme;
+    using Domain.Lookup;
+    using Domain.Scheme;
 
     public class CommonDataAccess : ICommonDataAccess
     {
@@ -38,6 +40,16 @@
             string authorityName = authorityMapping[authority];
 
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Name == authorityName);
+        }
+
+        public async Task<UKCompetentAuthority> FetchCompetentAuthority(Guid authority)
+        {
+            return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == authority);
+        }
+
+        public async Task<T> FetchLookup<T>(Guid id) where T : AreaBase
+        {
+            return await Context.Set<T>().SingleAsync(ca => ca.Id == id);
         }
 
         /// <summary>

@@ -13,6 +13,7 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Organisations;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

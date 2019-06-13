@@ -2,16 +2,10 @@
 {
     using System;
 
-    public class LocalArea
+    public class LocalArea : AreaBase
     {
-        protected LocalArea()
+        public LocalArea()
         {
         }
-
-        public Guid Id { get; protected set; }
-
-        public string Name { get; protected set; }
-
-        public Guid CompetentAuthorityId { get; protected set; }
     }
 }

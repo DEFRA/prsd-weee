@@ -15,6 +15,7 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;

@@ -11,6 +11,7 @@
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Charges;
     using FluentAssertions;
+    using RequestHandlers.Shared;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
