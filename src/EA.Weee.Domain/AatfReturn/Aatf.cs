@@ -63,8 +63,6 @@
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
             Guard.ArgumentNotNull(() => facilityType, facilityType);
-            Guard.ArgumentNotNull(() => localArea, localArea);
-            Guard.ArgumentNotNull(() => panArea, panArea);
 
             Name = name;
             CompetentAuthority = competentAuthority;

@@ -59,7 +59,9 @@
                 newDetails.AatfStatus,
                 newDetails.Organisation,
                 newDetails.Size,
-                newDetails.ApprovalDate)).MustHaveHappenedOnceExactly()
+                newDetails.ApprovalDate,
+                newDetails.LocalArea,
+                newDetails.PanArea)).MustHaveHappenedOnceExactly()
             .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
         }
 
