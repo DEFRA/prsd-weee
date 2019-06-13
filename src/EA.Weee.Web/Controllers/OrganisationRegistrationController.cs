@@ -12,7 +12,6 @@
     using Core.Shared;
     using EA.Weee.Core.Search;
     using Infrastructure;
-    using Microsoft.Owin.BuilderProperties;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -200,6 +199,7 @@
                     {
                         var model = new SoleTraderDetailsViewModel
                         {
+                            CompanyName = organisation.OrganisationName,
                             BusinessTradingName = organisation.TradingName,
                             OrganisationId = organisationId.Value,
                             AddressId = schemeViewData?.AddressId,
@@ -233,7 +233,7 @@
                     UpdateOrganisationTypeDetails updateRequest = new UpdateOrganisationTypeDetails(
                         model.OrganisationId.Value,
                         OrganisationType.SoleTraderOrIndividual,
-                        String.Empty,
+                        model.CompanyName,
                         model.BusinessTradingName,
                         String.Empty);
 
@@ -243,6 +243,7 @@
 
                 CreateSoleTraderRequest request = new CreateSoleTraderRequest
                 {
+                    BusinessName = model.CompanyName,
                     TradingName = model.BusinessTradingName
                 };
                 //create the organisation only if does not exist
@@ -769,7 +770,10 @@
 
                 return RedirectToAction("Confirmation", new
                 {
-                    organisationName = model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany ? model.OrganisationData.Name : model.OrganisationData.TradingName
+                    organisationName = 
+                        model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany || model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual
+                            ? model.OrganisationData.Name
+                            : model.OrganisationData.TradingName
                 });
             }
             catch (ApiBadRequestException ex)

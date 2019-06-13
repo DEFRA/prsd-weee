@@ -138,7 +138,7 @@
                 new PublicOrganisationData
                 {
                     Id = o.Id,
-                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName,
+                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany || o.OrganisationType == OrganisationType.SoleTraderOrIndividual ? o.Name : o.TradingName,
                     Address = new AddressData
                     {
                         Address1 = o.BusinessAddress.Address1,

@@ -30,7 +30,7 @@
             {
                 Id = source.Id,
                 OrganisationId = source.OrganisationId,
-                Name = source.Organisation.OrganisationType.Value == OrganisationType.RegisteredCompany.Value
+                Name = source.Organisation.OrganisationType.Value == OrganisationType.RegisteredCompany.Value || source.Organisation.OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value
                     ? source.Organisation.Name
                     : source.Organisation.TradingName,
                 SchemeStatus =
