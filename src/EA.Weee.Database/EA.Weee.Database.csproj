@@ -52,6 +52,7 @@
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\0008-InsertLocalAreaData.sql" />
+    <Content Include="scripts\Everytime\0009-InsertPanAreaData.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
