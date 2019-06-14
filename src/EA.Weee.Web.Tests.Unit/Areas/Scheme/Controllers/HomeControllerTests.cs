@@ -15,6 +15,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using FluentAssertions;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -1066,6 +1067,189 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
+        {
+            var organisationData = new OrganisationData() { HasAatfs = false };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);          
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAatfReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
+        {
+            var organisationData = new OrganisationData() { HasAatfs = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManageAatfReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
+        {
+            var organisationData = new OrganisationData() { HasAes = false };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAeReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
+        {
+            var organisationData = new OrganisationData() { HasAes = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManageAeReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
+        {
+            var organisationData = new OrganisationData() { HasAatfs = false };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAatfReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
+        {
+            var organisationData = new OrganisationData() { HasAatfs = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManageAatfReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
+        {
+            var organisationData = new OrganisationData() { HasAes = false };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAeReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
+        {
+            var organisationData = new OrganisationData() { HasAes = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManageAeReturns);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
+        {
+            var organisationData = new OrganisationData() { SchemeId = null };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeController(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManagePcsMembers);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
+        {
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeController(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManagePcsMembers);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
+        {
+            var organisationData = new OrganisationData() { SchemeId = null };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeController(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManagePcsMembers);
+        }
+
+        [Fact]
+        public async void ChooseActivityPOST_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
+        {
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeController(true).ChooseActivity(A.Dummy<ChooseActivityViewModel>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManagePcsMembers);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasAesAndAatfsButAatfReturnsIsOff_ViewModelShouldNotContainManageReturns()
+        {
+            var organisationData = new OrganisationData() { HasAes = true, HasAatfs = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForAATFReturns(false).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAeReturns);
+            model.PossibleValues.Should().NotContain(PcsAction.ManageAatfReturns);
         }
     }
 }
