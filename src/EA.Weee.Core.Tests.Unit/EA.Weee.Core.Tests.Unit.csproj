@@ -132,6 +132,7 @@
     <Compile Include="Routing\ExternalRouteTests.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRouteTests.cs" />
     <Compile Include="Routing\ResetPasswordRouteTests.cs" />
+    <Compile Include="Search\OrganisationSearchResultTests.cs" />
     <Compile Include="Search\Simple\SimpleSearcherTests.cs">
       <SubType>Code</SubType>
     </Compile>
