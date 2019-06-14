@@ -164,7 +164,9 @@
                     OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
                 orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency",
                     companyRegistrationNumber, OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber,
+                orgHelper.GetOrganisationWithDetails("THE Environemnt Agency", null, companyRegistrationNumber,
+                    OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails("Other", "THE Environemnt Agency", companyRegistrationNumber,
                     OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete),
                 orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber,
                     OrganisationType.Partnership, OrganisationStatus.Complete)

@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.AeReturn.Controllers
-@model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
+@model EA.Weee.Web.ViewModels.Returns.SubmittedReturnViewModel
 @{
     ViewBag.Title = "Confirm no whole WEEE exported - GOV.UK";
 }
@@ -9,7 +9,7 @@
 <section id="main-content">
 
     <h1 class="govuk-heading-l">
-        You have stated that no whole WEEE has been exported in 2019 Q1 Jan - Mar
+        You have stated that no whole WEEE has been exported in @Model.Period
     </h1>
 
     <div>

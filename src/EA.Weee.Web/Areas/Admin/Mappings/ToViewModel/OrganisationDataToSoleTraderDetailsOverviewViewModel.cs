@@ -17,6 +17,7 @@
                     OrganisationId = source.Id,
                     OrganisationType = source.OrganisationType
                 },
+                CompanyName = source.Name,
                 BusinessTradingName = source.TradingName
             };
         }
