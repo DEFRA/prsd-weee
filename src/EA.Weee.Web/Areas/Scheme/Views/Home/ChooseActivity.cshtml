@@ -2,14 +2,14 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
 @{
-    ViewBag.Title = "Choose Activity";
+    ViewBag.Title = "Choose Activity - GOV.UK";
 }
 
 @section main_content
 {   
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            What would you like to do?
+            What activity would you like to do?
         </h1>
     </header>
 
@@ -24,7 +24,7 @@
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "What would you like to do?",
+                "What activity would you like to do?",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
