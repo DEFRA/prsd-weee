@@ -13,22 +13,26 @@
     using System.Text;
     using System.Threading.Tasks;
     using Domain.Lookup;
+    using EA.Weee.RequestHandlers.Security;
 
     public class GetPanAreasHandler : IRequestHandler<GetPanAreas, IList<PanAreaData>>
     {
         private readonly WeeeContext context;
         private readonly IMap<PanArea, PanAreaData> mapper;
+        private readonly IWeeeAuthorization authorization;
 
-        public GetPanAreasHandler(WeeeContext context, IMap<PanArea, PanAreaData> mapper)
+        public GetPanAreasHandler(WeeeContext context, IWeeeAuthorization authorization, IMap<PanArea, PanAreaData> mapper)
         {
             this.context = context;
+            this.authorization = authorization;
             this.mapper = mapper;
         }
 
         public async Task<IList<PanAreaData>> HandleAsync(GetPanAreas message)
         {
-            var panareas =
-                await context.PanAreas.OrderBy(c => c.Name).ToArrayAsync();
+            authorization.EnsureCanAccessInternalArea();
+
+            var panareas = await context.PanAreas.OrderBy(c => c.Name).ToArrayAsync();
 
             return panareas.Select(mapper.Map).ToArray();
         }

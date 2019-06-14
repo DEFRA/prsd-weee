@@ -234,6 +234,8 @@
 
             var accessToken = User.GetAccessToken();
             viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+            viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+            viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
             viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
             return viewModel;

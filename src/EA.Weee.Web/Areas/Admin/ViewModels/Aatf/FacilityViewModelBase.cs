@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
 
@@ -35,6 +36,11 @@
         public Guid PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
+
+        public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
+
+        [Display(Name = "Local Area")]
+        public Guid LocalAreaId { get; set; }
 
         [Required]
         [Display(Name = "Status")]
