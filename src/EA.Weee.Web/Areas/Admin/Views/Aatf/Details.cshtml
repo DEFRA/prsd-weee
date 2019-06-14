@@ -1,8 +1,5 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using MvcNavigationHelpers
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
@@ -151,6 +148,13 @@
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
+                else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Sole trader name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Business trading name</th>
                     <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
@@ -260,9 +264,13 @@
                 {
                     <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
                 }
+                else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                }
                 else
                 {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
                 }
             </p>
         }
