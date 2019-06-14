@@ -92,10 +92,12 @@
             await action.Should().ThrowAsync<ArgumentException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenReturn_StatusShouldBeUpdated()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task HandleAsync_GivenReturn_StatusShouldBeUpdated(bool nilReturn)
         {
-            var message = new SubmitReturn(Guid.NewGuid());
+            var message = new SubmitReturn(Guid.NewGuid(), nilReturn);
             var @return = A.Fake<Return>();
             var userId = Guid.NewGuid();
 
@@ -105,7 +107,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), false)).MustHaveHappened(Repeated.Exactly.Once)
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), nilReturn)).MustHaveHappened(Repeated.Exactly.Once)
                 .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
@@ -123,7 +125,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), false)).MustNotHaveHappened();
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), A<bool>._)).MustNotHaveHappened();
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustNotHaveHappened();
         }
 
