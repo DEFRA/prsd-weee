@@ -75,58 +75,55 @@
 
         internal async Task<List<string>> GetActivities(Guid pcsId)
         {
-            string organisationDetailsActivityName;
-
-            bool hasScheme = false;
-            bool hasAatfs = false;
-
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
                 //Get the organisation type based on organisation id
-                organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                var organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
 
-                hasScheme = organisationDetails.SchemeId != null;
-                hasAatfs = organisationDetails.HasAatfs;
-            }
-            var organisationOverview = await GetOrganisationOverview(pcsId);
+                var organisationOverview = await GetOrganisationOverview(pcsId);
 
-            var activities = new List<string>();
+                var activities = new List<string>();
 
-            if (hasScheme)
-            {
-                activities.Add(PcsAction.ManagePcsMembers);
-
-                if (configurationService.CurrentConfiguration.EnableDataReturns)
+                if (organisationDetails.SchemeId != null)
                 {
-                    activities.Add(PcsAction.ManageEeeWeeeData);
+                    activities.Add(PcsAction.ManagePcsMembers);
+
+                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    {
+                        activities.Add(PcsAction.ManageEeeWeeeData);
+                    }
                 }
-            }
 
-            var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-            if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-            {
-                activities.Add(PcsAction.ViewSubmissionHistory);
-            }
+                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
+                {
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }
 
-            activities.Add(organisationDetailsActivityName);
-            if (hasScheme)
-            {
-                activities.Add(PcsAction.ManageContactDetails);
-            }
+                activities.Add(organisationDetailsActivityName);
+                if (organisationDetails.SchemeId != null)
+                {
+                    activities.Add(PcsAction.ManageContactDetails);
+                }
 
-            if (organisationOverview.HasMultipleOrganisationUsers)
-            {
-                activities.Add(PcsAction.ManageOrganisationUsers);
-            }
+                if (organisationOverview.HasMultipleOrganisationUsers)
+                {
+                    activities.Add(PcsAction.ManageOrganisationUsers);
+                }
 
-            if (configurationService.CurrentConfiguration.EnableAATFReturns && hasAatfs)
-            {
-                activities.Add(PcsAction.ManageAatfReturns);
-                activities.Add(PcsAction.ManageAeReturns);
-            }
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfReturns);
+                }
 
-            return activities;
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
+                {
+                    activities.Add(PcsAction.ManageAeReturns);
+                }
+
+                return activities;
+            }
         }
 
         private async Task<OrganisationOverview> GetOrganisationOverview(Guid organisationId)
@@ -492,8 +489,7 @@
                 page = 1;
             }
 
-            var model = new SubmissionHistoryViewModel();
-            model.OrderBy = orderBy;
+            var model = new SubmissionHistoryViewModel {OrderBy = orderBy};
 
             using (var client = apiClient())
             {
@@ -529,7 +525,8 @@
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
-                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
+                var csvFileName =
+                    $"{schemePublicInfo.ApprovalNo}_memberregistration_{year}_warnings_{submissionDateTime.ToString("ddMMyyyy_HHmm")}.csv";
 
                 var csv = csvWriter.Write(errors);
                 var fileContent = new UTF8Encoding().GetBytes(csv);
@@ -548,8 +545,7 @@
                 page = 1;
             }
 
-            var model = new DataReturnSubmissionHistoryViewModel();
-            model.OrderBy = orderBy;
+            var model = new DataReturnSubmissionHistoryViewModel {OrderBy = orderBy};
 
             using (var client = apiClient())
             {
