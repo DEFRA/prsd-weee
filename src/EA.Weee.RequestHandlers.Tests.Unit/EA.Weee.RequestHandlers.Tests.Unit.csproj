@@ -245,6 +245,7 @@
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Shared\GetLocalAreasHandlerTests.cs" />
+    <Compile Include="Shared\GetPanAreasHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />

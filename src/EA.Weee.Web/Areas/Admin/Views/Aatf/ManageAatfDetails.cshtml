@@ -74,6 +74,18 @@
                     @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                    @Html.Gds().LabelFor(m => m.PanAreaId)
+                    @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
+                    @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
+                    @Html.Gds().LabelFor(m => m.LocalAreaId)
+                    @Html.Gds().ValidationMessageFor(m => m.LocalAreaId)
+                    @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                </div>
+
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StatusValue)">
                     @Html.Gds().LabelFor(m => m.StatusValue)
                     @Html.Gds().ValidationMessageFor(m => m.StatusValue)

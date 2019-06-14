@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
 
@@ -17,6 +18,10 @@
         public string ApprovalNumber { get; set; }
 
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
+
+        public PanAreaData PanArea { get; set; }
+
+        public LocalAreaData LocalArea { get; set; }
 
         public AatfStatus AatfStatus { get; set; }
 
