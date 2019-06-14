@@ -4,7 +4,7 @@
     using Filters;
     using Security;
 
-    [AuthorizeInternalClaims(Claims.CanAccessInternalArea)]
+    [AuthorizeClaimsAttribute(Claims.CanAccessInternalArea)]
     public abstract class TestControllerBase : Controller
     {
     }

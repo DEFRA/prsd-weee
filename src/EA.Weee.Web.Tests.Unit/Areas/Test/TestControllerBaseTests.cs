@@ -10,10 +10,10 @@
     public class TestControllerBaseTests
     {
         [Fact]
-        public void TestControllerBase_SholdBeDecoratedWithAuthorizeInternalClaimsAttribute()
+        public void TestControllerBase_ShouldBeDecoratedWithAuthorizeInternalClaimsAttribute()
         {
             typeof(TestControllerBase).Should()
-                .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.CanAccessInternalArea)));
+                .BeDecoratedWith<AuthorizeClaimsAttribute>(a => a.Match(new AuthorizeClaimsAttribute(Claims.CanAccessInternalArea)));
         }
     }
 }
