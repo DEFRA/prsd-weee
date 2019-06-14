@@ -324,6 +324,7 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
@@ -1365,6 +1366,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
+    <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

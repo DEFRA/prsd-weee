@@ -4,7 +4,7 @@
     using System.Web.Mvc;
     using EA.Weee.Web.Areas.Test.ViewModels;
 
-    public class HomeController : Controller
+    public class HomeController : TestControllerBase
     {
         [HttpGet]
         public ActionResult Index()
