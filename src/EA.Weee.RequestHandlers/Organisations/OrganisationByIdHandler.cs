@@ -6,7 +6,9 @@
     using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
+    using Domain.AatfReturn;
     using Domain.Organisation;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -46,8 +48,9 @@
             {
                 organisationData.SchemeId = schemes.Id;
             }
-
-            organisationData.HasAatfs = await context.Aatfs.CountAsync(o => o.Organisation.Id == query.OrganisationId) > 0;
+            
+            organisationData.HasAatfs = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Aatf.Value);
+            organisationData.HasAes = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Ae.Value);
 
             return organisationData;
         }
