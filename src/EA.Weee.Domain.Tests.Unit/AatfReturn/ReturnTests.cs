@@ -8,6 +8,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using User;
     using Xunit;
 
     public class ReturnTests
@@ -62,8 +63,8 @@
         {
             var organisation = A.Fake<Organisation>();
             var quarter = A.Fake<Quarter>();
-            var userId = "user";
-            FacilityType facilityType = FacilityType.Aatf;
+            const string userId = "user";
+            var facilityType = FacilityType.Aatf;
 
             SystemTime.Freeze(new DateTime(2019, 05, 2));
             var @return = new Return(organisation, quarter, userId, facilityType);
@@ -131,6 +132,56 @@
             };
 
             update.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void ResetSubmitted_GivenNullCreatedBy_InvalidOperationExceptionExpected()
+        {
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Fake<FacilityType>()) { ReturnStatus = ReturnStatus.Submitted };
+
+            var action = Record.Exception(() => @return.ResetSubmitted(null, Guid.NewGuid()));
+
+            action.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void ResetSubmitted_GivenEmptyCreatedBy_InvalidOperationExceptionExpected()
+        {
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Fake<FacilityType>()) { ReturnStatus = ReturnStatus.Submitted };
+
+            var action = Record.Exception(() => @return.ResetSubmitted(string.Empty, Guid.NewGuid()));
+
+            action.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void ResetSubmitted_GivenReturnStatusIsNotSubmitted_InvalidOperationExceptionExpected()
+        {
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Fake<FacilityType>());
+
+            var action = Record.Exception(() => @return.ResetSubmitted("me", Guid.NewGuid()));
+
+            action.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void ResetSubmitted_GivenReturn_ReturnValueShouldBeReset()
+        {
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Fake<FacilityType>()) { ReturnStatus = ReturnStatus.Submitted };
+
+            var parentId = Guid.NewGuid();
+
+            SystemTime.Freeze(new DateTime(2019, 06, 14));
+            @return.ResetSubmitted("me", parentId);
+            SystemTime.Unfreeze();
+
+            @return.SubmittedById.Should().BeNull();
+            @return.SubmittedBy.Should().BeNull();
+            @return.SubmittedDate.Should().BeNull();
+            @return.CreatedById.Should().Be("me");
+            @return.CreatedBy.Should().BeNull();
+            @return.ReturnStatus.Should().Be(ReturnStatus.Created);
+            @return.CreatedDate.Should().BeSameDateAs(new DateTime(2019, 06, 14));
         }
     }
 }
