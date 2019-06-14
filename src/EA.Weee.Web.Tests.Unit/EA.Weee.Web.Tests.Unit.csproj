@@ -241,6 +241,12 @@
     <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModelTests.cs" />
+    <Compile Include="Areas\Test\CreatePcsDataReturnXmlFileControllerTests.cs" />
+    <Compile Include="Areas\Test\CreatePcsMemberXmlFileControllerTests.cs" />
+    <Compile Include="Areas\Test\HomeControllerTests.cs" />
+    <Compile Include="Areas\Test\ManageCacheControllerTests.cs" />
+    <Compile Include="Areas\Test\ManagePcsReturnsSubmissionWindowControllerTests.cs" />
+    <Compile Include="Areas\Test\TestControllerBaseTests.cs" />
     <Compile Include="Extensions\ModelStateExtensionsTests.cs" />
     <Compile Include="Infrastructure\ARedirectTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\OverriddenFacilityViewModelBase.cs" />
