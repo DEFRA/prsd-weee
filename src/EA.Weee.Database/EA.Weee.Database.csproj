@@ -247,6 +247,7 @@
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190606-1150-ReportOnQuestionAddAlternativeDescription.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190607-0955-ReportOnQuestionUpdateDescription.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191406-0937-copy-trading-name-sole-trader.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
