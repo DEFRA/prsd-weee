@@ -962,5 +962,13 @@
         {
             return new Return() { Organisation = CreateOrganisation(), Quarter = 1, Id = IntegerToGuid(1) };
         }
+
+        public AATF CreateAatf()
+        {
+            return new AATF()
+            {
+                Id = Guid.NewGuid()
+            };
+        }
     }
 }

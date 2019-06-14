@@ -107,6 +107,7 @@
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReceivedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CopyReturnHandlerTests.cs" />
+    <Compile Include="Admin\DeleteAatf\AatfDataAccessTests.cs" />
     <Compile Include="Factories\ReturnFactoryDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetAatfsDataAccessTests.cs" />
