@@ -87,7 +87,7 @@
 
             Action update = () =>
             {
-                @return.UpdateSubmitted(value);
+                @return.UpdateSubmitted(value, false);
             };
 
             update.Should().Throw<ArgumentException>();
@@ -100,7 +100,7 @@
 
             Action update = () =>
             {
-                @return.UpdateSubmitted(null);
+                @return.UpdateSubmitted(null, false);
             };
 
             update.Should().Throw<ArgumentNullException>();
@@ -112,12 +112,28 @@
             var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Dummy<FacilityType>());
 
             SystemTime.Freeze(new DateTime(2019, 05, 2));
-            @return.UpdateSubmitted("me2");
+            @return.UpdateSubmitted("me2", false);
             SystemTime.Unfreeze();
 
             @return.SubmittedDate.Value.Date.Should().Be(new DateTime(2019, 05, 2));
             @return.SubmittedById.Should().Be("me2");
             @return.ReturnStatus.Should().Be(ReturnStatus.Submitted);
+            @return.NilReturn.Should().Be(false);
+        }
+
+        [Fact]
+        public void UpdateSubmitted_GivenSubmittedBy_ReturnSubmittedPropertiesNilReturnShouldBeSet()
+        {
+            var @return = new Return(A.Dummy<Organisation>(), A.Dummy<Quarter>(), "me", A.Dummy<FacilityType>());
+
+            SystemTime.Freeze(new DateTime(2019, 05, 3));
+            @return.UpdateSubmitted("me3", true);
+            SystemTime.Unfreeze();
+
+            @return.SubmittedDate.Value.Date.Should().Be(new DateTime(2019, 05, 3));
+            @return.SubmittedById.Should().Be("me3");
+            @return.ReturnStatus.Should().Be(ReturnStatus.Submitted);
+            @return.NilReturn.Should().Be(true);
         }
 
         [Fact]
@@ -127,7 +143,7 @@
 
             Action update = () =>
             {
-                @return.UpdateSubmitted("me2");
+                @return.UpdateSubmitted("me2", false);
             };
 
             update.Should().Throw<InvalidOperationException>();
