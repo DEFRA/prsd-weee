@@ -75,7 +75,7 @@
                             @{
                                 if (item.ReturnsListDisplayOptions.DisplayContinue)
                                 {
-                                    @Html.ActionLink("Continue", "Index", "Holding", new { organisationId = @Model.OrganisationId }, null)
+                                    @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
                                 }
                             }
                         </td>
