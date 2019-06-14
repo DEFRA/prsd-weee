@@ -45,7 +45,7 @@
 
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
-            @return.UpdateSubmitted(userContext.UserId.ToString());
+            @return.UpdateSubmitted(userContext.UserId.ToString(), message.NilReturn);
 
             await weeeContext.SaveChangesAsync();
 
