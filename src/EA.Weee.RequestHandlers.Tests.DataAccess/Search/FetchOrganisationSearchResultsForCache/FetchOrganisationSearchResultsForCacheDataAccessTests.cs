@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Core.Search;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache;
     using EA.Weee.Tests.Core.Model;
     using Xunit;
@@ -36,7 +37,7 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -73,7 +74,7 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -110,7 +111,7 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -123,7 +124,7 @@
 
         /// <summary>
         /// Ensures that search results representing organisations which are sole traders or individuals will use
-        /// the 'TradingName' column from the database as the organisation name.
+        /// the 'Name' column from the database as the organisation name.
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -134,7 +135,7 @@
                 // Arrange
                 Organisation organisation = new Organisation();
                 organisation.Id = new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4");
-                organisation.TradingName = "Trading Name";
+                organisation.Name = "Name";
                 organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual.Value;
                 organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
 
@@ -147,14 +148,14 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
 
                 // Assert
                 Assert.Contains(results,
-                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name");
+                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Name");
             }
         }
 
@@ -184,7 +185,7 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -246,7 +247,7 @@
                 database.Model.Schemes.Add(scheme3);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -281,7 +282,7 @@
                 database.Model.Organisations.Add(organisation);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext);
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
                 IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
@@ -289,6 +290,46 @@
                 // Assert
                 Assert.Contains(results,
                     r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name");
+            }
+        }
+
+        /// <summary>
+        /// Ensures that search results representing organisations which are partnerships will use
+        /// the 'TradingName' column from the database as the organisation name.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task FetchOrganisations_OrganisationReturnedWithAddress()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Organisation organisation = new Organisation();
+                organisation.Id = new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4");
+                organisation.TradingName = "Trading Name";
+                organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.Partnership.Value;
+                organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
+
+                organisation.Address = helper.CreateOrganisationAddress();
+
+                database.Model.Organisations.Add(organisation);
+                database.Model.SaveChanges();
+
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+
+                // Act
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+                // Assert
+                Assert.Contains(results,
+                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name"
+                    && r.Address.Address1 == organisation.Address.Address1
+                    && r.Address.Address2 == organisation.Address.Address2
+                    && r.Address.TownOrCity == organisation.Address.TownOrCity
+                    && r.Address.CountyOrRegion == organisation.Address.CountyOrRegion
+                    && r.Address.Postcode == organisation.Address.Postcode);
             }
         }
     }

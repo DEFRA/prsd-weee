@@ -18,7 +18,7 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        @Html.Raw("Manage " + @Model.FacilityType.ToDisplayString() + "s")
+        @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage")
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
@@ -33,7 +33,7 @@
                 <tr class="govuk-table__row">
                     <td>
                         <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
-                        @Html.TextBoxFor(m => m.Filter.Name, new {@class = "govuk-!-width-three-quarters form-control govuk-input"})
+                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
                     </td>
                     <td>
                         @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
@@ -71,9 +71,9 @@
             {
                 {
                     var id = "select-aatf-" + @aatf.Id;
-               
+
                     <tr>
-                        <td style="word-break:break-all" class="govuk-table__cell">@aatf.Name</td>
+                        <td style="word-break:break-word" class="govuk-table__cell">@aatf.Name</td>
                         <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
                         <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
                         <td class="govuk-table__cell">@aatf.AatfStatusString</td>
@@ -83,13 +83,16 @@
             }
         </tbody>
     </table>
-    <br />
-    @(this.WeeeGds().Submit("Continue"))
-
     if (Model.CanAddAatf)
     {
         <p>
             <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
         </p>
     }
+    <br />
+    @(this.WeeeGds().Submit("Continue"))
+
+    <p>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+    </p>
 }

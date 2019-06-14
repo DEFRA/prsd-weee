@@ -58,11 +58,11 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                    "Navigation",
-                                    "External activity",
-                                    null,
-                                   null)):
+                                                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                                            "Navigation",
+                                                            "External activity",
+                                                            null,
+                                                           null)):
                                 @Model.Breadcrumb.ExternalActivity
                             </li>
                         }
@@ -71,11 +71,11 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                "Navigation",
-                                "Internal activity",
-                                null,
-                               null)):
+                                                        Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                                        "Navigation",
+                                                        "Internal activity",
+                                                        null,
+                                                       null)):
                                 @Model.Breadcrumb.InternalActivity
                             </li>
                         }
@@ -84,6 +84,26 @@
                         {
                             <li>
                                 <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
+                            </li>
+                        }
+                        else if (Model.Breadcrumb.InternalScheme != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">PCS</a>: @Model.Breadcrumb.InternalScheme
+                            </li>
+                        }
+
+                        @if (Model.Breadcrumb.InternalAatf != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 1 })">Aatf</a>: @Model.Breadcrumb.InternalAatf
+                            </li>
+                        }
+
+                        @if (Model.Breadcrumb.InternalAe != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 2 })">Ae</a>: @Model.Breadcrumb.InternalAe
                             </li>
                         }
 
