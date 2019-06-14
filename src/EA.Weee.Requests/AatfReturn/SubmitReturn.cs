@@ -7,9 +7,12 @@
     {
         public Guid ReturnId { get; private set; }
 
-        public SubmitReturn(Guid returnId)
+        public bool NilReturn { get; private set; }
+
+        public SubmitReturn(Guid returnId, bool nilReturn = false)
         {
             ReturnId = returnId;
+            NilReturn = nilReturn;
         }
     }
 }
