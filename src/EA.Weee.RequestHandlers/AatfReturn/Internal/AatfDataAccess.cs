@@ -8,6 +8,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
 
     public class AatfDataAccess : IAatfDataAccess
     {
@@ -102,6 +103,24 @@
         private async Task<Aatf> GetAatfById(Guid id)
         {
             return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task DeleteAatf(Guid aatfId)
+        {
+            Aatf aatf = await this.GetAatfById(aatfId);
+
+            context.Aatfs.Remove(aatf);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteOrganisation(Guid organisationId)
+        {
+            Organisation organisation = await context.Organisations.FirstOrDefaultAsync(p => p.Id == organisationId);
+
+            context.Organisations.Remove(organisation);
+
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -68,10 +68,7 @@
 
             A.CallTo(() => dataAccess.DoesAatfHaveData(aatfId)).Returns(hasData);
 
-            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted()
-            {
-                AatfId = aatfId
-            };
+            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted(aatfId);
 
             CheckAatfCanBeDeletedHandler handler = new CheckAatfCanBeDeletedHandler(authorization, dataAccess);
 
@@ -89,10 +86,7 @@
 
             A.CallTo(() => dataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(orgHasMoreAatfs);
 
-            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted()
-            {
-                AatfId = aatfId
-            };
+            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted(aatfId);
 
             CheckAatfCanBeDeletedHandler handler = new CheckAatfCanBeDeletedHandler(authorization, dataAccess);
 
@@ -109,10 +103,7 @@
             A.CallTo(() => dataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(false);
             A.CallTo(() => dataAccess.DoesAatfHaveData(aatfId)).Returns(false);
 
-            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted()
-            {
-                AatfId = aatfId
-            };
+            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted(aatfId);
 
             CheckAatfCanBeDeletedHandler handler = new CheckAatfCanBeDeletedHandler(authorization, dataAccess);
 
@@ -130,10 +121,7 @@
 
             A.CallTo(() => dataAccess.DoesAatfOrganisationHaveActiveUsers(aatfId)).Returns(hasActiveUsers);
 
-            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted()
-            {
-                AatfId = aatfId
-            };
+            CheckAatfCanBeDeleted request = new CheckAatfCanBeDeleted(aatfId);
 
             CheckAatfCanBeDeletedHandler handler = new CheckAatfCanBeDeletedHandler(authorization, dataAccess);
 
