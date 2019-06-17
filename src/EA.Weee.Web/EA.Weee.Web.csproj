@@ -323,6 +323,8 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -453,7 +455,7 @@
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\RegisteredCompanyDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderOrPartnershipDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\PartnershipDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
@@ -935,7 +937,7 @@
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\PartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
@@ -950,6 +952,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

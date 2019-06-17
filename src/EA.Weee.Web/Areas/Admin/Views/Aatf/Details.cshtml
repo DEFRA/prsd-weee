@@ -1,8 +1,5 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using MvcNavigationHelpers
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
@@ -149,6 +146,13 @@
                 {
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Company name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Sole trader name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
