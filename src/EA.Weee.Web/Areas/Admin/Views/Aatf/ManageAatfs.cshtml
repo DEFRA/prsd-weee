@@ -62,6 +62,8 @@
 
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
 {
+<fieldset style="border: none; margin-left: 0; padding: 0">
+    <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage")</legend>
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
     @Html.HiddenFor(m => m.Filter.Name)
@@ -83,19 +85,20 @@
             @foreach (var aatf in Model.AatfDataList)
             {
                 {
-                    var id = "select-aatf-" + @aatf.Id;
+                    var id = "selectAatf" + @aatf.Id;
 
                     <tr>
-                        <td style="word-break:break-all" class="govuk-table__cell">@aatf.Name</td>
+                        <td style="word-break: break-all" class="govuk-table__cell">@aatf.Name</td>
                         <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
                         <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
                         <td class="govuk-table__cell">@aatf.AatfStatusString</td>
-                        <td class="govuk-table__cell"><label class="govuk-visually-hidden" id="@id">select</label>   @Html.RadioButtonFor(m => m.Selected, @aatf.Id, new { aria_labelledby = @id })</td>
+                        <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.Selected, @aatf.Id, new { id = @id })</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+</fieldset>
     if (Model.CanAddAatf)
     {
         <p>
