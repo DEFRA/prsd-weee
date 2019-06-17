@@ -12,7 +12,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        
+
         <div class="govuk-!-padding-bottom-5"></div>
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
@@ -53,4 +53,5 @@
             Save and continue
         </button>
     }
+    <a href="@Url.RouteUrl(AatfRedirect.SelectReportOptionsRouteName, new {organisationId = Model.OrganisationId, returnId = Model.ReturnId })" class="govuk-back-link">Back</a>
 </section>
