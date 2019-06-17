@@ -3,6 +3,7 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin;
@@ -11,9 +12,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -22,12 +21,14 @@
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly DbContextHelper dbHelper = new DbContextHelper();
+        private readonly LocalAreaMap mapper;
         private GetLocalAreasHandler handler;
 
         public GetLocalAreasHandlerTests()
         {
             context = A.Fake<WeeeContext>();
             authorization = A.Fake<IWeeeAuthorization>();
+            mapper = A.Fake<LocalAreaMap>();
 
             A.CallTo(() => context.LocalAreas).Returns(dbHelper.GetAsyncEnabledDbSet(new List<LocalArea>
             {
@@ -37,7 +38,7 @@
                 new LocalArea() { Name = "West", CompetentAuthorityId = Guid.NewGuid(), Id = Guid.NewGuid() },
             }));
 
-            handler = new GetLocalAreasHandler(context, authorization);
+            handler = new GetLocalAreasHandler(context, authorization, mapper);
         }
 
         [Fact]
@@ -45,7 +46,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new GetLocalAreasHandler(A.Fake<WeeeContext>(), authorization);
+            handler = new GetLocalAreasHandler(A.Fake<WeeeContext>(), authorization, mapper);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetLocalAreas>());
 
