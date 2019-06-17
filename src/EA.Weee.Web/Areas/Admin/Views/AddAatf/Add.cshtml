@@ -78,13 +78,13 @@
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
-            @Html.Gds().LabelFor(m => m.PanAreaId)
+            <label class="govuk-label form-label" for="PanAreaId">PAN Area</label>
             @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
             @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
-            @Html.Gds().LabelFor(m => m.LocalAreaId)
+            <label class="govuk-label form-label" for="LocalAreaId">Local Area</label>
             @Html.Gds().ValidationMessageFor(m => m.LocalAreaId)
             @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
         </div>

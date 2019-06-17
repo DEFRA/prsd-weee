@@ -109,7 +109,7 @@
                     }
                 }
 
-                if (instance.CompetentAuthorityId == "A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8")
+                if (instance.CompetentAuthorityId == UKCompetentAuthorityAbbreviationType.EA)
                 {
                     if (instance.LocalAreaId == null)
                     {
