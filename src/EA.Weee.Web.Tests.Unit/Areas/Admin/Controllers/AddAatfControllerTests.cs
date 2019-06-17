@@ -800,10 +800,16 @@
             const string query = "query";
 
             SetupControllerAjaxRequest();
+            AddressData address = new AddressData()
+            {
+                Address1 = "Address 1",
+                TownOrCity = "Town",
+                CountryName = "England"
+            };
 
             var organisationResult = new List<OrganisationSearchResult>()
             {
-                new OrganisationSearchResult() { Name = "name", OrganisationId = Guid.NewGuid() }
+                new OrganisationSearchResult() { Name = "name", OrganisationId = Guid.NewGuid(), Address = address }
             };
 
             A.CallTo(() => organisationSearcher.Search(query, A<int>._, true)).Returns(organisationResult);

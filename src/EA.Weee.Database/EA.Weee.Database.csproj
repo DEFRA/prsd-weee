@@ -249,6 +249,8 @@
     <Content Include="scripts\Update\Release 2\Sprint09\20190524-1100-UpdateCharacterLimitsForAddressFields.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190606-1150-ReportOnQuestionAddAlternativeDescription.sql" />
     <Content Include="scripts\Update\Release 2\Sprint10\20190607-0955-ReportOnQuestionUpdateDescription.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20191406-0937-copy-trading-name-sole-trader.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20190613-1023-AddNilReturnColumn.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1225-fix-sole-trader-name.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-0938-add-localarea.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1344-create-pan-area-table.sql" />

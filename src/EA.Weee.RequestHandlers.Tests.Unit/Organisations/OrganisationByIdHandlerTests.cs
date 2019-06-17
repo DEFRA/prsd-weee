@@ -80,18 +80,10 @@
         [Fact]
         public async Task OrganisationByIdHandler_HappyPath_ReturnsOrganisationFromId()
         {
-            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
-
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
             {
                 GetOrganisationWithId(organisationId)
             }));
-
-            var aatfs = new List<Aatf>();
-            var schemes = new List<Domain.Scheme.Scheme> { new Domain.Scheme.Scheme(organisationId) };
-
-            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
-            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(aatfs));
 
             var expectedReturnValue = new OrganisationData();
             A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
@@ -104,41 +96,120 @@
             Assert.Same(expectedReturnValue, result);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_NoSchemesOrAatfs_OrganisationDataSetCorrectly(bool hasAatfOrScheme)
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasNoScheme_OrganisationSchemeIdShouldBeNull()
         {
-            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
-
             var organisation = GetOrganisationWithId(organisationId);
 
             var expectedReturnValue = new OrganisationData();
+
             A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
-
-            var aatfs = new List<Aatf>();
-            var schemes = new List<Domain.Scheme.Scheme>();
-
-            if (hasAatfOrScheme)
-            {
-                aatfs.Add(CreateAatf(organisation));
-                schemes.Add(new Domain.Scheme.Scheme(organisationId));
-            }
-
-            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
-            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
 
             var message = new GetOrganisationInfo(organisationId);
 
             var result = await handler.HandleAsync(message);
 
-            Assert.Equal(hasAatfOrScheme, result.HasAatfs);
-            Assert.Equal(hasAatfOrScheme, result.SchemeId != null);
+            result.SchemeId.Should().BeNull();
+        }
 
-            if (hasAatfOrScheme)
-            {
-                Assert.Equal(schemes.FirstOrDefault().Id, result.SchemeId);
-            }
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasScheme_OrganisationSchemeIdShouldBeSet()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+
+            var scheme = A.Fake<Domain.Scheme.Scheme>();
+            A.CallTo(() => scheme.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => scheme.OrganisationId).Returns(organisation.Id);
+
+            var schemes = new List<Domain.Scheme.Scheme> { scheme };
+
+            A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.SchemeId.Should().Be(scheme.Id);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasNoAatfs_OrganisationHasAatfsShouldBeFalse()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasAatfs.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasNoAes_OrganisationHasAesShouldBeFalse()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasAes.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasAes_OrganisationHasAesShouldBeTrue()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+
+            var ae = A.Fake<Aatf>();
+
+            A.CallTo(() => ae.FacilityType).Returns(FacilityType.Ae);
+            A.CallTo(() => ae.Organisation).Returns(organisation);
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>() { ae }));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasAes.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasAatfs_OrganisationHasAatfsShouldBeTrue()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasAatfs.Should().BeTrue();
         }
 
         [Fact]

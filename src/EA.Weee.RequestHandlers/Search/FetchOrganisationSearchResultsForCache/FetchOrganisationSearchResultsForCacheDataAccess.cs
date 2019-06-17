@@ -4,7 +4,9 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Search;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Scheme;
@@ -12,10 +14,12 @@
     public class FetchOrganisationSearchResultsForCacheDataAccess : IFetchOrganisationSearchResultsForCacheDataAccess
     {
         private readonly WeeeContext context;
+        private readonly IMap<Address, AddressData> addressMapper;
 
-        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context)
+        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context, IMap<Address, AddressData> addressMapper)
         {
             this.context = context;
+            this.addressMapper = addressMapper;
         }
 
         /// <summary>
@@ -27,14 +31,14 @@
         public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
         {
             var organisations = await context.Organisations
-                .Where(p => p.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
+                .Where(p => p.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
                 .ToListAsync();
 
             var schemes = await context.Schemes.ToListAsync();
 
             foreach (Scheme scheme in schemes)
             {
-                if (scheme.SchemeStatus.Value == SchemeStatus.Rejected.Value)
+                if (scheme.SchemeStatus.Value == Domain.Scheme.SchemeStatus.Rejected.Value)
                 {
                     organisations.Remove(scheme.Organisation);
                 }
@@ -43,7 +47,8 @@
             return organisations.Select(r => new OrganisationSearchResult()
             {
                 OrganisationId = r.Id,
-                Name = r.OrganisationName
+                Name = r.OrganisationName,
+                Address = addressMapper.Map(r.BusinessAddress)
             })
                 .OrderBy(r => r.Name)
                 .ToList();
