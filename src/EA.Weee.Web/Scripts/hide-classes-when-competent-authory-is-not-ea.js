@@ -1,21 +1,20 @@
 ﻿$(document).ready(function () {
-    var competentyAuthority = $("#CompetentAuthorityId option:selected").html();
+    function competentAuthoritySelection() {
+	    var competentAuthority = $("#CompetentAuthorityId option:selected").html();
 
-    if (competentyAuthority == "EA") {
-        $(".competent-authority-hidden").css("display", "block");
+        if (competentAuthority === "EA") {
+		    $(".competent-authority-hidden").css("display", "block");
+	    }
+	    else {
+            $(".competent-authority-hidden").css("display", "none");
+            $(".competent-authority-hidden").find("select").val('');
+        }
     }
-    else {
-        $(".competent-authority-hidden").css("display", "none");
-    }
+
+    competentAuthoritySelection();
+
+    $("#CompetentAuthorityId").change(function () {
+	    competentAuthoritySelection();
+    });
 });
 
-$("#CompetentAuthorityId").change(function () {
-    var competentyAuthority = $("#CompetentAuthorityId option:selected").html();
-
-    if (competentyAuthority == "EA") {
-        $(".competent-authority-hidden").css("display", "block");
-    }
-    else {
-        $(".competent-authority-hidden").css("display", "none");
-    }
-});
