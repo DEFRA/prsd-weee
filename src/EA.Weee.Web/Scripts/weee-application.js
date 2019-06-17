@@ -65,12 +65,17 @@
     // When there is a validation erorr, move the ID from the select element to the auto-complete
     // textbox so that the links in the validation summary will work.
     countryInput.each(function () {
+
         if ($(this).hasClass("input-validation-error")) {
             var validationInput = $(this).next("input");
             var id = $(this).attr("id");
             $(this).removeAttr("id");
             validationInput.attr("id", id);
         }
+
+        var input = $(this).next('input')[0];
+        input.id = $(this)[0].id + '_autocomplete';
+        $("<label class='govuk-visually-hidden' for='" + input.id + "'>Country input</label>").insertBefore(input);
     });
 
     //fn setCurPosition

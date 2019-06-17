@@ -154,9 +154,13 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var newId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
 
             var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<CopyReturn>.That.Matches(r => r.ReturnId == returnId)));
             clientCall.Returns(newId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            @return.NilReturn = false;
 
             var redirectResult = await controller.Copy(returnId, organisationId) as RedirectToRouteResult;
 
@@ -164,6 +168,29 @@
             redirectResult.RouteValues["action"].Should().Be("Index");
             redirectResult.RouteValues["returnId"].Should().Be(newId);
 
+            clientCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void CopyPost_UserShouldBeRedirectedToReportOptionsForNilReturn()
+        {
+            var organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var newId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<CopyReturn>.That.Matches(r => r.ReturnId == returnId)));
+            clientCall.Returns(newId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            @return.NilReturn = true;
+
+            var redirectResult = await controller.Copy(returnId, organisationId) as RedirectToRouteResult;
+
+            redirectResult.RouteName.Should().Be(AatfRedirect.SelectReportOptionsRouteName);
+            redirectResult.RouteValues["action"].Should().Be("Index");
+            redirectResult.RouteValues["returnId"].Should().Be(newId);
+            redirectResult.RouteValues["organisationId"].Should().Be(organisationId);
             clientCall.MustHaveHappenedOnceExactly();
         }
     }
