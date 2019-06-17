@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
+    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Security;
