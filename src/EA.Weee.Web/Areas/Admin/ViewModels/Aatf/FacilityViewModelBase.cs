@@ -108,6 +108,21 @@
                             new List<string> { nameof(instance.ApprovalDate) }));
                     }
                 }
+
+                if (instance.CompetentAuthorityId == Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8"))
+                {
+                    if (instance.LocalAreaId == null)
+                    {
+                        validationResults.Add(
+                            new ValidationResult($"Enter EA area", new List<string> { nameof(instance.LocalAreaId) }));
+                    }
+
+                    if (instance.PanAreaId == null)
+                    {
+                        validationResults.Add(
+                            new ValidationResult($"Enter WROS pat area", new List<string> { nameof(instance.PanAreaId) }));
+                    }
+                }
             }
 
             ModelValidated = true;
