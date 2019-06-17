@@ -74,7 +74,7 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
             @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
             @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
-            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Abbreviation", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
         </div>
 
         <div class="govuk-form-group competent-authority-hidden">
