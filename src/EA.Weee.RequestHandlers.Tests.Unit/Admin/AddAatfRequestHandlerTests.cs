@@ -153,7 +153,7 @@
             };
 
             var expectedFacilityType = facilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>();
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(aatf.CompetentAuthority.Id)).Returns(competentAuthority);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(aatf.CompetentAuthority.Abbreviation)).Returns(competentAuthority);
             A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(aatf.LocalAreaData.Id)).Returns(localarea);
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(aatf.PanAreaData.Id)).Returns(panarea);
 

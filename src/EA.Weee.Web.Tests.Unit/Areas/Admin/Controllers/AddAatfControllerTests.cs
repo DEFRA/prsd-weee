@@ -244,7 +244,7 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid(),
+                CompetentAuthorityId = Guid.NewGuid().ToString(),
                 ComplianceYear = (Int16)2019
             };
 
@@ -253,7 +253,7 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == Guid.Parse(viewModel.CompetentAuthorityId)),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
@@ -342,7 +342,7 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid(),
+                CompetentAuthorityId = Guid.NewGuid().ToString(),
                 ComplianceYear = (Int16)2019
             };
 
@@ -351,7 +351,7 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == Guid.Parse(viewModel.CompetentAuthorityId)),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
