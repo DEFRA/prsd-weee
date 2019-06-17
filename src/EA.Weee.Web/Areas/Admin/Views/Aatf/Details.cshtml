@@ -50,6 +50,12 @@
         <div class="govuk-table__header--large">
             @Model.FacilityType.ToDisplayString() details
         </div>
+        @if (Model.CanEdit)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
+            </p>
+        }
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">

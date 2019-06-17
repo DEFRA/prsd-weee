@@ -322,6 +322,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -948,6 +949,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\Delete.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

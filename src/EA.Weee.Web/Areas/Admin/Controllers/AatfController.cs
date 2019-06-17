@@ -4,9 +4,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -215,6 +217,30 @@
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Delete(Guid id, FacilityType facilityType)
+        {
+            using (var client = apiClient())
+            {
+                CanAatfBeDeletedFlags canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
+
+                DeleteViewModel viewModel = new DeleteViewModel()
+                {
+                    Id = id,
+                    FacilityType = facilityType,
+                    CanDeleteFlags = canDelete
+                };
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(DeleteViewModel viewModel)
+        {
             return View(viewModel);
         }
 
