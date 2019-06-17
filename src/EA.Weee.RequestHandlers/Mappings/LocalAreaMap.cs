@@ -23,7 +23,7 @@
                 };
             }
 
-            return new LocalAreaData();
+            return null;
         }
     }
 }

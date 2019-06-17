@@ -209,6 +209,7 @@
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
+    <Compile Include="Mapping\PanAreaMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
