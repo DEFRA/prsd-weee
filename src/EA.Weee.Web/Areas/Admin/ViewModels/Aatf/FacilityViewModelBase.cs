@@ -28,7 +28,7 @@
 
         [Required]
         [Display(Name = "Appropriate authority")]
-        public Guid CompetentAuthorityId { get; set; }
+        public string CompetentAuthorityId { get; set; }
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 

@@ -76,7 +76,7 @@
                         @Model.CompetentAuthority.Abbreviation <br />
                     </td>
                 </tr>
-                @if (Model.PanArea != null)
+                @if (Model.HasPatArea)
                 {
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">PAT area</th>
@@ -85,7 +85,7 @@
                     </td>
                 </tr>
                 }
-                @if (Model.LocalArea != null)
+                @if (Model.HasLocalArea)
                 {
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Local area</th>

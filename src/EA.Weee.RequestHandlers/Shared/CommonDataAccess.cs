@@ -42,9 +42,9 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Name == authorityName);
         }
 
-        public async Task<UKCompetentAuthority> FetchCompetentAuthority(Guid authority)
+        public async Task<UKCompetentAuthority> FetchCompetentAuthority(string authority)
         {
-            return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == authority);
+            return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
         public async Task<T> FetchLookup<T>(Guid id) where T : AreaBase
