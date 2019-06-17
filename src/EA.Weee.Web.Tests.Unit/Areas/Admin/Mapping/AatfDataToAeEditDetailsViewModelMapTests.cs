@@ -31,7 +31,7 @@
         [Fact]
         public void Map_GivenValidSource_WithApprovalDate_PropertiesShouldBeMapped()
         {
-            var competentAuthorityId = fixture.Create<Guid>();
+            var competentAuthorityId = "EA";
             var aatfData = CreateAatfData(competentAuthorityId);
 
             var result = map.Map(aatfData);
@@ -42,7 +42,7 @@
         [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDateTime()
         {
-            var competentAuthorityId = fixture.Create<Guid>();
+            var competentAuthorityId = "EA";
             var aatfData = CreateAatfData(competentAuthorityId);
             aatfData.ApprovalDate = default(DateTime);
 
@@ -52,23 +52,23 @@
             Assert.Null(result.ApprovalDate);
         }
 
-        private static void AssertResults(AatfData aatfData, AeEditDetailsViewModel result, Guid competentAuthorityId)
+        private static void AssertResults(AatfData aatfData, AeEditDetailsViewModel result, string competentAuthorityId)
         {
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddressData);
-            Assert.Equal(competentAuthorityId.ToString(), result.CompetentAuthorityId);
+            Assert.Equal(competentAuthorityId, result.CompetentAuthorityId);
             Assert.Equal(AatfStatus.Approved.Value, result.StatusValue);
             Assert.Equal(AatfSize.Large.Value, result.SizeValue);
             Assert.Equal(FacilityType.Aatf, result.FacilityType);
             Assert.Equal(aatfData.ComplianceYear, result.ComplianceYear);
         }
 
-        private AatfData CreateAatfData(Guid competentAuthorityId)
+        private AatfData CreateAatfData(string competentAuthorityId)
         {
             var competentAuthority = fixture.Build<UKCompetentAuthorityData>()
-                .With(ca => ca.Id, competentAuthorityId)
+                .With(ca => ca.Abbreviation, competentAuthorityId)
                 .With(ca => ca.Name, "Environment Agency")
                 .Create();
 
