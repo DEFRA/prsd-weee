@@ -122,7 +122,7 @@
         {
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
+                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId, true));
 
                 return AeRedirect.Confirmation(viewModel.ReturnId);
             }
