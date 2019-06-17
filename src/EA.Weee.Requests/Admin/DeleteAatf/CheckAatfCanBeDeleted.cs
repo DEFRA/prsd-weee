@@ -7,5 +7,10 @@
     public class CheckAatfCanBeDeleted : IRequest<CanAatfBeDeletedFlags>
     {
         public Guid AatfId { get; set; }
+
+        public CheckAatfCanBeDeleted(Guid id)
+        {
+            this.AatfId = id;
+        }
     }
 }
