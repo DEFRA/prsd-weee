@@ -6,15 +6,30 @@
     public class OrganisationTests
     {
         [Fact]
-        public void CreateSoleTrader_SetsStatusToIncomplete_AndTypeToSoleTrader_AndTradingName()
+        public void CreateSoleTrader_SetsStatusToIncomplete_AndTypeToSoleTrader_AndCompanyName()
         {
+            const string companyName = "test company name";
             const string tradingName = "test trading name";
 
-            var result = Organisation.CreateSoleTrader(tradingName);
+            var result = Organisation.CreateSoleTrader(companyName, tradingName);
 
             Assert.Equal(OrganisationType.SoleTraderOrIndividual, result.OrganisationType);
             Assert.Equal(OrganisationStatus.Incomplete, result.OrganisationStatus);
+            Assert.Equal(companyName, result.Name);
             Assert.Equal(tradingName, result.TradingName);
+        }
+
+        [Fact]
+        public void CreateSoleTrader_SetsStatusToIncomplete_AndTypeToSoleTrader_AndCompanyName_NullTradingName()
+        {
+            const string companyName = "test company name";
+
+            var result = Organisation.CreateSoleTrader(companyName);
+
+            Assert.Equal(OrganisationType.SoleTraderOrIndividual, result.OrganisationType);
+            Assert.Equal(OrganisationStatus.Incomplete, result.OrganisationStatus);
+            Assert.Equal(companyName, result.Name);
+            Assert.Null(result.TradingName);
         }
 
         [Fact]
@@ -91,23 +106,62 @@
         }
 
         [Fact]
-        public void UpdateSoleTraderOrIndividualDetails_TradingNameIsNull_ThrowsArgumentNullException()
+        public void UpdateSoleTraderDetails_CompanyNameIsNull_ThrowsArgumentNullException()
         {
+            const string companyName = "Company name";
             const string tradingName = "Trading name";
 
-            var organisation = Organisation.CreateSoleTrader(tradingName);
+            var organisation = Organisation.CreateSoleTrader(companyName, tradingName);
 
-            Assert.Throws<ArgumentNullException>(() => organisation.UpdateSoleTraderOrIndividualDetails(null));
+            Assert.Throws<ArgumentNullException>(() => organisation.UpdateSoleTraderDetails(null, tradingName));
         }
 
         [Fact]
-        public void UpdateSoleTraderOrIndividualDetails_HappyPath_UpdatedDetails()
+        public void UpdateSoleTraderDetails_TradingNameIsNull_UpdatedDetails()
+        {
+            const string companyName = "Company name";
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateSoleTrader(companyName, tradingName);
+
+            organisation.UpdateSoleTraderDetails("SFW Ltd.", null);
+
+            Assert.Equal(organisation.Name, "SFW Ltd.");
+            Assert.Equal(organisation.TradingName, null);
+        }
+
+        [Fact]
+        public void UpdateSoleTraderDetails_HappyPath_UpdatedDetails()
+        {
+            const string companyName = "Company name";
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateSoleTrader(companyName, tradingName);
+
+            organisation.UpdateSoleTraderDetails("SFW Ltd.", "SFW");
+
+            Assert.Equal(organisation.Name, "SFW Ltd.");
+            Assert.Equal(organisation.TradingName, "SFW");
+        }
+
+        [Fact]
+        public void UpdatePartnershipDetails_TradingNameIsNull_ThrowsArgumentNullException()
+        {
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreatePartnership(tradingName);
+
+            Assert.Throws<ArgumentNullException>(() => organisation.UpdatePartnershipDetails(null));
+        }
+
+        [Fact]
+        public void UpdatePartnershipDetails_HappyPath_UpdatedDetails()
         {
             const string tradingName = "Trading name";
 
             var organisation = Organisation.CreateSoleTrader(tradingName);
 
-            organisation.UpdateSoleTraderOrIndividualDetails("SFW Ltd.");
+            organisation.UpdatePartnershipDetails("SFW Ltd.");
 
             Assert.Equal(organisation.TradingName, "SFW Ltd.");
         }

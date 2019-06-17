@@ -238,8 +238,15 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnStatusToReturnDisplayOptionsMapperTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModelTests.cs" />
+    <Compile Include="Areas\Test\CreatePcsDataReturnXmlFileControllerTests.cs" />
+    <Compile Include="Areas\Test\CreatePcsMemberXmlFileControllerTests.cs" />
+    <Compile Include="Areas\Test\HomeControllerTests.cs" />
+    <Compile Include="Areas\Test\ManageCacheControllerTests.cs" />
+    <Compile Include="Areas\Test\ManagePcsReturnsSubmissionWindowControllerTests.cs" />
+    <Compile Include="Areas\Test\TestControllerBaseTests.cs" />
     <Compile Include="Extensions\ModelStateExtensionsTests.cs" />
     <Compile Include="Infrastructure\ARedirectTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\OverriddenFacilityViewModelBase.cs" />
@@ -250,7 +257,7 @@
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToNonObligatedViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToObligatedViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnViewModelToReturnsItemViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilitiesTests.cs" />
@@ -282,7 +289,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedReceivedViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModelTests.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModelTests.cs" />
+    <Compile Include="ViewModels\Returns\SubmittedReturnViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ReceivedPCSListViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
@@ -302,7 +309,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAeViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
-    <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrIndividualOrganisationDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />

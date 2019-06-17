@@ -39,7 +39,6 @@
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
                 viewModel.OrganisationId = @return.OrganisationData.Id;
-                viewModel.ReturnId = returnId;
                 viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(@return.OrganisationData.Id))).OrganisationName;
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
