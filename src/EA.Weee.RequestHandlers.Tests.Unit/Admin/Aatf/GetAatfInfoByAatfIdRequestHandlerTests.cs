@@ -6,6 +6,7 @@
     using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
@@ -36,7 +37,9 @@
                 A.Fake<IMap<AatfAddress, AatfAddressData>>(),
                 A.Fake<IMap<AatfContact, AatfContactData>>(),
                 A.Fake<IMap<Organisation, OrganisationData>>(),
-                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>());
+                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>(), 
+                A.Fake<IMap<PanArea, PanAreaData>>(), 
+                A.Fake<IMap<LocalArea, LocalAreaData>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
 
             fakeMapper = A.Fake<IMap<Aatf, AatfData>>();

@@ -9,12 +9,17 @@
     {
         public PanAreaData Map(PanArea source)
         {
-            return new PanAreaData
+            if (source != null)
             {
-                Name = source.Name,
-                Id = source.Id,
-                CompetentAuthorityId = source.CompetentAuthorityId
-            };
+                return new PanAreaData
+                {
+                    Name = source.Name,
+                    Id = source.Id,
+                    CompetentAuthorityId = source.CompetentAuthorityId
+                };
+            }
+
+            return new PanAreaData();
         }
     }
 }

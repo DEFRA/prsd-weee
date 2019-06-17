@@ -251,6 +251,8 @@
                 using (var client = apiClient())
                 {
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                    viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
+                    viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
 
@@ -273,6 +275,8 @@
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
                 viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 
