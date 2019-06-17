@@ -87,5 +87,9 @@
         {
             return entityList != null && entityList.Any();
         }
+
+        public bool HasPatArea => PanArea != null;
+
+        public bool HasLocalArea => LocalArea != null;
     }
 }

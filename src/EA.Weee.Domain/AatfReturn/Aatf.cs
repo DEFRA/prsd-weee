@@ -34,7 +34,11 @@
 
         public virtual PanArea PanArea { get; private set; }
 
+        public virtual Guid? PanAreaId { get; private set; }
+
         public virtual LocalArea LocalArea { get; private set; }
+
+        public virtual Guid? LocalAreaId { get; private set; }
 
         public Aatf()
         {
@@ -89,7 +93,15 @@
             Size = aatfSize;
             ApprovalDate = approvalDate;
             LocalArea = localArea;
+            if (localArea == null)
+            {
+                LocalAreaId = null;
+            }
             PanArea = panArea;
+            if (panArea == null)
+            {
+                PanAreaId = null;
+            }
         }
     }
 }
