@@ -62,7 +62,7 @@
             Core.AatfReturn.FacilityType facilityType = facilityMap.Map(source.FacilityType);
 
             var panArea = panAreaMap.Map(source.PanArea);
-
+            
             var localArea = localAreaMap.Map(source.LocalArea);
 
             return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), panArea, localArea)

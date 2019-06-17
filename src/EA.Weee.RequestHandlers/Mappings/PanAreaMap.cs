@@ -18,8 +18,7 @@
                     CompetentAuthorityId = source.CompetentAuthorityId
                 };
             }
-
-            return new PanAreaData();
+            return null;
         }
     }
 }
