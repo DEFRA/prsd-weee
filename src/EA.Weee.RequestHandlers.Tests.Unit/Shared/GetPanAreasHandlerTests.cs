@@ -5,6 +5,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin;
@@ -26,14 +27,14 @@
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly DbContextHelper dbHelper = new DbContextHelper();
-        private readonly IMap<PanArea, PanAreaData> mapper;
+        private readonly PanAreaMap mapper;
         private GetPanAreasHandler handler;
 
         public GetPanAreasHandlerTests()
         {
             context = A.Fake<WeeeContext>();
             authorization = A.Fake<IWeeeAuthorization>();
-            mapper = A.Fake<IMap<PanArea, PanAreaData>>();
+            mapper = A.Fake<PanAreaMap>();
 
             A.CallTo(() => context.PanAreas).Returns(dbHelper.GetAsyncEnabledDbSet(new List<PanArea>
             {
@@ -77,7 +78,7 @@
 
             result.Should().BeInAscendingOrder(x => x.Name);
         }
-        /*
+        
         [Fact]
         public async Task HandleAsync_GivenMessage_ResultShouldBeListOfPanAreaData()
         {
@@ -90,7 +91,7 @@
                 panarea.Should().BeOfType(typeof(PanAreaData));
             }
         }
-        */
+        
         [Fact]
         public async Task HandleAsync_GivenMessage_PanAreasShouldBeMapped()
         {
