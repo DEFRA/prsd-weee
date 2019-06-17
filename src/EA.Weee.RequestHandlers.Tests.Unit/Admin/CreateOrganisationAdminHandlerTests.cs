@@ -126,6 +126,31 @@
         }
 
         [Fact]
+        public async Task HandleAsync_SoleTraderOrIndividualWithOptionalBusinessName_CreatesOrganisation()
+        {
+            CreateOrganisationAdmin request = new CreateOrganisationAdmin()
+            {
+                BusinessName = "Business",
+                Address = CreateAddress(),
+                OrganisationType = Core.Organisations.OrganisationType.SoleTraderOrIndividual,
+                TradingName = "Trading"
+            };
+
+            Guid organisationId = Guid.NewGuid();
+
+            CreateOrganisationAdminHandler handler = new CreateOrganisationAdminHandler(authorization, this.dataAccess, this.context);
+
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).Returns(organisationId);
+
+            Guid result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(Repeated.Exactly.Once);
+
+            result.Should().Be(organisationId);
+        }
+
+        [Fact]
         public async Task HandleAsync_RegisteredCompany_CreatesOrganisation()
         {
             CreateOrganisationAdmin request = new CreateOrganisationAdmin()

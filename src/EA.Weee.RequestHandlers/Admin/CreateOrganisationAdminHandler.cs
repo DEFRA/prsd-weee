@@ -42,7 +42,7 @@
                     organisation = Organisation.CreateRegisteredCompany(message.BusinessName, message.RegistrationNumber, message.TradingName);
                     break;
                 case Core.Organisations.OrganisationType.SoleTraderOrIndividual:
-                    organisation = Organisation.CreateSoleTrader(message.BusinessName);
+                    organisation = Organisation.CreateSoleTrader(message.BusinessName, message.TradingName);
                     break;
                 default:
                     break;
