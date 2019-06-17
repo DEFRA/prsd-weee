@@ -13,7 +13,7 @@
             viewModel.Id = source.Id;
             viewModel.Name = source.Name;
             viewModel.ApprovalNumber = source.ApprovalNumber;
-            viewModel.CompetentAuthorityId = source.CompetentAuthority.Id.ToString();
+            viewModel.CompetentAuthorityId = source.CompetentAuthority.Abbreviation;
             viewModel.StatusValue = source.AatfStatus.Value;
             viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
             viewModel.SiteAddressData = source.SiteAddress;
