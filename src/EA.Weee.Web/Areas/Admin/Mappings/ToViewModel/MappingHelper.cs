@@ -13,7 +13,7 @@
             viewModel.Id = source.Id;
             viewModel.Name = source.Name;
             viewModel.ApprovalNumber = source.ApprovalNumber;
-            viewModel.CompetentAuthorityId = source.CompetentAuthority.Id;
+            viewModel.CompetentAuthorityId = source.CompetentAuthority.Abbreviation;
             viewModel.StatusValue = source.AatfStatus.Value;
             viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
             viewModel.SiteAddressData = source.SiteAddress;
@@ -21,9 +21,14 @@
             viewModel.SizeList = Enumeration.GetAll<AatfSize>();
             viewModel.ComplianceYear = source.ComplianceYear;
             viewModel.FacilityType = source.FacilityType;
-            viewModel.PanAreaId = source.PanAreaData.Id;
-            viewModel.LocalAreaId = source.LocalAreaData.Id;
-
+            if (source.PanAreaData != null)
+            {
+                viewModel.PanAreaId = source.PanAreaData.Id;
+            }
+            if (source.LocalAreaData != null)
+            {
+                viewModel.LocalAreaId = source.LocalAreaData.Id;
+            }
             if (source.ApprovalDate != default(DateTime))
             {
                 viewModel.ApprovalDate = source.ApprovalDate.GetValueOrDefault();

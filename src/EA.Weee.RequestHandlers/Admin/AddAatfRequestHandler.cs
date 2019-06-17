@@ -48,7 +48,7 @@
 
             var organisation = await dataAccess.GetById<Organisation>(message.OrganisationId);
 
-            var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Aatf.CompetentAuthority.Id);
+            var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Aatf.CompetentAuthority.Abbreviation);
 
             var contact = contactMapper.Map(message.AatfContact);
 
