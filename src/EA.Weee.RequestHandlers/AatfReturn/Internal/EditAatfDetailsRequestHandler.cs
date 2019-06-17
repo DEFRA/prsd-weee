@@ -50,10 +50,9 @@
 
             var existingAatf = await genericDataAccess.GetById<Aatf>(message.Data.Id);
 
-            var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Data.CompetentAuthority.Id);
+            var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Data.CompetentAuthority.Abbreviation);
 
             LocalArea localArea = null;
-
             PanArea panArea = null;
 
             if (message.Data.LocalAreaData != null)

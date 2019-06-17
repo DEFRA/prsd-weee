@@ -45,7 +45,7 @@
         /// <returns></returns>
         Task<InvoiceRun> FetchInvoiceRunAsync(Guid invoiceRunId);
 
-        Task<UKCompetentAuthority> FetchCompetentAuthority(Guid authority);
+        Task<UKCompetentAuthority> FetchCompetentAuthority(string authority);
 
         Task<T> FetchLookup<T>(Guid id) where T : AreaBase;
     }
