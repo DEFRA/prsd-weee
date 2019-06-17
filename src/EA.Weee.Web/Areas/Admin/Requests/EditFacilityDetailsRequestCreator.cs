@@ -21,6 +21,16 @@
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
 
+            if (viewModel.PanAreaId != null)
+            {
+                data.PanAreaData = viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId);
+            }
+
+            if (viewModel.LocalAreaId != null)
+            {
+                data.LocalAreaData = viewModel.LocalAreaList.First(p => p.Id == viewModel.LocalAreaId);
+            }
+
             data.FacilityType = viewModel.FacilityType;
 
             return new EditAatfDetails()

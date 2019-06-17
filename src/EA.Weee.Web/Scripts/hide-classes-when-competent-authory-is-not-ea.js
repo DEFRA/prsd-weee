@@ -5,7 +5,7 @@
         $(".competent-authority-hidden").css("display", "block");
     }
     else {
-        $(".competent-authority-hidden").css("display", "hidden");
+        $(".competent-authority-hidden").css("display", "none");
     }
 });
 

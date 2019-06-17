@@ -253,6 +253,13 @@
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                     viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
                     viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
+                    
+                    if (viewModel.CompetentAuthorityId != Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8"))
+                    {
+                        viewModel.PanAreaId = null;
+                        viewModel.LocalAreaId = null;
+                    }
+
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
                     await client.SendAsync(User.GetAccessToken(), request);
 

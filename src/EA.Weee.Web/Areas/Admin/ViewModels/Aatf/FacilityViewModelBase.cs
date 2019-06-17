@@ -33,14 +33,14 @@
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
         [Display(Name = "PAN Area")]
-        public Guid PanAreaId { get; set; }
+        public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
 
         [Display(Name = "Local Area")]
-        public Guid LocalAreaId { get; set; }
+        public Guid? LocalAreaId { get; set; }
 
         [Required]
         [Display(Name = "Status")]
