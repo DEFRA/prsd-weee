@@ -221,7 +221,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Delete(Guid id, FacilityType facilityType)
+        public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
             using (var client = apiClient())
             {
@@ -229,7 +229,8 @@
 
                 DeleteViewModel viewModel = new DeleteViewModel()
                 {
-                    Id = id,
+                    AatfId = id,
+                    OrganisationId = organisationId,
                     FacilityType = facilityType,
                     CanDeleteFlags = canDelete
                 };
@@ -241,7 +242,12 @@
         [HttpPost]
         public async Task<ActionResult> Delete(DeleteViewModel viewModel)
         {
-            return View(viewModel);
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
+
+                return View(viewModel);
+            }
         }
 
         private async Task<List<AatfDataList>> GetAatfs(FacilityType facilityType, FilteringViewModel filter = null)

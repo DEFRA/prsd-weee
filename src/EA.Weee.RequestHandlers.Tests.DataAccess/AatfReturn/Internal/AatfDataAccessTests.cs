@@ -236,5 +236,37 @@
 
             Assert.Equal(hasOtherAatfs, result);
         }
+
+        [Fact]
+        public async void DeleteAatf_DeletesAatf()
+        {
+            Guid aatfId = Guid.NewGuid();
+
+            Aatf aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+
+            await dataAccess.DeleteAatf(aatfId);
+
+            A.CallTo(() => context.Aatfs.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+        }
+
+        [Fact]
+        public async void DeleteOrganisation_DeletesOrganisation()
+        {
+            Guid organisationId = Guid.NewGuid();
+
+            Organisation organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation>() { organisation }));
+
+            await dataAccess.DeleteOrganisation(organisationId);
+
+            A.CallTo(() => context.Organisations.Remove(organisation)).MustHaveHappened(Repeated.Exactly.Once)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+        }
     }
 }
