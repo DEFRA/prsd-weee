@@ -1,0 +1,57 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Home
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Admin;
+@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.DeleteViewModel
+@{
+    ViewBag.Title = "Delete " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
+    {
+        <div class="govuk-grid-row">
+            <p>
+                Has data so can't be deleted
+            </p>
+        </div>
+    }
+    else
+    {
+        using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
+        {
+            <div>
+                @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
+                {
+                <div class="govuk-grid-row">
+                    <p>
+                        HAS USERS
+                    </p>
+                </div>
+                }
+
+                @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
+                {
+                <div class="govuk-grid-row">
+                    <p>
+                        ORG HAS MORE AATFS
+                    </p>
+                    }
+                </div>
+
+                }
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.CanDeleteFlags)
+                @Html.HiddenFor(m => m.FacilityType)
+
+                @(this.WeeeGds().Submit("Confirm"))
+            </div>
+        }
+    }
+</div>
