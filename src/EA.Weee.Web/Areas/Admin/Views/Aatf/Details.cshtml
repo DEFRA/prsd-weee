@@ -76,6 +76,24 @@
                         @Model.CompetentAuthority.Abbreviation <br />
                     </td>
                 </tr>
+                @if (Model.PanArea.Name != null)
+                {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">PAT area</th>
+                    <td class="govuk-table__cell">
+                        @Model.PanArea.Name <br />
+                    </td>
+                </tr>
+                }
+                @if (Model.LocalArea.Name != null)
+                {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Local area</th>
+                    <td class="govuk-table__cell">
+                        @Model.LocalArea.Name <br />
+                    </td>
+                </tr>
+                }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Status</th>
                     <td class="govuk-table__cell">@Model.AatfStatus</td>
