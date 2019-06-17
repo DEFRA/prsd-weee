@@ -44,6 +44,8 @@
 
         public FacilityType FacilityType { get; set; }
 
+        public bool NilReturn { get; set; }
+
         public ReturnData()
         {
             ObligatedWeeeReceivedData = new List<WeeeObligatedData>();

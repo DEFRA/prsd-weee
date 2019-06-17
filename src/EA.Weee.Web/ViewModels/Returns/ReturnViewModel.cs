@@ -15,20 +15,21 @@
         {
         }
 
+        public ReturnViewModel(ReturnData returnData) : base(returnData)
+        {
+        }
+
         public ReturnViewModel(ReturnData returnData, List<AatfObligatedData> obligatedTonnage, OrganisationData organisationData, TaskListDisplayOptions displayOptions) : base(returnData)
         {
             this.Year = returnData.Quarter.Year.ToString();
             this.AatfsData = obligatedTonnage;
             this.Organisation = organisationData;
-            this.ReturnId = returnData.Id;
             this.ReportOnDisplayOptions = displayOptions;
         }
 
         public Guid OrganisationId { get; set; }
 
         public string OrganisationName { get; set; }
-
-        public Guid ReturnId { get; set; }
 
         [Display(Name = "Reporting period")]
         public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";

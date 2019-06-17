@@ -338,6 +338,24 @@
             result.SchemeDataItems.Count().Should().Be(2);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenSourceNilReturn_NilReturnShouldBeMapped(bool nilReturn)
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => @return.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
+            A.CallTo(() => @return.NilReturn).Returns(nilReturn);
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.NilReturn.Should().Be(nilReturn);
+        }
+
         public Return GetReturn()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);

@@ -15,8 +15,6 @@
         {
         }
 
-        public Guid ReturnId { get; set; }
-
         public Guid OrganisationId { get; set; }
 
         public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
