@@ -52,9 +52,27 @@
 
             var competentAuthority = await commonDataAccess.FetchCompetentAuthority(message.Data.CompetentAuthority.Id);
 
-            var localArea = await commonDataAccess.FetchLookup<LocalArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+            LocalArea localArea = new LocalArea();
 
-            var panArea = await commonDataAccess.FetchLookup<PanArea>(new Guid("65753EC0-623F-4319-999E-1AB6741DE98B"));
+            PanArea panArea = new PanArea();
+
+            if (message.Data.LocalAreaData != null)
+            {
+                localArea = await commonDataAccess.FetchLookup<LocalArea>(message.Data.LocalAreaData.Id);
+            }
+            else
+            {
+                localArea = null;
+            }
+
+            if (message.Data.PanAreaData != null)
+            {
+                panArea = await commonDataAccess.FetchLookup<PanArea>(message.Data.PanAreaData.Id);
+            } 
+            else
+            {
+                panArea = null;
+            }
 
             var updatedAatf = new Aatf(
                 message.Data.Name,
