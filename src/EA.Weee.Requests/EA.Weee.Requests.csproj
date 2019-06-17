@@ -90,6 +90,7 @@
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatf.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />

@@ -53,7 +53,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
             </p>
         }
         <table class="govuk-table">

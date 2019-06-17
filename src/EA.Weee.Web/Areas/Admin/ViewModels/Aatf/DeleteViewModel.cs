@@ -6,7 +6,9 @@
 
     public class DeleteViewModel
     {
-        public Guid Id { get; set; }
+        public Guid AatfId { get; set; }
+
+        public Guid OrganisationId { get; set; }
 
         public CanAatfBeDeletedFlags CanDeleteFlags { get; set; }
 
