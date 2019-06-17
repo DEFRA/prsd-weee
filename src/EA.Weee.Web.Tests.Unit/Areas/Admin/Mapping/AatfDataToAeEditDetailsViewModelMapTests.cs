@@ -58,7 +58,7 @@
             Assert.Equal(aatfData.Name, result.Name);
             Assert.Equal(aatfData.ApprovalNumber, result.ApprovalNumber);
             Assert.Equal(aatfData.SiteAddress, result.SiteAddressData);
-            Assert.Equal(competentAuthorityId, result.CompetentAuthorityId);
+            Assert.Equal(competentAuthorityId.ToString(), result.CompetentAuthorityId);
             Assert.Equal(AatfStatus.Approved.Value, result.StatusValue);
             Assert.Equal(AatfSize.Large.Value, result.SizeValue);
             Assert.Equal(FacilityType.Aatf, result.FacilityType);

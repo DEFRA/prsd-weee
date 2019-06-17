@@ -23,7 +23,7 @@
 
                 var dataAccess = new CommonDataAccess(database.WeeeContext);
 
-                var result = await dataAccess.FetchCompetentAuthority(new Guid(id));
+                var result = await dataAccess.FetchCompetentAuthority(abbreviation);
 
                 result.Abbreviation.Should().Be(abbreviation);
             }
