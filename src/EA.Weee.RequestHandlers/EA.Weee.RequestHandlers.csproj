@@ -73,9 +73,7 @@
     <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
-    <Compile Include="Admin\DeleteAatf\AatfDataAccess.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
-    <Compile Include="Admin\DeleteAatf\IAatfDataAccess.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />

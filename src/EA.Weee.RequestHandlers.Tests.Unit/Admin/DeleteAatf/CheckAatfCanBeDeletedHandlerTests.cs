@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Admin;
     using EA.Weee.DataAccess.Identity;
+    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Admin.DeleteAatf;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.DeleteAatf;
