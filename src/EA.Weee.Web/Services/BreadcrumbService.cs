@@ -26,6 +26,21 @@
         public string InternalOrganisation { get; set; }
 
         /// <summary>
+        /// For an internal user, the scheme currently in scope.
+        /// </summary>
+        public string InternalScheme { get; set; }
+
+        /// <summary>
+        /// For an internal user, the AATF currently in scope.
+        /// </summaryA
+        public string InternalAatf { get; set; }
+
+        /// <summary>
+        /// For an internal user, the AE currently in scope.
+        /// </summary>
+        public string InternalAe { get; set; }
+
+        /// <summary>
         /// For an internal user, the user currently in scope.
         /// </summary>
         public string InternalUser { get; set; }

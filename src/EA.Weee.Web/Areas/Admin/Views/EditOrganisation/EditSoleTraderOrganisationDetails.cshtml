@@ -1,10 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@using EA.Weee.Core.Organisations
-@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview
-@using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Organisation.EditRegisteredCompanyOrganisationDetailsViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Organisation.EditSoleTraderOrganisationDetailsViewModel
 @{
     ViewBag.Title = "Edit organisation details - GOV.UK";
 }
@@ -25,7 +21,8 @@
         @Html.HiddenFor(m => m.OrganisationType)
 
         <p>
-            <span class="font-bold marginRight">Organisation type:</span> Registered company
+            <span class="font-bold marginRight">Organisation type:</span>
+            Sole trader or individual
         </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
@@ -34,14 +31,9 @@
             @Html.Gds().TextBoxFor(m => m.CompanyName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
-        </div>
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
@@ -51,7 +43,14 @@
             <button class="govuk-button">Save and Continue</button>
         </div>
         <p>
-            <a href="javascript:history.back();">Back</a>
+            @if (Model.SchemeId.HasValue)
+            {
+                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId }) + "#organisationDetails")">Back</a>
+            }
+            else
+            {
+                <a href="@(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = Model.AatfId }) + "#organisationDetails")">Back</a>
+            }
         </p>
     }
 

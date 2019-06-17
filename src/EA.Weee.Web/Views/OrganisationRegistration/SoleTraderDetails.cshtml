@@ -1,5 +1,4 @@
 ﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel
 @{
     ViewBag.Title = "Sole trader or individual";
@@ -17,6 +16,12 @@
         @Html.HiddenFor(m => m.ContactId)
         @Html.HiddenFor(m => m.AddressId)
         @Html.HiddenFor(m => m.OrganisationId)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)

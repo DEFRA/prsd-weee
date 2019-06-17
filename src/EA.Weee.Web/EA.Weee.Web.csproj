@@ -323,14 +323,15 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
-    <Compile Include="Areas\AeReturn\Controllers\AeReturnsController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
     <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
-    <Compile Include="Areas\AeReturn\ViewModels\ConfirmationViewModel.cs" />
     <Compile Include="Infrastructure\AeRedirect.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\IReturnsOrdering.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
@@ -365,7 +366,7 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToObligatedViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToObligatedViewModelMapTransfer.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMap.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToSubmittedReturnViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
@@ -414,7 +415,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SubmittedReturnViewModel.cs" />
+    <Compile Include="ViewModels\Returns\SubmittedReturnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\NonObligatedValuesViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\Validation\SelectReportOptionsViewModelValidator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsDeselectViewModel.cs" />
@@ -466,7 +467,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\EditPartnershipOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditRegisteredCompanyOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\ContactDetails\ContactDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
@@ -942,11 +943,12 @@
     <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsNil\Index.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditPartnershipOrganisationDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\ExportedWholeWeee.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
+    <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1364,6 +1366,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
+    <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

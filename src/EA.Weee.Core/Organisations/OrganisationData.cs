@@ -35,6 +35,8 @@
 
         public bool HasAatfs { get; set; }
 
+        public bool HasAes { get; set; }
+
         /// <summary>
         /// Provides a name that can be displayed to identify the organisation.
         /// Where the organisation is a registered company this is simply the name,

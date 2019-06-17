@@ -75,7 +75,7 @@
                             @{
                                 if (item.ReturnsListDisplayOptions.DisplayContinue)
                                 {
-                                    @Html.ActionLink("Continue", "Index", "Holding", new { organisationId = @Model.OrganisationId }, null)
+                                    @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
                                 }
                             }
                         </td>
@@ -96,7 +96,7 @@
     </p>
     <style type="text/css">
 
-        @@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+        @@media only screen and (max-width: 1020px) {
             td:nth-of-type(1):before {
                 content: "Year";
             }
