@@ -52,9 +52,19 @@
 
             var contact = contactMapper.Map(message.AatfContact);
 
-            var localArea = await commonDataAccess.FetchLookup<LocalArea>(message.Aatf.LocalAreaData.Id);
+            LocalArea localArea = null;
 
-            var panArea = await commonDataAccess.FetchLookup<PanArea>(message.Aatf.PanAreaData.Id);
+            PanArea panArea = null;
+
+            if (message.Aatf.LocalAreaData != null)
+            {
+                localArea = await commonDataAccess.FetchLookup<LocalArea>(message.Aatf.LocalAreaData.Id);
+            }
+
+            if (message.Aatf.PanAreaData != null)
+            {
+                panArea = await commonDataAccess.FetchLookup<PanArea>(message.Aatf.PanAreaData.Id);
+            }
 
             var aatf = new Aatf(
                 message.Aatf.Name,
