@@ -26,7 +26,7 @@
                 .With(e => e.StatusValue, AatfStatus.Approved.Value)
                 .With(e => e.SizeValue, AatfSize.Large.Value)
                 .Create();
-            viewModel.CompetentAuthorityId = viewModel.CompetentAuthoritiesList.Last().Id;
+            viewModel.CompetentAuthorityId = viewModel.CompetentAuthoritiesList.Last().Id.ToString();
 
             var result = requestCreator.ViewModelToRequest(viewModel);
 

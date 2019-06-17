@@ -105,7 +105,7 @@
             A.CallTo(() => addressMapper.Map(data.SiteAddress)).Returns(siteAddress);
             A.CallTo(() => aatf.ComplianceYear).Returns((Int16)2019);
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(aatf);
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(updateRequest.Data.CompetentAuthority.Id)).Returns(competentAuthorityDomain);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(updateRequest.Data.CompetentAuthority.Abbreviation)).Returns(competentAuthorityDomain);
             A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(updateRequest.Data.LocalAreaData.Id)).Returns(localAreaDomain);
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(updateRequest.Data.PanAreaData.Id)).Returns(panAreaDomain);
 
