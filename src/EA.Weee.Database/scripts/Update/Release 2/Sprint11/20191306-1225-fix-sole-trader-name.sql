@@ -1,1 +1,0 @@
-﻿UPDATE [Organisation].Organisation SET [NAME] = [TradingName] WHERE OrganisationType = 3
