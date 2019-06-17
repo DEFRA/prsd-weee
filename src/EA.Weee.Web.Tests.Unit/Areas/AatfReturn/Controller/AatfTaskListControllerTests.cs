@@ -2,6 +2,7 @@
 {
     using System;
     using System.Web.Mvc;
+    using Core.DataReturns;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -60,7 +61,7 @@
         [Fact]
         public async void IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
         {
-            var model = new ReturnViewModel() { ReturnId = Guid.NewGuid() };
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 

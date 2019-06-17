@@ -1,12 +1,11 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mappings.ToViewModel
 {
     using System;
     using Core.AatfReturn;
     using Core.DataReturns;
-    using EA.Weee.Core.Organisations;
-    using FakeItEasy;
+    using Core.Organisations;
     using FluentAssertions;
-    using Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Xunit;
 
     public class ReturnToSubmittedReturnViewModelMapTests
@@ -39,7 +38,7 @@
             result.Quarter.Should().Be("Q1");
             result.Year.Should().Be("2019");
             result.Period.Should().Be("Q1 Jan - Mar 2019");
-            result.OrgansationId.Should().Be(returnData.OrganisationData.Id);
+            result.OrganisationId.Should().Be(returnData.OrganisationData.Id);
         }
     }
 }

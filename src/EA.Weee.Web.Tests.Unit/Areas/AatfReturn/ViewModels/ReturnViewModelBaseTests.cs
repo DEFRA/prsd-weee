@@ -130,9 +130,19 @@
             model.SubmittedBy.Should().Be("-");
         }
 
+        [Fact]
+        public void Constructor_GivenReturnDataId_ReturnIdShouldBeSet()
+        {
+            var returnData = DefaultReturnData();
+
+            var model = new ReturnViewModelTest(returnData);
+
+            model.ReturnId.Should().Be(returnData.Id);
+        }
+
         private ReturnData DefaultReturnData()
         {
-            return new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow() };
+            return new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow(), Id = Guid.NewGuid() };
         }
 
         private Quarter GetQuarter()

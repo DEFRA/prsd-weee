@@ -59,10 +59,17 @@
             {
                 var newId = await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
 
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+
+                if (@return.NilReturn)
+                {
+                    return AatfRedirect.SelectReportOptions(organisationId, newId);
+                }
+
                 return AatfRedirect.TaskList(newId);
             }
         }
-
+  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(ReturnsViewModel model)

@@ -30,7 +30,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
         <button type="submit" class="govuk-button">
-            Save and continue
+            Submit
         </button>
         <p>
             @Html.NavigationRouteLink("Cancel", "Cancel and select reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
