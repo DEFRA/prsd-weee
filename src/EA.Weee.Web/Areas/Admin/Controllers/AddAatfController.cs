@@ -370,7 +370,9 @@
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault()) {FacilityType = viewModel.FacilityType};
+                viewModel.ApprovalDate.GetValueOrDefault(),
+                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId)) {FacilityType = viewModel.FacilityType};
 
             return data;
         }
