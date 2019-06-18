@@ -266,7 +266,7 @@
             if (schemeId.HasValue && !aatfId.HasValue)
             {
                 breadcrumb.InternalActivity = InternalUserActivity.ManageScheme;
-                breadcrumb.InternalOrganisation = await cache.FetchSchemeName(schemeId.Value);
+                breadcrumb.InternalScheme = await cache.FetchSchemeName(schemeId.Value);
             }
             if (!schemeId.HasValue && aatfId.HasValue)
             {
