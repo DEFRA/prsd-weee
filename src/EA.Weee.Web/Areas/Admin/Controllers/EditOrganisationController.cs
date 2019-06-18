@@ -153,6 +153,8 @@
                 };
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
+
+                await cache.InvalidateOrganisationSearch();
             }
 
             if (model.SchemeId.HasValue)
@@ -195,6 +197,8 @@
                 };
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
+
+                await cache.InvalidateOrganisationSearch();
             }
 
             if (model.SchemeId.HasValue)
@@ -236,6 +240,8 @@
                 };
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
+
+                await cache.InvalidateOrganisationSearch();
             }
 
             if (model.SchemeId.HasValue)
