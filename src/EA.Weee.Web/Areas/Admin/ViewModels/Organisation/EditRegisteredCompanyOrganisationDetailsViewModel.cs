@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
