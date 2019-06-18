@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
@@ -33,9 +34,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditSoleTraderOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId)
+        public async Task<ActionResult> EditSoleTraderOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId, FacilityType? facilityType)
         {
-            await SetBreadcrumb(schemeId, aatfId, orgId);
+            await SetBreadcrumb(schemeId, aatfId, orgId, facilityType);
 
             using (var client = apiClient())
             {
@@ -54,7 +55,8 @@
                     BusinessAddress = organisationData.BusinessAddress,
                     SchemeId = schemeId,
                     OrgId = orgId,
-                    AatfId = aatfId
+                    AatfId = aatfId,
+                    FacilityType = facilityType.GetValueOrDefault()
                 };
 
                 model.BusinessAddress.Countries = countries;
@@ -64,9 +66,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditPartnershipOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId)
+        public async Task<ActionResult> EditPartnershipOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId, FacilityType? facilityType)
         {
-            await SetBreadcrumb(schemeId, aatfId, orgId);
+            await SetBreadcrumb(schemeId, aatfId, orgId, facilityType);
 
             using (var client = apiClient())
             {
@@ -84,7 +86,8 @@
                     BusinessAddress = organisationData.BusinessAddress,
                     SchemeId = schemeId,
                     OrgId = orgId,
-                    AatfId = aatfId
+                    AatfId = aatfId,
+                    FacilityType = facilityType.GetValueOrDefault()
                 };
 
                 model.BusinessAddress.Countries = countries;
@@ -94,9 +97,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId)
+        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(Guid? schemeId, Guid orgId, Guid? aatfId, FacilityType? facilityType)
         {
-            await SetBreadcrumb(schemeId, aatfId, orgId);
+            await SetBreadcrumb(schemeId, aatfId, orgId, facilityType);
 
             using (var client = apiClient())
             {
@@ -116,7 +119,8 @@
                     BusinessAddress = organisationData.BusinessAddress,
                     SchemeId = schemeId,
                     OrgId = orgId,
-                    AatfId = aatfId
+                    AatfId = aatfId,
+                    FacilityType = facilityType.GetValueOrDefault()
                 };
 
                 model.BusinessAddress.Countries = countries;
@@ -129,7 +133,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(EditRegisteredCompanyOrganisationDetailsViewModel model)
         {
-            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId);
+            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId, model.FacilityType);
 
             if (!ModelState.IsValid)
             {
@@ -172,7 +176,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditSoleTraderOrganisationDetails(EditSoleTraderOrganisationDetailsViewModel model)
         {
-            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId);
+            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId, model.FacilityType);
 
             if (!ModelState.IsValid)
             {
@@ -214,7 +218,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPartnershipOrganisationDetails(EditPartnershipOrganisationDetailsViewModel model)
         {
-            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId);
+            await SetBreadcrumb(model.SchemeId, model.AatfId, model.OrgId, model.FacilityType);
 
             if (!ModelState.IsValid)
             {
@@ -261,7 +265,7 @@
             return Redirect(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = aatfId }) + "#organisationDetails");
         }
 
-        private async Task SetBreadcrumb(Guid? schemeId, Guid? aatfId, Guid organisationId)
+        private async Task SetBreadcrumb(Guid? schemeId, Guid? aatfId, Guid organisationId, FacilityType? facilityType)
         {
             if (schemeId.HasValue && !aatfId.HasValue)
             {
@@ -270,7 +274,19 @@
             }
             if (!schemeId.HasValue && aatfId.HasValue)
             {
-                breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+                switch (facilityType)
+                {
+                    case FacilityType.Aatf:
+                        breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
+                        breadcrumb.InternalAatf = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
+                        break;
+                    case FacilityType.Ae:
+                        breadcrumb.InternalActivity = InternalUserActivity.ManageAes;
+                        breadcrumb.InternalAe = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
+                        break;
+                    default:
+                        break;
+                }
                 // leaving this here as suspect it will come back in breadcrumb.InternalOrganisation = (await cache.FetchAatfData(organisationId, aatfId.Value)).Name;
             }
         }
