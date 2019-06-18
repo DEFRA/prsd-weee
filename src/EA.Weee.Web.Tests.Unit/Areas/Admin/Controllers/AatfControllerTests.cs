@@ -11,12 +11,14 @@
     using Api.Client;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -322,7 +324,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -524,7 +526,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
-            var result = await controller.Details(aatfId) as ViewResult;       
+            var result = await controller.Details(aatfId) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
         }
@@ -992,6 +994,50 @@
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
             resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
+        }
+
+        [Fact]
+        public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
+        {
+            CanAatfBeDeletedFlags canDelete = CanAatfBeDeletedFlags.HasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasMoreAatfs;
+            Guid aatfId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            FacilityType facilityType = FacilityType.Aatf;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(canDelete);
+
+            ViewResult result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
+
+            DeleteViewModel viewModel = result.Model as DeleteViewModel;
+
+            Assert.Equal(aatfId, viewModel.AatfId);
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(facilityType, viewModel.FacilityType);
+            Assert.Equal(canDelete, viewModel.CanDeleteFlags);
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Delete");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void PostDelete_DeleteAnAatfHandlerIsCalled_ReturnsRedirectToManageAatf()
+        {
+            DeleteViewModel viewModel = new DeleteViewModel()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                FacilityType = FacilityType.Aatf,
+                CanDeleteFlags = CanAatfBeDeletedFlags.HasActiveUsers
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId)));
+
+            RedirectToRouteResult result = await controller.Delete(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private void ContactDataAccessSetup(bool canEdit)
