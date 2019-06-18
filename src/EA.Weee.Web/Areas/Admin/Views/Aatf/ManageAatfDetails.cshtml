@@ -71,41 +71,55 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
                     @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
                     @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
-                    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Abbreviation", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StatusValue)">
-                    @Html.Gds().LabelFor(m => m.StatusValue)
-                    @Html.Gds().ValidationMessageFor(m => m.StatusValue)
-                    @Html.Gds().DropDownListFor(m => m.StatusValue, new SelectList(Model.StatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                <div class="govuk-form-group competent-authority-hidden">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                        <label class="govuk-label form-label" for="PanAreaId">WROS PAT Area</label>
+                        @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
+                        @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                    </div>
+
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
+                        <label class="govuk-label form-label" for="LocalAreaId">EA Area</label>
+                        @Html.Gds().ValidationMessageFor(m => m.LocalAreaId)
+                        @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                    </div>
                 </div>
 
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SizeValue)">
-                    @Html.Gds().LabelFor(m => m.SizeValue)
-                    @Html.Gds().ValidationMessageFor(m => m.SizeValue)
-                    @Html.Gds().DropDownListFor(m => m.SizeValue, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
-                </div>
-
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
-                    <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group" aria-live="polite">
-                        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                            <span class="govuk-details__summary-text govuk-label form-label" id="ApprovalDateLabel">
-                                @Html.DisplayNameFor(m => m.ApprovalDate)
-                            </span>
-                        </summary>
-                        @Html.Partial("_ApprovalDateProgressiveDisclosure")
-                    </details>
-                    @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
-                    @if (Model.ApprovalDate.HasValue)
-                    {
-                        <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("dd/MM/yyyy")" />
-                    }
-                    else
-                    {
-                        <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
-                    }
-                </div>
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StatusValue)">
+                @Html.Gds().LabelFor(m => m.StatusValue)
+                @Html.Gds().ValidationMessageFor(m => m.StatusValue)
+                @Html.Gds().DropDownListFor(m => m.StatusValue, new SelectList(Model.StatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
             </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SizeValue)">
+                @Html.Gds().LabelFor(m => m.SizeValue)
+                @Html.Gds().ValidationMessageFor(m => m.SizeValue)
+                @Html.Gds().DropDownListFor(m => m.SizeValue, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
+                <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group" aria-live="polite">
+                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text govuk-label form-label" id="ApprovalDateLabel">
+                            @Html.DisplayNameFor(m => m.ApprovalDate)
+                        </span>
+                    </summary>
+                    @Html.Partial("_ApprovalDateProgressiveDisclosure")
+                </details>
+                @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
+                @if (Model.ApprovalDate.HasValue)
+                {
+                    <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("dd/MM/yyyy")" />
+                }
+                else
+                {
+                    <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
+                }
+            </div>
+        </div>
         </div>
 
         <div class="govuk-!-padding-bottom-6"></div>
@@ -118,3 +132,7 @@
         </p>
     }
 </section>
+
+@section scripts {
+    @Scripts.Render("~/bundles/hide-classes-when-competent-authory-is-not-ea")
+}

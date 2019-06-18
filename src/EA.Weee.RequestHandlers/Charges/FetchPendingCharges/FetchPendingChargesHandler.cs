@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Scheme;
     using Security;
+    using Shared;
     using Weee.Security;
 
     public class FetchPendingChargesHandler : IRequestHandler<Requests.Charges.FetchPendingCharges, ManagePendingCharges>

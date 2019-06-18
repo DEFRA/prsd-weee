@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
 
@@ -27,9 +28,19 @@
 
         [Required]
         [Display(Name = "Appropriate authority")]
-        public Guid CompetentAuthorityId { get; set; }
+        public string CompetentAuthorityId { get; set; }
+
+        public IEnumerable<PanAreaData> PanAreaList { get; set; }
+
+        [Display(Name = "WROS PAT Area")]
+        public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
+
+        public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
+
+        [Display(Name = "EA Area")]
+        public Guid? LocalAreaId { get; set; }
 
         [Required]
         [Display(Name = "Status")]
@@ -95,6 +106,21 @@
                         validationResults.Add(
                             new ValidationResult($"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}",
                             new List<string> { nameof(instance.ApprovalDate) }));
+                    }
+                }
+
+                if (instance.CompetentAuthorityId == UKCompetentAuthorityAbbreviationType.EA)
+                {
+                    if (instance.LocalAreaId == null)
+                    {
+                        validationResults.Add(
+                            new ValidationResult($"Enter EA area", new List<string> { nameof(instance.LocalAreaId) }));
+                    }
+
+                    if (instance.PanAreaId == null)
+                    {
+                        validationResults.Add(
+                            new ValidationResult($"Enter WROS PAT area", new List<string> { nameof(instance.PanAreaId) }));
                     }
                 }
             }
