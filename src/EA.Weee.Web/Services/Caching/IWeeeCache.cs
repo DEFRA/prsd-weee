@@ -30,6 +30,8 @@
 
         Task InvalidateAatfCache(Guid id);
 
+        Task InvalidateSchemeCache(Guid id);
+
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
 }

@@ -6,30 +6,14 @@
     using System.ComponentModel.DataAnnotations;
     using Xunit;
 
-    public class RegisteredCompanyDetailsViewModelTests
+    public class SoleTraderDetailsViewModelTests
     {
-        [Theory]
-        [InlineData("1234567", true)]
-        [InlineData("123456", false)]
-        [InlineData("1234567891234567", false)]
-        public void CheckRegistrationCompanyNumberIsValidLength(string registrationNumber, bool result)
-        {
-            var model = ValidRegisteredCompanyDetailsViewModel();
-            model.CompaniesRegistrationNumber = registrationNumber;
-
-            var context = new ValidationContext(model, null, null);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(model, context, results, true);
-
-            Assert.Equal(result, isValid);
-        }
-
         [Theory]
         [InlineData(true, true)]
         [InlineData(false, false)]
         public void CheckCompanyNameIsRequired(bool populateCompanyName, bool result)
         {
-            var model = ValidRegisteredCompanyDetailsViewModel();
+            var model = ValidSoleTraderDetailsViewModel();
             if (!populateCompanyName)
             {
                 model.CompanyName = null;
@@ -47,7 +31,7 @@
         [InlineData(false, true)]
         public void CheckBusinessTradingNameIsNotRequired(bool populateTradingName, bool result)
         {
-            var model = ValidRegisteredCompanyDetailsViewModel();
+            var model = ValidSoleTraderDetailsViewModel();
             if (!populateTradingName)
             {
                 model.BusinessTradingName = null;
@@ -60,15 +44,14 @@
             Assert.Equal(result, isValid);
         }
 
-        private RegisteredCompanyDetailsViewModel ValidRegisteredCompanyDetailsViewModel()
+        private SoleTraderDetailsViewModel ValidSoleTraderDetailsViewModel()
         {
-            return new RegisteredCompanyDetailsViewModel
+            return new SoleTraderDetailsViewModel
             {
                 OrganisationType = "RegisteredCompany",
                 CompanyName = "Company name",
                 BusinessTradingName = "Trading name",
-                Address = new AddressData(),
-                CompaniesRegistrationNumber = "7654321"
+                Address = new AddressData()
             };
         }
     }
