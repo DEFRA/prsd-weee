@@ -151,7 +151,7 @@
                     <td class="govuk-table__cell">
                         @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                         {
-                        @:Sole trader
+                        @:Sole trader or individual
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
                         {
@@ -173,7 +173,7 @@
                 else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Sole trader name</th>
+                        <th class="govuk-table__header" scope="col">Sole trader / individual name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
