@@ -7,7 +7,7 @@
     public class EditSoleTraderOrganisationDetailsViewModel : EditOrganisationDetailsViewModelBase
     {
         [Required]
-        [DisplayName("Sole trader name")]
+        [DisplayName("Sole trader or individual")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string CompanyName { get; set; }
 
