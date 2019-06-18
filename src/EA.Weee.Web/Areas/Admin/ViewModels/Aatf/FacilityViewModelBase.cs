@@ -32,14 +32,14 @@
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
-        [Display(Name = "PAN Area")]
+        [Display(Name = "WROS PAT Area")]
         public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
 
-        [Display(Name = "Local Area")]
+        [Display(Name = "EA Area")]
         public Guid? LocalAreaId { get; set; }
 
         [Required]
@@ -120,7 +120,7 @@
                     if (instance.PanAreaId == null)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Enter WROS pat area", new List<string> { nameof(instance.PanAreaId) }));
+                            new ValidationResult($"Enter WROS PAT area", new List<string> { nameof(instance.PanAreaId) }));
                     }
                 }
             }
