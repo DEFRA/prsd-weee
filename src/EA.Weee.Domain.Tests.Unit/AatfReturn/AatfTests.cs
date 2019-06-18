@@ -113,5 +113,49 @@
             aatf.LocalArea.Should().Be(localArea);
             aatf.PanArea.Should().Be(panArea);
         }
+
+        [Fact]
+        public void Aatf_GivenNullLocalArea_LocalAreaIsNull()
+        {
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var organisation = A.Fake<Organisation>();
+            const string name = "name";
+            const string approvalNumber = "approvalNumber";
+            var aatfStatus = AatfStatus.Approved;
+            var contact = A.Fake<AatfContact>();
+            var complianceYear = (Int16)2019;
+            LocalArea localArea = null;
+            var panArea = A.Fake<PanArea>();
+            var facilityType = FacilityType.Aatf;
+            var date = DateTime.Now;
+            var address = A.Fake<AatfAddress>();
+            var size = AatfSize.Large;
+
+            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, address, size, date, contact, facilityType, complianceYear, localArea, panArea);
+
+            aatf.LocalArea.Should().Be(localArea);
+        }
+
+        [Fact]
+        public void Aatf_GivenNullPanArea_PanAreaIsNull()
+        {
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var organisation = A.Fake<Organisation>();
+            const string name = "name";
+            const string approvalNumber = "approvalNumber";
+            var aatfStatus = AatfStatus.Approved;
+            var contact = A.Fake<AatfContact>();
+            var complianceYear = (Int16)2019;
+            var localArea = A.Fake<LocalArea>();
+            PanArea panArea = null;
+            var facilityType = FacilityType.Aatf;
+            var date = DateTime.Now;
+            var address = A.Fake<AatfAddress>();
+            var size = AatfSize.Large;
+
+            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, address, size, date, contact, facilityType, complianceYear, localArea, panArea);
+
+            aatf.PanArea.Should().Be(panArea);
+        }
     }
 }
