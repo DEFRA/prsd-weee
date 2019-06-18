@@ -240,6 +240,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(DeleteViewModel viewModel)
         {
             using (var client = apiClient())
