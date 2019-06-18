@@ -8,6 +8,7 @@
     using DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Producer;
+    using Shared;
 
     public class FetchIssuedChargesCsvDataAccess : CommonDataAccess, IFetchIssuedChargesCsvDataAccess
     {

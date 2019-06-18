@@ -10,7 +10,7 @@
     public class ChooseActivityViewModel
     {
         [Required(ErrorMessage = "Select an activity")]
-        [Display(Name = "What would you like to do?")]
+        [Display(Name = "What activity would you like to do?")]
         public Activity? SelectedActivity { get; set; }
 
         public IReadOnlyCollection<Activity> PossibleValues { get; private set; }

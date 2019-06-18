@@ -50,51 +50,70 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
+                    <td class="govuk-!-width-one-half">&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
+                    <th class="govuk-table__header" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
                     <td class="govuk-table__cell" style="word-break: break-word">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">@Model.AddressHeadingName</th>
+                    <th class="govuk-table__header" scope="col">@Model.AddressHeadingName</th>
                     <td class="govuk-table__cell">
                         @Html.Raw(Model.SiteAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Approval number</th>
+                    <th class="govuk-table__header" scope="col">Approval number</th>
                     <td class="govuk-table__cell">@Model.ApprovalNumber</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Appropriate authority</th>
+                    <th class="govuk-table__header" scope="col">Appropriate authority</th>
                     <td class="govuk-table__cell">
                         @Model.CompetentAuthority.Abbreviation <br />
                     </td>
                 </tr>
+                @if (Model.HasPatArea)
+                {
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Status</th>
+                    <th class="govuk-table__header" scope="col">WROS PAT area</th>
+                    <td class="govuk-table__cell">
+                        @Model.PanArea.Name <br />
+                    </td>
+                </tr>
+                }
+                @if (Model.HasLocalArea)
+                {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">EA area</th>
+                    <td class="govuk-table__cell">
+                        @Model.LocalArea.Name <br />
+                    </td>
+                </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Status</th>
                     <td class="govuk-table__cell">@Model.AatfStatus</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Size</th>
+                    <th class="govuk-table__header" scope="col">Size</th>
                     <td class="govuk-table__cell">@Model.Size</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Approval date</th>
+                    <th class="govuk-table__header" scope="col">Approval date</th>
                     <td class="govuk-table__cell">@Model.ApprovalDateString</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Compliance year</th>
+                    <th class="govuk-table__header" scope="col">Compliance year</th>
                     <td class="govuk-table__cell">@Model.ComplianceYear</td>
                 </tr>
             </tbody>
         </table>
         @if (Model.CanEdit)
         {
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
-            </p>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
+        </p>
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
@@ -104,6 +123,7 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
+                    <td class="govuk-!-width-one-half">&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -123,68 +143,69 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
+                    <td class="govuk-!-width-one-half">&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Organisation type</th>
+                    <th class="govuk-table__header" scope="col">Organisation type</th>
                     <td class="govuk-table__cell">
                         @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                         {
-                            @:Sole trader
+                        @:Sole trader
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
                         {
-                            @:Partnership
+                        @:Partnership
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                         {
-                            @:Registered company
+                        @:Registered company
                         }
                     </td>
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Company name</th>
+                        <th class="govuk-table__header" scope="col">Company name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
                 else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Sole trader name</th>
+                        <th class="govuk-table__header" scope="col">Sole trader name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Business trading name</th>
+                    <th class="govuk-table__header" scope="col">Business trading name</th>
                     <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Company registration number (CRN)</th>
+                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
                         <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Address</th>
+                    <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
                         @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Telephone</th>
+                    <th class="govuk-table__header" scope="col">Telephone</th>
                     <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Email address</th>
+                    <th class="govuk-table__header" scope="col">Email address</th>
                     <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
                 </tr>
                 @if (Model.HasAnyRelatedEntities)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header aatf-details-associated-table-header-title govuk-!-width-two-thirds" scope="col" style="vertical-align: text-top">
+                        <th class="govuk-table__header aatf-details-associated-table-header-title govuk-!-width-one-half" scope="col" style="vertical-align: text-top">
                             This organisation also operates
                         </th>
                         <td>
@@ -205,55 +226,55 @@
                                         }
                                     }
 
-                                    @if (Model.AssociatedAes.Any())
-                                    {
-                                        if (Model.AssociatedAatfs.Any())
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td>
-                                                    <br />
-                                                </td>
-                                            </tr>
-                                        }
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell aatf-details-associated-table-cell-title">AE</td>
-                                        </tr>
-                                        foreach (var ae in Model.AssociatedAes)
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                                    @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
+                                @if (Model.AssociatedAes.Any())
+                                {
+                                if (Model.AssociatedAatfs.Any())
+                                {
+                                <tr class="govuk-table__row">
+                                    <td>
+                                        <br />
+                                    </td>
+                                </tr>
+                                }
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">AE</td>
+                                </tr>
+                                foreach (var ae in Model.AssociatedAes)
+                                {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                        @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
+                                    </td>
+                                </tr>
+                                }
+                                }
 
-                                    @if (Model.AssociatedSchemes.Any())
-                                    {
-                                        if (Model.AssociatedAes.Any() || Model.AssociatedAatfs.Any())
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td>
-                                                    <br />
-                                                </td>
-                                            </tr>
-                                        }
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell aatf-details-associated-table-cell-title">PCS</td>
-                                        </tr>
-                                        foreach (var scheme in Model.AssociatedSchemes)
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                                    @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
+                                @if (Model.AssociatedSchemes.Any())
+                                {
+                                if (Model.AssociatedAes.Any() || Model.AssociatedAatfs.Any())
+                                {
+                                <tr class="govuk-table__row">
+                                    <td>
+                                        <br />
+                                    </td>
+                                </tr>
+                                }
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">PCS</td>
+                                </tr>
+                                foreach (var scheme in Model.AssociatedSchemes)
+                                {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                        @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
+                                    </td>
+                                </tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -283,28 +304,29 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
+                    <td class="govuk-!-width-one-half">&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="col">Name</th>
                     <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Position</th>
+                    <th class="govuk-table__header" scope="col">Position</th>
                     <td class="govuk-table__cell">@Model.ContactData.Position</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Address</th>
+                    <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
                         @Html.Raw(Model.ContactAddressLong.Replace("\r\n", "<br />"))
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Telephone</th>
+                    <th class="govuk-table__header" scope="col">Telephone</th>
                     <td class="govuk-table__cell">@Model.ContactData.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Email</th>
+                    <th class="govuk-table__header" scope="col">Email</th>
                     <td class="govuk-table__cell">@Model.ContactData.Email</td>
                 </tr>
             </tbody>
@@ -312,9 +334,9 @@
 
         @if (Model.CanEdit)
         {
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
-            </p>
+        <p>
+            <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
+        </p>
         }
     </section>
     <div>&nbsp;</div>

@@ -1,26 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using System;
-    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
     using DataAccess;
-    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using Prsd.Core.Domain;
-    using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.CheckYourReturn;
-    using RequestHandlers.Factories;
     using Requests.AatfReturn;
-    using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -101,10 +92,12 @@
             await action.Should().ThrowAsync<ArgumentException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenReturn_StatusShouldBeUpdated()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task HandleAsync_GivenReturn_StatusShouldBeUpdated(bool nilReturn)
         {
-            var message = new SubmitReturn(Guid.NewGuid());
+            var message = new SubmitReturn(Guid.NewGuid(), nilReturn);
             var @return = A.Fake<Return>();
             var userId = Guid.NewGuid();
 
@@ -114,7 +107,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => @return.UpdateSubmitted(userId.ToString())).MustHaveHappened(Repeated.Exactly.Once)
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), nilReturn)).MustHaveHappened(Repeated.Exactly.Once)
                 .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
@@ -132,7 +125,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => @return.UpdateSubmitted(userId.ToString())).MustNotHaveHappened();
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), A<bool>._)).MustNotHaveHappened();
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustNotHaveHappened();
         }
 

@@ -9,7 +9,7 @@
     using Weee.Requests.Test;
 
     [Authorize]
-    public class ManagePcsReturnsSubmissionWindowController : Controller
+    public class ManagePcsReturnsSubmissionWindowController : TestControllerBase
     {
         private readonly Func<IWeeeClient> apiClient;
 

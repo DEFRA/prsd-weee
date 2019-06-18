@@ -29,7 +29,7 @@
             FacilityType = facilityType;
         }
 
-        public virtual void UpdateSubmitted(string submittedBy)
+        public virtual void UpdateSubmitted(string submittedBy, bool nilReturn)
         {
             Guard.ArgumentNotNullOrEmpty(() => submittedBy, submittedBy);
 
@@ -41,6 +41,7 @@
             SubmittedById = submittedBy;
             SubmittedDate = SystemTime.UtcNow;
             ReturnStatus = ReturnStatus.Submitted;
+            NilReturn = nilReturn;
         }
 
         public virtual void ResetSubmitted(string createdBy, Guid parentId)
@@ -60,6 +61,7 @@
             CreatedDate = SystemTime.UtcNow;
             ReturnStatus = ReturnStatus.Created;
             ParentId = parentId;
+            NilReturn = false;
         }
 
         public virtual Quarter Quarter { get; private set; }
@@ -83,5 +85,7 @@
         public virtual Guid? ParentId { get; set; }
 
         public virtual FacilityType FacilityType { get; set; }
+
+        public virtual bool NilReturn { get; set; }
     }
 }
