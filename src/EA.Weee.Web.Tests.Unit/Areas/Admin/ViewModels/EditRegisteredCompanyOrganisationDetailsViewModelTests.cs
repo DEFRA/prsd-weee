@@ -27,21 +27,21 @@
         [Fact]
         public void GivenModel_CompanyNameShouldHaveDisplayNameAttribute()
         {
-            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Company name");
+            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Company name");
         }
 
         [Fact]
         public void GivenModel_CompanyNameShouldHaveStringLengthAttribute()
         {
             GetProperty("CompanyName").Should().BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength
-                .Equals(CommonMaxFieldLengths.DefaultString);
+                .Should().Be(CommonMaxFieldLengths.DefaultString);
         }
 
         [Fact]
         public void GivenModel_CompaniesRegistrationNumberShouldHaveRequiredFieldAttribute()
         {
             GetProperty("CompaniesRegistrationNumber").Should().BeDecoratedWith<RequiredAttribute>()
-                .Which.ErrorMessage.Equals("Enter company registration number (CRN)");
+                .Which.ErrorMessage.Should().Be("Enter company registration number (CRN)");
         }
 
         [Fact]
@@ -57,20 +57,20 @@
         [Fact]
         public void GivenModel_CompaniesRegistrationNumberShouldHaveDisplayNameAttribute()
         {
-            GetProperty("CompaniesRegistrationNumber").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Equals("Company registration number (CRN)");
+            GetProperty("CompaniesRegistrationNumber").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("Company registration number (CRN)");
         }
 
         [Fact]
         public void GivenModel_BusinessTradingNameShouldHaveDisplayNameAttribute()
         {
-            GetProperty("BusinessTradingName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Business trading name");
+            GetProperty("BusinessTradingName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Business trading name");
         }
 
         [Fact]
         public void GivenModel_BusinessTradingNameShouldHaveStringLengthAttribute()
         {
             GetProperty("BusinessTradingName").Should()
-                .BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength.Equals(CommonMaxFieldLengths.DefaultString);
+                .BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength.Should().Be(CommonMaxFieldLengths.DefaultString);
         }
 
         private PropertyInfo GetProperty(string name)
