@@ -15,7 +15,28 @@
         {
             get
             {
-                return string.Format("{0} ({1}, {2}, {3})", this.Name, this.Address.Address1, this.Address.TownOrCity, this.Address.CountryName);
+                string addressString = this.Address.Address1;
+
+                if (this.Address.Address2 != null)
+                {
+                    addressString += ", " + this.Address.Address2;
+                }
+
+                addressString += ", " + this.Address.TownOrCity;
+
+                if (this.Address.CountyOrRegion != null)
+                {
+                    addressString += ", " + this.Address.CountyOrRegion;
+                }
+
+                if (this.Address.Postcode != null)
+                {
+                    addressString += ", " + this.Address.Postcode;
+                }
+
+                addressString += ", " + this.Address.CountryName;
+
+                return string.Format("{0} ({1})", this.Name, addressString);
             }
         }
     }
