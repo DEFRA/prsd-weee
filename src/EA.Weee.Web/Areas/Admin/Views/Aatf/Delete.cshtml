@@ -13,45 +13,44 @@
 
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">Are you sure</h1>
-
-
-    <div class="govuk-grid-row">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Are you sure?</h1>
+        </div>
+    </header>
         @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
         {
-            <div class="govuk-grid-row">
+            <div>
                 <p>
-                    Has data so can't be deleted
+                    Has data
+                </p>
+
+                <p>
+                    <a href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Cancel</a>
                 </p>
             </div>
 
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Cancel</a>
-            </p>
         }
         else
         {
             using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
             {
-                <div>
-                    @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
+                    if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
                     {
-                        <div class="govuk-grid-row">
+                        <div>
                             <p>
                                 HAS USERS
                             </p>
                         </div>
                     }
 
-                    @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
+                    if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
                     {
-                        <div class="govuk-grid-row">
+                        <div>
                             <p>
                                 ORG HAS MORE AATFS
                             </p>
-                            }
                         </div>
-
                     }
 
                     @Html.AntiForgeryToken()
@@ -61,8 +60,6 @@
                     @Html.HiddenFor(m => m.FacilityType)
 
                     @(this.WeeeGds().Submit("Confirm"))
-                </div>
             }
         }
-    </div>
 </section>
