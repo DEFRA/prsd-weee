@@ -284,15 +284,15 @@
     <p>
         @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
         {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
         }
         else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
         {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
         }
         else
         {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
         }
     </p>
         }
