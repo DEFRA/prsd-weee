@@ -495,17 +495,13 @@
         }
 
         [Fact]
-        public async Task PostEditPartnershipOrganisationDetails_ModelIsValid_UpdateOrganisationDetailsRequestSent()
+        public async Task PostEditPartnershipOrganisationDetails_OrganisationUpdated_SearchCacheShouldBeInvalidated()
         {
             var model = fixture.Build<EditPartnershipOrganisationDetailsViewModel>().WithAutoProperties().Create();
 
             await controller.EditPartnershipOrganisationDetails(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>.That.Matches(
-                u => u.OrganisationData.Id.Equals(model.OrgId)
-                     && u.OrganisationData.OrganisationType.Equals(model.OrganisationType)
-                     && u.OrganisationData.TradingName.Equals(model.BusinessTradingName)
-                     && u.OrganisationData.BusinessAddress.Equals(model.BusinessAddress)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -636,6 +632,16 @@
 
             breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
             breadcrumb.InternalOrganisation = aatf.Name;
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrganisationDetails_OrganisationUpdated_SearchCacheShouldBeInvalidated()
+        {
+            var model = fixture.Build<EditSoleTraderOrganisationDetailsViewModel>().WithAutoProperties().Create();
+
+            await controller.EditSoleTraderOrganisationDetails(model);
+
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -814,6 +820,16 @@
                      && u.OrganisationData.Name.Equals(model.CompanyName)
                      && u.OrganisationData.TradingName.Equals(model.BusinessTradingName)
                      && u.OrganisationData.BusinessAddress.Equals(model.BusinessAddress)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task PostEditRegisteredCompanyOrganisationDetails_OrganisationUpdated_SearchCacheShouldBeInvalidated()
+        {
+            var model = fixture.Build<EditRegisteredCompanyOrganisationDetailsViewModel>().WithAutoProperties().Create();
+
+            await controller.EditRegisteredCompanyOrganisationDetails(model);
+
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object> Guids
