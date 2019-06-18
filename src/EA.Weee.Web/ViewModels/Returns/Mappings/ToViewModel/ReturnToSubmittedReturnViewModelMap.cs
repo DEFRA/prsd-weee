@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
     using Core.AatfReturn;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
+    using Returns;
 
     public class ReturnToSubmittedReturnViewModelMap : IMap<ReturnData, SubmittedReturnViewModel>
     {
@@ -13,7 +13,7 @@
 
             var model = new SubmittedReturnViewModel(source)
             {
-                OrgansationId = source.OrganisationData.Id
+                OrganisationId = source.OrganisationData.Id
             };
 
             return model;

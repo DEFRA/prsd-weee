@@ -6,6 +6,7 @@
     using Core.Scheme;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Lookup;
     using Domain.User;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
@@ -217,8 +218,8 @@
 
             var aatfs = new List<Aatf>()
             {
-                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019),
-                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019)
+                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>()),
+                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>()),
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
@@ -335,6 +336,24 @@
             result.SchemeDataItems.Should().Contain(schemeData.ElementAt(0));
             result.SchemeDataItems.Should().Contain(schemeData.ElementAt(1));
             result.SchemeDataItems.Count().Should().Be(2);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenSourceNilReturn_NilReturnShouldBeMapped(bool nilReturn)
+        {
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            var @return = A.Fake<Return>();
+
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
+            A.CallTo(() => @return.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
+            A.CallTo(() => @return.NilReturn).Returns(nilReturn);
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.NilReturn.Should().Be(nilReturn);
         }
 
         public Return GetReturn()

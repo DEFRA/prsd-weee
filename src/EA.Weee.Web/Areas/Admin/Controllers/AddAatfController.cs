@@ -354,6 +354,8 @@
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.SiteAddressData.Countries = countries;
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.OrganisationName = organisation.OrganisationName;
@@ -415,11 +417,13 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Abbreviation == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault()) {FacilityType = viewModel.FacilityType};
+                viewModel.ApprovalDate.GetValueOrDefault(),
+                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId)) {FacilityType = viewModel.FacilityType};
 
             return data;
         }

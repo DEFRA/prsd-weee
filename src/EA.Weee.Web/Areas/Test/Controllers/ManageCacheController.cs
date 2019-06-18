@@ -6,7 +6,7 @@
     using Services;
 
     [Authorize]
-    public class ManageCacheController : Controller
+    public class ManageCacheController : TestControllerBase
     {
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;

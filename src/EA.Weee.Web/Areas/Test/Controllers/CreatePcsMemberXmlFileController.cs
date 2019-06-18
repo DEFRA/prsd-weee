@@ -15,7 +15,7 @@
     using Weee.Requests.Scheme.MemberUploadTesting;
 
     [Authorize]
-    public class CreatePcsMemberXmlFileController : Controller
+    public class CreatePcsMemberXmlFileController : TestControllerBase
     {
         private const int pageSize = 10;
         private readonly Func<IWeeeClient> apiClient;

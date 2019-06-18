@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Charges
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,7 @@
     using Core.Shared;
     using Domain;
     using Domain.Charges;
+    using Domain.Lookup;
     using Domain.Scheme;
 
     public interface ICommonDataAccess
@@ -43,5 +44,9 @@
         /// <param name="invoiceRunId"></param>
         /// <returns></returns>
         Task<InvoiceRun> FetchInvoiceRunAsync(Guid invoiceRunId);
+
+        Task<UKCompetentAuthority> FetchCompetentAuthority(string authority);
+
+        Task<T> FetchLookup<T>(Guid id) where T : AreaBase;
     }
 }
