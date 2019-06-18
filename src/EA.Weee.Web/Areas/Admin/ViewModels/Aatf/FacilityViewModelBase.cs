@@ -32,14 +32,14 @@
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
-        [Display(Name = "WROS PAT Area")]
+        [Display(Name = "WROS PAT area")]
         public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
 
-        [Display(Name = "EA Area")]
+        [Display(Name = "EA area")]
         public Guid? LocalAreaId { get; set; }
 
         [Required]
@@ -76,6 +76,8 @@
             $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.CountryId)}",
             nameof(ApprovalNumber),
             nameof(CompetentAuthorityId),
+            nameof(LocalAreaId),
+            nameof(PanAreaId),
             nameof(StatusValue),
             nameof(SizeValue),
             nameof(ApprovalDate)
