@@ -223,6 +223,10 @@
         [HttpGet]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
+            var aatfData = await cache.FetchAatfData(organisationId, id);
+
+            SetBreadcrumb(facilityType, aatfData.Name);
+
             using (var client = apiClient())
             {
                 CanAatfBeDeletedFlags canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));

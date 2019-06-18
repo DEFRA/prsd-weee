@@ -15,6 +15,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
@@ -1017,6 +1018,26 @@
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Delete");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetDelete_EnsureBreadcrumbIsSet()
+        {
+            Guid aatfId = Guid.NewGuid();
+            FacilityType facilityType = FacilityType.Aatf;
+
+            AatfData aatfData = A.Dummy<AatfData>();
+            aatfData.Name = "Name";
+            Organisation organisation = A.Dummy<Organisation>();
+
+            aatfData.Id = aatfId;
+
+            A.CallTo(() => cache.FetchAatfData(organisation.Id, aatfId)).Returns(aatfData);
+
+            await controller.Delete(aatfId, organisation.Id, facilityType);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(aatfData.Name);
         }
 
         [Fact]
