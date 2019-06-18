@@ -3,13 +3,13 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderDetailsViewModel
 @{
-    ViewBag.Title = "Sole trader details";
+    ViewBag.Title = "Sole trader or individual details";
 }
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            Sole trader or individual details
+            @ViewBag.Title
         </h1>
     </header>
 
