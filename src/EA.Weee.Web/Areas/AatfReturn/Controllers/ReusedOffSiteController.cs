@@ -39,6 +39,13 @@
 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
+            string path = (Request != null && Request.UrlReferrer != null) ? Request.UrlReferrer.AbsolutePath : String.Empty;
+
+            if (!String.IsNullOrEmpty(path) && path.Contains("reused-off-site-create-site"))
+            {
+                viewModel.SelectedValue = "Yes";
+            }
+
             return View(viewModel);
         }
 
