@@ -247,7 +247,7 @@
             {
                 await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
 
-                return View(viewModel);
+                return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }
         }
 
