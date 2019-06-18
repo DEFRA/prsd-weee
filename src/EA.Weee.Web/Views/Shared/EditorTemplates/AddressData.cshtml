@@ -34,9 +34,9 @@
 </div>
 
 <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)">
-    @Html.Gds().LabelFor(m => m.CountryId)
+    @Html.Gds().LabelFor(m => m.CountryId, new { id="country-dropdown-list" } )
     @Html.Gds().ValidationMessageFor(m => m.CountryId)
-    @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false"})
+    @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false", aria_labelledby = "country-dropdown-list"})
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
