@@ -33,29 +33,27 @@
         [Fact]
         public void GivenModel_CompanyNameShouldHaveDisplayNameAttribute()
         {
-            var property = GetProperty("CompanyName");
-            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Sole trader name");
+            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Sole trader or individual");
         }
 
         [Fact]
         public void GivenModel_BusinessTradingNameShouldHaveDisplayNameAttribute()
         {
-            var property = GetProperty("BusinessTradingName");
-            GetProperty("BusinessTradingName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Equals("Business trading name");
+            GetProperty("BusinessTradingName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Business trading name");
         }
 
         [Fact]
         public void GivenModel_CompanyNameShouldHaveStringLengthAttribute()
         {
             GetProperty("CompanyName").Should().BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength
-                .Equals(CommonMaxFieldLengths.DefaultString);
+                .Should().Be(CommonMaxFieldLengths.DefaultString);
         }
 
         [Fact]
         public void GivenModel_BusinessTradingNameShouldHaveStringLengthAttribute()
         {
             GetProperty("BusinessTradingName").Should().BeDecoratedWith<StringLengthAttribute>().Which.MaximumLength
-                .Equals(CommonMaxFieldLengths.DefaultString);
+                .Should().Be(CommonMaxFieldLengths.DefaultString);
         }
 
         private PropertyInfo GetProperty(string name)
