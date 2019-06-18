@@ -33,7 +33,7 @@
         [Fact]
         public void GivenModel_CompanyNameShouldHaveDisplayNameAttribute()
         {
-            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Sole trader or individual");
+            GetProperty("CompanyName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Sole trader / individual name");
         }
 
         [Fact]
