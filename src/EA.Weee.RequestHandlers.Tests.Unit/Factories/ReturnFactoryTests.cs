@@ -115,7 +115,7 @@
             var quarter1 = QuarterWindow(1);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter1 });
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(false);
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
@@ -133,7 +133,7 @@
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter1, quarter2 });
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(false);
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
@@ -151,8 +151,8 @@
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter1, quarter2 });
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.EndDate, 2019, FacilityType.Aatf)).Returns(true);
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.StartDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q2, FacilityType.Aatf)).Returns(false);
 
@@ -171,8 +171,8 @@
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter1, quarter2 });
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.EndDate, 2019, FacilityType.Aatf)).Returns(true);
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.StartDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q2, FacilityType.Aatf)).Returns(true);
 
@@ -190,8 +190,8 @@
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter1, quarter2 });
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.EndDate, 2019, FacilityType.Aatf)).Returns(true);
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter1.StartDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter2.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q1, FacilityType.Aatf)).Returns(false);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q2, FacilityType.Aatf)).Returns(true);
 
@@ -209,7 +209,7 @@
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._)).Returns(new List<QuarterWindow>() { quarter4 });
 
-            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter4.EndDate, 2019, FacilityType.Aatf)).Returns(true);
+            A.CallTo(() => returnFactoryDataAccess.ValidateAatfApprovalDate(organisationId, quarter4.StartDate, 2019, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => returnFactoryDataAccess.HasReturnQuarter(organisationId, 2019, QuarterType.Q4, FacilityType.Aatf)).Returns(false);
 
             var result = await returnFactory.GetReturnQuarter(organisationId, FacilityType.Aatf);
