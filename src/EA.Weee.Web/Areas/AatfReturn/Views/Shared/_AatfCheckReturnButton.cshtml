@@ -1,0 +1,5 @@
+﻿@using EA.Weee.Web.Infrastructure
+@model Guid
+<p>
+    @Html.RouteLink("Back to check return", AatfRedirect.Default, new { returnId = Model, controller = "CheckYourReturn", action = "Index" })
+</p>
