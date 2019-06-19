@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using FluentAssertions;
@@ -35,6 +36,28 @@
             var validationResult = model.Validate(new ValidationContext(model));
 
             validationResult.Count().Should().Be(0);
+        }
+
+        [Fact]
+        public void RuleFor_CompetentAuthorityIsEA_LocalAreaIsNull_ErrorShouldOccur()
+        {
+            var model = new OverriddenFacilityViewModelBase { CompetentAuthorityId = UKCompetentAuthorityAbbreviationType.EA, LocalAreaId = null, PanAreaId = Guid.NewGuid() };
+
+            var validationResult = model.Validate(new ValidationContext(model));
+
+            validationResult.Count().Should().Be(1);
+            validationResult.First().ErrorMessage.Should().Be("Enter EA area");
+        }
+
+        [Fact]
+        public void RuleFor_CompetentAuthorityIsEA_PanAreaIsNull_ErrorShouldOccur()
+        {
+            var model = new OverriddenFacilityViewModelBase { CompetentAuthorityId = UKCompetentAuthorityAbbreviationType.EA, PanAreaId = null, LocalAreaId = Guid.NewGuid() };
+
+            var validationResult = model.Validate(new ValidationContext(model));
+
+            validationResult.Count().Should().Be(1);
+            validationResult.First().ErrorMessage.Should().Be("Enter WROS PAT area");
         }
 
         [Fact]

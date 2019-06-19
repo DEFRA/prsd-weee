@@ -12,6 +12,7 @@
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
@@ -245,6 +246,10 @@
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
                 CompetentAuthorityId = Guid.NewGuid().ToString(),
+                PanAreaList = A.Fake<List<PanAreaData>>(),
+                PanAreaId = Guid.NewGuid(),
+                LocalAreaList = A.Fake<List<LocalAreaData>>(),
+                LocalAreaId = Guid.NewGuid(),
                 ComplianceYear = (Int16)2019
             };
 
@@ -257,7 +262,9 @@
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault());
+                viewModel.ApprovalDate.GetValueOrDefault(),
+                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId));
 
             await controller.AddAatf(viewModel);
 
@@ -266,6 +273,8 @@
                 && p.Aatf.Name == aatfData.Name
                 && p.Aatf.ApprovalNumber == aatfData.ApprovalNumber
                 && p.Aatf.CompetentAuthority == aatfData.CompetentAuthority
+                && p.Aatf.PanAreaData == aatfData.PanAreaData
+                && p.Aatf.LocalAreaData == aatfData.LocalAreaData
                 && p.Aatf.AatfStatus == aatfData.AatfStatus
                 && p.Aatf.SiteAddress == aatfData.SiteAddress
                 && p.Aatf.Size == aatfData.Size
