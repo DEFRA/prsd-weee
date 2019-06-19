@@ -30,10 +30,10 @@
                 </div>
             </div>
             <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                <div class="govuk-grid-column-one-third break-word">
+                <div class="govuk-grid-column-one-third weee-tonnage-left-aligned-display">
                     @Model.B2cTotal
                 </div>
-                <div class="govuk-grid-column-one-third break-word">
+                <div class="govuk-grid-column-one-third weee-tonnage-left-aligned-display">
                     @Model.B2bTotal
                 </div>
                 <div class="govuk-grid-column-one-third">
@@ -101,5 +101,8 @@
     </div>
     @{
         Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+    @{
+        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
     }
 </section>
