@@ -11,6 +11,7 @@
     using Api.Client;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
@@ -605,6 +606,41 @@
             mapperCall.MustHaveHappenedOnceExactly();
             clientCallAuthorities.MustHaveHappenedOnceExactly();
             clientCallCountries.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsPost_ValidViewModel_ListsShouldBeSet()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            IList<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>()
+                .With(a => a.CompetentAuthoritiesList, competentAuthorities)
+                .With(a => a.PanAreaList, panAreas)
+                .With(a => a.LocalAreaList, localAreas)
+                .Create();
+
+            var aatfData = new AatfData()
+            {
+                Id = viewModel.Id,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            var result = await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

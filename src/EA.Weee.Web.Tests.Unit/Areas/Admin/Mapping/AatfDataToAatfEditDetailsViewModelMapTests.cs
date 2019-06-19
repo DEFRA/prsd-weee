@@ -3,9 +3,11 @@
     using System;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
@@ -40,6 +42,38 @@
         }
 
         [Fact]
+        public void Map_IfPanAreaIsNull_PropertyShouldNotBeMapped()
+        {
+            var competentAuthorityId = "EA";
+            var competentAuthority = fixture.Build<UKCompetentAuthorityData>()
+                .With(ca => ca.Abbreviation, competentAuthorityId)
+                .With(ca => ca.Name, "Environment Agency")
+                .Create();
+
+            var aatfData = new AatfData(Guid.NewGuid(), "TEST", "test", (int)2019, competentAuthority, AatfStatus.Approved, null, AatfSize.Small, default(DateTime), null, A.Fake<LocalAreaData>());
+
+            var result = map.Map(aatfData);
+
+            result.PanAreaId.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_IfLocalAreaIsNull_PropertyShouldNotBeMapped()
+        {
+            var competentAuthorityId = "EA";
+            var competentAuthority = fixture.Build<UKCompetentAuthorityData>()
+                .With(ca => ca.Abbreviation, competentAuthorityId)
+                .With(ca => ca.Name, "Environment Agency")
+                .Create();
+
+            var aatfData = new AatfData(Guid.NewGuid(), "TEST", "test", (int)2019, competentAuthority, AatfStatus.Approved, null, AatfSize.Small, default(DateTime), A.Fake<PanAreaData>(), null);
+
+            var result = map.Map(aatfData);
+
+            result.LocalAreaId.Should().BeNull();
+        }
+
+        [Fact]
         public void Map_GivenValidSource_WithNoApprovalDate_PropertiesShouldBeMapped_ApprovalDateShouldBeDefaultDateTime()
         {
             var competentAuthorityId = "EA";
@@ -63,6 +97,8 @@
             Assert.Equal(AatfSize.Large.Value, result.SizeValue);
             Assert.Equal(FacilityType.Aatf, result.FacilityType);
             Assert.Equal(aatfData.ComplianceYear, result.ComplianceYear);
+            Assert.Equal(aatfData.PanAreaData.Id, result.PanAreaId);
+            Assert.Equal(aatfData.LocalAreaData.Id, result.LocalAreaId);
         }
 
         private AatfData CreateAatfData(string competentAuthorityId)
@@ -72,12 +108,26 @@
                 .With(ca => ca.Name, "Environment Agency")
                 .Create();
 
+            var panAreaData = fixture.Build<PanAreaData>()
+                .With(p => p.CompetentAuthorityId, competentAuthority.Id)
+                .With(p => p.Name, "PAN Area")
+                .With(p => p.Id, Guid.NewGuid())
+                .Create();
+
+            var localAreaData = fixture.Build<LocalAreaData>()
+                .With(p => p.CompetentAuthorityId, competentAuthority.Id)
+                .With(p => p.Name, "EA Area")
+                .With(p => p.Id, Guid.NewGuid())
+                .Create();
+
             return fixture.Build<AatfData>()
                 .With(a => a.CompetentAuthority, competentAuthority)
                 .With(a => a.AatfStatus, AatfStatus.Approved)
                 .With(a => a.Size, AatfSize.Large)
                 .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ComplianceYear, (Int16)2019)
+                .With(a => a.PanAreaData, panAreaData)
+                .With(a => a.LocalAreaData, localAreaData)
                 .Create();
         }
     }
