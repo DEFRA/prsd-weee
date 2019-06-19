@@ -8,9 +8,12 @@
     {
         public Guid ReturnId { get; private set; }
 
-        public GetReturn(Guid returnId)
+        public bool ForSummary { get; private set;  }
+
+        public GetReturn(Guid returnId, bool forSummary)
         {
             this.ReturnId = returnId;
+            this.ForSummary = forSummary;
         }
     }
 }
