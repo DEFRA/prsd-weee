@@ -107,13 +107,19 @@
 .weee-tonnage-right-aligned-display {
     text-align: right;
     padding-left: 1em !important;
-    word-break: break-all;
+    @extend .break-word;
+}
+
+.weee-tonnage-left-aligned-display {
+    text-align: left;
+    padding-right: 1em !important;
+    @extend .break-word;
 }
 
 .weee-tonnage-center-aligned-display {
     text-align: center;
     padding-left: 1em !important;
-    word-break: break-all;
+    @extend .break-word;
 }
 
 .weee-tonnage-column-padding-left {
@@ -125,5 +131,6 @@
 }
 
 .break-word {
+    word-break: break-all; // Fix IE & Firefox <68 issues
     word-break: break-word;
 }
