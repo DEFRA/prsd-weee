@@ -30,7 +30,7 @@
         {
             var quarterWindowTemplate = await dataAccess.GetByQuarter((int)quarter.Q);
 
-            var startMonth = 0;
+            int startMonth;
             if (quarter.Q == QuarterType.Q4)
             {
                 startMonth = 10;
