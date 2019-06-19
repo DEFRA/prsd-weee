@@ -54,7 +54,7 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion()),
-                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId))
+                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false))
                 });
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
@@ -73,7 +73,7 @@
             {
                 using (var client = apiClient())
                 {
-                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
+                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId, false));
                     if (CheckHasDeselectedOptions(viewModel))
                     {
                         if (!viewModel.HasSelectedOptions)
