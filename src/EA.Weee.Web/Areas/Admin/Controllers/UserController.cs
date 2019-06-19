@@ -11,7 +11,6 @@
     using Core.Shared.Paging;
     using EA.Weee.Core.Admin;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Security;
     using ViewModels.User;
@@ -23,13 +22,11 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private const int DefaultPageSize = 25;
-        private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
 
-        public UserController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
+        public UserController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
-            this.cache = cache;
             this.breadcrumb = breadcrumb;
         }
 
