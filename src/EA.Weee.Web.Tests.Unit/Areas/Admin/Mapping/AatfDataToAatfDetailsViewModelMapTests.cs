@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -229,6 +230,8 @@
             Assert.Equal(aatfData.Organisation.BusinessAddress.Telephone, result.Organisation.BusinessAddress.Telephone);
             Assert.Equal(aatfData.Organisation.BusinessAddress.Email, result.Organisation.BusinessAddress.Email);
             Assert.Equal(aatfData.FacilityType, result.FacilityType);
+            Assert.Equal(aatfData.LocalAreaData, result.LocalArea);
+            Assert.Equal(aatfData.PanAreaData, result.PanArea);
         }
 
         [Fact]
@@ -299,11 +302,15 @@
 
         private AatfData CreateAatfData()
         {
-            return new AatfData(Guid.NewGuid(), "AatfName", "12345", (Int16)2019, CreateUkCompetentAuthorityData(), AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
+            var competentAuthority = CreateUkCompetentAuthorityData();
+
+            return new AatfData(Guid.NewGuid(), "AatfName", "12345", (Int16)2019, competentAuthority, AatfStatus.Approved, CreateAatfAddressData(), AatfSize.Large, DateTime.Now)
             {
                 Contact = CreateAatfContactData(),
                 Organisation = CreateOrganisationData(),
-                FacilityType = FacilityType.Aatf
+                FacilityType = FacilityType.Aatf,
+                PanAreaData = new PanAreaData() { Name = "PAN Area", CompetentAuthorityId = competentAuthority.Id },
+                LocalAreaData = new LocalAreaData() { Name = "EA Area", CompetentAuthorityId = competentAuthority.Id }
             };
         }
     }

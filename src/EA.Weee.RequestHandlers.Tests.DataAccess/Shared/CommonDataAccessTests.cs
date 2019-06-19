@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using EA.Weee.Domain.Lookup;
     using FluentAssertions;
     using RequestHandlers.Scheme;
     using RequestHandlers.Shared;
@@ -26,6 +27,34 @@
                 var result = await dataAccess.FetchCompetentAuthority(abbreviation);
 
                 result.Abbreviation.Should().Be(abbreviation);
+            }
+        }
+
+        [Theory]
+        [InlineData("LocalArea", "4DDAD596-153B-436F-B1E2-31FEA920AFB3", "East Anglia (EAN)")]
+        [InlineData("LocalArea", "0B04DC2A-DAA7-49A6-9CB3-4B4202CFE122", "Cumbria and Lancashire (CLA)")]
+        [InlineData("PanArea", "13D97D30-B94D-491A-BA39-4ABB891917DF", "North")]
+        [InlineData("PanArea", "F5767376-6E4A-4C88-AB25-7EC075081BC4", "South east")]
+        public async Task FetchLookup_GivenId_ObjectIsRetrieved(string objectType, string id, string name)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+
+                var dataAccess = new CommonDataAccess(database.WeeeContext);
+
+                if (objectType == "LocalArea")
+                {
+                    var result = await dataAccess.FetchLookup<LocalArea>(Guid.Parse(id));
+
+                    result.Name.Should().Be(name);
+                }
+                else if (objectType == "PanArea")
+                {
+                    var result = await dataAccess.FetchLookup<PanArea>(Guid.Parse(id));
+
+                    result.Name.Should().Be(name);
+                }
             }
         }
     }
