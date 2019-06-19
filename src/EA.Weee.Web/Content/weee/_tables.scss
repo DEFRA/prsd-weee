@@ -110,6 +110,12 @@
     @extend .break-word;
 }
 
+.weee-tonnage-left-aligned-display {
+    text-align: left;
+    padding-right: 1em !important;
+    @extend .break-word;
+}
+
 .weee-tonnage-center-aligned-display {
     text-align: center;
     padding-left: 1em !important;
