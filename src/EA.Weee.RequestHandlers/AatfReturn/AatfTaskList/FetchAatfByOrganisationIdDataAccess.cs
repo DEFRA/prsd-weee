@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.DataReturns;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
 
@@ -17,9 +18,24 @@
             this.context = context;
         }
 
-        public async Task<List<Aatf>> FetchAatfByOrganisationId(Guid organisationId)
+        public async Task<List<Aatf>> FetchAatfByOrganisationId(Guid organisationId, int complianceYear, DateTime approvalStartDate)
         {
-            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId && a.FacilityType.Value == FacilityType.Aatf.Value).Select(a => a).ToListAsync();
+            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId 
+                                                  && a.FacilityType.Value == FacilityType.Aatf.Value
+                                                  && a.ComplianceYear == complianceYear
+                                                  && a.ApprovalDate.HasValue
+                                                  && a.ApprovalDate.Value < approvalStartDate.Date).Select(a => a).ToListAsync();
+        }
+
+        public async Task<List<Aatf>> FetchAatfByReturnId(Guid returnId)
+        {
+            var receivedAatf = await context.WeeeReceived.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
+
+            var sentOnAatf = await context.WeeeSentOn.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
+
+            var reusedAatf = await context.WeeeReused.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
+
+            return receivedAatf.Union(sentOnAatf).Union(reusedAatf).Distinct().ToList();
         }
     }
 }

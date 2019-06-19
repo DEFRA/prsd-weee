@@ -48,7 +48,7 @@
 
             foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
             {
-                returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id));
+                returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
             }
 
             return new ReturnsData(returnsData, quarter);

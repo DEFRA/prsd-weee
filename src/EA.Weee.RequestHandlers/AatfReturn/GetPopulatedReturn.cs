@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using AatfTaskList;
     using CheckYourReturn;
@@ -9,7 +10,6 @@
     using Domain.AatfReturn;
     using Factories;
     using NonObligated;
-    using ObligatedSentOn;
     using Prsd.Core.Mapper;
     using Security;
     using Specification;
@@ -22,7 +22,6 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
-        private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
@@ -32,8 +31,7 @@
             IMap<ReturnQuarterWindow, ReturnData> mapper, 
             IQuarterWindowFactory quarterWindowFactory,
             INonObligatedDataAccess nonObligatedDataAccess, 
-            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
-            IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess, 
+            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess, 
             IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
             IReturnSchemeDataAccess returnSchemeDataAccess,
             IGenericDataAccess genericDataAccess)
@@ -44,13 +42,12 @@
             this.quarterWindowFactory = quarterWindowFactory;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.obligatedDataAccess = obligatedDataAccess;
-            this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.returnSchemeDataAccess = returnSchemeDataAccess;
             this.genericDataAccess = genericDataAccess;
         }
 
-        public async Task<ReturnData> GetReturnData(Guid returnId)
+        public async Task<ReturnData> GetReturnData(Guid returnId, bool forSummary)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -58,7 +55,9 @@
 
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
-            var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
+            var annualQuarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
+
+            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(returnId);
 
@@ -66,7 +65,15 @@
 
             var returnObligatedReusedValues = await obligatedDataAccess.FetchObligatedWeeeReusedForReturn(returnId);
 
-            var aatfList = await aatfDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id);
+            List<Aatf> aatfs;
+            if (forSummary)
+            {
+                aatfs = await aatfDataAccess.FetchAatfByReturnId(@return.Id);
+            }
+            else
+            {
+                aatfs = await aatfDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate);
+            }
 
             var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(returnId);
 
@@ -75,8 +82,8 @@
             var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
 
             var returnQuarterWindow = new ReturnQuarterWindow(@return,
-                quarterWindow,
-                aatfList,
+                annualQuarterWindow,
+                aatfs,
                 returnNonObligatedValues,
                 returnObligatedReceivedValues,
                 returnObligatedReusedValues,

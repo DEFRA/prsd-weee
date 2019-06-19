@@ -45,7 +45,7 @@
             {
                 Guid? siteAddressId = null;
                 var siteAddress = new AatfAddressData();
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 if (weeeSentOnId != null)
                 {
