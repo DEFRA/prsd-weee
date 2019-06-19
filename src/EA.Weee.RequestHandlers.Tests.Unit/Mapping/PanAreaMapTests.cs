@@ -31,5 +31,13 @@
             result.Id.Should().Be(panArea.Id);
             result.CompetentAuthorityId.Should().Be(panArea.CompetentAuthorityId);
         }
+
+        [Fact]
+        public void Map_GivenNul_ReturnNull()
+        {
+            var result = mapper.Map(null);
+
+            result.Should().BeNull();
+        }
     }
 }
