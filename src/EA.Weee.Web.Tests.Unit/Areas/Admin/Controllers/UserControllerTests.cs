@@ -35,7 +35,6 @@
             // Arrange
             UserController controller = new UserController(
                 apiClient,
-                A.Fake<IWeeeCache>(),
                 A.Fake<BreadcrumbService>());
 
             // Act
@@ -55,7 +54,7 @@
         [Fact]
         public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
@@ -89,7 +88,7 @@
         [Fact]
         public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
@@ -106,7 +105,7 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModel_UpdatesUserAndCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
 
             var model = new EditUserViewModel
             {
@@ -141,7 +140,7 @@
         [Fact]
         public async Task PostEdit_WithOrganisationUserAndValidModel_UpdatesUserAndOrganisationUserStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
 
             var model = new EditUserViewModel
             {
@@ -175,7 +174,7 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModelAndUserBeingUpdatedIsCurrentUser_UpdatesUserAndDoesNotUpdateCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
 
             var model = new EditUserViewModel
             {
