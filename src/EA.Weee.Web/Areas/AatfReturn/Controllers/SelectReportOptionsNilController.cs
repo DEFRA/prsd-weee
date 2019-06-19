@@ -44,7 +44,7 @@
         {
             using (var client = apiClient())
             {
-                var returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
                 var viewModel = mapper.Map(new ReturnDataToSelectReportOptionsNilViewModelMapTransfer()
                 {
                     ReturnData = returnData,

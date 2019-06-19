@@ -18,7 +18,7 @@
             this.context = context;
         }
 
-        public async Task<List<Aatf>> FetchAatfByOrganisationId(Guid organisationId, int complianceYear, DateTime approvalStartDate)
+        public async Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime approvalStartDate)
         {
             return await context.Aatfs.Where(a => a.Organisation.Id == organisationId 
                                                   && a.FacilityType.Value == FacilityType.Aatf.Value
