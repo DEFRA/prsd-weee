@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Attributes;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -32,8 +34,13 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false)
         {
+            if (reselect)
+            {
+                return await Reselect(organisationId, returnId);
+            }
+
             using (var client = apiClient())
             {
                 var viewModel = new SelectYourPcsViewModel
@@ -71,6 +78,28 @@
             {
                 await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
+            }
+        }
+
+        private async Task<ActionResult> Reselect(Guid organisationId, Guid returnId)
+        {
+            using (var client = apiClient())
+            {
+                GetReturnScheme request = new GetReturnScheme(returnId);
+
+                var existing = await client.SendAsync(User.GetAccessToken(), request);
+
+                ReselectYourPcsViewModel viewModel = new ReselectYourPcsViewModel
+                {
+                    OrganisationId = organisationId,
+                    ReturnId = returnId,
+                    SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
+                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
+                };
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                return View("Reselect", viewModel);
             }
         }
 

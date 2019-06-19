@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -20,7 +23,7 @@
 
     public class SelectYourPcsControllerTests
     {
-        private readonly Func<IWeeeClient> weeeClient;
+        private readonly IWeeeClient weeeClient;
         private readonly SelectYourPcsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -29,12 +32,12 @@
 
         public SelectYourPcsControllerTests()
         {
-            weeeClient = A.Fake<Func<IWeeeClient>>();
+            weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddReturnSchemeRequestCreator>();
 
-            controller = new SelectYourPcsController(weeeClient, breadcrumb, cache, requestCreator);
+            controller = new SelectYourPcsController(() => weeeClient, breadcrumb, cache, requestCreator);
         }
 
         [Fact]
@@ -89,6 +92,58 @@
             redirect.RouteValues["action"].Should().Be("Index");
             redirect.RouteValues["controller"].Should().Be("AatfTaskList");
             redirect.RouteValues["returnId"].Should().Be(returnId);
+        }
+
+        [Fact]
+        public async void IndexGet_ReselectIsTrue_ReselectActionCalledAndViewReturned()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+
+            ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Reselect");
+
+            ReselectYourPcsViewModel viewModel = result.Model as ReselectYourPcsViewModel;
+
+            Assert.Equal(returnId, viewModel.ReturnId);
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async void IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+
+            List<Guid> selectedSchemeIds = new List<Guid>()
+            {
+                Guid.NewGuid(),
+                Guid.NewGuid()
+            };
+
+            SchemeDataList schemeDataList = new SchemeDataList()
+            {
+                SchemeDataItems = new List<SchemeData>()
+            };
+
+            foreach (Guid scheme in selectedSchemeIds)
+            {
+                schemeDataList.SchemeDataItems.Add(new SchemeData() { Id = scheme });
+            }
+
+            
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(schemeDataList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(A.Fake<List<SchemeData>>());
+
+            ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
+
+            ReselectYourPcsViewModel viewModel = result.Model as ReselectYourPcsViewModel;
+
+            Assert.Equal(selectedSchemeIds, viewModel.SelectedSchemes);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
