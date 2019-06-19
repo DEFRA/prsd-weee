@@ -18,7 +18,7 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage")
+        @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
@@ -63,7 +63,7 @@
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
 {
 <fieldset style="border: none; margin-left: 0; padding: 0">
-    <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage")</legend>
+    <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")</legend>
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
     @Html.HiddenFor(m => m.Filter.Name)

@@ -32,7 +32,7 @@
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
-        [Display(Name = "WROS PAT area")]
+        [Display(Name = "WROS pan area team")]
         public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
@@ -122,7 +122,7 @@
                     if (instance.PanAreaId == null)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Enter WROS PAT area", new List<string> { nameof(instance.PanAreaId) }));
+                            new ValidationResult($"Enter WROS pan area team", new List<string> { nameof(instance.PanAreaId) }));
                     }
                 }
             }
