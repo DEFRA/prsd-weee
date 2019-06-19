@@ -31,5 +31,13 @@
             result.Id.Should().Be(localArea.Id);
             result.CompetentAuthorityId.Should().Be(localArea.CompetentAuthorityId);
         }
+
+        [Fact]
+        public void Map_GivenNull_NullShouldBeReturned()
+        {
+            var result = mapper.Map(null);
+
+            result.Should().BeNull();
+        }
     }
 }
