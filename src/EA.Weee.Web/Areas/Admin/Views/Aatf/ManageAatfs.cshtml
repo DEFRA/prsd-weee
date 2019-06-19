@@ -23,7 +23,7 @@
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
 {
-    <div class="aatf-filter">
+    <div class="filter">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Filter.FacilityType)
         <div class="govuk-label">Filter by:</div>

@@ -12,7 +12,7 @@
 
 @section scripts{
     <script>
-        $('#idManageUsersTable tr').click(function() {
+        $('#idManageUsersTable tr').click(function () {
             $(this).find('td input[type=radio]').prop('checked', true);
         })
     </script>
@@ -23,9 +23,45 @@
     </h1>
 </header>
 
+@using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
+{
+    <div class="filter">
+        @Html.AntiForgeryToken()
+        <div class="govuk-label">Filter by:</div>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.Name, false)
+                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.OrganisationName, false)
+                        @Html.TextBoxFor(m => m.Filter.OrganisationName, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.Status, false)
+                        @Html.EnumDropDownListFor(model => model.Filter.Status, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @(this.WeeeGds().Submit("Apply"))
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Filter.Name)
+    @Html.HiddenFor(m => m.Filter.OrganisationName)
+    @Html.HiddenFor(m => m.Filter.Status)
     @Html.Gds().ValidationSummary()
     <div class="table-hr"></div>
     <table id="idManageUsersTable" class="prsd-table hover-effect govuk-table">
@@ -41,16 +77,16 @@
                         break;
 
                     case FindMatchingUsers.OrderBy.FullNameDescending:
-                    <th class="sorted-descending govuk-table__header">
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
-                        <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                    </th>
+                        <th class="sorted-descending govuk-table__header">
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                        </th>
                         break;
 
                     default:
-                    <th class="govuk-table__header">
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
-                    </th>
+                        <th class="govuk-table__header">
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                        </th>
                         break;
                 }
                 <th class="govuk-table__header">
@@ -66,16 +102,16 @@
                         break;
 
                     case FindMatchingUsers.OrderBy.OrganisationDescending:
-                    <th class="sorted-descending govuk-table__header">
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
-                        <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                    </th>
+                        <th class="sorted-descending govuk-table__header">
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                        </th>
                         break;
 
                     default:
-                    <th class="govuk-table__header">
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
-                    </th>
+                        <th class="govuk-table__header">
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                        </th>
                         break;
                 }
                 @switch (@Model.OrderBy)
@@ -110,16 +146,16 @@
                         break;
 
                     case FindMatchingUsers.OrderBy.StatusDescending:
-                    <th class="sorted-descending govuk-table__header">
-                        <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
-                        <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                    </th>
+                        <th class="sorted-descending govuk-table__header">
+                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                        </th>
                         break;
 
                     default:
-                    <th class="govuk-table__header">
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
-                    </th>
+                        <th class="govuk-table__header">
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                        </th>
                         break;
                 }
                 <th class="govuk-table__header" style="padding-right: 15px">Select</th>
@@ -129,8 +165,8 @@
             @foreach (UserSearchData user in Model.Users)
             {
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" width="100%">@user.FullName</td>
-                    <td class="govuk-table__cell">@user.Email</td>
+                    <td class="govuk-table__cell">@user.FullName</td>
+                    <td class="govuk-table__cell break-word">@user.Email</td>
                     <td class="govuk-table__cell">@user.OrganisationName</td>
                     <td class="govuk-table__cell">@user.Role</td>
                     <td class="govuk-table__cell">@user.Status</td>
@@ -141,7 +177,7 @@
             }
         </tbody>
     </table>
-    <br/>
+    <br />
 
     if (@Model.Users.PageCount > 1)
     {
