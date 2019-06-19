@@ -34,7 +34,7 @@
         [InlineData("LocalArea", "4DDAD596-153B-436F-B1E2-31FEA920AFB3", "East Anglia (EAN)")]
         [InlineData("LocalArea", "0B04DC2A-DAA7-49A6-9CB3-4B4202CFE122", "Cumbria and Lancashire (CLA)")]
         [InlineData("PanArea", "13D97D30-B94D-491A-BA39-4ABB891917DF", "North")]
-        [InlineData("PanArea", "F5767376-6E4A-4C88-AB25-7EC075081BC4", "South east")]
+        [InlineData("PanArea", "F5767376-6E4A-4C88-AB25-7EC075081BC4", "South East")]
         public async Task FetchLookup_GivenId_ObjectIsRetrieved(string objectType, string id, string name)
         {
             using (var database = new DatabaseWrapper())
