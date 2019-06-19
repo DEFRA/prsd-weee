@@ -47,6 +47,59 @@
             }
         }
 
+        [Fact]
+        public async Task FetchAatfByOrganisationIdAndQuarter_GivenNotMatchingApprovalDate_ReturnedListShouldNotContainAatf()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var dataAccess = new FetchAatfByOrganisationIdDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var organisation = Organisation.CreatePartnership("Dummy");
+                var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
+                var aatf = CreateAatf(competentAuthority, organisation, database, contact, FacilityType.Aatf, DateTime.Now.AddDays(1), 2019);
+
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
+
+                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(organisation.Id, 2019, DateTime.Now);
+
+                aatfList.Should().NotContain(aatf);
+                aatfList.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByOrganisationIdAndQuarter_GivenNonMatchingComplianceYear_ReturnedListShouldNotContainAatf(EA.Weee.Core.AatfReturn.FacilityType facilityType)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+
+                var dataAccess = new FetchAatfByOrganisationIdDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
+                var organisation = Organisation.CreatePartnership("Dummy");
+                var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
+
+                var aatf = CreateAatf(competentAuthority, organisation, database, contact, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
+
+                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(organisation.Id, 2020, DateTime.Now.AddDays(1));
+
+                aatfList.Should().NotContain(aatf);
+                aatfList.Should().BeEmpty();
+            }
+        }
+
         private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, DatabaseWrapper database, AatfContact contact, FacilityType facilityType, DateTime date, short year)
         {
             var country = database.WeeeContext.Countries.First();
