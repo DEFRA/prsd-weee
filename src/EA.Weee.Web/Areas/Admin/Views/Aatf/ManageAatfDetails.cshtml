@@ -76,7 +76,7 @@
 
                 <div class="govuk-form-group competent-authority-hidden">
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
-                        <label class="govuk-label form-label" for="PanAreaId">WROS PAT area</label>
+                        <label class="govuk-label form-label" for="PanAreaId">WROS pan area team</label>
                         @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
                         @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
                     </div>
