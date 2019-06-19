@@ -72,7 +72,7 @@
             }
             else
             {
-                aatfs = await aatfDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate);
+                aatfs = await aatfDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate);
             }
 
             var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(returnId);

@@ -22,15 +22,8 @@
 
     public class FetchAatfByOrganisationIdDataAccessTests
     {
-        private readonly DbContextHelper dbContextHelper;
-
-        public FetchAatfByOrganisationIdDataAccessTests()
-        {
-            dbContextHelper = new DbContextHelper();
-        }
-
         [Fact]
-        public async Task FetchAatfByOrganisationIdDataAccess_ReturnedListContainsAatf()
+        public async Task FetchAatfByOrganisationIdAndQuarter_GivenMatchingParameters_ReturnedListContainsAatf()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -44,19 +37,17 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
                 var organisation = Organisation.CreatePartnership("Dummy");
                 var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
-                var aatf = CreateAatf(competentAuthority, organisation, database, contact, FacilityType.Aatf);
-                var ae = CreateAatf(competentAuthority, organisation, database, contact, FacilityType.Ae);
-                
-                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf, ae });
+                var aatf = CreateAatf(competentAuthority, organisation, database, contact, FacilityType.Aatf, DateTime.Now, 2019);
+              
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
 
-                var aatfList = await dataAccess.FetchAatfByOrganisationId(organisation.Id);
+                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(organisation.Id, 2019, DateTime.Now.AddDays(1));
 
                 aatfList.Should().Contain(aatf);
-                aatfList.Should().NotContain(ae);
             }
         }
 
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, DatabaseWrapper database, AatfContact contact, FacilityType facilityType)
+        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, DatabaseWrapper database, AatfContact contact, FacilityType facilityType, DateTime date, short year)
         {
             var country = database.WeeeContext.Countries.First();
 
@@ -67,10 +58,10 @@
                 organisation,
                 new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
                 A.Fake<AatfSize>(),
-                DateTime.Now,
+                date,
                 contact,
                 facilityType,
-                2019);
+                year);
         }
     }
 }
