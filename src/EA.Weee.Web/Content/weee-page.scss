@@ -381,7 +381,7 @@ th.sorted-descending:after {
 p.important {
     @include govuk-font(19, $weight: bold);
     padding-left: 50px;
-    background: url(govuk_frontend/assets/images/icon-important.png) no-repeat 0% 50%;
+    background: url(govuk_frontend/images/icon-important.png) no-repeat 0% 50%;
     background-size: 35px 35px;
     min-height: 35px;
 }
