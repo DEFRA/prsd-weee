@@ -402,8 +402,8 @@
         {
             var weeeReused = new List<WeeeReused>()
             {
-                new WeeeReused(Aatf(), @return.Id),
-                new WeeeReused(Aatf(), @return.Id)
+                new WeeeReused(Aatf(), @return),
+                new WeeeReused(Aatf(), @return)
             };
 
             var weeeReusedSites = new List<WeeeReusedSite>()

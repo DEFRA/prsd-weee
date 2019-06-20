@@ -84,7 +84,7 @@
 
             await context.SaveChangesAsync();
 
-            var weeeReceived = new WeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 

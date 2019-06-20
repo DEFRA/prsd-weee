@@ -165,7 +165,7 @@
         {
             var @return = GetReturn();
 
-            var weeeReused = ReturnWeeeReused(aatf, @return.Id);
+            var weeeReused = ReturnWeeeReused(aatf, @return);
 
             var obligated = new List<WeeeReusedAmount>()
             {
@@ -370,9 +370,9 @@
             return weeeReceived;
         }
 
-        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Guid returnId)
+        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Return @return)
         {
-            var weeeReused = new WeeeReused(aatf, returnId);
+            var weeeReused = new WeeeReused(aatf, @return);
 
             return weeeReused;
         }

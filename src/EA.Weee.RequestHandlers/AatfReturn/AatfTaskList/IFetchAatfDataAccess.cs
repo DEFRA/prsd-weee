@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using EA.Weee.Domain.AatfReturn;
 
-    public interface IFetchAatfByOrganisationIdDataAccess
+    public interface IFetchAatfDataAccess
     {
         Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime approvalDateStart);
 
