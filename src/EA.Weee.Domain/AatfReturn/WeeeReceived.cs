@@ -25,14 +25,15 @@
             ReturnId = returnId;
         }
 
-        public WeeeReceived(Scheme scheme, Aatf aatf, Guid returnId)
+        public WeeeReceived(Scheme scheme, Aatf aatf, Return @return)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
             Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => @return, @return);
 
             Scheme = scheme;
             Aatf = aatf;
-            ReturnId = returnId;
+            Return = @return;
         }
         public WeeeReceived()
         {

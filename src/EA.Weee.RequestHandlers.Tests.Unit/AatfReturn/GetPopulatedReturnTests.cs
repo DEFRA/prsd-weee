@@ -34,7 +34,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly INonObligatedDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
-        private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
+        private readonly IFetchAatfDataAccess fetchAatfByOrganisationIdDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
@@ -45,7 +45,7 @@
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             fetchNonObligatedWeeeDataAccess = A.Fake<INonObligatedDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
-            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
+            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
 
@@ -73,7 +73,7 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
                 A.Dummy<IGenericDataAccess>());
 
@@ -94,7 +94,7 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
                 A.Dummy<IGenericDataAccess>());
 

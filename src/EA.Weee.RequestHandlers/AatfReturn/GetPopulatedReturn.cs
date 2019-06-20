@@ -22,7 +22,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess;
-        private readonly IFetchAatfByOrganisationIdDataAccess aatfDataAccess;
+        private readonly IFetchAatfDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
@@ -32,7 +32,7 @@
             IQuarterWindowFactory quarterWindowFactory,
             INonObligatedDataAccess nonObligatedDataAccess, 
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess, 
-            IFetchAatfByOrganisationIdDataAccess aatfDataAccess, 
+            IFetchAatfDataAccess aatfDataAccess, 
             IReturnSchemeDataAccess returnSchemeDataAccess,
             IGenericDataAccess genericDataAccess)
         {

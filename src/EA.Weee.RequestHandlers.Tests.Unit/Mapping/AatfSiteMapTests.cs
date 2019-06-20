@@ -97,7 +97,7 @@
         [Fact]
         public void Map_GivenSource_ObligatedDataIsMapped()
         {
-            var weeeReused = ReturnWeeeReused(aatf, Guid.NewGuid());
+            var weeeReused = ReturnWeeeReused(aatf, A.Dummy<Return>());
 
             var aatfAddressList = new List<AatfAddress>();
             var weeeReusedList = new List<WeeeReusedAmount>()
@@ -115,9 +115,9 @@
             result.ObligatedData.Count().Should().Be(2);
         }
 
-        public WeeeReused ReturnWeeeReused(Aatf aatf, Guid returnId)
+        public WeeeReused ReturnWeeeReused(Aatf aatf, Return @return)
         {
-            var weeeReused = new WeeeReused(aatf, returnId);
+            var weeeReused = new WeeeReused(aatf, @return);
 
             return weeeReused;
         }
