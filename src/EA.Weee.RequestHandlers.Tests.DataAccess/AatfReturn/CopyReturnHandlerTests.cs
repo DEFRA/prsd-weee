@@ -408,8 +408,8 @@
 
             var weeeReusedSites = new List<WeeeReusedSite>()
             {
-                new WeeeReusedSite(weeeReused.ElementAt(0), AatfSiteAddress()),
-                new WeeeReusedSite(weeeReused.ElementAt(1), AatfSiteAddress())
+                new WeeeReusedSite(weeeReused.ElementAt(0), AddressHelper.GetAatfAddress(database)),
+                new WeeeReusedSite(weeeReused.ElementAt(1), AddressHelper.GetAatfAddress(database))
             };
 
             var weeeReusedAmounts = new List<WeeeReusedAmount>()
@@ -431,8 +431,8 @@
         {
             var weeeSentOn = new List<WeeeSentOn>()
             {
-                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), Aatf(), @return),
-                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), Aatf(), @return)
+                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), Aatf(), @return),
+                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), Aatf(), @return)
             };
 
             var weeSentOnAmounts = new List<WeeeSentOnAmount>()
@@ -474,14 +474,9 @@
         private Aatf Aatf()
         {
             var aatf = new Aatf("aatf", competentAuthority, "123", AatfStatus.Approved, organisation,
-                AatfSiteAddress(), AatfSize.Large, DateTime.Now,
+                AddressHelper.GetAatfAddress(database), AatfSize.Large, DateTime.Now,
                 new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email"), FacilityType.Aatf, 2019);
             return aatf;
-        }
-
-        private AatfAddress AatfSiteAddress()
-        {
-            return new AatfAddress("name", "address1", "address2", "town", "county", "postcode", country);
         }
 
         private async Task AddNonObligated()

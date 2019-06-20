@@ -11,6 +11,7 @@
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Charges;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
@@ -30,7 +31,7 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
-                var aatfAddress = CreateAatfSiteAddress(database);
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
@@ -55,7 +56,7 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
-                var aatfAddress = CreateAatfSiteAddress(database);
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
@@ -83,7 +84,7 @@
                 var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
                 var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
                 var organisation = Organisation.CreatePartnership("Koalas");
-                var aatfAddress = CreateAatfSiteAddress(database);
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
@@ -96,13 +97,6 @@
                 filteredListWithAatf.Should().Contain(aatf);
                 filteredListWithoutAatf.Should().NotContain(aatf);
             }
-        }
-
-        private AatfAddress CreateAatfSiteAddress(DatabaseWrapper database)
-        {
-            var country = database.WeeeContext.Countries.First();
-
-            return new AatfAddress("Name", "Building", "Road", "Bath", "BANES", "BA2 2YU", country);
         }
     }
 }

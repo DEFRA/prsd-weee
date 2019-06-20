@@ -20,6 +20,8 @@
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Organisation = Domain.Organisation.Organisation;
+    using Return = Domain.AatfReturn.Return;
+    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
 
     public class FetchAatfDataAccessTests
     {
@@ -93,17 +95,13 @@
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
                 var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
-                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                
+
                 var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
 
                 var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
                     database.WeeeContext.Users.First().Id, FacilityType.Aatf);
 
-                var sentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database),
-                    aatf, @return);
-
-                await genericDataAccess.Add<Domain.AatfReturn.WeeeSentOn>(sentOn);
+                await CreateWeeeSentOn(database, aatf, @return);
 
                 var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
 
@@ -126,9 +124,7 @@
                 var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
                     database.WeeeContext.Users.First().Id, FacilityType.Aatf);
 
-                var reused = new EA.Weee.Domain.AatfReturn.WeeeReused(aatf, @return);
-
-                await genericDataAccess.Add<Domain.AatfReturn.WeeeReused>(reused);
+                await CreateWeeeReused(aatf, @return, genericDataAccess);
 
                 var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
 
@@ -151,16 +147,74 @@
                 var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
                     database.WeeeContext.Users.First().Id, FacilityType.Aatf);
 
-                var scheme = new EA.Weee.Domain.Scheme.Scheme(aatf.Organisation);
-
-                var received = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
-
-                await genericDataAccess.Add<Domain.AatfReturn.WeeeReceived>(received);
+                await CreateWeeeReceived(aatf, @return, genericDataAccess);
 
                 var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
 
                 aatfList.Should().Contain(aatf);
             }
+        }
+
+        [Fact]
+        public async Task FetchAatfByReturnId_GivenReturnMultipleReturnTypes_ReturnedListShouldContainDistinctAatf()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await CreateWeeeReceived(aatf, @return, genericDataAccess);
+                await CreateWeeeReceived(aatf, @return, genericDataAccess);
+
+                await CreateWeeeReused(aatf, @return, genericDataAccess);
+                await CreateWeeeReused(aatf, @return, genericDataAccess);
+
+                await CreateWeeeSentOn(database, aatf, @return);
+                await CreateWeeeSentOn(database, aatf, @return);
+
+                var aatf2 = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await CreateWeeeSentOn(database, aatf2, @return);
+
+                var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
+
+                aatfList.Count.Should().Be(2);
+                aatfList.Should().Contain(aatf);
+                aatfList.Should().Contain(aatf2);
+            }
+        }
+
+        private async Task CreateWeeeReceived(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
+        {
+            var scheme = new EA.Weee.Domain.Scheme.Scheme(aatf.Organisation);
+
+            var received = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
+
+            await genericDataAccess.Add<Domain.AatfReturn.WeeeReceived>(received);
+        }
+
+        private async Task CreateWeeeSentOn(DatabaseWrapper database, Aatf aatf, Return @return)
+        {
+            var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+            var sentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database),
+                aatf, @return);
+
+            await genericDataAccess.Add(sentOn);
+        }
+
+        private async Task CreateWeeeReused(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
+        {
+            var reused = new EA.Weee.Domain.AatfReturn.WeeeReused(aatf, @return);
+
+            await genericDataAccess.Add<Domain.AatfReturn.WeeeReused>(reused);
         }
 
         private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year)
@@ -176,7 +230,7 @@
                 "12345678",
                 AatfStatus.Approved,
                 organisation,
-                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
+                AddressHelper.GetAatfAddress(database),
                 A.Fake<AatfSize>(),
                 date,
                 contact,

@@ -13,6 +13,7 @@
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedGeneric;
+    using Weee.Tests.Core;
     using Xunit;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
@@ -32,9 +33,9 @@
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, AatfContact contact, Domain.Country country)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, AatfContact contact, Domain.Country country)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, organisation, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
+            var aatf = new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
             return aatf;
         }
 
@@ -43,9 +44,9 @@
             return new Scheme(organisation);
         }
 
-        public static AatfAddress CreateAatfAddress(Domain.Country country)
+        public static AatfAddress CreateAatfAddress(DatabaseWrapper database)
         {
-            return new AatfAddress("Name", "Address1", "Address2", "TownOrCity", "County", "TU22 7UT", country);
+            return AddressHelper.GetAatfAddress(database);
         }
 
         public static Organisation CreateOrganisation()

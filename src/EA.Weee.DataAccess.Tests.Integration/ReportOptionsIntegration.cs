@@ -90,11 +90,11 @@
                     returnReportOn.Add(new ReturnReportOn(@return.Id, question.Id));
                 }
 
-                var aatf = await CreateAatf(context, @return, country);
+                var aatf = await CreateAatf(database, @return, country);
                 var scheme = await CreateScheme(context, organisation);
-                var sentOnSiteAddress = await CreateAddress(context, country);
-                var sentOnSOperatorAddress = await CreateAddress(context, country);
-                var reusedSiteAddress = await CreateAddress(context, country);
+                var sentOnSiteAddress = await CreateAddress(database);
+                var sentOnSOperatorAddress = await CreateAddress(database);
+                var reusedSiteAddress = await CreateAddress(database);
 
                 await dataAccess.AddMany<ReturnReportOn>(returnReportOn);
 
@@ -190,11 +190,6 @@
             return (submittedWeeeReused, submittedWeeeReusedAddresses, submittedWeeeReusedAmounts, submittedWeeeReusedSites);
         }
 
-        private void RetrieveWeeeReusedValues(WeeeContext weeeContext, WeeeContext context, GenericDataAccess genericDataAccess, GenericDataAccess dataAccess, out List<WeeeReused> submittedWeeeReused, out List<AatfAddress> submittedWeeeReusedAddresses, out List<WeeeReusedAmount> submittedWeeeReusedAmounts, out List<WeeeReusedSite> submittedWeeeReusedSites)
-        {
-            throw new NotImplementedException();
-        }
-
         private static void AssertNonObligatedWeeeDeletion(WeeeContext context, List<NonObligatedWeee> submittedNonObligatedWeee)
         {
             foreach (var item in submittedNonObligatedWeee)
@@ -262,13 +257,13 @@
             }
         }
 
-        private static async Task<AatfAddress> CreateAddress(WeeeContext context, Country country)
+        private static async Task<AatfAddress> CreateAddress(DatabaseWrapper database)
         {
-            var address = ObligatedWeeeIntegrationCommon.CreateAatfAddress(country);
+            var address = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
 
-            context.AatfAddress.Add(address);
+            database.WeeeContext.AatfAddress.Add(address);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             return address;
         }
@@ -284,14 +279,14 @@
             return scheme;
         }
 
-        private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return, Country country)
+        private static async Task<Aatf> CreateAatf(DatabaseWrapper database, Domain.AatfReturn.Return @return, Country country)
         {
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), @return.Organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, @return.Organisation, contact, country);
 
-            context.Aatfs.Add(aatf);
+            database.WeeeContext.Aatfs.Add(aatf);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             return aatf;
         }
