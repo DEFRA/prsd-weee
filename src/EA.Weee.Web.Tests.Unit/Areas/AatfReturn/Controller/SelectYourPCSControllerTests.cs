@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -13,6 +14,7 @@
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
@@ -104,7 +106,7 @@
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Reselect");
 
-            ReselectYourPcsViewModel viewModel = result.Model as ReselectYourPcsViewModel;
+            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
@@ -132,18 +134,116 @@
                 schemeDataList.SchemeDataItems.Add(new SchemeData() { Id = scheme });
             }
 
-            
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(schemeDataList);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(A.Fake<List<SchemeData>>());
 
             ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
 
-            ReselectYourPcsViewModel viewModel = result.Model as ReselectYourPcsViewModel;
+            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(selectedSchemeIds, viewModel.SelectedSchemes);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ReselectPost_SchemesRemoved()
+        {
+            Guid returnId = Guid.NewGuid();
+
+            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
+            {
+                ReturnId = returnId
+            };
+
+            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
+            List<Guid> reselectedSchemes = new List<Guid>();
+
+            foreach (SchemeData scheme in existingSchemes)
+            {
+                scheme.Id = Guid.NewGuid();
+                reselectedSchemes.Add(scheme.Id);
+            }
+
+            model.SchemeList = existingSchemes;
+
+            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
+            {
+                SchemeDataItems = existingSchemes
+            };
+
+            List<Guid> removedPcs = new List<Guid>()
+            {
+                reselectedSchemes[reselectedSchemes.Count - 1]
+            };
+
+            reselectedSchemes.RemoveAt(reselectedSchemes.Count - 1);
+
+            model.SelectedSchemes = reselectedSchemes;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
+
+            ViewResult result = await controller.Index(model, true) as ViewResult;
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "PcsRemoved");
+
+            PcsRemovedViewModel resultModel = result.Model as PcsRemovedViewModel;
+
+            Assert.Equal(removedPcs, resultModel.RemovedSchemeList.Select(p => p.Id));
+            Assert.Equal(model.ReturnId, returnId);
+        }
+
+        [Fact]
+        public async void ReselectPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
+        {
+            Guid returnId = Guid.NewGuid();
+
+            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
+            {
+                ReturnId = returnId
+            };
+
+            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
+            List<Guid> reselectedSchemes = new List<Guid>();
+
+            foreach (SchemeData scheme in existingSchemes)
+            {
+                scheme.Id = Guid.NewGuid();
+                reselectedSchemes.Add(scheme.Id);
+            }
+
+            reselectedSchemes.Add(Guid.NewGuid());
+
+            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
+            {
+                SchemeDataItems = existingSchemes
+            };
+
+            model.SchemeList = existingSchemes;
+            model.SelectedSchemes = reselectedSchemes;
+
+            List<AddReturnScheme> requests = new List<AddReturnScheme>()
+            {
+                new AddReturnScheme()
+                {
+                    ReturnId = model.ReturnId,
+                    SchemeId = reselectedSchemes[2]
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(requests);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[2])));
+
+            RedirectToRouteResult result = await controller.Index(model, true) as RedirectToRouteResult;
+
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteName.Should().Be(AatfRedirect.Default);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
