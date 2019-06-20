@@ -17,6 +17,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using Weee.DataAccess;
     using Weee.Tests.Core;
@@ -50,6 +51,14 @@
         private Country country;
         private EA.Weee.Domain.UKCompetentAuthority competentAuthority;
         private Organisation organisation;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+
+        public CopyReturnHandlerTests()
+        {
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MinValue, QuarterType.Q1));
+        }
 
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
@@ -58,7 +67,8 @@
 
             handler = new CopyReturnHandler(authorization,
                 A.Dummy<WeeeContext>(),
-                A.Dummy<IUserContext>());
+                A.Dummy<IUserContext>(),
+                quarterWindowFactory);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CopyReturn>());
 
@@ -79,7 +89,8 @@
 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    A.Dummy<IUserContext>());
+                    A.Dummy<IUserContext>(),
+                    quarterWindowFactory);
 
                 Func<Task> action = async () => await handler.HandleAsync(new CopyReturn(@return.Id));
 
@@ -99,7 +110,8 @@
 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    A.Dummy<IUserContext>());
+                    A.Dummy<IUserContext>(),
+                    quarterWindowFactory);
 
                 Func<Task> assertAction = async () => await handler.HandleAsync(new CopyReturn(Guid.NewGuid()));
 
@@ -360,7 +372,8 @@
                 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    userContext);
+                    userContext,
+                    quarterWindowFactory);
                 
                 var result = await handler.HandleAsync(message);
 

@@ -5,12 +5,8 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class WeeeReused : ReturnEntity, IReturnOption
+    public class WeeeReused : AatfEntity, IReturnOption
     {
-        public virtual Guid AatfId { get; private set; }
-
-        public virtual Aatf Aatf { get; private set; }
-
         public IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
 
         public IList<WeeeReusedSite> WeeeReusedSites { get; set; }
