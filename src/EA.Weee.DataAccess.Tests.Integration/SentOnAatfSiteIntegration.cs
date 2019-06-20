@@ -1,20 +1,18 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Weee.Tests.Core;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
-    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
     public class SentOnAatfSiteIntegration
     {
@@ -63,9 +61,9 @@
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
                 var operatorCountry = await context.Countries.SingleAsync(c => c.Name == "Germany");
 
-                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
+                var siteAddress = AddressHelper.GetAatfAddress(database);
 
-                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", operatorCountry);
+                var operatorAddress = AddressHelper.GetAatfAddress(database);
 
                 var weeeSentOn = await CreateWeeeSentOnInContext(context, dataAccess, siteAddress, database);
 
@@ -126,7 +124,7 @@
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
@@ -150,7 +148,7 @@
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
@@ -174,7 +172,7 @@
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var country = await context.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
@@ -189,22 +187,6 @@
             await dataAccess.Submit(weeeSentOn);
 
             return weeeSentOn;
-        }
-
-        private async Task<List<WeeeSentOnAmount>> AppendWeeeSentOnAmountToWeeeSentOn(WeeeContext context, WeeeSentOn weeeSentOn)
-        {
-            var weeeSentOnAmountList = new List<WeeeSentOnAmount>();
-
-            foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
-            {
-                weeeSentOnAmountList.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1));
-            }
-
-            context.WeeeSentOnAmount.AddRange(weeeSentOnAmountList);
-
-            await context.SaveChangesAsync();
-
-            return weeeSentOnAmountList;
         }
     }
 }

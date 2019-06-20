@@ -264,7 +264,7 @@
                 "12345678",
                 AatfStatus.Approved,
                 organisation,
-                new AatfAddress("name", "one", "two", "bath", "BANES", "BA2 2PL", country),
+                AddressHelper.GetAatfAddress(database),
                 AatfSize.Large, 
                 DateTime.Now,
                 new AatfContact("first", "last", "position", "adress1", "address2", "town", "county", "postcode", country, "telephone", "email"), 

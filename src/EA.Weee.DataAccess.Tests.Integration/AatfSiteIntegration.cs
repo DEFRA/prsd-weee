@@ -12,6 +12,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using Weee.Tests.Core;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
@@ -27,15 +28,13 @@
             {
                 var context = database.WeeeContext;
 
-                var country = await context.Countries.SingleAsync(c => c.Name == "France");
-
-                var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
 
                 var dataAccess = new AatfSiteDataAccess(context, A.Fake<IGenericDataAccess>());
 
-                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress, database);
+                var returnData = await CreateWeeeReusedSite(dataAccess, aatfAddress, database);
 
-                AssertSubmitted(context, country, returnData, aatfAddress);
+                AssertSubmitted(context, aatfAddress.Country, returnData, aatfAddress);
             }
         }
 
@@ -48,11 +47,11 @@
 
                 var country = await context.Countries.SingleAsync(c => c.Name == "France");
 
-                var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
 
                 var dataAccess = new AatfSiteDataAccess(context, A.Fake<IGenericDataAccess>());
 
-                var returnData = await CreateWeeeReusedSite(context, dataAccess, aatfAddress, database);
+                var returnData = await CreateWeeeReusedSite(dataAccess, aatfAddress, database);
 
                 var oldAddress = (context.WeeeReusedSite
                                         .Where(t => t.WeeeReused.ReturnId == returnData.Item1
@@ -66,34 +65,33 @@
             }
         }
 
-        private async Task<Tuple<Guid, Guid>> CreateWeeeReusedSite(WeeeContext context,
-            AatfSiteDataAccess dataAccess, AatfAddress aatfAddress, DatabaseWrapper database)
+        private async Task<Tuple<Guid, Guid>> CreateWeeeReusedSite(AatfSiteDataAccess dataAccess, AatfAddress aatfAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
+            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.AatfContacts.Add(contact);
-            context.Aatfs.Add(aatf);
-            context.Returns.Add(@return);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.AatfContacts.Add(contact);
+            database.WeeeContext.Aatfs.Add(aatf);
+            database.WeeeContext.Returns.Add(@return);
             
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             var weeeReused = new WeeeReused(aatf.Id, @return.Id);
             var weeeReusedAmount = new List<WeeeReusedAmount>();
 
-            context.WeeeReused.Add(weeeReused);
+            database.WeeeContext.WeeeReused.Add(weeeReused);
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                context.WeeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, (int)category, (int)category, (int)category + 1));
+                database.WeeeContext.WeeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, (int)category, (int)category, (int)category + 1));
             }
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
             
             var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
 

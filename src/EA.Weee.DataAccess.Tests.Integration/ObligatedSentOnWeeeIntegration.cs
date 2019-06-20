@@ -26,7 +26,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedSentOnDataAccess(database.WeeeContext);
 
-                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess, database);
+                var weeeSentOnId = await CreateWeeeSentOnAmounts(dataAccess, database);
 
                 AssertValues(context, weeeSentOnId);
             }
@@ -40,7 +40,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedSentOnDataAccess(database.WeeeContext);
 
-                var weeeSentOnId = await CreateWeeeSentOnAmounts(context, dataAccess, database);
+                var weeeSentOnId = await CreateWeeeSentOnAmounts(dataAccess, database);
 
                 AssertValues(context, weeeSentOnId);
 
@@ -69,24 +69,23 @@
             }
         }
 
-        private async Task<Guid> CreateWeeeSentOnAmounts(WeeeContext context,
-            ObligatedSentOnDataAccess dataAccess, DatabaseWrapper database)
+        private async Task<Guid> CreateWeeeSentOnAmounts(ObligatedSentOnDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
+            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
             var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
-            var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.Aatfs.Add(aatf);
-            context.Returns.Add(@return);
-            context.AatfAddress.Add(siteAddress);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.Aatfs.Add(aatf);
+            database.WeeeContext.Returns.Add(@return);
+            database.WeeeContext.AatfAddress.Add(siteAddress);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             var weeeSentOn = new WeeeSentOn(siteAddress.Id, aatf.Id, @return.Id);
 
