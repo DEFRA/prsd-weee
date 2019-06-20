@@ -9,11 +9,11 @@
     {
         public virtual Guid AatfId { get; private set; }
 
-        public virtual Aatf Aatf { get; private set; }      
+        public virtual Aatf Aatf { get; private set; }
 
-        public virtual IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
+        public IList<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
 
-        public virtual IList<WeeeReusedSite> WeeeReusedSites { get; set; }
+        public IList<WeeeReusedSite> WeeeReusedSites { get; set; }
 
         public WeeeReused(Guid aatfId, Guid returnId)
         {
@@ -21,12 +21,13 @@
             ReturnId = returnId;
         }
 
-        public WeeeReused(Aatf aatf, Guid returnId)
+        public WeeeReused(Aatf aatf, Return @return)
         {
             Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => @return, @return);
 
             Aatf = aatf;
-            ReturnId = returnId;
+            Return = @return;
         }
 
         public WeeeReused()

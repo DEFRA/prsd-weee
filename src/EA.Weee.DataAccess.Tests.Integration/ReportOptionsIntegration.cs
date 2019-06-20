@@ -316,7 +316,7 @@
         {
             var returnScheme = new ReturnScheme(scheme, @return);
 
-            var weeeReceived = new WeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 

@@ -14,7 +14,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new WeeeReceived(null, A.Fake<Aatf>(), Guid.NewGuid());
+                var @return = new WeeeReceived(null, A.Fake<Aatf>(), A.Dummy<Return>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -25,7 +25,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new WeeeReceived(A.Fake<Scheme>(), null, Guid.NewGuid());
+                var @return = new WeeeReceived(A.Fake<Scheme>(), null, A.Dummy<Return>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -36,13 +36,13 @@
         {
             var scheme = A.Fake<Scheme>();
             var aatf = A.Fake<Aatf>();
-            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
 
-            var weeeReceived = new WeeeReceived(scheme, aatf, returnId);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             weeeReceived.Scheme.Should().Be(scheme);
             weeeReceived.Aatf.Should().Be(aatf);
-            weeeReceived.ReturnId.Should().Be(returnId);
+            weeeReceived.Return.Should().Be(@return);
         }
 
         [Fact]

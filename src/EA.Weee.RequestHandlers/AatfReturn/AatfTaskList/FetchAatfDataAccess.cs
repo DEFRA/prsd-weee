@@ -9,11 +9,11 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
 
-    public class FetchAatfByOrganisationIdDataAccess : IFetchAatfByOrganisationIdDataAccess
+    public class FetchAatfDataAccess : IFetchAatfDataAccess
     {
         private readonly WeeeContext context;
 
-        public FetchAatfByOrganisationIdDataAccess(WeeeContext context)
+        public FetchAatfDataAccess(WeeeContext context)
         {
             this.context = context;
         }
