@@ -23,7 +23,7 @@
     </h1>
 </header>
 
-@using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
+@using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "User", method: FormMethod.Post))
 {
     <div class="filter">
         @Html.AntiForgeryToken()
@@ -46,8 +46,7 @@
                         @Html.Gds().LabelFor(m => m.Filter.Status, false)
                         @Html.EnumDropDownListFor(model => model.Filter.Status, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
                     </td>
-                    <td>
-                    </td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
@@ -56,7 +55,7 @@
     </div>
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(actionName: "Index", controllerName: "User", method: FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Filter.Name)

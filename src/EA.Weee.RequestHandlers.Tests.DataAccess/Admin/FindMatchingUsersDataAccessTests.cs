@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
-    using Domain;
     using Domain.User;
+    using EA.Weee.Core.User;
     using RequestHandlers.Admin;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -23,7 +23,7 @@
             using (var dbWrapper = new DatabaseWrapper())
             {
                 // Add AspNet user user
-                var modelHelper = new ModelHelper(dbWrapper.Model);               
+                var modelHelper = new ModelHelper(dbWrapper.Model);
                 var aspNetUser = modelHelper.CreateUser("My username", IdType.Guid);
                 dbWrapper.Model.SaveChanges();
 
@@ -54,7 +54,7 @@
 
                 var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
 
-                var result = (await dataAccess.GetOrganisationUsers())
+                var result = (await dataAccess.GetOrganisationUsers(new UserFilter()))
                     .Where(ou => ou.OrganisationName == uniqueOrgName);
 
                 Assert.Single(result);
@@ -106,7 +106,7 @@
 
                 var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
 
-                var result = (await dataAccess.GetOrganisationUsers())
+                var result = (await dataAccess.GetOrganisationUsers(new UserFilter()))
                     .Where(ou => ou.OrganisationName == uniqueOrgName);
 
                 Assert.Single(result);
