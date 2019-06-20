@@ -34,7 +34,7 @@
         [Fact]
         public void WeeeReused_ShouldInheritFromReturnEntity()
         {
-            typeof(WeeeReused).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+            typeof(WeeeReused).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.AatfEntity).Name);
         }
     }
 }

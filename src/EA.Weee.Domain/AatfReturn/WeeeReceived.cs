@@ -6,13 +6,9 @@
     using EA.Prsd.Core.Domain;
     using Scheme;
 
-    public class WeeeReceived : ReturnEntity, IReturnOption
+    public class WeeeReceived : AatfEntity, IReturnOption
     {
         public Guid SchemeId { get; private set; }
-
-        public Guid AatfId { get; private set; }
-
-        public virtual Aatf Aatf { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
 
