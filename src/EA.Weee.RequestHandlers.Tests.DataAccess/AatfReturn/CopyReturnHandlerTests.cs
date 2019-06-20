@@ -453,8 +453,8 @@
         {
             var weeReceived = new List<WeeeReceived>()
             {
-                new WeeeReceived(new Scheme(organisation), Aatf(), @return.Id),
-                new WeeeReceived(new Scheme(organisation), Aatf(), @return.Id)
+                new WeeeReceived(new Scheme(organisation), Aatf(), @return),
+                new WeeeReceived(new Scheme(organisation), Aatf(), @return)
             };
 
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
