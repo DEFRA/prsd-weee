@@ -1,13 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
+﻿namespace EA.Weee.Core.User
 {
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.Shared;
 
-    public class FilteringViewModel
+    public class UserFilter
     {
         public string Name { get; set; }
 
-        [Display(Name = "Organisation name")]
         public string OrganisationName { get; set; }
 
         public UserStatus? Status { get; set; }

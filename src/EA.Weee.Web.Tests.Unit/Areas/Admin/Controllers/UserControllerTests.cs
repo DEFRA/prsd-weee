@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Security;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Admin;
     using Core.Shared;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using Security;
     using Web.Areas.Admin.Controllers;
@@ -23,23 +22,24 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient weeeClient;
+        private readonly IMapper mapper;
+        private readonly UserController controller;
+
         public UserControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             apiClient = () => weeeClient;
+            mapper = A.Fake<IMapper>();
+            controller = new UserController(apiClient, A.Fake<BreadcrumbService>(), mapper);
         }
 
         [Fact]
         public async Task PostIndex_WithValidModel_RedirectsToViewAction()
         {
             // Arrange
-            UserController controller = new UserController(
-                apiClient,
-                A.Fake<BreadcrumbService>());
-
-            // Act
             Guid selectedUserId = Guid.NewGuid();
 
+            // Act
             ActionResult result = await controller.Index(new ManageUsersViewModel { SelectedUserId = selectedUserId });
 
             // Assert
@@ -54,8 +54,6 @@
         [Fact]
         public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
-            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
                 {
@@ -88,8 +86,6 @@
         [Fact]
         public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
         {
-            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
                 {
@@ -105,8 +101,6 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModel_UpdatesUserAndCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
@@ -140,8 +134,6 @@
         [Fact]
         public async Task PostEdit_WithOrganisationUserAndValidModel_UpdatesUserAndOrganisationUserStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
@@ -174,8 +166,6 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModelAndUserBeingUpdatedIsCurrentUser_UpdatesUserAndDoesNotUpdateCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
