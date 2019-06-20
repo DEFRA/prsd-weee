@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Attributes;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -58,10 +60,15 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel, bool reselect = false)
         {
             if (ModelState.IsValid)
             {
+                if (reselect)
+                {
+                    return await Reselect(viewModel);
+                }
+
                 using (var client = apiClient())
                 {
                     var requests = requestCreator.ViewModelToRequest(viewModel);
@@ -89,18 +96,70 @@
 
                 var existing = await client.SendAsync(User.GetAccessToken(), request);
 
-                ReselectYourPcsViewModel viewModel = new ReselectYourPcsViewModel
+                SelectYourPcsViewModel viewModel = new SelectYourPcsViewModel
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
+                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList(),
+                    Reselect = true
                 };
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View("Reselect", viewModel);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        private async Task<ActionResult> Reselect(SelectYourPcsViewModel viewModel)
+        {
+            using (var client = apiClient())
+            {
+                var existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
+
+                if (HaveSchemesBeenRemoved(viewModel, existing.SchemeDataItems.ToList()))
+                {
+                    PcsRemovedViewModel model = new PcsRemovedViewModel()
+                    {
+                        RemovedSchemeList = viewModel.SchemeList.Where(p => viewModel.SelectedSchemes.Contains(p.Id) == false).ToList(),
+                        ReturnId = viewModel.ReturnId
+                    };
+
+                    return View("PcsRemoved", model);
+                }
+
+                foreach (var scheme in existing.SchemeDataItems)
+                {
+                    if (viewModel.SelectedSchemes.Contains(scheme.Id))
+                    {
+                        viewModel.SelectedSchemes.Remove(scheme.Id);
+                    }
+                }
+
+                var requests = requestCreator.ViewModelToRequest(viewModel);
+
+                foreach (var request in requests)
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+            }
+
+            return AatfRedirect.TaskList(viewModel.ReturnId);
+        }
+
+        private bool HaveSchemesBeenRemoved(SelectYourPcsViewModel model, List<SchemeData> alreadySelected)
+        {
+            foreach (SchemeData scheme in alreadySelected)
+            {
+                if (model.SelectedSchemes.Contains(scheme.Id) == false)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

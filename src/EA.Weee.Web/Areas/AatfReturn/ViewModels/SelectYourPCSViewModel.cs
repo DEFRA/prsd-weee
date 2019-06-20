@@ -29,5 +29,7 @@
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }
+
+        public bool Reselect { get; set; }
     }
 }

@@ -319,7 +319,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\ReselectYourPcsViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
@@ -951,6 +951,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectYourPcs\Reselect.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
