@@ -3,6 +3,7 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using AatfTaskList;
     using CheckYourReturn;
@@ -10,12 +11,14 @@
     using Core.Helpers;
     using DataAccess;
     using Domain.AatfReturn;
+    using Factories;
     using NonObligated;
     using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
+    using QuarterWindow = Domain.DataReturns.QuarterWindow;
     using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
     internal class CopyReturnHandler : IRequestHandler<CopyReturn, Guid>
@@ -23,13 +26,16 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IUserContext userContext;
         private readonly WeeeContext context;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public CopyReturnHandler(IWeeeAuthorization authorization,
             WeeeContext context,
-            IUserContext userContext)
+            IUserContext userContext,
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.authorization = authorization;
             this.userContext = userContext;
+            this.quarterWindowFactory = quarterWindowFactory;
             this.context = context;
         }
 
@@ -60,9 +66,41 @@
 
             CopyReturn(message, returnCopy);
 
+            await RemoveAatfsWithInvalidApprovalDate(returnCopy);
+
             await context.SaveChangesAsync();
 
             return @returnCopy.Id;
+        }
+
+        private async Task RemoveAatfsWithInvalidApprovalDate(Return returnCopy)
+        {
+            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(returnCopy.Quarter);
+
+            var sentOnToRemove = context.WeeeSentOn.Where(Predicate<WeeeSentOn>(quarterWindow, returnCopy))
+                .Include(w => w.WeeeSentOnAmounts).ToList();
+
+            context.WeeeSentOnAmount.RemoveRange(sentOnToRemove.SelectMany(r => r.WeeeSentOnAmounts));
+            context.WeeeSentOn.RemoveRange(sentOnToRemove);
+
+            var reusedToRemove = context.WeeeReused.Where(Predicate<WeeeReused>(quarterWindow, returnCopy))
+                .Include(w => w.WeeeReusedAmounts)
+                .Include(w => w.WeeeReusedSites).ToList();
+
+            context.WeeeReusedAmount.RemoveRange(reusedToRemove.SelectMany(r => r.WeeeReusedAmounts));
+            context.WeeeReusedSite.RemoveRange(reusedToRemove.SelectMany(r => r.WeeeReusedSites));
+            context.WeeeReused.RemoveRange(reusedToRemove);
+
+            var receivedToRemove = context.WeeeReceived.Where(Predicate<WeeeReceived>(quarterWindow, returnCopy))
+                .Include(w => w.WeeeReceivedAmounts).ToList();
+
+            context.WeeeReceivedAmount.RemoveRange(receivedToRemove.SelectMany(r => r.WeeeReceivedAmounts));
+            context.WeeeReceived.RemoveRange(receivedToRemove);
+        }
+
+        private static Expression<Func<T, bool>> Predicate<T>(QuarterWindow quarterWindow, Return returnCopy) where T : AatfEntity
+        {
+            return w => (w.Aatf.ApprovalDate == null || w.Aatf.ApprovalDate.Value >= quarterWindow.StartDate) && w.ReturnId == returnCopy.Id;
         }
 
         private void CopyReturn(CopyReturn message, Return returnCopy)
@@ -81,13 +119,16 @@
                 .Include(w => w.Aatf)
                 .ToList();
 
-            reused.ForEach(s => s.UpdateReturn(returnCopy));
-            reused.ForEach(r => context.Entry(r.Aatf).State = EntityState.Unchanged);
-            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w.Address).State = EntityState.Added));
-            reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-            reused.ForEach(r => r.WeeeReusedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+            if (reused.Any())
+            {
+                reused.ForEach(s => s.UpdateReturn(returnCopy));
+                reused.ForEach(r => context.Entry(r.Aatf).State = EntityState.Unchanged);
+                reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w.Address).State = EntityState.Added));
+                reused.ForEach(r => r.WeeeReusedSites.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+                reused.ForEach(r => r.WeeeReusedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
 
-            context.WeeeReused.AddRange(reused);
+                context.WeeeReused.AddRange(reused);
+            }
         }
 
         private void CopyReturnSentOn(CopyReturn message, Return returnCopy)
@@ -99,13 +140,16 @@
                 .Include(w => w.SiteAddress)
                 .ToList();
 
-            sentOn.ForEach(s => s.UpdateReturn(returnCopy));
-            sentOn.ForEach(s => s.WeeeSentOnAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-            sentOn.ForEach(s => context.Entry(s.OperatorAddress).State = EntityState.Added);
-            sentOn.ForEach(s => context.Entry(s.SiteAddress).State = EntityState.Added);
-            sentOn.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
+            if (sentOn.Any())
+            {
+                sentOn.ForEach(s => s.UpdateReturn(returnCopy));
+                sentOn.ForEach(s => s.WeeeSentOnAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+                sentOn.ForEach(s => context.Entry(s.OperatorAddress).State = EntityState.Added);
+                sentOn.ForEach(s => context.Entry(s.SiteAddress).State = EntityState.Added);
+                sentOn.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
 
-            context.WeeeSentOn.AddRange(sentOn);
+                context.WeeeSentOn.AddRange(sentOn);
+            }
         }
 
         private void CopyReturnReceived(CopyReturn message, Return returnCopy)
@@ -114,12 +158,15 @@
                 .Include(w => w.WeeeReceivedAmounts)
                 .ToList();
 
-            received.ForEach(r => r.UpdateReturn(returnCopy));
-            received.ForEach(r => r.WeeeReceivedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-            received.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
-            received.ForEach(s => context.Entry(s.Scheme).State = EntityState.Unchanged);
+            if (received.Any())
+            {
+                received.ForEach(r => r.UpdateReturn(returnCopy));
+                received.ForEach(r => r.WeeeReceivedAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
+                received.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
+                received.ForEach(s => context.Entry(s.Scheme).State = EntityState.Unchanged);
 
-            context.WeeeReceived.AddRange(received);
+                context.WeeeReceived.AddRange(received);
+            }
         }
 
         private async Task CopyReturnNonObligated(CopyReturn message, Return returnCopy)
