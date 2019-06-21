@@ -243,6 +243,8 @@
                     model.Status);
 
                 result = await client.SendAsync(User.GetAccessToken(), request);
+
+                await cache.InvalidateSchemeCache(schemeId);
             }
 
             switch (result.Result)

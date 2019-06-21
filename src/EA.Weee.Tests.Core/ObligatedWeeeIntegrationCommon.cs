@@ -1,26 +1,14 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.Tests.Core
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Domain;
-    using Domain.User;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
-    using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Tests.Core.Model;
-    using FluentAssertions;
-    using RequestHandlers.AatfReturn.ObligatedGeneric;
-    using Weee.Tests.Core;
-    using Xunit;
+    using DataAccess;
+    using Domain.AatfReturn;
+    using Domain.DataReturns;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using Scheme = Domain.Scheme.Scheme;
-    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
-    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
 
     public static class ObligatedWeeeIntegrationCommon
     {

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
@@ -122,9 +123,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
@@ -146,9 +145,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
@@ -170,9 +167,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);

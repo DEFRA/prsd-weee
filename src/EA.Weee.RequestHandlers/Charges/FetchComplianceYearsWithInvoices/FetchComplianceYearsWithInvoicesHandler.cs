@@ -7,6 +7,7 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
+    using Shared;
 
     public class FetchComplianceYearsWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchComplianceYearsWithInvoices, IReadOnlyList<int>>
     {

@@ -49,7 +49,6 @@
         private Return @return;
         private Return copiedReturn;
         private Country country;
-        private EA.Weee.Domain.UKCompetentAuthority competentAuthority;
         private Organisation organisation;
         private readonly IQuarterWindowFactory quarterWindowFactory;
 
@@ -387,7 +386,7 @@
         private async Task CreateReturnToCopy()
         {
             country = await database.WeeeContext.Countries.FirstAsync();
-            competentAuthority = await database.WeeeContext.UKCompetentAuthorities.FirstAsync(c => c.Name == "Environment Agency");
+            await database.WeeeContext.UKCompetentAuthorities.FirstAsync(c => c.Name == "Environment Agency");
 
             organisation = Organisation.CreateSoleTrader("Test Organisation");
             var quarter = new Quarter(2019, QuarterType.Q1);
@@ -413,10 +412,12 @@
 
         private async Task AddWeeeReused()
         {
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+
             var weeeReused = new List<WeeeReused>()
             {
-                new WeeeReused(Aatf(), @return),
-                new WeeeReused(Aatf(), @return)
+                new WeeeReused(aatf, @return.Id),
+                new WeeeReused(aatf, @return.Id)
             };
 
             var weeeReusedSites = new List<WeeeReusedSite>()
@@ -442,10 +443,12 @@
 
         private async Task AddWeeSentOn()
         {
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+
             var weeeSentOn = new List<WeeeSentOn>()
             {
-                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), Aatf(), @return),
-                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), Aatf(), @return)
+                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), aatf, @return),
+                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), aatf, @return)
             };
 
             var weeSentOnAmounts = new List<WeeeSentOnAmount>()
@@ -464,10 +467,12 @@
 
         private async Task AddWeeeReceived()
         {
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+
             var weeReceived = new List<WeeeReceived>()
             {
-                new WeeeReceived(new Scheme(organisation), Aatf(), @return),
-                new WeeeReceived(new Scheme(organisation), Aatf(), @return)
+                new WeeeReceived(new Scheme(organisation), aatf, @return.Id),
+                new WeeeReceived(new Scheme(organisation), aatf, @return.Id)
             };
 
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>()

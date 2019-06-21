@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
+    using Shared;
 
     public interface IIssuePendingChargesDataAccess : ICommonDataAccess
     {
