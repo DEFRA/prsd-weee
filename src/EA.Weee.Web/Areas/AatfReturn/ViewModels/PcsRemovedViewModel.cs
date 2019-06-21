@@ -13,6 +13,8 @@
         public List<Guid> SelectedSchemes { get; set; }
         public Guid ReturnId { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         [Required(ErrorMessage = "You must select an option")]
         public override string SelectedValue { get; set; }
 
