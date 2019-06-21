@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using AutoFixture;
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
@@ -19,6 +20,13 @@
 
     public class OrganisationRegistrationControllerTests
     {
+        private Fixture fixture;
+
+        public OrganisationRegistrationControllerTests()
+        {
+            fixture = new Fixture();
+        }
+
         [Fact]
         public async Task GetRegisteredOfficeAddress_ApiThrowsException_ExceptionShouldNotBeCaught()
         {
@@ -533,6 +541,30 @@
             Assert.NotNull(model);
             Assert.IsType<SoleTraderDetailsViewModel>(model);
             Assert.Equal(orgData.TradingName, ((SoleTraderDetailsViewModel)model).BusinessTradingName);
+        }
+
+        [Fact]
+        public async Task GetSoleTraderDetails_WithSearchedText_ReturnsSoleTraderDetailsViewWithCompanyName()
+        {
+            // Arrange
+            var search = fixture.Create<string>();
+
+            var weeeClient = A.Dummy<IWeeeClient>();
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            var result = await controller.SoleTraderDetails(searchedText: search);
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<SoleTraderDetailsViewModel>(model);
+            Assert.Equal(search, ((SoleTraderDetailsViewModel)model).CompanyName);
         }
 
         [Fact]
