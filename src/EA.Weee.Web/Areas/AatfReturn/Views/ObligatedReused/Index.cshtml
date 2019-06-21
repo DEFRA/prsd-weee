@@ -52,4 +52,10 @@
         TonnageTotals('B2C');
         TonnageTotals('B2B');
     </script>
+    @{
+        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
+    }
+    <p>
+        @Html.RouteLink("Back", AatfRedirect.Default, new { returnId = Model.ReturnId, controller = "AatfTaskList" }, new { @class = "govuk-back-link" })
+    </p>
 </section>

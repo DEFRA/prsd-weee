@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
+    using Shared;
 
     public interface IFetchInvoiceRunsDataAccess : ICommonDataAccess
     {

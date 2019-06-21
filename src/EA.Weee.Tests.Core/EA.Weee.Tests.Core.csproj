@@ -291,6 +291,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="ObjectInstantiator.cs" />
+    <Compile Include="ObligatedWeeeIntegrationCommon.cs" />
     <Compile Include="OrganisationHelper.cs" />
     <Compile Include="OrganisationUserHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,6 +11,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Weee.Tests.Core;
     using Xunit;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
     using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
@@ -128,12 +129,9 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
-            var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, aatfContact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.AatfContacts.Add(aatfContact);
             context.Organisations.Add(organisation);
             context.Schemes.Add(scheme);
             context.Aatfs.Add(aatf);
