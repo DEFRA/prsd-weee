@@ -2,14 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using Weee.Tests.Core;
     using Xunit;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
     using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
@@ -71,9 +70,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             database.WeeeContext.Organisations.Add(organisation);

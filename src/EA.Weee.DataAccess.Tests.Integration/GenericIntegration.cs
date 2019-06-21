@@ -128,9 +128,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
-            var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, aatfContact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             database.WeeeContext.AatfContacts.Add(aatfContact);

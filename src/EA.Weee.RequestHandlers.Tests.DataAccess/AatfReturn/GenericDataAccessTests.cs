@@ -13,6 +13,7 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Organisations;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -27,13 +28,9 @@
             using (var database = new DatabaseWrapper())
             {
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var countryId = new Guid("B5EBE1D1-8349-43CD-9E87-0081EA0A8463");
-                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
-                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-                var contact = CreateContact(country);
-
-                var aatf = CreateAatf(competentAuthority, database, contact);
+                
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -48,15 +45,11 @@
             {
                 var originalAatfCount = database.WeeeContext.Aatfs.Count();
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
-
+                
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-                var contact = CreateContact(country);
-
-                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, 2019);
-                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, 2019);
+                
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -73,18 +66,13 @@
             using (var database = new DatabaseWrapper())
             {
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-                var contact = CreateContact(country);
-
-                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, 2019);
-                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, 2019);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
-                var aatf3 = new Aatf("Name3", competentAuthority, "approval1", AatfStatus.Approved, organisation2, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, 2019);
+                var aatf3 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation2);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -105,15 +93,11 @@
         {
             using (var database = new DatabaseWrapper())
             {
-               var dataAccess = new GenericDataAccess(database.WeeeContext);
-                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-                var contact = CreateContact(country);
 
-                var aatf1 = new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019);
-                var aatf2 = new Aatf("Name2", competentAuthority, "approval2", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
 
@@ -135,9 +119,7 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-                var contact = CreateContact(country);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 database.WeeeContext.Aatfs.Add(new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation,
                     AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019));

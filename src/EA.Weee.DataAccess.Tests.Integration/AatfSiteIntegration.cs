@@ -5,7 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.AatfReturn;
+    using Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
@@ -69,9 +69,7 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             database.WeeeContext.Organisations.Add(organisation);
@@ -83,7 +81,6 @@
             await database.WeeeContext.SaveChangesAsync();
 
             var weeeReused = new WeeeReused(aatf.Id, @return.Id);
-            var weeeReusedAmount = new List<WeeeReusedAmount>();
 
             database.WeeeContext.WeeeReused.Add(weeeReused);
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())

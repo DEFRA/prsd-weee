@@ -11,6 +11,7 @@
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchInvoiceRunCsv;
     using RequestHandlers.Security;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Xunit;
     using FetchInvoiceRunCsv = Requests.Charges.FetchInvoiceRunCsv;

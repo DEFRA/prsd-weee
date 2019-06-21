@@ -199,7 +199,8 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
-    <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Mappings\LocalAreaMap.cs" />
+    <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
@@ -211,7 +212,7 @@
     <Compile Include="Charges\FetchIssuedChargesCsv\IFetchIssuedChargesCsvDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandler.cs" />
-    <Compile Include="Charges\ICommonDataAccess.cs" />
+    <Compile Include="Shared\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Mappings\AatfStatusMap.cs" />
     <Compile Include="Mappings\AatfDataListMap.cs" />
     <Compile Include="Mappings\FacilityTypeMap.cs" />
+    <Compile Include="Mappings\PanAreaMap.cs" />
     <Compile Include="Mappings\ReturnStatusMap.cs" />
     <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
@@ -390,6 +392,8 @@
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
+    <Compile Include="Shared\GetLocalAreasHandler.cs" />
+    <Compile Include="Shared\GetPanAreasHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
