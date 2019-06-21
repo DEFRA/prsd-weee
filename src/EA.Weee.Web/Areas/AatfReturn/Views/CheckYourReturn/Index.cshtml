@@ -158,17 +158,7 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            @if (Equals(aatf.WeeeSentOn.B2B, "-") && Equals(aatf.WeeeSentOn.B2C, "-"))
-                            {
-                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
-                            }
-                            else
-                            {
-                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
-
-                            }
-
-
+                            @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
                         </p>
                     </div>
                 </div>

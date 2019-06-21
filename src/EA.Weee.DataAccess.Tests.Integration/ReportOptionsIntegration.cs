@@ -19,6 +19,7 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
     using Country = Domain.Country;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
@@ -90,7 +91,7 @@
                     returnReportOn.Add(new ReturnReportOn(@return.Id, question.Id));
                 }
 
-                var aatf = await CreateAatf(database, @return, country);
+                var aatf = await CreateAatf(context, @return);
                 var scheme = await CreateScheme(context, organisation);
                 var sentOnSiteAddress = await CreateAddress(database);
                 var sentOnSOperatorAddress = await CreateAddress(database);
@@ -281,8 +282,7 @@
 
         private static async Task<Aatf> CreateAatf(DatabaseWrapper database, Domain.AatfReturn.Return @return, Country country)
         {
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, @return.Organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, @return.Organisation);
 
             database.WeeeContext.Aatfs.Add(aatf);
 

@@ -9,6 +9,7 @@
     using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.Factories;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -32,7 +33,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
                 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+                await CreateAatf(database, organisation, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -52,7 +53,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+                await CreateAatf(database, organisation, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -72,7 +73,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, DateTime.Now);
+                await CreateAatf(database, organisation, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -92,7 +93,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, null);
+                await CreateAatf(database, organisation, null);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -112,7 +113,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, new DateTime(2019).AddDays(1));
+                await CreateAatf(database, organisation, new DateTime(2019).AddDays(1));
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -132,7 +133,7 @@
 
                 var organisation = Organisation.CreatePartnership("Dummy");
 
-                await CreateAatf(database, organisation, FacilityType.Aatf, 2019, new DateTime(2019));
+                await CreateAatf(database, organisation, new DateTime(2019));
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);
 
@@ -253,27 +254,17 @@
             return @return;
         }
 
-        private async Task<Aatf> CreateAatf(DatabaseWrapper database, Organisation organisation, FacilityType facilityType, short year, DateTime? approvalDate)
+        private async Task<Aatf> CreateAatf(DatabaseWrapper database, Organisation organisation, DateTime? approvalDate)
         {
             var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
             var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
             var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-            var aatf = new Aatf("name",
-                competentAuthority,
-                "12345678",
-                AatfStatus.Approved,
-                organisation,
-                AddressHelper.GetAatfAddress(database),
-                AatfSize.Large, 
-                DateTime.Now,
-                new AatfContact("first", "last", "position", "adress1", "address2", "town", "county", "postcode", country, "telephone", "email"), 
-                facilityType,
-                year);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
             if (!approvalDate.HasValue)
             {
-                aatf.UpdateDetails("name", competentAuthority.Id, "12345678", AatfStatus.Approved, organisation, AatfSize.Large, null);
+                aatf.UpdateDetails("name", competentAuthority, "12345678", AatfStatus.Approved, organisation, AatfSize.Large, null, aatf.LocalArea, aatf.PanArea);
             }
 
             database.WeeeContext.Aatfs.Add(aatf);

@@ -11,6 +11,7 @@
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Charges;
     using FluentAssertions;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
@@ -34,7 +35,7 @@
                 var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "123456789", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
@@ -59,7 +60,7 @@
                 var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
@@ -87,7 +88,7 @@
                 var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019);
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
 
                 await genericDataAccess.Add<Aatf>(aatf);
 
