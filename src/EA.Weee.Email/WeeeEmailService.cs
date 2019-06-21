@@ -87,6 +87,28 @@
             }
         }
 
+        public async Task<bool> SendOrganisationUserRequestToEA(string emailAddress, string organisationName, string userName)
+        {
+            var model = new
+            {
+                OrganisationName = organisationName,
+                ExternalUserLoginUrl = configuration.ExternalUserLoginUrl,
+                FullName = userName
+            };
+
+            EmailContent content = new EmailContent()
+            {
+                HtmlText = templateExecutor.Execute("OrganisationUserRequest.cshtml", model),
+                PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
+            };
+
+            using (MailMessage message = messageCreator.Create(emailAddress,
+                 "New request to access an organisation in WEEE Online", content))
+            {
+                return await sender.SendAsync(message);
+            }
+        }
+
         public async Task<bool> SendOrganisationUserRequestCompleted(Domain.Organisation.OrganisationUser organisationUser)
         {
             var model = new
