@@ -112,6 +112,7 @@
     </None>
     <EmbeddedResource Include="Templates\OrganisationUserRequestCompleted.cshtml" />
     <EmbeddedResource Include="Templates\OrganisationUserRequest.cshtml" />
+    <EmbeddedResource Include="Templates\OrganisationUserRequestToEA.cshtml" />
     <EmbeddedResource Include="Templates\PasswordResetRequest.cshtml" />
     <EmbeddedResource Include="Templates\SchemeMemberSubmitted.cshtml" />
     <EmbeddedResource Include="Templates\SchemeDataReturnSubmitted.cshtml" />
@@ -125,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\OrganisationUserRequest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\OrganisationUserRequestToEA.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\PasswordResetRequest.txt" />

@@ -98,8 +98,8 @@
 
             EmailContent content = new EmailContent()
             {
-                HtmlText = templateExecutor.Execute("OrganisationUserRequest.cshtml", model),
-                PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
+                HtmlText = templateExecutor.Execute("OrganisationUserRequestToEA.cshtml", model),
+                PlainText = templateExecutor.Execute("OrganisationUserRequestToEA.txt", model)
             };
 
             using (MailMessage message = messageCreator.Create(emailAddress,
