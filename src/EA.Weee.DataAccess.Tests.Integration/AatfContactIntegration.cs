@@ -13,6 +13,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using Weee.Tests.Core;
     using Xunit;
     using AatfContact = Domain.AatfReturn.AatfContact;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
@@ -52,8 +53,8 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, aatfAddress, country);
+
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
 
             context.Organisations.Add(organisation);
             context.Schemes.Add(scheme);

@@ -92,6 +92,7 @@
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
+    <Compile Include="Admin\GetLocalAreas.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
     <Compile Include="Admin\GetRoles.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
+    <Compile Include="Shared\GetPanAreas.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />

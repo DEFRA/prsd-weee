@@ -1,8 +1,5 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using MvcNavigationHelpers
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
@@ -13,7 +10,7 @@
 <div class="govuk-grid-row">
     <section class="govuk-grid-column-full" id="main-content">
         <header class="hgroup">
-            <h1 class="govuk-heading-l" style="word-break: break-all"> @Model.Name</h1>
+            <h1 class="govuk-heading-l" style="word-break: break-word"> @Model.Name</h1>
         </header>
     </section>
 </div>
@@ -76,6 +73,24 @@
                         @Model.CompetentAuthority.Abbreviation <br />
                     </td>
                 </tr>
+                @if (Model.HasPatArea)
+                {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">WROS pan area team</th>
+                    <td class="govuk-table__cell">
+                        @Model.PanArea.Name <br />
+                    </td>
+                </tr>
+                }
+                @if (Model.HasLocalArea)
+                {
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">EA area</th>
+                    <td class="govuk-table__cell">
+                        @Model.LocalArea.Name <br />
+                    </td>
+                </tr>
+                }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Status</th>
                     <td class="govuk-table__cell">@Model.AatfStatus</td>
@@ -136,7 +151,7 @@
                     <td class="govuk-table__cell">
                         @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                         {
-                        @:Sole trader
+                        @:Sole trader or individual
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
                         {
@@ -150,10 +165,17 @@
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company name</th>
-                    <td class="govuk-table__cell">@Model.Organisation.Name</td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Sole trader / individual name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
                 }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Business trading name</th>
@@ -161,10 +183,10 @@
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                    <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                        <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                    </tr>
                 }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
@@ -182,27 +204,27 @@
                 </tr>
                 @if (Model.HasAnyRelatedEntities)
                 {
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header aatf-details-associated-table-header-title" scope="col" style="vertical-align: text-top">
-                        This organisation also operates
-                    </th>
-                    <td>
-                        <table>
-                            <tbody>
-                                @if (Model.AssociatedAatfs.Any())
-                                {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">AATF</td>
-                                </tr>
-                                foreach (var aatf in Model.AssociatedAatfs)
-                                {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                        @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
-                                    </td>
-                                </tr>
-                                }
-                                }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header aatf-details-associated-table-header-title govuk-!-width-one-half" scope="col" style="vertical-align: text-top">
+                            This organisation also operates
+                        </th>
+                        <td>
+                            <table>
+                                <tbody>
+                                    @if (Model.AssociatedAatfs.Any())
+                                    {
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell aatf-details-associated-table-cell-title">AATF</td>
+                                        </tr>
+                                        foreach (var aatf in Model.AssociatedAatfs)
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, new { })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
 
                                 @if (Model.AssociatedAes.Any())
                                 {
@@ -259,20 +281,20 @@
 
         @if (Model.CanEdit)
         {
-            <p>
-                @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
-                {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
-                }
-                else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
-                }
-                else
-                {
-                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id)))">Edit organisation details</a>
-                }
-            </p>
+    <p>
+        @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+        }
+        else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+        }
+        else
+        {
+            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+        }
+    </p>
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">

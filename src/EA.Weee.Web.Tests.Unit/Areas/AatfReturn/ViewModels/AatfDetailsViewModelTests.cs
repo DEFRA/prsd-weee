@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FakeItEasy;
     using FluentAssertions;
@@ -61,6 +63,22 @@
             var model = new AatfDetailsViewModel() { AssociatedSchemes = new List<SchemeData>() { A.Fake<SchemeData>() } };
 
             model.HasAnyRelatedEntities.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_PanAreaIsNotNull_HasPatAreaShouldBeTrue()
+        {
+            var model = new AatfDetailsViewModel() { PanArea = A.Fake<PanAreaData>() };
+
+            model.HasPatArea.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_LocalAreaIsNotNull_HasLocalAreaShouldBeTrue()
+        {
+            var model = new AatfDetailsViewModel() { LocalArea = A.Fake<LocalAreaData>() };
+
+            model.HasLocalArea.Should().BeTrue();
         }
     }
 }
