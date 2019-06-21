@@ -148,6 +148,7 @@
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\RegisteredProducerDataAccessTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccessTests.cs" />
+    <Compile Include="Shared\CommonDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
     <Compile Include="Shared\GetSubmissionHistoryDataAccessTests.cs" />
