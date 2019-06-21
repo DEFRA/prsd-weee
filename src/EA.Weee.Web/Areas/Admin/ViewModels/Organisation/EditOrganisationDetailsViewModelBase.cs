@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
 {
     using System;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
 
@@ -14,8 +15,10 @@
 
         public OrganisationType OrganisationType { get; set; }
 
+        public FacilityType FacilityType { get; set; }
+
         public abstract string BusinessTradingName { get; set; }
 
-        public AddressData BusinessAddress { get; set; }
+        public Core.Shared.AddressData BusinessAddress { get; set; }
     }
 }
