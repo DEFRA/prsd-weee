@@ -28,12 +28,14 @@
         {
             oldDetails.UpdateDetails(
                 newDetails.Name,
-                newDetails.CompetentAuthorityId,
+                newDetails.CompetentAuthority,
                 newDetails.ApprovalNumber,
                 newDetails.AatfStatus,
                 newDetails.Organisation,
                 newDetails.Size,
-                newDetails.ApprovalDate);
+                newDetails.ApprovalDate,
+                newDetails.LocalArea,
+                newDetails.PanArea);
 
             return context.SaveChangesAsync();
         }

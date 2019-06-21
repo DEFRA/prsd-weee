@@ -63,7 +63,7 @@
 .prsd-table-collapse tr {
 }
 
-@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+@media only screen and (max-width: 1020px){
 
     .prsd-table-collapse {
         display: block;
@@ -107,13 +107,19 @@
 .weee-tonnage-right-aligned-display {
     text-align: right;
     padding-left: 1em !important;
-    word-break: break-all;
+    @extend .break-word;
+}
+
+.weee-tonnage-left-aligned-display {
+    text-align: left;
+    padding-right: 1em !important;
+    @extend .break-word;
 }
 
 .weee-tonnage-center-aligned-display {
     text-align: center;
     padding-left: 1em !important;
-    word-break: break-all;
+    @extend .break-word;
 }
 
 .weee-tonnage-column-padding-left {
@@ -122,4 +128,9 @@
 
 .weee-tonnage-top-aligned-display {
     padding-top: 20px;
+}
+
+.break-word {
+    word-break: break-all; // Fix IE & Firefox <68 issues
+    word-break: break-word;
 }

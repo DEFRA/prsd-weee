@@ -42,7 +42,8 @@
                 SubmittedBy = source.Return.SubmittedBy?.FullName,
                 SubmittedDate = source.Return.SubmittedDate,
                 ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList(),
-                ReturnStatus = mapper.Map<ReturnStatus>(source.Return.ReturnStatus)
+                ReturnStatus = mapper.Map<ReturnStatus>(source.Return.ReturnStatus),
+                NilReturn = source.Return.NilReturn
             };
 
             if (source.Aatfs != null)

@@ -65,7 +65,7 @@
                 SiteAddressData = new AatfAddressData(),
                 ApprovalNumber = "WEE/AA0123AA/AE",
                 CompetentAuthoritiesList = new List<UKCompetentAuthorityData>(),
-                CompetentAuthorityId = new Guid(),
+                CompetentAuthorityId = new Guid().ToString(),
                 StatusList = Enumeration.GetAll<AatfStatus>(),
                 StatusValue = 1,
                 SizeList = Enumeration.GetAll<AatfSize>(),

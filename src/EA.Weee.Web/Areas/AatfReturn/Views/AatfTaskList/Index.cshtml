@@ -74,13 +74,13 @@
                         <div class="govuk-grid-column-one-quarter">
                             &nbsp;
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeReceived.B2C
                             </p>
                         </div>
 
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeReceived.B2B
                             </p>
@@ -107,28 +107,20 @@
                         <div class="govuk-grid-column-one-quarter">
                             &nbsp;
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeSentOn.B2C
                             </p>
                         </div>
 
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeSentOn.B2B
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
                             <p>
-                                @if (item.WeeeSentOn.RedirectToSummary)
-                                {
-                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
-                                }
-                                else
-                                {
-                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnCreateSite" })
-                                }
-
+                                @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
                             </p>
                         </div>
                     </div>
@@ -147,13 +139,13 @@
                         <div class="govuk-grid-column-one-quarter">
                             &nbsp;
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeReused.B2C
                             </p>
                         </div>
 
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-quarter break-word">
                             <p>
                                 @item.WeeeReused.B2B
                             </p>
@@ -211,7 +203,7 @@
                 <div class="govuk-grid-column-one-quarter">
                     &nbsp;
                 </div>
-                <div class="govuk-grid-column-one-quarter ">
+                <div class="govuk-grid-column-one-quarter break-word">
                     <p>
                         @Model.NonObligatedTonnageTotal
                     </p>
@@ -238,7 +230,7 @@
                     <div class="govuk-grid-column-one-quarter">
                         &nbsp;
                     </div>
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-quarter break-word">
                         <p>
                             @Model.NonObligatedTonnageTotalDcf
                         </p>
@@ -280,5 +272,5 @@
         </summary>
         @Html.Partial("_ContactProgressiveDisclosure")
     </details>
-
+    <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
 </section>

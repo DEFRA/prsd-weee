@@ -122,6 +122,7 @@
     <Compile Include="AatfReturn\WeeeSentOnSummaryListData.cs" />
     <Compile Include="Admin\CanAatfBeDeletedFlags.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\LocalAreaData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchData.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Shared\PanAreaData.cs" />
     <Compile Include="Shared\UKCompetentAuthorityAbbreviationType.cs" />
     <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />

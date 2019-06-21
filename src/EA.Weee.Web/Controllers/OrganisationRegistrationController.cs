@@ -159,11 +159,11 @@
                         switch (organisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
-                                return RedirectToAction("SoleTraderDetails", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction(nameof(SoleTraderDetails), new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.RegisteredCompany:
-                                return RedirectToAction("RegisteredCompanyDetails", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction(nameof(RegisteredCompanyDetails), new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.Partnership:
-                                return RedirectToAction("PartnershipDetails", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction(nameof(PartnershipDetails), new { organisationId = model.OrganisationId.Value });
                         }
                     }
                 }
@@ -172,11 +172,11 @@
                     switch (organisationType)
                     {
                         case OrganisationType.SoleTraderOrIndividual:
-                            return RedirectToAction("SoleTraderDetails", new { searchedText = model.SearchedText });
+                            return RedirectToAction(nameof(SoleTraderDetails), new { searchedText = model.SearchedText });
                         case OrganisationType.RegisteredCompany:
-                            return RedirectToAction("RegisteredCompanyDetails", new { searchedText = model.SearchedText });
+                            return RedirectToAction(nameof(RegisteredCompanyDetails), new { searchedText = model.SearchedText });
                         case OrganisationType.Partnership:
-                            return RedirectToAction("PartnershipDetails", new { searchedText = model.SearchedText });
+                            return RedirectToAction(nameof(PartnershipDetails), new { searchedText = model.SearchedText });
                     }
                 }
             }
@@ -208,10 +208,10 @@
 
                         return View("SoleTraderDetails", model);
                     }
-                    return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
+                    return View(new SoleTraderDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
                 }
             }
-            return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
+            return View(new SoleTraderDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
         }
 
         [HttpPost]

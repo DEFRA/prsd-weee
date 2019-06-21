@@ -12,6 +12,7 @@
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
@@ -244,7 +245,11 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid(),
+                CompetentAuthorityId = Guid.NewGuid().ToString(),
+                PanAreaList = A.Fake<List<PanAreaData>>(),
+                PanAreaId = Guid.NewGuid(),
+                LocalAreaList = A.Fake<List<LocalAreaData>>(),
+                LocalAreaId = Guid.NewGuid(),
                 ComplianceYear = (Int16)2019
             };
 
@@ -253,11 +258,13 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == Guid.Parse(viewModel.CompetentAuthorityId)),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault());
+                viewModel.ApprovalDate.GetValueOrDefault(),
+                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId));
 
             await controller.AddAatf(viewModel);
 
@@ -266,6 +273,8 @@
                 && p.Aatf.Name == aatfData.Name
                 && p.Aatf.ApprovalNumber == aatfData.ApprovalNumber
                 && p.Aatf.CompetentAuthority == aatfData.CompetentAuthority
+                && p.Aatf.PanAreaData == aatfData.PanAreaData
+                && p.Aatf.LocalAreaData == aatfData.LocalAreaData
                 && p.Aatf.AatfStatus == aatfData.AatfStatus
                 && p.Aatf.SiteAddress == aatfData.SiteAddress
                 && p.Aatf.Size == aatfData.Size
@@ -342,7 +351,7 @@
                 OrganisationId = Guid.NewGuid(),
                 ContactData = A.Fake<AatfContactData>(),
                 CompetentAuthoritiesList = A.Fake<List<UKCompetentAuthorityData>>(),
-                CompetentAuthorityId = Guid.NewGuid(),
+                CompetentAuthorityId = Guid.NewGuid().ToString(),
                 ComplianceYear = (Int16)2019
             };
 
@@ -351,7 +360,7 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == Guid.Parse(viewModel.CompetentAuthorityId)),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
@@ -447,8 +456,8 @@
         }
 
         [Theory]
-        [InlineData("Sole trader or individual", "SoleTraderOrPartnershipDetails")]
-        [InlineData("Partnership", "SoleTraderOrPartnershipDetails")]
+        [InlineData("Sole trader or individual", "SoleTraderDetails")]
+        [InlineData("Partnership", "PartnershipDetails")]
         [InlineData("Registered company", "RegisteredCompanyDetails")]
         public void TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
@@ -467,15 +476,15 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsGet_ReturnsViewWithViewModelPopulated()
+        public async Task PartnershipDetailsGet_ReturnsViewWithViewModelPopulated()
         {
             string searchText = "Company";
             string organisationType = "Sole trader or individual";
             var facilityType = fixture.Create<FacilityType>();
 
-            ViewResult result = await controller.SoleTraderOrPartnershipDetails(organisationType, facilityType, searchText) as ViewResult;
+            ViewResult result = await controller.PartnershipDetails(organisationType, facilityType, searchText) as ViewResult;
 
-            SoleTraderOrPartnershipDetailsViewModel resultViewModel = result.Model as SoleTraderOrPartnershipDetailsViewModel;
+            var resultViewModel = result.Model as PartnershipDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.BusinessTradingName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
@@ -486,9 +495,9 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsPost_ModelNotValid_ReturnsView()
+        public async Task PartnershipDetailsPost_ModelNotValid_ReturnsView()
         {
-            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
+            var viewModel = new PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual"
@@ -497,8 +506,8 @@
 
             controller.ModelState.AddModelError("error", "error");
 
-            ViewResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as ViewResult;
-            SoleTraderOrPartnershipDetailsViewModel resultViewModel = result.Model as SoleTraderOrPartnershipDetailsViewModel;
+            ViewResult result = await controller.PartnershipDetails(viewModel) as ViewResult;
+            var resultViewModel = result.Model as PartnershipDetailsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
             Assert.Equal(viewModel.BusinessTradingName, resultViewModel.BusinessTradingName);
@@ -507,9 +516,9 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
+        public async Task PartnershipDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
         {
-            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
+            var viewModel = new PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -518,7 +527,7 @@
 
             viewModel.Address.Countries = countries;
 
-            RedirectToRouteResult result = await controller.SoleTraderOrPartnershipDetails(viewModel) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.PartnershipDetails(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
@@ -528,9 +537,9 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
+        public async Task PartnershipDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
         {
-            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
+            var viewModel = new PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -539,10 +548,91 @@
 
             viewModel.Address.Countries = countries;
 
-            await controller.SoleTraderOrPartnershipDetails(viewModel);
+            await controller.PartnershipDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateOrganisationAdmin>.That.Matches(
                 p => p.BusinessName == viewModel.BusinessTradingName
+                && p.Address == viewModel.Address
+                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsGet_ReturnsViewWithViewModelPopulated()
+        {
+            string searchText = "Company";
+            string organisationType = "Sole trader or individual";
+            var facilityType = fixture.Create<FacilityType>();
+
+            var result = await controller.SoleTraderDetails(organisationType, facilityType, searchText) as ViewResult;
+
+            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+
+            Assert.Equal(searchText, resultViewModel.CompanyName);
+            Assert.Equal(organisationType, resultViewModel.OrganisationType);
+            Assert.Equal(countries, resultViewModel.Address.Countries);
+            Assert.Equal(facilityType, resultViewModel.FacilityType);
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsPost_ModelNotValid_ReturnsView()
+        {
+            var viewModel = new SoleTraderDetailsViewModel()
+            {
+                BusinessTradingName = "Company",
+                OrganisationType = "Sole trader or individual"
+            };
+            viewModel.Address.Countries = countries;
+
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.SoleTraderDetails(viewModel) as ViewResult;
+            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
+            Assert.Equal(viewModel.BusinessTradingName, resultViewModel.BusinessTradingName);
+            Assert.Equal(viewModel.OrganisationType, resultViewModel.OrganisationType);
+            Assert.Equal(countries, resultViewModel.Address.Countries);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
+        {
+            var viewModel = new SoleTraderDetailsViewModel()
+            {
+                BusinessTradingName = "Company",
+                OrganisationType = "Sole trader or individual",
+                FacilityType = FacilityType.Aatf
+            };
+
+            viewModel.Address.Countries = countries;
+
+            var result = await controller.SoleTraderDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Add");
+            result.RouteValues["controller"].Should().Be("AddAatf");
+
+            result.RouteValues["organisationId"].Should().NotBe(null);
+            result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
+        {
+            var viewModel = new SoleTraderDetailsViewModel()
+            {
+                CompanyName = "Company",
+                OrganisationType = "Sole trader or individual",
+                Address = A.Dummy<AddressData>()
+            };
+
+            viewModel.Address.Countries = countries;
+
+            await controller.SoleTraderDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateOrganisationAdmin>.That.Matches(
+                p => p.BusinessName == viewModel.CompanyName
                 && p.Address == viewModel.Address
                 && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -723,24 +813,47 @@
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsGet_Always_SetsInternalBreadcrumb()
+        public async Task PartnershipDetailsGet_Always_SetsInternalBreadcrumb()
         {
-            await controller.SoleTraderOrPartnershipDetails("test", fixture.Create<FacilityType>());
+            await controller.PartnershipDetails("test", fixture.Create<FacilityType>());
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
 
         [Fact]
-        public async Task SoleTraderOrPartnershipDetailsPost_Always_SetsInternalBreadcrumb()
+        public async Task PartnershipDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            SoleTraderOrPartnershipDetailsViewModel viewModel = new SoleTraderOrPartnershipDetailsViewModel()
+            var viewModel = new PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
                 Address = A.Dummy<AddressData>()
             };
 
-            await controller.SoleTraderOrPartnershipDetails(viewModel);
+            await controller.PartnershipDetails(viewModel);
+
+            Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsGet_Always_SetsInternalBreadcrumb()
+        {
+            await controller.SoleTraderDetails("test", fixture.Create<FacilityType>());
+
+            Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsPost_Always_SetsInternalBreadcrumb()
+        {
+            var viewModel = new SoleTraderDetailsViewModel()
+            {
+                BusinessTradingName = "Company",
+                OrganisationType = "Sole trader or individual",
+                Address = A.Dummy<AddressData>()
+            };
+
+            await controller.SoleTraderDetails(viewModel);
 
             Assert.Equal("Add new organisation", breadcrumbService.InternalActivity);
         }
