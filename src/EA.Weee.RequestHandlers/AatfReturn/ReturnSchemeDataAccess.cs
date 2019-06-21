@@ -38,5 +38,25 @@
 
             return @return?.Organisation;
         }
+
+        public async Task RemoveReturnScheme(Guid schemeId)
+        {
+            List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId).ToListAsync();
+
+            foreach (WeeeReceived weee in weeeReceived)
+            {
+                List<WeeeReceivedAmount> weeeReceivedData = await context.WeeeReceivedAmount.Where(p => p.WeeeReceived.Id == weee.Id).ToListAsync();
+
+                context.WeeeReceivedAmount.RemoveRange(weeeReceivedData);
+
+                context.WeeeReceived.Remove(weee);
+            }
+
+            var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId);
+
+            context.ReturnScheme.Remove(scheme);
+
+            await context.SaveChangesAsync();
+        }
     }
 }
