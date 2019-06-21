@@ -15,6 +15,7 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
@@ -22,11 +23,8 @@
 
     public class FetchAatfByOrganisationIdDataAccessTests
     {
-        private readonly DbContextHelper dbContextHelper;
-
         public FetchAatfByOrganisationIdDataAccessTests()
         {
-            dbContextHelper = new DbContextHelper();
         }
 
         [Fact]
@@ -70,7 +68,9 @@
                 DateTime.Now,
                 contact,
                 facilityType,
-                2019);
+                2019,
+                database.WeeeContext.LocalAreas.First(),
+                database.WeeeContext.PanAreas.First());
         }
     }
 }

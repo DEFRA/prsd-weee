@@ -12,6 +12,7 @@
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
     using RequestHandlers.Security;
+    using RequestHandlers.Shared;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

@@ -105,7 +105,7 @@
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(model.ReturnId))))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(model.ReturnId) && c.NilReturn.Equals(true))))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

@@ -10,14 +10,15 @@
     using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Core.Shared.Paging;
+    using Filters;
     using Infrastructure;
+    using Security;
     using Services;
     using ViewModels.CreatePcsDataReturnXmlFile;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
 
-    [Authorize]
-    public class CreatePcsDataReturnXmlFileController : Controller
+    public class CreatePcsDataReturnXmlFileController : TestControllerBase
     {
         private const int pageSize = 10;
         private readonly Func<IWeeeClient> apiClient;
