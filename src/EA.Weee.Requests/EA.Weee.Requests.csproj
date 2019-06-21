@@ -85,6 +85,7 @@
     <Compile Include="AatfReturn\Obligated\RemoveAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\RemoveScheme.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\AddAatf.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
