@@ -240,6 +240,8 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PartnershipDetailsViewModelTests.cs" />
     <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModelTests.cs" />
     <Compile Include="Areas\Test\CreatePcsDataReturnXmlFileControllerTests.cs" />
@@ -312,7 +314,7 @@
     <Compile Include="Areas\Admin\ViewModels\AddAatfViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditSoleTraderOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditRegisteredCompanyOrganisationDetailsViewModelTests.cs" />
-    <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SoleTraderDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageAatfsViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />

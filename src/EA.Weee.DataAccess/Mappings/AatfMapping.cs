@@ -2,6 +2,7 @@
 {
     using Domain.AatfReturn;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Lookup;
     using Domain.Organisation;
 
     internal class AatfMapping : EntityTypeConfiguration<Aatf>
@@ -15,6 +16,9 @@
 
             HasRequired<Organisation>(a => a.Organisation);
             HasRequired<AatfAddress>(a => a.SiteAddress);
+
+            HasOptional<LocalArea>(x => x.LocalArea);
+            HasOptional<PanArea>(x => x.PanArea);
         }
     }
 }
