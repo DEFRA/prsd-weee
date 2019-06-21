@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Domain;
+    using Domain.AatfReturn;
     using Domain.Admin;
     using Domain.Audit;
     using Domain.Charges;
@@ -20,6 +17,10 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -29,6 +30,34 @@
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
         public virtual DbSet<Organisation> Organisations { get; set; }
+
+        public virtual DbSet<NonObligatedWeee> NonObligatedWeee { get; set; }
+
+        public virtual DbSet<WeeeReceivedAmount> WeeeReceivedAmount { get; set; }
+
+        public virtual DbSet<WeeeReceived> WeeeReceived { get; set; }
+
+        public virtual DbSet<WeeeReusedAmount> WeeeReusedAmount { get; set; }
+
+        public virtual DbSet<WeeeReused> WeeeReused { get; set; }
+
+        public virtual DbSet<WeeeSentOn> WeeeSentOn { get; set; }
+
+        public virtual DbSet<WeeeSentOnAmount> WeeeSentOnAmount { get; set; }
+
+        public virtual DbSet<Return> Returns { get; set; }
+
+        public virtual DbSet<ReturnScheme> ReturnScheme { get; set; }
+
+        public virtual DbSet<AatfAddress> AatfAddress { get; set; }
+
+        public virtual DbSet<WeeeReusedSite> WeeeReusedSite { get; set; }
+
+        public virtual DbSet<ReturnReportOn> ReturnReportOns { get; set; }
+
+        public virtual DbSet<ReportOnQuestion> ReportOnQuestions { get; set; }
+
+        public virtual DbSet<AatfContact> AatfContacts { get; set; }
 
         public virtual DbSet<User> Users { get; set; }
 
@@ -43,6 +72,14 @@
         public virtual DbSet<MemberUploadError> MemberUploadErrors { get; set; }
 
         public virtual DbSet<Scheme> Schemes { get; set; }
+
+        public virtual DbSet<Contact> Contacts { get; set; }
+
+        public virtual DbSet<Address> Addresses { get; set; }
+
+        public virtual DbSet<LocalArea> LocalAreas { get; set; }
+
+        public virtual DbSet<PanArea> PanAreas { get; set; }
 
         /// <summary>
         /// Registered producers including items marked as removed.
@@ -136,6 +173,8 @@
         public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
 
         public virtual DbSet<Role> Roles { get; set; }
+
+        public virtual DbSet<Aatf> Aatfs { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 

@@ -12,7 +12,7 @@
 @section main_content {
 	<header class="hgroup">
 		<div>
-		    <h1 class="heading-large">Your @Model.ComplianceYear member registration file has passed our validation checks</h1>
+		    <h1 class="govuk-heading-l">Your @Model.ComplianceYear member registration file has passed our validation checks</h1>
 		</div>
 	</header>
 	@using (Html.BeginForm())
@@ -22,7 +22,7 @@
 
 		@Html.HiddenFor(m => m.TotalCharges)
 
-		<p>Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.</p>
+		<p>Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct</p>
 
 		int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
 		string warningText = numWarnings > 1 ? "warnings" : "warning";
@@ -35,10 +35,10 @@
 				You must review all warnings and make any necessary corrections to your file before it is ready to be submitted.
 				Or, if you are happy with its content, you can submit your file with warnings.
 			</p>
-			<details>
+			<details role="group" class="govuk-details weee-upload-warning">
 				@{
 					string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
-					this.WeeeGds().SummaryExpansion(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings", "Validation sucessful");
+					this.WeeeGds().SummaryExpansion(warningSummaryText, "govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small", "Member registration warnings", "View member registration warnings", "Validation sucessful");
 				}
 				<div class="warning-list-container">
 					<ul>
@@ -46,7 +46,7 @@
 						{
 							if (uploadError.ErrorLevel == ErrorLevel.Warning)
 							{
-								<li class="warning-list-item font-xsmall">@uploadError.Description</li>
+								<li class="warning-list-item govuk-!-font-size-16">@uploadError.Description</li>
 							}
 						}
 					</ul>
@@ -54,8 +54,7 @@
 			</details>
 		}
 
-	    <div class="highlight-section">
-
+	    <div class="highlight-section govuk-body">
 	            <div class="highlight-section-text">
 	                Based on the information provided in your XML, your charges are:
 	            </div>
@@ -64,24 +63,27 @@
 	            </div>
 	    </div>
 
-		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
+		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete</p>
 
 		@Html.Partial("_PrivacyPolicy");
 
-		<div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-			@Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-			<label class="block-label" for="PrivacyPolicy">
-				@Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-				Confirm you have read our privacy policy
-			</label>
-		</div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            <fieldset class="govuk-fieldset">
+                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item" style="padding-left: 0px;">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "govuk-checkboxes__input" })
+                    </div>
+                </div>
+            </fieldset>
+        </div>
 
 		<p>
 			@this.WeeeGds().SubmitWithEventTracking(
 						"Submit",
 						"Uploads",
 						"XML submission",
-						htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
+						htmlAttributes: new Dictionary<string, object> { { "class", "govuk-button" } }
 						)
 		</p>
 
@@ -90,7 +92,7 @@
                              Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
                              "Member registration loop",
                              "Upload a new file",
-                             "Validation successful")).
+                             "Validation successful"))
 		</p>
 	}
 }

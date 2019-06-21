@@ -1,51 +1,51 @@
 ﻿#footer .footer_agencies {
 
-	@include media(desktop) {
-		padding-left: 30px;
-		padding-right: 30px;
-	}
+    @include govuk-media-query(desktop) {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-    @include media($max-width: 640px) {
+    @include govuk-media-query(640px) {
         padding-left: 15px;
         padding-right: 15px;
     }
 }
 
 #footer .footer-meta-inner {
-	
-	a[rel="external"]:after {
-		background-image: url(govuk/stylesheets/external-links/external-link-black-12x12.png);
-		background-repeat: no-repeat;
-	}
-	
-	@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-		a[rel="external"]:after {
-			background-image: url(govuk/stylesheets/external-links/external-link-black-24x24.png);
-			background-size: 12px 12px;
-		}
-	}
-	
-	a[rel="external"]:after {
-		content: "\A0\A0\A0\A0\A0\A0";
-		background-position: right 3px;
-	}
-	
-	a[rel="external"]:hover:after {
-		background-position: right 3px;
-	}
-	
-	@media (max-width: 640px) {
-		a[rel="external"] {
-			font-size: 16px;
-		}
 
-		a[rel="external"]:after {
-			content: "\A0\A0\A0\A0\A0";
-			background-position: right 3px;
-		}
+    a[rel="external"]:after {
+        background-image: url(govuk/stylesheets/external-links/external-link-black-12x12.png);
+        background-repeat: no-repeat;
+    }
 
-		a[rel="external"]:hover:after {
-			background-position: right 3px 1px;
-		}
-	}
+    @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+        a[rel="external"]:after {
+            background-image: url(govuk/stylesheets/external-links/external-link-black-24x24.png);
+            background-size: 12px 12px;
+        }
+    }
+
+    a[rel="external"]:after {
+        content: "\A0\A0\A0\A0\A0\A0";
+        background-position: right 3px;
+    }
+
+    a[rel="external"]:hover:after {
+        background-position: right 3px;
+    }
+
+    @media (max-width: 640px) {
+        a[rel="external"] {
+            font-size: 16px;
+        }
+
+        a[rel="external"]:after {
+            content: "\A0\A0\A0\A0\A0";
+            background-position: right 3px;
+        }
+
+        a[rel="external"]:hover:after {
+            background-position: right 3px 1px;
+        }
+    }
 }

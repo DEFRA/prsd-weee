@@ -1,0 +1,38 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type.OrganisationTypeViewModel
+@{
+    ViewBag.Title = "Create new organisation";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SearchedText)
+    @Html.HiddenFor(m => m.FacilityType)
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Organisation type
+        </h1>
+    </header>
+
+    @Html.Gds().ValidationSummary()
+
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+        @this.WeeeGds().RadioButtonsFor(
+            m => m.SelectedValue,
+            Model.PossibleValues,
+            "Organisation type",
+            RadioButtonLegend.VisuallyHidden,
+            RadioButtonLayout.Stacked)
+    </div>
+
+    <div class="govuk-form-group">
+        <button class="govuk-button" type="submit">Continue</button>
+    </div>
+    <p>
+        <a href="@(Url.UrlFor<AddAatfController>(u => u.SearchResults(Model.SearchedText, Model.FacilityType)))">Back</a>
+    </p>
+}

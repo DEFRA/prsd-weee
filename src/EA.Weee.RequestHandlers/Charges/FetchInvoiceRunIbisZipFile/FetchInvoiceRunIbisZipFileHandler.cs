@@ -7,6 +7,7 @@
     using EA.Prsd.Core.Mediator;
     using Ionic.Zip;
     using Security;
+    using Shared;
 
     public class FetchInvoiceRunIbisZipFileHandler : IRequestHandler<Requests.Charges.FetchInvoiceRunIbisZipFile, FileInfo>
     {

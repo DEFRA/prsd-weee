@@ -47,5 +47,10 @@
                 return value;
             }
         }
+
+        public async Task InvalidateCache(TKey key)
+        {
+            await provider.Remove(CacheName, hashKey(key));
+        }
     }
 }

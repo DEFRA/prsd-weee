@@ -9,6 +9,7 @@
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns;
+    using RequestHandlers.Factories;
     using Requests.DataReturns;
     using Xunit;
 
@@ -39,7 +40,7 @@
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
                 .Returns(new List<QuarterWindow>
                 {
-                    new QuarterWindow(windowStart, windowEnd)
+                    new QuarterWindow(windowStart, windowEnd, QuarterType.Q1)
                 });
 
             var handler = new IsSubmissionWindowOpenHandler(quarterWindowFactory, systemDataDataAccess);
@@ -66,7 +67,7 @@
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
                 .Returns(new List<QuarterWindow>
                 {
-                    new QuarterWindow(windowStart, windowEnd)
+                    new QuarterWindow(windowStart, windowEnd, QuarterType.Q1)
                 });
 
             SystemTime.Freeze(timeNow, true);

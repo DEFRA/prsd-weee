@@ -5,13 +5,16 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
+    using Core.AatfReturn;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Search;
     using Infrastructure;
+    using Weee.Requests.AatfReturn;
 
     public class WeeeCache : IWeeeCache
     {
@@ -24,10 +27,13 @@
         public Cache<Guid, string> SchemeNames { get; private set; }
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
+        public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
+        public Cache<Guid, SchemePublicInfo> SchemePublicInfosBySchemeId { get; private set; }
+        public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
-        private string accessToken;
+        private readonly string accessToken;
 
         public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService)
         {
@@ -49,7 +55,7 @@
 
             OrganisationNames = new Cache<Guid, string>(
                 provider,
-                "OrganisationName",
+                "AatfName",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 (key) => key.ToString(),
                 (key) => FetchOrganisationNameFromApi(key));
@@ -66,7 +72,7 @@
                 "UserActiveCompleteOrganisationCount",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchUserActiveCompleteOrganisationCountFromApi(key));
+                (key) => FetchUserActiveCompleteOrganisationCountFromApi());
 
             SchemePublicInfos = new Cache<Guid, SchemePublicInfo>(
                 provider,
@@ -74,6 +80,13 @@
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
                 (key) => FetchSchemePublicInfoFromApi(key));
+
+            SchemePublicInfosBySchemeId = new Cache<Guid, SchemePublicInfo>(
+                provider,
+                "SchemeInfos",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                (key) => FetchSchemePublicInfoByIdFromApi(key));
 
             ProducerSearchResultList = new SingleItemCache<IList<ProducerSearchResult>>(
                 provider,
@@ -86,6 +99,13 @@
                 "OrganisationPublicInfoList",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 () => FetchOrganisationSearchResultListFromApi());
+
+            AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
+                provider,
+                "AatfInfo",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                FetchAatfInfoFromApi);
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -114,14 +134,14 @@
         {
             using (var client = apiClient())
             {
-                var request = new GetSchemeById(schemeId);
+                var request = new GetSchemePublicInfoBySchemeId(schemeId);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result.Name;
             }
         }
 
-        private async Task<int> FetchUserActiveCompleteOrganisationCountFromApi(Guid key)
+        private async Task<int> FetchUserActiveCompleteOrganisationCountFromApi()
         {
             using (var client = apiClient())
             {
@@ -129,9 +149,8 @@
                 var result = await client.SendAsync(accessToken, request);
 
                 return result
-                    .Where(o => o.UserStatus == Core.Shared.UserStatus.Active)
-                    .Where(o => o.Organisation.OrganisationStatus == Core.Shared.OrganisationStatus.Complete)
-                    .Count();
+                    .Where(o => o.UserStatus == UserStatus.Active)
+                    .Count(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete);
             }
         }
 
@@ -140,6 +159,28 @@
             using (var client = apiClient())
             {
                 var request = new GetSchemePublicInfo(organisationId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
+        private async Task<SchemePublicInfo> FetchSchemePublicInfoByIdFromApi(Guid schemeId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemePublicInfoBySchemeId(schemeId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
+        private async Task<IList<AatfData>> FetchAatfInfoFromApi(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetAatfByOrganisation(organisationId);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result;
@@ -188,6 +229,11 @@
             return SchemePublicInfos.Fetch(organisationId);
         }
 
+        public Task<SchemePublicInfo> FetchSchemePublicInfoBySchemeId(Guid schemeId)
+        {
+            return SchemePublicInfosBySchemeId.Fetch(schemeId);
+        }
+
         public Task<IList<ProducerSearchResult>> FetchProducerSearchResultList()
         {
             return ProducerSearchResultList.Fetch();
@@ -216,6 +262,23 @@
         public async Task InvalidateOrganisationSearch()
         {
             await OrganisationSearchResultList.InvalidateCache();
+        }
+
+        public async Task InvalidateAatfCache(Guid id)
+        {
+            await AatfPublicInfo.InvalidateCache(id);
+        }
+
+        public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)
+        {
+            var aatfInfo = await AatfPublicInfo.Fetch(organisationId);
+
+            return aatfInfo.FirstOrDefault(a => a.Id == aatfId);
+        }
+
+        public async Task InvalidateSchemeCache(Guid id)
+        {
+            await SchemeNames.InvalidateCache(id);
         }
     }
 }

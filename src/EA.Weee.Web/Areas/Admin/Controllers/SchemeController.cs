@@ -123,10 +123,7 @@
                         }
 
                     case OverviewDisplayOption.ContactDetails:
-
-                        var organisationData =
-                            await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
-                        var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
+                        var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(scheme);
                         contactDetailsModel.SchemeName = scheme.SchemeName;
                         contactDetailsModel.SchemeId = scheme.Id;
                         contactDetailsModel.CanEditContactDetails = scheme.CanEdit;
@@ -246,6 +243,8 @@
                     model.Status);
 
                 result = await client.SendAsync(User.GetAccessToken(), request);
+
+                await cache.InvalidateSchemeCache(schemeId);
             }
 
             switch (result.Result)
@@ -330,11 +329,11 @@
                 {
                     return new HttpForbiddenResult();
                 }
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                model.OrganisationAddress = organisationData.OrganisationAddress;
-                model.Contact = organisationData.Contact;
+                model.OrganisationAddress = scheme.Address;
+                model.Contact = scheme.Contact;
                 model.OrganisationAddress.Countries = countries;
                 model.SchemeId = schemeId;
                 model.OrgId = orgId;
@@ -360,13 +359,13 @@
 
             using (var client = apiClient())
             {
-                var orgData = new OrganisationData
+                var orgData = new SchemeData()
                 {
-                    Id = model.OrgId,
+                    OrganisationId = model.OrgId,
                     Contact = model.Contact,
-                    OrganisationAddress = model.OrganisationAddress,
+                    Address = model.OrganisationAddress,
                 };
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(orgData));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(orgData));
             }
 
             return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.ContactDetails });
@@ -388,128 +387,6 @@
 
                 return View("ViewOrganisationDetails", model);
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> EditSoleTraderOrIndividualOrganisationDetails(Guid schemeId, Guid orgId)
-        {
-            await SetBreadcrumb(schemeId);
-
-            using (var client = apiClient())
-            {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
-                if (!organisationData.CanEditOrganisation)
-                {
-                    return new HttpForbiddenResult();
-                }
-                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-
-                var model = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
-                {
-                    OrganisationType = organisationData.OrganisationType,
-                    BusinessTradingName = organisationData.TradingName,
-                    BusinessAddress = organisationData.BusinessAddress
-                };
-
-                model.BusinessAddress.Countries = countries;
-                model.SchemeId = schemeId;
-                model.OrgId = orgId;
-
-                return View("EditSoleTraderOrIndividualOrganisationDetails", model);
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(Guid schemeId, Guid orgId)
-        {
-            await SetBreadcrumb(schemeId);
-
-            using (var client = apiClient())
-            {
-                var organisationData = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
-                if (!organisationData.CanEditOrganisation)
-                {
-                    return new HttpForbiddenResult();
-                }
-                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-
-                var model = new EditRegisteredCompanyOrganisationDetailsViewModel
-                {
-                    OrganisationType = organisationData.OrganisationType,
-                    CompanyName = organisationData.OrganisationName,
-                    BusinessTradingName = organisationData.TradingName,
-                    CompaniesRegistrationNumber = organisationData.CompanyRegistrationNumber,
-                    BusinessAddress = organisationData.BusinessAddress
-                };
-
-                model.BusinessAddress.Countries = countries;
-                model.SchemeId = schemeId;
-                model.OrgId = orgId;
-
-                return View("EditRegisteredCompanyOrganisationDetails", model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(EditRegisteredCompanyOrganisationDetailsViewModel model)
-        {
-            await SetBreadcrumb(model.SchemeId);
-
-            if (!ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    model.BusinessAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                }
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                var orgData = new OrganisationData
-                {
-                    Id = model.OrgId,
-                    OrganisationType = model.OrganisationType,
-                    CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
-                    TradingName = model.BusinessTradingName,
-                    Name = model.CompanyName,
-                    BusinessAddress = model.BusinessAddress,
-                };
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
-            }
-
-            return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditSoleTraderOrIndividualOrganisationDetails(EditSoleTraderOrIndividualOrganisationDetailsViewModel model)
-        {
-            await SetBreadcrumb(model.SchemeId);
-
-            if (!ModelState.IsValid)
-            {
-                using (var client = apiClient())
-                {
-                    model.BusinessAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                }
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                var orgData = new OrganisationData
-                {
-                    Id = model.OrgId,
-                    OrganisationType = model.OrganisationType,
-                    TradingName = model.BusinessTradingName,
-                    BusinessAddress = model.BusinessAddress,
-                };
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
-            }
-
-            return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
         }
 
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
@@ -594,7 +471,7 @@
 
             if (schemeId.HasValue)
             {
-                breadcrumb.InternalOrganisation = await cache.FetchSchemeName(schemeId.Value);
+                breadcrumb.InternalScheme = await cache.FetchSchemeName(schemeId.Value);
             }
         }
     }

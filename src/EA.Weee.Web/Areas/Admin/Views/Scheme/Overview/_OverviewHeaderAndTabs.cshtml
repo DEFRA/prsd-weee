@@ -5,11 +5,11 @@
 
 @model OverviewViewModel
 <header class="hgroup">
-    <h1 class="heading-xlarge">@Model.SchemeName</h1>
+    <h1 class="govuk-heading-xl">@Model.SchemeName</h1>
 </header>
 
-<div class="section-tabs">
-    <ul>
+<div class="govuk-tabs" data-module="tabs">
+    <ul class="govuk-tabs__list">
         @this.WeeeGds().Tab("PCS details",
             Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.PcsDetails)),
             Model.ActiveOverviewDisplayOption == OverviewDisplayOption.PcsDetails)

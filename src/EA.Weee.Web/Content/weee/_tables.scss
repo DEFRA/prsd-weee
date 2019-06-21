@@ -1,12 +1,18 @@
+@import "../govuk_frontend/package/helpers/media-queries";
+
+.gov-uk-no-bottom-border {
+    border-bottom: none;
+}
+
 .prsd-table {
-    background: $page-colour;
+    background: govuk-colour('white');
     position: relative;
 
     thead {
         th {
-            background: $panel-colour;
+            background: govuk-colour('grey-3');
             padding-left: 15px;
-            border: 5px solid $page-colour;
+            border: 5px solid govuk-colour('white');
         }
 
         tr {
@@ -16,10 +22,10 @@
 
     tbody {
         td {
-            background: $highlight-colour;
+            background: govuk-colour('grey-4');
             padding-left: 15px;
             border-bottom: none;
-            border: 3px solid $page-colour;
+            border: 3px solid govuk-colour('white');
 
             &:last-child {
                 text-align: center;
@@ -46,10 +52,78 @@
         tr {
             &:hover {
                 td {
-                    background: $page-colour;
+                    background: govuk-colour('white');
                     cursor: default;
                 }
             }
         }
     }
+}
+
+.prsd-table-collapse tr {
+}
+
+@media only screen and (max-width: 1020px){
+
+    .prsd-table-collapse {
+        display: block;
+    }
+
+    .prsd-table-collapse-header {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .prsd-table-collapse-row {
+    }
+
+    .prsd-table-collapse-cell {
+        border: none;
+        border-bottom: 1px solid #bfc1c3;
+        position: relative;
+        padding-left: 50%;
+        min-height: 20px;
+        text-align: right;
+    }
+
+    .prsd-table-collapse-cell:before {
+        font-weight: 700;
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        white-space: nowrap;
+        padding: 10px 20px 10px 0;
+        text-align: left;
+    }
+}
+
+#weee-data-entry-table * {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.weee-tonnage-right-aligned-display {
+    text-align: right;
+    padding-left: 1em !important;
+    word-break: break-all;
+}
+
+.weee-tonnage-center-aligned-display {
+    text-align: center;
+    padding-left: 1em !important;
+    word-break: break-all;
+}
+
+.weee-tonnage-column-padding-left {
+    padding-left: 1em !important;
+}
+
+.weee-tonnage-top-aligned-display {
+    padding-top: 20px;
+}
+
+.break-word {
+    word-break: break-word;
 }

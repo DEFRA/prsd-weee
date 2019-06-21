@@ -7,7 +7,7 @@
 @section main_content {
 
     <header class="hgroup">
-        <h1 class="heading-large">Are you sure you want to remove this producer?</h1>
+        <h1 class="govuk-heading-l">Are you sure you want to remove this producer?</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -17,33 +17,34 @@
 
         <p>The following producer will no longer be a member of @Model.Producer.SchemeName for @Model.Producer.ComplianceYear.</p>
 
-        <table>
-            <thead>
-                <tr class="visuallyhidden">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-visually-hidden">
                     <th colspan="2">Confirm Producer Details</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <th>Producer name</th>
-                    <td>@Model.Producer.ProducerName</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Producer name</th>
+                    <td class="govuk-table__header" scope="col">@Model.Producer.ProducerName</td>
                 </tr>
-                <tr>
-                    <th>Producer registration number</th>
-                    <td>@Model.Producer.RegistrationNumber</td>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Producer registration number</th>
+                    <td class="govuk-table__cell">@Model.Producer.RegistrationNumber</td>
                 </tr>
             </tbody>
         </table>
-        <br/>
+        <br />
 
         if(Model.Producer.HasSubmittedEEE)
         {
-            <p class="important">
-                The scheme has already submitted a data return for this producer. If you remove this producer, their EEE data for the specified scheme and compliance year will be lost.                
-            </p>
+        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+        <p class="important">
+            The scheme has already submitted a data return for this producer. If you remove this producer, their EEE data for the specified scheme and compliance year will be lost.
+        </p>
         }
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -52,6 +53,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }

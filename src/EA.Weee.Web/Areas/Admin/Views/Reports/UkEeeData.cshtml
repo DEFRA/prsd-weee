@@ -7,7 +7,7 @@
 @section main_content {
 
     <header class="hgroup">
-        <h1 class="heading-large">Download UK EEE data</h1>
+        <h1 class="govuk-heading-l">Download UK EEE data</h1>
     </header>
     @using (Html.BeginForm())
     {
@@ -17,7 +17,7 @@
         <p>Filter the report to download entries that match your criteria.</p>
         <p>All data is reported in tonnes (t) to three decimal places.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })

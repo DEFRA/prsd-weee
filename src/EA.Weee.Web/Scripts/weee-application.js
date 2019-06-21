@@ -34,7 +34,7 @@
     }
 
     // Bind the disabling behaviour to all buttons.
-    $('input[type=submit], button').bind('click', function() {
+    $('input[type=submit], button').bind('click', function () {
         return disableButtonFor1Second($(this));
     });
 
@@ -59,24 +59,56 @@
     }
 
     // Set the country drop-down list for any address to use auto-complete.
-    var countryInput = $(".form-group.countries select");
+    var countryInput = $(".govuk-form-group.countries select");
     countryInput.selectToAutocomplete();
 
     // When there is a validation erorr, move the ID from the select element to the auto-complete
     // textbox so that the links in the validation summary will work.
-    if (countryInput.hasClass("input-validation-error")) {
-        var validationInput = countryInput.next("input");
-        var id = countryInput.attr("id");
-        countryInput.removeAttr("id");
-        validationInput.attr("id", id);
-    }
+    countryInput.each(function () {
+
+        if ($(this).hasClass("input-validation-error")) {
+            var validationInput = $(this).next("input");
+            var id = $(this).attr("id");
+            $(this).removeAttr("id");
+            validationInput.attr("id", id);
+        }
+    });
+
+    //fn setCurPosition
+    $.fn.setCurPosition = function (pos) {
+        this.focus();
+        this.each(function (index, elem) {
+            if (elem.setSelectionRange) {
+                elem.setSelectionRange(pos, pos);
+            } else if (elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
+            }
+        });
+        return this;
+    };
+
 
     // When a link is clicked in the validation summary, move the focus to the associated input.
     // The link will only set the target, not the focus, to the specified anchor.
     $('.error-summary a').click(function () {
-        $($(this).attr('href')).focus();
+        $($(this).attr('href'));
+        var input = $($(this).attr('href'));
+        $(input).setCurPosition(0);
+
         return false;
     });
+
+    $(".date-picker").flatpickr({
+        enableTime: false,
+        allowInput: true,
+        dateFormat: "d/m/Y",
+        locale: "en"
+	    }
+    );
 });
 
 //USAGE: $("#form").serializeFiles();

@@ -55,7 +55,7 @@
             CsvWriter<DataReturnSummaryCsvData> writer = csvWriterFactory.Create<DataReturnSummaryCsvData>();
 
             writer.DefineColumn("Quarter", r => string.Format("Q{0}", r.Quarter));
-            writer.DefineColumn("EEE or WEEE in tonnes (t)", r => descriptions[new Tuple<int, int?>(r.Type, r.Source)]);
+            writer.DefineColumn("EEE or WEEE (tonnes)", r => descriptions[new Tuple<int, int?>(r.Type, r.Source)]);
             writer.DefineColumn("Obligation type", r => r.ObligationType);
             writer.DefineColumn("Cat 1 (t)", r => string.Format("{0:F3}", r.Category1));
             writer.DefineColumn("Cat 2 (t)", r => string.Format("{0:F3}", r.Category2));

@@ -138,18 +138,18 @@
                 new PublicOrganisationData
                 {
                     Id = o.Id,
+                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany || o.OrganisationType == OrganisationType.SoleTraderOrIndividual ? o.Name : o.TradingName,
                     Address = new AddressData
                     {
-                        Address1 = o.OrganisationAddress.Address1,
-                        Address2 = o.OrganisationAddress.Address2,
-                        TownOrCity = o.OrganisationAddress.TownOrCity,
-                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                        Postcode = o.OrganisationAddress.Postcode,
-                        CountryId = o.OrganisationAddress.Country.Id,
-                        Telephone = o.OrganisationAddress.Telephone,
-                        Email = o.OrganisationAddress.Email
+                        Address1 = o.BusinessAddress.Address1,
+                        Address2 = o.BusinessAddress.Address2,
+                        TownOrCity = o.BusinessAddress.TownOrCity,
+                        CountyOrRegion = o.BusinessAddress.CountyOrRegion,
+                        Postcode = o.BusinessAddress.Postcode,
+                        CountryId = o.BusinessAddress.Country.Id,
+                        Telephone = o.BusinessAddress.Telephone,
+                        Email = o.BusinessAddress.Email
                     },
-                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
 
             return new OrganisationSearchDataResult(

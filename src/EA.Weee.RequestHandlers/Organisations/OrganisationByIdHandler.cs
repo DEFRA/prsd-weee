@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using EA.Weee.Security;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
+    using Domain.AatfReturn;
     using Domain.Organisation;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -34,11 +37,22 @@
 
             if (org == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
-                    query.OrganisationId));
+                throw new ArgumentException($"Could not find an organisation with id {query.OrganisationId}");
             }
 
-            return organisationMap.Map(org);
+            var organisationData = organisationMap.Map(org);
+
+            var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
+
+            if (schemes != null)
+            {
+                organisationData.SchemeId = schemes.Id;
+            }
+            
+            organisationData.HasAatfs = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Aatf.Value);
+            organisationData.HasAes = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Ae.Value);
+
+            return organisationData;
         }
     }
 }

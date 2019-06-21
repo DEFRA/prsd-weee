@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.Requests</RootNamespace>
     <AssemblyName>EA.Weee.Requests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -46,10 +46,57 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AddReturnReportOn.cs" />
+    <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\GetAatfById.cs" />
+    <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\CopyReturn.cs" />
+    <Compile Include="AatfReturn\GetReturnStatus.cs" />
+    <Compile Include="AatfReturn\GetReturn.cs" />
+    <Compile Include="AatfReturn\AddReturn.cs" />
+    <Compile Include="AatfReturn\GetReturns.cs" />
+    <Compile Include="AatfReturn\GetReturnScheme.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfDetails.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContact.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContact.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
+    <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
+    <Compile Include="AatfReturn\NonObligated\EditNonObligated.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligated.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\AatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedSentOn.cs" />
+    <Compile Include="AatfReturn\Obligated\AddSentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\EditAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedReceived.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedReused.cs" />
+    <Compile Include="AatfReturn\Obligated\EditObligatedSentOn.cs" />
+    <Compile Include="AatfReturn\Obligated\EditSentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\EditSentOnAatfSiteWithOperator.cs" />
+    <Compile Include="AatfReturn\Obligated\GetAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\GetWeeeSentOn.cs" />
+    <Compile Include="AatfReturn\Obligated\GetWeeeSentOnById.cs" />
+    <Compile Include="AatfReturn\Obligated\ObligatedBaseRequest.cs" />
+    <Compile Include="AatfReturn\Obligated\GetSentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedReused.cs" />
+    <Compile Include="AatfReturn\Obligated\AddObligatedReceived.cs" />
+    <Compile Include="AatfReturn\Obligated\AddAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\ObligatedValue.cs" />
+    <Compile Include="AatfReturn\Obligated\RemoveAatfSite.cs" />
+    <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
+    <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\SubmitReturn.cs" />
+    <Compile Include="Admin\AddAatf.cs" />
+    <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
+    <Compile Include="Admin\CreateOrganisationAdmin.cs" />
+    <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
+    <Compile Include="Admin\GetInternalOrganisation.cs" />
+    <Compile Include="Admin\GetLocalAreas.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
+    <Compile Include="Admin\GetSchemesByOrganisationId.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
@@ -77,8 +124,16 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\GetUploadInfoByDataReturnUploadId.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
+    <Compile Include="Admin\GetAatfsByOrganisationId.cs" />
+    <Compile Include="Organisations\GetContact.cs" />
+    <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetSchemeByOrganisationId.cs" />
+    <Compile Include="Scheme\GetSchemeById.cs" />
+    <Compile Include="Scheme\GetSchemeExternalById.cs" />
+    <Compile Include="Scheme\GetSchemesExternal.cs" />
     <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
@@ -99,13 +154,14 @@
     <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetails.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
-    <Compile Include="Scheme\GetSchemeById.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfoBySchemeId.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
     <Compile Include="Admin\GetRoles.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
+    <Compile Include="Shared\GetPanAreas.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
@@ -113,7 +169,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
+    <Compile Include="Scheme\AddContactPerson.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatus.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />
@@ -163,16 +219,17 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -10,7 +10,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">
+        <h1 class="govuk-heading-l">
             Which organisation would you like to perform activities for?
         </h1>
     </header>
@@ -20,7 +20,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
             @this.WeeeGds().RadioButtonsFor(
                  m => m.SelectedOrganisationId,
                  Model.Organisations,
@@ -29,13 +29,11 @@
                  RadioButtonLegend.VisuallyHidden,
                  RadioButtonLayout.Stacked)
         </div>
-
-        <p>
-            <button class="button" type="submit">Perform activities</button>
-        </p>
-
+        
+            <button class="govuk-button" type="submit">Perform activities</button>
+        
         <div>
-            <a href="@Url.Action("Search", "OrganisationRegistration")">Create or access another organisation</a>
+            <a href="@Url.Action("Search", "OrganisationRegistration")">Access another organisation</a>
         </div>
     }
 }

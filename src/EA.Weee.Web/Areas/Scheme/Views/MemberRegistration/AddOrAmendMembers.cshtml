@@ -85,28 +85,30 @@
         }))
     {
         <header class="hgroup">
-            <h1 id="title" class="heading-large" aria-live="off">
+            <h1 id="title" class="govuk-heading-l" aria-live="off">
                 Submit members' details
             </h1>
         </header>
-
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
         <div id="preSubmissionContent">
-            @Html.AntiForgeryToken()
-            @Html.Gds().ValidationSummary()
-
-            <p>To register or update your members' details, upload and submit an XML file.</p>
+            
+            <p>To register or update your members' details, upload and submit an XML file</p>
+            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
             <p class="important">
-                Your XML file must use the version 3.07 schema.
+                Your XML file must use the version 3.07 schema
             </p>
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
-                @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
+                <!-- Removed this as the TextBoxFor helper was adding the govuk-input class to the browse button, causing some formatting issues SG -->
+                <!--@Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })-->
+                <input class="govuk-file-upload" id="File" data-val="true" data-val-required="You must choose a file" name="File" accept=".xml" type="file">
             </div>
 
         </div>
 
-        @(this.WeeeGds().Submit("Check file for errors", new { style = "margin-top: 20px;", id = "submitButton", @class="button" }, true))
+        @(this.WeeeGds().Submit("Check file for errors", new { style = "margin-top: 20px;", id = "submitButton", @class="govuk-button" }, true))
 
         <p>
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })

@@ -7,6 +7,7 @@
         [Display(Name = "Something")]
         Something = 1,
         [Display(Name = "Something Else")]
-        SomethingElse = 2
+        SomethingElse = 2,
+        SomethingDifferent = 3
     }
 }

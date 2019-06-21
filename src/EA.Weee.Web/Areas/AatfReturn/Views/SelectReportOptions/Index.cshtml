@@ -1,0 +1,124 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
+@{
+    ViewBag.Title = "AATF return reporting options - GOV.UK";
+    var message = string.Empty;
+}
+
+<section id="main-content">
+    @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsRouteName))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-heading-l govuk-fieldset__heading">
+                        What do you need to report for @Model.Year @Model.Period?
+                    </h1>
+                </legend>
+                <p id="all-apply-hint">
+                    Select all that apply
+                </p>
+                <div class="govuk-checkboxes">
+                    @for (var i = 0; i < Model.ReportOnQuestions.Count; i++)
+                    {
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].AlternativeDescription)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Description)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Question)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].ParentId)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Id)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Selected)
+                        if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
+                        {
+                            <div class="govuk-checkboxes__item">
+                                @{
+                                    var selectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
+                                }
+                                <input type="checkbox" name="SelectedOptions" value="@Model.ReportOnQuestions[i].Id" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption/>
+                                <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
+                                    @Model.ReportOnQuestions[i].Description
+
+                                    <p class="govuk-body govuk-!-font-size-16" style="padding-top: 10px">
+                                        @switch (i)
+                                        {
+                                            case 0:
+                                                message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat";
+                                                break;
+                                            case 1:
+                                                message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere";
+                                                break;
+                                            case 2:
+                                                message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste";
+                                                break;
+                                            case 3:
+                                                message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
+                                                break;
+                                        }
+                                        @message
+                                    </p>
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            var errorClass = @Model.ReportOnQuestions[i].HasError ? "dcf-section-error" : "";
+                            var yesSelectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
+                            var noSelectedOption = @Model.DcfSelectedValue == "No" ? "checked" : "";
+
+                            <div id="dcfSection" class="dcf-section @errorClass">
+                                <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
+                                    @Model.ReportOnQuestions[i].Description?
+                                </h3>
+                                <p class="govuk-body govuk-!-font-size-16">
+                                    This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment
+                                </p>
+                                <div class="govuk-form-group" id="WeeeReusedOptions">
+                                    <fieldset class="govuk-fieldset inline">
+                                        <legend class="govuk-visually-hidden">Confirm if this WEEE has been been sent to you from a DCF operator</legend>
+                                        <div class="govuk-radios govuk-radios--inline">
+                                            <div class="govuk-radios__item">
+                                                <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes" @yesSelectedOption>
+                                                <input class="govuk-radios__input" id="DcfSelectedValue-0" name="DcfSelectedValue" type="radio" value="Yes" @yesSelectedOption>
+                                                <label for="DcfSelectedValue-0" class="govuk-label govuk-radios__label">Yes</label>
+                                            </div>
+                                            <div class="govuk-radios__item">
+                                                <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No" @noSelectedOption>
+                                                <input class="govuk-radios__input" id="DcfSelectedValue-1" name="DcfSelectedValue" type="radio" value="No" @noSelectedOption>
+                                                <label for="DcfSelectedValue-1" class="govuk-label govuk-radios__label">No</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                </div>
+            </fieldset>
+        </div>
+        @Html.HiddenFor(m => m.QuarterWindowEndDate)
+        @Html.HiddenFor(m => m.QuarterWindowStartDate)
+        @Html.HiddenFor(m => m.Quarter)
+        @Html.HiddenFor(m => m.Period)
+        @Html.HiddenFor(m => m.Year)
+        @Html.HiddenFor(m => m.DcfSelectedValue)
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        <p>
+            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId })
+        </p>
+        <button type="submit" class="govuk-button">
+            Continue
+        </button>
+    }
+</section>
+
+@section scripts{
+    @Scripts.Render("~/bundles/weee-checkbox-toggle-visibility")
+    <script>
+        toggleVisibility('#Option-@Model.ReportOnQuestions[3].Id','#dcfSection');
+    </script>
+}

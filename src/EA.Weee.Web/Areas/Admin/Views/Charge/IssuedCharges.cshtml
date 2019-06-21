@@ -20,7 +20,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Issued Charges</h1>
+        <h1 class="govuk-heading-l">Issued Charges</h1>
     </header>
 
     <p>
@@ -35,7 +35,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
             @Html.Gds().LabelFor(m => m.SelectedComplianceYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
             @Html.Gds().DropDownListFor(
@@ -55,7 +55,7 @@
                 new { autocomplete = "false" })
         </div>
 
-        @(this.WeeeGds().Submit("Download charges (CSV)", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Download charges (CSV)"))
     }
 
     <p>

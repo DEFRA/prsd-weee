@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
 
@@ -16,6 +18,8 @@
 
         Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId);
 
+        Task<SchemePublicInfo> FetchSchemePublicInfoBySchemeId(Guid schemeId);
+
         Task<IList<ProducerSearchResult>> FetchProducerSearchResultList();
 
         Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultList();
@@ -23,5 +27,11 @@
         Task InvalidateProducerSearch();
 
         Task InvalidateOrganisationSearch();
+
+        Task InvalidateAatfCache(Guid id);
+
+        Task InvalidateSchemeCache(Guid id);
+
+        Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
 }

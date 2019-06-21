@@ -46,32 +46,41 @@
 
             message.Address.CountryName = country.Name;
             var address = ValueObjectInitializer.CreateAddress(message.Address, country);
-            organisation.AddOrUpdateAddress(addresstype, address);
-            try
+
+            if (addresstype.Equals(AddressType.SchemeAddress))
             {
-                await db.SaveChangesAsync();
+                if (message.AddressId.HasValue)
+                {
+                    var findAddress = await db.Addresses.SingleAsync(a => a.Id == message.AddressId.Value);
+
+                    findAddress.Overwrite(address);
+                    address = findAddress;
+                }
+                else
+                {
+                    db.Addresses.Add(address);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                throw new InvalidOperationException(ex.Message);
+                organisation.AddOrUpdateAddress(addresstype, address);
             }
 
-            return GetAddressId(addresstype, organisation);
+            await db.SaveChangesAsync();
+                
+            return GetAddressId(addresstype, organisation, address);
         }
 
-        private static Guid GetAddressId(AddressType type, Organisation organisation)
+        private static Guid GetAddressId(AddressType type, Organisation organisation, Address address)
         {
             switch (type.Value)
             {
                 case 1:
-                    return organisation.OrganisationAddress.Id;
-
+                    return address.Id;
                 case 2:
                     return organisation.BusinessAddress.Id;
-
                 case 3:
                     return organisation.NotificationAddress.Id;
-
                 default:
                     throw new InvalidOperationException("No address id found.");
             }

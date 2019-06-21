@@ -1,0 +1,138 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.FacilityViewModelBase
+@{
+    ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Manage @Model.FacilityType.ToDisplayString() details</h1>
+    @using (Html.BeginForm(actionName: Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf ? "ManageAatfDetails" : "ManageAeDetails", controllerName: "Aatf", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.ComplianceYear)
+        @Html.HiddenFor(m => m.FacilityType)
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+                    @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
+                    @Html.Gds().ValidationMessageFor(m => m.Name)
+                    @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+                </div>
+
+                @Html.HiddenFor(m => m.SiteAddressData.Id)
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address1)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Address1)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Address1)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Address1, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Address2)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Address2)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Address2)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Address2, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.AddressLine })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.TownOrCity)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.TownOrCity)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.TownOrCity)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.TownOrCity, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountyOrRegion)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.CountyOrRegion)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountyOrRegion)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.CountyOrRegion, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.TownCounty })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SiteAddressData.Postcode)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.Postcode)
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.Postcode)
+                    @Html.Gds().TextBoxFor(m => m.SiteAddressData.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
+                </div>
+
+                <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.SiteAddressData.CountryId)">
+                    @Html.Gds().LabelFor(m => m.SiteAddressData.CountryId, new { id="country-dropdown-list" })
+                    @Html.Gds().ValidationMessageFor(m => m.SiteAddressData.CountryId)
+                    @Html.DropDownListFor(m => m.SiteAddressData.CountryId, new SelectList(Model.SiteAddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "false", aria_labelledby = "country-dropdown-list" })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
+                    @Html.Gds().LabelFor(m => m.ApprovalNumber)
+                    @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
+                    @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @class = "govuk-!-width-one-third", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
+                </div>
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+                    @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+                    @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
+                    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Abbreviation", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                </div>
+
+                <div class="govuk-form-group competent-authority-hidden">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                        <label class="govuk-label form-label" for="PanAreaId">WROS pan area team</label>
+                        @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
+                        @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                    </div>
+
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
+                        <label class="govuk-label form-label" for="LocalAreaId">EA area</label>
+                        @Html.Gds().ValidationMessageFor(m => m.LocalAreaId)
+                        @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+                    </div>
+                </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StatusValue)">
+                @Html.Gds().LabelFor(m => m.StatusValue)
+                @Html.Gds().ValidationMessageFor(m => m.StatusValue)
+                @Html.Gds().DropDownListFor(m => m.StatusValue, new SelectList(Model.StatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SizeValue)">
+                @Html.Gds().LabelFor(m => m.SizeValue)
+                @Html.Gds().ValidationMessageFor(m => m.SizeValue)
+                @Html.Gds().DropDownListFor(m => m.SizeValue, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">
+                <details class="govuk-details govuk-!-font-size-16 govuk-!-margin-bottom-1" role="group" aria-live="polite">
+                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text govuk-label form-label" id="ApprovalDateLabel">
+                            @Html.DisplayNameFor(m => m.ApprovalDate)
+                        </span>
+                    </summary>
+                    @Html.Partial("_ApprovalDateProgressiveDisclosure")
+                </details>
+                @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
+                @if (Model.ApprovalDate.HasValue)
+                {
+                    <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" value="@Model.ApprovalDate.Value.ToString("dd/MM/yyyy")" />
+                }
+                else
+                {
+                    <input id="ApprovalDate" name="ApprovalDate" class="govuk-!-width-one-third form-control govuk-input date-picker" aria-labelledby="ApprovalDateLabel" />
+                }
+            </div>
+        </div>
+        </div>
+
+        <div class="govuk-!-padding-bottom-6"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <p>
+            <a href="@(Url.Action("Details", new { area = "Admin", Id = Model.Id }))">Back</a>
+        </p>
+    }
+</section>
+
+@section scripts {
+    @Scripts.Render("~/bundles/hide-classes-when-competent-authory-is-not-ea")
+}

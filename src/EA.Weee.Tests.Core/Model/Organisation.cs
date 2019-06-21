@@ -19,6 +19,8 @@ namespace EA.Weee.Tests.Core.Model
             this.MemberUploads = new HashSet<MemberUpload>();
             this.OrganisationUsers = new HashSet<OrganisationUser>();
             this.Schemes = new HashSet<Scheme>();
+            this.AATFs = new HashSet<AATF>();
+            this.Returns = new HashSet<Return>();
         }
     
         public System.Guid Id { get; set; }
@@ -28,17 +30,15 @@ namespace EA.Weee.Tests.Core.Model
         public int OrganisationStatus { get; set; }
         public string TradingName { get; set; }
         public string CompanyRegistrationNumber { get; set; }
-        public Nullable<System.Guid> ContactId { get; set; }
-        public Nullable<System.Guid> OrganisationAddressId { get; set; }
         public Nullable<System.Guid> BusinessAddressId { get; set; }
         public Nullable<System.Guid> NotificationAddressId { get; set; }
     
         public virtual Address Address { get; set; }
         public virtual Address Address1 { get; set; }
-        public virtual Address Address2 { get; set; }
-        public virtual Contact Contact { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
         public virtual ICollection<Scheme> Schemes { get; set; }
+        public virtual ICollection<AATF> AATFs { get; set; }
+        public virtual ICollection<Return> Returns { get; set; }
     }
 }

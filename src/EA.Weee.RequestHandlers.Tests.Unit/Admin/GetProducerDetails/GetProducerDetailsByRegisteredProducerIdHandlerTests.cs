@@ -22,7 +22,7 @@
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
-
+ 
     public class GetProducerDetailsByRegisteredProducerIdHandlerTests
     {
         [Theory]

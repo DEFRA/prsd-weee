@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Domain.DataReturns;
     using Domain.Error;
     using Domain.Lookup;
     using Domain.Obligation;
@@ -955,6 +956,11 @@
             AddWeeeDeliveredAmount(dataReturnVersion, weeeDeliveredAmount);
 
             return weeeDeliveredAmount;
+        }
+
+        public Return CreateReturn()
+        {
+            return new Return() { Organisation = CreateOrganisation(), Quarter = 1, Id = IntegerToGuid(1) };
         }
     }
 }

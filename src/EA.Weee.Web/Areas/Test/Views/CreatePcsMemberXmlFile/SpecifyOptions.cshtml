@@ -9,7 +9,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">
+        <h1 class="govuk-heading-l">
             Specify options for the XML file
         </h1>
     </header>
@@ -21,45 +21,47 @@
 
         @Html.HiddenFor(model => model.OrganisationID);
         
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.SchemaVersion)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.SchemaVersion)>
             @Html.Gds().LabelFor(model => model.SchemaVersion)
             @Html.Gds().ValidationMessageFor(mode => Model.SchemaVersion)
             @Html.EnumDropDownListFor(model => model.SchemaVersion)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
             @Html.Gds().LabelFor(model => model.ComplianceYear)
             @Html.Gds().ValidationMessageFor(mode => Model.ComplianceYear)
             @Html.Gds().TextBoxFor(model => model.ComplianceYear)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfNewProducers)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfNewProducers)>
             @Html.Gds().LabelFor(model => model.NumberOfNewProducers)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfNewProducers)
             @Html.Gds().TextBoxFor(model => model.NumberOfNewProducers)
         </div>
 
-        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfExistingProducers)>
+        <div class="govuk-form-group" @Html.Gds().FormGroupClass(m => m.NumberOfExistingProducers)>
             @Html.Gds().LabelFor(model => model.NumberOfExistingProducers)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfExistingProducers)
             @Html.Gds().TextBoxFor(model => model.NumberOfExistingProducers)
         </div>
 
-        <h3 class="heading-small">Advanced Options</h3>
+        <h3 class="govuk-heading-s">Advanced Options</h3>
 
-        <div class="form-group">
-            @Html.Gds().CheckBoxFor(model => model.NoCompaniesForNewProducers)
+        <div class="govuk-form-group">
+            @Html.Gds().CheckBoxFrontEndFor(model => model.NoCompaniesForNewProducers, new { @class = "govuk-checkboxes__input" })
         </div>
         
-        <h3 class="heading-small">Optional Errors</h3>
+        <h3 class="govuk-heading-s">Optional Errors</h3>
 
-        <div class="form-group">
-            @Html.Gds().CheckBoxFor(model => model.IncludeMalformedSchema)
-            @Html.Gds().CheckBoxFor(model => model.IncludeUnexpectedFooElement)
-            @Html.Gds().CheckBoxFor(model => model.IgnoreStringLengthConditions)
+        <div class="govuk-form-group">
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IncludeMalformedSchema, new { @class = "govuk-checkboxes__input" })
+            <div class="govuk-!-padding-bottom-2"></div>
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IncludeUnexpectedFooElement, new { @class = "govuk-checkboxes__input" })
+            <div class="govuk-!-padding-bottom-2"></div>
+            @Html.Gds().CheckBoxFrontEndFor(model => model.IgnoreStringLengthConditions, new { @class = "govuk-checkboxes__input" })
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
 
         @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsMemberXmlFile", null, null)
     }

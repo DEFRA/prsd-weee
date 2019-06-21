@@ -6,7 +6,7 @@
     using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    public class LatestMemberUploadListMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
+    public class List : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
     {
         public LatestMemberUploadList Map(IEnumerable<MemberUpload> source)
         {

@@ -2,14 +2,14 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
 @{
-    ViewBag.Title = "Choose Activity";
+    ViewBag.Title = "Choose Activity - GOV.UK";
 }
 
 @section main_content
 {   
     <header class="hgroup">
-        <h1 class="heading-large">
-            What would you like to do?
+        <h1 class="govuk-heading-l">
+            What activity would you like to do?
         </h1>
     </header>
 
@@ -18,24 +18,25 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.SchemeId)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "What would you like to do?",
+                "What activity would you like to do?",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 
     @if (Model.ShowLinkToCreateOrJoinOrganisation)
     {
-    <div>
-        <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Create or access another organisation</a>
-    </div>
+    <p>
+        <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Access another organisation</a>
+    </p>
 }
 }
 
