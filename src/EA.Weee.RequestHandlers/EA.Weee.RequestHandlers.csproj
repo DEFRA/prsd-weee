@@ -200,6 +200,9 @@
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
     <Compile Include="Mappings\LocalAreaMap.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\GetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\IGetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\GetActiveOrganisationUsersHandler.cs" />
     <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
