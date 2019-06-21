@@ -1,25 +1,14 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.Tests.Core
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Domain;
-    using Domain.User;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
-    using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Tests.Core.Model;
-    using FluentAssertions;
-    using RequestHandlers.AatfReturn.ObligatedGeneric;
-    using Xunit;
+    using DataAccess;
+    using Domain.AatfReturn;
+    using Domain.DataReturns;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using Scheme = Domain.Scheme.Scheme;
-    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
-    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
 
     public static class ObligatedWeeeIntegrationCommon
     {
@@ -32,9 +21,9 @@
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(UKCompetentAuthority competentAuthority, Organisation organisation, AatfContact contact, Domain.Country country)
+        public static Aatf CreateAatf(WeeeContext context, Organisation organisation)
         {
-            var aatf = new Aatf("aatfname", competentAuthority, "number", AatfStatus.Approved, organisation, CreateAatfAddress(country), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
+            var aatf = new Aatf("aatfname", context.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(context.Countries.First()), AatfSize.Large, DateTime.Now, CreateDefaultContact(context.Countries.First()), FacilityType.Aatf, 2019, context.LocalAreas.First(), context.PanAreas.First());
             return aatf;
         }
 

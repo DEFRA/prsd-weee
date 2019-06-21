@@ -26,7 +26,7 @@
                 .With(e => e.StatusValue, AatfStatus.Approved.Value)
                 .With(e => e.SizeValue, AatfSize.Large.Value)
                 .Create();
-            viewModel.CompetentAuthorityId = viewModel.CompetentAuthoritiesList.Last().Id;
+            viewModel.CompetentAuthorityId = viewModel.CompetentAuthoritiesList.Last().Abbreviation;
 
             var result = requestCreator.ViewModelToRequest(viewModel);
 
@@ -34,7 +34,7 @@
             result.Data.Id.Should().Be(viewModel.Id);
             result.Data.Name.Should().Be(viewModel.Name);
             result.Data.ApprovalNumber.Should().Be(viewModel.ApprovalNumber);
-            result.Data.CompetentAuthority.Id.Should().Be(viewModel.CompetentAuthorityId);
+            result.Data.CompetentAuthority.Abbreviation.Should().Be(viewModel.CompetentAuthorityId);
             result.Data.AatfStatus.Should().Be(AatfStatus.Approved);
             result.Data.SiteAddress.Should().Be(viewModel.SiteAddressData);
             result.Data.Size.Should().Be(AatfSize.Large);
