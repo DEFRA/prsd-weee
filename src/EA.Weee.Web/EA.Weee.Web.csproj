@@ -938,7 +938,6 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\PartnershipDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderOrPartnershipDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
