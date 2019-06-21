@@ -5,24 +5,22 @@
     using EA.Weee.Requests.AatfReturn;
     using System.Threading.Tasks;
 
-    public class RemoveSchemeRequestHandler : IRequestHandler<RemoveScheme, bool>
+    public class RemoveReturnSchemeRequestHandler : IRequestHandler<RemoveReturnScheme, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
 
-        public RemoveSchemeRequestHandler(IWeeeAuthorization authorization, IReturnSchemeDataAccess returnSchemeDataAccess)
+        public RemoveReturnSchemeRequestHandler(IWeeeAuthorization authorization, IReturnSchemeDataAccess returnSchemeDataAccess)
         {
             this.authorization = authorization;
             this.returnSchemeDataAccess = returnSchemeDataAccess;
         }
 
-        public async Task<bool> HandleAsync(RemoveScheme message)
+        public async Task<bool> HandleAsync(RemoveReturnScheme message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            // Remove scheme
-
-            // Remove weee data with that scheme id
+            await returnSchemeDataAccess.RemoveReturnScheme(message.SchemeId);
 
             return true;
         }

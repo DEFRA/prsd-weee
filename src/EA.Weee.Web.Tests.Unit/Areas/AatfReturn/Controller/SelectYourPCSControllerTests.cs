@@ -245,6 +245,9 @@
                 SelectedValue = "Yes",
                 SelectedSchemes = reselectedSchemes,
                 RemovedSchemes = new List<Guid>()
+                {
+                    Guid.NewGuid()
+                }
             };
 
             RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
@@ -255,6 +258,7 @@
             result.RouteName.Should().Be(AatfRedirect.Default);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeId == model.RemovedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -313,34 +317,6 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[2])));
-
-            return reselectedSchemes;
-        }
-
-        private List<Guid> PrepareRemoveSchemes(Guid returnId)
-        {
-            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
-            List<Guid> reselectedSchemes = new List<Guid>();
-
-            foreach (SchemeData scheme in existingSchemes)
-            {
-                scheme.Id = Guid.NewGuid();
-                reselectedSchemes.Add(scheme.Id);
-            }
-
-            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
-            {
-                SchemeDataItems = existingSchemes
-            };
-
-            List<Guid> removedPcs = new List<Guid>()
-            {
-                reselectedSchemes[reselectedSchemes.Count - 1]
-            };
-
-            reselectedSchemes.RemoveAt(reselectedSchemes.Count - 1);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
 
             return reselectedSchemes;
         }
