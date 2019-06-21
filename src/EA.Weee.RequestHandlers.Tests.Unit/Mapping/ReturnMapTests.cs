@@ -6,6 +6,7 @@
     using Core.Scheme;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Lookup;
     using Domain.User;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
@@ -217,8 +218,8 @@
 
             var aatfs = new List<Aatf>()
             {
-                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019),
-                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019)
+                new Aatf("Aatf1", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>()),
+                new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>()),
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
