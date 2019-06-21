@@ -453,10 +453,7 @@
             {
                 try
                 {
-                    await
-                        client.SendAsync(
-                            User.GetAccessToken(),
-                            new JoinOrganisation(viewModel.OrganisationId));
+                    await client.SendAsync(User.GetAccessToken(), new JoinOrganisation(viewModel.OrganisationId));
                 }
                 catch (ApiException ex)
                 {
@@ -468,12 +465,20 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
+                var anyActiveUsers = true;
+                var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(viewModel.OrganisationId));
+                
+                if (activeUsers.Count() == 0)
+                {
+                    anyActiveUsers = false;
+                }
+
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = anyActiveUsers });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId, bool activeUsers)
         {
             using (var client = apiClient())
             {
@@ -483,7 +488,8 @@
 
                 var model = new JoinOrganisationConfirmationViewModel()
                 {
-                    OrganisationName = organisationData.DisplayName
+                    OrganisationName = organisationData.DisplayName,
+                    AnyActiveUsers = activeUsers
                 };
 
                 return View(model);
