@@ -54,7 +54,8 @@
                     join org in context.Organisations on orgUser.OrganisationId equals org.Id
                     where org.OrganisationStatus.Value == OrganisationStatus.Complete.Value
                     && (filter.Status == null || filter.Status == (UserStatus)orgUser.UserStatus.Value)
-                    && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || org.Name.ToLower().Contains(filter.OrganisationName.ToLower()))
+                    && ((org.Name != null && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || org.Name.ToLower().Contains(filter.OrganisationName.ToLower())))
+                        || (org.TradingName != null && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || org.TradingName.ToLower().Contains(filter.OrganisationName.ToLower()))))
                     && (filter.Name == null || filter.Name.Trim() == string.Empty || (u.FirstName + " " + u.Surname).ToLower().Contains(filter.Name.ToLower()))
                     select new UserSearchData
                     {
