@@ -4,9 +4,11 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using AutoFixture;
     using Core.Admin;
     using Core.Shared;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.User;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using FakeItEasy;
@@ -20,6 +22,7 @@
 
     public class UserControllerTests
     {
+        private readonly Fixture fixture;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient weeeClient;
         private readonly IMapper mapper;
@@ -27,6 +30,7 @@
 
         public UserControllerTests()
         {
+            fixture = new Fixture();
             weeeClient = A.Fake<IWeeeClient>();
             apiClient = () => weeeClient;
             mapper = A.Fake<IMapper>();
@@ -49,6 +53,29 @@
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("View", redirectValues["action"]);
             Assert.Equal(selectedUserId, redirectValues["id"]);
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_RedirectsToIndexView()
+        {
+            var filter = fixture.Create<FilteringViewModel>();
+            var mappedFilter = fixture.Create<UserFilter>();
+
+            var mapperCall = A.CallTo(() => mapper.Map<UserFilter>(filter));
+            mapperCall.Returns(mappedFilter);
+
+            var result = await controller.ApplyFilter(filter);
+
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("Index", viewResult.ViewName);
+            Assert.IsType<ManageUsersViewModel>(viewResult.Model);
+
+            var viewResultModel = (ManageUsersViewModel)viewResult.Model;
+            Assert.Equal(filter, viewResultModel.Filter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<FindMatchingUsers>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
