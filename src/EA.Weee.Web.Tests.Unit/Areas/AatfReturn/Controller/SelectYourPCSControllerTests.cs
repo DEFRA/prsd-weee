@@ -243,7 +243,8 @@
             {
                 ReturnId = returnId,
                 SelectedValue = "Yes",
-                SelectedSchemes = reselectedSchemes
+                SelectedSchemes = reselectedSchemes,
+                RemovedSchemes = new List<Guid>()
             };
 
             RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
@@ -256,7 +257,34 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private List<Guid> PrepareSaveSchemes(Guid returnId)
+        [Fact]
+        public async void PcsRemovedPost_NoSelectedValue_ReturnsToSelectPcs()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+
+            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
+
+            PcsRemovedViewModel model = new PcsRemovedViewModel()
+            {
+                ReturnId = returnId,
+                SelectedValue = "No",
+                SelectedSchemes = reselectedSchemes,
+                RemovedSchemes = new List<Guid>(),
+                OrganisationId = organisationId
+            };
+
+            RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
+
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteName.Should().Be(AatfRedirect.SelectPcsRouteName);
+
+            Assert.Equal(controller.TempData["selectedSchemes"] as List<Guid>, model.SelectedSchemes);
+        }
+
+            private List<Guid> PrepareSaveSchemes(Guid returnId)
         {
             List<Guid> reselectedSchemes = new List<Guid>();
             List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
@@ -285,6 +313,34 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[2])));
+
+            return reselectedSchemes;
+        }
+
+        private List<Guid> PrepareRemoveSchemes(Guid returnId)
+        {
+            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
+            List<Guid> reselectedSchemes = new List<Guid>();
+
+            foreach (SchemeData scheme in existingSchemes)
+            {
+                scheme.Id = Guid.NewGuid();
+                reselectedSchemes.Add(scheme.Id);
+            }
+
+            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
+            {
+                SchemeDataItems = existingSchemes
+            };
+
+            List<Guid> removedPcs = new List<Guid>()
+            {
+                reselectedSchemes[reselectedSchemes.Count - 1]
+            };
+
+            reselectedSchemes.RemoveAt(reselectedSchemes.Count - 1);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
 
             return reselectedSchemes;
         }

@@ -104,10 +104,19 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList(),
                     Reselect = true
                 };
 
+                if (TempData.ContainsKey("selectedSchemes"))
+                {
+                    viewModel.SelectedSchemes = TempData["selectedSchemes"] as List<Guid>;
+                    TempData.Remove("selectedSchemes");
+                }
+                else
+                { 
+                    viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
+                }
+               
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View("Reselect", viewModel);
@@ -129,7 +138,8 @@
                         RemovedSchemeList = viewModel.SchemeList.Where(p => viewModel.SelectedSchemes.Contains(p.Id) == false).ToList(),
                         SelectedSchemes = viewModel.SelectedSchemes,
                         RemovedSchemes = viewModel.SchemeList.Select(p => p.Id).Where(q => viewModel.SelectedSchemes.Contains(q) == false).ToList(),
-                        ReturnId = viewModel.ReturnId
+                        ReturnId = viewModel.ReturnId,
+                        OrganisationId = viewModel.OrganisationId
                     };
 
                     return View("PcsRemoved", model);
@@ -178,15 +188,18 @@
                     {
                         SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
 
-                        // Also need to call a remove handler here
+                       foreach (Guid schemeToRemove in viewModel.RemovedSchemes)
+                        {
+                            await client.SendAsync(User.GetAccessToken(), new RemoveScheme() { SchemeId = schemeToRemove }); // Add this to tests
+                        }
 
                         return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
                     }
                 }
                 else
                 {
-                    // Go back to select PCS
-                    return View();
+                    TempData["selectedSchemes"] = viewModel.SelectedSchemes;
+                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId, true);
                 }
             }
             else
