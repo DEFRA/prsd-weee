@@ -693,7 +693,7 @@
                 organisationSearcher);
 
             // Act
-            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id);
+            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
 
             // Assert
             var model = ((ViewResult)result).Model;
