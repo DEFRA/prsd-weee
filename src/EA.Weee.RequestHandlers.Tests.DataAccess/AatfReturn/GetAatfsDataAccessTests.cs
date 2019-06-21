@@ -35,7 +35,7 @@
                 var aatfAddress = AddressHelper.GetAatfAddress(database);
                 var aatfSize = AatfSize.Large;
 
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 await genericDataAccess.Add<Aatf>(aatf);
 

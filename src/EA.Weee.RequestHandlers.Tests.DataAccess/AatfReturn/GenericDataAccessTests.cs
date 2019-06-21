@@ -30,7 +30,7 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -48,8 +48,8 @@
                 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -68,11 +68,11 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
-                var aatf3 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation2);
+                var aatf3 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation2);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -96,8 +96,8 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
 
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
 
@@ -119,10 +119,9 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
-                database.WeeeContext.Aatfs.Add(new Aatf("Name1", competentAuthority, "approval1", AatfStatus.Approved, organisation,
-                    AddressHelper.GetAatfAddress(database), A.Fake<AatfSize>(), DateTime.Now, contact, FacilityType.Aatf, (Int16)2019));
+                database.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation));
 
                 await database.WeeeContext.SaveChangesAsync();
 
@@ -130,36 +129,6 @@
 
                 database.WeeeContext.ChangeTracker.Entries().Count(e => e.State == EntityState.Deleted).Should().Be(0);
             }
-        }
-
-        private Aatf CreateAatf(UKCompetentAuthority competentAuthority, DatabaseWrapper database, AatfContact contact)
-        {
-            return new Aatf("name",
-                competentAuthority,
-                "12345678",
-                AatfStatus.Approved,
-                Organisation.CreatePartnership("trading"),
-                AddressHelper.GetAatfAddress(database), 
-                A.Fake<AatfSize>(),
-                DateTime.Now,
-                contact,
-                FacilityType.Aatf,
-                2019);
-        }
-
-        private AatfContact CreateContact(Domain.Country country)
-        {
-            return new AatfContact("First Name",
-                "Last Name",
-                "Manager",
-                "1 Address Lane",
-                "Address Ward",
-                "Town",
-                "County",
-                "Postcode",
-                country,
-                "01234 567890",
-                "email@email.com");
         }
     }
 }

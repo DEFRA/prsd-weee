@@ -5,6 +5,7 @@
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.Tests.Core.Model;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -21,10 +22,9 @@
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, AatfContact contact, Domain.Country country)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation)
         {
-            var aatf = new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, contact, FacilityType.Aatf, 2019);
-            return aatf;
+            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
         public static Scheme CreateScheme(Organisation organisation)
