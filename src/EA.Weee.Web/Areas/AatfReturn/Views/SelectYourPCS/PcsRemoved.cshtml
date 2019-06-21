@@ -6,61 +6,74 @@
     ViewBag.Title = "Confirm PCS removal - GOV.UK";
 }
 
-    <section id="main-content">
+<section id="main-content">
 
-        <h1 class="govuk-heading-l">
-            Are you sure you wish to remove these PCS from your list?
-        </h1>
+    <h1 class="govuk-heading-l">
+        Are you sure you wish to remove these PCS from your list?
+    </h1>
 
-        <div>
-            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-            <p class="important">
-                Any data entered against these options will be deleted
-            </p>
+    <div>
+        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+        <p class="important">
+            Any data entered against these options will be deleted
+        </p>
+    </div>
+
+    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { action = "PcsRemoved" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.OrganisationId)
+
+
+        <table class="govuk-table prsd-table-collapse">
+            <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
+            <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                    <th class="govuk-table__header prsd-table-collapse">PCS name</th>
+                    <th class="govuk-table__header prsd-table-collapse">Approval number</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body prsd-table-collapse">
+
+                @for (var i = 0; i < Model.RemovedSchemeList.Count; i++)
+                {
+                    var scheme = Model.RemovedSchemeList[i];
+                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.SchemeName</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.ApprovalName</td>
+                    </tr>
+                    @Html.HiddenFor(m => Model.SelectedSchemes[i])
+                    @Html.HiddenFor(m => Model.RemovedSchemes[i])
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].ApprovalName)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].Id)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].OrganisationId)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].Name)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].CanEdit)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].CompetentAuthorityId)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].IbisCustomerReference)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].ObligationType)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeDataAvailability)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeName)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeStatus)
+                    @Html.HiddenFor(m => Model.RemovedSchemeList[i].Selected)
+                }
+            </tbody>
+        </table>
+        <div class="govuk-!-padding-bottom-5"></div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeReusedOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "a",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
         </div>
 
-        @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { action = "PcsRemoved" }, FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Gds().ValidationSummary()
-            @Html.HiddenFor(m => m.ReturnId)
-            @Html.HiddenFor(m => m.OrganisationId)
-
-
-            for (var i = 0; i < Model.RemovedSchemeList.Count; i++)
-            {
-                <p>
-                    @Model.RemovedSchemeList[i].Name
-                </p>
-                @Html.HiddenFor(m => Model.SelectedSchemes[i])
-                @Html.HiddenFor(m => Model.RemovedSchemes[i])
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].ApprovalName)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Id)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].OrganisationId)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Name)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].CanEdit)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].CompetentAuthorityId)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].IbisCustomerReference)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].ObligationType)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeDataAvailability)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeName)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeStatus)
-                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Selected)
-            }
-
-            <div class="govuk-!-padding-bottom-5"></div>
-
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeReusedOptions">
-                @this.WeeeGds().RadioButtonsFor(
-                    m => m.SelectedValue,
-                    Model.PossibleValues,
-                    "a",
-                    RadioButtonLegend.VisuallyHidden,
-                    RadioButtonLayout.Inline)
-            </div>
-
-            <div class="govuk-form-group">
-                <button class="govuk-button" type="submit">Submit</button>
-            </div>
-        }
-    </section>
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Submit</button>
+        </div>
+    }
+</section>
