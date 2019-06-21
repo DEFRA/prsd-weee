@@ -3,14 +3,11 @@
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Weee.Tests.Core;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
