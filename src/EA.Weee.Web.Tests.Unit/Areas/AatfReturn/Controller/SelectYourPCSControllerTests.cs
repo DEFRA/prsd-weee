@@ -232,8 +232,6 @@
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
-            A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(requests);
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[2])));
 
             RedirectToRouteResult result = await controller.Index(model, true) as RedirectToRouteResult;
