@@ -5,6 +5,7 @@
     using Domain;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Charges;
+    using Shared;
 
     public class IssuePendingChargesDataAccess : CommonDataAccess, IIssuePendingChargesDataAccess
     {

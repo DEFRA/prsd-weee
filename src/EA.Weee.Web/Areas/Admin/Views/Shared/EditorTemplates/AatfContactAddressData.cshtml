@@ -32,6 +32,6 @@
     @Html.Gds().TextBoxFor(m => m.Postcode, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.Postcode })
 </div>
 
-<div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list">
+<div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)">
     @Html.Partial("_CountryPartial", Model)
 </div>

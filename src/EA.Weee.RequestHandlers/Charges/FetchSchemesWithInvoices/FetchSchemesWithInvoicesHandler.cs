@@ -9,6 +9,7 @@
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
+    using Shared;
 
     public class FetchSchemesWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchSchemesWithInvoices, IReadOnlyList<SchemeData>>
     {

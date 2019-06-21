@@ -72,10 +72,6 @@
             $(this).removeAttr("id");
             validationInput.attr("id", id);
         }
-
-        var input = $(this).next('input')[0];
-        input.id = $(this)[0].id + '_autocomplete';
-        $("<label class='govuk-visually-hidden' for='" + input.id + "'>Country input</label>").insertBefore(input);
     });
 
     //fn setCurPosition

@@ -381,7 +381,7 @@ th.sorted-descending:after {
 p.important {
     @include govuk-font(19, $weight: bold);
     padding-left: 50px;
-    background: url(govuk_frontend/assets/images/icon-important.png) no-repeat 0% 50%;
+    background: url(govuk_frontend/images/icon-important.png) no-repeat 0% 50%;
     background-size: 35px 35px;
     min-height: 35px;
 }
@@ -1063,9 +1063,17 @@ details summary::-ms-details-marker {
         font-weight: $govuk-font-weight-bold;
     }
 
-    .govuk-button {
-        margin: 0;
-        background-color: govuk-colour('light-blue')
+    .buttons {
+        .govuk-button {
+            margin: 0;
+            background-color: govuk-colour('light-blue')
+        }
+
+        .cancel {
+            background-color: govuk-colour('grey-1')
+        }
+
+        margin-bottom: 0;
     }
 }
 
