@@ -91,7 +91,7 @@
                     returnReportOn.Add(new ReturnReportOn(@return.Id, question.Id));
                 }
 
-                var aatf = await CreateAatf(context, @return);
+                var aatf = await CreateAatf(database, @return);
                 var scheme = await CreateScheme(context, organisation);
                 var sentOnSiteAddress = await CreateAddress(database);
                 var sentOnSOperatorAddress = await CreateAddress(database);
@@ -280,9 +280,9 @@
             return scheme;
         }
 
-        private static async Task<Aatf> CreateAatf(DatabaseWrapper database, Domain.AatfReturn.Return @return, Country country)
+        private static async Task<Aatf> CreateAatf(DatabaseWrapper database, Domain.AatfReturn.Return @return)
         {
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, @return.Organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, @return.Organisation);
 
             database.WeeeContext.Aatfs.Add(aatf);
 

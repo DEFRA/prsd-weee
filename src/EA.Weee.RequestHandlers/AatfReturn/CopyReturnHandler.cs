@@ -66,6 +66,8 @@
 
             CopyReturn(message, returnCopy);
 
+            await context.SaveChangesAsync();
+
             await RemoveAatfsWithInvalidApprovalDate(returnCopy);
 
             await context.SaveChangesAsync();
