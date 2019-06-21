@@ -190,7 +190,7 @@
 
                        foreach (Guid schemeToRemove in viewModel.RemovedSchemes)
                         {
-                            await client.SendAsync(User.GetAccessToken(), new RemoveScheme() { SchemeId = schemeToRemove }); // Add this to tests
+                            await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeId = schemeToRemove });
                         }
 
                         return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
