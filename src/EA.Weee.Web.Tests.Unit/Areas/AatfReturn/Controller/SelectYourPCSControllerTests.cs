@@ -152,11 +152,6 @@
         {
             Guid returnId = Guid.NewGuid();
 
-            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
-            {
-                ReturnId = returnId
-            };
-
             List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
             List<Guid> reselectedSchemes = new List<Guid>();
 
@@ -165,8 +160,6 @@
                 scheme.Id = Guid.NewGuid();
                 reselectedSchemes.Add(scheme.Id);
             }
-
-            model.SchemeList = existingSchemes;
 
             SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
             {
@@ -179,6 +172,13 @@
             };
 
             reselectedSchemes.RemoveAt(reselectedSchemes.Count - 1);
+
+            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
+            {
+                ReturnId = returnId,
+                SchemeList = existingSchemes,
+                SelectedSchemes = reselectedSchemes
+            };
 
             model.SelectedSchemes = reselectedSchemes;
 
@@ -197,14 +197,69 @@
         public async void ReselectPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
         {
             Guid returnId = Guid.NewGuid();
+           
+            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
 
             SelectYourPcsViewModel model = new SelectYourPcsViewModel()
             {
-                ReturnId = returnId
+                ReturnId = returnId,
+                SelectedSchemes = reselectedSchemes
             };
 
-            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
+            RedirectToRouteResult result = await controller.Index(model, true) as RedirectToRouteResult;
+
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteName.Should().Be(AatfRedirect.Default);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void PcsRemovedPost_ModelStateNotValid_ReturnsViewWithViewModel()
+        {
+            PcsRemovedViewModel viewModel = A.Dummy<PcsRemovedViewModel>();
+
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ViewResult result = await controller.PcsRemoved(viewModel) as ViewResult;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "PcsRemoved");
+
+            PcsRemovedViewModel resultModel = result.Model as PcsRemovedViewModel;
+
+            Assert.Equal(viewModel, resultModel);
+        }
+
+        [Fact]
+        public async void PcsRemovedPost_YesSelectedValue_ReturnsUserToTaskListCallsToSaveSchemesMade()
+        {
+            Guid returnId = Guid.NewGuid();
+
+            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
+
+            PcsRemovedViewModel model = new PcsRemovedViewModel()
+            {
+                ReturnId = returnId,
+                SelectedValue = "Yes",
+                SelectedSchemes = reselectedSchemes
+            };
+
+            RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
+
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteName.Should().Be(AatfRedirect.Default);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        private List<Guid> PrepareSaveSchemes(Guid returnId)
+        {
             List<Guid> reselectedSchemes = new List<Guid>();
+            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
 
             foreach (SchemeData scheme in existingSchemes)
             {
@@ -219,14 +274,11 @@
                 SchemeDataItems = existingSchemes
             };
 
-            model.SchemeList = existingSchemes;
-            model.SelectedSchemes = reselectedSchemes;
-
             List<AddReturnScheme> requests = new List<AddReturnScheme>()
             {
                 new AddReturnScheme()
                 {
-                    ReturnId = model.ReturnId,
+                    ReturnId = returnId,
                     SchemeId = reselectedSchemes[2]
                 }
             };
@@ -234,14 +286,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[2])));
 
-            RedirectToRouteResult result = await controller.Index(model, true) as RedirectToRouteResult;
-
-            result.RouteValues["returnId"].Should().Be(returnId);
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
-            result.RouteName.Should().Be(AatfRedirect.Default);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeId == reselectedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
+            return reselectedSchemes;
         }
     }
 }
