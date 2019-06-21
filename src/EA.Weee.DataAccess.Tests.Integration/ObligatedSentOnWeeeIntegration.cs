@@ -74,8 +74,8 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
-            var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(context.Countries.First());
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+            var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             database.WeeeContext.Organisations.Add(organisation);

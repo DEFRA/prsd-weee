@@ -54,7 +54,7 @@
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
 
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
             database.WeeeContext.Organisations.Add(organisation);
             database.WeeeContext.Schemes.Add(scheme);
