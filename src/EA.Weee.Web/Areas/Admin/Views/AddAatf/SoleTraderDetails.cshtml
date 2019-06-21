@@ -1,23 +1,15 @@
 ﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderOrPartnershipDetailsViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderDetailsViewModel
 @{
-    ViewBag.Title = "Partnership/soletrader details";
+    ViewBag.Title = "Sole trader or individual details";
 }
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            @if (Model.OrganisationType == "Partnership")
-            {
-                @:Partnership details
-            }
-            else
-            {
-                @:Sole trader or individual details
-            }
+            @ViewBag.Title
         </h1>
     </header>
 
@@ -27,6 +19,12 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
         @Html.HiddenFor(m => m.FacilityType)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)

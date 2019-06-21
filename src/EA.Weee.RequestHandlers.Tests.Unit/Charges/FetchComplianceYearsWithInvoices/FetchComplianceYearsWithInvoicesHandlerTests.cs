@@ -16,6 +16,7 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using RequestHandlers.Shared;
     using Xunit;
     public class FetchComplianceYearsWithInvoicesHandlerTests
     {

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Charges;
     using Domain;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core.Model;
     using Xunit;
     public class CommonDataAccessTests
