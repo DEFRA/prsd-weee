@@ -14,6 +14,7 @@
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchSchemesWithInvoices;
     using RequestHandlers.Security;
+    using RequestHandlers.Shared;
     using Requests.Charges;
     using Weee.Tests.Core;
     using Xunit;

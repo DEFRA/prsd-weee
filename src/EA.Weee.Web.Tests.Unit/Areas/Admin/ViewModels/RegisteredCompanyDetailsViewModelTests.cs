@@ -2,12 +2,8 @@
 {
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class RegisteredCompanyDetailsViewModelTests
@@ -18,8 +14,44 @@
         [InlineData("1234567891234567", false)]
         public void CheckRegistrationCompanyNumberIsValidLength(string registrationNumber, bool result)
         {
-            RegisteredCompanyDetailsViewModel model = ValidRegisteredCompanyDetailsViewModel();
+            var model = ValidRegisteredCompanyDetailsViewModel();
             model.CompaniesRegistrationNumber = registrationNumber;
+
+            var context = new ValidationContext(model, null, null);
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(model, context, results, true);
+
+            Assert.Equal(result, isValid);
+        }
+
+        [Theory]
+        [InlineData(true, true)]
+        [InlineData(false, false)]
+        public void CheckCompanyNameIsRequired(bool populateCompanyName, bool result)
+        {
+            var model = ValidRegisteredCompanyDetailsViewModel();
+            if (!populateCompanyName)
+            {
+                model.CompanyName = null;
+            }
+
+            var context = new ValidationContext(model, null, null);
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(model, context, results, true);
+
+            Assert.Equal(result, isValid);
+        }
+
+        [Theory]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public void CheckBusinessTradingNameIsNotRequired(bool populateTradingName, bool result)
+        {
+            var model = ValidRegisteredCompanyDetailsViewModel();
+            if (!populateTradingName)
+            {
+                model.BusinessTradingName = null;
+            }
 
             var context = new ValidationContext(model, null, null);
             var results = new List<ValidationResult>();
@@ -35,7 +67,8 @@
                 OrganisationType = "RegisteredCompany",
                 CompanyName = "Company name",
                 BusinessTradingName = "Trading name",
-                Address = new AddressData()
+                Address = new AddressData(),
+                CompaniesRegistrationNumber = "7654321"
             };
         }
     }
