@@ -7,6 +7,8 @@
     using Attributes;
     using Constant;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Infrastructure;
@@ -55,8 +57,9 @@
                     PastedData = TempData["pastedValues"] as String
                 });
 
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
-
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                TempData["currentQuarter"] = @return.Quarter;
+                TempData["currentQuarterWindow"] = @return.QuarterWindow;
                 return View(model);
             }
         }
@@ -76,17 +79,18 @@
                     return RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId });
                 }
 
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
                 return View(viewModel);
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(string.Empty, string.Empty, quarter);
         }
     }
 }

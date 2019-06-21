@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using System;
 
@@ -56,5 +57,10 @@
         /// The activity currently in scope when accessing the test area.
         /// </summary>
         public string TestAreaActivity { get; set; }
+
+        /// <summary>
+        /// Information about Aatf
+        /// </summary>
+        public string AatfDisplayInfo { get; set; }
     }
 }
