@@ -27,6 +27,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Shared;
 
     public class AatfController : AdminController
     {
@@ -82,7 +83,7 @@
         {
             SetBreadcrumb(facilityType, null);
 
-            return View(new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel() { FacilityType = facilityType } });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel { FacilityType = facilityType } });
         }
 
         [HttpPost]
@@ -124,6 +125,12 @@
         {
             SetBreadcrumb(filter.FacilityType, null);
             return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), CanAddAatf = IsUserInternalAdmin(), Filter = filter, FacilityType = filter.FacilityType });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ClearFilter(FacilityType facilityType)
+        {
+            return await ManageAatfs(facilityType);
         }
 
         [HttpGet]
@@ -271,6 +278,8 @@
 
             var accessToken = User.GetAccessToken();
             viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+            viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+            viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
             viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
 
             return viewModel;
@@ -286,7 +295,11 @@
                 using (var client = apiClient())
                 {
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                    viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
+                    viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
+
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
+
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
@@ -308,6 +321,8 @@
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
                 viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
             }
 

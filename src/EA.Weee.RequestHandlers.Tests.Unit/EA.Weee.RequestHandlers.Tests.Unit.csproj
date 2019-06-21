@@ -211,6 +211,8 @@
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
+    <Compile Include="Mapping\LocalAreaMapTests.cs" />
+    <Compile Include="Mapping\PanAreaMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
@@ -246,6 +248,8 @@
     <Compile Include="Shared\GetApiDateHandlerTests.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
+    <Compile Include="Shared\GetLocalAreasHandlerTests.cs" />
+    <Compile Include="Shared\GetPanAreasHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />

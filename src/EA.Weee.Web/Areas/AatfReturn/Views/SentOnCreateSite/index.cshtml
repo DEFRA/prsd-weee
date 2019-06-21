@@ -27,4 +27,5 @@
         </button>
 
     }
+    @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
 </section>

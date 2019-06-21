@@ -66,7 +66,7 @@
             {
                 var request = requestCreator.ViewModelToRequest(viewModel);
                 await client.SendAsync(User.GetAccessToken(), request);
-                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId));
+                await client.SendAsync(User.GetAccessToken(), new SubmitReturn(viewModel.ReturnId, true));
             }
             return await Task.Run<ActionResult>(() => AatfRedirect.SubmittedReturn(viewModel.ReturnId));
         }

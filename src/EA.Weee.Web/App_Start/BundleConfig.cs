@@ -49,6 +49,9 @@
             bundles.Add(new ScriptBundle("~/bundles/weee-checkbox-toggle-visibility").Include(
                 "~/Scripts/weee-checkbox-toggle-visibility.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/hide-classes-when-competent-authory-is-not-ea").Include(
+                "~/Scripts/hide-classes-when-competent-authory-is-not-ea.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
 

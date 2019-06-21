@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.Organisations;
     using Domain.AatfReturn;
+    using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
@@ -61,7 +62,9 @@
             A.CallTo(() => facilityTypeMap.Map(facilityType)).Returns(returnFacilityType);
             A.CallTo(() => organisationMap.Map(organisation)).Returns(organisationData);
 
-            var source = new Aatf(name, competentAuthority, approvalNumber, status, organisation, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, complianceYear);
+            var source = new Aatf(name, competentAuthority, approvalNumber, status, organisation, A.Fake<AatfAddress>(),
+                A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, complianceYear,
+                A.Fake<LocalArea>(), A.Fake<PanArea>());
 
             var result = map.Map(source);
 
