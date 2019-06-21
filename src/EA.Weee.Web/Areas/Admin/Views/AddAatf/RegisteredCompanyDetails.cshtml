@@ -1,0 +1,54 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.RegisteredCompanyDetailsViewModel
+@{
+    ViewBag.Title = "Registered company";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Registered company details</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationType)
+        @Html.HiddenFor(m => m.FacilityType)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+        </div>
+
+        <div>
+            <h2 class="govuk-heading-s">Registered office address</h2>
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
+            @Html.EditorFor(m => m.Address)
+        </div>
+
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Continue</button>
+        </div>
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.CompanyName, Model.FacilityType)))">Back</a>
+        </p>
+
+    }
+}

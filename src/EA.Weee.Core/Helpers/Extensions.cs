@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -114,6 +115,40 @@
                             .GetMember(enumValue.ToString())
                             .First()
                             .GetCustomAttribute<TAttribute>();
+        }
+
+        public static string ToDisplayString<T>(this T value)
+        {
+            var fieldInfo = typeof(T).GetField(value.ToString());
+
+            var descriptionAttributes = fieldInfo.GetCustomAttributes(
+                typeof(DisplayAttribute), false) as DisplayAttribute[];
+
+            if (descriptionAttributes == null)
+            {
+                return string.Empty;
+            }
+
+            return descriptionAttributes.Length > 0
+                ? descriptionAttributes[0].Name
+                : value.ToString();
+        }
+
+        public static T GetPropertyValue<T>(this object obj, string propertyName)
+        {
+            var property = obj.GetType().GetProperty(propertyName);
+
+            if (property == null)
+            {
+                throw new ArgumentException($"A property with the name '{propertyName}' was not found", nameof(propertyName));
+            }
+
+            if (property.PropertyType != typeof(T))
+            {
+                throw new InvalidCastException($"The property '{propertyName}' is of type '{property.PropertyType}' not the specified '{typeof(T)}'");
+            }
+
+            return (T)property.GetValue(obj, null);
         }
     }
 }

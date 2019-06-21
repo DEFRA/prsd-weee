@@ -5,20 +5,20 @@
 
 <section>
     <header class="hgroup">
-        <h1 class="heading-large">Submissions history</h1>
+        <h1 class="govuk-heading-l">Submissions history</h1>
     </header>
 
-    <div class="column-two-thirds">
+    <div class="govuk-grid-column-full">
         <p>View submissions for:</p>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
             @Html.Gds().LabelFor(m => m.SelectedScheme)
             @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
-            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
         </div>
 
         <p>
@@ -26,8 +26,11 @@
         </p>
     </div>
 
-    <div class="form-group" id="submissionResults"></div>
-
+    
+    <div class="govuk-grid-column-full">
+        <div class="govuk-form-group" id="submissionResults"></div>
+    </div>
+    
     <p class="left-cleared">
         <a href="javascript:history.back();">Back</a>
     </p>

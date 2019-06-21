@@ -1,0 +1,67 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
+@{
+    ViewBag.Title = "Obligated WEEE";
+}
+
+<div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+    <div class="govuk-table__head">
+        <div class="govuk-grid-row govuk-table__row govuk-table__header">
+            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                <span>B2C (tonnes)</span>
+            </div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                <span>B2B (tonnes)</span>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-table__body">
+        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+        {
+            var category = Model.CategoryValues[i];
+
+            <div class="govuk-grid-row govuk-table__cell">
+                <div class="govuk-grid-column-one-half govuk-!-padding-bottom-0" id="@category.CategoryId">
+                    @(@category.CategoryId). @category.CategoryDisplay
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                    @Html.HiddenFor(m => m.CategoryValues[i].Id)
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="display:inline-flex">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
+                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
+                        @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                    </div>
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left" style="display:inline-flex">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
+                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
+                        @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="govuk-grid-row govuk-table__cell">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m">
+                    Total (tonnes)
+                </h2>
+            </div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display" style="display:inline-flex">
+                <h2 class="govuk-heading-m" id="B2CTotal" name="B2CTotal">@Model.B2CTotal</h2>
+            </div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display" style="display:inline-flex">
+                <h2 class="govuk-heading-m" id="B2BTotal" name="B2BTotal">@Model.B2BTotal</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/weee_tonnage_totals")
+<script>
+        TonnageTotals('B2C');
+        TonnageTotals('B2B');
+</script>

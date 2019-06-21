@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using Core.Scheme;
     using Core.Shared.Paging;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
@@ -21,6 +22,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
     using Web.ViewModels.Shared.Submission;
+    using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
@@ -59,11 +61,11 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                List<string> activities = await GetActivities(pcsId);
+                var activities = await GetActivities(pcsId);
 
-                var model = new ChooseActivityViewModel(activities);
-                model.OrganisationId = pcsId;
-                await SetBreadcrumb(pcsId, null);
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
+
+                await SetBreadcrumb(pcsId, null, false);
 
                 await SetShowLinkToCreateOrJoinOrganisation(model);
 
@@ -73,38 +75,55 @@
 
         internal async Task<List<string>> GetActivities(Guid pcsId)
         {
-            string organisationDetailsActivityName;
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
                 //Get the organisation type based on organisation id
-                organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                var organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+
+                var organisationOverview = await GetOrganisationOverview(pcsId);
+
+                var activities = new List<string>();
+
+                if (organisationDetails.SchemeId != null)
+                {
+                    activities.Add(PcsAction.ManagePcsMembers);
+
+                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    {
+                        activities.Add(PcsAction.ManageEeeWeeeData);
+                    }
+                }
+
+                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
+                {
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }
+
+                activities.Add(organisationDetailsActivityName);
+                if (organisationDetails.SchemeId != null)
+                {
+                    activities.Add(PcsAction.ManageContactDetails);
+                }
+
+                if (organisationOverview.HasMultipleOrganisationUsers)
+                {
+                    activities.Add(PcsAction.ManageOrganisationUsers);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfReturns);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
+                {
+                    activities.Add(PcsAction.ManageAeReturns);
+                }
+
+                return activities;
             }
-            var organisationOverview = await GetOrganisationOverview(pcsId);
-
-            List<string> activities = new List<string>();
-            activities.Add(PcsAction.ManagePcsMembers);
-
-            if (configurationService.CurrentConfiguration.EnableDataReturns)
-            {
-                activities.Add(PcsAction.ManageEeeWeeeData);
-            }
-
-            bool canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-            if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-            {
-                activities.Add(PcsAction.ViewSubmissionHistory);
-            }
-
-            activities.Add(organisationDetailsActivityName);
-            activities.Add(PcsAction.ManageContactDetails);
-
-            if (organisationOverview.HasMultipleOrganisationUsers)
-            {
-                activities.Add(PcsAction.ManageOrganisationUsers);
-            }
-
-            return activities;
         }
 
         private async Task<OrganisationOverview> GetOrganisationOverview(Guid organisationId)
@@ -153,7 +172,7 @@
                 {
                     var organisationOverview = await GetOrganisationOverview(viewModel.OrganisationId);
 
-                    bool canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                    var canViewDataReturnsSubmission = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
                     if (organisationOverview.HasMemberSubmissions && canViewDataReturnsSubmission)
                     {
                         return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
@@ -171,9 +190,17 @@
                 {
                     return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
+                if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
+                {
+                    return AatfRedirect.ReturnsList(viewModel.OrganisationId);
+                }
+                if (viewModel.SelectedValue == PcsAction.ManageAeReturns)
+                {
+                    return AeRedirect.ReturnsList(viewModel.OrganisationId);
+                }
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, null);
+            await SetBreadcrumb(viewModel.OrganisationId, null, false);
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
             await SetShowLinkToCreateOrJoinOrganisation(viewModel);
             return View(viewModel);
@@ -236,17 +263,17 @@
 
         private async Task SetShowLinkToCreateOrJoinOrganisation(ChooseActivityViewModel model)
         {
-            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+            var organisations = await GetOrganisations();
 
-            List<OrganisationUserData> accessibleOrganisations = organisations
+            var accessibleOrganisations = organisations
                 .Where(o => o.UserStatus == UserStatus.Active)
                 .ToList();
 
-            List<OrganisationUserData> inaccessibleOrganisations = organisations
+            var inaccessibleOrganisations = organisations
                 .Except(accessibleOrganisations)
                 .ToList();
 
-            bool showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
+            var showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
 
             model.ShowLinkToCreateOrJoinOrganisation = showLink;
         }
@@ -288,7 +315,7 @@
                                 ou.User.FirstName + " " + ou.User.Surname + " (" +
                                 ou.UserStatus.ToString() + ")", ou.Id));
 
-                await SetBreadcrumb(pcsId, "Manage organisation users");
+                await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
                 var model = new OrganisationUsersViewModel
                 {
@@ -303,7 +330,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, OrganisationUsersViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation users");
+            await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
             if (!ModelState.IsValid)
             {
@@ -330,7 +357,7 @@
         {
             if (organisationUserId.HasValue)
             {
-                await SetBreadcrumb(pcsId, "Manage organisation users");
+                await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
                 using (var client = apiClient())
                 {
@@ -360,7 +387,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, OrganisationUserViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation users");
+            await SetBreadcrumb(pcsId, "Manage organisation users", false);
 
             if (!ModelState.IsValid)
             {
@@ -400,8 +427,8 @@
                 {
                     OrganisationData = orgDetails
                 };
-                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
-                await SetBreadcrumb(pcsId, organisationDetailsActivityName);
+                var organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                await SetBreadcrumb(pcsId, organisationDetailsActivityName, false);
                 return View("ViewOrganisationDetails", model);
             }
         }
@@ -416,13 +443,13 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "Manage organisation contact details");
+            await SetBreadcrumb(pcsId, PcsAction.ManageContactDetails);
 
-            OrganisationData model;
+            SchemeData model;
             using (var client = apiClient())
             {
-                model = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
+                model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             return View(model);
@@ -430,25 +457,25 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageContactDetails(OrganisationData model)
+        public async Task<ActionResult> ManageContactDetails(SchemeData model)
         {
-            await SetBreadcrumb(model.Id, "Manage organisation contact details");
+            await SetBreadcrumb(model.OrganisationId, PcsAction.ManageContactDetails);
 
             if (!ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    model.Address.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 }
                 return View(model);
             }
 
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model, true));
+                await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(model, true));
             }
 
-            return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
+            return RedirectToAction("ChooseActivity", new { pcsId = model.OrganisationId });
         }
 
         [HttpGet]
@@ -462,8 +489,7 @@
                 page = 1;
             }
 
-            var model = new SubmissionHistoryViewModel();
-            model.OrderBy = orderBy;
+            var model = new SubmissionHistoryViewModel {OrderBy = orderBy};
 
             using (var client = apiClient())
             {
@@ -495,14 +521,15 @@
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
+                var csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
-                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
+                var csvFileName =
+                    $"{schemePublicInfo.ApprovalNo}_memberregistration_{year}_warnings_{submissionDateTime.ToString("ddMMyyyy_HHmm")}.csv";
 
-                string csv = csvWriter.Write(errors);
-                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                var csv = csvWriter.Write(errors);
+                var fileContent = new UTF8Encoding().GetBytes(csv);
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
@@ -518,8 +545,7 @@
                 page = 1;
             }
 
-            var model = new DataReturnSubmissionHistoryViewModel();
-            model.OrderBy = orderBy;
+            var model = new DataReturnSubmissionHistoryViewModel {OrderBy = orderBy};
 
             using (var client = apiClient())
             {
@@ -581,11 +607,15 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, bool setScheme = true)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
-            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+            breadcrumb.OrganisationId = organisationId;
+            if (setScheme)
+            {
+                breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+            }
         }
     }
 }

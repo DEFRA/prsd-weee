@@ -1,20 +1,21 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using Api.Client;
+    using Core.Organisations;
+    using Core.Scheme;
+    using Core.Shared;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.Organisations;
-    using Core.Scheme;
-    using Core.Shared;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Infrastructure;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Scheme;
@@ -52,7 +53,7 @@
                 .Returns(new PartnershipDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<RegisteredCompanyDetailsOverviewViewModel>(A<OrganisationData>._))
                 .Returns(new RegisteredCompanyDetailsOverviewViewModel());
-            A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<OrganisationData>._))
+            A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<SchemeData>._))
                 .Returns(new ContactDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<MembersDataOverviewViewModel>(A<SchemeData>._))
                 .Returns(new MembersDataOverviewViewModel());
@@ -98,7 +99,7 @@
 
             var controller = SchemeController();
 
-            SchemeData scheme = new SchemeData
+            var scheme = new SchemeData
             {
                 CanEdit = false
             };
@@ -118,7 +119,7 @@
 
             var controller = SchemeController();
 
-            SchemeData scheme = new SchemeData
+            var scheme = new SchemeData
             {
                 CanEdit = true
             };
@@ -339,25 +340,27 @@
         public async Task PostEditScheme_WithApiReturningSuccess_RedirectsToSchemeOverview()
         {
             // Arrange
-            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new UpdateSchemeInformationResult()
             {
                 Result = UpdateSchemeInformationResult.ResultType.Success
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
 
-            SchemeController controller = SchemeController();
+            var controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            var model = new SchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
             };
 
-            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+            var result = await controller.EditScheme(A.Dummy<Guid>(), model);
+
+            A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
 
             // Assert
-            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
             Assert.Equal("Overview", redirectResult.RouteValues["action"]);
@@ -373,25 +376,25 @@
         public async Task PostEditScheme_WithApiReturningApprovalNumberUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
-            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new UpdateSchemeInformationResult()
             {
                 Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
 
-            SchemeController controller = SchemeController();
+            var controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            var model = new SchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
             };
 
-            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+            var result = await controller.EditScheme(A.Dummy<Guid>(), model);
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
 
@@ -410,7 +413,7 @@
         public async Task PostEditScheme_WithApiReturningIbisCustomerReferenceUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
-            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new UpdateSchemeInformationResult()
             {
                 Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
                 IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
@@ -422,19 +425,19 @@
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
 
-            SchemeController controller = SchemeController();
+            var controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            var model = new SchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
             };
 
-            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+            var result = await controller.EditScheme(A.Dummy<Guid>(), model);
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
 
@@ -561,12 +564,12 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(organisationData);
 
-            List<CountryData> countries = new List<CountryData>();
+            var countries = new List<CountryData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
 
-            SchemeData scheme = new SchemeData
+            var scheme = new SchemeData
             {
                 CanEdit = false
             };
@@ -576,46 +579,40 @@
             var schemeController = SchemeController();
             new HttpContextMocker().AttachToController(schemeController);
 
-            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+            var result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
 
             // Assert
             Assert.IsType<HttpForbiddenResult>(result);
         }
 
         [Fact]
-        public async Task GetManageContactDetails_WithValidOrganisationId_ShouldReturnsDataAndDefaultView()
+        public async Task GetManageContactDetails_WithValidSchemeId_ShouldReturnsDataAndDefaultView()
         {
-            var organisationData = new OrganisationData
+            var organisationId = Guid.NewGuid();
+            var schemeId = Guid.NewGuid();
+
+            var schemeData = new SchemeData()
             {
                 Contact = new ContactData(),
-                OrganisationAddress = new AddressData()
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(organisationData);
-
-            List<CountryData> countries = new List<CountryData>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(countries);
-
-            SchemeData scheme = new SchemeData
-            {
+                Address = new AddressData(),
                 CanEdit = true
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(schemeData);
+
+            var countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
             var schemeController = SchemeController();
 
             new HttpContextMocker().AttachToController(schemeController);
 
-            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+            var result = await schemeController.ManageContactDetails(schemeId, organisationId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>.That.Matches(c => c.SchemeId.Equals(schemeId))))
                 .MustHaveHappened(Repeated.Exactly.Once);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
@@ -624,7 +621,7 @@
         [Fact]
         public async Task PostManageContactDetails_WithModelErrors_GetsCountriesAndReturnsDefaultView()
         {
-            List<CountryData> countries = new List<CountryData>();
+            var countries = new List<CountryData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
@@ -642,7 +639,7 @@
                 SchemeId = Guid.NewGuid(),
                 OrgId = Guid.NewGuid()
             };
-            ActionResult result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
+            var result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -652,7 +649,7 @@
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
 
-            ViewResult viewResult = (ViewResult)result;
+            var viewResult = (ViewResult)result;
 
             Assert.Equal(string.Empty, viewResult.ViewName);
             Assert.Equal(manageContactDetailsViewModel, viewResult.Model);
@@ -668,20 +665,20 @@
                 SchemeId = Guid.NewGuid(),
                 OrgId = Guid.NewGuid()
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .Returns(true);
             var schemeController = SchemeController();
             new HttpContextMocker().AttachToController(schemeController);
 
-            ActionResult result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
+            var result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(RedirectToRouteResult), result);
 
-            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            var redirectResult = (RedirectToRouteResult)result;
             Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
         }
 
@@ -703,8 +700,8 @@
             await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
-                .WhenArgumentsMatch(a => ((UpdateOrganisationContactDetails)a[1]).SendNotificationOnChange == false)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
+                .WhenArgumentsMatch(a => ((UpdateSchemeContactDetails)a[1]).SendNotificationOnChange == false)
                 .MustHaveHappened();
         }
 
@@ -724,226 +721,6 @@
         }
 
         [Fact]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(new List<CountryData>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                    TradingName = "TradingName",
-                    BusinessAddress = new AddressData(),
-                    CanEditOrganisation = true
-                });
-
-            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
-
-            Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "EditSoleTraderOrIndividualOrganisationDetails");
-        }
-
-        [Fact]
-        public async void GetEditSoleTraderOrIndividualOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                    TradingName = "TradingName",
-                    BusinessAddress = new AddressData(),
-                    CanEditOrganisation = false
-                });
-
-            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
-
-            Assert.NotNull(result);
-            Assert.IsType<HttpForbiddenResult>(result);
-        }
-
-        [Fact]
-        public async void PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
-        {
-            List<CountryData> countries = new List<CountryData>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(countries);
-
-            var schemeController = SchemeController();
-
-            new HttpContextMocker().AttachToController(schemeController);
-
-            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
-
-            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
-            {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinessAddress = new AddressData(),
-                BusinessTradingName = "TradingName",
-                OrgId = Guid.NewGuid(),
-                SchemeId = Guid.NewGuid()
-            };
-            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.Equal(countries, viewModel.BusinessAddress.Countries);
-
-            Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
-
-            ViewResult viewResult = (ViewResult)result;
-
-            Assert.Equal(String.Empty, viewResult.ViewName);
-            Assert.Equal(viewModel, viewResult.Model);
-        }
-
-        [Fact]
-        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
-        {
-            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
-            {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinessAddress = new AddressData(),
-                BusinessTradingName = "TradingName",
-                OrgId = Guid.NewGuid(),
-                SchemeId = Guid.NewGuid()
-            };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .Returns(true);
-            var schemeController = SchemeController();
-            new HttpContextMocker().AttachToController(schemeController);
-
-            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.NotNull(result);
-            Assert.IsType(typeof(RedirectToRouteResult), result);
-
-            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
-            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
-            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
-        }
-
-        [Fact]
-        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(new List<CountryData>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                    TradingName = "TradingName",
-                    Name = "CompanyName",
-                    CompanyRegistrationNumber = "123456789",
-                    BusinessAddress = new AddressData(),
-                    CanEditOrganisation = true
-                });
-
-            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
-
-            Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "EditRegisteredCompanyOrganisationDetails");
-        }
-
-        [Fact]
-        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                    TradingName = "TradingName",
-                    Name = "CompanyName",
-                    CompanyRegistrationNumber = "123456789",
-                    BusinessAddress = new AddressData(),
-                    CanEditOrganisation = false
-                });
-
-            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(Guid.NewGuid(), Guid.NewGuid());
-
-            Assert.NotNull(result);
-            Assert.IsType<HttpForbiddenResult>(result);
-        }
-
-        [Fact]
-        public async void PostEditRegisteredCompanyOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
-        {
-            List<CountryData> countries = new List<CountryData>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .Returns(countries);
-
-            var schemeController = SchemeController();
-
-            new HttpContextMocker().AttachToController(schemeController);
-
-            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
-
-            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
-            {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinessAddress = new AddressData(),
-                CompanyName = "CompanyName",
-                CompaniesRegistrationNumber = "123456789",
-                BusinessTradingName = "TradingName",
-                OrgId = Guid.NewGuid(),
-                SchemeId = Guid.NewGuid()
-            };
-            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.Equal(countries, viewModel.BusinessAddress.Countries);
-
-            Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
-
-            ViewResult viewResult = (ViewResult)result;
-
-            Assert.Equal(String.Empty, viewResult.ViewName);
-            Assert.Equal(viewModel, viewResult.Model);
-        }
-
-        [Fact]
-        public async Task PostEditRegisteredCompanyOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
-        {
-            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
-            {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                BusinessAddress = new AddressData(),
-                CompanyName = "CompanyName",
-                CompaniesRegistrationNumber = "123456789",
-                BusinessTradingName = "TradingName",
-                OrgId = Guid.NewGuid(),
-                SchemeId = Guid.NewGuid()
-            };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .Returns(true);
-            var schemeController = SchemeController();
-            new HttpContextMocker().AttachToController(schemeController);
-
-            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.NotNull(result);
-            Assert.IsType(typeof(RedirectToRouteResult), result);
-
-            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
-            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
-            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
-        }
-
-        [Fact]
         public async void HttpGet_Overview_WithNullOverviewDisplayOption_ShouldDefaultToPcsDetailsViewModel()
         {
             var result = await SchemeController().Overview(Guid.NewGuid());
@@ -954,6 +731,119 @@
 
             Assert.IsType<PcsDetailsOverviewViewModel>(viewResult.Model);
             Assert.Equal("Overview/PcsDetailsOverview", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpGet_Overview_BreadcrumbShouldBeSet()
+        {
+            var schemeName = "schemeName";
+            var schemeId = Guid.NewGuid();
+
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await SchemeController().Overview(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void HttpGet_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+
+            var controller = SchemeController();
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void HttpPost_EditScheme_ModelWithError_BreadcrumbIsSet()
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+
+            var controller = SchemeController();
+
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = SchemeStatus.Pending
+            });
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public async void HttpPost_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+
+            var controller = SchemeController();
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
+        }
+
+        [Theory]
+        [InlineData(UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
+        [InlineData(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
+        [InlineData(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
+        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet(UpdateSchemeInformationResult.ResultType resultType)
+        {
+            var schemeId = Guid.NewGuid();
+            var schemeName = "schemeName";
+            var infoResult = new UpdateSchemeInformationResult();
+            infoResult.Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure;
+
+            var controller = SchemeController();
+
+            var scheme = new SchemeData
+            {
+                CanEdit = true
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(infoResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
+            A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
+
+            var result = await controller.EditScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+            breadcrumbService.InternalScheme.Should().Be(schemeName);
         }
 
         [Theory]

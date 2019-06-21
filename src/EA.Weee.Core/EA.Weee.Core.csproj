@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.Core</RootNamespace>
     <AssemblyName>EA.Weee.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,21 +33,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Autofac.Mvc5.4.0.2\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -58,28 +55,22 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -88,7 +79,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfSchemeData.cs" />
+    <Compile Include="AatfReturn\AatfSize.cs" />
+    <Compile Include="AatfReturn\AatfStatus.cs" />
+    <Compile Include="AatfReturn\AatfDataList.cs" />
+    <Compile Include="AatfReturn\AatfContactData.cs" />
+    <Compile Include="AatfReturn\ObligatedType.cs" />
+    <Compile Include="AatfReturn\OperatorAddressData.cs" />
+    <Compile Include="AatfReturn\ReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\ReportOnQuestionEnum.cs" />
+    <Compile Include="AatfReturn\ReturnsData.cs" />
+    <Compile Include="AatfReturn\ReturnStatusData.cs" />
+    <Compile Include="AatfReturn\ReturnReportOn.cs" />
+    <Compile Include="AatfReturn\AatfContactAddressData.cs" />
+    <Compile Include="AatfReturn\ReturnsListDisplayOptions.cs" />
+    <Compile Include="AatfReturn\FacilityType.cs" />
+    <Compile Include="AatfReturn\ReturnStatus.cs" />
+    <Compile Include="AatfReturn\AatfFilter.cs" />
+    <Compile Include="AatfReturn\SiteAddressData.cs" />
+    <Compile Include="AatfReturn\AatfAddressData.cs" />
+    <Compile Include="AatfReturn\AatfData.cs" />
+    <Compile Include="AatfReturn\AatfObligatedData.cs" />
+    <Compile Include="AatfReturn\AddressData.cs" />
+    <Compile Include="AatfReturn\AddressDataSummary.cs" />
+    <Compile Include="AatfReturn\AddressTonnageSummary.cs" />
+    <Compile Include="AatfReturn\CategoryValue.cs" />
+    <Compile Include="AatfReturn\CategoryValues.cs" />
+    <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
+    <Compile Include="AatfReturn\NonObligatedData.cs" />
+    <Compile Include="AatfReturn\ObligatedPastedValues.cs" />
+    <Compile Include="AatfReturn\PastedValue.cs" />
+    <Compile Include="AatfReturn\PastedValues.cs" />
+    <Compile Include="AatfReturn\SchemeDataList.cs" />
+    <Compile Include="AatfReturn\TaskListDisplayOptions.cs" />
+    <Compile Include="AatfReturn\WeeeObligatedData.cs" />
+    <Compile Include="AatfReturn\ReceivedPcsData.cs" />
+    <Compile Include="AatfReturn\ObligatedCategoryValue.cs" />
+    <Compile Include="AatfReturn\QuarterWindow.cs" />
+    <Compile Include="AatfReturn\ReturnData.cs" />
+    <Compile Include="AatfReturn\Scheme.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnData.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnSummaryListData.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\LocalAreaData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />
     <Compile Include="Admin\ProducerEeeDetails.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchData.cs" />
@@ -115,7 +148,10 @@
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatter.cs" />
     <Compile Include="Helpers\Extensions.Strings.cs" />
+    <Compile Include="Helpers\ICategoryValueTotalCalculator.cs" />
+    <Compile Include="Helpers\CategoryValueTotalCalculator.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
+    <Compile Include="AatfReturn\ReturnsListRedirectOptions.cs" />
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />
@@ -167,15 +203,20 @@
     <Compile Include="Search\Simple\SimpleSearcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AatfReturn\NonObligatedCategoryValue.cs" />
+    <Compile Include="AatfReturn\NonObligatedCategoryValues.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\ICsvWriter.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
+    <Compile Include="Shared\IPasteProcessor.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Shared\PanAreaData.cs" />
     <Compile Include="Shared\UKCompetentAuthorityAbbreviationType.cs" />
+    <Compile Include="Shared\PasteProcessor.cs" />
     <Compile Include="SystemData\PcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\UserData.cs" />
     <Compile Include="Admin\UserSearchData.cs" />
@@ -231,9 +272,12 @@
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\UserStatus.cs" />
+    <Compile Include="Validation\DecimalPlaceHelper.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="Validation\MinimumElementAttribute.cs" />
+    <Compile Include="Validation\TonnageValueAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +285,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
+      <Project>{A987FFF6-5386-419E-AF0A-E6C74E3323CF}</Project>
+      <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
@@ -252,10 +300,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

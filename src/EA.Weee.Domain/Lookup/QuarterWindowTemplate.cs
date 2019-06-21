@@ -4,23 +4,23 @@
 
     public class QuarterWindowTemplate
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
-        public int Quarter { get; private set; }
+        public int Quarter { get; set; }
 
-        public int AddStartYears { get; private set; }
+        public int AddStartYears { get; set; }
 
-        public int StartMonth { get; private set; }
+        public int StartMonth { get; set; }
 
-        public int StartDay { get; private set; }
+        public int StartDay { get; set; }
 
-        public int AddEndYears { get; private set; }
+        public int AddEndYears { get; set; }
 
-        public int EndMonth { get; private set; }
+        public int EndMonth { get; set; }
 
-        public int EndDay { get; private set; }
+        public int EndDay { get; set; }
 
-        protected QuarterWindowTemplate()
+        public QuarterWindowTemplate()
         {
         }
     }

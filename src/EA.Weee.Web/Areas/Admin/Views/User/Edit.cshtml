@@ -9,7 +9,7 @@
 
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">User details</h1>
+            <h1 class="govuk-heading-l">User details</h1>
         </div>
     </header>
 
@@ -25,38 +25,38 @@
         @Html.HiddenFor(m => m.IsCompetentAuthorityUser)
         @Html.HiddenFor(m => m.CanManageStatus)
 
-        <div class="form-group">
-            <table title="This table contains the organisation user details.">
-                <tbody>
-                    <tr>
-                        <th>Company</th>
-                        <td>@Model.OrganisationName</td>
+        <div class="govuk-form-group">
+            <table class="govuk-table" title="This table contains the organisation user details.">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Company</th>
+                        <td class="govuk-table__cell">@Model.OrganisationName</td>
                     </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Email</th>
+                        <td class="govuk-table__cell"><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
-            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
-            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
         </div>
 
         if (Model.CanManageStatus)
         {
             if (Model.IsCompetentAuthorityUser)
             {
-                <div class="form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
                     @Html.Gds().LabelFor(m => m.Role)
                     @Html.Gds().ValidationMessageFor(m => m.Role)
                     @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { autocomplete = "false" })
@@ -64,10 +64,12 @@
             }
             else
             {
-                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                    @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                </div>
             }
 
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
                 @Html.Gds().LabelFor(m => m.UserStatus)
                 @Html.Gds().ValidationMessageFor(m => m.UserStatus)
                 @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { autocomplete = "false" })
@@ -75,12 +77,14 @@
         }
         else
         {
-            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
-            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { @class = "hidden" })
+                @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { @class = "hidden" })
+            </div>
         }
 
-        <div class="form-group">
-            <button class="button" type="submit">Save and continue</button>
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Save and continue</button>
         </div>
         <p>
             @Html.ActionLink("Back", "View", new { id = Model.Id })

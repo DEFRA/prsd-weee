@@ -1,0 +1,55 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
+@{
+    ViewBag.Title = "Non Obligated WEEE";
+}
+
+<div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+    <div class="govuk-table__head">
+        <div class="govuk-grid-row govuk-table__row govuk-table__header">
+            <div class="govuk-grid-column-three-quarters">&nbsp;</div>
+            <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                <span>WEEE (tonnes)</span>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-table__body">
+        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+        {
+            var category = Model.CategoryValues[i];
+
+            <div class="govuk-grid-row govuk-table__cell">
+                <div class="govuk-grid-column-three-quarters govuk-!-padding-bottom-0" id="@category.CategoryId">
+                    @(@category.CategoryId). @category.CategoryDisplay
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                    @Html.HiddenFor(m => m.CategoryValues[i].Id)
+                </div>
+                <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Tonnage)">
+                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Tonnage)
+                        @Html.TextBoxFor(m => m.CategoryValues[i].Tonnage, new { @class = "govuk-input govuk-input--width-10 weee-input", @style = "float:right; text-align: right", aria_labelledby = @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="govuk-grid-row govuk-table__cell">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m">
+                    Total (tonnes)
+                </h2>
+            </div>
+            <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                <h2 class="govuk-heading-m" id="TonnageTotal" name="TonnageTotal">@Model.Total</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/weee_tonnage_totals")
+<script>
+    TonnageTotals('Tonnage');
+</script>
+

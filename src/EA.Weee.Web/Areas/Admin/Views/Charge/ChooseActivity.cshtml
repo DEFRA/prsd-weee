@@ -20,7 +20,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">
+        <h1 class="govuk-heading-l">
             What would you like to manage?
         </h1>
     </header>
@@ -30,7 +30,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedActivity)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedActivity)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedActivity,
                 Model.PossibleValues,
@@ -40,7 +40,7 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 
     <p>

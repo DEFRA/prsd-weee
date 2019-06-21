@@ -8,15 +8,15 @@
         {
             var linkBuilder = new TagBuilder("a");
             linkBuilder.Attributes.Add("href", url);
-            linkBuilder.SetInnerText(displayText);
-
-            var tagBuilder = new TagBuilder("li");
-            tagBuilder.InnerHtml = linkBuilder.ToString();
-
+            linkBuilder.AddCssClass("govuk-tabs__tab");
             if (isActive)
             {
-                tagBuilder.Attributes.Add("class", "active");
+                linkBuilder.AddCssClass("govuk-tabs__tab--selected");
             }
+            linkBuilder.SetInnerText(displayText);
+
+            var tagBuilder = new TagBuilder("li") { InnerHtml = linkBuilder.ToString() };
+            tagBuilder.AddCssClass("govuk-tabs__list-item");
 
             return new MvcHtmlString(tagBuilder.ToString());
         }

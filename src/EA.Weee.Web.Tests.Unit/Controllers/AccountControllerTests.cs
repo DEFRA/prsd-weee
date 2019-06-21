@@ -10,10 +10,10 @@
     using Api.Client.Actions;
     using Api.Client.Entities;
     using Authorization;
+    using EA.Weee.Web.ViewModels.Account;
     using FakeItEasy;
     using Prsd.Core.Web.ApiClient;
     using Services;
-    using ViewModels.Account;
     using Web.Controllers;
     using Xunit;
 

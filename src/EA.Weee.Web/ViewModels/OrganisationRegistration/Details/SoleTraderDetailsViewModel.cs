@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
 {
-    using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details.Base;
 
-    public class SoleTraderDetailsViewModel
+    public class SoleTraderDetailsViewModel : OrganisationViewModel
     {
-        public Guid? OrganisationId { get; set; }
-
         [Required]
+        [DisplayName("Sole trader / individual name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [DisplayName("Business trading name")]
-        public virtual string BusinessTradingName { get; set; }
+        public string CompanyName { get; set; }
     }
 }

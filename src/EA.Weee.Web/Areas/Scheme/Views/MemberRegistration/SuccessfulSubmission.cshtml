@@ -10,7 +10,7 @@
 @section main_content {
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">You have successfully submitted your @Model.ComplianceYear member registration file</h1>
+            <h1 class="govuk-heading-l">You have successfully submitted your @Model.ComplianceYear member registration file</h1>
         </div>
     </header>
 
@@ -18,14 +18,14 @@
     {
         @Html.AntiForgeryToken()
 
-        <p>To find notification of all your registered members and their producer registration numbers, <a href="@(Url.UrlFor<MemberRegistrationController>(c => c.Summary(Model.PcsId)))">manage PCS members</a>.</p>
+        <p>To find notification of all your registered members and their producer registration numbers, <a href="@(Url.UrlFor<MemberRegistrationController>(c => c.Summary(Model.PcsId)))">manage PCS members</a></p>
 
-        <p>We will send an invoice for any producer registration charges to your organisation's contact.</p>
-        <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
+        <p>We will send an invoice for any producer registration charges to your organisation's contact</p>
+        <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities</p>
     }
 
     <p>
-    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
     </p>
     <p>
         @this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",

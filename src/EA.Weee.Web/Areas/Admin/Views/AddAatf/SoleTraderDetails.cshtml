@@ -1,0 +1,51 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details.SoleTraderDetailsViewModel
+@{
+    ViewBag.Title = "Sole trader or individual details";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @ViewBag.Title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationType)
+        @Html.HiddenFor(m => m.FacilityType)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div>
+            <h2 class="govuk-heading-s">Principle place of business addresss</h2>
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
+            @Html.EditorFor(m => m.Address)
+        </div>
+
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Continue</button>
+        </div>
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.BusinessTradingName, Model.FacilityType)))">Back</a>
+        </p>
+
+    }
+}

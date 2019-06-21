@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.Domain</RootNamespace>
     <AssemblyName>EA.Weee.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -46,7 +46,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\Aatf.cs" />
+    <Compile Include="AatfReturn\AatfAddressObligatedAmount.cs" />
+    <Compile Include="AatfReturn\AatfContact.cs" />
+    <Compile Include="AatfReturn\AatfSize.cs" />
+    <Compile Include="AatfReturn\INonObligatedAmount.cs" />
+    <Compile Include="AatfReturn\IObligatedAmount.cs" />
+    <Compile Include="AatfReturn\AatfAddress.cs" />
+    <Compile Include="AatfReturn\IReturnOption.cs" />
+    <Compile Include="AatfReturn\NonObligatedAmount.cs" />
+    <Compile Include="AatfReturn\ObligatedAmount.cs" />
+    <Compile Include="AatfReturn\ReportOnQuestion.cs" />
+    <Compile Include="AatfReturn\ReturnEntity.cs" />
+    <Compile Include="AatfReturn\ReturnReportOn.cs" />
+    <Compile Include="AatfReturn\FacilityType.cs" />
+    <Compile Include="AatfReturn\WeeeReused.cs" />
+    <Compile Include="AatfReturn\WeeeReceivedAmount.cs" />
+    <Compile Include="AatfReturn\WeeeReceived.cs" />
+    <Compile Include="AatfReturn\AatfReturn.cs" />
+    <Compile Include="AatfReturn\AatfStatus.cs" />
+    <Compile Include="AatfReturn\NonObligatedWeee.cs" />
+    <Compile Include="AatfReturn\Return.cs" />
+    <Compile Include="AatfReturn\ReturnQuarterWindow.cs" />
+    <Compile Include="AatfReturn\ReturnScheme.cs" />
+    <Compile Include="AatfReturn\ReturnStatus.cs" />
+    <Compile Include="AatfReturn\WeeeReusedAmount.cs" />
+    <Compile Include="AatfReturn\WeeeReusedSite.cs" />
+    <Compile Include="AatfReturn\WeeeSentOn.cs" />
+    <Compile Include="AatfReturn\WeeeSentOnAmount.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="Lookup\AreaBase.cs" />
+    <Compile Include="Lookup\LocalArea.cs" />
+    <Compile Include="Lookup\PanArea.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
     <Compile Include="DataReturns\DataReturnVersionAssociativeEntity.cs" />
@@ -87,6 +118,7 @@
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Error\UploadErrorType.cs" />
+    <Compile Include="Scheme\Scheme.Address.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
@@ -105,7 +137,7 @@
     <Compile Include="Scheme\MemberUploadError.cs" />
     <Compile Include="Organisation\Organisation.cs" />
     <Compile Include="Organisation\Organisation.Address.cs" />
-    <Compile Include="Organisation\Organisation.MainContactPerson.cs" />
+    <Compile Include="Scheme\Scheme.MainContactPerson.cs" />
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
@@ -135,10 +167,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

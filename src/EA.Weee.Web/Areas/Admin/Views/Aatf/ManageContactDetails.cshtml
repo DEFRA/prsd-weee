@@ -1,0 +1,33 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditContactAddressViewModel
+@{
+    ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " contact details - GOV.UK";
+}
+
+    <section id="main-content">
+        <h1 class="govuk-heading-l">Manage @Model.FacilityType.ToDisplayString() contact details</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.ContactData.Id)
+            @Html.HiddenFor(m => m.FacilityType)
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.EditorFor(m => m.ContactData)
+
+            <div class="govuk-!-padding-bottom-6"></div>
+            <button type="submit" name="save" class="govuk-button" id="site-details">
+                Save and continue
+            </button>
+            <div class="govuk-!-padding-bottom-6"></div>
+            <p>
+                <a href="@(Url.Action("Details", new { area = "Admin", Id = Model.AatfId }) + "#contactDetails")">Back</a>
+            </p>
+        }
+    </section>

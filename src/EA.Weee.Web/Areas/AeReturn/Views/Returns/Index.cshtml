@@ -1,0 +1,134 @@
+﻿@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.AeReturn.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
+@{
+    ViewBag.Title = "Manage AE returns - GOV.UK";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">
+        Manage AE returns
+    </h1>
+    @if (Model.DisplayCreateReturn)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.OrganisationId)
+                    @Html.HiddenFor(m => m.ComplianceYear)
+                    @Html.HiddenFor(m => m.Quarter)
+
+                    <div class="govuk-form-group">
+                        <button class="govuk-button" type="submit">Start a new return for @Model.Quarter.ToDisplayString() @Model.ComplianceYear</button>
+                    </div>
+                }
+
+                <details class="govuk-details govuk-!-font-size-16" role="group" aria-live="polite">
+                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text">
+                            I need to submit a return for a different quarter
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
+                        <div class="govuk-body govuk-!-font-size-16">
+                            If you want to start a different return other than the one available, contact your environmental regulator
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    }
+    @if (Model.Returns.Count > 0)
+    {
+
+
+        <table class="govuk-table prsd-table-collapse">
+            <caption class="govuk-table__caption govuk-visually-hidden">Manage AE returns</caption>
+            <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body prsd-table-collapse">
+
+                @for (var returnCount = 0; returnCount < Model.Returns.Count; returnCount++)
+                {
+                    var item = Model.Returns[returnCount];
+
+                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                            @{
+                                if (item.ReturnsListDisplayOptions.DisplayContinue)
+                                {
+                                    @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            You have not yet started any AE returns
+        </p>
+    }
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, null)
+    </p>
+    <style type="text/css">
+
+        @@media only screen and (max-width: 1020px) {
+            td:nth-of-type(1):before {
+                content: "Year";
+            }
+
+            td:nth-of-type(2):before {
+                content: "Quarter";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Total obligated (tonnes)";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Total non-obligated (tonnes)";
+            }
+
+            td:nth-of-type(5):before {
+                content: "Created by";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Submitted date (GMT)";
+            }
+
+            td:nth-of-type(7):before {
+                content: "Submitted by";
+            }
+
+            td:nth-of-type(8):before {
+                content: "Status";
+            }
+        }
+    </style>
+
+</section>

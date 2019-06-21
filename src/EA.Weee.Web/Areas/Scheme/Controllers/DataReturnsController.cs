@@ -362,6 +362,7 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = "Manage EEE/WEEE data";
+            breadcrumb.OrganisationId = organisationId;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 

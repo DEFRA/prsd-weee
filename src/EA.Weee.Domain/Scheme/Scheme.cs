@@ -6,11 +6,20 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Scheme : Entity
+    public partial class Scheme : Entity
     {
         public Scheme(Guid organisationId)
         {
             OrganisationId = organisationId;
+            SchemeStatus = SchemeStatus.Pending;
+            ApprovalNumber = string.Empty;
+        }
+
+        public Scheme(Guid organisationId, Guid addressId, Guid contactId)
+        {
+            OrganisationId = organisationId;
+            AddressId = addressId;
+            ContactId = contactId;
             SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
         }
@@ -46,6 +55,16 @@
         public Guid? CompetentAuthorityId { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public virtual Contact Contact { get; private set; }
+
+        public virtual Guid? ContactId { get; private set; }
+
+        public virtual Address Address { get; private set; }
+
+        public virtual Guid? AddressId { get; private set; }
+
+        public bool HasAddress => Address != null;
 
         public void UpdateScheme(
             string schemeName,

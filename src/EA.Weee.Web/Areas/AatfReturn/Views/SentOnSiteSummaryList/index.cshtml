@@ -1,0 +1,86 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnSiteSummaryListViewModel
+@{
+    ViewBag.Title = "Sent On WEEE";
+}
+<section id="main-content">
+    <h1 class="govuk-heading-l" style="padding-top: 0px;">What other AATFs/ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
+    <p class="govuk-body">You can add multiple AATFs/ATFs</p>
+    <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere</p>
+    @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+            @if (Model.Sites.Count > 0)
+            {
+                <div class="govuk-table__head">
+                    <div class="govuk-grid-row govuk-table__row govuk-table__header">
+                        <div class="govuk-grid-column-one-quarter">
+                            AATF/ATF name and address
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            Operator name and address
+                        </div>
+                        <div class="govuk-grid-column-one-half">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display" style="word-break:keep-all">
+                                B2C (tonnes)
+                            </div>
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display" style="word-break:keep-all">
+                                B2B (tonnes)
+                            </div>
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                Actions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                foreach (var address in Model.Sites)
+                {
+                    <div class="govuk-grid-row govuk-table__cell">
+                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                            @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
+                        </div>
+                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                            @Html.Raw(Model.CreateLongAddress(address.OperatorAddress));
+                        </div>
+                        <div class="govuk-grid-column-one-half">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                @address.Tonnages.B2C
+                            </div>
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                @address.Tonnages.B2B
+                            </div>
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                <div>
+                                    @Html.NavigationRouteLink("Change", "Change", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnCreateSite" })
+                                </div>
+                                <div style="padding-top: 10px;">
+                                    @Html.NavigationRouteLink("Remove", "Remove", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, action = "Index", controller = "SentOnRemoveSite" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="govuk-!-padding-bottom-8"></div>
+                <p>You have not entered any sites. If WEEE has been sent to another AATF/AE for treatment, enter the site details.</p>
+            }
+        </div>
+        <div class="govuk-!-padding-bottom-2"></div>
+        <p class="govuk-body" style="margin-bottom: 0px;">
+            @Html.RouteLink("Add another AATF/ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+        </p>
+        <div class="govuk-!-padding-bottom-8"></div>
+
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+</section>

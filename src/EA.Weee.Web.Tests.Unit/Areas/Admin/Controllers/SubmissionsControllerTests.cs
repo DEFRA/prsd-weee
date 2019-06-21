@@ -10,10 +10,10 @@
     using Services;
     using Services.Caching;
     using TestHelpers;
-    using ViewModels.Shared.Submission;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Submissions;
     using Web.Areas.Scheme.ViewModels;
+    using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin.GetDataReturnSubmissionChanges;
     using Weee.Requests.Admin.GetSubmissionChanges;
     using Weee.Requests.Shared;

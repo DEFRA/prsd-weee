@@ -1,15 +1,20 @@
 ﻿namespace EA.Weee.Web
 {
     using System.Reflection;
+    using Areas.AatfReturn.Attributes;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
     using EA.Weee.Core;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
+    using FluentValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
@@ -77,6 +82,18 @@
             builder.RegisterType<FuzzyOrganisationSearcher>()
                 .As<ISearcher<OrganisationSearchResult>>()
                 .InstancePerRequest();
+
+            builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
+                .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+                .AsImplementedInterfaces().InstancePerRequest();
+
+            // AATF View Model Mapping Utilties
+            builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
+            builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
+            builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
+            builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
+
+            builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
 
             return builder.Build();
         }

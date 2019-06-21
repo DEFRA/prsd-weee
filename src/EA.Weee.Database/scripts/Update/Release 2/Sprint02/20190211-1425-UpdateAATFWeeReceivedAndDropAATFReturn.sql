@@ -1,0 +1,18 @@
+ALTER TABLE [AATF].[WeeeReceived] DROP CONSTRAINT FK_WeeeReceived_AATFReturn
+ALTER TABLE [AATF].[WeeeReceived] DROP COLUMN AATFReturnId
+ALTER TABLE [AATF].[WeeeReceived] ADD  ReturnId uniqueidentifier NOT NULL
+ALTER TABLE [AATF].[WeeeReceived] ADD CONSTRAINT FK_Return_ReturnId FOREIGN KEY (ReturnId) REFERENCES [AATF].[Return](Id);
+ALTER TABLE [AATF].[WeeeReceived] Add AatfId uniqueidentifier NOT NULL
+ALTER TABLE [AATF].[WeeeReceived] ADD CONSTRAINT FK_Aatf_AatfId FOREIGN KEY (AatfId) REFERENCES [AATF].[AATF](Id);
+ALTER TABLE [AATF].[AATFReturnReportOn] DROP CONSTRAINT [FK_AATFReturnReportOn_AATFReturn]
+GO
+IF (EXISTS (SELECT * 
+                 FROM INFORMATION_SCHEMA.TABLES 
+                 WHERE TABLE_SCHEMA = 'AATF' 
+                 AND  TABLE_NAME = 'AATFReturnScheme'))
+BEGIN
+ALTER TABLE [AATF].[AATFReturnScheme] DROP CONSTRAINT [FK_AATFReturnScheme_AATFReturn]
+END
+ALTER TABLE [AATF].[WeeeReused] DROP CONSTRAINT [FK_WeeeReused_AATFReturn]
+ALTER TABLE [AATF].[WeeeSentOn] DROP CONSTRAINT [FK_WeeeSentOn_AATFReturn]
+DROP TABLE [AATF].[AATFReturn]

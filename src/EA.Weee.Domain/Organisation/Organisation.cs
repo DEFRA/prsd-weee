@@ -18,11 +18,10 @@
             OrganisationStatus = OrganisationStatus.Incomplete;
         }
 
-        private Organisation(OrganisationType organisationType, string companyName, string companyRegistrationNumber, string tradingName = null)
+        private Organisation(OrganisationType organisationType, string companyName, string companyRegistrationNumber = null, string tradingName = null)
         {
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
-            Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
 
             OrganisationType = organisationType;
             OrganisationStatus = OrganisationStatus.Incomplete;
@@ -31,7 +30,7 @@
             TradingName = tradingName;
         }
 
-        protected Organisation()
+        public Organisation()
         {
         }
 
@@ -57,10 +56,6 @@
             }
         }
 
-        public virtual Address OrganisationAddress { get; private set; }
-
-        public virtual Guid? OrganisationAddressId { get; private set; }
-
         public virtual Address BusinessAddress { get; private set; }
 
         public virtual Guid? BusinessAddressId { get; private set; }
@@ -69,13 +64,9 @@
 
         public virtual Guid? NotificationAddressId { get; private set; }
 
-        public virtual Contact Contact { get; private set; }
-
-        public virtual Guid? ContactId { get; private set; }
-
-        public static Organisation CreateSoleTrader(string tradingName)
+        public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual, tradingName);
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, null, tradingName);
         }
 
         public static Organisation CreatePartnership(string tradingName)
@@ -94,7 +85,8 @@
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             if (organisationType == OrganisationType.SoleTraderOrIndividual)
             {
-                Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+                Name = companyName;
             }
             else if (organisationType == OrganisationType.Partnership)
             {
@@ -112,7 +104,14 @@
             TradingName = tradingName;
         }
 
-        public void UpdateSoleTraderOrIndividualDetails(string tradingName)
+        public void UpdateSoleTraderDetails(string companyName, string tradingName)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+            Name = companyName;
+            TradingName = tradingName;
+        }
+
+        public void UpdatePartnershipDetails(string tradingName)
         {
             Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
             TradingName = tradingName;
@@ -139,22 +138,7 @@
                 throw new InvalidOperationException("Organisation status must be Incomplete to transition to Complete");
             }
 
-            if (OrganisationAddress == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have an OrganisationAddress");
-            }
-
-            if (Contact == null)
-            {
-                throw new InvalidOperationException("A Complete organisation must have a Contact");
-            }
-
             OrganisationStatus = OrganisationStatus.Complete;
-        }
-
-        public bool HasOrganisationAddress
-        {
-            get { return OrganisationAddress != null; }
         }
 
         public bool HasBusinessAddress
@@ -176,7 +160,7 @@
         {
             get
             {
-                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value)
+                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value)
                 {
                     return Name;
                 }

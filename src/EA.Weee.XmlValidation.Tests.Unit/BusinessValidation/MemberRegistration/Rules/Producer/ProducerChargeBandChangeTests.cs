@@ -123,8 +123,8 @@
         private class ProducerChargeBandChangeEvaluator
         {
             public IProducerQuerySet QuerySet { get; private set; }
-            public IProducerChargeBandCalculator ProducerChargeBandCalculator { get; private set; }
-            private ProducerChargeBandChange producerChargeBandChange;
+            private IProducerChargeBandCalculator ProducerChargeBandCalculator { get; set; }
+            private readonly ProducerChargeBandChange producerChargeBandChange;
             
             public ProducerChargeBandChangeEvaluator(IProducerChargeBandCalculatorChooser chooser)
             {

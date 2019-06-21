@@ -4,7 +4,7 @@
 
 @section main_content
 {
-    <h2 class="heading-large">Activate your user account</h2>
+    <h2 class="govuk-heading-l">Activate your user account</h2>
 
     <p class="lede">
         In order to use this service, please activate your user account.
@@ -21,7 +21,7 @@
     {
         @Html.AntiForgeryToken()
         <p>
-            <button class="button" type="submit">Request another email</button>        
+            <button class="govuk-button" type="submit">Request another email</button>        
         </p>
         <p>
             @Html.ActionLink("Create another user account", "Create", "Account")

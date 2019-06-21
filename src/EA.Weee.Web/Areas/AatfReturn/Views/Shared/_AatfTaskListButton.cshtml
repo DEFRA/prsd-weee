@@ -1,0 +1,4 @@
+﻿@using EA.Weee.Web.Infrastructure
+@model Guid
+
+@Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model, controller = "AatfTaskList", action = "Index" }, new { @class = "govuk-button" })

@@ -8,6 +8,8 @@
     using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using Domain;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv;
     using EA.Weee.RequestHandlers.Security;
@@ -54,7 +56,7 @@
         public async Task HandleAsync_Always_CreatesFileNameWithSchemeApprovalNumberComplianceYearAndCurrentTime()
         {
             // Arrange
-            Domain.Scheme.Scheme scheme = new Domain.Scheme.Scheme(A.Dummy<Domain.Organisation.Organisation>());
+            Domain.Scheme.Scheme scheme = new Domain.Scheme.Scheme(A.Dummy<Organisation>());
             scheme.UpdateScheme(
                 "Scheme name",
                 "WEE/AB1234CD/SCH",
@@ -106,7 +108,7 @@
             Assert.NotNull(csvWriter);
             Assert.Collection(csvWriter.ColumnTitles,
                 c => Assert.Equal("Quarter", c),
-                c => Assert.Equal("EEE or WEEE in tonnes (t)", c),
+                c => Assert.Equal("EEE or WEEE (tonnes)", c),
                 c => Assert.Equal("Obligation type", c),
                 c => Assert.Equal("Cat 1 (t)", c),
                 c => Assert.Equal("Cat 2 (t)", c),
