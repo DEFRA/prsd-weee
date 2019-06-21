@@ -5,13 +5,14 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.AatfReturn;
+    using Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using Weee.Tests.Core;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
@@ -71,21 +72,17 @@
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var country = await context.Countries.SingleAsync(c => c.Name == "France");
-            var contact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(country);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context.UKCompetentAuthorities.First(), organisation, contact, country);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             context.Organisations.Add(organisation);
             context.Schemes.Add(scheme);
-            context.AatfContacts.Add(contact);
             context.Aatfs.Add(aatf);
             context.Returns.Add(@return);
             
             await context.SaveChangesAsync();
 
             var weeeReused = new WeeeReused(aatf.Id, @return.Id);
-            var weeeReusedAmount = new List<WeeeReusedAmount>();
 
             context.WeeeReused.Add(weeeReused);
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())

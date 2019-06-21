@@ -275,5 +275,10 @@
 
             return aatfInfo.FirstOrDefault(a => a.Id == aatfId);
         }
+
+        public async Task InvalidateSchemeCache(Guid id)
+        {
+            await SchemeNames.InvalidateCache(id);
+        }
     }
 }

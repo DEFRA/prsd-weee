@@ -29,11 +29,11 @@
             @Html.Gds().ValidationMessageFor(m => m.CurrentDate)
             @if (Model.CurrentDate.HasValue)
             {
-                <input id="CurrentDate" name="CurrentDate" type="date" value="@Model.CurrentDate.Value.ToString("yyyy-MM-dd")"/>
+                <input id="CurrentDate" name="CurrentDate" class="govuk-!-width-one-third form-control govuk-input date-picker"  value="@Model.CurrentDate.Value.ToString("dd/MM/yyyy")"/>
             }
             else
             {
-                <input id="CurrentDate" name="CurrentDate" type="date" />
+                <input id="CurrentDate" name="CurrentDate" class="govuk-!-width-one-third form-control govuk-input date-picker" />
             }
         </div>
 
