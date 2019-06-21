@@ -170,14 +170,16 @@
             if (ModelState.IsValid)
             {
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+                var routeValues = new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText };
 
                 switch (organisationType)
                 {
                     case OrganisationType.SoleTraderOrIndividual:
+                        return RedirectToAction(nameof(SoleTraderDetails), "AddAatf", routeValues);
                     case OrganisationType.Partnership:
-                        return RedirectToAction("SoleTraderOrPartnershipDetails", "AddAatf", new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText });
+                        return RedirectToAction(nameof(PartnershipDetails), "AddAatf", routeValues);
                     case OrganisationType.RegisteredCompany:
-                        return RedirectToAction("RegisteredCompanyDetails", "AddAatf", new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText });
+                        return RedirectToAction(nameof(RegisteredCompanyDetails), "AddAatf", routeValues);
                 }
             }
 
@@ -185,13 +187,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderOrPartnershipDetails(string organisationType, FacilityType facilityType, string searchedText = null)
+        public async Task<ActionResult> PartnershipDetails(string organisationType, FacilityType facilityType, string searchedText = null)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
             IList<CountryData> countries = await GetCountries();
 
-            SoleTraderOrPartnershipDetailsViewModel model = new SoleTraderOrPartnershipDetailsViewModel
+            var model = new PartnershipDetailsViewModel
             {
                 BusinessTradingName = searchedText,
                 OrganisationType = organisationType,
@@ -205,7 +207,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SoleTraderOrPartnershipDetails(SoleTraderOrPartnershipDetailsViewModel model)
+        public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
@@ -228,7 +230,56 @@
 
                 Guid id = await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
+                return RedirectToAction(nameof(Add), "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SoleTraderDetails(string organisationType, FacilityType facilityType, string searchedText = null)
+        {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
+            var countries = await GetCountries();
+
+            var model = new SoleTraderDetailsViewModel
+            {
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                FacilityType = facilityType
+            };
+
+            model.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderDetails(SoleTraderDetailsViewModel model)
+        {
+            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
+
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var request = new CreateOrganisationAdmin()
+                {
+                    Address = model.Address,
+                    BusinessName = model.CompanyName,
+                    TradingName = model.BusinessTradingName,
+                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>()
+                };
+
+                var id = await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToAction(nameof(Add), "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
             }
         }
 
@@ -303,6 +354,8 @@
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.SiteAddressData.Countries = countries;
                 viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.OrganisationName = organisation.OrganisationName;
@@ -364,11 +417,13 @@
                 viewModel.Name,
                 viewModel.ApprovalNumber,
                 viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Id == viewModel.CompetentAuthorityId),
+                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Abbreviation == viewModel.CompetentAuthorityId),
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault()) {FacilityType = viewModel.FacilityType};
+                viewModel.ApprovalDate.GetValueOrDefault(),
+                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId)) {FacilityType = viewModel.FacilityType};
 
             return data;
         }

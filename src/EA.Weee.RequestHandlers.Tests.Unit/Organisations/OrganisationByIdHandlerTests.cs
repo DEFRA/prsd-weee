@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
+    using Domain.Lookup;
     using Domain.Organisation;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
@@ -250,7 +251,7 @@
 
         private Aatf CreateAatf(Organisation organisation)
         {
-            return new Aatf("name", A.Dummy<UKCompetentAuthority>(), "number", A.Dummy<AatfStatus>(), organisation, A.Dummy<AatfAddress>(), A.Dummy<AatfSize>(), DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), (Int16)2019);
+            return new Aatf("name", A.Dummy<UKCompetentAuthority>(), "number", A.Dummy<AatfStatus>(), organisation, A.Dummy<AatfAddress>(), A.Dummy<AatfSize>(), DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), (Int16)2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
         }
     }
 }
