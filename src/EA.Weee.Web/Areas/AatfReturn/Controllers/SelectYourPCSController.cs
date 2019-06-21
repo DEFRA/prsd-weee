@@ -5,8 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Attributes;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
@@ -62,6 +64,8 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel, bool reselect = false)
         {
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+
             if (ModelState.IsValid)
             {
                 if (reselect)
@@ -83,7 +87,6 @@
             }
             else
             {
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
                 return View(viewModel);
             }
         }
@@ -117,36 +120,79 @@
         {
             using (var client = apiClient())
             {
-                var existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
+                SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
 
                 if (HaveSchemesBeenRemoved(viewModel, existing.SchemeDataItems.ToList()))
                 {
                     PcsRemovedViewModel model = new PcsRemovedViewModel()
                     {
                         RemovedSchemeList = viewModel.SchemeList.Where(p => viewModel.SelectedSchemes.Contains(p.Id) == false).ToList(),
+                        SelectedSchemes = viewModel.SelectedSchemes,
+                        RemovedSchemes = viewModel.SchemeList.Select(p => p.Id).Where(q => viewModel.SelectedSchemes.Contains(q) == false).ToList(),
                         ReturnId = viewModel.ReturnId
                     };
 
                     return View("PcsRemoved", model);
                 }
 
-                foreach (var scheme in existing.SchemeDataItems)
+                return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
+            }
+        }
+
+        private async Task<ActionResult> SaveAndContinue(SchemeDataList existingSchemes, List<Guid> schemeIdsToAdd, Guid returnId)
+        {
+            using (var client = apiClient())
+            {
+                foreach (SchemeData scheme in existingSchemes.SchemeDataItems)
                 {
-                    if (viewModel.SelectedSchemes.Contains(scheme.Id))
+                    if (schemeIdsToAdd.Contains(scheme.Id))
                     {
-                        viewModel.SelectedSchemes.Remove(scheme.Id);
+                        schemeIdsToAdd.Remove(scheme.Id);
                     }
                 }
 
-                var requests = requestCreator.ViewModelToRequest(viewModel);
-
-                foreach (var request in requests)
+                foreach (Guid scheme in schemeIdsToAdd)
                 {
+                    AddReturnScheme request = new AddReturnScheme()
+                    {
+                        ReturnId = returnId,
+                        SchemeId = scheme
+                    };
+
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
-            }
 
-            return AatfRedirect.TaskList(viewModel.ReturnId);
+                return AatfRedirect.TaskList(returnId);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PcsRemoved(PcsRemovedViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == "Yes")
+                {
+                    using (var client = apiClient())
+                    {
+                        SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
+
+                        // Also need to call a remove handler here
+
+                        return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
+                    }
+                }
+                else
+                {
+                    // Go back to select PCS
+                    return View();
+                }
+            }
+            else
+            {
+                return View(viewModel);
+            }
         }
 
         private bool HaveSchemesBeenRemoved(SelectYourPcsViewModel model, List<SchemeData> alreadySelected)
