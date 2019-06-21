@@ -1,7 +1,65 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.PcsRemovedViewModel
 @{
-    ViewBag.Title = "PcsRemoved";
+    ViewBag.Title = "Confirm PCS removal - GOV.UK";
 }
 
-<h2>PcsRemoved</h2>
+    <section id="main-content">
 
+        <h1 class="govuk-heading-l">
+            Are you sure you wish to remove these PCS from your list?
+        </h1>
+
+        <div>
+            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
+            <p class="important">
+                Any data entered against these options will be deleted
+            </p>
+        </div>
+
+        @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { action = "PcsRemoved" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.ReturnId)
+
+
+            for (var i = 0; i < Model.RemovedSchemeList.Count; i++)
+            {
+                <p>
+                    @Model.RemovedSchemeList[i].Name
+                </p>
+                @Html.HiddenFor(m => Model.SelectedSchemes[i])
+                @Html.HiddenFor(m => Model.RemovedSchemes[i])
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].ApprovalName)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Id)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].OrganisationId)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Name)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].CanEdit)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].CompetentAuthorityId)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].IbisCustomerReference)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].ObligationType)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeDataAvailability)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeName)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].SchemeStatus)
+                @Html.HiddenFor(m => Model.RemovedSchemeList[i].Selected)
+            }
+
+            <div class="govuk-!-padding-bottom-5"></div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeReusedOptions">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedValue,
+                    Model.PossibleValues,
+                    "a",
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Inline)
+            </div>
+
+            <div class="govuk-form-group">
+                <button class="govuk-button" type="submit">Submit</button>
+            </div>
+        }
+    </section>
