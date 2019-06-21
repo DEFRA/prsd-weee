@@ -9,7 +9,6 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations.Create;
     using Security;
-
     public class CreateSoleTraderRequestHandler : IRequestHandler<CreateSoleTraderRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
@@ -27,7 +26,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var organisation = Organisation.CreateSoleTrader(message.TradingName);
+            var organisation = Organisation.CreateSoleTrader(message.BusinessName, message.TradingName);
             db.Organisations.Add(organisation);
 
             await db.SaveChangesAsync();

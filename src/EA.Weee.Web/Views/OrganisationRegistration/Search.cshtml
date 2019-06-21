@@ -6,7 +6,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Add your organisation</h1>
+        <h1 class="govuk-heading-l">Find your organisation</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -16,16 +16,16 @@
         
         @Html.HiddenFor(m => m.SelectedOrganisationId);
         
-        <p>
-            Search for your registered company, partnership or sole trader name. If it is not listed, create a new organisation.
-        </p>
+    <p>
+        Search for your registered company, partnership, sole trader or individual name.
+    </p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
-            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control", @maxLength = CommonMaxFieldLengths.DefaultString })
-            <button type="submit" class="button">
-                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search"/>
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-one-half", @maxLength = CommonMaxFieldLengths.DefaultString }) <!-- SG Change, form control forces 50% width -->
+            <button type="submit" class="govuk-button">
+                <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search"/>
             </button>
         </div>
 
@@ -88,6 +88,7 @@
                 },
                 disabled: window.innerWidth <= 640
             }).autocomplete("instance")._renderItem = function (ul, item) {
+                $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
                 return $("<li></li>")
                     .data("item.autocomplete", item)
                     .append("<span>" + item.Name + "</span>")

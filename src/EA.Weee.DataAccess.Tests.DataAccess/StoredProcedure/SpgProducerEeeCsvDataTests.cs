@@ -9,10 +9,12 @@
     using Domain.Obligation;
     using Domain.Producer.Classification;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class SpgProducerEeeCsvDataTests
     {

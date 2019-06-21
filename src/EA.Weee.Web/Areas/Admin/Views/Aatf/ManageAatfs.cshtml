@@ -1,0 +1,114 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
+@{
+    ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + "s - GOV.UK";
+}
+
+@section scripts{
+    <script>
+        $('#idManageAatfsTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")
+    </h1>
+</header>
+@using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
+{
+    <div class="aatf-filter">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Filter.FacilityType)
+        <div class="govuk-label">Filter by:</div>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
+                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
+                        @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Apply"))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Clear", "ClearFilter", new { facilityType = Model.FacilityType }, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+@using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
+{
+<fieldset style="border: none; margin-left: 0; padding: 0">
+    <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")</legend>
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    @Html.HiddenFor(m => m.Filter.Name)
+    @Html.HiddenFor(m => m.Filter.ApprovalNumber)
+    @Html.HiddenFor(m => m.Filter.FacilityType)
+    @Html.HiddenFor(m => m.FacilityType)
+    <div class="table-hr"></div>
+    <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name of @Model.FacilityType.ToDisplayString()</th>
+                <th class="govuk-table__header" scope="col">Approval number</th>
+                <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" style="padding-right: 20px;" scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var aatf in Model.AatfDataList)
+            {
+                {
+                    var id = "selectAatf" + @aatf.Id;
+
+                    <tr>
+                        <td style="word-break:break-word" class="govuk-table__cell">@aatf.Name</td>
+                        <td class="govuk-table__cell">@aatf.ApprovalNumber</td>
+                        <td class="govuk-table__cell">@aatf.CompetentAuthority.Abbreviation</td>
+                        <td class="govuk-table__cell">@aatf.AatfStatusString</td>
+                        <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.Selected, @aatf.Id, new { id = @id })</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</fieldset>
+    if (Model.CanAddAatf)
+    {
+        <p>
+            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
+        </p>
+    }
+    <br />
+    @(this.WeeeGds().Submit("Continue"))
+
+    <p>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+    </p>
+}

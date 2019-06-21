@@ -1,0 +1,1 @@
+ALTER TABLE [AATF].[Return] ADD FacilityType int NOT NULL DEFAULT 1;

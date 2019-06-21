@@ -23,5 +23,13 @@
 
             return scheme.Organisation;
         }
+
+        public async Task<Organisation> GetById(Guid organisationId)
+        {
+            var organisation = await context.Organisations
+                .SingleAsync(c => c.Id == organisationId);
+
+            return organisation;
+        }
     }
 }

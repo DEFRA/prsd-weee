@@ -8,7 +8,8 @@
         public const string CreatePcsMemberXmlFile = "Create PCS Member XML File";
         public const string CreatePcsDataReturnXmlFile = "Create PCS Data Return XML File";
         public const string ManageCache = "Manage Cache";
-        public const string ManagePcsReturnsSubmissionWindow = "Manage PCS Returns Submission Window";
+        public const string ManagePcsReturnsSubmissionWindow = "Manage Returns Submission Window";
+        public const string CopyAndPaste = "Copy and paste";
 
         public HomeViewModel() : base(new List<string>
             {

@@ -9,36 +9,51 @@
         {
             // JQuery 1.x.x is used for IE 8 and earlier.
             bundles.Add(new ScriptBundle("~/bundles/jquery-1").Include(
-                "~/Scripts/jquery-1*",
-                "~/Scripts/jquery.unobtrusive-ajax.js",
-                "~/Scripts/jquery-ui-{version}.js",
-                "~/Scripts/jquery.select-to-autocomplete.js",
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/custom-validation.js"));
+                    "~/Scripts/jquery-1*",
+                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                    "~/Scripts/jquery-ui-{version}.js",
+                    "~/Scripts/jquery.select-to-autocomplete.js",
+                    "~/Scripts/jquery.validate*",
+                    "~/Scripts/custom-validation.js"));
 
-            // JQuery 2.x.x is used for allother browsers.
-            bundles.Add(new ScriptBundle("~/bundles/jquery-2").Include(
-                "~/Scripts/jquery-2*",
-                "~/Scripts/jquery.unobtrusive-ajax.js",
-                "~/Scripts/jquery-ui-{version}.js",
-                "~/Scripts/jquery.select-to-autocomplete.js",
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/custom-validation.js"));
+            // JQuery 3.x.x is used for all other browsers.
+            bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
+                    "~/Scripts/jquery-3.3.1.js",
+                    "~/Scripts/jquery-migrate-3.0.0.js",
+                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                    "~/Scripts/jquery-ui-{version}.js",
+                    "~/Scripts/jquery.select-to-autocomplete.js",
+                    "~/Scripts/jquery.validate*",
+                    "~/Scripts/custom-validation.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
-                      "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_toolkit/govuk/selection-buttons.js",
-                      "~/Scripts/govuk_toolkit/govuk/show-hide-content.js",
-                      "~/Scripts/govuk_toolkit/govuk/shim-links-with-button-role.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
-                      "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
-                      "~/Scripts/govuk_elements/application.js"));
+            bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
+                    "~/Scripts/govuk_frontend/govuk-frontend-2.7.0.min.js",
+                    "~/Scripts/govuk_frontend/html5shiv.js",
+                    "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
-                      "~/Scripts/vendor/modernizr.custom.77028.js",
-                      "~/Scripts/vendor/details.polyfill.js",
-                      "~/Scripts/weee-application.js"));
+                    "~/Scripts/vendor/modernizr.custom.77028.js",
+                    "~/Scripts/flatpickr.js",
+                    "~/Scripts/flatpickr.uk.js",
+                    "~/Scripts/weee-application.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
+                "~/Scripts/weee-tonnage-totals.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
+                "~/Scripts/sent-on-operator-address.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/weee-collapsible-link").Include(
+                "~/Scripts/weee-collapsible-link.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/weee-checkbox-toggle-visibility").Include(
+                "~/Scripts/weee-checkbox-toggle-visibility.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/hide-classes-when-competent-authory-is-not-ea").Include(
+                "~/Scripts/hide-classes-when-competent-authory-is-not-ea.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
+                "~/Scripts/show-warning.js"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
@@ -50,7 +65,11 @@
                       "~/Content/weee-page-ie8.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
-                      "~/Content/weee-page.css"));
+                            "~/Content/flatpickr.css",
+                            "~/Content/weee-page.css"));
+
+            bundles.Add(new StyleBundle("~/Content/remove-site").Include(
+                "~/Content/remove-site.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

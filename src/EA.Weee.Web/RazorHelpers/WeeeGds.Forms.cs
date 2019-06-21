@@ -31,14 +31,22 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            string html = string.Format(@"<input type=""submit"" value=""{0}"" {1}/>", text, attributes.ToString());
+            string html = string.Format(@"<input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>", text, attributes.ToString());
+
+            return new MvcHtmlString(html);
+        }
+
+        public MvcHtmlString Submit(string value)
+        {
+            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
+                value, AttributesHtml(null), SpinnerHtml(false));
 
             return new MvcHtmlString(html);
         }
 
         public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
                 value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);
@@ -46,7 +54,7 @@
 
         public MvcHtmlString Submit(string value, object htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
                 value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);

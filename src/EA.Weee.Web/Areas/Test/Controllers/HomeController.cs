@@ -4,7 +4,7 @@
     using System.Web.Mvc;
     using EA.Weee.Web.Areas.Test.ViewModels;
 
-    public class HomeController : Controller
+    public class HomeController : TestControllerBase
     {
         [HttpGet]
         public ActionResult Index()
@@ -32,6 +32,9 @@
                     
                     case HomeViewModel.ManagePcsReturnsSubmissionWindow:
                         return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
+
+                    case HomeViewModel.CopyAndPaste:
+                        return RedirectToAction("Index", "CopyValues");
 
                     default:
                         throw new NotSupportedException();

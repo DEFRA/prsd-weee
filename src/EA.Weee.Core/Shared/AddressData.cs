@@ -8,6 +8,8 @@
 
     public class AddressData : IValidatableObject
     {
+        public Guid Id { get; set; }
+
         public byte[] RowVersion { get; set; }
 
         [Required]
@@ -20,11 +22,11 @@
         public string Address2 { get; set; }
 
         [Required]
-        [StringLength(CommonMaxFieldLengths.AddressLine)]
+        [StringLength(CommonMaxFieldLengths.TownCounty)]
         [Display(Name = "Town or city")]
         public string TownOrCity { get; set; }
 
-        [StringLength(CommonMaxFieldLengths.AddressLine)]
+        [StringLength(CommonMaxFieldLengths.TownCounty)]
         [Display(Name = "County or region")]
         public string CountyOrRegion { get; set; }
 
@@ -44,7 +46,7 @@
         [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
         [Display(Name = "Phone")]
-        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters")]
+        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
         public string Telephone { get; set; }
 
         [Required]

@@ -9,10 +9,10 @@
     @if (Model.Results.Count > 0)
     {
         <header class="hgroup">
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 Search results
             </h1>
-            <h2 class="heading-small">We found results for ‘@Model.SearchTerm’</h2>
+            <h2 class="govuk-heading-s">We found results for ‘@Model.SearchTerm’</h2>
         </header>
 
         using (Html.BeginForm())
@@ -20,58 +20,57 @@
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
-
-
-            <p>If your organisation is not listed, this may be because:</p>
-            <ul class="list-bullet">
+            <p class="govuk-body">If your organisation is not listed, this may be because:</p>
+            <ul class="govuk-list govuk-list--bullet">
                 <li>you mistyped the organisation’s name</li>
                 <li>your organisation has not yet been created in our service</li>
                 <li>you entered something other than the organisation name</li>
             </ul>
 
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
                 @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedOrganisationId,
                     Model.Results,
                     r => r.OrganisationId,
-                    r => r.Name,
+                    r => r.NameWithAddress,
                     RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Stacked)
             </div>
 
-            @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+            @(this.WeeeGds().Submit("Continue"))
         }
 
         <p>
             @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
         </p>
         <p>
-            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null)
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button btnDisable" })
         </p>
     }
     else
     {
         <header class="hgroup">
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 No results found
             </h1>
-            <h2 class="heading-small">We found no results for ‘@Model.SearchTerm’</h2>
+            <h2 class="govuk-heading-s">We found no results for ‘@Model.SearchTerm’</h2>
         </header>
 
-        <p>If your organisation is not listed, this may be because:</p>
+        <p class="govuk-body">If your organisation is not listed, this may be because:</p>
 
-        <ul class="list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li>you mistyped the organisation’s name</li>
             <li>your organisation has not yet been created in our service</li>
             <li>you entered something other than the organisation name</li>
         </ul>
         
         <p>
-            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button btnDisable" })
         </p>
         <p>
-            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
+
         </p>
     }
 

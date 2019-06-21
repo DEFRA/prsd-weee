@@ -1,14 +1,16 @@
-﻿Your request to access a WEEE organisation
+﻿Your request to access @Model.OrganisationName
 
-Hello,
+Dear @Model.FullName,
 
-@Model.OrganisationName has @(Model.Approved ? "authorised" : "rejected") your request to access the Waste Electrical and Electronic Equipment (WEEE) online service on their behalf.
+Your request to access the Waste Electrical and Electronic Equipment (WEEE) online service on behalf of @Model.OrganisationName has been @(Model.Approved ? "authorised" : "rejected").
+
+@(Model.Approved ? string.Format("To access this organisation and perform activities sign in to the WEEE online service at {0}", @Model.ExternalUserLoginUrl) : "If you have any queries about this rejection, please contact the organisation's administrator.") 
 
 @(Model.Approved ? string.Format("Sign in to the WEEE online service to perform activities at {0}", @Model.ExternalUserLoginUrl) : "If you have any queries about this rejection, please contact the organisation's administrator.") 
 
 This is an automated email; do not reply.
 
-@(Model.Approved ? "If you have any enquiries, contact your relevant helpline:" : "If you have any other enquiries, contact your relevant helpline:") 
+@(Model.Approved ? "If you have any enquiries, contact your environmental regulator:" : "If you have any other enquiries, contact your environmental regulator:") 
 
 - Environment Agency (England): 03708 506506
 

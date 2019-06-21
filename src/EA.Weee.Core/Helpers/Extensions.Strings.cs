@@ -24,5 +24,25 @@
         {            
             return str.Replace("  ", "&nbsp;&nbsp;").Replace("&nbsp; ", "&nbsp;&nbsp;");
         }
+
+        public static string ToTonnageEditDisplay(this decimal? tonnage)
+        {
+            return tonnage.HasValue ? ToTonnageEditDisplay(tonnage.Value) : string.Empty;
+        }
+
+        public static string ToTonnageEditDisplay(this decimal tonnage)
+        {
+            return $"{tonnage:###0.000}";
+        }
+
+        public static string ToTonnageDisplay(this decimal? tonnage)
+        {
+            return tonnage.HasValue ? ToTonnageDisplay(tonnage.Value) : "0.000";
+        }
+
+        public static string ToTonnageDisplay(this decimal tonnage)
+        {
+            return $"{tonnage:#,##0.000}";
+        }
     }
 } 

@@ -9,6 +9,7 @@
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
+    using RequestHandlers.Factories;
     using Xml.DataReturns;
     using Xunit;
 
@@ -36,8 +37,7 @@
             var windowStart = new DateTime(2016, 1, 1, 0, 0, 0);
             var windowEnd = new DateTime(2016, 1, 2, 0, 0, 0);
 
-            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
-                .Returns(new QuarterWindow(windowStart, windowEnd));
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(new QuarterWindow(windowStart, windowEnd, QuarterType.Q1));
 
             var result = await
                 SubmissionWindowClosed()
@@ -61,7 +61,7 @@
             var windowEnd = new DateTime(2016, 1, 2, 0, 0, 0);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
-                .Returns(new QuarterWindow(windowStart, windowEnd));
+                .Returns(new QuarterWindow(windowStart, windowEnd, QuarterType.Q1));
 
             SystemTime.Freeze(timeNow, true);
 
@@ -89,7 +89,7 @@
             var windowEnd = new DateTime(2016, 1, 2, 0, 0, 0);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
-                .Returns(new QuarterWindow(windowStart, windowEnd));
+                .Returns(new QuarterWindow(windowStart, windowEnd, QuarterType.Q1));
 
             SystemTime.Freeze(timeNow, true);
 
@@ -123,7 +123,7 @@
             var windowEnd = new DateTime(2015, 12, 31, 23, 59, 59);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
-                .Returns(new QuarterWindow(windowStart, windowEnd));
+                .Returns(new QuarterWindow(windowStart, windowEnd, QuarterType.Q1));
 
             SystemTime.Freeze(timeNow, true);
 

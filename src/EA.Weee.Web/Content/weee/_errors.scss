@@ -1,21 +1,34 @@
-﻿@import "colours";
+﻿@import "../govuk_frontend/package/helpers/colour";
+
+.input-validation-error {   
+}
 
 .form-group-error {
-    border-left: 3px solid $error-colour;
+    border-left: 3px solid $govuk-error-colour;
     padding: 10px 0 10px 10px;
     background-color: #FEF7F7;
 }
 
-.field-validation-error{
-    color: $error-colour;
+.field-validation-error {
+    color: $govuk-error-colour;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.validation-summary{
-    background-color:#FEF7F7;
+.validation-summary {
+    background-color: #FEF7F7;
 
-    ul li{
+    ul li {
         margin-bottom: 7px;
+    }
+}
+
+#weee-data-entry-table * {
+    .govuk-form-group--error {
+        float: right;
+    }
+
+    .error{
+        padding-left: 15px;
     }
 }

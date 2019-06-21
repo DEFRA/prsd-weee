@@ -24,26 +24,25 @@
 }
 
 @section main_content {
-
     <header class="hgroup">
         @if (hasErrors)
         {
             if (hasWarnings)
             {
-                <h1 class="heading-large">
+                <h1 class="govuk-heading-l">
                     @yearAndQuarterText contains @errorCount @errorText and @warningCount @warningText
                 </h1>
             }
             else
             {
-                <h1 class="heading-large">
+                <h1 class="govuk-heading-l">
                     @yearAndQuarterText contains @errorCount @errorText
                 </h1>
             }
         }
         else
         {
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 Your EEE/WEEE data return has passed our validation checks
             </h1>
         }
@@ -51,23 +50,23 @@
 
     @if (hasErrors)
     {
-        <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
-            <p>
-                Errors are problems with the XML file structure and content, which prevent our system from validating your file.
-                All errors must be rectified before we can continue our validation process. You may see several error messages
-                before you can submit your file.
-            </p>
+        <h2 class="govuk-heading-m">You must rectify all errors in order to successfully upload your file.</h2>
+        <p class="govuk-body">
+            Errors are problems with the XML file structure and content, which prevent our system from validating your file.
+            All errors must be rectified before we can continue our validation process. You may see several error messages
+            before you can submit your file.
+        </p>
     }
     else
     {
-        <p>
-            Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.
+        <p class="govuk-body">
+            Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct
         </p>
     }
 
     @if (hasWarnings)
     {
-        <p>
+        <p class="govuk-body">
             @if (!hasErrors)
             {
                 <span>Your XML file contains @warningCount @warningText.</span>
@@ -82,33 +81,35 @@
 
     @if (hasErrors)
     {
-        <details>
+        <details class="govuk-details weee-upload-error" aria-live="polite">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
-                this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
+                this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary error-details-summary error-details-summary-title govuk-!-font-weight-bold", "Data return errors", "View data return errors");
             }
+
             <div class="error-list-container">
                 <ul>
                     @foreach (DataReturnError error in Model.DataReturn.Errors)
                     {
-                        <li class="error-list-item font-xsmall">
+                        <li class="error-list-item govuk-!-font-size-16">
                             @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
                         </li>
                     }
+            
                 </ul>
             </div>
         </details>
-                }
+    }
 
     @if (hasWarnings)
     {
-        <details>
-            <summary class="warning-details-summary bold-small">View @warningCount @warningText</summary>
+        <details role="group" class="govuk-details weee-upload-warning">
+            <summary class="govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small">View @warningCount @warningText</summary>
             <div class="warning-list-container">
                 <ul>
                     @foreach (DataReturnWarning warning in Model.DataReturn.Warnings)
                     {
-                        <li class="error-list-item font-xsmall">@warning.Description</li>
+                        <li class="warning-list-item govuk-!-font-size-16">@warning.Description</li>
                     }
                 </ul>
             </div>
@@ -117,8 +118,8 @@
 
     @if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
     {
-        <p>
-            <div class="highlight-section">
+        <p class="govuk-body">
+            <div class="highlight-section govuk-body">
                 <div class="highlight-section-text">
                     The XML file you are submitting is for:
                 </div>
@@ -149,37 +150,37 @@
                 {
 
                     <div class="highlight-section-text negative-margin">
-                        <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;">
+                        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;" height="42" width="42">
                         Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
                     </div>
                 }
 
             </div>
         </p>
-                        }
+    }
 
     @if (hasErrors)
     {
         <p>
             To see your XML file’s full list,
             @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)",
-                      Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
-                      "DataReturns",
-                      "Data return downloads",
-                      "Data return errors and warnings")).
+                              Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
+                              "DataReturns",
+                              "Data return downloads",
+                              "Data return errors and warnings")).
         </p>
-            <p>
-                @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
-                      Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                      "Data return loop",
-                      "Upload a new data return file",
-                      "Data return validation failed",
-                      new Dictionary<string, object> { { "class", "button" } }))
-            </p>
+        <p>
+            @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
+                          Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                          "Data return loop",
+                          "Upload a new data return file",
+                          "Data return validation failed",
+                          new Dictionary<string, object> { { "class", "govuk-button" } }))
+        </p>
 
-            <div>
-                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-            </div>
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        </p>
     }
     else
     {
@@ -189,7 +190,7 @@
         {
             @Html.AntiForgeryToken()
 
-            <p>
+            <p class="govuk-body">
                 @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",
                     "Data return uploads",
@@ -199,12 +200,12 @@
             </p>
         }
 
-        <p>
+        <p class="govuk-body">
             Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
-                                    Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
-                                    "Data return loop",
-                                    "Upload a new data return file",
-                                    "Data return validation successful")).
+                           Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                           "Data return loop",
+                           "Upload a new data return file",
+                           "Data return validation successful"))
         </p>
     }
 }

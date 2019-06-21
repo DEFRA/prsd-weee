@@ -10,5 +10,7 @@
         Task<QuarterWindow> GetQuarterWindow(Quarter quarter);
 
         Task<List<QuarterWindow>> GetQuarterWindowsForDate(DateTime date);
+
+        Task<QuarterWindow> GetAnnualQuarter(Quarter quarter);
     }
 }

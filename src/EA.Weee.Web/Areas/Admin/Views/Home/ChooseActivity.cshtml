@@ -8,7 +8,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">
+        <h1 class="govuk-heading-l">
             What activity would you like to do?
         </h1>
     </header>
@@ -18,7 +18,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="InternalUserActivityOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="InternalUserActivityOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
@@ -27,7 +27,7 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+        @(this.WeeeGds().Submit("Continue"))
     }
 }
 

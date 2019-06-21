@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.RequestHandlers</RootNamespace>
     <AssemblyName>EA.Weee.RequestHandlers</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -33,37 +33,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="DotNetZip, Version=1.13.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.13.0\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16294.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16294-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -75,7 +67,91 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\IFetchAatfByOrganisationIdDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
+    <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
+    <Compile Include="Factories\IReturnFactory.cs" />
+    <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
+    <Compile Include="Factories\ReturnFactory.cs" />
+    <Compile Include="Factories\ReturnFactoryDataAccess.cs" />
+    <Compile Include="AatfReturn\GenericDataAccess.cs" />
+    <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\CopyReturnHandler.cs" />
+    <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
+    <Compile Include="AatfReturn\Internal\AatfDataAccess.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfDetailsRequestHandler.cs" />
+    <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
+    <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
+    <Compile Include="AatfReturn\Internal\IAatfDataAccess.cs" />
+    <Compile Include="Admin\AddAatfRequestHandler.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedAmountByWeeeReusedIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedSiteByWeeeReusedIdSpecification.cs" />
+    <Compile Include="Admin\CompleteOrganisationAdminHandler.cs" />
+    <Compile Include="Admin\CreateOrganisationAdminHandler.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfInfoByAatfIdRequestHandler.cs" />
+    <Compile Include="AatfReturn\GetReportOnQuestionHandler.cs" />
+    <Compile Include="AatfReturn\GetReturnsHandler.cs" />
+    <Compile Include="AatfReturn\GetReturnHandler.cs" />
+    <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandler.cs" />
+    <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
+    <Compile Include="AatfReturn\IGenericDataAccess.cs" />
+    <Compile Include="AatfReturn\IGetPopulatedReturn.cs" />
+    <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
+    <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedGeneric\IObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedGeneric\ObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\EditObligatedReceivedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\IObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReceived\ObligatedReceivedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\EditAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\GetAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\EditObligatedReusedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\ObligatedReusedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\AddAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\IAatfSiteDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\IObligatedReusedDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedReused\RemoveAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\AddObligatedSentOnHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditObligatedSentOnHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnByIdHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetWeeeSentOnHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\IObligatedSentOnDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\ObligatedSentOnDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\RemoveWeeeSentOnHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\WeeeSentOnDataAccess.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\AddSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\EditSentOnAatfSiteWithOperatorHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\GetSentOnAatfSiteHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\IWeeeSentOnDataAccess.cs" />
+    <Compile Include="AatfReturn\ReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\AddReturnHandler.cs" />
+    <Compile Include="AatfReturn\IReturnDataAccess.cs" />
+    <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandler.cs" />
+    <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandler.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />
+    <Compile Include="AatfReturn\ReturnSchemeDataAccess.cs" />
+    <Compile Include="AatfReturn\Specification\ISpecification.cs" />
+    <Compile Include="AatfReturn\Specification\AatfsByOrganisationSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\ReturnReportOnByReturnIdSpecification.cs" />
+    <Compile Include="AatfReturn\Specification\Specification.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
+    <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
+    <Compile Include="AatfReturn\Specification\WeeeReusedByAddressIdSpecification.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsByOrganisationIdHandler.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsDataAccess.cs" />
+    <Compile Include="Admin\GetAatfs\GetAatfsHandler.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetAatfs\IGetAatfsDataAccess.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionChangeType.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChanges.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\DataReturnSubmissionEeeChangesCsvData.cs" />
@@ -100,9 +176,11 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesByOrganisationIdHandler.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvDataAccess.cs" />
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsvHandler.cs" />
     <Compile Include="Admin\GetSubmissionChanges\IGetSubmissionChangesCsvDataAccess.cs" />
+    <Compile Include="Admin\OrganisationInternalByIdHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv\GetMissingProducerDataCsvDataProcessor.cs" />
@@ -121,7 +199,8 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
-    <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Mappings\LocalAreaMap.cs" />
+    <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
@@ -133,7 +212,7 @@
     <Compile Include="Charges\FetchIssuedChargesCsv\IFetchIssuedChargesCsvDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandler.cs" />
-    <Compile Include="Charges\ICommonDataAccess.cs" />
+    <Compile Include="Shared\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
@@ -163,6 +242,16 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IDataReturnVersionComparer.cs" />
+    <Compile Include="Mappings\AatfAddressDataMap.cs" />
+    <Compile Include="Mappings\AatfAddressMap.cs" />
+    <Compile Include="Mappings\AatfContactDataMap.cs" />
+    <Compile Include="Mappings\AatfSizeMap.cs" />
+    <Compile Include="Mappings\AatfStatusMap.cs" />
+    <Compile Include="Mappings\AatfDataListMap.cs" />
+    <Compile Include="Mappings\FacilityTypeMap.cs" />
+    <Compile Include="Mappings\PanAreaMap.cs" />
+    <Compile Include="Mappings\ReturnStatusMap.cs" />
+    <Compile Include="Mappings\AatfContactMap.cs" />
     <Compile Include="Scheme\MemberRegistration\IXmlChargeBandCalculatorStrategy.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculator.cs" />
@@ -200,10 +289,17 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="DataReturns\Upload\IFetchDataReturnUploadDataAccess.cs" />
+    <Compile Include="Mappings\AatfMap.cs" />
+    <Compile Include="Mappings\AatfSentOnSiteMap.cs" />
+    <Compile Include="Mappings\AatfSiteMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
+    <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
+    <Compile Include="Mappings\ReturnMap.cs" />
     <Compile Include="Mappings\SchemeAnnualDataAvailabilityMap.cs" />
     <Compile Include="Mappings\SchemeDataAvailabilityMap.cs" />
+    <Compile Include="Organisations\GetContactHandler.cs" />
+    <Compile Include="Organisations\GetAddressHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
@@ -211,6 +307,9 @@
     <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ITotalChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\TotalChargeCalculator.cs" />
+    <Compile Include="Scheme\GetSchemeByOrganisationIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfobySchemeIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemesExternalHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
@@ -274,14 +373,13 @@
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccess.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
-    <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
     <Compile Include="Organisations\IOrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
     <Compile Include="Organisations\OrganisationDetailsDataAccess.cs" />
-    <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
@@ -294,6 +392,8 @@
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
+    <Compile Include="Shared\GetLocalAreasHandler.cs" />
+    <Compile Include="Shared\GetPanAreasHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
@@ -312,14 +412,13 @@
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
-    <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
+    <Compile Include="Scheme\AddContactPersonHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandler.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
-    <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
@@ -392,17 +491,20 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AatfReturn\Factory\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.54.0\build\StyleCop.MSBuild.Targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

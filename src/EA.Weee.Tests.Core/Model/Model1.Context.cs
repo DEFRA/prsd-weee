@@ -30,11 +30,9 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<Organisation> Organisations { get; set; }
         public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
         public virtual DbSet<MemberUploadError> MemberUploadErrors { get; set; }
-        public virtual DbSet<Scheme> Schemes { get; set; }
         public virtual DbSet<Address1> Address1 { get; set; }
         public virtual DbSet<AuthorisedRepresentative> AuthorisedRepresentatives { get; set; }
         public virtual DbSet<BrandName_> BrandName_Set { get; set; }
@@ -68,5 +66,20 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
         public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<NonObligatedWeee> NonObligatedWeees { get; set; }
+        public virtual DbSet<WeeeReceived> WeeeReceiveds { get; set; }
+        public virtual DbSet<WeeeReceivedAmount> WeeeReceivedAmounts { get; set; }
+        public virtual DbSet<WeeeReused> WeeeReuseds { get; set; }
+        public virtual DbSet<WeeeReusedAmount> WeeeReusedAmounts { get; set; }
+        public virtual DbSet<WeeeReusedSite> WeeeReusedSites { get; set; }
+        public virtual DbSet<WeeeSentOn> WeeeSentOns { get; set; }
+        public virtual DbSet<Organisation> Organisations { get; set; }
+        public virtual DbSet<Scheme> Schemes { get; set; }
+        public virtual DbSet<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
+        public virtual DbSet<AATF> AATFs { get; set; }
+        public virtual DbSet<ReportOnQuestion> ReportOnQuestions { get; set; }
+        public virtual DbSet<Return> Returns { get; set; }
+        public virtual DbSet<ReturnReportOn> ReturnReportOns { get; set; }
+        public virtual DbSet<ReturnScheme> ReturnSchemes { get; set; }
     }
 }

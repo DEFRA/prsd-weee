@@ -25,7 +25,7 @@
 {
     <div id="pendingChargesView">
         <header class="hgroup">
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 Pending Charges
             </h1>
         </header>
@@ -37,25 +37,25 @@
 
         @if (Model.PendingCharges.Count > 0)
         {
-            <table width="100%" class="" cellspacing="20">
-                <thead>
-                    <tr>
-                        <th>PCS name</th>
-                        <th>Approval number</th>
-                        <th>Compliance year</th>
-                        <th class="numeric">Total</th>
-                        <th> Submitted date</th>
+            <table class="govuk-table" style="width: 100%">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">PCS name</th>
+                        <th class="govuk-table__header" scope="col">Approval number</th>
+                        <th class="govuk-table__header" scope="col">Compliance year</th>
+                        <th class="govuk-table__header numeric" scope="col">Total</th>
+                        <th class="govuk-table__header" scope="col"> Submitted date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                     @foreach (PendingCharge pendingCharge in Model.PendingCharges)
                     {
-                        <tr>
-                            <td>@pendingCharge.SchemeName</td>
-                            <td>@pendingCharge.SchemeApprovalNumber</td>
-                            <td>@pendingCharge.ComplianceYear</td>
-                            <td class="numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
-                            <td style="width:100%">@pendingCharge.SubmittedDate.ToString("dd-MMM-yyyy HH:mm")</td>
+                        <tr tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@pendingCharge.SchemeName</td>
+                            <td class="govuk-table__cell">@pendingCharge.SchemeApprovalNumber</td>
+                            <td class="govuk-table__cell">@pendingCharge.ComplianceYear</td>
+                            <td class="govuk-table__cell numeric">@pendingCharge.TotalGBP.ToString("C", CultureInfo.CreateSpecificCulture("en-GB"))</td>
+                            <td class="govuk-table__cell">@pendingCharge.SubmittedDate.ToString("dd-MMM-yyyy HH:mm")</td>
                         </tr>
                     }
                 </tbody>
@@ -72,7 +72,7 @@
                     }))
                 {
                     @Html.AntiForgeryToken()
-                    @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+                    @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "govuk-button", style = "margin-top: 20px" }, true))
                     <p>
                         @Html.ActionLink("Perform another activity", "Index", "Home")
                     </p>
@@ -81,7 +81,7 @@
             else
             {
                 <p>
-                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "govuk-button" })
                 </p>
             }
 
@@ -101,7 +101,7 @@
                 There are no pending charges.
             </p>
             <p>
-                @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+                @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "govuk-button" })
             </p>
         }
 
@@ -112,7 +112,7 @@
 
     <div id="ajaxErrorView" style="display: none">
         <header class="hgroup">
-            <h1 class="heading-large">
+            <h1 class="govuk-heading-l">
                 The pending charges could not be issued
             </h1>
         </header>
@@ -121,14 +121,14 @@
             <span class="bold-small"> The following must be fixed before charges can be issued.</span>
         </p>
 
-        <table width="100%" class="">
-            <tbody>
+        <table width="100%" class="govuk-table">
+            <tbody class="govuk-table__body">
                 @* Rows added here by JavaScript *@
             </tbody>
         </table>
         <br />
         <p>
-            @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" })
+            @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "govuk-button" })
         </p>
     </div>
 }
@@ -181,8 +181,8 @@
                         } else {
                             @* Populate the table in the ajaxErrorView *@
                             for (i = 0; i < response.Errors.length; ++i) {
-                                var tr = $("<tr/>");
-                                var td = $("<td/>");
+                                var tr = $("<tr class='govuk-table__row' />");
+                                var td = $("<td class='govuk-table__cell' />");
                                 td.text(response.Errors[i]);
                                 tr.append(td);
                                 $("#ajaxErrorView table tbody").append(tr);

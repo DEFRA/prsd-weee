@@ -25,17 +25,15 @@
             }
             else
             {
-                organisation = Organisation.CreateSoleTrader(tradingName);
+                organisation = Organisation.CreateSoleTrader(name, tradingName);
             }
-
-            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, GetAddress());
-
-            organisation.AddOrUpdateMainContactPerson(GetContact());
 
             if (status == OrganisationStatus.Complete)
             {
                 organisation.CompleteRegistration();
             }
+
+            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, GetAddress());
 
             var properties = typeof(Organisation).GetProperties();
 

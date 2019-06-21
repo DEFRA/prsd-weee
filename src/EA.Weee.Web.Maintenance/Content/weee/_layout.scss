@@ -1,13 +1,13 @@
 // Phase banner
 // ==========================================================================
-.phase-banner {
-  @include phase-banner(beta);
-}
+/*.phase-banner {
+  @include govuk-phase-banner(beta);
+}*/
 
-// Use .grid-column to create a grid column with 15px gutter
+// Use .grid-column to create a grid column with 15px govuk-gutter
 // By default grid columns break to become full width at tablet size
 .column-whole {
-  @include grid-column(1);
+    @include govuk-grid-column(full);
 }
 
 .spacer{

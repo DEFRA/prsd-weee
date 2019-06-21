@@ -18,13 +18,13 @@
 
             summary = "<h2 class='heading-medium error-summary-heading'>You have " + headerErrorCount + " on this page</h2>";
 
-            $(".form-group").removeClass("error");
+            $(".govuk-form-group").removeClass("error");
 
             //Generate our error summary list
             for (error in errorList) {
                 summary += '<li><a href="#' + errorList[error].element.id + '">' + errorList[error].message + '</a></li>';
 
-                $(errorList[error].element).parents(".form-group").last().addClass("error");
+                $(errorList[error].element).parents(".govuk-form-group").last().addClass("error");
             }
 
             // Toggle classes on validation summary

@@ -1,17 +1,42 @@
+
 // Phase banner
 // ==========================================================================
-.phase-banner {
-  @include phase-banner(beta);
+/*.phase-banner {
+  @include govuk-phase-banner(beta);
+}*/
+@import "../govuk_frontend/package/helpers/grid";
+
+#main-content {
+    padding-top: govuk-spacing(7);
+}
+.govuk-main-wrapper {
+    padding-top: 0px;
 }
 
-// Use .grid-column to create a grid column with 15px gutter
+// Use .grid-column to create a grid column with 15px govuk-gutter
 // By default grid columns break to become full width at tablet size
-.column-whole {
-  @include grid-column(1);
-}
+/*.column-whole {
+    @extend govuk-grid-column-whole;
+}*/
+@include govuk-grid-column($width: full, $class: column);
 
-.spacer{
+@include govuk-grid-column($width: one-half, $class: column);
+    
+.spacer {
     margin: 0;
     width: 100%;
     height: 25px;
+}
+
+.govuk-grid-column-one-fifth {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 15px;
+}
+
+@media(min-width:40.0625em) {
+    .govuk-grid-column-one-fifth {
+        width: 20%;
+        float: left;
+    }
 }

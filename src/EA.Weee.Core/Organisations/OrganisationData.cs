@@ -5,7 +5,10 @@
 
     public class OrganisationData
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
+
+        public Guid? SchemeId { get; set; }
+
         public byte[] RowVersion { get; set; }
 
         public string Name { get; set; }
@@ -17,9 +20,7 @@
         public string TradingName { get; set; }
 
         public string CompanyRegistrationNumber { get; set; }
-
         public AddressData OrganisationAddress { get; set; }
-
         public AddressData BusinessAddress { get; set; }
 
         public AddressData NotificationAddress { get; set; }
@@ -32,6 +33,10 @@
 
         public bool HasNotificationAddress { get; set; }
 
+        public bool HasAatfs { get; set; }
+
+        public bool HasAes { get; set; }
+
         /// <summary>
         /// Provides a name that can be displayed to identify the organisation.
         /// Where the organisation is a registered company this is simply the name,
@@ -40,5 +45,7 @@
         public string OrganisationName { get; set; }
 
         public bool CanEditOrganisation { get; set; }
+
+        public bool IsRegisteredCompany => OrganisationType == OrganisationType.RegisteredCompany;
     }
 }

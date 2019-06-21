@@ -4,12 +4,15 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using FakeItEasy;
+    using FluentAssertions;
     using Prsd.Core.Mediator;
     using Services;
-    using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class HomeControllerTests
@@ -68,6 +71,23 @@
         }
 
         [Fact]
+        public void HttpGet_ChooseActivity_ViewModelPossibleValuesShouldBeInCorrectOrder()
+        {
+            var controller = HomeController();
+            var result = controller.ChooseActivity() as ViewResult;
+            var model = result.Model as RadioButtonStringCollectionViewModel;
+
+            model.PossibleValues[0].Should().Be(InternalUserActivity.ManageScheme);
+            model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
+            model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
+            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsCharges);
+            model.PossibleValues[4].Should().Be(InternalUserActivity.ManageAatfs);
+            model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAes);
+            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageUsers);
+            model.PossibleValues[7].Should().Be(InternalUserActivity.ViewReports);
+        }
+
+        [Fact]
         public void HttpPost_ChooseActivity_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             var controller = HomeController();
@@ -82,6 +102,8 @@
         [Theory]
         [InlineData(InternalUserActivity.ManageUsers, "Index")]
         [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
+        [InlineData(InternalUserActivity.ManageAatfs, "ManageAatfs")]
+        [InlineData(InternalUserActivity.ManageAes, "ManageAatfs")]
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
@@ -99,6 +121,16 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
+
+            if (selection == InternalUserActivity.ManageAatfs)
+            {
+                Assert.Equal(FacilityType.Aatf, redirectToRouteResult.RouteValues["facilityType"]);
+            }
+
+            if (selection == InternalUserActivity.ManageAes)
+            {
+                Assert.Equal(FacilityType.Ae, redirectToRouteResult.RouteValues["facilityType"]);
+            }
         }
 
         /// <summary>

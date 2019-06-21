@@ -4,16 +4,22 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Search;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
 
     public class FetchOrganisationSearchResultsForCacheDataAccess : IFetchOrganisationSearchResultsForCacheDataAccess
     {
         private readonly WeeeContext context;
+        private readonly IMap<Address, AddressData> addressMapper;
 
-        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context)
+        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context, IMap<Address, AddressData> addressMapper)
         {
             this.context = context;
+            this.addressMapper = addressMapper;
         }
 
         /// <summary>
@@ -24,19 +30,26 @@
         /// <returns></returns>
         public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
         {
-            var results = await context
-                .Schemes
-                .Where(s => s.SchemeStatus.Value != Domain.Scheme.SchemeStatus.Rejected.Value)
-                .Select(s => s.Organisation)
-                .Where(o => o.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
-                .AsNoTracking()
+            var organisations = await context.Organisations
+                .Where(p => p.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
                 .ToListAsync();
 
-            return results.Select(r => new OrganisationSearchResult()
+            var schemes = await context.Schemes.ToListAsync();
+
+            foreach (Scheme scheme in schemes)
+            {
+                if (scheme.SchemeStatus.Value == Domain.Scheme.SchemeStatus.Rejected.Value)
                 {
-                    OrganisationId = r.Id,
-                    Name = r.OrganisationName
-                })
+                    organisations.Remove(scheme.Organisation);
+                }
+            }
+
+            return organisations.Select(r => new OrganisationSearchResult()
+            {
+                OrganisationId = r.Id,
+                Name = r.OrganisationName,
+                Address = addressMapper.Map(r.BusinessAddress)
+            })
                 .OrderBy(r => r.Name)
                 .ToList();
         }

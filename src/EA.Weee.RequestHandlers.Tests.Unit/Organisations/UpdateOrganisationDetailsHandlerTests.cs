@@ -17,6 +17,7 @@
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
+    using Organisation = Domain.Organisation.Organisation;
     using OrganisationType = Core.Organisations.OrganisationType;
 
     public class UpdateOrganisationDetailsHandlerTests
@@ -64,41 +65,45 @@
         public async Task UpdateOrganisationDetailsHandler_WithValidData_FetchesOrganisationAndUpdatesAndSaves()
         {
             // Arrange
-            OrganisationData organisationData = new OrganisationData();
-            organisationData.Id = new Guid("9a310218-311b-460d-bd50-9d246c237dcc");
-            organisationData.OrganisationType = OrganisationType.RegisteredCompany;
-            organisationData.Name = "CompanyName";
-            organisationData.CompanyRegistrationNumber = "123456789";
-            organisationData.OrganisationName = "CompanyName";
-            organisationData.BusinessAddress = new Core.Shared.AddressData();
-            organisationData.BusinessAddress.Address1 = "Address1";
-            organisationData.BusinessAddress.Address2 = "Address2";
-            organisationData.BusinessAddress.TownOrCity = "Town";
-            organisationData.BusinessAddress.CountyOrRegion = "County";
-            organisationData.BusinessAddress.Postcode = "Postcode";
-            organisationData.BusinessAddress.CountryId = new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4");
-            organisationData.BusinessAddress.Telephone = "012345678";
-            organisationData.BusinessAddress.Email = "email@domain.com";
+            var organisationData = new OrganisationData
+            {
+                Id = new Guid("9a310218-311b-460d-bd50-9d246c237dcc"),
+                OrganisationType = OrganisationType.RegisteredCompany,
+                Name = "CompanyName",
+                CompanyRegistrationNumber = "123456789",
+                OrganisationName = "CompanyName",
+                BusinessAddress = new Core.Shared.AddressData
+                {
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "Postcode",
+                    CountryId = new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4"),
+                    Telephone = "012345678",
+                    Email = "email@domain.com"
+                }
+            };
 
-            UpdateOrganisationDetails request = new UpdateOrganisationDetails(organisationData);
+            var request = new UpdateOrganisationDetails(organisationData);
 
-            IOrganisationDetailsDataAccess dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
-            IWeeeAuthorization weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+            var weeeAuthorization = A.Fake<IWeeeAuthorization>();
 
-            Organisation organisation = A.Dummy<Organisation>();
+            var organisation = A.Dummy<Organisation>();
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("9a310218-311b-460d-bd50-9d246c237dcc")))
                 .Returns(organisation);
 
-            Country country = new Country(
+            var country = new Country(
                 new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4"),
                 "Name");
             A.CallTo(() => dataAccess.FetchCountryAsync(new Guid("79b70dfb-bbfd-4801-9849-880f66ee48e4")))
                 .Returns(country);
 
-            UpdateOrganisationDetailsHandler handler = new UpdateOrganisationDetailsHandler(dataAccess, weeeAuthorization);
+            var handler = new UpdateOrganisationDetailsHandler(dataAccess, weeeAuthorization);
 
             // Act
-            bool result = await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
 
             // Assert
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("9a310218-311b-460d-bd50-9d246c237dcc")))

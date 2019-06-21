@@ -10,11 +10,11 @@
     <header class="hgroup">
         @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
         {
-        <h1 class="heading-large">Principal place of business details</h1>
+        <h1 class="govuk-heading-l">Principal place of business details</h1>
         }
         else
         {
-        <h1 class="heading-large">Registered office details</h1>
+        <h1 class="govuk-heading-l">Registered office details</h1>
         }
     </header>
 
@@ -27,8 +27,8 @@
 
         @Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "Contact us to change your details" } })
 
-        <div class="form-group">
-            <button class="button" type="submit">Perform another activity</button>
+        <div class="govuk-form-group">
+            <button class="govuk-button" type="submit">Perform another activity</button>
         </div>
     }
 }

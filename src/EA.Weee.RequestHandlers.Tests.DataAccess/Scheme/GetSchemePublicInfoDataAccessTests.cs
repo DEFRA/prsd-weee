@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo;
     using EA.Weee.Tests.Core.Model;
+    using FluentAssertions;
     using Xunit;
 
     public class GetSchemePublicInfoDataAccessTests
@@ -13,11 +14,11 @@
         {
             using (var database = new DatabaseWrapper())
             {
-                Guid organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
-                GetSchemePublicInfoDataAccess dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
+                var organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
+                var dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
 
                 // Arrange
-                ModelHelper modelHelper = new ModelHelper(database.Model);
+                var modelHelper = new ModelHelper(database.Model);
 
                 var scheme1 = modelHelper.CreateScheme();
                 scheme1.Organisation.Id = organisationId;
@@ -38,11 +39,11 @@
         {
             using (var database = new DatabaseWrapper())
             {
-                Guid organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
-                GetSchemePublicInfoDataAccess dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
+                var organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
+                var dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
 
                 // Arrange
-                ModelHelper modelHelper = new ModelHelper(database.Model);
+                var modelHelper = new ModelHelper(database.Model);
 
                 var scheme1 = modelHelper.CreateScheme();
                 scheme1.Organisation.Id = new Guid("ED41564F-7486-4ED8-B563-CC3FCA9ECF39");
@@ -62,11 +63,11 @@
         {
             using (var database = new DatabaseWrapper())
             {
-                Guid organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
-                GetSchemePublicInfoDataAccess dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
+                var organisationId = new Guid("72BB14DF-DCD5-4DBB-BBA9-4CFC26AD80F9");
+                var dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
 
                 // Arrange
-                ModelHelper modelHelper = new ModelHelper(database.Model);
+                var modelHelper = new ModelHelper(database.Model);
 
                 var scheme1 = modelHelper.CreateScheme();
                 scheme1.Organisation.Id = organisationId;
@@ -81,6 +82,55 @@
 
                 // Assert
                 await Assert.ThrowsAsync<Exception>(action);
+            }
+        }
+
+        [Fact]
+        public async void FetchSchemeBySchemeId_WitValidSchemeId_ReturnsScheme()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var schemeId = Guid.NewGuid();
+                var dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
+
+                // Arrange
+                var modelHelper = new ModelHelper(database.Model);
+
+                var scheme1 = modelHelper.CreateScheme();
+                scheme1.Id = schemeId;
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = await dataAccess.FetchSchemeBySchemeId(schemeId);
+
+                // Assert
+                result.Should().NotBeNull();
+                result.Id.Should().Be(schemeId);
+            }
+        }
+
+        [Fact]
+        public async void FetchSchemeBySchemeId_WithUnknownSchemeId_ThrowsException()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var organisationId = Guid.NewGuid();
+                var dataAccess = new GetSchemePublicInfoDataAccess(database.WeeeContext);
+
+                // Arrange
+                var modelHelper = new ModelHelper(database.Model);
+
+                var scheme1 = modelHelper.CreateScheme();
+                scheme1.Organisation.Id = Guid.NewGuid();
+
+                database.Model.SaveChanges();
+
+                // Act
+                Func<Task<Domain.Scheme.Scheme>> action = async () => await dataAccess.FetchSchemeBySchemeId(organisationId);
+
+                // Assert
+                await action.Should().ThrowAsync<Exception>();
             }
         }
     }

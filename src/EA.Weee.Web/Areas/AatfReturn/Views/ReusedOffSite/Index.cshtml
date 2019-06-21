@@ -1,0 +1,40 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteViewModel
+@{
+    ViewBag.Title = "Reused WEEE";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">
+        @Model.AatfName
+    </h1>
+    <h2 class="govuk-heading-l">
+        Has any of this WEEE gone directly to another site to be reused?
+    </h2>
+
+    <p>This is WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first</p>
+
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        <div class="govuk-!-padding-bottom-5"></div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeReusedOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Confirm if this WEEE has been directly sent to another site",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+</section>
