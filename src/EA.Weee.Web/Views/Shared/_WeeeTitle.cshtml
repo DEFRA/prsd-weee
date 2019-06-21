@@ -58,11 +58,11 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                                            "Navigation",
-                                                            "External activity",
-                                                            null,
-                                                           null)):
+                                                                Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                                                    "Navigation",
+                                                                    "External activity",
+                                                                    null,
+                                                                   null)):
                                 @Model.Breadcrumb.ExternalActivity
                             </li>
                         }
@@ -71,11 +71,11 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                        Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                                        "Navigation",
-                                                        "Internal activity",
-                                                        null,
-                                                       null)):
+                                                                Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                                                "Navigation",
+                                                                "Internal activity",
+                                                                null,
+                                                               null)):
                                 @Model.Breadcrumb.InternalActivity
                             </li>
                         }
@@ -161,4 +161,7 @@
     <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
 }
 
-
+@if (Model.Breadcrumb.AatfDisplayInfo != null && !(String.IsNullOrEmpty(Model.Breadcrumb.AatfDisplayInfo)) && Model.Breadcrumb.ExternalActivity == "AATF return")
+{
+    <div id="schemeBanner" style="white-space:pre-wrap;">@Html.Raw(Model.Breadcrumb.AatfDisplayInfo)</div>
+}
