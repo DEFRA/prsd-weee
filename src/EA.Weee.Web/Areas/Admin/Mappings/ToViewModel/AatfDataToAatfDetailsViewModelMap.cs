@@ -40,7 +40,9 @@
                 FacilityType = source.AatfData.FacilityType,
                 ComplianceYear = source.AatfData.ComplianceYear,
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
-                ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false)
+                ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false),
+                PanArea = source.AatfData.PanAreaData,
+                LocalArea = source.AatfData.LocalAreaData
             };
 
             if (source.AssociatedAatfs != null)

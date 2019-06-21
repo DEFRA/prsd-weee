@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Producer;
+    using Shared;
 
     public interface IFetchIssuedChargesCsvDataAccess : ICommonDataAccess
     {

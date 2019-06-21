@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -107,9 +108,15 @@
 
             A.CallTo(() => matchingOrg.Id).Returns(organisationId);
 
-            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
-            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg, A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
-            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(), A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>());
+            var aatf1 = new Aatf("B", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg,
+                A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(),
+                A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>(), A.Fake<LocalArea>(), A.Fake<PanArea>());
+            var aatf2 = new Aatf("A", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), matchingOrg,
+                A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(),
+                A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>(), A.Fake<LocalArea>(), A.Fake<PanArea>());
+            var aatf3 = new Aatf("C", A.Fake<UKCompetentAuthority>(), "TEST", A.Fake<Domain.AatfReturn.AatfStatus>(), A.Fake<Organisation>(),
+                A.Fake<AatfAddress>(), A.Fake<Domain.AatfReturn.AatfSize>(), DateTime.Now, A.Fake<AatfContact>(),
+                A.Fake<Domain.AatfReturn.FacilityType>(), A.Dummy<Int16>(), A.Fake<LocalArea>(), A.Fake<PanArea>());
 
             var aatfs = new List<Aatf>()
             {
