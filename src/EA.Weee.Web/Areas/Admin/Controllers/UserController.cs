@@ -19,10 +19,11 @@
     using Weee.Requests.Admin;
     using Weee.Requests.Users;
     using GetUserData = Weee.Requests.Admin.GetUserData;
+
     public class UserController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const int DefaultPageSize = 25;
+        private const int DefaultPageSize = 5;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
 
@@ -36,14 +37,11 @@
         /// <summary>
         /// Get a list of organisation-users and authority-users with optional paging and ordering.
         /// </summary>
-        /// <param name="orderBy"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult> Index(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
             var model = await GetManageUsersViewModel(orderBy, page);
-            return View(model);
+            return View(nameof(Index), model);
         }
 
         /// <summary>
@@ -72,6 +70,12 @@
         {
             var model = await GetManageUsersViewModel(orderBy, page, filter);
             return View(nameof(Index), model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ClearFilter(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending)
+        {
+            return await Index(orderBy);
         }
 
         /// <summary>
