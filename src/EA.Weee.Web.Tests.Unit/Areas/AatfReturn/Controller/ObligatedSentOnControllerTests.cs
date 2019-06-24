@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
@@ -20,6 +21,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -89,12 +91,31 @@
             var organisationId = Guid.NewGuid();
             const string orgName = "orgName";
 
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var aatfInfo = A.Fake<AatfData>();
+            var aatfId = Guid.NewGuid();
+
+            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar Reporting on: Test (WEE/QW1234RE/ATF)";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+            const string aatfName = "Test";
+            aatfInfo.ApprovalNumber = "WEE/QW1234RE/ATF";
+
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(A.Dummy<Guid>(), organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<String>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
+            A.CallTo(() => aatfInfo.Name).Returns(aatfName);
+
+            await controller.Index(A.Dummy<Guid>(), organisationId, A.Dummy<Guid>(), aatfId, A.Dummy<String>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
+
+            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
+            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
         }
 
         [Fact]

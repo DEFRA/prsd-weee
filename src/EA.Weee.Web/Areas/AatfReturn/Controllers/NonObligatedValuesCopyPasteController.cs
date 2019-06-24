@@ -44,9 +44,7 @@
                     Dcf = dcf,
                     Typeheading = typeHeading
                 };
-
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
-
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }
@@ -68,11 +66,12 @@
             return await Task.Run<ActionResult>(() => AatfRedirect.NonObligated(viewModel.ReturnId, viewModel.Dcf));
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(string.Empty, string.Empty, quarter);
         }
     }
 }
