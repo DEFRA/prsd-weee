@@ -79,6 +79,21 @@
         }
 
         [Fact]
+        public async Task ClearFilter_ParametersSent_ViewModelSetCorrectlyAndFilterCleared()
+        {
+            var orderBy = fixture.Create<FindMatchingUsers.OrderBy>();
+
+            var result = await controller.ClearFilter(orderBy) as ViewResult;
+
+            Assert.IsType<ManageUsersViewModel>(result.Model);
+            var viewModel = result.Model as ManageUsersViewModel;
+            Assert.Equal(orderBy, viewModel.OrderBy);
+            Assert.Equal(null, viewModel.Filter.Name);
+            Assert.Equal(null, viewModel.Filter.OrganisationName);
+            Assert.Equal(null, viewModel.Filter.Status);
+        }
+
+        [Fact]
         public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))

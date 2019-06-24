@@ -27,6 +27,7 @@
 {
     <div class="filter">
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrderBy)
         <div class="govuk-label">Filter by:</div>
         <br />
         <table class="govuk-table">
@@ -51,13 +52,27 @@
             </tbody>
         </table>
 
-        @(this.WeeeGds().Submit("Apply"))
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Apply", new { orderBy = Model.OrderBy }))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Clear", "ClearFilter", new { orderBy = Model.OrderBy }, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 }
 
 @using (Html.BeginForm(actionName: "Index", controllerName: "User", method: FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.OrderBy)
     @Html.HiddenFor(m => m.Filter.Name)
     @Html.HiddenFor(m => m.Filter.OrganisationName)
     @Html.HiddenFor(m => m.Filter.Status)
@@ -182,7 +197,7 @@
     {
         <div class="pager govuk-body">
             @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o =>
-                o.AddRouteValue("orderby", @Model.OrderBy))
+                o.Action("Index").AddRouteValueFor(m => m.OrderBy))
         </div>
 
         <p class="govuk-body">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
