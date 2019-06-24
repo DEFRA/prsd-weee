@@ -27,16 +27,14 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IEditSentOnAatfSiteRequestCreator requestCreator;
-        private readonly IGetSentOnAatfSiteRequestCreator getRequestCreator;
         private readonly IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper;
 
-        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IEditSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper, IGetSentOnAatfSiteRequestCreator getRequestCreator)
+        public SentOnCreateSiteOperatorController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IEditSentOnAatfSiteRequestCreator requestCreator, IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.requestCreator = requestCreator;
-            this.getRequestCreator = getRequestCreator;
             this.mapper = mapper;
         }
 
@@ -64,11 +62,13 @@
 
                 var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer() { ReturnId = returnId, SiteAddressData = siteAddressData, OperatorAddressId = operatorAddressId, AatfId = aatfId, OrganisationId = organisationId, WeeeSentOnId = weeeSentOnId, JavascriptDisabled = javascriptDisabled, CountryData = operatorCountryData, OperatorAddressData = operatorAddress });
 
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
                 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+
                 TempData["currentQuarter"] = @return.Quarter;
                 TempData["currentQuarterWindow"] = @return.QuarterWindow;
+
                 return View(viewModel);
             }
         }
