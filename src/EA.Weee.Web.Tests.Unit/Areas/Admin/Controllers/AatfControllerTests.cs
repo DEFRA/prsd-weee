@@ -15,7 +15,6 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain.Organisation;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
@@ -216,7 +215,7 @@
         {
             SetUpControllerContext(true);
 
-            ActionResult result = await controller.ManageAatfs(FacilityType.Aatf);
+            await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
             Assert.Equal(null, breadcrumbService.InternalAatf);
@@ -1088,14 +1087,12 @@
 
             AatfData aatfData = A.Dummy<AatfData>();
             aatfData.Name = "Name";
-            Organisation organisation = A.Dummy<Organisation>();
-           
             aatfData.Id = aatfId;
             
-            A.CallTo(() => cache.FetchAatfData(organisation.Id, aatfId)).Returns(aatfData);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Delete(aatfId, organisation.Id, facilityType);
+            await controller.Delete(aatfId, organisationId, facilityType);
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
             breadcrumbService.InternalAatf.Should().Be(aatfData.Name);
