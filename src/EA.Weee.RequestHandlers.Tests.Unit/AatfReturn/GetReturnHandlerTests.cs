@@ -40,14 +40,16 @@
             await action.Should().ThrowAsync<SecurityException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenReturn_GetPopulatedReturnShouldBeCalled()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task HandleAsync_GivenReturn_GetPopulatedReturnShouldBeCalled(bool forSummary)
         {
             var returnId = Guid.NewGuid();
 
-            var result = await handler.HandleAsync(new GetReturn(returnId));
+            var result = await handler.HandleAsync(new GetReturn(returnId, forSummary));
 
-            A.CallTo(() => populatedReturn.GetReturnData(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => populatedReturn.GetReturnData(returnId, forSummary)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -55,7 +57,7 @@
         {
             var returnData = new ReturnData();
 
-            A.CallTo(() => populatedReturn.GetReturnData(A<Guid>._)).Returns(returnData);
+            A.CallTo(() => populatedReturn.GetReturnData(A<Guid>._, A<bool>._)).Returns(returnData);
 
             var result = await handler.HandleAsync(A.Dummy<GetReturn>());
 

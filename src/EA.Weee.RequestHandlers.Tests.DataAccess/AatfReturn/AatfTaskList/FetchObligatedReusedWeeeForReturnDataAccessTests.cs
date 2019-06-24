@@ -40,7 +40,7 @@
 
                 var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
                 var @return = new Return(organisation, new Quarter(2019, QuarterType.Q1), database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 database.WeeeContext.Organisations.Add(organisation);
                 database.WeeeContext.Aatfs.Add(aatf);

@@ -23,7 +23,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReusedAmounts(context, dataAccess, database);
+                var returnId = await CreateWeeeReusedAmounts(dataAccess, database);
 
                 AssertValues(context, returnId);
             }
@@ -37,7 +37,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReusedAmounts(context, dataAccess, database);
+                var returnId = await CreateWeeeReusedAmounts(dataAccess, database);
 
                 AssertValues(context, returnId);
 
@@ -66,20 +66,19 @@
             }
         }
 
-        private async Task<Guid> CreateWeeeReusedAmounts(WeeeContext context,
-            ObligatedReusedDataAccess dataAccess, DatabaseWrapper database)
+        private async Task<Guid> CreateWeeeReusedAmounts(ObligatedReusedDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.Aatfs.Add(aatf);
-            context.Returns.Add(@return);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.Aatfs.Add(aatf);
+            database.WeeeContext.Returns.Add(@return);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             var weeeReused = new WeeeReused(aatf.Id, @return.Id);
 
