@@ -34,8 +34,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly INonObligatedDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
-        private readonly IWeeeSentOnDataAccess sentOnAatfSiteDataAccess;
-        private readonly IFetchAatfByOrganisationIdDataAccess fetchAatfByOrganisationIdDataAccess;
+        private readonly IFetchAatfDataAccess fetchAatfByOrganisationIdDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
@@ -44,10 +43,9 @@
             returnDataAccess = A.Fake<IReturnDataAccess>();
             mapper = A.Fake<IMap<ReturnQuarterWindow, ReturnData>>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-            sentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             fetchNonObligatedWeeeDataAccess = A.Fake<INonObligatedDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
-            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfByOrganisationIdDataAccess>();
+            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
 
@@ -59,7 +57,6 @@
                 quarterWindowFactory,
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
-                sentOnAatfSiteDataAccess,
                 fetchAatfByOrganisationIdDataAccess,
                 returnSchemeDataAccess,
                 genericDataAccess);
@@ -76,12 +73,11 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IWeeeSentOnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
                 A.Dummy<IGenericDataAccess>());
 
-            Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>());
+            Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
@@ -98,22 +94,20 @@
                 A.Dummy<IQuarterWindowFactory>(),
                 A.Dummy<INonObligatedDataAccess>(),
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
-                A.Dummy<IWeeeSentOnDataAccess>(),
-                A.Dummy<IFetchAatfByOrganisationIdDataAccess>(),
+                A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
                 A.Dummy<IGenericDataAccess>());
 
-            Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>());
+            Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
             await action.Should().ThrowAsync<SecurityException>();
         }
 
-        [Fact]
         public async Task GetReturnData_GivenReturn_ReturnShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
             A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -125,7 +119,7 @@
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
 
-            var result = await populatedReturn.GetReturnData(A.Dummy<Guid>());
+            var result = await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -135,7 +129,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -145,7 +139,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -155,39 +149,37 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async Task GetReturnData_GivenReturn_ObligatedSentOnValuesShouldBeRetrieved()
+        public async Task GetReturnData_GivenReturnNonSummary_AatfsShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
-            var @return = A.Fake<Return>();
-            var aatfList = A.Fake<List<Aatf>>();
+            var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+            var quarterWindow = new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddDays(1), QuarterType.Q1);
 
             A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(@return.Organisation.Id)).Returns(aatfList);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(quarterWindow);
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, false);
 
-            foreach (var aatf in aatfList)
-            {
-                A.CallTo(() => sentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatf.Id, returnId)).MustHaveHappened(Repeated.Exactly.Once);
-            }
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async Task GetReturnData_GivenReturn_AatfsShouldBeRetrieved()
+        public async Task GetReturnData_GivenReturnForSummary_AatfsShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
+            var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+           
+            A.CallTo(() => returnDataAccess.GetById(@return.Id)).Returns(@return);
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, true);
 
-            var organisationId = new Guid();
-
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -195,7 +187,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, false);
 
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -205,13 +197,13 @@
         {
             var returnId = Guid.NewGuid();
 
-            var result = await populatedReturn.GetReturnData(returnId);
+            var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
             A.CallTo(() => genericDataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(s => s.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async Task GetReturnData_GivenReturn_MapperShouldBeCalled()
+        public async Task GetReturnData_GivenReturnForNonSummary_MapperShouldBeCalled()
         {
             var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>());
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue, QuarterType.Q1);
@@ -221,6 +213,7 @@
             var obligatedSentOnValues = new List<WeeeSentOnAmount>();
             var returnSchemes = new List<ReturnScheme>();
             var reportsOn = new List<ReturnReportOn>();
+            var aatfs = new List<Aatf>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
@@ -230,19 +223,57 @@
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnSchemes);
             A.CallTo(() => genericDataAccess.GetManyByExpression<ReturnReportOn>(A<ReturnReportOnByReturnIdSpecification>._)).Returns(reportsOn);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(A<Guid>._, A<int>._, A<DateTime>._))
+                .Returns(aatfs);
 
-            await populatedReturn.GetReturnData(A.Dummy<Guid>());
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), false);
 
-            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.IsSameOrEqualTo(quarterWindow)
-                                                                                && c.NonObligatedWeeeList.IsSameOrEqualTo(nonObligatedValues)
-                                                                                && c.ObligatedWeeeReceivedList.IsSameOrEqualTo(obligatedReceivedValues)
-                                                                                && c.ObligatedWeeeReusedList.IsSameOrEqualTo(obligatedReusedValues)
-                                                                                && c.ObligatedWeeeSentOnList.IsSameOrEqualTo(obligatedSentOnValues)
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.Equals(quarterWindow)
+                                                                               && c.Aatfs.Equals(aatfs)
+                                                                                && c.NonObligatedWeeeList.Equals(nonObligatedValues)
+                                                                                && c.ObligatedWeeeReceivedList.Equals(obligatedReceivedValues)
+                                                                                && c.ObligatedWeeeReusedList.Equals(obligatedReusedValues)
+                                                                                && c.ObligatedWeeeSentOnList.Equals(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)
                                                                                 && c.ReturnSchemes.Equals(returnSchemes)
                                                                                 && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public async Task GetReturnData_GivenReturnForSummary_MapperShouldBeCalled()
+        {
+            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>());
+            var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue, QuarterType.Q1);
+            var nonObligatedValues = new List<NonObligatedWeee>();
+            var obligatedReceivedValues = new List<WeeeReceivedAmount>();
+            var obligatedReusedValues = new List<WeeeReusedAmount>();
+            var obligatedSentOnValues = new List<WeeeSentOnAmount>();
+            var returnSchemes = new List<ReturnScheme>();
+            var reportsOn = new List<ReturnReportOn>();
+            var aatfs = new List<Aatf>();
+
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
+            A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnSchemes);
+            A.CallTo(() => genericDataAccess.GetManyByExpression<ReturnReportOn>(A<ReturnReportOnByReturnIdSpecification>._)).Returns(reportsOn);
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByReturnId(A<Guid>._)).Returns(aatfs);
+
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), true);
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(c => c.QuarterWindow.Equals(quarterWindow)
+                                                                               && c.Aatfs.Equals(aatfs)
+                                                                                && c.NonObligatedWeeeList.Equals(nonObligatedValues)
+                                                                                && c.ObligatedWeeeReceivedList.Equals(obligatedReceivedValues)
+                                                                                && c.ObligatedWeeeReusedList.Equals(obligatedReusedValues)
+                                                                                && c.ObligatedWeeeSentOnList.Equals(obligatedSentOnValues)
+                                                                                && c.Return.Equals(@return)
+                                                                                && c.ReturnSchemes.Equals(returnSchemes)
+                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
         [Fact]
         public async Task GetReturnData_GivenReturn_MappedObjectShouldBeReturned()
         {
@@ -250,7 +281,7 @@
 
             A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>._)).Returns(returnData);
 
-            var result = await populatedReturn.GetReturnData(A.Dummy<Guid>());
+            var result = await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
             result.Should().Be(returnData);
         }

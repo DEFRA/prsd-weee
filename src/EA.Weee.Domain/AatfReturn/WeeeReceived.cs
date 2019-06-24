@@ -6,13 +6,9 @@
     using EA.Prsd.Core.Domain;
     using Scheme;
 
-    public class WeeeReceived : ReturnEntity, IReturnOption
+    public class WeeeReceived : AatfEntity, IReturnOption
     {
         public Guid SchemeId { get; private set; }
-
-        public virtual Guid AatfId { get; private set; }
-
-        public virtual Aatf Aatf { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
 
@@ -25,14 +21,15 @@
             ReturnId = returnId;
         }
 
-        public WeeeReceived(Scheme scheme, Aatf aatf, Guid returnId)
+        public WeeeReceived(Scheme scheme, Aatf aatf, Return @return)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
             Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => @return, @return);
 
             Scheme = scheme;
             Aatf = aatf;
-            ReturnId = returnId;
+            Return = @return;
         }
         public WeeeReceived()
         {
