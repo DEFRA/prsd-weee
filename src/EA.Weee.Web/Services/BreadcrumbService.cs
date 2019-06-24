@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
     using System;
+    using EA.Weee.Core.Scheme;
 
     public class BreadcrumbService
     {
