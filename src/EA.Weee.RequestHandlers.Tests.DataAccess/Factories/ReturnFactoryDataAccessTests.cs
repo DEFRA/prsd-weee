@@ -260,7 +260,7 @@
             var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "France");
             var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
             if (!approvalDate.HasValue)
             {

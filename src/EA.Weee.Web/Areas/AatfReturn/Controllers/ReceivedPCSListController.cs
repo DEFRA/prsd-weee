@@ -41,7 +41,7 @@
             {
                 var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
                 {

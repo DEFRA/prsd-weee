@@ -33,7 +33,7 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                ReturnData returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                ReturnData returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
                 ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,

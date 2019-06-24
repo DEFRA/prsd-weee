@@ -27,16 +27,14 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IWeeeClient weeeClient;
-        private readonly IPasteProcessor pasteProcessor;
 
         public ObligatedValuesCopyPasteControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             weeeClient = weeeClient = A.Fake<IWeeeClient>();
-            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            controller = new ObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache, pasteProcessor);
+            controller = new ObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache);
         }
 
         [Fact]
