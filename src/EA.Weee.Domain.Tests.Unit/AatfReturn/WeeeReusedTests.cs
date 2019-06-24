@@ -13,7 +13,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new WeeeReused(null, Guid.NewGuid());
+                var @return = new WeeeReused(null, A.Dummy<Return>());
             };
 
             constructor.Should().Throw<ArgumentNullException>();
@@ -23,18 +23,18 @@
         public void WeeeReused_GivenValidParameters_WeeeReceivedPropertiesShouldBeSet()
         {
             var aatf = A.Fake<Aatf>();
-            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
 
-            var weeeReceived = new WeeeReused(aatf, returnId);
+            var weeeReceived = new WeeeReused(aatf, @return);
 
             weeeReceived.Aatf.Should().Be(aatf);
-            weeeReceived.ReturnId.Should().Be(returnId);
+            weeeReceived.Return.Should().Be(@return);
         }
 
         [Fact]
         public void WeeeReused_ShouldInheritFromReturnEntity()
         {
-            typeof(WeeeReused).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+            typeof(WeeeReused).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.AatfEntity).Name);
         }
     }
 }

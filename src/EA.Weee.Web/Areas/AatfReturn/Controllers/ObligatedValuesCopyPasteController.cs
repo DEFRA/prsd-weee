@@ -21,14 +21,12 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IPasteProcessor pasteProcessor;
 
-        public ObligatedValuesCopyPasteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IPasteProcessor pasteProcessor)
+        public ObligatedValuesCopyPasteController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-            this.pasteProcessor = pasteProcessor;
         }
 
         [HttpGet]
@@ -36,7 +34,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
                 var viewModel = new ObligatedValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
