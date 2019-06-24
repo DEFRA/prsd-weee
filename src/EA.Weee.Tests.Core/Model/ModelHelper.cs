@@ -46,7 +46,7 @@
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public AspNetUser CreateUser(string userName, IdType idType = IdType.Integer)
+        public AspNetUser CreateUser(string userName, IdType idType = IdType.Integer, string firstName = "Test", string surname = "LastName")
         {
             var userId = string.Empty;
 
@@ -63,8 +63,8 @@
 
             AspNetUser user = new AspNetUser();
             user.Id = userId;
-            user.FirstName = "Test";
-            user.Surname = "LastName";
+            user.FirstName = firstName;
+            user.Surname = surname;
             user.Email = userName;
             user.EmailConfirmed = true;
             user.UserName = userName;

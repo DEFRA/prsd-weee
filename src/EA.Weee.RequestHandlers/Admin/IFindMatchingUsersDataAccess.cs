@@ -2,10 +2,12 @@
 {
     using System.Threading.Tasks;
     using Core.Admin;
+    using EA.Weee.Core.User;
 
     public interface IFindMatchingUsersDataAccess
     {
-        Task<UserSearchData[]> GetCompetentAuthorityUsers();
-        Task<UserSearchData[]> GetOrganisationUsers();
+        Task<UserSearchData[]> GetCompetentAuthorityUsers(UserFilter filter);
+
+        Task<UserSearchData[]> GetOrganisationUsers(UserFilter filter);
     }
 }

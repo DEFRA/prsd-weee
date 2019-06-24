@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Admin;
+    using EA.Weee.Core.User;
     using Prsd.Core.Mediator;
 
     public class FindMatchingUsers : IRequest<UserSearchDataResult>
@@ -19,12 +20,14 @@
         /// </summary>
         public int PageSize { get; private set; }
 
+        public UserFilter Filter { get; private set; } 
+
         /// <summary>
         /// Defines how the results will be ordered.
         /// </summary>
         public OrderBy Ordering { get; private set; }
 
-        public FindMatchingUsers(int pageNumber, int pageSize, OrderBy ordering)
+        public FindMatchingUsers(int pageNumber, int pageSize, OrderBy ordering, UserFilter filter)
         {
             if (pageNumber < 1)
             {
@@ -39,6 +42,7 @@
             PageNumber = pageNumber;
             PageSize = pageSize;
             Ordering = ordering;
+            Filter = filter ?? new UserFilter();
         }
 
         public enum OrderBy

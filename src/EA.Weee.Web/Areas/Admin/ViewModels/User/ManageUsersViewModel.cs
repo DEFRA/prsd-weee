@@ -8,6 +8,8 @@
 
     public class ManageUsersViewModel
     {
+        public FilteringViewModel Filter { get; set; }
+
         public IPagedList<UserSearchData> Users { get; set; }
 
         public FindMatchingUsers.OrderBy OrderBy { get; set; }
