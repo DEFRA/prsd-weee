@@ -5,6 +5,7 @@
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.Tests.Core.Model;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -21,10 +22,9 @@
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(WeeeContext context, Organisation organisation)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation)
         {
-            var aatf = new Aatf("aatfname", context.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(context.Countries.First()), AatfSize.Large, DateTime.Now, CreateDefaultContact(context.Countries.First()), FacilityType.Aatf, 2019, context.LocalAreas.First(), context.PanAreas.First());
-            return aatf;
+            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
         public static Scheme CreateScheme(Organisation organisation)
@@ -32,9 +32,9 @@
             return new Scheme(organisation);
         }
 
-        public static AatfAddress CreateAatfAddress(Domain.Country country)
+        public static AatfAddress CreateAatfAddress(DatabaseWrapper database)
         {
-            return new AatfAddress("Name", "Address1", "Address2", "TownOrCity", "County", "TU22 7UT", country);
+            return AddressHelper.GetAatfAddress(database);
         }
 
         public static Organisation CreateOrganisation()

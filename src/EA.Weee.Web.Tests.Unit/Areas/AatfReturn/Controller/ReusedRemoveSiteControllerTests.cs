@@ -60,8 +60,7 @@
             var siteId = Guid.NewGuid();
             const string orgName = "orgName";
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -122,8 +121,7 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -150,8 +148,7 @@
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()

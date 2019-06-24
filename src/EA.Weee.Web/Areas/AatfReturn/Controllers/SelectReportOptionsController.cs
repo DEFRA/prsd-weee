@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -54,10 +55,13 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion()),
-                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId))
+                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false))
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(viewModel.ReturnData.Quarter, viewModel.ReturnData.QuarterWindow));
+
+                TempData["currentQuarter"] = viewModel.ReturnData.Quarter;
+                TempData["currentQuarterWindow"] = viewModel.ReturnData.QuarterWindow;
 
                 return View("Index", viewModel);
             }
@@ -73,7 +77,7 @@
             {
                 using (var client = apiClient())
                 {
-                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
+                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId, false));
                     if (CheckHasDeselectedOptions(viewModel))
                     {
                         if (!viewModel.HasSelectedOptions)
@@ -104,7 +108,7 @@
                 return AatfRedirect.TaskList(viewModel.ReturnId);
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
         }
@@ -150,11 +154,12 @@
             return false;
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(string.Empty, string.Empty, quarter);
         }
     }
 }

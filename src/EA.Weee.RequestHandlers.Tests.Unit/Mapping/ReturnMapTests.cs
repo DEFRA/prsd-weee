@@ -139,7 +139,7 @@
         {
             var @return = GetReturn();
 
-            var weeeReceived = ReturnWeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = ReturnWeeeReceived(scheme, aatf, @return);
 
             var obligated = new List<WeeeReceivedAmount>()
             {
@@ -166,7 +166,7 @@
         {
             var @return = GetReturn();
 
-            var weeeReused = ReturnWeeeReused(aatf, @return.Id);
+            var weeeReused = ReturnWeeeReused(aatf, @return);
 
             var obligated = new List<WeeeReusedAmount>()
             {
@@ -364,16 +364,16 @@
             return @return;
         }
 
-        public WeeeReceived ReturnWeeeReceived(DomainScheme scheme, DomainAatf aatf, Guid returnId)
+        public WeeeReceived ReturnWeeeReceived(DomainScheme scheme, DomainAatf aatf, Return @return)
         {
-            var weeeReceived = new WeeeReceived(scheme, aatf, returnId);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             return weeeReceived;
         }
 
-        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Guid returnId)
+        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Return @return)
         {
-            var weeeReused = new WeeeReused(aatf, returnId);
+            var weeeReused = new WeeeReused(aatf, @return);
 
             return weeeReused;
         }

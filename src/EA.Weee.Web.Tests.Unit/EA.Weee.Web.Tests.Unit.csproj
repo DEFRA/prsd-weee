@@ -219,6 +219,7 @@
     <Compile Include="App_Start\ReturnUrlMappingTests.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToUserFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Areas\Admin\ViewModels\OverriddenFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
+    <Compile Include="Infrastructure\DisplayHelperTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />

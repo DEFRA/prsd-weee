@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using EA.Weee.Core.Scheme;
     using System;
+    using EA.Weee.Core.Scheme;
 
     public class BreadcrumbService
     {
@@ -56,5 +56,10 @@
         /// The activity currently in scope when accessing the test area.
         /// </summary>
         public string TestAreaActivity { get; set; }
+
+        /// <summary>
+        /// Information about Aatf
+        /// </summary>
+        public string AatfDisplayInfo { get; set; }
     }
 }

@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Security;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using AutoFixture;
     using Core.Admin;
     using Core.Shared;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.User;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using Security;
     using Web.Areas.Admin.Controllers;
@@ -21,26 +22,28 @@
 
     public class UserControllerTests
     {
+        private readonly Fixture fixture;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient weeeClient;
+        private readonly IMapper mapper;
+        private readonly UserController controller;
+
         public UserControllerTests()
         {
+            fixture = new Fixture();
             weeeClient = A.Fake<IWeeeClient>();
             apiClient = () => weeeClient;
+            mapper = A.Fake<IMapper>();
+            controller = new UserController(apiClient, A.Fake<BreadcrumbService>(), mapper);
         }
 
         [Fact]
         public async Task PostIndex_WithValidModel_RedirectsToViewAction()
         {
             // Arrange
-            UserController controller = new UserController(
-                apiClient,
-                A.Fake<IWeeeCache>(),
-                A.Fake<BreadcrumbService>());
-
-            // Act
             Guid selectedUserId = Guid.NewGuid();
 
+            // Act
             ActionResult result = await controller.Index(new ManageUsersViewModel { SelectedUserId = selectedUserId });
 
             // Assert
@@ -53,10 +56,46 @@
         }
 
         [Fact]
+        public async Task ApplyFilterPost_RedirectsToIndexView()
+        {
+            var filter = fixture.Create<FilteringViewModel>();
+            var mappedFilter = fixture.Create<UserFilter>();
+
+            var mapperCall = A.CallTo(() => mapper.Map<UserFilter>(filter));
+            mapperCall.Returns(mappedFilter);
+
+            var result = await controller.ApplyFilter(filter);
+
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("Index", viewResult.ViewName);
+            Assert.IsType<ManageUsersViewModel>(viewResult.Model);
+
+            var viewResultModel = (ManageUsersViewModel)viewResult.Model;
+            Assert.Equal(filter, viewResultModel.Filter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<FindMatchingUsers>.That.Matches(a => a.Filter == mappedFilter))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ClearFilter_ParametersSent_ViewModelSetCorrectlyAndFilterCleared()
+        {
+            var orderBy = fixture.Create<FindMatchingUsers.OrderBy>();
+
+            var result = await controller.ClearFilter(orderBy) as ViewResult;
+
+            Assert.IsType<ManageUsersViewModel>(result.Model);
+            var viewModel = result.Model as ManageUsersViewModel;
+            Assert.Equal(orderBy, viewModel.OrderBy);
+            Assert.Equal(null, viewModel.Filter.Name);
+            Assert.Equal(null, viewModel.Filter.OrganisationName);
+            Assert.Equal(null, viewModel.Filter.Status);
+        }
+
+        [Fact]
         public async Task GetEdit_ReturnsEditView_WhenCanEditUserIsTrue()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
                 {
@@ -89,8 +128,6 @@
         [Fact]
         public async Task GetEdit_ReturnsHttpForbiddenResult_WhenCanEditUserIsFalse()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
                 .Returns(new ManageUserData
                 {
@@ -106,8 +143,6 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModel_UpdatesUserAndCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
@@ -141,8 +176,6 @@
         [Fact]
         public async Task PostEdit_WithOrganisationUserAndValidModel_UpdatesUserAndOrganisationUserStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
@@ -175,8 +208,6 @@
         [Fact]
         public async Task PostEdit_WithCompetentAuthorityUserAndValidModelAndUserBeingUpdatedIsCurrentUser_UpdatesUserAndDoesNotUpdateCompetentAuthorityUserRoleAndStatusAndRedirectsToViewAction()
         {
-            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
-
             var model = new EditUserViewModel
             {
                 UserStatus = UserStatus.Active,
