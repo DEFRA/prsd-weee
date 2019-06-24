@@ -29,7 +29,6 @@
         private readonly IWeeeClient apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IGetSentOnAatfSiteRequestCreator getRequestCreator;
         private readonly IEditSentOnAatfSiteRequestCreator requestCreator;
         private readonly SentOnCreateSiteOperatorController controller;
         private readonly IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel> mapper;
@@ -39,11 +38,10 @@
             this.apiClient = A.Fake<IWeeeClient>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
-            this.getRequestCreator = A.Fake<IGetSentOnAatfSiteRequestCreator>();
             this.requestCreator = A.Fake<IEditSentOnAatfSiteRequestCreator>();
             this.mapper = A.Fake<IMap<ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer, SentOnCreateSiteOperatorViewModel>>();
 
-            controller = new SentOnCreateSiteOperatorController(() => apiClient, breadcrumb, cache, requestCreator, mapper, getRequestCreator);
+            controller = new SentOnCreateSiteOperatorController(() => apiClient, breadcrumb, cache, requestCreator, mapper);
         }
 
         [Fact]
@@ -109,10 +107,12 @@
             var returnId = Guid.NewGuid();
             var weeeSentOnId = Guid.NewGuid();
             var weeeSentOnList = new List<WeeeSentOnData>();
-            var weeeSentOn = new WeeeSentOnData();
-            weeeSentOn.SiteAddress = new AatfAddressData();
-            weeeSentOn.SiteAddressId = Guid.NewGuid();
-            weeeSentOn.WeeeSentOnId = weeeSentOnId;
+            var weeeSentOn = new WeeeSentOnData
+            {
+                SiteAddress = new AatfAddressData(),
+                SiteAddressId = Guid.NewGuid(),
+                WeeeSentOnId = weeeSentOnId
+            };
             weeeSentOnList.Add(weeeSentOn);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
@@ -127,8 +127,10 @@
         {
             var form = new FormCollection();
             controller.ModelState.AddModelError("error", "error");
-            var model = new SentOnCreateSiteOperatorViewModel();
-            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteOperatorViewModel
+            {
+                OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
             await controller.Index(model, form);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<EditSentOnAatfSiteWithOperator>._)).MustNotHaveHappened();
@@ -138,12 +140,14 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var form = new FormCollection();
-            var model = new SentOnCreateSiteOperatorViewModel();
-            model.OrganisationId = Guid.NewGuid();
-            model.AatfId = Guid.NewGuid();
-            model.WeeeSentOnId = Guid.NewGuid();
-            model.ReturnId = Guid.NewGuid();
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteOperatorViewModel
+            {
+                OrganisationId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                WeeeSentOnId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
             var request = new EditSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -160,13 +164,15 @@
         {
             var form = new FormCollection();
             var boolConversion = Convert.ToBoolean(operatorBool);
-            var model = new SentOnCreateSiteOperatorViewModel();
-            model.OrganisationId = Guid.NewGuid();
-            model.AatfId = Guid.NewGuid();
-            model.WeeeSentOnId = Guid.NewGuid();
-            model.ReturnId = Guid.NewGuid();
-            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteOperatorViewModel
+            {
+                OrganisationId = Guid.NewGuid(),
+                AatfId = Guid.NewGuid(),
+                WeeeSentOnId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST"),
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
 
             form.Add("IsOperatorTheSameAsAATF", operatorBool);
 
