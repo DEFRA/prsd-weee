@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
+    using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -71,10 +72,21 @@
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
 
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+
+            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
+            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
         }
 
         [Fact]
