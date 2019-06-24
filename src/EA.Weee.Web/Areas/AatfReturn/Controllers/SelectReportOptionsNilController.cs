@@ -52,7 +52,7 @@
                     ReturnId = returnId
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(returnData.Quarter, returnData.QuarterWindow));
 
                 return View("Index", viewModel);
             }
@@ -71,11 +71,12 @@
             return await Task.Run<ActionResult>(() => AatfRedirect.SubmittedReturn(viewModel.ReturnId));
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(string.Empty, string.Empty, quarter);
         }
     }
 }
