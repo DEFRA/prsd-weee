@@ -49,6 +49,7 @@
     <Compile Include="AatfReturn\Aatf.cs" />
     <Compile Include="AatfReturn\AatfAddressObligatedAmount.cs" />
     <Compile Include="AatfReturn\AatfContact.cs" />
+    <Compile Include="AatfReturn\AatfEntity.cs" />
     <Compile Include="AatfReturn\AatfSize.cs" />
     <Compile Include="AatfReturn\INonObligatedAmount.cs" />
     <Compile Include="AatfReturn\IObligatedAmount.cs" />

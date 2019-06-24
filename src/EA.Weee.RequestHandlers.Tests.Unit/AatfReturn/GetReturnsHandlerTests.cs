@@ -67,7 +67,6 @@
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        [Fact]
         public async Task HandleAsync_GivenOrganisation_GetPopulatedReturnsShouldBeCalled()
         {
             var organisationId = Guid.NewGuid();
@@ -85,8 +84,8 @@
 
             var result = await handler.HandleAsync(new GetReturns(organisationId, Core.AatfReturn.FacilityType.Aatf));
 
-            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -96,7 +95,7 @@
             var returnData = A.CollectionOfFake<ReturnData>(2).ToArray();
 
             A.CallTo(() => returnDataAccess.GetByOrganisationId(A<Guid>._)).Returns(returns);
-            A.CallTo((() => populatedReturn.GetReturnData(A<Guid>._))).ReturnsNextFromSequence(returnData);
+            A.CallTo((() => populatedReturn.GetReturnData(A<Guid>._, A<bool>._))).ReturnsNextFromSequence(returnData);
 
             var result = await handler.HandleAsync(A.Dummy<GetReturns>());
 
@@ -159,13 +158,13 @@
 
             if (facilityType == Core.AatfReturn.FacilityType.Ae)
             {
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id))).MustHaveHappened(Repeated.Exactly.Once);
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
             }
 
             if (facilityType == Core.AatfReturn.FacilityType.Aatf)
             {
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(2).Id))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(2).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
             }
         }
     }

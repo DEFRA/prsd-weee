@@ -25,7 +25,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess, database);
+                var returnId = await CreateWeeeReceivedAmounts(dataAccess, database);
 
                 AssertValues(context, returnId);
             }
@@ -39,7 +39,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
-                var returnId = await CreateWeeeReceivedAmounts(context, dataAccess, database);
+                var returnId = await CreateWeeeReceivedAmounts(dataAccess, database);
                 
                 AssertValues(context, returnId);
 
@@ -68,22 +68,21 @@
             }
         }
 
-        private async Task<Guid> CreateWeeeReceivedAmounts(WeeeContext context,
-            ObligatedReceivedDataAccess dataAccess, DatabaseWrapper database)
+        private async Task<Guid> CreateWeeeReceivedAmounts(ObligatedReceivedDataAccess dataAccess, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.Aatfs.Add(aatf);
-            context.Returns.Add(@return);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.Aatfs.Add(aatf);
+            database.WeeeContext.Returns.Add(@return);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
-            var weeeReceived = new WeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 
