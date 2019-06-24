@@ -23,7 +23,7 @@
     public class UserController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const int DefaultPageSize = 5;
+        private const int DefaultPageSize = 25;
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
 
