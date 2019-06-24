@@ -52,27 +52,41 @@
 
             authorization.EnsureOrganisationAccess(returnCopy.Organisation.Id);
 
-            await CopyReturnReportsOn(message, returnCopy);
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    await CopyReturnReportsOn(message, returnCopy);
 
-            await CopyReturnSchemes(message, returnCopy);
+                    await CopyReturnSchemes(message, returnCopy);
 
-            await CopyReturnNonObligated(message, returnCopy);
+                    await CopyReturnNonObligated(message, returnCopy);
 
-            CopyReturnReceived(message, returnCopy);
+                    CopyReturnReceived(message, returnCopy);
 
-            CopyReturnSentOn(message, returnCopy);
+                    CopyReturnSentOn(message, returnCopy);
 
-            CopyReturnReused(message, returnCopy);
+                    CopyReturnReused(message, returnCopy);
 
-            CopyReturn(message, returnCopy);
+                    CopyReturn(message, returnCopy);
 
-            await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
-            await RemoveAatfsWithInvalidApprovalDate(returnCopy);
+                    await RemoveAatfsWithInvalidApprovalDate(returnCopy);
 
-            await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
-            return @returnCopy.Id;
+                    transaction.Commit();
+
+                    return @returnCopy.Id;
+                }
+                catch
+                {
+                    transaction.Rollback();
+
+                    throw;
+                }
+            }
         }
 
         private async Task RemoveAatfsWithInvalidApprovalDate(Return returnCopy)

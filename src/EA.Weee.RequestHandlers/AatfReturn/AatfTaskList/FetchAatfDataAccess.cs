@@ -18,13 +18,13 @@
             this.context = context;
         }
 
-        public async Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime approvalStartDate)
+        public async Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime windowStartDate)
         {
             return await context.Aatfs.Where(a => a.Organisation.Id == organisationId 
                                                   && a.FacilityType.Value == FacilityType.Aatf.Value
                                                   && a.ComplianceYear == complianceYear
                                                   && a.ApprovalDate.HasValue
-                                                  && a.ApprovalDate.Value < approvalStartDate.Date).Select(a => a).ToListAsync();
+                                                  && a.ApprovalDate.Value < windowStartDate.Date).Select(a => a).ToListAsync();
         }
 
         public async Task<List<Aatf>> FetchAatfByReturnId(Guid returnId)
