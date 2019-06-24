@@ -10,6 +10,7 @@
     using Core.Shared;
     using EA.Weee.Core.Search;
     using FakeItEasy;
+    using FluentAssertions;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
     using Web.ViewModels.OrganisationRegistration.Details;
@@ -702,6 +703,39 @@
             Assert.IsType<JoinOrganisationConfirmationViewModel>(model);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetJoinOrganisationConfirmation_GivenActiveUsers_ActiveUsersIsSetInViewModel(bool activeUsers)
+        {
+            // Arrange
+            var orgData = new PublicOrganisationData
+            {
+                Id = Guid.NewGuid(),
+                DisplayName = "Test"
+            };
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(orgData);
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationConfirmationViewModel viewModel = model as JoinOrganisationConfirmationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(activeUsers);
+        }
+
         [Fact]
         public async Task GetJoinOrganisation_ReturnsView()
         {
@@ -724,6 +758,67 @@
 
             Assert.NotNull(model);
             Assert.IsType<JoinOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public async Task GetJoinOrganisation_GivenActiveUsers_ReturnsViewWithActiveUsersSet()
+        {
+            // Arrange
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(new PublicOrganisationData());
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var activeUsers = new List<OrganisationUserData>()
+            {
+                A.Fake<OrganisationUserData>()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationViewModel viewModel = model as JoinOrganisationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task GetJoinOrganisation_GivenNoActiveUsers_ReturnsViewWithActiveUsersSet()
+        {
+            // Arrange
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(new PublicOrganisationData());
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var activeUsers = new List<OrganisationUserData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationViewModel viewModel = model as JoinOrganisationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(false);
         }
 
         [Fact]
