@@ -9,9 +9,10 @@
     using Base;
     using Core.Shared;
     using Core.Shared.Paging;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.User;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Security;
     using ViewModels.User;
@@ -23,45 +24,24 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private const int DefaultPageSize = 25;
-        private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly IMapper mapper;
 
-        public UserController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
+        public UserController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper)
         {
             this.apiClient = apiClient;
-            this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.mapper = mapper;
         }
 
         /// <summary>
         /// Get a list of organisation-users and authority-users with optional paging and ordering.
         /// </summary>
-        /// <param name="orderBy"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult> Index(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
-            SetBreadcrumb();
-
-            if (page < 1)
-            {
-                page = 1;
-            }
-
-            using (var client = apiClient())
-            {
-                FindMatchingUsers query = new FindMatchingUsers(page, DefaultPageSize, orderBy);
-
-                UserSearchDataResult usersSearchResultData = await client.SendAsync(User.GetAccessToken(), query);
-
-                ManageUsersViewModel model = new ManageUsersViewModel();
-
-                model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                model.OrderBy = orderBy;
-
-                return View(model);
-            }
+            var model = await GetManageUsersViewModel(orderBy, page);
+            return View(nameof(Index), model);
         }
 
         /// <summary>
@@ -77,10 +57,25 @@
         {
             if (!ModelState.IsValid)
             {
-                return await Index(orderBy, page);
+                var refreshedModel = await GetManageUsersViewModel(orderBy, page, model.Filter);
+                return View(refreshedModel);
             }
 
             return RedirectToAction("View", new { id = model.SelectedUserId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ApplyFilter(FilteringViewModel filter, FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
+        {
+            var model = await GetManageUsersViewModel(orderBy, page, filter);
+            return View(nameof(Index), model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ClearFilter(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending)
+        {
+            return await Index(orderBy);
         }
 
         /// <summary>
@@ -185,6 +180,31 @@
             }
 
             return RedirectToAction("View", new { id });
+        }
+
+        private async Task<ManageUsersViewModel> GetManageUsersViewModel(FindMatchingUsers.OrderBy orderBy, int page, FilteringViewModel filter = null)
+        {
+            SetBreadcrumb();
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var model = new ManageUsersViewModel();
+            using (var client = apiClient())
+            {
+                var mappedFilter = mapper.Map<UserFilter>(filter);
+                var query = new FindMatchingUsers(page, DefaultPageSize, orderBy, mappedFilter);
+
+                var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), query);
+
+                model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
+                model.OrderBy = orderBy;
+                model.Filter = filter ?? new FilteringViewModel();
+            }
+
+            return model;
         }
 
         private void SetBreadcrumb()
