@@ -53,5 +53,8 @@
             <button class="govuk-button" type="submit">Save and continue</button>
         </div>
     }
+    @{
+        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
+    }
     @Html.RouteLink("Back", AatfRedirect.Default, new { returnId = Model.ReturnId, controller = "AatfTaskList" }, new { @class = "govuk-back-link" })
 </section>
