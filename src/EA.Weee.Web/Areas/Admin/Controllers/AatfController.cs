@@ -243,8 +243,10 @@
                     AatfId = id,
                     OrganisationId = organisationId,
                     FacilityType = facilityType,
-                    CanDeleteFlags = canDelete
-                };
+                    CanDeleteFlags = canDelete,
+                    AatfName = aatfData.Name,
+                    OrganisationName = await cache.FetchOrganisationName(organisationId)
+            };
 
                 return View(viewModel);
             }
