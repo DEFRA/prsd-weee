@@ -86,6 +86,10 @@
 
                     throw;
                 }
+                finally
+                {
+                    transaction.Dispose();
+                }
             }
         }
 
