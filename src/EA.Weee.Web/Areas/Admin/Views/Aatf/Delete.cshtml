@@ -13,53 +13,60 @@
 
 
 <section id="main-content">
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">Are you sure?</h1>
-        </div>
-    </header>
-        @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
-        {
+
+    @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
+    {
+        <header class="hgroup">
             <div>
-                <p>
-                    Has data
-                </p>
-
-                <p>
-                    <a href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Cancel</a>
-                </p>
+                <h1 class="govuk-heading-l">Unable to delete this AATF</h1>
             </div>
+        </header>
+        <div>
+            <p>
+                There is data associated with *the AATF* and it can not be deleted. Speak to the relevant EA person to
+                discuss further.
+            </p>
 
-        }
-        else
+            <p>
+                <a class="govuk-button" href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Continue</a>
+            </p>
+        </div>
+
+    }
+    else
+    {
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">Are you sure you want to delete this AATF?</h1>
+            </div>
+        </header>
+        using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
         {
-            using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
+            if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
             {
-                    if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
-                    {
-                        <div>
-                            <p>
-                                HAS USERS
-                            </p>
-                        </div>
-                    }
-
-                    if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
-                    {
-                        <div>
-                            <p>
-                                ORG HAS MORE AATFS
-                            </p>
-                        </div>
-                    }
-
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(m => m.AatfId)
-                    @Html.HiddenFor(m => m.OrganisationId)
-                    @Html.HiddenFor(m => m.CanDeleteFlags)
-                    @Html.HiddenFor(m => m.FacilityType)
-
-                    @(this.WeeeGds().Submit("Confirm"))
+                <div>
+                    <p>
+                        There are active users associated with *the AATF*. By continuing, you will be removing all record of this AATF, including contact details and entrys in the return tasklist.
+                    </p>
+                </div>
             }
+
+            if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
+            {
+                <div>
+                    <p>
+                        This AATF is part of *Organisation*, which has multiple AATF's. By continuing, you will be removing all record of this AATF, including contact details and entrys in the return tasklist, but other AATF's will still be visible.
+                    </p>
+                </div>
+            }
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.CanDeleteFlags)
+            @Html.HiddenFor(m => m.FacilityType)
+
+            @(this.WeeeGds().Submit("Delete and Continue"))
         }
+    }
 </section>
