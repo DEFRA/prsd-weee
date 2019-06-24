@@ -49,9 +49,9 @@
         </div>
         @if (Model.CanEdit)
         {
-            <p>
+            <div style="float:right">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
-            </p>
+            </div>
         }
         <table class="govuk-table">
             <tbody class="govuk-table__body">

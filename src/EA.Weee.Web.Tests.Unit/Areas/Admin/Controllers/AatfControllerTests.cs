@@ -1055,16 +1055,24 @@
             Guid organisationId = Guid.NewGuid();
             FacilityType facilityType = FacilityType.Aatf;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(canDelete);
+            var organisationData = A.Fake<OrganisationData>();
+            const string orgName = "orgName";
+            const string aatfName = "aatfName";
+            AatfData aatfData = A.Dummy<AatfData>();
+            aatfData.Name = aatfName;
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(canDelete);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             ViewResult result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
 
             DeleteViewModel viewModel = result.Model as DeleteViewModel;
-
             Assert.Equal(aatfId, viewModel.AatfId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(facilityType, viewModel.FacilityType);
             Assert.Equal(canDelete, viewModel.CanDeleteFlags);
+            Assert.Equal(orgName, viewModel.OrganisationName);
+            Assert.Equal(aatfName, viewModel.AatfName);
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Delete");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
@@ -1073,16 +1081,19 @@
         [Fact]
         public async void GetDelete_EnsureBreadcrumbIsSet()
         {
+            const string orgName = "orgName";
             Guid aatfId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
             FacilityType facilityType = FacilityType.Aatf;
 
             AatfData aatfData = A.Dummy<AatfData>();
             aatfData.Name = "Name";
             Organisation organisation = A.Dummy<Organisation>();
-
+           
             aatfData.Id = aatfId;
-
+            
             A.CallTo(() => cache.FetchAatfData(organisation.Id, aatfId)).Returns(aatfData);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             await controller.Delete(aatfId, organisation.Id, facilityType);
 

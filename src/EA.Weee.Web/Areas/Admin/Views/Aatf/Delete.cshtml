@@ -1,14 +1,12 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using MvcNavigationHelpers
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Core.Admin;
-@using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.DeleteViewModel
 @{
     ViewBag.Title = "Delete " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
+    var facilityType = Model.FacilityType.ToDisplayString();
 }
 
 
@@ -18,12 +16,12 @@
     {
         <header class="hgroup">
             <div>
-                <h1 class="govuk-heading-l">Unable to delete this AATF</h1>
+                <h1 class="govuk-heading-l">Unable to delete this @facilityType</h1>
             </div>
         </header>
         <div>
             <p>
-                There is data associated with *the AATF* and it can not be deleted. Speak to the relevant EA person to
+                There is data associated with @Model.AatfName and it can not be deleted. Speak to the relevant EA person to
                 discuss further.
             </p>
 
@@ -37,7 +35,7 @@
     {
         <header class="hgroup">
             <div>
-                <h1 class="govuk-heading-l">Are you sure you want to delete this AATF?</h1>
+                <h1 class="govuk-heading-l">Are you sure you want to delete this @facilityType?</h1>
             </div>
         </header>
         using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
@@ -46,7 +44,7 @@
             {
                 <div>
                     <p>
-                        There are active users associated with *the AATF*. By continuing, you will be removing all record of this AATF, including contact details and entrys in the return tasklist.
+                        There are active users associated with @Model.AatfName. By continuing, you will be removing all record of this @facilityType, including contact details and entries in the return tasklist.
                     </p>
                 </div>
             }
@@ -55,7 +53,7 @@
             {
                 <div>
                     <p>
-                        This AATF is part of *Organisation*, which has multiple AATF's. By continuing, you will be removing all record of this AATF, including contact details and entrys in the return tasklist, but other AATF's will still be visible.
+                        This @facilityType is part of @Model.OrganisationName, which has multiple @facilityType's. By continuing, you will be removing all record of this @facilityType, including contact details and entries in the return tasklist, but other @facilityType will still be visible.
                     </p>
                 </div>
             }
@@ -66,7 +64,7 @@
             @Html.HiddenFor(m => m.CanDeleteFlags)
             @Html.HiddenFor(m => m.FacilityType)
 
-            @(this.WeeeGds().Submit("Delete and Continue"))
+            @(this.WeeeGds().Submit("Delete and continue"))
         }
     }
 </section>
