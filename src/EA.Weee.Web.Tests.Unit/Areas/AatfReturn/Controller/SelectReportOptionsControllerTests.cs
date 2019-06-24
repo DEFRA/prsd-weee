@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -64,6 +66,9 @@
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
+            var viewModel = CreateInitialViewModel();
+            A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
+
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().Be("Index");
@@ -74,10 +79,16 @@
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
-
+            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar";
+            var viewModel = CreateInitialViewModel();
+            A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
+           
             await controller.Index(organisationId, returnId);
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+
+            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
+            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
         }
 
         [Fact]
@@ -378,6 +389,18 @@
             {
                 model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
             }
+
+            return model;
+        }
+
+        private static SelectReportOptionsViewModel CreateInitialViewModel()
+        {
+            var model = new SelectReportOptionsViewModel()
+            {
+                OrganisationId = A.Dummy<Guid>(),
+                ReturnId = A.Dummy<Guid>(),
+                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30)) }
+            };
 
             return model;
         }
