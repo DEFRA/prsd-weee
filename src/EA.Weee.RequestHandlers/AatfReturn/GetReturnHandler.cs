@@ -34,7 +34,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            return await getPopulatedReturn.GetReturnData(message.ReturnId);
+            return await getPopulatedReturn.GetReturnData(message.ReturnId, message.ForSummary);
         }
     }
 }

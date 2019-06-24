@@ -5,15 +5,11 @@
     using System;
     using System.Collections.Generic;
 
-    public class WeeeSentOn : ReturnEntity, IReturnOption
+    public class WeeeSentOn : AatfEntity, IReturnOption
     {
         public virtual AatfAddress OperatorAddress { get; private set; }
 
         public virtual AatfAddress SiteAddress { get; private set; }
-
-        public virtual Aatf Aatf { get; private set; }
-
-        public virtual Guid AatfId { get; private set; }
 
         public virtual Guid SiteAddressId { get; private set; }
 

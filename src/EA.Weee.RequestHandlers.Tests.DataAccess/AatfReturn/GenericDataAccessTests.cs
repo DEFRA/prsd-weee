@@ -30,7 +30,7 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
@@ -48,8 +48,8 @@
                 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
                 
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
                 var dbNewAatfs = database.WeeeContext.Aatfs.Count() - originalAatfCount;
@@ -68,11 +68,11 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
 
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 var organisation2 = Organisation.CreateSoleTrader("Test Organisation 2");
-                var aatf3 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation2);
+                var aatf3 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation2);
 
                 database.WeeeContext.Aatfs.Add(aatf1);
                 database.WeeeContext.Aatfs.Add(aatf2);
@@ -96,8 +96,8 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
 
-                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
                 await dataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf2 });
 
@@ -119,7 +119,9 @@
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
                 var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+
+                database.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation));
 
                 await database.WeeeContext.SaveChangesAsync();
 

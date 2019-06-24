@@ -59,7 +59,7 @@
             {
                 var newId = await client.SendAsync(User.GetAccessToken(), new CopyReturn(returnId));
 
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 if (@return.NilReturn)
                 {

@@ -35,7 +35,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
                 viewModel.OrganisationId = @return.OrganisationData.Id;
