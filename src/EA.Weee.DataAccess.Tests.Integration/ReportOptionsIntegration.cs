@@ -91,11 +91,11 @@
                     returnReportOn.Add(new ReturnReportOn(@return.Id, question.Id));
                 }
 
-                var aatf = await CreateAatf(context, @return);
+                var aatf = await CreateAatf(database, @return);
                 var scheme = await CreateScheme(context, organisation);
-                var sentOnSiteAddress = await CreateAddress(context, country);
-                var sentOnSOperatorAddress = await CreateAddress(context, country);
-                var reusedSiteAddress = await CreateAddress(context, country);
+                var sentOnSiteAddress = await CreateAddress(database);
+                var sentOnSOperatorAddress = await CreateAddress(database);
+                var reusedSiteAddress = await CreateAddress(database);
 
                 await dataAccess.AddMany<ReturnReportOn>(returnReportOn);
 
@@ -258,13 +258,13 @@
             }
         }
 
-        private static async Task<AatfAddress> CreateAddress(WeeeContext context, Country country)
+        private static async Task<AatfAddress> CreateAddress(DatabaseWrapper database)
         {
-            var address = ObligatedWeeeIntegrationCommon.CreateAatfAddress(country);
+            var address = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
 
-            context.AatfAddress.Add(address);
+            database.WeeeContext.AatfAddress.Add(address);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             return address;
         }
@@ -280,13 +280,13 @@
             return scheme;
         }
 
-        private static async Task<Aatf> CreateAatf(WeeeContext context, Domain.AatfReturn.Return @return)
+        private static async Task<Aatf> CreateAatf(DatabaseWrapper database, Domain.AatfReturn.Return @return)
         {
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, @return.Organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, @return.Organisation);
 
-            context.Aatfs.Add(aatf);
+            database.WeeeContext.Aatfs.Add(aatf);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             return aatf;
         }
@@ -311,7 +311,7 @@
         {
             var returnScheme = new ReturnScheme(scheme, @return);
 
-            var weeeReceived = new WeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             var weeeReceivedAmount = new List<WeeeReceivedAmount>();
 

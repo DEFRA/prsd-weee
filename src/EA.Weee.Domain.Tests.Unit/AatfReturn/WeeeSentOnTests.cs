@@ -75,7 +75,7 @@
         [Fact]
         public void WeeeSentOn_ShouldInheritFromReturnEntity()
         {
-            typeof(WeeeSentOn).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.ReturnEntity).Name);
+            typeof(WeeeSentOn).BaseType.Name.Should().Be(typeof(Domain.AatfReturn.AatfEntity).Name);
         }
     }
 }

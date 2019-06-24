@@ -5,17 +5,16 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -54,7 +53,12 @@
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal())
                 };
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+
+                TempData["currentQuarter"] = @return.Quarter;
+                TempData["currentQuarterWindow"] = @return.QuarterWindow;
 
                 return View("Index", viewModel);
             }
@@ -64,7 +68,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel, bool reselect = false)
         {
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             if (ModelState.IsValid)
             {
@@ -116,8 +120,8 @@
                 { 
                     viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
                 }
-               
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
                 return View("Reselect", viewModel);
             }
@@ -221,11 +225,12 @@
             return false;
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(string.Empty, string.Empty, quarter);
         }
     }
 }

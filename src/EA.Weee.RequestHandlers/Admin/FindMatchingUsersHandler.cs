@@ -28,8 +28,8 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var organisationsUsers = await dataAccess.GetOrganisationUsers();
-            var competentAuthorityUsers = await dataAccess.GetCompetentAuthorityUsers();
+            var organisationsUsers = await dataAccess.GetOrganisationUsers(query.Filter);
+            var competentAuthorityUsers = await dataAccess.GetCompetentAuthorityUsers(query.Filter);
 
             List<UserSearchData> results = new List<UserSearchData>();
             results.AddRange(organisationsUsers);

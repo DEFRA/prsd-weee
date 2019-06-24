@@ -41,7 +41,7 @@
             {
                 var schemeList = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(returnId));
 
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var viewModel = mapper.Map(new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
                 {
@@ -53,8 +53,7 @@
                     SchemeDataItems = schemeList.SchemeDataItems.ToList()
                 });
 
-                await SetBreadcrumb(schemeList.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
-
+                await SetBreadcrumb(schemeList.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }
@@ -66,11 +65,13 @@
             return await Task.Run(() => RedirectToAction("Index", "AatfTaskList", new { area = "AatfReturn", returnId = viewModel.ReturnId, organisationid = viewModel.OrganisationId }));
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber, quarter);
         }
     }
 }
