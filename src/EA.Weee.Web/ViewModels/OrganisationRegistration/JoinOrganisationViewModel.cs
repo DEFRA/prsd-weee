@@ -11,7 +11,7 @@ namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 
         public string OrganisationName { get; set; }
 
-        public bool ActiveUsers { get; set; }
+        public bool AnyActiveUsers { get; set; }
 
         [Required(ErrorMessage = "Confirm whether you want to request access to the organisation")]
         public override string SelectedValue { get; set; }

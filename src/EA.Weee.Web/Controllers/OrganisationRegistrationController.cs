@@ -425,11 +425,21 @@
                 }
                 else
                 {
+                    var anyActiveUsers = true;
+                    var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+
+                    if (activeUsers.Count() == 0)
+                    {
+                        anyActiveUsers = false;
+                    }
+
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
-                        OrganisationName = organisationData.DisplayName
+                        OrganisationName = organisationData.DisplayName,
+                        AnyActiveUsers = anyActiveUsers
                     };
+
                     return View(model);
                 }
             }
@@ -465,15 +475,7 @@
                     throw;
                 }
 
-                var anyActiveUsers = true;
-                var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(viewModel.OrganisationId));
-                
-                if (activeUsers.Count() == 0)
-                {
-                    anyActiveUsers = false;
-                }
-
-                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = anyActiveUsers });
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = viewModel.AnyActiveUsers });
             }
         }
 
