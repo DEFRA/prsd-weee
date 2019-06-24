@@ -11,7 +11,7 @@
     </header>
 
     <p>
-        @if (Model.AnyActiveUsers)
+        @if (!Model.AnyActiveUsers)
         {
             @:Your environmental regulator now has to authorise your request to access the organisation. Once authorised, you’ll be able to perform activities under the WEEE service.
         }

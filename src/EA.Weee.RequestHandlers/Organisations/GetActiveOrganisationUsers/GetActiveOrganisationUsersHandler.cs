@@ -12,13 +12,11 @@
 
     public class GetActiveOrganisationUsersHandler : IRequestHandler<GetActiveOrganisationUsers, IEnumerable<OrganisationUserData>>
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGetActiveOrganisationUsersDataAccess dataAccess;
         private readonly IMap<OrganisationUser, OrganisationUserData> mapper;
 
-        public GetActiveOrganisationUsersHandler(IWeeeAuthorization authorization, IGetActiveOrganisationUsersDataAccess dataAccess, IMap<OrganisationUser, OrganisationUserData> mapper)
+        public GetActiveOrganisationUsersHandler(IGetActiveOrganisationUsersDataAccess dataAccess, IMap<OrganisationUser, OrganisationUserData> mapper)
         {
-            this.authorization = authorization;
             this.dataAccess = dataAccess;
             this.mapper = mapper;
         }
