@@ -21,11 +21,19 @@
         {
             IEnumerable<OrganisationUser> activeOrganisationUsers = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationId);
 
+            var activeUsers = false;
             var sender = await dataAccess.FetchUser(@event.UserId.ToString());
 
             foreach (OrganisationUser activeOrganisationUser in activeOrganisationUsers)
             {
+                activeUsers = true;
                 await emailService.SendOrganisationUserRequest(activeOrganisationUser.User.Email, activeOrganisationUser.Organisation.OrganisationName, sender.FullName);
+            }
+
+            if (!activeUsers)
+            {
+                var organisation = await dataAccess.FetchOrganisation(@event.OrganisationId);
+                await emailService.SendOrganisationUserRequestToEA(sender.Email, organisation.OrganisationName, sender.FullName);
             }
         }
     }

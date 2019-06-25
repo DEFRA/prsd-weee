@@ -425,11 +425,15 @@
                 }
                 else
                 {
+                    var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
-                        OrganisationName = organisationData.DisplayName
+                        OrganisationName = organisationData.DisplayName,
+                        AnyActiveUsers = activeUsers.Any()
                     };
+
                     return View(model);
                 }
             }
@@ -453,10 +457,7 @@
             {
                 try
                 {
-                    await
-                        client.SendAsync(
-                            User.GetAccessToken(),
-                            new JoinOrganisation(viewModel.OrganisationId));
+                    await client.SendAsync(User.GetAccessToken(), new JoinOrganisation(viewModel.OrganisationId));
                 }
                 catch (ApiException ex)
                 {
@@ -468,12 +469,12 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = viewModel.AnyActiveUsers });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId, bool activeUsers)
         {
             using (var client = apiClient())
             {
@@ -483,7 +484,8 @@
 
                 var model = new JoinOrganisationConfirmationViewModel()
                 {
-                    OrganisationName = organisationData.DisplayName
+                    OrganisationName = organisationData.DisplayName,
+                    AnyActiveUsers = activeUsers
                 };
 
                 return View(model);
