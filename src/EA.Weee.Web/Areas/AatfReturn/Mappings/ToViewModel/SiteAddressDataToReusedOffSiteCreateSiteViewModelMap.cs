@@ -19,7 +19,8 @@
                 OrganisationId = source.OrganisationId,
                 ReturnId = source.ReturnId,
                 SiteId = source.SiteId,
-                AddressData = new SiteAddressData()
+                AddressData = new SiteAddressData(),
+                HasSites = source.ReturnedSites.AddressData.Count() > 0 ? true : false
             };
 
             viewModel.AddressData.Countries = source.Countries;

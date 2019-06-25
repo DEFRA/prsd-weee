@@ -38,12 +38,16 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
+            var id = Guid.NewGuid();
+            var siteAddress = new SiteAddressData() { Id = id };
+            var addressSummary = new AddressTonnageSummary { AddressData = new List<SiteAddressData> { siteAddress } };
             var source = new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
             {
                 AatfId = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
                 ReturnId = Guid.NewGuid(),
-                Countries = new List<CountryData>()
+                Countries = new List<CountryData>(),
+                ReturnedSites = addressSummary
             };
 
             var result = mapper.Map(source);
@@ -53,6 +57,30 @@
             result.ReturnId.Should().Be(source.ReturnId);
             result.SiteId.Should().BeNull();
             result.AddressData.Countries.Should().BeSameAs(source.Countries);
+            result.HasSites.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenValidSource_PropertiesShouldBeMappedWithNosites()
+        {
+            var addressSummary = new AddressTonnageSummary { AddressData = new List<SiteAddressData> { } };
+            var source = new SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                ReturnId = Guid.NewGuid(),
+                Countries = new List<CountryData>(),
+                ReturnedSites = addressSummary
+            };
+
+            var result = mapper.Map(source);
+
+            result.AatfId.Should().Be(source.AatfId);
+            result.OrganisationId.Should().Be(source.OrganisationId);
+            result.ReturnId.Should().Be(source.ReturnId);
+            result.SiteId.Should().BeNull();
+            result.AddressData.Countries.Should().BeSameAs(source.Countries);
+            result.HasSites.Should().BeFalse();
         }
 
         [Fact]
