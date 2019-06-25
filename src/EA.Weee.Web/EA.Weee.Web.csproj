@@ -955,7 +955,6 @@
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\Reselect.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
