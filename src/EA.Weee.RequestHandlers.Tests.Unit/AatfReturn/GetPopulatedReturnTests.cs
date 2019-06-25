@@ -25,6 +25,7 @@
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using ReturnStatus = Domain.AatfReturn.ReturnStatus;
 
     public class GetPopulatedReturnTests
     {
@@ -155,31 +156,45 @@
         }
 
         [Fact]
-        public async Task GetReturnData_GivenReturnNonSummary_AatfsShouldBeRetrieved()
+        public async Task GetReturnData_GivenReturnNonSummary_AatfsForOrganisationShouldBeRetrieved()
         {
-            var returnId = Guid.NewGuid();
             var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
             var quarterWindow = new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddDays(1), QuarterType.Q1);
 
-            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            A.CallTo(() => returnDataAccess.GetById(@return.Id)).Returns(@return);
             A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(quarterWindow);
 
-            var result = await populatedReturn.GetReturnData(returnId, false);
+            var result = await populatedReturn.GetReturnData(@return.Id, false);
 
             A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async Task GetReturnData_GivenReturnForSummary_AatfsShouldBeRetrieved()
+        public async Task GetReturnData_GivenReturnForSummaryAndReturnIsSubmitted_AatfsShouldBeRetrieved()
         {
-            var returnId = Guid.NewGuid();
-            var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
-           
+            var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf)
+            {
+                ReturnStatus = ReturnStatus.Submitted
+            };
             A.CallTo(() => returnDataAccess.GetById(@return.Id)).Returns(@return);
 
-            var result = await populatedReturn.GetReturnData(returnId, true);
+            var result = await populatedReturn.GetReturnData(@return.Id, true);
 
             A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task GetReturnData_GivenReturnForSummaryAndReturnIsCreated_AatfsForOrganisationShouldBeRetrieved()
+        {
+            var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+            var quarterWindow = new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddDays(1), QuarterType.Q1);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(quarterWindow);
+            A.CallTo(() => returnDataAccess.GetById(@return.Id)).Returns(@return);
+
+            var result = await populatedReturn.GetReturnData(@return.Id, true);
+
+            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -242,7 +257,7 @@
         [Fact]
         public async Task GetReturnData_GivenReturnForSummary_MapperShouldBeCalled()
         {
-            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>());
+            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>()) {ReturnStatus = ReturnStatus.Submitted};
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue, QuarterType.Q1);
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();
