@@ -80,11 +80,7 @@
                 using (var client = apiClient())
                 {
                     var requests = requestCreator.ViewModelToRequest(viewModel);
-
-                    foreach (var request in requests)
-                    {
-                        await client.SendAsync(User.GetAccessToken(), request);
-                    }
+                    await client.SendAsync(User.GetAccessToken(), requests);
                 }
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
@@ -117,7 +113,7 @@
                     TempData.Remove("selectedSchemes");
                 }
                 else
-                { 
+                {
                     viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
                 }
 
@@ -165,16 +161,12 @@
                     }
                 }
 
-                foreach (Guid scheme in schemeIdsToAdd)
+                var request = new AddReturnScheme
                 {
-                    AddReturnScheme request = new AddReturnScheme()
-                    {
-                        ReturnId = returnId,
-                        SchemeId = scheme
-                    };
-
-                    await client.SendAsync(User.GetAccessToken(), request);
-                }
+                    ReturnId = returnId,
+                    SchemeIds = schemeIdsToAdd
+                };
+                await client.SendAsync(User.GetAccessToken(), request);
 
                 return AatfRedirect.TaskList(returnId);
             }
@@ -192,7 +184,7 @@
                     {
                         SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
 
-                       foreach (Guid schemeToRemove in viewModel.RemovedSchemes)
+                        foreach (Guid schemeToRemove in viewModel.RemovedSchemes)
                         {
                             await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeId = schemeToRemove });
                         }
