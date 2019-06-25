@@ -18,10 +18,12 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -214,7 +216,7 @@
         {
             SetUpControllerContext(true);
 
-            ActionResult result = await controller.ManageAatfs(FacilityType.Aatf);
+            await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
             Assert.Equal(null, breadcrumbService.InternalAatf);
@@ -338,7 +340,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
             await controller.Details(aatfId);
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -540,7 +542,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
-            var result = await controller.Details(aatfId) as ViewResult;       
+            var result = await controller.Details(aatfId) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
         }
@@ -1043,6 +1045,91 @@
             resultWithoutAddress2.Should().Be(siteAddressWithoutAddress2Long);
             resultWithoutCounty.Should().Be(siteAddressWithoutCountyLong);
             resultWithoutPostcode.Should().Be(siteAddressWithoutPostcodeLong);
+        }
+
+        [Fact]
+        public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
+        {
+            CanAatfBeDeletedFlags canDelete = CanAatfBeDeletedFlags.HasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasMoreAatfs;
+            Guid aatfId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            FacilityType facilityType = FacilityType.Aatf;
+
+            var organisationData = A.Fake<OrganisationData>();
+            const string orgName = "orgName";
+            const string aatfName = "aatfName";
+            AatfData aatfData = A.Dummy<AatfData>();
+            aatfData.Name = aatfName;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(canDelete);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+            ViewResult result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
+
+            DeleteViewModel viewModel = result.Model as DeleteViewModel;
+            Assert.Equal(aatfId, viewModel.AatfId);
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(facilityType, viewModel.FacilityType);
+            Assert.Equal(canDelete, viewModel.CanDeleteFlags);
+            Assert.Equal(orgName, viewModel.OrganisationName);
+            Assert.Equal(aatfName, viewModel.AatfName);
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Delete");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetDelete_EnsureBreadcrumbIsSet()
+        {
+            const string orgName = "orgName";
+            Guid aatfId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            FacilityType facilityType = FacilityType.Aatf;
+
+            AatfData aatfData = A.Dummy<AatfData>();
+            aatfData.Name = "Name";
+            aatfData.Id = aatfId;
+            
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
+
+            await controller.Delete(aatfId, organisationId, facilityType);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(aatfData.Name);
+        }
+
+        [Fact]
+        public async void PostDelete_DeleteAnAatfHandlerIsCalled_ReturnsRedirectToManageAatf()
+        {
+            DeleteViewModel viewModel = new DeleteViewModel()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                FacilityType = FacilityType.Aatf,
+                CanDeleteFlags = CanAatfBeDeletedFlags.HasActiveUsers
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId)));
+
+            RedirectToRouteResult result = await controller.Delete(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData("Delete")]
+        [InlineData("ManageAatfDetails")]
+        [InlineData("ManageContactDetails")]
+        public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
+        {
+            var methods = typeof(AatfController).GetMethods();
+            var methodInfo = methods.Where(method =>
+                    Attribute.GetCustomAttribute(method, typeof(HttpGetAttribute)) != null).Where(method => method.Name == methodName);
+            methodInfo.FirstOrDefault().Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         private void ContactDataAccessSetup(bool canEdit)

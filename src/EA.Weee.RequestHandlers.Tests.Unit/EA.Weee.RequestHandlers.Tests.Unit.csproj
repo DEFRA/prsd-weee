@@ -99,6 +99,8 @@
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandlerTests.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetContactHandlerTests.cs" />
     <Compile Include="Organisations\GetAddressHandlerTests.cs" />

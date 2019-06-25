@@ -74,6 +74,8 @@
     <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />
@@ -201,6 +203,9 @@
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
     <Compile Include="Mappings\LocalAreaMap.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\GetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\IGetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\GetActiveOrganisationUsersHandler.cs" />
     <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />

@@ -38,9 +38,17 @@
         /// Get a list of organisation-users and authority-users with optional paging and ordering.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult> Index(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
+        public async Task<ActionResult> Index(string name, string organisationName, UserStatus? status, FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
-            var model = await GetManageUsersViewModel(orderBy, page);
+            var filter = new FilteringViewModel()
+            {
+                Name = name,
+                OrganisationName = organisationName,
+                Status = status
+            };
+
+            var model = await GetManageUsersViewModel(orderBy, page, filter);
+
             return View(nameof(Index), model);
         }
 
@@ -75,7 +83,7 @@
         [HttpGet]
         public async Task<ActionResult> ClearFilter(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending)
         {
-            return await Index(orderBy);
+            return await Index(null, null, null, orderBy);
         }
 
         /// <summary>

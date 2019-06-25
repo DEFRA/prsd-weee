@@ -121,6 +121,7 @@
     <Compile Include="AatfReturn\Scheme.cs" />
     <Compile Include="AatfReturn\WeeeSentOnData.cs" />
     <Compile Include="AatfReturn\WeeeSentOnSummaryListData.cs" />
+    <Compile Include="Admin\CanAatfBeDeletedFlags.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\LocalAreaData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />
