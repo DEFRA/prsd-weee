@@ -323,6 +323,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
@@ -954,6 +955,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\NilReturn.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\Delete.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <None Include="Content\remove-site.scss" />
