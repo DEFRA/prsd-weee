@@ -28,6 +28,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Shared;
+    using EA.Weee.Web.Filters;
 
     public class AatfController : AdminController
     {
@@ -134,6 +135,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAatfDetails(Guid id)
         {
             using (var client = apiClient())
@@ -174,6 +176,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageContactDetails(Guid id, FacilityType facilityType)
         {
             using (var client = apiClient())
@@ -228,6 +231,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
             var aatfData = await cache.FetchAatfData(organisationId, id);
