@@ -23,6 +23,7 @@
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -1117,6 +1118,18 @@
             result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData("Delete")]
+        [InlineData("ManageAatfDetails")]
+        [InlineData("ManageContactDetails")]
+        public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
+        {
+            var methods = typeof(AatfController).GetMethods();
+            var methodInfo = methods.Where(method =>
+                    Attribute.GetCustomAttribute(method, typeof(HttpGetAttribute)) != null).Where(method => method.Name == methodName);
+            methodInfo.FirstOrDefault().Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         private void ContactDataAccessSetup(bool canEdit)
