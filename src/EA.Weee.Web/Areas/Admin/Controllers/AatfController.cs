@@ -4,9 +4,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -26,6 +28,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Shared;
+    using EA.Weee.Web.Filters;
 
     public class AatfController : AdminController
     {
@@ -132,6 +135,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAatfDetails(Guid id)
         {
             using (var client = apiClient())
@@ -172,6 +176,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageContactDetails(Guid id, FacilityType facilityType)
         {
             using (var client = apiClient())
@@ -223,6 +228,44 @@
             }
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
+        {
+            var aatfData = await cache.FetchAatfData(organisationId, id);
+
+            SetBreadcrumb(facilityType, aatfData.Name);
+
+            using (var client = apiClient())
+            {
+                CanAatfBeDeletedFlags canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
+
+                DeleteViewModel viewModel = new DeleteViewModel()
+                {
+                    AatfId = id,
+                    OrganisationId = organisationId,
+                    FacilityType = facilityType,
+                    CanDeleteFlags = canDelete,
+                    AatfName = aatfData.Name,
+                    OrganisationName = await cache.FetchOrganisationName(organisationId)
+            };
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(DeleteViewModel viewModel)
+        {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
+
+                return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
+            }
         }
 
         private async Task<List<AatfDataList>> GetAatfs(FacilityType facilityType, FilteringViewModel filter = null)

@@ -17,5 +17,7 @@
         Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId);
 
         Task<User> FetchUser(string userId);
+
+        Task<Organisation> FetchOrganisation(Guid orgId);
     }
 }

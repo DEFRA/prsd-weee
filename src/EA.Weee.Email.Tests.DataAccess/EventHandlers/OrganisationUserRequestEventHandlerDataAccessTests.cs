@@ -67,5 +67,28 @@
                 }
             }
         }
+
+        [Fact]
+        public async Task FetchOrganisation_ReturnsSpecifiedOrganisation()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = helper.CreateOrganisation();
+                organisation.Name = "Organisation";
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new OrganisationUserRequestEventHandlerDataAccess(database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.FetchOrganisation(organisation.Id);
+                // Assert
+                result.Name.Should().Be(organisation.Name);
+            }
+        }
     }
 }

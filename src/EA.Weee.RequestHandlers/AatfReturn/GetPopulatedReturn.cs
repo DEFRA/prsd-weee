@@ -13,6 +13,7 @@
     using Prsd.Core.Mapper;
     using Security;
     using Specification;
+    using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
     public class GetPopulatedReturn : IGetPopulatedReturn
     {
@@ -66,7 +67,7 @@
             var returnObligatedReusedValues = await obligatedDataAccess.FetchObligatedWeeeReusedForReturn(returnId);
 
             List<Aatf> aatfs;
-            if (forSummary)
+            if (forSummary && @return.ReturnStatus.Equals(EA.Weee.Domain.AatfReturn.ReturnStatus.Submitted))
             {
                 aatfs = await aatfDataAccess.FetchAatfByReturnId(@return.Id);
             }
