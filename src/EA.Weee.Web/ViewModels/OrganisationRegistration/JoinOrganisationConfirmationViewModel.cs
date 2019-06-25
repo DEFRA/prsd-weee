@@ -10,5 +10,7 @@
 
         [Required]
         public string OrganisationName { get; set; }
+
+        public bool AnyActiveUsers { get; set; }
     }
 }
