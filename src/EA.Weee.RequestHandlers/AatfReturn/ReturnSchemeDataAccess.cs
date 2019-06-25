@@ -39,22 +39,25 @@
             return @return?.Organisation;
         }
 
-        public async Task RemoveReturnScheme(Guid schemeId)
+        public async Task RemoveReturnScheme(List<Guid> schemeIds)
         {
-            List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId).ToListAsync();
-
-            foreach (WeeeReceived weee in weeeReceived)
+            foreach (var schemeId in schemeIds)
             {
-                List<WeeeReceivedAmount> weeeReceivedData = await context.WeeeReceivedAmount.Where(p => p.WeeeReceived.Id == weee.Id).ToListAsync();
+                List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId).ToListAsync();
 
-                context.WeeeReceivedAmount.RemoveRange(weeeReceivedData);
+                foreach (WeeeReceived weee in weeeReceived)
+                {
+                    List<WeeeReceivedAmount> weeeReceivedData = await context.WeeeReceivedAmount.Where(p => p.WeeeReceived.Id == weee.Id).ToListAsync();
 
-                context.WeeeReceived.Remove(weee);
+                    context.WeeeReceivedAmount.RemoveRange(weeeReceivedData);
+
+                    context.WeeeReceived.Remove(weee);
+                }
+
+                var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId);
+
+                context.ReturnScheme.Remove(scheme);
             }
-
-            var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId);
-
-            context.ReturnScheme.Remove(scheme);
 
             await context.SaveChangesAsync();
         }

@@ -183,12 +183,7 @@
                     using (var client = apiClient())
                     {
                         SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
-
-                        foreach (Guid schemeToRemove in viewModel.RemovedSchemes)
-                        {
-                            await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeId = schemeToRemove });
-                        }
-
+                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes });
                         return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
                     }
                 }
