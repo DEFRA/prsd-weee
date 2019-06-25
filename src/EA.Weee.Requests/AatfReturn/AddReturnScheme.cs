@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
 
-    public class AddReturnScheme : IRequest<Guid>
+    public class AddReturnScheme : IRequest<List<Guid>>
     {
-        public Guid SchemeId { get; set; }
+        public List<Guid> SchemeIds { get; set; }
 
         public Guid ReturnId { get; set; }
     }

@@ -18,13 +18,13 @@
             this.context = context;
         }
 
-        public async Task<Guid> Submit(ReturnScheme scheme)
+        public async Task<List<Guid>> Submit(List<ReturnScheme> schemes)
         {
-            context.ReturnScheme.Add(scheme);
+            context.ReturnScheme.AddRange(schemes);
 
             await context.SaveChangesAsync();
 
-            return scheme.Id;
+            return schemes.Select(s => s.Id).ToList();
         }
 
         public async Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId)
