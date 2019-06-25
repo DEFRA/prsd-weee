@@ -22,5 +22,7 @@
         Task<bool> SendTestEmail(string emailAddress);
 
         Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName);
+
+        Task<bool> SendOrganisationUserRequestToEA(string emailAddress, string organisationName, string userName);
     }
 }

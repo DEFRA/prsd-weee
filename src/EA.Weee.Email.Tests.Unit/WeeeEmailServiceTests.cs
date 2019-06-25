@@ -398,6 +398,74 @@
                 .MustHaveHappened();
         }
 
+        [Fact]
+        public async Task SendOrganisationUserRequestToEA_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationUserRequestToEA(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A.Dummy<string>(), "New request to access an organisation in WEEE Online", A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestToEA_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+            var email = "test@civica.co.uk";
+
+            // Act
+            await emailService.SendOrganisationUserRequestToEA(email, A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(email, A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestToEA_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationUserRequestToEA(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestToEA.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestToEA.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestToEA_SendsCreatedMailMessageWithContinueOnException()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var mailMessage = new MailMessage();
+
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, A<string>._, A<EmailContent>._))
+                .Returns(mailMessage);
+
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationUserRequestToEA(
+                A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
+
+            // Assert
+            A.CallTo(() => builder.Sender.SendAsync(mailMessage, false)).MustHaveHappened();
+        }
+
         private class WeeeEmailServiceBuilder
         {
             public readonly ITemplateExecutor TemplateExecutor;

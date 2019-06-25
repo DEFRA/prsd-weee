@@ -17,6 +17,8 @@
 
         public bool Edit => (SiteId.HasValue);
 
+        public bool HasSites { get; set; }
+
         public ReusedOffSiteCreateSiteViewModel()
         {
             this.AddressData = new SiteAddressData();
