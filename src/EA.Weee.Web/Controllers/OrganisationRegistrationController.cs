@@ -425,19 +425,13 @@
                 }
                 else
                 {
-                    var anyActiveUsers = true;
                     var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
-
-                    if (activeUsers.Count() == 0)
-                    {
-                        anyActiveUsers = false;
-                    }
 
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
                         OrganisationName = organisationData.DisplayName,
-                        AnyActiveUsers = anyActiveUsers
+                        AnyActiveUsers = activeUsers.Any()
                     };
 
                     return View(model);
