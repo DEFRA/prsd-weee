@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using EA.Prsd.Core.Mediator;
     using System;
+    using System.Collections.Generic;
+    using EA.Prsd.Core.Mediator;
 
     public class RemoveReturnScheme : IRequest<bool>
     {
-        public Guid SchemeId { get; set; }
+        public List<Guid> SchemeIds { get; set; }
     }
 }

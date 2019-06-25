@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
+    using AutoFixture;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -7,17 +8,20 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
 
     public class RemoveReturnSchemeHandlerTests
     {
+        private readonly Fixture fixture;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private RemoveReturnSchemeRequestHandler handler;
 
         public RemoveReturnSchemeHandlerTests()
         {
+            fixture = new Fixture();
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
 
@@ -39,16 +43,16 @@
         [Fact]
         public async Task HandleAsync_GivenSchemeId_ReturnSchemeDeleted()
         {
-            var schemeId = Guid.NewGuid();
+            var schemeIds = fixture.CreateMany<Guid>().ToList();
 
             RemoveReturnScheme request = new RemoveReturnScheme()
             {
-                SchemeId = schemeId
+                SchemeIds = schemeIds
             };
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeIds)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

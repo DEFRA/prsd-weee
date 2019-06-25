@@ -270,7 +270,7 @@
             result.RouteName.Should().Be(AatfRedirect.Default);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeId == model.RemovedSchemes[0]))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeIds == model.RemovedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
