@@ -12,6 +12,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using FakeItEasy;
+    using FluentAssertions;
     using Security;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.User;
@@ -53,6 +54,27 @@
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("View", redirectValues["action"]);
             Assert.Equal(selectedUserId, redirectValues["id"]);
+        }
+
+        [Fact]
+        public async Task GetIndex_GetManageUsersViewModelIsCalledWithParameters()
+        {
+            // Arrange
+            var orderBy = FindMatchingUsers.OrderBy.FullNameAscending;
+            var userStatus = UserStatus.Active;
+            var name = "TestName";
+            var org = "TestOrg";
+
+            // Act
+            var result = await controller.Index(name, org, userStatus, orderBy, 1) as ViewResult;
+
+            ManageUsersViewModel model = result.Model as ManageUsersViewModel;
+
+            // Assert
+            model.OrderBy.Should().Be(orderBy);
+            model.Filter.Name.Should().Be(name);
+            model.Filter.OrganisationName.Should().Be(org);
+            model.Filter.Status.Should().Be(userStatus);
         }
 
         [Fact]
