@@ -85,21 +85,21 @@
                 {
                     case FindMatchingUsers.OrderBy.FullNameAscending:
                         <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameDescending })">Name</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
                             <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
                         </th>
                         break;
 
                     case FindMatchingUsers.OrderBy.FullNameDescending:
                         <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
                             <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
                         </th>
                         break;
 
                     default:
                         <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending })">Name</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
                         </th>
                         break;
                 }
@@ -110,21 +110,21 @@
                 {
                     case FindMatchingUsers.OrderBy.OrganisationAscending:
                         <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationDescending })">Organisation</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
                             <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
                         </th>
                         break;
 
                     case FindMatchingUsers.OrderBy.OrganisationDescending:
                         <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
                             <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
                         </th>
                         break;
 
                     default:
                         <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending })">Organisation</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
                         </th>
                         break;
                 }
@@ -132,21 +132,21 @@
                 {
                     case FindMatchingUsers.OrderBy.RoleAscending:
                         <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
                             <span class="govuk-visually-hidden">Sorted with the lowest rank role first.</span>
                         </th>
                         break;
 
                     case FindMatchingUsers.OrderBy.RoleDescending:
                         <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending })">Role</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
                             <span class="govuk-visually-hidden">Sorted with the highest rank role first.</span>
                         </th>
                         break;
 
                     default:
                         <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
                         </th>
                         break;
                 }
@@ -154,7 +154,7 @@
                 {
                     case FindMatchingUsers.OrderBy.StatusAscending:
                         <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending })">Status</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
                             <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
                         </th>
                         break;
@@ -168,7 +168,7 @@
 
                     default:
                         <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
                         </th>
                         break;
                 }
