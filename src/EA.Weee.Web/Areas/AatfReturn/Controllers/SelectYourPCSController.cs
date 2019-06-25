@@ -119,7 +119,7 @@
 
                 await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
-                return View("Reselect", viewModel);
+                return View(nameof(Index), viewModel);
             }
         }
 

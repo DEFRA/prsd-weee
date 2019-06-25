@@ -116,7 +116,7 @@
 
             ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
 
-            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Reselect");
+            Assert.True(result.ViewName == "Index");
 
             SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
 
