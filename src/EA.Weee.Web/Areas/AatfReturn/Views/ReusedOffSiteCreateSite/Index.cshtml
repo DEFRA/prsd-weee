@@ -25,5 +25,12 @@
             Save and continue
         </button>
     }
-    @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+    @if (Model.HasSites)
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSiteSummaryList", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+    }
+    else
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+    }
 </section>

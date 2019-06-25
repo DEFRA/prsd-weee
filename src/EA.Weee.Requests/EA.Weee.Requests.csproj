@@ -90,6 +90,8 @@
     <Compile Include="Admin\AddAatf.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatf.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Admin\GetAatfsByOrganisationId.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers.cs" />
     <Compile Include="Organisations\GetContact.cs" />
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />

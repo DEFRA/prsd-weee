@@ -1,0 +1,70 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Admin;
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.DeleteViewModel
+@{
+    ViewBag.Title = "Delete " + Model.FacilityType.ToDisplayString() + " - GOV.UK";
+    var facilityType = Model.FacilityType.ToDisplayString();
+}
+
+
+<section id="main-content">
+
+    @if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
+    {
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">Unable to delete this @facilityType</h1>
+            </div>
+        </header>
+        <div>
+            <p>
+                There is data associated with @Model.AatfName and it can not be deleted. Speak to the relevant EA person to
+                discuss further.
+            </p>
+
+            <p>
+                <a class="govuk-button" href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Continue</a>
+            </p>
+        </div>
+
+    }
+    else
+    {
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">Are you sure you want to delete this @facilityType?</h1>
+            </div>
+        </header>
+        using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
+        {
+            if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
+            {
+                <div>
+                    <p>
+                        There are active users associated with @Model.AatfName. By continuing, you will be removing all record of this @facilityType, including contact details and entries in the return tasklist.
+                    </p>
+                </div>
+            }
+
+            if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))
+            {
+                <div>
+                    <p>
+                        This @facilityType is part of @Model.OrganisationName, which has multiple @facilityType's. By continuing, you will be removing all record of this @facilityType, including contact details and entries in the return tasklist, but other @facilityType will still be visible.
+                    </p>
+                </div>
+            }
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.CanDeleteFlags)
+            @Html.HiddenFor(m => m.FacilityType)
+
+            @(this.WeeeGds().Submit("Delete and continue"))
+        }
+    }
+</section>

@@ -1,0 +1,5 @@
+﻿New request to access an organisation in WEEE Online
+
+@Model.FullName has requested to gain access to @Model.OrganisationName via the Waste electrical and Electronic Equipment (WEEE) online service.
+
+To action this request sign in to the WEEE online service
