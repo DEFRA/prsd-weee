@@ -36,15 +36,17 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
-
-                @for (var i = 0; i < Model.RemovedSchemeList.Count; i++)
+                @for (var i = 0; i < Model.SelectedSchemes.Count; i++)
+                {
+                    @Html.HiddenFor(m => Model.SelectedSchemes[i])
+                }
+                @for (var i = 0; i < Model.RemovedSchemes.Count; i++)
                 {
                     var scheme = Model.RemovedSchemeList[i];
                     <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.SchemeName</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.ApprovalName</td>
                     </tr>
-                    @Html.HiddenFor(m => Model.SelectedSchemes[i])
                     @Html.HiddenFor(m => Model.RemovedSchemes[i])
                     @Html.HiddenFor(m => Model.RemovedSchemeList[i].ApprovalName)
                     @Html.HiddenFor(m => Model.RemovedSchemeList[i].Id)
