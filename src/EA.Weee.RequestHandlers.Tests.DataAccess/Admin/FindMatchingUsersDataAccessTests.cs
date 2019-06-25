@@ -392,6 +392,43 @@
             }
         }
 
+        [Fact]
+        public async void GetOrganisationUsers_WithOrganisationNameFilterAndMatchingTradingName_DoesNotReturnWhenOrganisationNameDoesNotMatch()
+        {
+            using (var dbWrapper = new DatabaseWrapper())
+            {
+                // Add AspNet user
+                var modelHelper = new ModelHelper(dbWrapper.Model);
+                var user = modelHelper.CreateUser(fixture.Create<string>(), IdType.Guid, fixture.Create<string>().Substring(0, 10), fixture.Create<string>().Substring(0, 10));
+                dbWrapper.Model.SaveChanges();
+
+                // Add organisation
+                var organisationName = "Waste";
+                var organisationTradingName = "Trash";
+                var organisation = Organisation.CreateSoleTrader(organisationName, organisationTradingName);
+                organisation.CompleteRegistration();
+                dbWrapper.WeeeContext.Organisations.Add(organisation);
+                dbWrapper.WeeeContext.SaveChanges();
+
+                // Add organisation users
+                var organisationUsers = new List<Domain.Organisation.OrganisationUser>
+                {
+                    new Domain.Organisation.OrganisationUser(Guid.Parse(user.Id), organisation.Id, UserStatus.Active)
+                };
+
+                dbWrapper.WeeeContext.OrganisationUsers.AddRange(organisationUsers);
+                dbWrapper.WeeeContext.SaveChanges();
+
+                var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
+
+                var filter = new UserFilter { OrganisationName = "Trash" };
+
+                var result = await dataAccess.GetOrganisationUsers(filter);
+
+                Assert.Equal(0, result.Count());
+            }
+        }
+
         [Theory]
         [InlineData(Core.Shared.UserStatus.Active)]
         [InlineData(Core.Shared.UserStatus.Inactive)]
