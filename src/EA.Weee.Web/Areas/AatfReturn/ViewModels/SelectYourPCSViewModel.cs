@@ -26,8 +26,12 @@
         [MinimumElements(1, "You must select at least one PCS from the list")]
         public List<Guid> SelectedSchemes { get; set; }
 
+        public List<Guid> RemovedSchemes { get; set; }
+
         public Guid OrganisationId { get; set; }
 
         public Guid ReturnId { get; set; }
+
+        public bool Reselect { get; set; }
     }
 }
