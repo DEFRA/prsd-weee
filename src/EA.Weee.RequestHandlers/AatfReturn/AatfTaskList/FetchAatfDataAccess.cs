@@ -8,34 +8,34 @@
     using Domain.DataReturns;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using Factories;
 
     public class FetchAatfDataAccess : IFetchAatfDataAccess
     {
         private readonly WeeeContext context;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
-        public FetchAatfDataAccess(WeeeContext context)
+        public FetchAatfDataAccess(WeeeContext context, 
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.context = context;
+            this.quarterWindowFactory = quarterWindowFactory;
         }
 
-        public async Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime windowStartDate)
+        public async Task<List<Aatf>> FetchAatfByReturnQuarterWindow(Return @return)
         {
-            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId 
+            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
+
+            return await context.Aatfs.Where(a => a.Organisation.Id == @return.Organisation.Id 
                                                   && a.FacilityType.Value == FacilityType.Aatf.Value
-                                                  && a.ComplianceYear == complianceYear
+                                                  && a.ComplianceYear == @return.Quarter.Year
                                                   && a.ApprovalDate.HasValue
-                                                  && a.ApprovalDate.Value < windowStartDate.Date).Select(a => a).ToListAsync();
+                                                  && a.ApprovalDate.Value < quarterWindow.StartDate.Date).Select(a => a).ToListAsync();
         }
 
         public async Task<List<Aatf>> FetchAatfByReturnId(Guid returnId)
         {
-            var receivedAatf = await context.WeeeReceived.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
-
-            var sentOnAatf = await context.WeeeSentOn.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
-
-            var reusedAatf = await context.WeeeReused.Where(w => w.Return.Id == returnId).Select(w => w.Aatf).ToListAsync();
-
-            return receivedAatf.Union(sentOnAatf).Union(reusedAatf).Distinct().ToList();
+            return await context.ReturnAatfs.Where(r => r.Return.Id.Equals(returnId)).Select(r => r.Aatf).ToListAsync();
         }
     }
 }
