@@ -12,7 +12,7 @@
     {
         Task<Guid> Add<TEntity>(TEntity entity) where TEntity : Entity;
 
-        Task AddMany<TEntity>(IEnumerable<TEntity> entity) where TEntity : Entity;
+        Task AddMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity;
 
         Task<List<TEntity>> GetAll<TEntity>() where TEntity : class;
 
