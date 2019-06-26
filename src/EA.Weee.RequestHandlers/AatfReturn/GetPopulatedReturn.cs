@@ -58,8 +58,6 @@
 
             var annualQuarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
 
-            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
-
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(returnId);
 
             var returnObligatedReceivedValues = await obligatedDataAccess.FetchObligatedWeeeReceivedForReturn(returnId);
@@ -73,7 +71,7 @@
             }
             else
             {
-                aatfs = await aatfDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate);
+                aatfs = await aatfDataAccess.FetchAatfByReturnQuarterWindow(@return);
             }
 
             var sentOn = await obligatedDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(returnId);
