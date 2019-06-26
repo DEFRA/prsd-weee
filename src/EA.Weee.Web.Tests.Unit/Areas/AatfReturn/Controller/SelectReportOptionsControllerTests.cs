@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -15,7 +14,6 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -79,7 +77,7 @@
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
-            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar";
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
             var viewModel = CreateInitialViewModel();
             A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
            
@@ -87,8 +85,7 @@
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
 
-            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
-            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
 
         [Fact]
