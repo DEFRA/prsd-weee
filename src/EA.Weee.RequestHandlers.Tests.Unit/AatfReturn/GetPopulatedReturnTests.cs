@@ -35,7 +35,7 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly INonObligatedDataAccess fetchNonObligatedWeeeDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchObligatedWeeeDataAccess;
-        private readonly IFetchAatfDataAccess fetchAatfByOrganisationIdDataAccess;
+        private readonly IFetchAatfDataAccess fetchAatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
@@ -46,7 +46,7 @@
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             fetchNonObligatedWeeeDataAccess = A.Fake<INonObligatedDataAccess>();
             fetchObligatedWeeeDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
-            fetchAatfByOrganisationIdDataAccess = A.Fake<IFetchAatfDataAccess>();
+            fetchAatfDataAccess = A.Fake<IFetchAatfDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
 
@@ -58,7 +58,7 @@
                 quarterWindowFactory,
                 fetchNonObligatedWeeeDataAccess,
                 fetchObligatedWeeeDataAccess,
-                fetchAatfByOrganisationIdDataAccess,
+                fetchAatfDataAccess,
                 returnSchemeDataAccess,
                 genericDataAccess);
         }
@@ -159,14 +159,12 @@
         public async Task GetReturnData_GivenReturnNonSummary_AatfsForOrganisationShouldBeRetrieved()
         {
             var @return = new Return(Organisation.CreatePartnership("trading"), new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
-            var quarterWindow = new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddDays(1), QuarterType.Q1);
 
             A.CallTo(() => returnDataAccess.GetById(@return.Id)).Returns(@return);
-            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(quarterWindow);
 
             var result = await populatedReturn.GetReturnData(@return.Id, false);
 
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -180,7 +178,8 @@
 
             var result = await populatedReturn.GetReturnData(@return.Id, true);
 
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(A<Return>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -194,7 +193,8 @@
 
             var result = await populatedReturn.GetReturnData(@return.Id, true);
 
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(@return.Organisation.Id, @return.Quarter.Year, quarterWindow.StartDate)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(A<Guid>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -238,8 +238,7 @@
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnSchemes);
             A.CallTo(() => genericDataAccess.GetManyByExpression<ReturnReportOn>(A<ReturnReportOnByReturnIdSpecification>._)).Returns(reportsOn);
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByOrganisationIdAndQuarter(A<Guid>._, A<int>._, A<DateTime>._))
-                .Returns(aatfs);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(A<Return>._)).Returns(aatfs);
 
             await populatedReturn.GetReturnData(A.Dummy<Guid>(), false);
 
@@ -275,7 +274,7 @@
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturnByReturn(A<Guid>._)).Returns(obligatedSentOnValues);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnSchemes);
             A.CallTo(() => genericDataAccess.GetManyByExpression<ReturnReportOn>(A<ReturnReportOnByReturnIdSpecification>._)).Returns(reportsOn);
-            A.CallTo(() => fetchAatfByOrganisationIdDataAccess.FetchAatfByReturnId(A<Guid>._)).Returns(aatfs);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(A<Guid>._)).Returns(aatfs);
 
             await populatedReturn.GetReturnData(A.Dummy<Guid>(), true);
 
