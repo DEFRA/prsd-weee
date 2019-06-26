@@ -161,7 +161,22 @@
     <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
 }
 
-@if (Model.Breadcrumb.AatfDisplayInfo != null && !(String.IsNullOrEmpty(Model.Breadcrumb.AatfDisplayInfo)) && Model.Breadcrumb.ExternalActivity == "AATF return")
+@if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
 {
-    <div id="schemeBanner" style="white-space:pre-wrap;">@Html.Raw(Model.Breadcrumb.AatfDisplayInfo)</div>
+    <div id="schemeBanner">
+        <div class="govuk-grid-row">           
+            @if (Model.Breadcrumb.QuarterDisplayInfo != null && !(String.IsNullOrEmpty(Model.Breadcrumb.QuarterDisplayInfo)))
+            {
+                <div class="govuk-grid-column-one-third">
+                    <strong>Reporting period: </strong>@Html.Raw(Model.Breadcrumb.QuarterDisplayInfo)
+                </div>
+            }
+            @if (Model.Breadcrumb.AatfDisplayInfo != null && !(String.IsNullOrEmpty(Model.Breadcrumb.AatfDisplayInfo)))
+            {
+                <div class="govuk-grid-column-two-thirds">
+                    <strong>Reporting on: </strong>@Html.Raw(Model.Breadcrumb.AatfDisplayInfo)
+                </div>
+            }
+        </div>        
+    </div>
 }
