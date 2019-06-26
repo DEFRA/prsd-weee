@@ -196,8 +196,7 @@
     if (@Model.Users.PageCount > 1)
     {
         <div class="pager govuk-body">
-            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o =>
-                o.Action("Index").AddRouteValueFor(m => m.OrderBy))
+            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o => o.Action("Index").RouteValues(new { orderBy = Model.OrderBy, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status }))
         </div>
 
         <p class="govuk-body">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
