@@ -39,12 +39,14 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId, bool? javascriptDisabled)
         {
             using (var client = apiClient())
             {
                 Guid? siteAddressId = null;
+                Guid? operatorAddressId = null;
                 var siteAddress = new AatfAddressData();
+                var operatorAddress = new AatfAddressData();
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 if (weeeSentOnId != null)
@@ -53,10 +55,12 @@
                     var weeeSentOn = weeeSentOnList[0];
                     siteAddress = weeeSentOn.SiteAddress;
                     siteAddressId = weeeSentOn.SiteAddressId;
+                    operatorAddress = weeeSentOn.OperatorAddress;
+                    operatorAddressId = weeeSentOn.OperatorAddressId;
                 }
 
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, SiteAddressId = siteAddressId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.OrganisationData.Id, SiteAddressData = siteAddress });
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, WeeeSentOnId = weeeSentOnId, SiteAddressId = siteAddressId, ReturnId = returnId, AatfId = aatfId, OrganisationId = @return.OrganisationData.Id, SiteAddressData = siteAddress, OperatorAddressId = operatorAddressId, OperatorAddressData = operatorAddress, JavascriptDisabled = javascriptDisabled });
                
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
                 TempData["currentQuarter"] = @return.Quarter;
@@ -67,8 +71,11 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel)
+        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel, FormCollection formCollection)
         {
+            var isOperatorTheSame = Convert.ToBoolean(formCollection["IsOperatorTheSameAsAATF"]);
+            viewModel.IsOperatorTheSameAsAATF = isOperatorTheSame;
+
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
@@ -83,6 +90,7 @@
             using (var client = apiClient())
             {
                 viewModel.SiteAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                viewModel.OperatorAddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
