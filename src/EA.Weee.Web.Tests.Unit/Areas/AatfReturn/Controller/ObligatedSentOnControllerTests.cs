@@ -109,8 +109,8 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
 
-            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
-            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
+            Assert.Contains(reportingQuarter, breadcrumb.QuarterDisplayInfo);
+            Assert.Contains(reportingPeriod, breadcrumb.AatfDisplayInfo);
         }
 
         [Fact]
