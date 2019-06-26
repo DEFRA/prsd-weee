@@ -4,10 +4,8 @@
     using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
 
-    public class AddReturnScheme : IRequest<List<Guid>>
+    public class RemoveReturnScheme : IRequest<bool>
     {
         public List<Guid> SchemeIds { get; set; }
-
-        public Guid ReturnId { get; set; }
     }
 }

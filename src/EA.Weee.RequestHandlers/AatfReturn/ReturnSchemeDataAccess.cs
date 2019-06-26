@@ -18,13 +18,13 @@
             this.context = context;
         }
 
-        public async Task<Guid> Submit(ReturnScheme scheme)
+        public async Task<List<Guid>> Submit(List<ReturnScheme> schemes)
         {
-            context.ReturnScheme.Add(scheme);
+            context.ReturnScheme.AddRange(schemes);
 
             await context.SaveChangesAsync();
 
-            return scheme.Id;
+            return schemes.Select(s => s.Id).ToList();
         }
 
         public async Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId)
@@ -37,6 +37,29 @@
             var @return = await context.Returns.FirstOrDefaultAsync(r => r.Id == returnId);
 
             return @return?.Organisation;
+        }
+
+        public async Task RemoveReturnScheme(List<Guid> schemeIds)
+        {
+            foreach (var schemeId in schemeIds)
+            {
+                List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId).ToListAsync();
+
+                foreach (WeeeReceived weee in weeeReceived)
+                {
+                    List<WeeeReceivedAmount> weeeReceivedData = await context.WeeeReceivedAmount.Where(p => p.WeeeReceived.Id == weee.Id).ToListAsync();
+
+                    context.WeeeReceivedAmount.RemoveRange(weeeReceivedData);
+
+                    context.WeeeReceived.Remove(weee);
+                }
+
+                var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId);
+
+                context.ReturnScheme.Remove(scheme);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

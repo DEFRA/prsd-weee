@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
@@ -31,11 +29,11 @@
         [Fact]
         public async Task Submit_GivenSchemeAddedToContext_ChangesShouldBeSaved()
         {
-            var item = A.Fake<ReturnScheme>();
+            var items = A.Fake<List<ReturnScheme>>();
 
-            await dataAccess.Submit(item);
+            await dataAccess.Submit(items);
 
-            A.CallTo(() => context.ReturnScheme.Add(item)).MustHaveHappened().Then(
+            A.CallTo(() => context.ReturnScheme.AddRange(items)).MustHaveHappened().Then(
                 A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
