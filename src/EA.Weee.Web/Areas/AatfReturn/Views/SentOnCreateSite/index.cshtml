@@ -34,8 +34,10 @@
         @Html.HiddenFor(m => m.WeeeSentOnId)
         @Html.EditorFor(m => m.SiteAddressData)
         @Html.HiddenFor(m => m.SiteAddressId)
+        @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
-        <div class="govuk-!-padding-bottom-3"></div>
+        <div class="govuk-!-padding-bottom-6" style="border-bottom: 1px solid #bfc1c3;"></div>
+        <div class="govuk-!-padding-bottom-6"></div>
         <h2 class="govuk-heading-m">Which operator was the WEEE sent to for treatment?</h2>
         <div class="govuk-form-group" id="operatorCheckBox">
             <div class="govuk-checkboxes">
