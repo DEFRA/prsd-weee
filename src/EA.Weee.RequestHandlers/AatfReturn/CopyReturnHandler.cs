@@ -164,9 +164,17 @@
             {
                 sentOn.ForEach(s => s.UpdateReturn(returnCopy));
                 sentOn.ForEach(s => s.WeeeSentOnAmounts.ToList().ForEach(w => context.Entry(w).State = EntityState.Added));
-                sentOn.ForEach(s => context.Entry(s.OperatorAddress).State = EntityState.Added);
-                sentOn.ForEach(s => context.Entry(s.SiteAddress).State = EntityState.Added);
-                sentOn.ForEach(s => context.Entry(s.Aatf).State = EntityState.Unchanged);
+
+                foreach (var weeeSentOn in sentOn)
+                {
+                    context.Entry(weeeSentOn.SiteAddress).State = EntityState.Added;
+                    context.Entry(weeeSentOn.Aatf).State = EntityState.Unchanged;
+
+                    if (weeeSentOn.OperatorAddress != null)
+                    {
+                        context.Entry(weeeSentOn.OperatorAddress).State = EntityState.Added;
+                    }
+                }
 
                 context.WeeeSentOn.AddRange(sentOn);
             }
