@@ -9,7 +9,7 @@
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">What other AATFs/ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
     <p class="govuk-body">You can add multiple AATFs/ATFs</p>
-    <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere</p>
+    <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere.</p>
     @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -82,8 +82,6 @@
         <div class="govuk-!-padding-bottom-8"></div>
 
         Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-        
-        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
-        
+                
     }
 </section>
