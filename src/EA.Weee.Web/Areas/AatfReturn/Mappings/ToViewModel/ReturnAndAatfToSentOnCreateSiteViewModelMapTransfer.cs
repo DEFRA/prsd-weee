@@ -24,8 +24,12 @@
 
         public AatfAddressData OperatorAddressData;
 
+        public Guid? OperatorAddressId;
+
         public IList<Core.Shared.CountryData> CountryData;
-        
+
+        public bool? JavascriptDisabled;
+
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
         {
         }

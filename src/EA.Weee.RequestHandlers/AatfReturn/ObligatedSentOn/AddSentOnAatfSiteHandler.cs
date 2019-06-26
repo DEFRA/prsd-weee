@@ -40,6 +40,7 @@
             var weeeSentOn = new WeeeSentOn();
 
             Country siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
+            Country operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
 
             var @return = await returnDataAccess.GetById(message.ReturnId);
 
@@ -54,7 +55,16 @@
                 message.SiteAddressData.Postcode,
                 siteCountry);
 
-            weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
+            var operatorAddress = new AatfAddress(
+                message.OperatorAddressData.Name,
+                message.OperatorAddressData.Address1,
+                message.OperatorAddressData.Address2,
+                message.OperatorAddressData.TownOrCity,
+                message.OperatorAddressData.CountyOrRegion,
+                message.OperatorAddressData.Postcode,
+                operatorCountry);
+
+            weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 
             await sentOnDataAccess.Submit(weeeSentOn);
 
