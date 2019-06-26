@@ -15,7 +15,9 @@
                 {
                     SiteAddressData = viewModel.SiteAddressData,
                     SiteAddressId = (Guid)viewModel.SiteAddressId,
-                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId
+                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId,
+                    OperatorAddressData = viewModel.OperatorAddressData,
+                    OperatorAddressId = (Guid)viewModel.OperatorAddressId
                 };
             }
 
@@ -24,7 +26,8 @@
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,
                 AatfId = viewModel.AatfId,
-                SiteAddressData = viewModel.SiteAddressData
+                SiteAddressData = viewModel.SiteAddressData,
+                OperatorAddressData = viewModel.OperatorAddressData
             };
 
             return aatfSite;
