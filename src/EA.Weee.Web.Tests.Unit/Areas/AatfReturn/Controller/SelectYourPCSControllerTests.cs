@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -13,10 +12,8 @@
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
@@ -76,7 +73,7 @@
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
             var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
-            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar";
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;
 
@@ -86,8 +83,7 @@
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
 
-            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
-            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
 
         [Fact]
