@@ -7,7 +7,7 @@
         var postcode = $('#SiteAddressData_Postcode').val();
         var countyorregion = $('#SiteAddressData_CountyOrRegion').val();
         var countryId = $('#SiteAddressData_CountryId').val();
-        var countryName = $('#SiteAddressData_CountryName').val();
+        var countryName = $('#country-dropdown-list input').val();
 
         if (address1 != '') {
             $('#OperatorAddressData_Address1').val(address1);
