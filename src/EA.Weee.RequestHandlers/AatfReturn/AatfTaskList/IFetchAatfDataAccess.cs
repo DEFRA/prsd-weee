@@ -7,7 +7,7 @@
 
     public interface IFetchAatfDataAccess
     {
-        Task<List<Aatf>> FetchAatfByOrganisationIdAndQuarter(Guid organisationId, int complianceYear, DateTime windowStartDate);
+        Task<List<Aatf>> FetchAatfByReturnQuarterWindow(Return @return);
 
         Task<List<Aatf>> FetchAatfByReturnId(Guid returnId);
     }

@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    public class AddReturnSchemeHandler : IRequestHandler<AddReturnScheme, Guid>
+    public class AddReturnSchemeHandler : IRequestHandler<AddReturnScheme, List<Guid>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
@@ -26,15 +24,19 @@
             this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(AddReturnScheme message)
+        public async Task<List<Guid>> HandleAsync(AddReturnScheme message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var scheme = await schemeDataAccess.GetSchemeOrDefault(message.SchemeId);
             var @return = await returnDataAccess.GetById(message.ReturnId);
-            var returnScheme = new ReturnScheme(scheme, @return);
+            var returnSchemes = new List<ReturnScheme>();
+            foreach (var schemeId in message.SchemeIds)
+            {
+                var scheme = await schemeDataAccess.GetSchemeOrDefault(schemeId);
+                returnSchemes.Add(new ReturnScheme(scheme, @return));
+            }
 
-            return await returnSchemeDataAccess.Submit(returnScheme);
+            return await returnSchemeDataAccess.Submit(returnSchemes);
         }
     }
 }

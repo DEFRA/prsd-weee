@@ -26,9 +26,9 @@
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "AatfTaskList", action = "Index", returnId = returnId }));
         }
 
-        public static RedirectToRouteResult SelectPcs(Guid organsationId, Guid returnId)
+        public static RedirectToRouteResult SelectPcs(Guid organsationId, Guid returnId, bool reselect = false)
         {
-            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId, reselect = reselect }));
         }
 
         public static RedirectToRouteResult SelectReportOptions(Guid organsationId, Guid returnId)

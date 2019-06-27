@@ -71,7 +71,8 @@
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
             var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
-            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber, quarter);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }
