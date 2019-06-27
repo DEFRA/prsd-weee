@@ -384,13 +384,9 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\EditSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\GetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\IEditSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\IGetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
@@ -415,7 +411,6 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
@@ -915,7 +910,6 @@
     <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_CountryPartial.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
