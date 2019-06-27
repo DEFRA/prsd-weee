@@ -467,7 +467,7 @@
 
                 var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
 
-                var filter = new UserFilter { Status = status };
+                var filter = new UserFilter { Status = status, OrganisationName = organisationName };
 
                 var result = await dataAccess.GetOrganisationUsers(filter);
 
@@ -522,7 +522,7 @@
 
                 var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
 
-                var filter = new UserFilter { Status = Core.Shared.UserStatus.Pending };
+                var filter = new UserFilter { Status = Core.Shared.UserStatus.Pending, OrganisationName = organisationName };
 
                 var result = await dataAccess.GetOrganisationUsers(filter);
 
