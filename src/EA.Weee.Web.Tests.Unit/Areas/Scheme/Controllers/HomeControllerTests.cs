@@ -536,7 +536,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ViewRegisteredOfficeDetails
+                SelectedValue = PcsAction.ViewOrganisationDetails
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
