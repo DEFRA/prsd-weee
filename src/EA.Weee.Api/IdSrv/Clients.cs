@@ -31,11 +31,6 @@
                         new Secret(config.ApiSecret.Sha256())
                     },
                     AccessTokenLifetime = 3600, // 1 hour,
-                    //RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                    //RefreshTokenExpiration = TokenExpiration.Sliding,
-                    //SlidingRefreshTokenLifetime = 3600,
-                    //AbsoluteRefreshTokenLifetime = 7200,
-                    //UpdateAccessTokenClaimsOnRefresh = true,
                     AllowAccessToAllScopes = true
                 }
             };
