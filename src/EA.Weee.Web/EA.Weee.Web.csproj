@@ -318,6 +318,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
@@ -953,6 +954,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\Delete.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <None Include="Content\remove-site.scss" />

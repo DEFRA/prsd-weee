@@ -16,6 +16,7 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Factories;
     using RequestHandlers.Shared;
     using Weee.Tests.Core;
     using Xunit;
@@ -26,41 +27,54 @@
 
     public class FetchAatfDataAccessTests
     {
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+
+        public FetchAatfDataAccessTests()
+        {
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+        }
+
         [Fact]
-        public async Task FetchAatfByOrganisationIdAndQuarter_GivenMatchingParameters_ReturnedListContainsAatf()
+        public async Task FetchAatfByReturnQuarterWindow_GivenMatchingParameters_ReturnedListContainsAatf()
         {
             using (var database = new DatabaseWrapper())
             {
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                
+
                 var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
-              
+                var @return = new Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(new QuarterWindow(DateTime.Now.AddDays(1), DateTime.Now.AddDays(1), QuarterType.Q1));
+
                 await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
 
-                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(aatf.Organisation.Id, 2019, DateTime.Now.AddDays(1));
+                var aatfList = await dataAccess.FetchAatfByReturnQuarterWindow(@return);
 
                 aatfList.Should().Contain(aatf);
             }
         }
 
         [Fact]
-        public async Task FetchAatfByOrganisationIdAndQuarter_GivenNotMatchingApprovalDate_ReturnedListShouldNotContainAatf()
+        public async Task FetchAatfByReturnQuarterWindow_GivenNotMatchingApprovalDate_ReturnedListShouldNotContainAatf()
         {
             using (var database = new DatabaseWrapper())
             {
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-                
+
                 var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now.AddDays(1), 2019);
+                var @return = new Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(new QuarterWindow(DateTime.Now, DateTime.Now, QuarterType.Q1));
 
                 await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
 
-                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(aatf.Organisation.Id, 2019, DateTime.Now);
+                var aatfList = await dataAccess.FetchAatfByReturnQuarterWindow(@return);
 
                 aatfList.Should().NotContain(aatf);
                 aatfList.Should().BeEmpty();
@@ -68,20 +82,23 @@
         }
 
         [Fact]
-        public async Task FetchAatfByOrganisationIdAndQuarter_GivenNonMatchingComplianceYear_ReturnedListShouldNotContainAatf()
+        public async Task FetchAatfByReturnQuarterWindow_GivenNonMatchingComplianceYear_ReturnedListShouldNotContainAatf()
         {
             using (var database = new DatabaseWrapper())
             {
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
-                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2020);
+                var @return = new Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(new QuarterWindow(DateTime.Now.AddDays(1), DateTime.Now.AddDays(1), QuarterType.Q1));
 
                 await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf });
 
-                var aatfList = await dataAccess.FetchAatfByOrganisationIdAndQuarter(aatf.Organisation.Id, 2020, DateTime.Now.AddDays(1));
+                var aatfList = await dataAccess.FetchAatfByReturnQuarterWindow(@return);
 
                 aatfList.Should().NotContain(aatf);
                 aatfList.Should().BeEmpty();
@@ -89,35 +106,13 @@
         }
 
         [Fact]
-        public async Task FetchAatfByReturnId_GivenReturnWithSentOnAatf_ReturnedListShouldContainAatf()
+        public async Task FetchAatfByReturnId_GivenReturnId_ReturnedListShouldContainAatfs()
         {
             using (var database = new DatabaseWrapper())
             {
                 var helper = new ModelHelper(database.Model);
                 var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
-
-                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
-
-                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
-                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
-
-                await CreateWeeeSentOn(database, aatf, @return);
-
-                var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
-
-                aatfList.Should().Contain(aatf);
-            }
-        }
-
-        [Fact]
-        public async Task FetchAatfByReturnId_GivenReturnWithReusedAatf_ReturnedListShouldContainAatf()
-        {
-            using (var database = new DatabaseWrapper())
-            {
-                var helper = new ModelHelper(database.Model);
-                var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
                 var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
@@ -125,70 +120,49 @@
                 var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
                     database.WeeeContext.Users.First().Id, FacilityType.Aatf);
 
-                await CreateWeeeReused(aatf, @return, genericDataAccess);
-
-                var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
-
-                aatfList.Should().Contain(aatf);
-            }
-        }
-
-        [Fact]
-        public async Task FetchAatfByReturnId_GivenReturnWithReceivedOnAatf_ReturnedListShouldContainAatf()
-        {
-            using (var database = new DatabaseWrapper())
-            {
-                var helper = new ModelHelper(database.Model);
-                var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
-                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-
-                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
-
-                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
-                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
-
-                await CreateWeeeReceived(aatf, @return, genericDataAccess);
-
-                var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
-
-                aatfList.Should().Contain(aatf);
-            }
-        }
-
-        [Fact]
-        public async Task FetchAatfByReturnId_GivenReturnMultipleReturnTypes_ReturnedListShouldContainDistinctAatf()
-        {
-            using (var database = new DatabaseWrapper())
-            {
-                var helper = new ModelHelper(database.Model);
-                var domainHelper = new DomainHelper(database.WeeeContext);
-                var dataAccess = new FetchAatfDataAccess(database.WeeeContext);
-                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-
-                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
-
-                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
-                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
-
-                await CreateWeeeReceived(aatf, @return, genericDataAccess);
-                await CreateWeeeReceived(aatf, @return, genericDataAccess);
-
-                await CreateWeeeReused(aatf, @return, genericDataAccess);
-                await CreateWeeeReused(aatf, @return, genericDataAccess);
-
-                await CreateWeeeSentOn(database, aatf, @return);
-                await CreateWeeeSentOn(database, aatf, @return);
+                await genericDataAccess.Add(new ReturnAatf(aatf, @return));
 
                 var aatf2 = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
 
-                await CreateWeeeSentOn(database, aatf2, @return);
+                await genericDataAccess.Add(new ReturnAatf(aatf2, @return));
 
                 var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
 
                 aatfList.Count.Should().Be(2);
                 aatfList.Should().Contain(aatf);
                 aatfList.Should().Contain(aatf2);
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByReturnId_GivenReturnId_ReturnedListShouldOnlyContainReturnRelatedAatfs()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf, @return));
+
+                var @return2 = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                var aatf2 = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf2, @return2));
+
+                var aatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
+
+                aatfList.Count.Should().Be(1);
+                aatfList.Should().Contain(aatf);
+                aatfList.Should().NotContain(aatf2);
             }
         }
 
