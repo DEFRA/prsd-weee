@@ -211,7 +211,6 @@
     <Compile Include="Areas\AatfReturn\Controller\SelectYourPCSControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReceivedControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteControllerTests.cs" />
-    <Compile Include="Areas\AatfReturn\Controller\SentOnCreateSiteOperatorControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnRemoveSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SentOnSiteSummaryListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SubmittedReturnControllerTests.cs" />
