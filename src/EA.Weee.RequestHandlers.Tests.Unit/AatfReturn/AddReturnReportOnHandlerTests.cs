@@ -21,7 +21,6 @@
         private readonly IGenericDataAccess dataAccess;
         private readonly WeeeContext context;
         private AddReturnReportOnHandler handler;
-        private const string DcfYes = "Yes";
 
         public AddReturnReportOnHandlerTests()
         {
@@ -60,7 +59,7 @@
 
             await handler.HandleAsync(request);
 
-            var returnReportOn = CreateReportedOptions(request.ReturnId, 4);
+            var returnReportOn = CreateReportedOptions(request.ReturnId);
 
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 4))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
@@ -78,12 +77,12 @@
                 ReturnId = Guid.NewGuid(),
                 SelectedOptions = selectedOptions,
                 Options = options,
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             await handler.HandleAsync(request);
 
-            var returnReportOn = CreateReportedOptions(request.ReturnId, 5);
+            var returnReportOn = CreateReportedOptions(request.ReturnId);
 
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 5))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
@@ -102,12 +101,12 @@
                 ReturnId = Guid.NewGuid(),
                 SelectedOptions = selectedOptions,
                 Options = options,
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             await handler.HandleAsync(request);
 
-            var returnReportOn = CreateReportedOptions(request.ReturnId, 3);
+            var returnReportOn = CreateReportedOptions(request.ReturnId);
 
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
@@ -122,7 +121,7 @@
                 SelectedOptions = CreateSelectedOptions(),
                 DeselectedOptions = new List<int>() { 1 },
                 Options = CreateReportQuestions(),
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             var weeeReceived = A.Fake<WeeeReceived>();
@@ -146,7 +145,7 @@
                 SelectedOptions = CreateSelectedOptions(),
                 DeselectedOptions = new List<int>() { 2 },
                 Options = CreateReportQuestions(),
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             var weeeSentOn = A.Fake<WeeeSentOn>();
@@ -170,7 +169,7 @@
                 SelectedOptions = CreateSelectedOptions(),
                 DeselectedOptions = new List<int>() { 3 },
                 Options = CreateReportQuestions(),
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             var weeeReused = A.Fake<WeeeReused>();
@@ -196,7 +195,7 @@
                 SelectedOptions = new List<int> { 1, 2, 3, 4, 5 },
                 DeselectedOptions = new List<int>() { 4 },
                 Options = CreateReportQuestions(),
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             await handler.HandleAsync(request);
@@ -213,7 +212,7 @@
                 SelectedOptions = new List<int> { 1, 2, 3, 4, 5 },
                 DeselectedOptions = new List<int>() { 5 },
                 Options = CreateReportQuestions(),
-                DcfSelectedValue = DcfYes
+                DcfSelectedValue = true
             };
 
             await handler.HandleAsync(request);
@@ -226,7 +225,7 @@
             return new List<int> { 1, 2, 3, 4 };
         }
 
-        private List<ReturnReportOn> CreateReportedOptions(Guid returnId, int count)
+        private List<ReturnReportOn> CreateReportedOptions(Guid returnId)
         {
             var output = new List<ReturnReportOn>();
             for (var i = 1; i <= 5; i++)
