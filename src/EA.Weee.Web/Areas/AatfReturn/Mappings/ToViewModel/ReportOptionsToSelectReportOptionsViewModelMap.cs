@@ -31,11 +31,12 @@
                 foreach (var option in source.ReturnData.ReturnReportOns)
                 {
                     model.ReportOnQuestions.First(r => r.Id == option.ReportOnQuestionId).Selected = true;
+                    model.ReportOnQuestions.First(r => r.Id == option.ReportOnQuestionId).OriginalSelected = true;
                 }
                 if (!source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligatedDcf)
                     && source.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.NonObligated))
                 {
-                    model.DcfSelectedValue = "No";
+                    model.DcfSelectedValue = model.NoValue;
                 }
             }
 

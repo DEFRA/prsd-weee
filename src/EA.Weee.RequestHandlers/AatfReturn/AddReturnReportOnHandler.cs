@@ -18,7 +18,6 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly WeeeContext context;
-        private const string DcfYes = "Yes";
 
         public AddReturnReportOnHandler(IWeeeAuthorization authorization,
             IGenericDataAccess dataAccess,
@@ -65,7 +64,7 @@
 
             await context.SaveChangesAsync();
 
-            if (message.SelectedOptions != null && message.SelectedOptions.Count != 0)
+            if (message.SelectedOptions != null && message.SelectedOptions.Any())
             {
                 var returnReportOn = new List<ReturnReportOn>();
 
@@ -74,9 +73,9 @@
                     returnReportOn.Add(new ReturnReportOn(message.ReturnId, option));
                 }
 
-                if (message.DcfSelectedValue == DcfYes)
+                if (message.DcfSelectedValue)
                 {
-                    bool isParentSelected = message.SelectedOptions.Contains((int?)ReportOnQuestionEnum.NonObligated ?? default(int));
+                    var isParentSelected = message.SelectedOptions.Contains((int?)ReportOnQuestionEnum.NonObligated ?? default(int));
 
                     if (isParentSelected)
                     {
@@ -110,7 +109,6 @@
         {
             var weeeSentOns = await dataAccess.GetManyByReturnId<WeeeSentOn>(returnId);
             var weeeSentOnAmounts = new List<WeeeSentOnAmount>();
-            var weeeSentOnSites = new List<Guid>();
             var addresses = new List<AatfAddress>();
             foreach (var weeeSentOn in weeeSentOns)
             {
@@ -160,7 +158,7 @@
 
             if (dcf)
             {
-                nonObligatedWeees = nonObligatedWeees.Where(n => n.Dcf == true).ToList();
+                nonObligatedWeees = nonObligatedWeees.Where(n => n.Dcf).ToList();
             }
 
             dataAccess.RemoveMany<NonObligatedWeee>(nonObligatedWeees);
