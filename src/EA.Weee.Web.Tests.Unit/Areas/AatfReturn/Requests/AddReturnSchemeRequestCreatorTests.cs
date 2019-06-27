@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -46,11 +47,9 @@
 
             var requests = requestCreator.ViewModelToRequest(viewModel);
 
-            foreach (var request in requests)
-            {
-                request.SchemeId.Should().Be(selectedSchemeId);
-                request.ReturnId.Should().Be(returnId);
-            }
+            requests.ReturnId.Should().Be(returnId);
+            requests.SchemeIds.Count.Should().Be(1);
+            requests.SchemeIds.First().Should().Be(selectedSchemeId);
         }
     }
 }

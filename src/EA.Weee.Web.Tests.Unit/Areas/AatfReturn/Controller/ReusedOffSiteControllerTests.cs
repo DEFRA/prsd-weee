@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using System;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -59,7 +57,8 @@
             var aatfInfo = A.Fake<AatfData>();
             var aatfId = Guid.NewGuid();
 
-            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar Reporting on: Test (WEE/QW1234RE/ATF)";
+            const string reportingQuarter = "2019 Q1 Jan - Mar";
+            const string reportingPeriod = "Test (WEE/QW1234RE/ATF)";
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;
             const string aatfName = "Test";
@@ -77,8 +76,8 @@
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
 
-            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
-            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
+            Assert.Contains(reportingQuarter, breadcrumb.QuarterDisplayInfo);
+            Assert.Contains(reportingPeriod, breadcrumb.AatfDisplayInfo);
         }
 
         [Fact]
