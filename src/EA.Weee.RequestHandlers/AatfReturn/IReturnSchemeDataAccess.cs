@@ -8,10 +8,12 @@
 
     public interface IReturnSchemeDataAccess
     {
-        Task<Guid> Submit(ReturnScheme scheme);
+        Task<List<Guid>> Submit(List<ReturnScheme> scheme);
 
         Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId);
 
         Task<Organisation> GetOrganisationByReturnId(Guid returnId);
+
+        Task RemoveReturnScheme(List<Guid> schemeIds);
     }
 }
