@@ -55,8 +55,10 @@
             result.SiteAddressData.Countries.Should().BeEquivalentTo(transfer.CountryData);
         }
 
-        [Fact]
-        public void Map_GivenValidSource_PropertiesShouldBeMapped()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(null)]
+        public void Map_GivenValidSource_PropertiesShouldBeMapped(bool javascriptDisabled)
         {
             var orgId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -72,13 +74,28 @@
                 CountryName = "CountryName",
                 CountryId = Guid.NewGuid()
             };
+
+            var operatorAddressData = new AatfAddressData()
+            {
+                Name = "SiteOP",
+                Address1 = "OPAddress1",
+                Address2 = "OPAddress2",
+                TownOrCity = "OPTown",
+                CountyOrRegion = "OPCounty",
+                CountryName = "OPCountryName",
+                CountryId = Guid.NewGuid(),
+                Countries = A.Fake<IList<Core.Shared.CountryData>>()
+            };
+
             var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
             {
                 ReturnId = returnId,
                 AatfId = aatfId,
                 OrganisationId = orgId,
                 CountryData = A.Fake<IList<Core.Shared.CountryData>>(),
-                SiteAddressData = siteAddressData
+                SiteAddressData = siteAddressData,
+                OperatorAddressData = operatorAddressData,
+                JavascriptDisabled = javascriptDisabled
             };
 
             var result = map.Map(transfer);
@@ -87,6 +104,19 @@
             result.ReturnId.Should().Be(returnId);
             result.AatfId.Should().Be(aatfId);
             result.SiteAddressData.Should().BeEquivalentTo(siteAddressData);
+
+            if (javascriptDisabled == true)
+            {
+                result.OperatorAddressData.Address1.Should().Be(siteAddressData.Address1);
+                result.OperatorAddressData.Address2.Should().Be(siteAddressData.Address2);
+                result.OperatorAddressData.TownOrCity.Should().Be(siteAddressData.TownOrCity);
+                result.OperatorAddressData.CountyOrRegion.Should().Be(siteAddressData.CountyOrRegion);
+                result.OperatorAddressData.CountryName.Should().Be(siteAddressData.CountryName);
+            }
+            else
+            {
+                result.OperatorAddressData.Should().BeEquivalentTo(operatorAddressData);
+            }
         }
     }
 }
