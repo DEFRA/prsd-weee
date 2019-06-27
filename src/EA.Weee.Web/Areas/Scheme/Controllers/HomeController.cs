@@ -78,8 +78,6 @@
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                //Get the organisation type based on organisation id
-                var organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
 
                 var organisationOverview = await GetOrganisationOverview(pcsId);
 
@@ -95,22 +93,16 @@
                     }
                 }
 
-                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-                {
-                    activities.Add(PcsAction.ViewSubmissionHistory);
-                }
-
-                activities.Add(organisationDetailsActivityName);
                 if (organisationDetails.SchemeId != null)
                 {
                     activities.Add(PcsAction.ManageContactDetails);
                 }
 
-                if (organisationOverview.HasMultipleOrganisationUsers)
+                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
                 {
-                    activities.Add(PcsAction.ManageOrganisationUsers);
-                }
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }              
 
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
                 {
@@ -120,6 +112,13 @@
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
                 {
                     activities.Add(PcsAction.ManageAeReturns);
+                }
+
+                activities.Add(PcsAction.ViewOrganisationDetails);
+
+                if (organisationOverview.HasMultipleOrganisationUsers)
+                {
+                    activities.Add(PcsAction.ManageOrganisationUsers);
                 }
 
                 return activities;
@@ -160,7 +159,7 @@
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.ViewRegisteredOfficeDetails || viewModel.SelectedValue == PcsAction.ViewPrinciplePlaceOfBusinessDetails)
+                if (viewModel.SelectedValue == PcsAction.ViewOrganisationDetails)
                 {
                     return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
                 }
@@ -427,7 +426,7 @@
                 {
                     OrganisationData = orgDetails
                 };
-                var organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                var organisationDetailsActivityName = PcsAction.ViewOrganisationDetails;
                 await SetBreadcrumb(pcsId, organisationDetailsActivityName, false);
                 return View("ViewOrganisationDetails", model);
             }
