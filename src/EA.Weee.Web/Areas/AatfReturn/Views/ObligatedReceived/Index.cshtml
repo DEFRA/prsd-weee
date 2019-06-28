@@ -43,8 +43,5 @@
             </button>
         </form>
     }
-    @{
-        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
-    }
     @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ReceivedPcsList" }, new { @class = "govuk-back-link" })
 </section>
