@@ -33,8 +33,8 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
-        private readonly ConfigurationService configurationService;
         private readonly BreadcrumbService breadcrumb;
+        private readonly int maximumSearchResults;
 
         public AddAatfController(
             ISearcher<OrganisationSearchResult> organisationSearcher,
@@ -47,7 +47,8 @@
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-            this.configurationService = configurationService;
+
+            maximumSearchResults = configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults;
         }
 
         [HttpGet]
@@ -89,7 +90,7 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, configurationService.CurrentConfiguration.MaximumOrganisationSearchResults, true);
+            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
