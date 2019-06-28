@@ -10,22 +10,16 @@
 
     public class ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer
     {
-        public Guid OrganisationId;
+        public ReturnData Return { get; set; }
 
-        public Guid ReturnId;
+        public Guid AatfId { get; set; }
 
-        public Guid AatfId;
+        public WeeeSentOnData WeeeSentOnData { get; set; }
 
-        public Guid? WeeeSentOnId;
+        public IList<Core.Shared.CountryData> CountryData { get; set; }
 
-        public AatfAddressData SiteAddressData;
+        public bool? JavascriptDisabled { get; set; }
 
-        public Guid? SiteAddressId;
-
-        public AatfAddressData OperatorAddressData;
-
-        public IList<Core.Shared.CountryData> CountryData;
-        
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
         {
         }
