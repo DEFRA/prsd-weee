@@ -15,6 +15,7 @@
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Services;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -28,12 +29,16 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
-        private const int maximumSearchResults = 5;
+        private readonly int maximumSearchResults;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISearcher<OrganisationSearchResult> organisationSearcher)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, 
+            ISearcher<OrganisationSearchResult> organisationSearcher,
+            ConfigurationService configurationService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+
+            maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
 
         [HttpGet]
@@ -75,9 +80,10 @@
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm)
         {
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+            SearchResultsViewModel viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm, Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+            };
 
             return View(viewModel);
         }

@@ -100,13 +100,10 @@
             var returnId = Guid.NewGuid();
 
             var model = A.Fake<SelectReportOptionsDeselectViewModel>();
-            //var reportsOn = A.CollectionOfFake<ReportOnQuestion>(1);
 
             A.CallTo(() => model.OrganisationId).Returns(organisationId);
             A.CallTo(() => model.ReturnId).Returns(returnId);
             A.CallTo(() => model.SelectedValue).Returns(model.YesValue);
-            //A.CallTo(() => reportsOn.ElementAt(0).Id).Returns((int)ReportOnQuestionEnum.WeeeReceived);
-            //A.CallTo(() => reportsOn.ElementAt(0).ReSelected).Returns(false);
 
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);

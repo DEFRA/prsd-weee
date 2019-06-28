@@ -7,7 +7,7 @@
         var postcode = $('#SiteAddressData_Postcode').val();
         var countyorregion = $('#SiteAddressData_CountyOrRegion').val();
         var countryId = $('#SiteAddressData_CountryId').val();
-        var countryName = $('#SiteAddressData_CountryName').val();
+        var countryName = $('#country-dropdown-list input').val();
 
         if (address1 != '') {
             $('#OperatorAddressData_Address1').val(address1);
@@ -31,7 +31,7 @@
 
         if (countryId != '') {
             $('#OperatorAddressData_CountryId').val(countryId);
-            $('#country-dropdown-list input').val(countryName);
+            $('#operator-country-dropdown-list input').val(countryName);
         }
     } else {
         $('#OperatorAddressData_Address1').val('');
@@ -40,6 +40,6 @@
         $('#OperatorAddressData_Postcode').val('');
         $('#OperatorAddressData_TownOrCity').val('');
         $('#OperatorAddressData_CountryId').val('');
-        $('#country-dropdown-list input').val('');
+        $('#operator-country-dropdown-list input').val('');
     }
 }
