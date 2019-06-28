@@ -36,5 +36,7 @@
         bool EnableInvoicing { get; set; }
 
         double OrganisationCacheDurationMins { get; set; }
+
+        int MaximumOrganisationSearchResults { get; set; }
     }
 }
