@@ -54,5 +54,11 @@
 
         [DefaultValue(10)]
         public int MaximumOrganisationSearchResults { get; set; }
+
+        [DefaultValue(10)]
+        public int MaximumAatfOrganisationSearchResults { get; set; }
+
+        [DefaultValue(10)]
+        public int MaximumProducerOrganisationSearchResults { get; set; }
     }
 }
