@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -21,6 +22,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class SentOnCreateSiteControllerTests
@@ -103,21 +105,51 @@
         [Fact]
         public async void IndexGet_GivenWeeeSentOnId_ApiShouldBeCalled()
         {
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
             var weeeSentOnId = Guid.NewGuid();
-            var weeeSentOnList = new List<WeeeSentOnData>();
-            var weeeSentOn = new WeeeSentOnData();
-            weeeSentOn.SiteAddress = new AatfAddressData();
-            weeeSentOn.SiteAddressId = Guid.NewGuid();
-            weeeSentOn.WeeeSentOnId = weeeSentOnId;
-            weeeSentOnList.Add(weeeSentOn);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId, null);
 
-            await controller.Index(returnId, aatfId, weeeSentOnId, null);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(w => w.AatfId == aatfId && w.ReturnId == returnId && w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+        [Fact]
+        public async void IndexGet_GivenReturnId_ApiShouldBeCalled()
+        {
+            var returnId = Guid.NewGuid();
+
+            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>(), null);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenWeenSentOn_MapperShouldBeCalled()
+        {
+            var weeeSentOn = A.Fake<WeeeSentOnData>();
+            var returnData = A.Fake<ReturnData>();
+            var countryData = A.Fake<List<CountryData>>();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>._)).Returns(weeeSentOn);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryData);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null);
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>.That.Matches(r =>
+                    r.Return.Equals(returnData) && r.WeeeSentOnData.Equals(weeeSentOn) && r.CountryData.Equals(countryData))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenMappedViewModel_ViewModelShouldBeReturned()
+        {
+            var model = A.Fake<SentOnCreateSiteViewModel>();
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
+
+            model.Should().Be(model);
         }
 
         [Fact]
@@ -125,9 +157,11 @@
         {
             var form = new FormCollection();
             controller.ModelState.AddModelError("error", "error");
-            var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            model.OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteViewModel
+            {
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST"),
+                OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
             await controller.Index(model, form);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddSentOnAatfSite>._)).MustNotHaveHappened();
@@ -137,8 +171,10 @@
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var form = new FormCollection();
-            var model = new SentOnCreateSiteViewModel();
-            model.SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
+            var model = new SentOnCreateSiteViewModel
+            {
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
             var request = new AddSentOnAatfSite();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -169,7 +205,7 @@
 
             await controller.Index(model, form);
 
-            A.CallTo(() => requestCreator.ViewModelToRequest(A<SentOnCreateSiteViewModel>.That.Matches(m => m.IsOperatorTheSameAsAATF == boolConversion))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => requestCreator.ViewModelToRequest(A<SentOnCreateSiteViewModel>.That.Matches(m => m.IsOperatorTheSameAsAatf == boolConversion))).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
