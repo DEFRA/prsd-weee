@@ -2,6 +2,8 @@
 @using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.AatfReturn.AatfAddressData
 
+@Html.HiddenFor(m => m.Id)
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
