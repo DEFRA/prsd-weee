@@ -38,7 +38,7 @@
 
             var returnSchemeList = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
 
-            var schemeDataList = returnSchemeList.Select(s => mapper.Map<Scheme, SchemeData>(s.Scheme)).ToList();
+            var schemeDataList = returnSchemeList.Select(s => mapper.Map<Scheme, SchemeData>(s.Scheme)).OrderBy(sd => sd.SchemeName).ToList();
 
             var organisation = await returnSchemeDataAccess.GetOrganisationByReturnId(message.ReturnId);
 

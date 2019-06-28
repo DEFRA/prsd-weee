@@ -26,8 +26,10 @@
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IReturnDataAccess returnDataAccess; 
         private readonly GetSchemeRequestHandler handler;
-        private readonly IMapper mapper;
-   
+        private readonly IMapper mapper;        
+        private SchemeData schemeData1;
+        private SchemeData schemeData2;
+
         public GetSchemeRequestHandlerTests()
         {
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -110,6 +112,44 @@
             result.OrganisationData.Should().Be(organisationData);
             result.SchemeDataItems.Should().Contain(schemeList);
             result.SchemeDataItems.Count().Should().Be(1);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenSchemeListAndOperator_SchemeDataListShouldBeOrderedBySchemeName()
+        {
+            var organisationData = A.Fake<Core.Organisations.OrganisationData>();
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
+            Scheme scheme1 = new Scheme(organisation);
+            Scheme scheme2 = new Scheme(organisation);
+
+            var @return = A.Dummy<Return>();
+            var returnScheme = new List<ReturnScheme>()
+            {
+                new ReturnScheme(scheme1, @return), 
+                new ReturnScheme(scheme2, @return)
+            };
+
+            schemeData1 = A.Fake<SchemeData>();
+            schemeData1.SchemeName = "Scheme D";
+            schemeData1.SchemeStatus = Core.Shared.SchemeStatus.Approved;
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme1)).Returns(schemeData1);
+
+            schemeData2 = A.Fake<SchemeData>();
+            schemeData2.SchemeName = "Scheme A";
+            schemeData2.SchemeStatus = Core.Shared.SchemeStatus.Approved;
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme2)).Returns(schemeData2);
+
+            var schemeList = new List<SchemeData> {schemeData1, schemeData2 };
+
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._)).Returns(organisationData);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnScheme);
+            var result = await handler.HandleAsync(A.Dummy<GetReturnScheme>());
+
+            Assert.Collection(
+             result.SchemeDataItems,
+             (element1) => Assert.Equal("Scheme A", element1.SchemeName),
+             (element2) => Assert.Equal("Scheme D", element2.SchemeName));
         }
     }
 }
