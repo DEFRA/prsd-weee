@@ -15,8 +15,6 @@
         }
 
         [Required(ErrorMessage = "You must tell us if you want to remove these reporting options")]
-        public string SelectedValue { get; set; }
-
-        public IList<string> PossibleValues => new List<string> { "Yes", "No" };
+        public virtual string SelectedValue { get; set; }
     }
 }
