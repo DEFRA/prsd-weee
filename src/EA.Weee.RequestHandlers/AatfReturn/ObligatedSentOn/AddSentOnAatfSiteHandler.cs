@@ -15,17 +15,15 @@
 
     internal class AddSentOnAatfSiteHandler : IRequestHandler<AddSentOnAatfSite, Guid>
     {
-        private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public AddSentOnAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
+        public AddSentOnAatfSiteHandler(IWeeeAuthorization authorization,
         IWeeeSentOnDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess, IReturnDataAccess returnDataAccess, IOrganisationDetailsDataAccess orgDataAccess)
         {
-            this.context = context;
             this.authorization = authorization;
             this.sentOnDataAccess = sentOnDataAccess;
             this.genericDataAccess = genericDataAccess;
@@ -37,9 +35,8 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var weeeSentOn = new WeeeSentOn();
-
-            Country siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
+            var siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.SiteAddressData.CountryId);
+            var operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(message.OperatorAddressData.CountryId);
 
             var @return = await returnDataAccess.GetById(message.ReturnId);
 
@@ -54,7 +51,16 @@
                 message.SiteAddressData.Postcode,
                 siteCountry);
 
-            weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
+            var operatorAddress = new AatfAddress(
+                message.OperatorAddressData.Name,
+                message.OperatorAddressData.Address1,
+                message.OperatorAddressData.Address2,
+                message.OperatorAddressData.TownOrCity,
+                message.OperatorAddressData.CountyOrRegion,
+                message.OperatorAddressData.Postcode,
+                operatorCountry);
+
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 
             await sentOnDataAccess.Submit(weeeSentOn);
 
