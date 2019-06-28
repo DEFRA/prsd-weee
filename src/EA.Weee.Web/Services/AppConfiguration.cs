@@ -51,5 +51,8 @@
 
         [DefaultValue(15.0)]
         public double OrganisationCacheDurationMins { get; set; }
+
+        [DefaultValue(10)]
+        public int MaximumOrganisationSearchResults { get; set; }
     }
 }
