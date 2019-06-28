@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.User;
@@ -78,7 +79,7 @@
         }
 
         [Fact]
-        public async Task GetByComplianceYearAndYear_ReturnsWithMatchingQuarter_ReturnsShouldBeReturned()
+        public async Task GetByComplianceYearAndYear_ReturnsWithMatchingQuarterAndFacilityType_ReturnsShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -89,11 +90,12 @@
 
                 var @return1 = CreateReturn(database, organisation);
                 var @return2 = CreateReturn(database, organisation);
-                var @return3 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q2));
-                var @return4 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q3));
-                var @return5 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q4));
-                var @return6 = CreateReturn(database, organisation, new Quarter(2018, QuarterType.Q1));
+                var @return3 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q2), FacilityType.Aatf);
+                var @return4 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q3), FacilityType.Aatf);
+                var @return5 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q4), FacilityType.Aatf);
+                var @return6 = CreateReturn(database, organisation, new Quarter(2018, QuarterType.Q1), FacilityType.Aatf);
                 var @return7 = CreateReturn(database, organisation2);
+                var @return8 = CreateReturn(database, organisation, new Quarter(2019, QuarterType.Q1), FacilityType.Ae);
 
                 var dataAccess = new ReturnDataAccess(database.WeeeContext);
 
@@ -104,6 +106,7 @@
                 await dataAccess.Submit(@return5);
                 await dataAccess.Submit(@return6);
                 await dataAccess.Submit(@return7);
+                await dataAccess.Submit(@return8);
 
                 var results = await dataAccess.GetByComplianceYearAndQuarter(@return1);
 
@@ -111,6 +114,7 @@
                 results.Count(r => r.Quarter.Year != 2019).Should().Be(0);
                 results.Count(r => r.Id != @return1.Id && r.Id != @return2.Id).Should().Be(0);
                 results.Count(r => r.Organisation.Id != @return1.Organisation.Id).Should().Be(0);
+                results.Count(r => r.FacilityType != @return1.FacilityType).Should().Be(0);
             }
         }
 
@@ -129,9 +133,9 @@
             return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
         }
 
-        private Return CreateReturn(DatabaseWrapper database, Organisation organisation, Quarter quarter)
+        private Return CreateReturn(DatabaseWrapper database, Organisation organisation, Quarter quarter, FacilityType facilityType)
         {
-            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
+            return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, facilityType);
         }
     }
 }
