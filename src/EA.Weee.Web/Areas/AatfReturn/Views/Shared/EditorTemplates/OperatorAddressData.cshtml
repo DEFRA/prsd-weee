@@ -2,6 +2,8 @@
 @using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.AatfReturn.OperatorAddressData
 
+@Html.HiddenFor(m => m.Id)
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
@@ -40,7 +42,7 @@
             @Html.Gds().TextBoxFor(m => m.Postcode, new { @class = "govuk-!-width-full", @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
 
-        <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="country-dropdown-list">
+        <div class="govuk-form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)" id="operator-country-dropdown-list">
             @Html.Partial("_CountryPartial", Model)
         </div>
     </div>

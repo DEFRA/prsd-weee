@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -15,6 +16,7 @@
     using FluentAssertions;
     using Xunit;
     using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class AddReturnReportOnHandlerTests
     {
@@ -218,6 +220,26 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() => dataAccess.RemoveMany<NonObligatedWeee>(A<IList<NonObligatedWeee>>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAddReportOnRequestAndSelectedAndDcfIsNo_DcfQuestionShouldNotBeAdded()
+        {
+            var selectedOptions = CreateSelectedOptions();
+
+            var options = CreateReportQuestions();
+
+            var request = new AddReturnReportOn()
+            {
+                ReturnId = Guid.NewGuid(),
+                SelectedOptions = selectedOptions,
+                Options = options,
+                DcfSelectedValue = false
+            };
+
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<List<ReturnReportOn>>.That.Matches(l => l.Exists(i => i.ReturnId.Equals(request.ReturnId) && i.ReportOnQuestionId.Equals((int)ReportOnQuestionEnum.NonObligatedDcf))))).MustNotHaveHappened();
         }
 
         private List<int> CreateSelectedOptions()
