@@ -13,9 +13,9 @@
             {
                 return new EditSentOnAatfSite()
                 {
-                    SiteAddressData = viewModel.SiteAddressData,
-                    SiteAddressId = (Guid)viewModel.SiteAddressId,
-                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId
+                    SiteAddressData = viewModel.SiteAddressData,   
+                    WeeeSentOnId = (Guid)viewModel.WeeeSentOnId,
+                    OperatorAddressData = viewModel.OperatorAddressData,
                 };
             }
 
@@ -24,7 +24,8 @@
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,
                 AatfId = viewModel.AatfId,
-                SiteAddressData = viewModel.SiteAddressData
+                SiteAddressData = viewModel.SiteAddressData,
+                OperatorAddressData = viewModel.OperatorAddressData
             };
 
             return aatfSite;
