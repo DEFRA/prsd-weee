@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnCreateSiteViewModel
 @{
-    ViewBag.Title = "Sent On WEEE";
+    ViewBag.Title = "Sent On WEEE - GOV.UK";
 }
 
 <section id="main-content">
@@ -33,7 +33,6 @@
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.WeeeSentOnId)
         @Html.EditorFor(m => m.SiteAddressData)
-        @Html.HiddenFor(m => m.SiteAddressId)
         @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
         <div class="govuk-!-padding-bottom-6" style="border-bottom: 1px solid #bfc1c3;"></div>
@@ -42,7 +41,7 @@
         <div class="govuk-form-group" id="operatorCheckBox">
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
-                    @if (Model.IsOperatorTheSameAsAATF)
+                    @if (Model.IsOperatorTheSameAsAatf)
                     {
                         <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" checked />
                     }
@@ -50,13 +49,12 @@
                     {
                         <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" />
                     }
-                    <label class="govuk-label govuk-checkboxes__label" for="IsOperatorTheSameAsAATF" style="padding-top: 7px;">@Html.DisplayNameFor(m => m.IsOperatorTheSameAsAATF)</label> <br />
+                    <label class="govuk-label govuk-checkboxes__label" for="IsOperatorTheSameAsAATF" style="padding-top: 7px;">@Html.DisplayNameFor(m => m.IsOperatorTheSameAsAatf)</label> <br />
                 </div>
             </div>
         </div>
 
         @Html.EditorFor(m => m.OperatorAddressData)
-        @Html.HiddenFor(m => m.OperatorAddressId)
 
         <div class="govuk-!-padding-bottom-3"></div>
         <button type="submit" name="save" class="govuk-button" id="site-details">

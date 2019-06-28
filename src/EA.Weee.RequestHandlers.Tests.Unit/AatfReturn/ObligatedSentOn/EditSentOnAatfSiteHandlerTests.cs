@@ -23,10 +23,6 @@
 
     public class EditSentOnAatfSiteHandlerTests
     {
-        private readonly WeeeContext context;
-        private readonly IReturnDataAccess returnDataAccess;
-        private readonly IWeeeAuthorization authorization;
-        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IAatfSiteDataAccess offSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
@@ -34,15 +30,12 @@
 
         public EditSentOnAatfSiteHandlerTests()
         {
-            context = A.Fake<WeeeContext>();
-            authorization = A.Fake<IWeeeAuthorization>();
-            returnDataAccess = A.Fake<IReturnDataAccess>();
-            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
+            var authorization = A.Fake<IWeeeAuthorization>();
             offSiteDataAccess = A.Fake<IAatfSiteDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
-            handler = new EditSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess, offSiteDataAccess);
+            handler = new EditSentOnAatfSiteHandler(authorization, genericDataAccess, organisationDetailsDataAccess, offSiteDataAccess);
         }
 
         [Fact]
@@ -50,7 +43,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new EditSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess, offSiteDataAccess);
+            var handler = new EditSentOnAatfSiteHandler(authorization, genericDataAccess, organisationDetailsDataAccess, offSiteDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditSentOnAatfSite>());
 
@@ -60,27 +53,12 @@
         [Fact]
         public async Task HandleAsync_GivenSiteAddressDataInRequest_AddressDataShouldBeOfTypeSiteAddressData()
         {
-            var request = new EditSentOnAatfSite()
-            {
-                WeeeSentOnId = Guid.NewGuid(),
-                SiteAddressId = Guid.NewGuid(),
-                SiteAddressData = new AatfAddressData()
-                {
-                    Name = "OpName",
-                    Address1 = "Address1",
-                    Address2 = "Address2",
-                    TownOrCity = "Town",
-                    CountyOrRegion = "County",
-                    Postcode = "GU22 7UY",
-                    CountryName = "France",
-                    CountryId = Guid.NewGuid()
-                }
-            };
+            var request = CreateRequest();
 
             var value = A.Fake<AatfAddress>();
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
-            A.CallTo(() => genericDataAccess.GetById<AatfAddress>(request.SiteAddressId)).Returns(value);
+            A.CallTo(() => genericDataAccess.GetById<AatfAddress>(request.SiteAddressData.Id)).Returns(value);
             A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(request.SiteAddressData.CountryId)).Returns(country);
 
             await handler.HandleAsync(request);
@@ -91,27 +69,12 @@
         [Fact]
         public async Task HandleAsync_GivenEditSentOnAatfSiteRequest_DataAccessIsCalled()
         {
-            var request = new EditSentOnAatfSite()
-            {
-                WeeeSentOnId = Guid.NewGuid(),
-                OperatorAddressId = Guid.NewGuid(),
-                OperatorAddressData = new OperatorAddressData()
-                {
-                    Name = "OpName",
-                    Address1 = "Address1",
-                    Address2 = "Address2",
-                    TownOrCity = "Town",
-                    CountyOrRegion = "County",
-                    Postcode = "GU22 7UY",
-                    CountryName = "France",
-                    CountryId = Guid.NewGuid()
-                }
-            };
+            var request = CreateRequest();
 
             var value = A.Fake<AatfAddress>();
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
-            A.CallTo(() => genericDataAccess.GetById<AatfAddress>(request.OperatorAddressId)).Returns(value);
+            A.CallTo(() => genericDataAccess.GetById<AatfAddress>(request.OperatorAddressData.Id)).Returns(value);
             A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(request.OperatorAddressData.CountryId)).Returns(country);
 
             await handler.HandleAsync(request);
@@ -124,6 +87,39 @@
                 && o.Postcode == request.OperatorAddressData.Postcode
                 && o.CountryName == request.OperatorAddressData.CountryName
                 && o.CountryId == request.OperatorAddressData.CountryId), country)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        private static EditSentOnAatfSite CreateRequest()
+        {
+            var request = new EditSentOnAatfSite()
+            {
+                WeeeSentOnId = Guid.NewGuid(),
+                SiteAddressData = new AatfAddressData()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "OpName",
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "GU22 7UY",
+                    CountryName = "France",
+                    CountryId = Guid.NewGuid()
+                },
+                OperatorAddressData = new OperatorAddressData()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "OpName",
+                    Address1 = "Address1",
+                    Address2 = "Address2",
+                    TownOrCity = "Town",
+                    CountyOrRegion = "County",
+                    Postcode = "GU22 7UY",
+                    CountryName = "France",
+                    CountryId = Guid.NewGuid()
+                }
+            };
+            return request;
         }
     }
 }

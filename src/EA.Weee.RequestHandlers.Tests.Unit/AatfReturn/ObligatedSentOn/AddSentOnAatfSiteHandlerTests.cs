@@ -22,9 +22,7 @@
 
     public class AddSentOnAatfSiteHandlerTests
     {
-        private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IWeeeAuthorization authorization;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
@@ -32,14 +30,13 @@
 
         public AddSentOnAatfSiteHandlerTests()
         {
-            context = A.Fake<WeeeContext>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-            authorization = A.Fake<IWeeeAuthorization>();
+            var authorization = A.Fake<IWeeeAuthorization>();
             sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
-            handler = new AddSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
+            handler = new AddSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -47,7 +44,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
+            var handler = new AddSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddSentOnAatfSite>());
 
