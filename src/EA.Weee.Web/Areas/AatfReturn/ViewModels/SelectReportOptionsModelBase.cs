@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -11,22 +12,69 @@
 
     public abstract class SelectReportOptionsModelBase
     {
-        public SelectReportOptionsModelBase()
+        protected SelectReportOptionsModelBase()
         {
         }
 
-        public Guid OrganisationId { get; set; }
+        public virtual Guid OrganisationId { get; set; }
 
-        public Guid ReturnId { get; set; }
+        public virtual Guid ReturnId { get; set; }
 
-        public IList<ReportOnQuestion> ReportOnQuestions { get; set; }
+        public virtual IList<ReportOnQuestion> ReportOnQuestions { get; set; }
 
-        public bool HasSelectedOptions => SelectedOptions != null && SelectedOptions.Count != 0;
+        public virtual bool HasSelectedOptions => ReportOnQuestions != null && ReportOnQuestions.Any(c => c.Selected);
 
-        public List<int> SelectedOptions { get; set; }
+        public virtual List<int> DeSelectedOptions
+        {
+            get
+            {
+                return ReportOnQuestions.Where(r => r.DeSelected).Select(r => r.Id).ToList();
+            }
+        }
 
-        public List<int> DeselectedOptions { get; set; }
+        public virtual List<int> SelectedOptions
+        {
+            get
+            {
+                return ReportOnQuestions.Where(r => r.Selected && r != DcfQuestion).Select(r => r.Id).ToList();
+            }
+        }
 
-        public string DcfSelectedValue { get; set; }
+        private string dcfSelectedValue;
+        public virtual string DcfSelectedValue
+        {
+            get => dcfSelectedValue;
+            set
+            {
+                dcfSelectedValue = value;
+
+                if (DcfQuestion != null)
+                {
+                    DcfQuestion.Selected = value?.Equals(YesValue) ?? false;
+                }
+            }
+        }
+
+        public virtual ReportOnQuestion DcfQuestion
+        {
+            get
+            {
+                return ReportOnQuestions.FirstOrDefault(d => d.Id.Equals((int)ReportOnQuestionEnum.NonObligatedDcf));
+            }
+        }
+
+        public virtual bool DcfQuestionSelected
+        {
+            get
+            {
+                return ReportOnQuestions.Any(r => r.Id.Equals((int)ReportOnQuestionEnum.NonObligatedDcf) && r.Selected);
+            }
+        }
+
+        public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
+
+        public string YesValue => DcfPossibleValues.ElementAt(0);
+
+        public string NoValue => DcfPossibleValues.ElementAt(1);
     }
 }
