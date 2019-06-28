@@ -135,7 +135,7 @@
                 {
                     PcsRemovedViewModel model = new PcsRemovedViewModel()
                     {
-                        RemovedSchemeList = viewModel.SchemeList.Where(p => viewModel.SelectedSchemes.Contains(p.Id) == false).ToList(),
+                        RemovedSchemeList = viewModel.SchemeList.Where(q => !viewModel.SelectedSchemes.Contains(q.Id) && existing.SchemeDataItems.Any(e => e.Id == q.Id)).ToList(),
                         SelectedSchemes = viewModel.SelectedSchemes,
                         RemovedSchemes = viewModel.SchemeList.Select(p => p.Id).Where(q => !viewModel.SelectedSchemes.Contains(q) && existing.SchemeDataItems.Any(e => e.Id == q)).ToList(),
                         ReturnId = viewModel.ReturnId,
