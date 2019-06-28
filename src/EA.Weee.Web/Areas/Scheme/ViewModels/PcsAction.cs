@@ -4,7 +4,7 @@
     {
         public static string ManagePcsMembers = "Manage PCS members";
         public static string ManageEeeWeeeData = "Manage PCS EEE/WEEE data";
-        public static string ViewSubmissionHistory = "View PCS submission history";
+        public static string ViewSubmissionHistory = "View PCS submissions history";
         public static string ViewRegisteredOfficeDetails = "View registered office details";
         public static string ViewPrinciplePlaceOfBusinessDetails = "View principal place of business";
         public static string ManageContactDetails = "Change PCS contact details";

@@ -9,7 +9,7 @@
 <section id="main-content">
 
     <h1 class="govuk-heading-l">
-        Are you sure you wish to remove these PCS from your list?
+        Are you sure you want to remove these PCS(s) from your list?
     </h1>
 
     <div>
@@ -42,7 +42,7 @@
                 }
                 @for (var i = 0; i < Model.RemovedSchemes.Count; i++)
                 {
-                    var scheme = Model.RemovedSchemeList[i];
+                    var scheme = Model.RemovedSchemeList.SingleOrDefault(x => x.Id == Model.RemovedSchemes[i]);
                     <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.SchemeName</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@scheme.ApprovalName</td>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit">Submit</button>
+            <button class="govuk-button" type="submit">Save and continue</button>
         </div>
     }
 </section>
