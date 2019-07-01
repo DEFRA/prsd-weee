@@ -11,6 +11,12 @@
 
         public AddressData Address { get; set; }
 
+        public int AatfCount { get; set; }
+
+        public int AeCount { get; set; }
+
+        public int PcsCount { get; set; }
+
         public string NameWithAddress
         {
             get
