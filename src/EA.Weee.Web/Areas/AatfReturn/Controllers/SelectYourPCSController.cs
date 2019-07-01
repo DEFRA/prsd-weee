@@ -152,13 +152,15 @@
                     }
                 }
 
-                var request = new AddReturnScheme
+                if (schemeIdsToAdd != null && schemeIdsToAdd.Count > 0)
                 {
-                    ReturnId = returnId,
-                    SchemeIds = schemeIdsToAdd
-                };
-                await client.SendAsync(User.GetAccessToken(), request);
-
+                    var request = new AddReturnScheme
+                    {
+                        ReturnId = returnId,
+                        SchemeIds = schemeIdsToAdd
+                    };
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
                 return AatfRedirect.TaskList(returnId);
             }
         }
@@ -174,7 +176,7 @@
                     using (var client = apiClient())
                     {
                         SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
-                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes });
+                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes, ReturnId = viewModel.ReturnId });
                         return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
                     }
                 }

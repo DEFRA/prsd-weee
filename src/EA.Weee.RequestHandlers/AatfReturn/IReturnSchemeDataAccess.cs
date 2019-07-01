@@ -14,6 +14,6 @@
 
         Task<Organisation> GetOrganisationByReturnId(Guid returnId);
 
-        Task RemoveReturnScheme(List<Guid> schemeIds);
+        Task RemoveReturnScheme(List<Guid> schemeIds, Guid returnId);
     }
 }
