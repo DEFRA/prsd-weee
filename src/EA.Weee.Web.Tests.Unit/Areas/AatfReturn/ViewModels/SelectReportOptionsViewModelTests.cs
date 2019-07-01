@@ -178,6 +178,22 @@
             model.DcfQuestionSelected.Should().Be(selection);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void NonObligatedQuestionSelected_GivenNonObligatedQuestionIsOrIsNotSelected_CorrectResultShouldBeReturned(bool selection)
+        {
+            var model = GetDefaultViewModel();
+
+            var nonObligatedQuestion = fixture.Build<ReportOnQuestion>().With(r => r.Id, (int)ReportOnQuestionEnum.NonObligated).With(r => r.Selected, selection).Create();
+            model.ReportOnQuestions = new List<ReportOnQuestion>()
+            {
+                nonObligatedQuestion
+            };
+
+            model.NonObligatedQuestionSelected.Should().Be(selection);
+        }
+
         [Fact]
         public void YesValue_YesShouldBeReturned()
         {

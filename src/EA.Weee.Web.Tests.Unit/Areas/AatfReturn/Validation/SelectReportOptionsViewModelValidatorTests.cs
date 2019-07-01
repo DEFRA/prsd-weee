@@ -101,11 +101,11 @@
 
         private SelectReportOptionsViewModel GenerateInvalidNonObligated()
         {
-            var nonObligatedQuestion = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
-            var dcfQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligatedDcf, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>())
+            var nonObligatedQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligated, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>())
             {
                 Selected = true
             };
+            var nonObligatedDcfQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligatedDcf, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
             var selectedQuestion = new ReportOnQuestion(2, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>())
             {
                 Selected = true
@@ -113,7 +113,7 @@
 
             var model = new SelectReportOptionsViewModel()
             {
-                ReportOnQuestions = new List<ReportOnQuestion>() { nonObligatedQuestion, dcfQuestion, selectedQuestion },
+                ReportOnQuestions = new List<ReportOnQuestion>() { nonObligatedQuestion, selectedQuestion, nonObligatedDcfQuestion },
             };
             return model;
         }
