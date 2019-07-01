@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -13,6 +15,15 @@
         public StoredProcedures(WeeeContext context)
         {
             this.context = context;
+        }
+
+        public void GetAatfSubmissions(Guid aatfId)
+        {
+            var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+
+            var results = context.Database
+                .SqlQuery<AatfReturnSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId",
+                    aatfIdParameter).ToList();
         }
 
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
