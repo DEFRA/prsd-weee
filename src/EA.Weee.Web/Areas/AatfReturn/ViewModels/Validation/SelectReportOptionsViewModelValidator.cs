@@ -27,7 +27,7 @@
                 }
                 else
                 {
-                    if (instance.DcfQuestionSelected && !instance.DcfPossibleValues.Contains(instance.DcfSelectedValue))
+                    if (instance.NonObligatedQuestionSelected && !instance.DcfPossibleValues.Contains(instance.DcfSelectedValue))
                     {
                         instance.DcfQuestion.HasError = true;
                         context.AddFailure(new ValidationFailure($"Option-{instance.DcfQuestion.Id - 1}", $"You must tell us whether any of the non-obligated WEEE was retained by a DCF"));

@@ -71,6 +71,14 @@
             }
         }
 
+        public virtual bool NonObligatedQuestionSelected
+        {
+            get
+            {
+                return ReportOnQuestions.Any(r => r.Id.Equals((int)ReportOnQuestionEnum.NonObligated) && r.Selected);
+            }
+        }
+
         public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
 
         public string YesValue => DcfPossibleValues.ElementAt(0);
