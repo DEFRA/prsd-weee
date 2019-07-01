@@ -295,8 +295,6 @@
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["action"].Should().Be("Index");
             result.RouteName.Should().Be(AatfRedirect.SelectPcsRouteName);
-
-            Assert.Equal(controller.TempData["selectedSchemes"] as List<Guid>, model.SelectedSchemes);
         }
 
         private List<Guid> PrepareSaveSchemes(Guid returnId)
