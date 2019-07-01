@@ -17,13 +17,11 @@
             this.context = context;
         }
 
-        public void GetAatfSubmissions(Guid aatfId)
+        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId)
         {
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
 
-            var results = context.Database
-                .SqlQuery<AatfReturnSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId",
-                    aatfIdParameter).ToList();
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId", aatfIdParameter).ToListAsync();
         }
 
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,

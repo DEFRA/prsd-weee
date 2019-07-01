@@ -16,10 +16,10 @@
             using (var db = new DatabaseWrapper())
             {
                 //Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
                 
                 // Act
-                db.StoredProcedures.GetAatfSubmissions(Guid.Parse("D890DC94-5361-445E-918F-AA5B00C0AC0E"));
+                var results = await db.StoredProcedures.GetAatfSubmissions(Guid.Parse("D890DC94-5361-445E-918F-AA5B00C0AC0E"));
             }
         }
     }

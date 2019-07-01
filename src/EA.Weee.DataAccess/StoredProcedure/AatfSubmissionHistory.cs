@@ -3,7 +3,7 @@
     using System;
     using Domain.AatfReturn;
 
-    public class AatfReturnSubmissionHistory
+    public class AatfSubmissionHistory
     {
         public virtual Guid ReturnId { get; set; }
 
