@@ -104,18 +104,9 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    Reselect = true
+                    Reselect = true,
+                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
                 };
-
-                if (TempData.ContainsKey("selectedSchemes"))
-                {
-                    viewModel.SelectedSchemes = TempData["selectedSchemes"] as List<Guid>;
-                    TempData.Remove("selectedSchemes");
-                }
-                else
-                {
-                    viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
-                }
 
                 await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
@@ -189,7 +180,6 @@
                 }
                 else
                 {
-                    TempData["selectedSchemes"] = viewModel.SelectedSchemes;
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId, true);
                 }
             }
