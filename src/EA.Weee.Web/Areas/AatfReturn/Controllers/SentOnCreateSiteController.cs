@@ -78,7 +78,7 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
-                    
+
                     return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
                 }
             }
@@ -92,6 +92,16 @@
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
+        }
+
+        public virtual SentOnCreateSiteViewModel IndexNoJavaScript(SentOnCreateSiteViewModel viewModel, AatfAddressData siteAddress)
+        {
+            using (var client = apiClient())
+            {
+                viewModel.OperatorAddressData.Name = siteAddress.Name;
+
+                return viewModel;
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)

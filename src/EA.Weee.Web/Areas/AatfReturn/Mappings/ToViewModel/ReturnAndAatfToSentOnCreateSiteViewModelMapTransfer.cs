@@ -20,6 +20,8 @@
 
         public bool? JavascriptDisabled { get; set; }
 
+        public AatfAddressData SiteAddressData { get; set; }
+
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
         {
         }
