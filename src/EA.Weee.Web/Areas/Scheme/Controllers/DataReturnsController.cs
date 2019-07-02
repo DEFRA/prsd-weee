@@ -361,7 +361,7 @@
         private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Manage EEE/WEEE data";
+            breadcrumb.ExternalActivity = PcsAction.ManageEeeWeeeData;
             breadcrumb.OrganisationId = organisationId;
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }

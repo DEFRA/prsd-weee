@@ -228,7 +228,7 @@
                     OrganisationId = pcsId
                 };
 
-                await SetBreadcrumb(pcsId, "View submission history");
+                await SetBreadcrumb(pcsId, PcsAction.ViewSubmissionHistory);
 
                 return View(model);
             }
@@ -250,7 +250,7 @@
                 }
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, "View submission history");
+            await SetBreadcrumb(viewModel.OrganisationId, PcsAction.ViewSubmissionHistory);
             viewModel.PossibleValues = new List<string>
             {
                 SubmissionType.MemberRegistrations,
@@ -481,7 +481,7 @@
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId,
             SubmissionsHistoryOrderBy orderBy = SubmissionsHistoryOrderBy.ComplianceYearDescending, int page = 1)
         {
-            await SetBreadcrumb(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, PcsAction.ViewSubmissionHistory);
 
             if (page < 1)
             {
@@ -537,7 +537,7 @@
         public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId,
             DataReturnSubmissionsHistoryOrderBy orderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearDescending, int page = 1)
         {
-            await SetBreadcrumb(pcsId, "View submission history");
+            await SetBreadcrumb(pcsId, PcsAction.ViewSubmissionHistory);
 
             if (page < 1)
             {
