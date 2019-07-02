@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
@@ -120,8 +121,12 @@
             await dataAccess.RemoveReturnScheme(schemeIds, returnId);
 
             A.CallTo(() => context.WeeeReceived.Remove(weee)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once)); 
+            context.WeeeReceived.Where(w => w.ReturnId == A.Dummy<Guid>()).Count().Should().Be(1);
+
+            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(Repeated.Exactly.Once);
+            context.ReturnScheme.Where(w => w.ReturnId == A.Dummy<Guid>()).Count().Should().Be(1);
+
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
