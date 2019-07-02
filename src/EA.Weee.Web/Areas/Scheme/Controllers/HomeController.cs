@@ -307,6 +307,10 @@
 
                 var orgUsers = await GetOrganisationUsers(pcsId);
 
+                if (orgUsers.Count == 0)
+                {
+                    throw new InvalidOperationException("No users found for supplied organisation");
+                }
                 var orgUsersKeyValuePairs =
                     orgUsers.Select(
                         ou =>
