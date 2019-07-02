@@ -57,17 +57,6 @@
             viewModel.SiteAddressData.Countries = source.CountryData;
             viewModel.OperatorAddressData.Countries = source.CountryData;
 
-            if (source.JavascriptDisabled == true)
-            {
-                viewModel.OperatorAddressData.Address1 = viewModel.SiteAddressData.Address1;
-                viewModel.OperatorAddressData.Address2 = viewModel.SiteAddressData.Address2;
-                viewModel.OperatorAddressData.CountryId = viewModel.SiteAddressData.CountryId;
-                viewModel.OperatorAddressData.CountryName = viewModel.SiteAddressData.CountryName;
-                viewModel.OperatorAddressData.TownOrCity = viewModel.SiteAddressData.TownOrCity;
-                viewModel.OperatorAddressData.Postcode = viewModel.SiteAddressData.Postcode;
-                viewModel.OperatorAddressData.CountyOrRegion = viewModel.SiteAddressData.CountyOrRegion;
-            }
-
             return viewModel;
         }
     }

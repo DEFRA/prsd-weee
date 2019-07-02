@@ -18,7 +18,7 @@
 
         public IList<Core.Shared.CountryData> CountryData { get; set; }
 
-        public bool? JavascriptDisabled { get; set; }
+        public AatfAddressData SiteAddressData { get; set; }
 
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
         {
