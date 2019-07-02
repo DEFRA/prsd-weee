@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using Core.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -99,7 +100,8 @@
 
             var model = A.Fake<SelectReportOptionsViewModel>();
             var reportsOn = A.CollectionOfFake<ReportOnQuestion>(1);
-
+            var schemeDataItems = A.CollectionOfFake<SchemeData>(0);
+            var returnData = new ReturnData() { SchemeDataItems = schemeDataItems };
             A.CallTo(() => reportsOn.ElementAt(0).Id).Returns((int)ReportOnQuestionEnum.WeeeReceived);
             A.CallTo(() => reportsOn.ElementAt(0).Selected).Returns(true);
             A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
@@ -108,6 +110,8 @@
             
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -126,18 +130,21 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = CreateSubmittedViewModel();
-            var returnReportsOn = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReceived, returnId) };
-            var returnData = new ReturnData() { ReturnReportOns = returnReportsOn };
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
-            viewModel.SelectedOptions.Add(1);
+            var model = A.Fake<SelectReportOptionsViewModel>();
+            var reportsOn = A.CollectionOfFake<ReportOnQuestion>(1);
+            var schemeDataItems = A.CollectionOfFake<SchemeData>(1);
+            var returnData = new ReturnData() { SchemeDataItems = schemeDataItems };
+            A.CallTo(() => reportsOn.ElementAt(0).Id).Returns((int)ReportOnQuestionEnum.WeeeReceived);
+            A.CallTo(() => reportsOn.ElementAt(0).Selected).Returns(true);
+            A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
+            A.CallTo(() => model.OrganisationId).Returns(organisationId);
+            A.CallTo(() => model.ReturnId).Returns(returnId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("AatfTaskList");
