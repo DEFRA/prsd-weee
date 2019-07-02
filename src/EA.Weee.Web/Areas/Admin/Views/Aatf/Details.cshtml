@@ -49,7 +49,7 @@
         </div>
         @if (Model.CanEdit)
         {
-            <div style="float:right">
+            <div style="float:right" hidden="hidden">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
             </div>
         }
@@ -139,6 +139,7 @@
                         </h2>
                     </td>
                 </tr>
+            </tbody>
             </tbody>
         </table>
     </section>
