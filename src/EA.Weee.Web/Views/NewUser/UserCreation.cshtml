@@ -20,42 +20,42 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelFor(m => m.Name)
             @Html.Gds().ValidationMessageFor(m => m.Name)
-            @Html.Gds().TextBoxFor(m => m.Name, new {  @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Surname)">
             @Html.Gds().LabelFor(m => m.Surname)
             @Html.Gds().ValidationMessageFor(m => m.Surname)
-            @Html.Gds().TextBoxFor(m => m.Surname, new {  @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new {  @maxlength = CommonMaxFieldLengths.EmailAddress })
+            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
             <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number</p>
-            @Html.Gds().PasswordFor(m => m.Password, new {  @maxlength = CommonMaxFieldLengths.Password })
+            @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
-            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new {  @maxlength = CommonMaxFieldLengths.Password })
+            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", 
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use",
                           Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                          "Policies", 
+                          "Policies",
                           "Terms and conditions",
-                          null, 
-                          null, 
+                          null,
+                          null,
                           true))
                 </p>
-                
+
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                         <input name="TermsAndConditions" class="govuk-checkboxes__input" id="TermsAndConditions" type="checkbox" value="true">
@@ -64,14 +64,39 @@
                         </label>
                         <input name="TermsAndConditions" type="hidden" value="false">
                     </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            <fieldset class="govuk-fieldset">
+                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                <p>
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Read privacy policy",
+                          Url.UrlFor<NewUserController>(c => c.Privacy()),
+                          "Policies",
+                          "Privacy",
+                          null,
+                          null,
+                          true))
+                </p>
+
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input name="PrivacyPolicy" class="govuk-checkboxes__input" id="PrivacyPolicy" type="checkbox" value="true">
+                        <label class="govuk-label govuk-checkboxes__label" for="PrivacyPolicy">
+                            Accept privacy notice
+                        </label>
+                        <input name="PrivacyPolicy" type="hidden" value="false">
                     </div>
-                </fieldset>
-            </div>
+                </div>
+            </fieldset>
+        </div>
 
-            @(this.WeeeGds().Submit("Create a user account"))
+        @(this.WeeeGds().Submit("Create a user account"))
 
-            <p>
-                @Html.ActionLink("Sign in to your account", "SignIn", "Account")
-            </p>
-        }
+        <p>
+            @Html.ActionLink("Sign in to your account", "SignIn", "Account")
+        </p>
     }
+}
