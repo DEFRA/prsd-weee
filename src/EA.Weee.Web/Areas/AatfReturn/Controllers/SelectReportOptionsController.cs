@@ -91,11 +91,11 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
-                }
 
-                if (IfNotPreviouslySelectedReceived(viewModel))
-                {
-                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                    if (IfNotPreviouslySelectedPcs(viewModel))
+                    {
+                        return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                    }
                 }
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
@@ -106,10 +106,10 @@
             return View(viewModel);
         }
 
-        private static bool IfNotPreviouslySelectedReceived(SelectReportOptionsViewModel viewModel)
+        private static bool IfNotPreviouslySelectedPcs(SelectReportOptionsViewModel viewModel)
         {
             return viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected
-                   && !viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.WeeeReceived);
+                   && !viewModel.ReturnData.SchemeDataItems.Any();
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
