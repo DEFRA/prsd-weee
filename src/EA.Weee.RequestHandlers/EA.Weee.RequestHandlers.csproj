@@ -204,6 +204,7 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
+    <Compile Include="Mappings\AatfSubmissionHistoryMap.cs" />
     <Compile Include="Mappings\LocalAreaMap.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\GetActiveOrganisationUsersDataAccess.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\IGetActiveOrganisationUsersDataAccess.cs" />

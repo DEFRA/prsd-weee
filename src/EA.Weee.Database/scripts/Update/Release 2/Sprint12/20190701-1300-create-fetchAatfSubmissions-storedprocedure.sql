@@ -112,15 +112,20 @@ FROM
 				r.Id) reused ON reused.Id = rs.ReturnId
 SELECT
 	rd.ReturnId,
+	r.ComplianceYear,
+	r.Quarter,
 	rd.WeeeReceivedHouseHold,
 	rd.WeeeReceivedNonHouseHold,
 	rd.WeeeReusedHouseHold,
 	rd.WeeeReusedNonHouseHold,
 	rd.WeeeSentOnHouseHold,
-	rd.WeeeSentOnNonHouseHold
+	rd.WeeeSentOnNonHouseHold,
+	CONCAT(u.FirstName , ' ', u.Surname) AS SubmittedBy,
+	r.SubmittedDate AS SubmittedDate
 FROM
 	@ReturnData rd
 	INNER JOIN [AATF].[Return] r ON r.Id = rd.ReturnId
+	INNER JOIN [Identity].AspNetUsers u ON r.SubmittedById = u.Id
 
 END
 GO

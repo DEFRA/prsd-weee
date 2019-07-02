@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.Admin;
+    using Core.Admin.AatfReports;
     using Prsd.Core.Mediator;
 
     public class GetAatfSubmissionHistory : IRequest<List<AatfSubmissionHistoryData>>
