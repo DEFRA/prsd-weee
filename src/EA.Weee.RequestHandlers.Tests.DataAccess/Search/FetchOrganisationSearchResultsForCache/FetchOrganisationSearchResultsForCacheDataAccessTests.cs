@@ -5,13 +5,26 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.Core.Search;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
+    using FakeItEasy;
     using Xunit;
 
     public class FetchOrganisationSearchResultsForCacheDataAccessTests
     {
+        private readonly WeeeContext context;
+
+        public FetchOrganisationSearchResultsForCacheDataAccessTests()
+        {
+            context = A.Fake<WeeeContext>();
+        }
+
         /// <summary>
         /// Ensures that the data access does not return incomplete organisations.
         /// </summary>
@@ -278,7 +291,7 @@
                 organisation.TradingName = "Trading Name";
                 organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.Partnership.Value;
                 organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
-         
+
                 database.Model.Organisations.Add(organisation);
                 database.Model.SaveChanges();
 
@@ -331,6 +344,123 @@
                     && r.Address.CountyOrRegion == organisation.Address.CountyOrRegion
                     && r.Address.Postcode == organisation.Address.Postcode);
             }
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithPcs_CountReturned()
+        {
+            DbContextHelper dbContextHelper = new DbContextHelper();
+
+            Guid organisationId = Guid.NewGuid();
+
+            Domain.Organisation.Organisation organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            List<Domain.Organisation.Organisation> organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            List<Aatf> aatfs = new List<Aatf>()
+            {
+                new Aatf("one", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>()),
+                new Aatf("two", A.Dummy<UKCompetentAuthority>(), "5678", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>())
+            };
+
+            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.Contains(results,
+                r => r.PcsCount == 1);
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithAatf_CountReturned()
+        {
+            DbContextHelper dbContextHelper = new DbContextHelper();
+
+            Guid organisationId = Guid.NewGuid();
+
+            Domain.Organisation.Organisation organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            List<Domain.Organisation.Organisation> organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            List<Aatf> aatfs = new List<Aatf>()
+            {
+                new Aatf("one", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), FacilityType.Aatf, 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>()),
+                new Aatf("two", A.Dummy<UKCompetentAuthority>(), "5678", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), FacilityType.Aatf, 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>())
+            };
+
+            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.Contains(results,
+                r => r.AatfCount == 2);
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithAe_CountReturned()
+        {
+            DbContextHelper dbContextHelper = new DbContextHelper();
+
+            Guid organisationId = Guid.NewGuid();
+
+            Domain.Organisation.Organisation organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            List<Domain.Organisation.Organisation> organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            List<Aatf> aatfs = new List<Aatf>()
+            {
+                new Aatf("one", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), FacilityType.Ae, 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>()),
+                new Aatf("two", A.Dummy<UKCompetentAuthority>(), "5678", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), FacilityType.Ae, 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>())
+            };
+
+            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.Contains(results,
+                r => r.AeCount == 2);
         }
     }
 }
