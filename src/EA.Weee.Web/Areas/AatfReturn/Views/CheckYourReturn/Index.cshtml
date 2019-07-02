@@ -90,7 +90,15 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " change received for treatment", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
+                            @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                            {
+                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " change received for treatment", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" });
+
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Report", "Report", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            }
                         </p>
                     </div>
                 </div>
@@ -163,7 +171,14 @@
                     </div>
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
+                            @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+                            {
+                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Report", "Report", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            }
                         </p>
                     </div>
                 </div>
