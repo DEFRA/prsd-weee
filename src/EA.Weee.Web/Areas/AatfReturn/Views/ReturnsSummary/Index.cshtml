@@ -50,7 +50,12 @@
         @foreach (var aatf in Model.AatfsData)
         {
             <div class="govuk-grid-row govuk-table__row govuk-table__header--no-line">
-                <h1 class="govuk-heading-m">@aatf.Aatf.Name &ndash; @aatf.Aatf.ApprovalNumber</h1>
+                <p>
+                    <b>Obligated WEEE - @aatf.Aatf.Name (@aatf.Aatf.ApprovalNumber)</b>
+                </p>
+                <p>
+                    Status: <b>@aatf.Aatf.AatfStatus</b>
+                </p>
             </div>
 
             <div class="govuk-grid-column-one-half">&nbsp;</div>
