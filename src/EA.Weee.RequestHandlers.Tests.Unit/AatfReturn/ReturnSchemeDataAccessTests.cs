@@ -55,6 +55,29 @@
         }
 
         [Fact]
+        public async Task GetSelectedSchemesByReturnId_ReturnSchemeNamesInAscendingOrder()
+        {
+            var returnId = Guid.NewGuid();
+            var returnScheme1 = A.Fake<ReturnScheme>();
+            var returnScheme2 = A.Fake<ReturnScheme>();
+
+            A.CallTo(() => returnScheme1.Scheme).Returns(A.Fake<Scheme>());
+            A.CallTo(() => returnScheme2.Scheme).Returns(A.Fake<Scheme>());
+            A.CallTo(() => returnScheme1.ReturnId).Returns(returnId);
+            A.CallTo(() => returnScheme2.ReturnId).Returns(returnId);
+            A.CallTo(() => returnScheme1.Scheme.SchemeName).Returns("Scheme Q");
+            A.CallTo(() => returnScheme2.Scheme.SchemeName).Returns("Scheme D");
+            A.CallTo(() => context.ReturnScheme).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ReturnScheme>() { returnScheme1, returnScheme2 }));
+
+            var result = await dataAccess.GetSelectedSchemesByReturnId(returnId);
+
+            Assert.Collection(
+           result,
+           (element1) => Assert.Equal("Scheme D", element1.Scheme.SchemeName),
+           (element2) => Assert.Equal("Scheme Q", element2.Scheme.SchemeName));
+        }
+
+        [Fact]
         public async Task GetOperatorByReturnId_GivenReturnIdExists_OperatorForReturnShouldBeReturned()
         {
             var returnId = Guid.NewGuid();
