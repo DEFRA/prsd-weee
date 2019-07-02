@@ -39,11 +39,11 @@
             return @return?.Organisation;
         }
 
-        public async Task RemoveReturnScheme(List<Guid> schemeIds)
+        public async Task RemoveReturnScheme(List<Guid> schemeIds, Guid returnId)
         {
             foreach (var schemeId in schemeIds)
             {
-                List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId).ToListAsync();
+                List<WeeeReceived> weeeReceived = await context.WeeeReceived.Where(p => p.SchemeId == schemeId && p.ReturnId == returnId).ToListAsync();
 
                 foreach (WeeeReceived weee in weeeReceived)
                 {
@@ -54,7 +54,7 @@
                     context.WeeeReceived.Remove(weee);
                 }
 
-                var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId);
+                var scheme = await context.ReturnScheme.FirstOrDefaultAsync(p => p.SchemeId == schemeId && p.ReturnId == returnId);
 
                 context.ReturnScheme.Remove(scheme);
             }

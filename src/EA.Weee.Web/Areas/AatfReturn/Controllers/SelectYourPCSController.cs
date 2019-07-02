@@ -104,18 +104,9 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    Reselect = true
+                    Reselect = true,
+                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
                 };
-
-                if (TempData.ContainsKey("selectedSchemes"))
-                {
-                    viewModel.SelectedSchemes = TempData["selectedSchemes"] as List<Guid>;
-                    TempData.Remove("selectedSchemes");
-                }
-                else
-                {
-                    viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
-                }
 
                 await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
@@ -161,13 +152,15 @@
                     }
                 }
 
-                var request = new AddReturnScheme
+                if (schemeIdsToAdd != null && schemeIdsToAdd.Count > 0)
                 {
-                    ReturnId = returnId,
-                    SchemeIds = schemeIdsToAdd
-                };
-                await client.SendAsync(User.GetAccessToken(), request);
-
+                    var request = new AddReturnScheme
+                    {
+                        ReturnId = returnId,
+                        SchemeIds = schemeIdsToAdd
+                    };
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
                 return AatfRedirect.TaskList(returnId);
             }
         }
@@ -183,13 +176,12 @@
                     using (var client = apiClient())
                     {
                         SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
-                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes });
+                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes, ReturnId = viewModel.ReturnId });
                         return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
                     }
                 }
                 else
                 {
-                    TempData["selectedSchemes"] = viewModel.SelectedSchemes;
                     return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId, true);
                 }
             }
