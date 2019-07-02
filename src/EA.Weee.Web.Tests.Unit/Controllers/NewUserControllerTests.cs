@@ -95,6 +95,20 @@
         }
 
         [Fact]
+        public async Task NewUser_PrivacyPolicyNotChecked_ValidationError()
+        {
+            var userCreationViewModel = GetValidUserCreationViewModel();
+
+            userCreationViewModel.PrivacyPolicy = false;
+
+            var newUserController = GetMockNewUserController(userCreationViewModel);
+
+            var result = await newUserController.UserCreation(userCreationViewModel) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
+        }
+
+        [Fact]
         public async Task HttpPost_NewUser_IsValid()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
