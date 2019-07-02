@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
+    using Domain.Admin.AatfReports;
 
     public interface IGetAatfSubmissionHistoryDataAccess
     {
