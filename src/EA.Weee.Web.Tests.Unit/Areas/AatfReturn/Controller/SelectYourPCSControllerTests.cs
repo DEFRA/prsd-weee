@@ -269,7 +269,7 @@
             result.RouteName.Should().Be(AatfRedirect.Default);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeIds == model.RemovedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeIds == model.RemovedSchemes && p.ReturnId == returnId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -295,8 +295,6 @@
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["action"].Should().Be("Index");
             result.RouteName.Should().Be(AatfRedirect.SelectPcsRouteName);
-
-            Assert.Equal(controller.TempData["selectedSchemes"] as List<Guid>, model.SelectedSchemes);
         }
 
         private List<Guid> PrepareSaveSchemes(Guid returnId)

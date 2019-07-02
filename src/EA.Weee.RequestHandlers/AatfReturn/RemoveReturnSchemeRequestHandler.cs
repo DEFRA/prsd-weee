@@ -20,7 +20,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            await returnSchemeDataAccess.RemoveReturnScheme(message.SchemeIds);
+            await returnSchemeDataAccess.RemoveReturnScheme(message.SchemeIds, message.ReturnId);
 
             return true;
         }
