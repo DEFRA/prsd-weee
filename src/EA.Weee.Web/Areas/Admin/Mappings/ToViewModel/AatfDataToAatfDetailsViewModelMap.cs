@@ -63,6 +63,11 @@
                 viewModel.ApprovalDate = source.AatfData.ApprovalDate.GetValueOrDefault();
             }
 
+            if (source.SubmissionHistory.Any())
+            {
+                viewModel.SubmissionHistoryData = source.SubmissionHistory;
+            }
+
             return viewModel;
         }
     }

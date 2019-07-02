@@ -5,8 +5,10 @@
     using System.Threading.Tasks;
     using AatfReports;
     using Core.Admin;
+    using Core.Admin.AatfReports;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.Admin.AatfReports;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
