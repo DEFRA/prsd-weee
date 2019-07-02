@@ -29,7 +29,7 @@
 
         public async Task<List<ReturnScheme>> GetSelectedSchemesByReturnId(Guid returnId)
         {
-            return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Include(s => s.Scheme).ToListAsync();
+            return await context.ReturnScheme.Where(now => now.ReturnId == returnId).Include(s => s.Scheme).OrderBy(s => s.Scheme.SchemeName).ToListAsync();
         }
 
         public async Task<Organisation> GetOrganisationByReturnId(Guid returnId)
