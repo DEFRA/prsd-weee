@@ -40,5 +40,8 @@
 
         [MustBeTrue(ErrorMessage = "Confirm that you've read and accepted the terms and conditions")]
         public bool TermsAndConditions { get; set; }
+
+        [MustBeTrue(ErrorMessage = "Confirm that you've read and accepted the privacy policy")]
+        public bool PrivacyPolicy { get; set; }
     }
 }
