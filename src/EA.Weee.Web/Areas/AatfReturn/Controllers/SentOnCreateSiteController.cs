@@ -39,7 +39,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId, bool? javascriptDisabled)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId)
         {
             using (var client = apiClient())
             {
@@ -53,7 +53,7 @@
 
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, Return = @return, AatfId = aatfId, WeeeSentOnData = weeeSentOn, JavascriptDisabled = javascriptDisabled });
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, Return = @return, AatfId = aatfId, WeeeSentOnData = weeeSentOn });
                
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
 
@@ -66,20 +66,24 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel, FormCollection formCollection)
+        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel, bool? noJavascriptCopy)
         {
-            var isOperatorTheSame = Convert.ToBoolean(formCollection["IsOperatorTheSameAsAATF"]);
-            viewModel.IsOperatorTheSameAsAatf = isOperatorTheSame;
-
-            if (ModelState.IsValid)
+            if (NoJavascriptCopy(noJavascriptCopy))
             {
-                using (var client = apiClient())
+                CopySiteAddressToOperatorAddress(viewModel);
+            }
+            else
+            {
+                if (ModelState.IsValid)
                 {
-                    var request = requestCreator.ViewModelToRequest(viewModel);
+                    using (var client = apiClient())
+                    {
+                        var request = requestCreator.ViewModelToRequest(viewModel);
 
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                        var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
+                        return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
+                    }
                 }
             }
 
@@ -92,6 +96,17 @@
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
+        }
+
+        private void CopySiteAddressToOperatorAddress(SentOnCreateSiteViewModel viewModel)
+        {
+            viewModel.OperatorAddressData.Address1 = viewModel.SiteAddressData.Address1;
+            ModelState.Clear();
+        }
+
+        private static bool NoJavascriptCopy(bool? javascriptCopy)
+        {
+            return javascriptCopy.HasValue && javascriptCopy.Value;
         }
 
         public virtual SentOnCreateSiteViewModel IndexNoJavaScript(SentOnCreateSiteViewModel viewModel, AatfAddressData siteAddress)
