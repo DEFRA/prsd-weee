@@ -15,7 +15,7 @@
     .govuk-table__header--large {
         padding: govuk-spacing(2) govuk-spacing(4) govuk-spacing(2) 0;
         text-align: left;
-        font-size:xx-large;
+        font-size: xx-large;
     }
 
     .govuk-table__header,
@@ -28,6 +28,18 @@
     .govuk-table__cell {
         padding: govuk-spacing(2) govuk-spacing(4) govuk-spacing(2) 0;
         border-bottom: 1px solid $govuk-border-colour;
+        text-align: left;
+        // GOV.UK Elements sets the font-size and line-height for all headers and cells
+        // in tables.
+        @include govuk-compatibility(govuk_elements) {
+            font-size: inherit;
+            line-height: inherit;
+        }
+    }
+
+    .govuk-table__cell--thick {
+        padding: govuk-spacing(2) govuk-spacing(4) govuk-spacing(2) 0;
+        border-bottom: 2px solid $govuk-border-colour;
         text-align: left;
         // GOV.UK Elements sets the font-size and line-height for all headers and cells
         // in tables.
@@ -50,7 +62,7 @@
 
     .govuk-table__line {
         padding: govuk-spacing(2) govuk-spacing(4) govuk-spacing(2) 0;
-        border-bottom: 1px solid $govuk-border-colour;
+        border-bottom: 2px solid $govuk-border-colour;
     }
 
     .govuk-table__cell--numeric {
