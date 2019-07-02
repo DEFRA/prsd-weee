@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using System.Collections.Generic;
 
     public class ReportOnQuestion
