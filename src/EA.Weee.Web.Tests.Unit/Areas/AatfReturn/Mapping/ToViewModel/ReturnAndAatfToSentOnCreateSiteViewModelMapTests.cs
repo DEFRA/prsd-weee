@@ -106,24 +106,6 @@
             result.SiteAddressData.CountryName.Should().Be(source.WeeeSentOnData.SiteAddress.CountryName);
         }
 
-        [Fact]
-        public void Map_GivenWeeeSentOnAndJavascriptDisabled_SiteAddressShouldBeMappedToOperatorAddress()
-        {
-            var source = CreateDefaultTransferObject().With(s => s.JavascriptDisabled, true).Create();
-
-            var result = map.Map(source);
-
-            result.OperatorAddressData.Id.Should().Be(source.WeeeSentOnData.OperatorAddressId);
-            result.OperatorAddressData.Name.Should().Be(source.WeeeSentOnData.OperatorAddress.Name);
-            result.OperatorAddressData.Address1.Should().Be(source.WeeeSentOnData.SiteAddress.Address1);
-            result.OperatorAddressData.Address2.Should().Be(source.WeeeSentOnData.SiteAddress.Address2);
-            result.OperatorAddressData.TownOrCity.Should().Be(source.WeeeSentOnData.SiteAddress.TownOrCity);
-            result.OperatorAddressData.CountyOrRegion.Should().Be(source.WeeeSentOnData.SiteAddress.CountyOrRegion);
-            result.OperatorAddressData.Postcode.Should().Be(source.WeeeSentOnData.SiteAddress.Postcode);
-            result.OperatorAddressData.CountryId.Should().Be(source.WeeeSentOnData.SiteAddress.CountryId);
-            result.OperatorAddressData.CountryName.Should().Be(source.WeeeSentOnData.SiteAddress.CountryName);
-        }
-
         private IPostprocessComposer<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer> CreateDefaultTransferObject()
         {
             var returnData = fixture.Build<ReturnData>()
@@ -131,7 +113,6 @@
                 .Create();
 
             var source = fixture.Build<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>()
-                .With(r => r.JavascriptDisabled, false)
                 .With(r => r.Return, returnData);
 
             return source;
