@@ -254,6 +254,7 @@
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnViewModelMapTests.cs" />
