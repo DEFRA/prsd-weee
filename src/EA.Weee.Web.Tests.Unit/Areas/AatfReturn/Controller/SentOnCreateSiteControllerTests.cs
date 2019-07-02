@@ -85,7 +85,7 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
             A.CallTo(() => aatfInfo.Name).Returns(aatfName);
 
-            await controller.Index(Guid.NewGuid(), aatfId, null, null);
+            await controller.Index(Guid.NewGuid(), aatfId, null, null, A.Fake<FormCollection>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -97,7 +97,7 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null, null) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null, null, A.Fake<FormCollection>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -107,7 +107,7 @@
         {
             var weeeSentOnId = Guid.NewGuid();
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId, null);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId, null, A.Fake<FormCollection>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -117,7 +117,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>(), null);
+            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -133,7 +133,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryData);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>());
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>.That.Matches(r =>
                     r.Return.Equals(returnData) && r.WeeeSentOnData.Equals(weeeSentOn) && r.CountryData.Equals(countryData))))
@@ -147,7 +147,7 @@
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>()) as ViewResult;
 
             model.Should().Be(model);
         }

@@ -10,20 +10,23 @@
 <section id="main-content">
     <h1 class="govuk-heading-l">WEEE sent to another AATF/ATF for treatment</h1>
     <h2 class="govuk-heading-m">Which AATF/ATF was the WEEE sent to for treatment?</h2>
-    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Get))
+    <!--
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
         @Html.HiddenFor(m => m.WeeeSentOnId)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.SiteAddressData)
         @Html.Hidden("javascriptDisabled", true)
 
         <div class="govuk-form-group" id="operatorButton" style="display: none">
-            <button type="submit" class="govuk-button" formmethod="get" name="operatorButtonName">
+            <button type="submit" class="govuk-button" formmethod="post" name="operatorButtonName">
                 The operator address is the same as the AATF/ATF address
             </button>
         </div>
     }
+        -->
     @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -38,6 +41,14 @@
         <div class="govuk-!-padding-bottom-6" style="border-bottom: 1px solid #bfc1c3;"></div>
         <div class="govuk-!-padding-bottom-6"></div>
         <h2 class="govuk-heading-m">Which operator was the WEEE sent to for treatment?</h2>
+        <div class="govuk-form-group" id="operatorButton" style="display: none">
+            <!--
+                <button type="submit" class="govuk-button" formmethod="post" name="operatorButtonName" value="nojavascript">
+                    The operator address is the same as the AATF/ATF address
+                </button>
+            -->
+            <a href="@Url.Action("IndexNoJavascript", "SentOnCreateSite", new { Model })" class="govuk-button">The operator address is the same as the AATF/ATF address</a>
+        </div>
         <div class="govuk-form-group" id="operatorCheckBox">
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
@@ -57,7 +68,7 @@
         @Html.EditorFor(m => m.OperatorAddressData)
 
         <div class="govuk-!-padding-bottom-3"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details">
+        <button type="submit" name="save" class="govuk-button" id="site-details" value="javascript">
             Save and continue
         </button>
 
