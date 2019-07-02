@@ -71,15 +71,8 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-                <p>
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Read privacy policy",
-                          Url.UrlFor<NewUserController>(c => c.Privacy()),
-                          "Policies",
-                          "Privacy",
-                          null,
-                          null,
-                          true))
-                </p>
+
+                @RenderPage("~/Views/Shared/_PrivacyPolicy.cshtml")
 
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
