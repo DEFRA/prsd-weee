@@ -100,23 +100,20 @@
 
         private void CopySiteAddressToOperatorAddress(SentOnCreateSiteViewModel viewModel)
         {
+            viewModel.OperatorAddressData.Name = viewModel.SiteAddressData.Name;
             viewModel.OperatorAddressData.Address1 = viewModel.SiteAddressData.Address1;
+            viewModel.OperatorAddressData.Address2 = viewModel.SiteAddressData.Address2;
+            viewModel.OperatorAddressData.TownOrCity = viewModel.SiteAddressData.TownOrCity;
+            viewModel.OperatorAddressData.CountyOrRegion = viewModel.SiteAddressData.CountyOrRegion;
+            viewModel.OperatorAddressData.Postcode = viewModel.SiteAddressData.Postcode;
+            viewModel.OperatorAddressData.CountryId = viewModel.SiteAddressData.CountryId;
+            viewModel.OperatorAddressData.CountryName = viewModel.SiteAddressData.CountryName;
             ModelState.Clear();
         }
 
         private static bool NoJavascriptCopy(bool? javascriptCopy)
         {
             return javascriptCopy.HasValue && javascriptCopy.Value;
-        }
-
-        public virtual SentOnCreateSiteViewModel IndexNoJavaScript(SentOnCreateSiteViewModel viewModel, AatfAddressData siteAddress)
-        {
-            using (var client = apiClient())
-            {
-                viewModel.OperatorAddressData.Name = siteAddress.Name;
-
-                return viewModel;
-            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)

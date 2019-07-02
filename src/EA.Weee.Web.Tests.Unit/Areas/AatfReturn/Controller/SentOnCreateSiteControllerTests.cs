@@ -85,7 +85,7 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
             A.CallTo(() => aatfInfo.Name).Returns(aatfName);
 
-            await controller.Index(Guid.NewGuid(), aatfId, null, null, A.Fake<FormCollection>());
+            await controller.Index(Guid.NewGuid(), aatfId, null);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -97,7 +97,7 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null, null, A.Fake<FormCollection>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -107,7 +107,7 @@
         {
             var weeeSentOnId = Guid.NewGuid();
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId, null, A.Fake<FormCollection>());
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -117,7 +117,7 @@
         {
             var returnId = Guid.NewGuid();
 
-            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>());
+            await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -133,7 +133,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryData);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>());
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>.That.Matches(r =>
                     r.Return.Equals(returnData) && r.WeeeSentOnData.Equals(weeeSentOn) && r.CountryData.Equals(countryData))))
@@ -147,7 +147,7 @@
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), null, A.Fake<FormCollection>()) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             model.Should().Be(model);
         }
@@ -155,14 +155,13 @@
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
-            var form = new FormCollection();
             controller.ModelState.AddModelError("error", "error");
             var model = new SentOnCreateSiteViewModel
             {
                 SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST"),
                 OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
             };
-            await controller.Index(model, form);
+            await controller.Index(model, null);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddSentOnAatfSite>._)).MustNotHaveHappened();
         }
@@ -170,7 +169,6 @@
         [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var form = new FormCollection();
             var model = new SentOnCreateSiteViewModel
             {
                 SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
@@ -179,11 +177,48 @@
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
-            await controller.Index(model, form);
+            await controller.Index(model, null);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public async void IndexPost_GivenNoJavascriptCopyIsTrue_SideAddressShouldBeMappedToOperatorAddress()
+        {
+            var model = new SentOnCreateSiteViewModel
+            {
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST"),
+                OperatorAddressData = new OperatorAddressData()
+            };
+
+            var result = await controller.Index(model, true) as ViewResult;
+
+            var resultModel = result.Model as SentOnCreateSiteViewModel;
+
+            resultModel.OperatorAddressData.Name.Should().Be(model.SiteAddressData.Name);
+            resultModel.OperatorAddressData.Address1.Should().Be(model.SiteAddressData.Address1);
+            resultModel.OperatorAddressData.Address2.Should().Be(model.SiteAddressData.Address2);
+            resultModel.OperatorAddressData.TownOrCity.Should().Be(model.SiteAddressData.TownOrCity);
+            resultModel.OperatorAddressData.CountyOrRegion.Should().Be(model.SiteAddressData.CountyOrRegion);
+            resultModel.OperatorAddressData.CountryName.Should().Be(model.SiteAddressData.CountryName);
+            resultModel.OperatorAddressData.Postcode.Should().Be(model.SiteAddressData.Postcode);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(null)]
+        public async void IndexPost_GivenNoJavascriptCopyIsFalseOrNull_SentOnAatfSiteShouldBeSent(bool javascript)
+        {
+            var model = new SentOnCreateSiteViewModel
+            {
+                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
+            };
+
+            await controller.Index(model, javascript);
+
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+        /*
         [Theory]
         [InlineData("true")]
         [InlineData("false")]
@@ -207,5 +242,6 @@
 
             A.CallTo(() => requestCreator.ViewModelToRequest(A<SentOnCreateSiteViewModel>.That.Matches(m => m.IsOperatorTheSameAsAatf == boolConversion))).MustHaveHappened(Repeated.Exactly.Once);
         }
+        */
     }
 }
