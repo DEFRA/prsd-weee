@@ -43,7 +43,15 @@
         private string dcfSelectedValue;
         public virtual string DcfSelectedValue
         {
-            get => dcfSelectedValue;
+            get
+            {
+                if (!NonObligatedQuestionSelected)
+                {
+                    DcfSelectedValue = null;
+                }
+
+                return dcfSelectedValue;
+            }
             set
             {
                 dcfSelectedValue = value;
