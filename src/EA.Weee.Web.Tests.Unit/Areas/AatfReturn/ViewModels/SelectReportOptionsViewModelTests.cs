@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Reflection;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
@@ -128,7 +129,7 @@
         }
 
         [Fact]
-        public void DcfSelectedValue_GivenNullValue_DcfQuestionSelectedShouldNotBeSet()
+        public void DcfSelectedValueSet_GivenNullValue_DcfQuestionSelectedShouldNotBeSet()
         {
             var viewModel = GetDefaultViewModelWithDcfQuestion();
 
@@ -137,7 +138,7 @@
         }
 
         [Fact]
-        public void DcfSelectedValue_GivenYesValue_DcfQuestionSelectedShouldBeTrue()
+        public void DcfSelectedValueSet_GivenYesValue_DcfQuestionSelectedShouldBeTrue()
         {
             var viewModel = GetDefaultViewModelWithDcfQuestion();
 
@@ -146,7 +147,7 @@
         }
 
         [Fact]
-        public void DcfSelectedValue_GivenNoValue_DcfQuestionSelectedShouldBeFalse()
+        public void DcfSelectedValueSet_GivenNoValue_DcfQuestionSelectedShouldBeFalse()
         {
             var viewModel = GetDefaultViewModelWithDcfQuestion();
 
@@ -208,6 +209,19 @@
             var model = GetDefaultViewModel();
 
             model.NoValue.Should().Be("No");
+        }
+
+        [Fact]
+        public void DcfSelectedValueGet_GivenNonObligatedQuestionIsNotSelected_NullShouldBeReturnedAndDcfQuestionNotSelected()
+        {
+            var viewModel = GetDefaultViewModelWithDcfQuestion();
+            viewModel.DcfSelectedValue = viewModel.YesValue;
+            viewModel.ReportOnQuestions.Add(new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligated, string.Empty, string.Empty, null, string.Empty) { Selected = false });
+
+            var result = viewModel.DcfSelectedValue;
+
+            result.Should().BeNull();
+            viewModel.ReportOnQuestions.First(r => r.Id.Equals((int)ReportOnQuestionEnum.NonObligatedDcf)).Selected.Should().BeFalse();
         }
 
         private SelectReportOptionsViewModel GetDefaultViewModel()
