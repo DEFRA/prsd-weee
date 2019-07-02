@@ -17,7 +17,7 @@
 
         public int PcsCount { get; set; }
 
-        public string NameWithAddress
+        public string AddressString
         {
             get
             {
@@ -25,24 +25,32 @@
 
                 if (this.Address.Address2 != null)
                 {
-                    addressString += ", " + this.Address.Address2;
+                    addressString += ",<br/>" + this.Address.Address2;
                 }
 
-                addressString += ", " + this.Address.TownOrCity;
+                addressString += ",<br/>" + this.Address.TownOrCity;
 
                 if (this.Address.CountyOrRegion != null)
                 {
-                    addressString += ", " + this.Address.CountyOrRegion;
+                    addressString += ",<br/>" + this.Address.CountyOrRegion;
                 }
 
                 if (this.Address.Postcode != null)
                 {
-                    addressString += ", " + this.Address.Postcode;
+                    addressString += ",<br/>" + this.Address.Postcode;
                 }
 
-                addressString += ", " + this.Address.CountryName;
+                addressString += ",<br/>" + this.Address.CountryName;
 
-                return string.Format("{0} ({1})", this.Name, addressString);
+                return addressString;
+            }
+        }
+
+        public string NameWithAddress
+        {
+            get
+            {
+                return string.Format("{0} ({1})", this.Name, this.AddressString.Replace("<br/>", " "));
             }
         }
     }
