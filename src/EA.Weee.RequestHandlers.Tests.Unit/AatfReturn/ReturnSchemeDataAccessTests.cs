@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
@@ -86,6 +87,7 @@
         public async Task RemoveReturnScheme_GivenSchemeIdReturnId_PCSforReturnShouldBeReturned()
         {
             var returnId = Guid.NewGuid();
+            var returnIdNoMatch = Guid.NewGuid();
             var schemeId1 = Guid.NewGuid();
             var schemeIds = new List<Guid>();
             schemeIds.Add(schemeId1);
@@ -99,12 +101,12 @@
 
             A.CallTo(() => returnSchemeNoMatch.Scheme).Returns(A.Fake<Scheme>());
             A.CallTo(() => returnSchemeNoMatch.SchemeId).Returns(schemeId1);
-            A.CallTo(() => returnSchemeNoMatch.ReturnId).Returns(A.Dummy<Guid>());
+            A.CallTo(() => returnSchemeNoMatch.ReturnId).Returns(returnIdNoMatch);
 
             List<WeeeReceived> weeeReceived = new List<WeeeReceived>();
 
             WeeeReceived weee = new WeeeReceived(schemeId1, A.Dummy<Guid>(), returnId);           
-            WeeeReceived weee1 = new WeeeReceived(schemeId1, A.Dummy<Guid>(), A.Dummy<Guid>());
+            WeeeReceived weee1 = new WeeeReceived(schemeId1, A.Dummy<Guid>(), returnIdNoMatch);
             weeeReceived.Add(weee);
             weeeReceived.Add(weee1);
 
@@ -120,13 +122,10 @@
 
             await dataAccess.RemoveReturnScheme(schemeIds, returnId);
 
-            A.CallTo(() => context.WeeeReceived.Remove(weee)).MustHaveHappened(Repeated.Exactly.Once);
-            context.WeeeReceived.Where(w => w.ReturnId == A.Dummy<Guid>()).Count().Should().Be(1);
-
-            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(Repeated.Exactly.Once);
-            context.ReturnScheme.Where(w => w.ReturnId == A.Dummy<Guid>()).Count().Should().Be(1);
-
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => context.WeeeReceived.Remove(weee)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(Repeated.Exactly.Once)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }
