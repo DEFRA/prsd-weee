@@ -2,6 +2,8 @@
 {
     using EA.Weee.Core.AatfReturn;
     using System.Collections.Generic;
+    using Core.Admin;
+    using Core.Admin.AatfReports;
 
     public class AatfDataToAatfDetailsViewModelMapTransfer
     {
@@ -21,5 +23,7 @@
         public List<AatfDataList> AssociatedAatfs { get; set; }
 
         public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
+
+        public List<AatfSubmissionHistoryData> SubmissionHistory { get; set; }
     }
 }

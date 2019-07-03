@@ -5,6 +5,7 @@
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Core.Shared;
     using EA.Weee.Core;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
@@ -89,9 +90,9 @@
 
             // AATF View Model Mapping Utilties
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
-            builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
             builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
+            builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
 
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
 

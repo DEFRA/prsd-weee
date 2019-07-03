@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
     using System.Collections.Generic;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
-    
+    using Core.AatfReturn;
+    using Core.Helpers;
+
     public class TonnageUtilities : ITonnageUtilities
     {
         public ObligatedCategoryValue SumObligatedValues(List<WeeeObligatedData> dataSet)
@@ -39,6 +39,26 @@
         public string CheckIfTonnageIsNull(decimal? tonnage)
         {
             return (tonnage != null) ? tonnage.ToTonnageDisplay() : "-";
+        }
+
+        public string SumTotals(List<decimal?> values)
+        {
+            decimal? total = null;
+
+            foreach (var @decimal in values)
+            {
+                if (@decimal.HasValue)
+                {
+                    if (!total.HasValue)
+                    {
+                        total = 0;
+                    }
+
+                    total += @decimal.Value;
+                }
+            }
+
+            return CheckIfTonnageIsNull(total);
         }
     }
 }

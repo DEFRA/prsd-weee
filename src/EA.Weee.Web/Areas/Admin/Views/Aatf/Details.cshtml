@@ -124,21 +124,37 @@
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
         <div class="govuk-table__header--large">
-            Data
+            @Model.FacilityType.ToDisplayString() data returns
         </div>
         <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Year</th>
+                    <th class="govuk-table__header" scope="col">Quarter</th>
+                    <th class="govuk-table__header" scope="col">Total obligated (tonnes)</th>
+                    <th class="govuk-table__header" scope="col">Total non-obligated (tonnes)</th>
+                    <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
+                    <th class="govuk-table__header" scope="col">Submitted by</th>
+                    <th class="govuk-table__header" scope="col"></th>
+                </tr>
+            </thead>
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-!-width-one-half">&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td>
-                        <h2 class="govuk-table__header">
-                            AATF data returns
-                        </h2>
-                    </td>
-                </tr>
+
+                @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
+                {
+                    var item = Model.SubmissionHistoryData[returnCount];
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="text-align:right">@item.ComplianceYear</td>
+                        <td class="govuk-table__cell" style="text-align:right">@item.Quarter.ToDisplayString()</td>
+                        <td class="govuk-table__cell" style="text-align:right">@item.ObligatedTotal</td>
+                        <td class="govuk-table__cell" style="text-align:right">@item.NonObligatedTotal</td>
+                        <td class="govuk-table__cell">@item.SubmittedDate</td>
+                        <td class="govuk-table__cell">@item.SubmittedBy</td>
+                        <td class="govuk-table__cell">  <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a>  </td>
+                    </tr>
+                }
             </tbody>
             </tbody>
         </table>
