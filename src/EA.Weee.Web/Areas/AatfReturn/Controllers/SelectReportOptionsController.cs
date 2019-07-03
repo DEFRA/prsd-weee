@@ -100,10 +100,22 @@
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
             }
+            else
+            {
+                RemoveDcfSelectedValueModelState(viewModel);
+            }
 
             await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
+        }
+
+        private void RemoveDcfSelectedValueModelState(SelectReportOptionsViewModel viewModel)
+        {
+            if (!viewModel.NonObligatedQuestionSelected)
+            {
+                ModelState.Remove("DcfSelectedValue");
+            }
         }
 
         private static bool IfNotPreviouslySelectedPcs(SelectReportOptionsViewModel viewModel)
