@@ -11,10 +11,10 @@
         <h1 class="govuk-heading-l">Which user would you like to manage?</h1>
     </header>
 
-   @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
     {
-       @Html.Gds().ValidationSummary()
-       @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.AntiForgeryToken()
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
             @this.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
@@ -25,9 +25,19 @@
                 RadioButtonLayout.Stacked)
         </div>
 
+        using (this.WeeeGds().ProgressiveDisclosure("What do these statuses mean?"))
+        {
+            <p>
+                Setting a user to 'active' will grant them access to all features and data available within the WEEE Online service for your organisation.
+            </p>
+            <p>
+                Setting the user to 'rejected' will remove their access to this organisation within the WEEE Online service.
+            </p>
+        }
+
         @(this.WeeeGds().Submit("Continue"))
     }
     <div>
-         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </div>
 }
