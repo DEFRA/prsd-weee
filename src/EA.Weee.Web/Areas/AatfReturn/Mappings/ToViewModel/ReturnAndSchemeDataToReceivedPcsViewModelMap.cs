@@ -2,23 +2,22 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
     public class ReturnAndSchemeDataToReceivedPcsViewModelMap : IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel>
     {
-        private readonly IWeeeCache cache;
         private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnAndSchemeDataToReceivedPcsViewModelMap(
-            IWeeeCache cache,
             ITonnageUtilities tonnageUtilities)
         {
-            this.cache = cache;
             this.tonnageUtilities = tonnageUtilities;
         }
 
