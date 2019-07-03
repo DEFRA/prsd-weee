@@ -11,11 +11,9 @@
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">Create your user account</h1>
-
-        <h2 class="govuk-body-s">
-            If you have already set up an account, you don’t need to create a new one. Use the link at the bottom of the page to sign in to your account.
-        </h2>
     </header>
+    <p>If you have already set up an account, you don’t need to create a new one. Use the link at the bottom of the page to sign in to your account.</p>
+
     @using (Html.BeginForm("UserCreation", "NewUser"))
     {
         @Html.AntiForgeryToken()
