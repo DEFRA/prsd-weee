@@ -94,5 +94,18 @@
         public bool HasLocalArea => LocalArea != null;
 
         public List<AatfSubmissionHistoryViewModel> SubmissionHistoryData { get; set; }
+
+        public bool HasSubmissionData
+        {
+            get
+            {
+                if (SubmissionHistoryData != null && SubmissionHistoryData.Any())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }
