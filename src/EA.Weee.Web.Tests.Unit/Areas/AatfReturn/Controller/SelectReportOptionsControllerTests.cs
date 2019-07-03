@@ -185,14 +185,12 @@
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
+            var model = CreateSubmittedViewModel();
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             const string orgName = "orgName";
-            var model = new SelectReportOptionsViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+            model.OrganisationId = organisationId;
+            model.ReturnId = returnId;
 
             controller.ModelState.AddModelError("error", "error");
 
