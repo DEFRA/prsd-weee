@@ -26,5 +26,21 @@
         public string SubmittedBy { get; set; }
 
         public string SubmittedDate { get; set; }
+
+        public decimal? ObligatedTotal
+        {
+            get
+            {
+
+            }
+        }
+
+        public decimal? NonObligatedTotal
+        {
+           get
+           {
+
+            }
+        }
     }
 }
