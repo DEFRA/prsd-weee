@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
