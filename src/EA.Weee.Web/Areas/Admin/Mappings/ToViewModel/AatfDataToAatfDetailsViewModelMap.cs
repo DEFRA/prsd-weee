@@ -3,20 +3,26 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
+        private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
 
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities)
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities, 
+            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap)
         {
             this.addressUtilities = addressUtilities;
+            this.aatfSubmissionHistoryMap = aatfSubmissionHistoryMap;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
@@ -61,6 +67,11 @@
             if (source.AatfData.ApprovalDate != default(DateTime))
             {
                 viewModel.ApprovalDate = source.AatfData.ApprovalDate.GetValueOrDefault();
+            }
+
+            if (source.SubmissionHistory != null && source.SubmissionHistory.Any())
+            {
+                viewModel.SubmissionHistoryData = source.SubmissionHistory.Select(s => aatfSubmissionHistoryMap.Map(s)).ToList();
             }
 
             return viewModel;

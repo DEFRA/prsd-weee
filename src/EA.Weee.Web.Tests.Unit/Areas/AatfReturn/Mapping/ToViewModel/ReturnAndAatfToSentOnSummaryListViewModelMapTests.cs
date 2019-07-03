@@ -8,6 +8,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
     using Xunit;
 
     public class ReturnAndAatfToSentOnSummaryListViewModelMapTests
@@ -16,7 +17,7 @@
 
         public ReturnAndAatfToSentOnSummaryListViewModelMapTests()
         {
-            map = new ReturnAndAatfToSentOnSummaryListViewModelMap(A.Fake<IWeeeCache>(), A.Fake<ITonnageUtilities>());
+            map = new ReturnAndAatfToSentOnSummaryListViewModelMap(A.Fake<ITonnageUtilities>());
         }
 
         [Fact]

@@ -5,6 +5,7 @@
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared;
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {
