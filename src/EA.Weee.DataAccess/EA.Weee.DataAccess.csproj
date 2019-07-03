@@ -87,6 +87,7 @@
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
     <Compile Include="Mappings\AatfContactMapping.cs" />
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
+    <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\AatfReturnReportOnMapping.cs" />
     <Compile Include="Mappings\AatfSiteAddressMapping.cs" />
     <Compile Include="Mappings\AatfSizeMapping.cs" />
