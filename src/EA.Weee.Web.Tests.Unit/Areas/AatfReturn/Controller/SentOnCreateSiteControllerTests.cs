@@ -195,7 +195,6 @@
 
             var resultModel = result.Model as SentOnCreateSiteViewModel;
 
-            resultModel.OperatorAddressData.Name.Should().Be(model.SiteAddressData.Name);
             resultModel.OperatorAddressData.Address1.Should().Be(model.SiteAddressData.Address1);
             resultModel.OperatorAddressData.Address2.Should().Be(model.SiteAddressData.Address2);
             resultModel.OperatorAddressData.TownOrCity.Should().Be(model.SiteAddressData.TownOrCity);
