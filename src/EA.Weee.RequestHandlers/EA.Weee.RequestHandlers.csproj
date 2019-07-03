@@ -76,8 +76,11 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
+    <Compile Include="Mappings\AatfSubmissionHistoryMap.cs" />
     <Compile Include="Mappings\LocalAreaMap.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\GetActiveOrganisationUsersDataAccess.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\IGetActiveOrganisationUsersDataAccess.cs" />
