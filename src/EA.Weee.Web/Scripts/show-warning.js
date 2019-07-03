@@ -1,6 +1,6 @@
 ﻿function showWarning(show) {
 
-    var warningText = $("#yes-warning");
+    var warningText = $("#warning-text");
 
     if (show == true) {
         warningText.removeClass('hidden');
