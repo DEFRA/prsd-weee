@@ -12,17 +12,18 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.Shared;
     using Xunit;
 
     public class ReturnAndSchemeDataToReceivedPcsViewModelMapTests
     {
-        private ReturnAndSchemeDataToReceivedPcsViewModelMap mapper;
-        private ITonnageUtilities tonnageUtilities;
+        private readonly ReturnAndSchemeDataToReceivedPcsViewModelMap mapper;
+        private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnAndSchemeDataToReceivedPcsViewModelMapTests()
         {
             tonnageUtilities = A.Fake<ITonnageUtilities>();
-            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(A.Fake<IWeeeCache>(), tonnageUtilities);
+            mapper = new ReturnAndSchemeDataToReceivedPcsViewModelMap(tonnageUtilities);
         }
 
         [Fact]

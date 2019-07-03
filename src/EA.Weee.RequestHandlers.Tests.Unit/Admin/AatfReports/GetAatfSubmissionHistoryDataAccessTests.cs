@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.Admin.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.AatfReports;

@@ -27,7 +27,7 @@ SELECT
 	SUM(wra.NonHouseholdTonnage) AS ReceivedTotalNonhouseHold,
 	SUM(wra.HouseholdTonnage) AS ReceivedTotalHouseHold 
 FROM
-	[AATF].WeeeReceived wr
+	[AATF].WeeeReceived wr WITH (NOLOCK)
 	INNER JOIN [AATF].WeeeReceivedAmount wra WITH (NOLOCK) ON wr.Id = wra.WeeeReceivedId 
 	INNER JOIN [AATF].[Return] r ON r.Id = wr.ReturnId
 WHERE
@@ -42,9 +42,9 @@ SELECT
 	SUM(wsoa.NonHouseholdTonnage) AS SentOnTotalNonHouseHold,
 	SUM(wsoa.HouseholdTonnage) AS SentOnTotalHousehold
 FROM
-	[AATF].WeeeSentOn wso
+	[AATF].WeeeSentOn wso WITH (NOLOCK)
 	INNER JOIN [AATF].WeeeSentOnAmount wsoa WITH (NOLOCK) ON wso.Id = wsoa.WeeeSentOnId
-	INNER JOIN [AATF].[Return] r ON r.Id = wso.ReturnId
+	INNER JOIN [AATF].[Return] r WITH (NOLOCK) ON r.Id = wso.ReturnId
 WHERE
 	wso.AatfId = @AatfId
 	AND r.Id NOT IN (SELECT ReturnId FROM @ReturnData)
@@ -65,9 +65,9 @@ FROM
 			SUM(wsoa.NonHouseholdTonnage) AS SentOnTotalNonHouseHold,
 			SUM(wsoa.HouseholdTonnage) AS SentOnTotalHouseHold
 		FROM
-			[AATF].WeeeSentOn wso
+			[AATF].WeeeSentOn wso WITH (NOLOCK)
 			INNER JOIN [AATF].WeeeSentOnAmount wsoa WITH (NOLOCK) ON wso.Id = wsoa.WeeeSentOnId
-			INNER JOIN [AATF].[Return] r ON r.Id = wso.ReturnId
+			INNER JOIN [AATF].[Return] r WITH (NOLOCK) ON r.Id = wso.ReturnId
 		WHERE
 			wso.AatfId = @AatfId
 		GROUP BY
@@ -80,9 +80,9 @@ SELECT
 	SUM(wra.NonHouseholdTonnage) AS ReusedTotalNonHouseHold,
 	SUM(wra.HouseholdTonnage) AS ReusedTotalHouseHold
 FROM
-	[AATF].WeeeReused wr
-	INNER JOIN [AATF].WeeeReusedAmount wra ON wr.Id = wra.WeeeReusedId
-	INNER JOIN [AATF].[Return] r ON r.Id = wr.ReturnId
+	[AATF].WeeeReused wr WITH (NOLOCK)
+	INNER JOIN [AATF].WeeeReusedAmount wra WITH (NOLOCK) ON wr.Id = wra.WeeeReusedId
+	INNER JOIN [AATF].[Return] r WITH (NOLOCK) ON r.Id = wr.ReturnId
 WHERE
 	wr.AatfId = @AatfId
 	AND r.Id NOT IN (SELECT ReturnId FROM @ReturnData)
@@ -103,9 +103,9 @@ FROM
 				SUM(wra.NonHouseholdTonnage) AS ReusedTotalNonHouseHold,
 				SUM(wra.HouseholdTonnage) AS ReusedTotalHouseHold
 			FROM
-				[AATF].WeeeReused wr
-				INNER JOIN [AATF].WeeeReusedAmount wra ON wr.Id = wra.WeeeReusedId
-				INNER JOIN [AATF].[Return] r ON r.Id = wr.ReturnId
+				[AATF].WeeeReused wr WITH (NOLOCK)
+				INNER JOIN [AATF].WeeeReusedAmount wra WITH (NOLOCK) ON wr.Id = wra.WeeeReusedId
+				INNER JOIN [AATF].[Return] r WITH (NOLOCK) ON r.Id = wr.ReturnId
 			WHERE
 				wr.AatfId = @AatfId
 			GROUP BY
@@ -124,8 +124,10 @@ SELECT
 	r.SubmittedDate AS SubmittedDate
 FROM
 	@ReturnData rd
-	INNER JOIN [AATF].[Return] r ON r.Id = rd.ReturnId
+	INNER JOIN [AATF].[Return] r WITH (NOLOCK) ON r.Id = rd.ReturnId
 	INNER JOIN [Identity].AspNetUsers u ON r.SubmittedById = u.Id
+WHERE
+	r.ReturnStatus = 2
 
 END
 GO
