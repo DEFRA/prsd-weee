@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -31,8 +32,6 @@
         }
 
         public ReturnData ReturnData { get; set; }
-
-        public IList<string> DcfPossibleValues => new List<string> { "Yes", "No" };
 
         public DateTime QuarterWindowStartDate { get; set; }
 

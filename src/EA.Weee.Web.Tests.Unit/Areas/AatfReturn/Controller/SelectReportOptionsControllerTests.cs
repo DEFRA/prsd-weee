@@ -2,9 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
+    using Core.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -15,7 +16,6 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -79,7 +79,7 @@
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
-            const string reportingPeriod = "Reporting period: 2019 Q1 Jan - Mar";
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
             var viewModel = CreateInitialViewModel();
             A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
            
@@ -87,8 +87,7 @@
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
 
-            var displayValue = breadcrumb.AatfDisplayInfo.Replace("&#09;", string.Empty);
-            Assert.Contains(reportingPeriod, Regex.Replace(displayValue, "<.*?>", String.Empty));
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
 
         [Fact]
@@ -100,15 +99,22 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = CreateSubmittedViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
-            viewModel.SelectedOptions.Add(1);
-
+            var model = A.Fake<SelectReportOptionsViewModel>();
+            var reportsOn = A.CollectionOfFake<ReportOnQuestion>(1);
+            var schemeDataItems = A.CollectionOfFake<SchemeData>(0);
+            var returnData = new ReturnData() { SchemeDataItems = schemeDataItems };
+            A.CallTo(() => reportsOn.ElementAt(0).Id).Returns((int)ReportOnQuestionEnum.WeeeReceived);
+            A.CallTo(() => reportsOn.ElementAt(0).Selected).Returns(true);
+            A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
+            A.CallTo(() => model.OrganisationId).Returns(organisationId);
+            A.CallTo(() => model.ReturnId).Returns(returnId);
+            
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["organisationId"].Should().Be(organisationId);
@@ -125,18 +131,21 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = CreateSubmittedViewModel();
-            var returnReportsOn = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReceived, returnId) };
-            var returnData = new ReturnData() { ReturnReportOns = returnReportsOn };
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
-            viewModel.SelectedOptions.Add(1);
+            var model = A.Fake<SelectReportOptionsViewModel>();
+            var reportsOn = A.CollectionOfFake<ReportOnQuestion>(1);
+            var schemeDataItems = A.CollectionOfFake<SchemeData>(1);
+            var returnData = new ReturnData() { SchemeDataItems = schemeDataItems };
+            A.CallTo(() => reportsOn.ElementAt(0).Id).Returns((int)ReportOnQuestionEnum.WeeeReceived);
+            A.CallTo(() => reportsOn.ElementAt(0).Selected).Returns(true);
+            A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
+            A.CallTo(() => model.OrganisationId).Returns(organisationId);
+            A.CallTo(() => model.ReturnId).Returns(returnId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(returnData);
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("AatfTaskList");
@@ -144,34 +153,11 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithoutPcsOptionSelected_PageRedirectsToSelectReportOptionsNil()
-        {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            var organisationId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-
-            var viewModel = CreateSubmittedViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
-
-            httpContext.RouteData.Values.Add("organisationId", organisationId);
-            httpContext.RouteData.Values.Add("returnId", returnId);
-
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
-
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["returnId"].Should().Be(returnId);
-            result.RouteValues["organisationId"].Should().Be(organisationId);
-            result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsNilRouteName);
-        }
-
-        [Fact]
         public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = CreateSubmittedViewModel();
-            model.SelectedOptions.Add(1);
+            model.ReportOnQuestions.First().Selected = true;
+
             var request = new AddReturnReportOn();
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
@@ -182,29 +168,29 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModelWithNoSelectedOptions_ApiSendShouldNotBeCalled()
+        public async void IndexPost_GivenInvalidViewModel_ApiSendShouldNotBeCalled()
         {
             var model = CreateSubmittedViewModel();
             var request = new AddReturnReportOn();
+
+            controller.ModelState.AddModelError("errror", "error");
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).Returns(request);
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Never);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustNotHaveHappened();
         }
 
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
+            var model = CreateSubmittedViewModel();
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             const string orgName = "orgName";
-            var model = new SelectReportOptionsViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+            model.OrganisationId = organisationId;
+            model.ReturnId = returnId;
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -218,42 +204,6 @@
         }
 
         [Fact]
-        public async void SetSelected_OptionsSelected_ViewModelQuestionsUpdate()
-        {
-            var model = CreateSubmittedViewModel();
-            var selectionOptions = new List<int>() { 1, 2, 3, 4 };
-            model.SelectedOptions.AddRange(selectionOptions);
-
-            controller.ModelState.AddModelError("error", "error");
-
-            var result = await controller.Index(model) as ViewResult;
-
-            var outputModel = result.Model as SelectReportOptionsViewModel;
-
-            foreach (var selectedOption in selectionOptions)
-            {
-                model.ReportOnQuestions.FirstOrDefault(r => r.Id == selectedOption).Selected.Should().BeTrue();
-            }
-        }
-
-        [Fact]
-        public async void SetSelected_DcfSelected_ViewModelQuestionsUpdate()
-        {
-            var model = CreateSubmittedViewModel();
-            var selectionOptions = new List<int>() { 4 };
-            model.SelectedOptions.AddRange(selectionOptions);
-            model.DcfSelectedValue = "Yes";
-
-            controller.ModelState.AddModelError("error", "error");
-
-            var result = await controller.Index(model) as ViewResult;
-
-            var outputModel = result.Model as SelectReportOptionsViewModel;
-
-            model.ReportOnQuestions.FirstOrDefault(r => r.Id == (int)ReportOnQuestionEnum.NonObligatedDcf).Selected.Should().BeTrue();
-        }
-
-        [Fact]
         public async void IndexPost_OnSubmitWithDeselectedOptionAndSelectedOption_PageRedirectsToSelectReportOptionsDeselect()
         {
             var httpContext = new HttpContextMocker();
@@ -262,14 +212,14 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = CreateSubmittedViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
-            var selectionOptions = new List<int>() { 1, 2, 3, 4 };
-            viewModel.SelectedOptions.AddRange(selectionOptions);
+            var model = A.Fake<SelectReportOptionsViewModel>();
 
-            var returnData = new ReturnData();
-            returnData.ReturnReportOns = new List<ReturnReportOn>();
+            A.CallTo(() => model.OrganisationId).Returns(organisationId);
+            A.CallTo(() => model.ReturnId).Returns(returnId);
+            A.CallTo(() => model.DeSelectedOptions).Returns(new List<int>() { 1 });
+            A.CallTo(() => model.HasSelectedOptions).Returns(true);
+
+            var returnData = new ReturnData { ReturnReportOns = new List<ReturnReportOn>() };
 
             for (var i = 0; i < 5; i++)
             {
@@ -281,7 +231,7 @@
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+           var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -298,12 +248,13 @@
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
 
-            var viewModel = CreateSubmittedViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.OrganisationId = organisationId;
+            var model = A.Fake<SelectReportOptionsViewModel>();
 
-            var returnData = new ReturnData();
-            returnData.ReturnReportOns = new List<ReturnReportOn>();
+            A.CallTo(() => model.OrganisationId).Returns(organisationId);
+            A.CallTo(() => model.ReturnId).Returns(returnId);
+            A.CallTo(() => model.DeSelectedOptions).Returns(new List<int>() { 1 });
+
+            var returnData = new ReturnData { ReturnReportOns = new List<ReturnReportOn>() };
 
             for (var i = 0; i < 5; i++)
             {
@@ -315,7 +266,7 @@
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel) as RedirectToRouteResult;
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -324,66 +275,26 @@
         }
 
         [Fact]
-        public async void CheckHasDeselectedOptions_OptionsDeselected_ViewModelQuestionsUpdate()
+        public async void IndexPost_GivenNonObligatedQuestionIsNotSelectedAndModelIsNotValid_DcfSelectedValueShouldBeRemovedFromModelState()
         {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
             var model = CreateSubmittedViewModel();
-            var selectionOptions = new List<int>() { 2 };
-            model.SelectedOptions.AddRange(selectionOptions);
+            model.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligated).Selected = false;
 
-            var returnData = new ReturnData();
-            returnData.ReturnReportOns = new List<ReturnReportOn>();
-
-            for (var i = 0; i < 5; i++)
-            {
-                returnData.ReturnReportOns.Add(new ReturnReportOn(i + 1, A.Dummy<Guid>()));
-            }
-
-            A.CallTo(() => weeeClient.SendAsync(A<String>._, A<GetReturn>._)).Returns(returnData);
+            controller.ModelState.AddModelError("error", "error");
+            controller.ModelState.Add("DcfSelectedValue", new ModelState());
+            controller.ModelState.SetModelValue("DcfSelectedValue", new ValueProviderResult("Yes", string.Empty, CultureInfo.InvariantCulture));
 
             await controller.Index(model);
 
-            var outputModel = controller.TempData["viewModel"] as SelectReportOptionsViewModel;
-
-            var deselectedOptions = returnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList().Where(s => model.SelectedOptions.All(s2 => s2 != s)).ToList();
-
-            foreach (var option in deselectedOptions)
-            {
-                model.ReportOnQuestions.FirstOrDefault(r => r.Id == option).Deselected.Should().BeTrue();
-            }
+            controller.ModelState.Where(m => m.Key.Equals("DcfSelectedValue")).Should().BeNullOrEmpty();
         }
 
-        [Fact]
-        public async void CheckHasDeselectedOptions_OptionsDeselectedNoSelected_ViewModelQuestionsUpdate()
+        private SelectReportOptionsViewModel CreateSubmittedViewModel()
         {
-            var model = CreateSubmittedViewModel();
-
-            var returnData = new ReturnData();
-            returnData.ReturnReportOns = new List<ReturnReportOn>();
-
-            for (var i = 0; i < 5; i++)
-            {
-                returnData.ReturnReportOns.Add(new ReturnReportOn(i + 1, A.Dummy<Guid>()));
-            }
-
-            A.CallTo(() => weeeClient.SendAsync(A<String>._, A<GetReturn>._)).Returns(returnData);
-
-            await controller.Index(model);
-
-            var outputModel = controller.TempData["viewModel"] as SelectReportOptionsViewModel;
-
-            var deselectedOptions = returnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList().Where(s => model.SelectedOptions.All(s2 => s2 != s)).ToList();
-
-            foreach (var option in deselectedOptions)
-            {
-                model.ReportOnQuestions.FirstOrDefault(r => r.Id == option).Deselected.Should().BeTrue();
-            }
-        }
-
-        private static SelectReportOptionsViewModel CreateSubmittedViewModel()
-        {
-            var model = new SelectReportOptionsViewModel();
-            model.SelectedOptions = new List<int>();
-            model.ReportOnQuestions = new List<ReportOnQuestion>();
+            var model = new SelectReportOptionsViewModel { ReportOnQuestions = new List<ReportOnQuestion>() };
 
             for (var i = 0; i < 5; i++)
             {

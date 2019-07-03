@@ -49,6 +49,7 @@
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisationFacilityType.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
     <Compile Include="AatfReturn\CopyReturn.cs" />
     <Compile Include="AatfReturn\GetReturnStatus.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="AatfReturn\Obligated\RemoveAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\RemoveReturnScheme.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
     <Compile Include="Admin\AddAatf.cs" />

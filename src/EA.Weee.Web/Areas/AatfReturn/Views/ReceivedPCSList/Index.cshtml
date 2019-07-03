@@ -1,9 +1,12 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
+﻿@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPcsListViewModel
 @{
-    ViewBag.Title = "Received PCS List";
+    ViewBag.Title = "Received PCS List - GOV.UK";
 }
 
 <section id="main-content">
@@ -61,10 +64,13 @@
         }
     </div>
 
+    <div class=" govuk-!-font-size-19">
+        <p>
+            @Html.NavigationRouteLink("Change selected PCS", null, AatfRedirect.SelectPcsRouteName, new { organisationId = @Model.OrganisationId, returnId = Model.ReturnId, reselect = true })
+        </p>
+    </div>
+
     @{
         Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-    }
-    @{
-        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
     }
 </section>
