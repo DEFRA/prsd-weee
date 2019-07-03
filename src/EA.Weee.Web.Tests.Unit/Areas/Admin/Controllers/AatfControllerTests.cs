@@ -1121,7 +1121,6 @@
         }
 
         [Theory]
-        [InlineData("Delete")]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
