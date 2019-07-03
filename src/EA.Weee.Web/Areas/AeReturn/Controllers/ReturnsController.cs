@@ -95,7 +95,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.WeeeSelectedValue == YesNoEnum.Yes)
+            if (viewModel.WeeeSelectedValue == YesNoEnum.No)
             {
                 return AeRedirect.ReturnsList(organisationId);
             }
