@@ -93,6 +93,6 @@
 
         public bool HasLocalArea => LocalArea != null;
 
-        public List<AatfSubmissionHistoryData> SubmissionHistoryData { get; set; }
+        public List<AatfSubmissionHistoryViewModel> SubmissionHistoryData { get; set; }
     }
 }

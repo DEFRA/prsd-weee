@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
@@ -73,6 +74,30 @@
 
             result.B2B.Should().Be("3.579");
             result.B2C.Should().Be("4.690");
+        }
+
+        [Fact]
+        public void SumTotals_GivenNullValues_EmptyTonnageShouldBeReturned()
+        {
+            var result = tonnageUtilities.SumTotals(new List<decimal?>() {null, null});
+
+            result.Should().Be("-");
+        }
+
+        [Fact]
+        public void SumTotals_GivenValues_TonnageShouldBeReturned()
+        {
+            var result = tonnageUtilities.SumTotals(new List<decimal?>() { 1, 3, 5.001m });
+
+            result.Should().Be("9.001");
+        }
+
+        [Fact]
+        public void SumTotals_GivenValuesThatContainANullValue_TonnageShouldBeReturned()
+        {
+            var result = tonnageUtilities.SumTotals(new List<decimal?>() { 1, null, 5.001m });
+
+            result.Should().Be("6.001");
         }
     }
 }

@@ -11,16 +11,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
-        private readonly ITonnageUtilities tonnageUtilities;
+        private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
 
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities,
-            ITonnageUtilities tonnageUtilities)
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities, 
+            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap)
         {
             this.addressUtilities = addressUtilities;
+            this.aatfSubmissionHistoryMap = aatfSubmissionHistoryMap;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
@@ -67,15 +69,9 @@
                 viewModel.ApprovalDate = source.AatfData.ApprovalDate.GetValueOrDefault();
             }
 
-            if (source.SubmissionHistory.Any())
+            if (source.SubmissionHistory != null && source.SubmissionHistory.Any())
             {
-                //totalNonObligatedTonnageDcf = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
-
-                viewModel.SubmissionHistoryData = source.SubmissionHistory;
-                foreach (var submissionHistory in viewModel.SubmissionHistoryData)
-                {
-                    submissionHistory.ObligatedTotal = tonnageUtilities.InitialiseTotalDecimal()
-                }
+                viewModel.SubmissionHistoryData = source.SubmissionHistory.Select(s => aatfSubmissionHistoryMap.Map(s)).ToList();
             }
 
             return viewModel;

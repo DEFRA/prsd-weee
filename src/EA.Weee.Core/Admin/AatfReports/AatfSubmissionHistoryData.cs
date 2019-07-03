@@ -2,6 +2,7 @@
 {
     using System;
     using DataReturns;
+    using Shared;
 
     public class AatfSubmissionHistoryData
     {
@@ -17,7 +18,7 @@
 
         public decimal? WeeeReusedHouseHold { get; set; }
 
-        public decimal? WeeeReusedHouseNonHold { get; set; }
+        public decimal? WeeeReusedNonHouseHold { get; set; }
 
         public decimal? WeeeSentOnHouseHold { get; set; }
 
@@ -25,22 +26,6 @@
 
         public string SubmittedBy { get; set; }
 
-        public string SubmittedDate { get; set; }
-
-        public decimal? ObligatedTotal
-        {
-            get
-            {
-
-            }
-        }
-
-        public decimal? NonObligatedTotal
-        {
-           get
-           {
-
-            }
-        }
+        public DateTime SubmittedDate { get; set; }
     }
 }

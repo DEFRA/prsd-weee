@@ -2,6 +2,7 @@
 {
     using Core.Admin.AatfReports;
     using Core.DataReturns;
+    using Core.Shared;
     using Domain.Admin.AatfReports;
     using Prsd.Core.Mapper;
 
@@ -17,10 +18,10 @@
                 WeeeReceivedHouseHold = source.WeeeReceivedHouseHold,
                 WeeeReceivedNonHouseHold = source.WeeeReceivedNonHouseHold,
                 WeeeReusedHouseHold = source.WeeeReusedHouseHold,
-                WeeeReusedHouseNonHold = source.WeeeReusedHouseNonHold,
+                WeeeReusedNonHouseHold = source.WeeeReusedHouseNonHold,
                 WeeeSentOnHouseHold = source.WeeeSentOnHouseHold,
                 WeeeSentOnNonHouseHold = source.WeeeSentOnNonHouseHold,
-                SubmittedDate = source.SubmittedDate.ToString("dd/MM/yyyy HH:mm:ss"),
+                SubmittedDate = source.SubmittedDate,
                 SubmittedBy = source.SubmittedBy
             };
         }
