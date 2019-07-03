@@ -8,10 +8,8 @@
         <h1 class="govuk-heading-l">
             Sign in to your account
         </h1>
-        <h2 class="govuk-body-s">
-            If you haven’t already set up an account, you can create one using the link at the bottom of the page
-        </h2>
     </header>
+    <p> If you haven’t already set up an account, you can create one using the link at the bottom of the page</p>
 
     @using (Html.BeginForm("SignIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {
@@ -38,10 +36,10 @@
         @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
     </p>
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking("Reset password", 
+        @this.WeeeGds().ActionLinkWithEventTracking("Reset password",
             Url.UrlFor<AccountController>(c => c.ResetPasswordRequest()),
-            "User account", 
-            "Reset password", 
+            "User account",
+            "Reset password",
             "External")
     </p>
 }
