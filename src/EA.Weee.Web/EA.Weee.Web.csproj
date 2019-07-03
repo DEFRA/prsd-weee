@@ -938,7 +938,7 @@
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_ApprovalDateProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_AatfApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsNil\Index.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditRegisteredCompanyOrganisationDetails.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditPartnershipOrganisationDetails.cshtml" />
@@ -951,6 +951,7 @@
     <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
