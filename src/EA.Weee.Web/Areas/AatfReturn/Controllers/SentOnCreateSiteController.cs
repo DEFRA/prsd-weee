@@ -100,7 +100,6 @@
 
         private void CopySiteAddressToOperatorAddress(SentOnCreateSiteViewModel viewModel)
         {
-            viewModel.OperatorAddressData.Name = viewModel.SiteAddressData.Name;
             viewModel.OperatorAddressData.Address1 = viewModel.SiteAddressData.Address1;
             viewModel.OperatorAddressData.Address2 = viewModel.SiteAddressData.Address2;
             viewModel.OperatorAddressData.TownOrCity = viewModel.SiteAddressData.TownOrCity;
