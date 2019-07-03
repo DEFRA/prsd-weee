@@ -55,6 +55,7 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
                 </tr>
@@ -65,21 +66,22 @@
                 {
                     var item = Model.Returns[returnCount];
 
-                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @{
-                                if (item.ReturnsListDisplayOptions.DisplayContinue)
-                                {
-                                    @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
-                                }
+                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                        @{
+                            if (item.ReturnsListDisplayOptions.DisplayContinue)
+                            {
+                                @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
                             }
-                        </td>
-                    </tr>
+                        }
+                    </td>
+                </tr>
                 }
 
             </tbody>
@@ -106,26 +108,18 @@
             }
 
             td:nth-of-type(3):before {
-                content: "Total obligated (tonnes)";
-            }
-
-            td:nth-of-type(4):before {
-                content: "Total non-obligated (tonnes)";
-            }
-
-            td:nth-of-type(5):before {
                 content: "Created by";
             }
 
-            td:nth-of-type(6):before {
+            td:nth-of-type(4):before {
                 content: "Submitted date (GMT)";
             }
 
-            td:nth-of-type(7):before {
+            td:nth-of-type(5):before {
                 content: "Submitted by";
             }
 
-            td:nth-of-type(8):before {
+            td:nth-of-type(6):before {
                 content: "Status";
             }
         }
