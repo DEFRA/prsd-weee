@@ -3,8 +3,10 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
@@ -13,8 +15,10 @@
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
+        private readonly ITonnageUtilities tonnageUtilities;
 
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities)
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities,
+            ITonnageUtilities tonnageUtilities)
         {
             this.addressUtilities = addressUtilities;
         }
@@ -65,7 +69,13 @@
 
             if (source.SubmissionHistory.Any())
             {
+                //totalNonObligatedTonnageDcf = tonnageUtilities.InitialiseTotalDecimal(source.NonObligatedData.Where(n => n.Dcf && n.Tonnage.HasValue).Sum(n => n.Tonnage));
+
                 viewModel.SubmissionHistoryData = source.SubmissionHistory;
+                foreach (var submissionHistory in viewModel.SubmissionHistoryData)
+                {
+                    submissionHistory.ObligatedTotal = tonnageUtilities.InitialiseTotalDecimal()
+                }
             }
 
             return viewModel;
