@@ -46,21 +46,18 @@
                         </p>
                     </div>
                     <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-quarter">
-                            &nbsp;
-                        </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-third">
                             <p>
                                 <b>B2C (tonnes)</b>
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-third">
                             <p>
                                 <b>B2B (tonnes)</b>
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
-
+                        <div class="govuk-grid-column-one-third">
+                            &nbsp;
                         </div>
                     </div>
                 </div>
@@ -74,23 +71,20 @@
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-quarter">
-                                &nbsp;
-                            </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeReceived.B2C
                                 </p>
                             </div>
 
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeReceived.B2B
                                 </p>
                             </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                                 <p>
-                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" })
+                                    @Html.NavigationRouteLink("Add / edit data", @item.Aatf.Name + " received on behalf of PCS(s)", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, new { style = "font-size: 0.8rem" })
                                 </p>
                             </div>
                         </div>
@@ -104,26 +98,21 @@
                             <p>
                                 Sent to another AATF / ATF
                             </p>
-
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-quarter">
-                                &nbsp;
-                            </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeSentOn.B2C
                                 </p>
                             </div>
-
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeSentOn.B2B
                                 </p>
                             </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                                 <p>
-                                    @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" })
+                                    @Html.NavigationRouteLink("Add / edit data", @item.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" }, new { style = "font-size: 0.8rem" })
                                 </p>
                             </div>
                         </div>
@@ -139,29 +128,25 @@
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-quarter">
-                                &nbsp;
-                            </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeReused.B2C
                                 </p>
                             </div>
-
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                                 <p>
                                     @item.WeeeReused.B2B
                                 </p>
                             </div>
-                            <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                                 <p>
                                     @if (item.WeeeReused.RedirectToSummary)
                                     {
-                                        @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
+                                        @Html.NavigationRouteLink("Add / edit data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }, new { style = "font-size: 0.8rem" })
                                     }
                                     else
                                     {
-                                        @Html.NavigationRouteLink("Add data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" })
+                                        @Html.NavigationRouteLink("Add / edit data", @item.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, new { style = "font-size: 0.8rem" })
                                     }
                                 </p>
                             </div>
@@ -180,16 +165,16 @@
                     </p>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-third">
                         &nbsp;
                     </div>
-                    <div class="govuk-grid-column-one-quarter">
-                        &nbsp;
-                    </div>
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-third">
                         <p>
                             <b>Total (tonnes)</b>
                         </p>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        &nbsp;
                     </div>
                 </div>
             </div>
@@ -200,20 +185,17 @@
                     </p>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-quarter">
+                    <div class="govuk-grid-column-one-third">
                         &nbsp;
                     </div>
-                    <div class="govuk-grid-column-one-quarter">
-                        &nbsp;
-                    </div>
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                         <p>
                             @Model.NonObligatedTonnageTotal
                         </p>
                     </div>
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
-                            @Html.NavigationRouteLink("Add data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                            @Html.NavigationRouteLink("Add / edit data", "Non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }, new { style = "font-size: 0.8rem" })
                         </p>
                     </div>
                 </div>
@@ -227,20 +209,17 @@
                         </p>
                     </div>
                     <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-quarter">
+                        <div class="govuk-grid-column-one-third">
                             &nbsp;
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
-                            &nbsp;
-                        </div>
-                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display break-word">
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
                             <p>
                                 @Model.NonObligatedTonnageTotalDcf
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                             <p>
-                                @Html.NavigationRouteLink("Add data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
+                                @Html.NavigationRouteLink("Add / edit data", "Non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }, new { style = "font-size: 0.8rem" })
                             </p>
                         </div>
                     </div>

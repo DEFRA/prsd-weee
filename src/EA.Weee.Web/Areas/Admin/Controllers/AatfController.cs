@@ -29,6 +29,7 @@
     using System.Web.Mvc;
     using Core.Shared;
     using EA.Weee.Web.Filters;
+    using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
     {
@@ -66,11 +67,14 @@
 
                 var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Organisation.Id));
 
+                var submissionHistory = await client.SendAsync(User.GetAccessToken(), new GetAatfSubmissionHistory(id));
+
                 var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
-                    AssociatedSchemes = associatedSchemes
+                    AssociatedSchemes = associatedSchemes,
+                    SubmissionHistory = submissionHistory
                 });
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
@@ -231,7 +235,7 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [AuthorizeInternalClaims(Claims.NotAllowed)]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
             var aatfData = await cache.FetchAatfData(organisationId, id);
