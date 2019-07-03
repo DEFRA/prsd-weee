@@ -6,21 +6,13 @@
 
     public static class DisplayHelper
     {
-        public static string Reporting = "<b>Reporting on: </b>";
-        public static string Period = "<b>Reporting period: </b>";
-        public static string Tab = "&#09;";
-
-        public static string ReportingOnValue(string name, string number, string quarter)
+        public static string ReportingOnValue(string name, string number)
         {
             string value = string.Empty;
-
-            if (!string.IsNullOrEmpty(quarter))
-            {
-                value = Period + quarter + Tab;
-            }
+           
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(number))
             {
-                return value + Tab + Tab + Tab + " " + Reporting + name + " " + "(" + number + ")";
+                return value + name + " " + "(" + number + ")";
             }
             return value;
         }

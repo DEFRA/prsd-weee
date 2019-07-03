@@ -23,7 +23,7 @@
                 AuthenticationType = Constants.WeeeAuthType,
                 LoginPath = new PathString("/account/sign-in"),
                 SlidingExpiration = true,
-                ExpireTimeSpan = TimeSpan.FromMinutes(60),
+                ExpireTimeSpan = TimeSpan.FromMinutes(180),
                 CookieName = EA.Prsd.Core.Web.Constants.CookiePrefix + Constants.WeeeAuthType,
                 Provider = new WeeeCookieAuthenticationProvider(returnUrlMapping)
             });

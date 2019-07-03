@@ -21,7 +21,6 @@
     using FluentAssertions;
     using Weee.Tests.Core;
     using Xunit;
-    using Country = Domain.Country;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -320,7 +319,7 @@
                 weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, (int)category, (int)category, (int)category + 1));
             }
 
-            await returnSchemeDataAccess.Submit(returnScheme);
+            await returnSchemeDataAccess.Submit(new List<ReturnScheme> { returnScheme });
             await dataAccess.Submit(weeeReceivedAmount);
         }
 

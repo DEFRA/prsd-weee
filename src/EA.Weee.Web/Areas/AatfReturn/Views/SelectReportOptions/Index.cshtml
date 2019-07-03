@@ -22,7 +22,7 @@
                 <p id="all-apply-hint">
                     Select all that apply
                 </p>
-                <div class="govuk-checkboxes">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedOptions)">
                     @for (var i = 0; i < Model.ReportOnQuestions.Count; i++)
                     {
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].AlternativeDescription)
@@ -30,14 +30,16 @@
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Question)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].ParentId)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Id)
-                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Selected)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].OriginalSelected)
+                        @Html.HiddenFor(m => m.HasSelectedOptions)
+
                         if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
                         {
                             <div class="govuk-checkboxes__item">
                                 @{
                                     var selectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
                                 }
-                                <input type="checkbox" name="SelectedOptions" value="@Model.ReportOnQuestions[i].Id" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption/>
+                                <input type="checkbox" name="ReportOnQuestions[@i].Selected" value="true" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption />
                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
                                     @Model.ReportOnQuestions[i].Description
 

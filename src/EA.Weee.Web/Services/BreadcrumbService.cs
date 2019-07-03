@@ -61,5 +61,10 @@
         /// Information about Aatf
         /// </summary>
         public string AatfDisplayInfo { get; set; }
+
+        /// <summary>
+        /// Information about reporting quarter
+        /// </summary>
+        public string QuarterDisplayInfo { get; set; }
     }
 }

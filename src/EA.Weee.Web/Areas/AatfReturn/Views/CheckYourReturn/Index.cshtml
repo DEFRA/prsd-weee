@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
 @{
-    ViewBag.Title = "Check your AATF return for " + Model.Organisation.OrganisationName;
+    ViewBag.Title = "Check your AATF return for " + Model.Organisation.OrganisationName + " - GOV.UK";
 }
 
 @{
@@ -51,7 +51,12 @@
         @foreach (var aatf in Model.AatfsData)
         {
             <div class="govuk-grid-row govuk-table__row govuk-table__header--no-line">
-                <h1 class="govuk-heading-m">@aatf.Aatf.Name &ndash; @aatf.Aatf.ApprovalNumber</h1>
+                <p>
+                    <b>Obligated WEEE - @aatf.Aatf.Name (@aatf.Aatf.ApprovalNumber)</b>
+                </p>
+                <p>
+                    Status: <b>@aatf.Aatf.AatfStatus</b>
+                </p>
             </div>
 
             <div class="govuk-grid-column-one-half">&nbsp;</div>
@@ -117,7 +122,7 @@
                             <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
                                 <div class="govuk-grid-column-one-half">
                                     <div class="govuk-grid-column-two-thirds">
-                                        @pcsdata.Scheme.Name
+                                        @pcsdata.Scheme.SchemeName
                                     </div>
 
                                     <div class="govuk-grid-column-one-third collapsible-padding-right">

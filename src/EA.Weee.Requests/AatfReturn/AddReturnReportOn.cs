@@ -18,6 +18,6 @@
 
         public IList<ReportOnQuestion> Options { get; set; }
 
-        public string DcfSelectedValue { get; set; }
+        public bool DcfSelectedValue { get; set; }
     }
 }

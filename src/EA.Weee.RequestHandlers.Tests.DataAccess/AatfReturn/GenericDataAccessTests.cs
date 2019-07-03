@@ -89,6 +89,58 @@
         }
 
         [Fact]
+        public async Task GetManyByExpression_Specification_AatfsByAatfFacilityTypeShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var dataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf3 = new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, ObligatedWeeeIntegrationCommon.CreateAatfAddress(database), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+                database.WeeeContext.Aatfs.Add(aatf1);
+                database.WeeeContext.Aatfs.Add(aatf2);
+                database.WeeeContext.Aatfs.Add(aatf3);
+                await database.WeeeContext.SaveChangesAsync();
+
+                var aatfInfo = await dataAccess.GetManyByExpression(new AatfsByOrganisationAndFacilityTypeSpecification(organisation.Id, Core.AatfReturn.FacilityType.Aatf));
+
+                aatfInfo.Count.Should().Be(2);
+                aatfInfo.Where(a => Equals(aatf1)).Should().NotBeNull();
+                aatfInfo.Where(a => Equals(aatf2)).Should().NotBeNull();
+                aatfInfo.Where(a => Equals(aatf3)).Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task GetManyByExpression_Specification_AatfsByAeFacilityTypeShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var dataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var organisation = Organisation.CreateSoleTrader("Test Organisation");
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf3 = new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, ObligatedWeeeIntegrationCommon.CreateAatfAddress(database), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+                database.WeeeContext.Aatfs.Add(aatf1);
+                database.WeeeContext.Aatfs.Add(aatf2);
+                database.WeeeContext.Aatfs.Add(aatf3);
+                await database.WeeeContext.SaveChangesAsync();
+
+                var aatfInfo = await dataAccess.GetManyByExpression(new AatfsByOrganisationAndFacilityTypeSpecification(organisation.Id, Core.AatfReturn.FacilityType.Ae));
+
+                aatfInfo.Count.Should().Be(1);
+                aatfInfo.Where(a => Equals(aatf1)).Should().NotBeNull();
+                aatfInfo.Where(a => Equals(aatf2)).Should().BeEmpty();
+                aatfInfo.Where(a => Equals(aatf3)).Should().BeEmpty();
+            }
+        }
+
+        [Fact]
         public async Task GetAll_AllEntitiesShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())

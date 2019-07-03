@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteSummaryListViewModel
 @{
-    ViewBag.Title = "Reused WEEE";
+    ViewBag.Title = "Reused WEEE - GOV.UK";
 }
 
 <section id="main-content">
@@ -101,8 +101,5 @@
     </div>
     @{
         Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-    }
-    @{
-        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
     }
 </section>

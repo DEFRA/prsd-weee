@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using System.Collections.Generic;
 
     public class ReportOnQuestion
@@ -17,7 +18,7 @@
         {
         }
 
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         public string Question { get; set; }
 
@@ -27,10 +28,14 @@
 
         public string AlternativeDescription { get; set; }
 
-        public bool Selected { get; set; }
+        public virtual bool Selected { get; set; }
 
-        public bool Deselected { get; set; }
+        public virtual bool DeSelected => OriginalSelected && !Selected;
 
-        public bool HasError { get; set; }
+        public virtual bool ReSelected => Selected && !OriginalSelected;
+
+        public virtual bool HasError { get; set; }
+
+        public virtual bool OriginalSelected { get; set; }
     }
 }

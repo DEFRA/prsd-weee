@@ -49,8 +49,11 @@
             countries = A.Dummy<IList<CountryData>>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            var configurationService = A.Fake<ConfigurationService>();
 
-            controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
+            A.CallTo(() => configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults).Returns(5);
+
+            controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, configurationService);
         }
 
         [Fact]
@@ -218,7 +221,6 @@
         [Fact]
         public async Task AddAatfPost_ValidViewModel_ReturnsRedirect()
         {
-            var facilityType = fixture.Create<FacilityType>();
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
                 SizeValue = 1,
@@ -322,9 +324,6 @@
         [Fact]
         public async Task AddAePost_ValidViewModel_ReturnsRedirect()
         {
-            var facilityType = fixture.Create<FacilityType>();
-            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
-
             var viewModel = new AddAeViewModel()
             {
                 SizeValue = 1,
@@ -366,8 +365,6 @@
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
 
-            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
-
             await controller.AddAe(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAatf>.That.Matches(
@@ -388,7 +385,6 @@
         [Fact]
         public async Task AddAePost_InvalidViewModel_ReturnsViewWithViewModelPopulatedWithLists()
         {
-            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
             controller.ModelState.AddModelError("error", "error");
 
             var viewModel = CreateAddAeViewModel();
@@ -407,8 +403,6 @@
         [Fact]
         public async Task AddAePost_ValidViewModel_CacheShouldBeInvalidated()
         {
-            var controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache);
-
             var viewModel = new AddAeViewModel()
             {
                 SizeValue = 1,

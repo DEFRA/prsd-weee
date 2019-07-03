@@ -35,7 +35,7 @@
             {
                 WeeeSentOnId = Guid.NewGuid(),
                 SiteAddressData = A.Fake<AatfAddressData>(),
-                SiteAddressId = Guid.NewGuid()
+                OperatorAddressData = A.Fake<OperatorAddressData>(),
             };
 
             var request = requestCreator.ViewModelToRequest(viewModel);
