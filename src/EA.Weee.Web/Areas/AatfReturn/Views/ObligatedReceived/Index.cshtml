@@ -3,7 +3,7 @@
 @using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Received WEEE";
+    ViewBag.Title = "Received WEEE - GOV.UK";
 }
 
 <section id="main-content">
@@ -42,9 +42,6 @@
                 Save and continue
             </button>
         </form>
-    }
-    @{
-        Html.RenderPartial("_AatfCheckReturnButton", Model.ReturnId);
     }
     @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ReceivedPcsList" }, new { @class = "govuk-back-link" })
 </section>

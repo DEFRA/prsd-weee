@@ -311,7 +311,6 @@
     <Compile Include="Areas\AatfReturn\Controllers\SelectYourPcsController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\ObligatedReceivedController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteController.cs" />
-    <Compile Include="Areas\AatfReturn\Controllers\SentOnCreateSiteOperatorController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnRemoveSiteController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SentOnSiteSummaryListController.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\SubmittedReturnController.cs" />
@@ -319,6 +318,7 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
@@ -350,8 +350,6 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReportOptionsToSelectReportOptionsViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToReusedRemoveSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMap.cs" />
-    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteOperatorViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnRemoveSiteViewModelMap.cs" />
@@ -386,13 +384,9 @@
     <Compile Include="Areas\AatfReturn\Requests\ObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\AddSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\EditSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\GetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddReturnSchemeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IAddSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\IEditSentOnAatfSiteRequestCreator.cs" />
-    <Compile Include="Areas\AatfReturn\Requests\IGetSentOnAatfSiteRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\INonObligatedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReusedWeeeRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\Requests\IObligatedReceivedWeeeRequestCreator.cs" />
@@ -417,7 +411,6 @@
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsModelBase.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectReportOptionsViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SelectYourPcsViewModel.cs" />
-    <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteOperatorViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnCreateSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnRemoveSiteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SentOnSiteSummaryListViewModel.cs" />
@@ -917,7 +910,6 @@
     <Content Include="Areas\AatfReturn\Views\NonObligatedValuesCopyPaste\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_CountryPartial.cshtml" />
-    <Content Include="Areas\AatfReturn\Views\SentOnCreateSiteOperator\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\EditorTemplates\OperatorAddressData.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ObligatedSentOn\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SentOnSiteSummaryList\index.cshtml" />
@@ -956,6 +948,7 @@
     <Content Include="Areas\AeReturn\Views\Returns\Confirmation.cshtml" />
     <Content Include="Areas\Admin\Views\EditOrganisation\EditSoleTraderOrganisationDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\Delete.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <None Include="Content\remove-site.scss" />

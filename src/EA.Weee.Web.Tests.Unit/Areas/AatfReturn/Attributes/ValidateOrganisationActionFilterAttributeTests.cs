@@ -67,7 +67,7 @@
         }
 
         [Fact]
-        public void OnActionExecuting_NoAATFsOrAE_ArgumentExceptionExpected()
+        public void OnActionExecuting_NoAATFs_ArgumentExceptionExpected()
         {
             Action action = () => attribute.OnActionExecuting(context);
 
@@ -77,9 +77,28 @@
             routeData.Values.Add("organisationId", orgId);
 
             A.CallTo(() => context.RouteData).Returns(routeData);
-            A.CallTo(() => client.SendAsync(A<string>._, new GetAatfByOrganisation(orgId))).Returns(new List<AatfData>());
+            A.CallTo(() => client.SendAsync(A<string>._, new GetAatfByOrganisationFacilityType(orgId, FacilityType.Aatf))).Returns(new List<AatfData>());
 
             action.Should().Throw<InvalidOperationException>().WithMessage("No AATF found for this organisation.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_NoAEs_ArgumentExceptionExpected()
+        {
+            var attribute = new ValidateOrganisationActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client, FacilityType = FacilityType.Ae };
+            Action action = () => attribute.OnActionExecuting(context);
+
+            Guid orgId = Guid.NewGuid();
+
+            var routeData = new RouteData();
+            routeData.Values.Add("organisationId", orgId);
+
+            A.CallTo(() => context.RouteData).Returns(routeData);
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFReturns).Returns(true);
+
+            A.CallTo(() => client.SendAsync(A<string>._, new GetAatfByOrganisationFacilityType(orgId, FacilityType.Ae))).Returns(new List<AatfData>());
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("No AE found for this organisation.");
         }
     }
 }

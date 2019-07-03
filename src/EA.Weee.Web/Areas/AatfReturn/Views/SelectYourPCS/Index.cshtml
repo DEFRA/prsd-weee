@@ -1,14 +1,13 @@
 ﻿@using System.Web.Mvc.Html
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectYourPcsViewModel
 @{
-    ViewBag.Title = "Select Your PCS";
+    ViewBag.Title = "Select Your PCS - GOV.UK";
 }
 
 <section id="main-content">
-    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName))
+    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { reselect = Model.Reselect }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -26,7 +25,14 @@
                     @for (var i = 0; i < Model.SchemeList.Count; i++)
                     {
                         <div class="govuk-checkboxes__item">
-                            <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" />
+                            @{
+                                var selectedOption = "";
+                                if (Model.Reselect && Model.SelectedSchemes != null)
+                                {
+                                    selectedOption = Model.SelectedSchemes.Count(p => p == Model.SchemeList[i].Id) > 0 ? "checked" : "";
+                                }
+                            }
+                            <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" @selectedOption />
                             <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id">
                                 @Model.SchemeList[i].SchemeName - @Model.SchemeList[i].ApprovalName
                             </label>
@@ -53,5 +59,8 @@
             Save and continue
         </button>
     }
-    @Html.RouteLink("Back", AatfRedirect.SelectReportOptionsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, new { @class = "govuk-back-link" })
+    @if (!Model.Reselect)
+    {
+        @Html.RouteLink("Back", AatfRedirect.SelectReportOptionsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, new { @class = "govuk-back-link" });
+    }
 </section>

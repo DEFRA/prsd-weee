@@ -39,13 +39,16 @@
 
             var organisationId = (Guid)guidOrganisationIdActionParameter;
 
-            using (var client = Client())
+            if (FacilityType != 0)
             {
-                var aatfData = client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-
-                if (aatfData.Result.Count == 0)
+                using (var client = Client())
                 {
-                    throw new InvalidOperationException(string.Format("No {0} found for this organisation.", this.FacilityType.ToString().ToUpper()));
+                    var aatfData = client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetAatfByOrganisationFacilityType(organisationId, FacilityType));
+
+                    if (aatfData.Result == null || aatfData.Result.Count == 0)
+                    {
+                        throw new InvalidOperationException(string.Format("No {0} found for this organisation.", this.FacilityType.ToString().ToUpper()));
+                    }
                 }
             }
 

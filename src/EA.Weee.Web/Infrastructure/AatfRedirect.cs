@@ -26,19 +26,19 @@
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "AatfTaskList", action = "Index", returnId = returnId }));
         }
 
-        public static RedirectToRouteResult SelectPcs(Guid organsationId, Guid returnId)
+        public static RedirectToRouteResult SelectPcs(Guid organisationId, Guid returnId, bool reselect = false)
         {
-            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectPcsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organisationId, returnId = returnId, reselect = reselect }));
         }
 
-        public static RedirectToRouteResult SelectReportOptions(Guid organsationId, Guid returnId)
+        public static RedirectToRouteResult SelectReportOptions(Guid organisationId, Guid returnId)
         {
-            return new RedirectToRouteResult(SelectReportOptionsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectReportOptionsRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organisationId, returnId = returnId }));
         }
 
-        public static RedirectToRouteResult SelectReportOptionDeselect(Guid organsationId, Guid returnId)
+        public static RedirectToRouteResult SelectReportOptionDeselect(Guid organisationId, Guid returnId)
         {
-            return new RedirectToRouteResult(SelectReportOptionsDeselectRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectReportOptionsDeselectRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organisationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult SelectReportOptionsNil(Guid organsationId, Guid returnId)

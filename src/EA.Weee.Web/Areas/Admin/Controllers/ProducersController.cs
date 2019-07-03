@@ -23,14 +23,20 @@
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
-        private const int maximumSearchResults = 10;
+        private readonly int maximumSearchResults;
 
-        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient, IWeeeCache cache)
+        public ProducersController(BreadcrumbService breadcrumb, 
+            ISearcher<ProducerSearchResult> producerSearcher, 
+            Func<IWeeeClient> apiClient, 
+            IWeeeCache cache,
+            ConfigurationService configurationService)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
             this.apiClient = apiClient;
             this.cache = cache;
+
+            maximumSearchResults = configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults;
         }
 
         /// <summary>
