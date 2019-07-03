@@ -148,11 +148,11 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" style="text-align:right">@item.ComplianceYear</td>
                         <td class="govuk-table__cell" style="text-align:right">@item.Quarter.ToDisplayString()</td>
-                        <td class="govuk-table__cell" style="text-align:right">0</td>
-                        <td class="govuk-table__cell" style="text-align:right">0</td>
+                        <td class="govuk-table__cell" style="text-align:right">@item.ObligatedTotal</td>
+                        <td class="govuk-table__cell" style="text-align:right">@item.NonObligatedTotal</td>
                         <td class="govuk-table__cell">@item.SubmittedDate</td>
                         <td class="govuk-table__cell">@item.SubmittedBy</td>
-                        <td class="govuk-table__cell"></td>
+                        <td class="govuk-table__cell">  <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a>  </td>
                     </tr>
                 }
             </tbody>

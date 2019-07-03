@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using AutoFixture;
+    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
@@ -12,20 +13,25 @@
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Mapper;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
     {
         private readonly IAddressUtilities addressUtilities;
+        private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
         private readonly AatfDataToAatfDetailsViewModelMap map;
         private readonly Fixture fixture;
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
             addressUtilities = A.Fake<IAddressUtilities>();
+            aatfSubmissionHistoryMap = A.Fake<IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel>>();
+
             fixture = new Fixture();
 
-            map = new AatfDataToAatfDetailsViewModelMap(addressUtilities);
+            map = new AatfDataToAatfDetailsViewModelMap(addressUtilities, aatfSubmissionHistoryMap);
         }
 
         [Fact]
