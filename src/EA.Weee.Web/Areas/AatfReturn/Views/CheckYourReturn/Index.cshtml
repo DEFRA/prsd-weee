@@ -94,18 +94,16 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p>
+                            <p style="word-break: normal;">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
                     }
-
                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                         <p>
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                             {
                                 @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " change received for treatment", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" });
-
                             }
                             else
                             {
@@ -187,7 +185,7 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p>
+                            <p style="word-break: normal;">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
@@ -229,7 +227,7 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p>
+                            <p style="word-break: normal;">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
