@@ -44,15 +44,16 @@
         public async Task HandleAsync_GivenSchemeId_ReturnSchemeDeleted()
         {
             var schemeIds = fixture.CreateMany<Guid>().ToList();
-
+            var returnId = Guid.NewGuid();
             RemoveReturnScheme request = new RemoveReturnScheme()
             {
-                SchemeIds = schemeIds
+                SchemeIds = schemeIds,
+                ReturnId = returnId
             };
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeIds, A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeIds, returnId)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

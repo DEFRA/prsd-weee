@@ -71,141 +71,146 @@
 
 @using (Html.BeginForm(actionName: "Index", controllerName: "User", method: FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.OrderBy)
-    @Html.HiddenFor(m => m.Filter.Name)
-    @Html.HiddenFor(m => m.Filter.OrganisationName)
-    @Html.HiddenFor(m => m.Filter.Status)
-    @Html.Gds().ValidationSummary()
-    <div class="table-hr"></div>
-    <table id="idManageUsersTable" class="prsd-table hover-effect govuk-table">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                @switch (@Model.OrderBy)
-                {
-                    case FindMatchingUsers.OrderBy.FullNameAscending:
-                        <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
-                        </th>
-                        break;
-
-                    case FindMatchingUsers.OrderBy.FullNameDescending:
-                        <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                        </th>
-                        break;
-
-                    default:
-                        <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
-                        </th>
-                        break;
-                }
-                <th class="govuk-table__header">
-                    Email
-                </th>
-                @switch (@Model.OrderBy)
-                {
-                    case FindMatchingUsers.OrderBy.OrganisationAscending:
-                        <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
-                        </th>
-                        break;
-
-                    case FindMatchingUsers.OrderBy.OrganisationDescending:
-                        <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                        </th>
-                        break;
-
-                    default:
-                        <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
-                        </th>
-                        break;
-                }
-                @switch (@Model.OrderBy)
-                {
-                    case FindMatchingUsers.OrderBy.RoleAscending:
-                        <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
-                            <span class="govuk-visually-hidden">Sorted with the lowest rank role first.</span>
-                        </th>
-                        break;
-
-                    case FindMatchingUsers.OrderBy.RoleDescending:
-                        <th class="sorted-descending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
-                            <span class="govuk-visually-hidden">Sorted with the highest rank role first.</span>
-                        </th>
-                        break;
-
-                    default:
-                        <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
-                        </th>
-                        break;
-                }
-                @switch (@Model.OrderBy)
-                {
-                    case FindMatchingUsers.OrderBy.StatusAscending:
-                        <th class="sorted-ascending govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
-                        </th>
-                        break;
-
-                    case FindMatchingUsers.OrderBy.StatusDescending:
-                        <th class="sorted-descending govuk-table__header">
-                            <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
-                            <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
-                        </th>
-                        break;
-
-                    default:
-                        <th class="govuk-table__header">
-                            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
-                        </th>
-                        break;
-                }
-                <th class="govuk-table__header" style="padding-right: 15px">Select</th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            @foreach (UserSearchData user in Model.Users)
-            {
+    <fieldset style="border: none; margin-left: 0; padding: 0">
+        <legend class="govuk-visually-hidden">Which user would you like to manage?</legend>
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrderBy)
+        @Html.HiddenFor(m => m.Filter.Name)
+        @Html.HiddenFor(m => m.Filter.OrganisationName)
+        @Html.HiddenFor(m => m.Filter.Status)
+        @Html.Gds().ValidationSummary()
+        <div class="table-hr"></div>
+        <table id="idManageUsersTable" class="prsd-table hover-effect govuk-table">
+            <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@user.FullName</td>
-                    <td class="govuk-table__cell break-word">@user.Email</td>
-                    <td class="govuk-table__cell">@user.OrganisationName</td>
-                    <td class="govuk-table__cell">@user.Role</td>
-                    <td class="govuk-table__cell">@user.Status</td>
-                    <td class="govuk-table__cell">
-                        @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId)
-                    </td>
+                    @switch (@Model.OrderBy)
+                    {
+                        case FindMatchingUsers.OrderBy.FullNameAscending:
+                            <th class="sorted-ascending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
+                            </th>
+                            break;
+
+                        case FindMatchingUsers.OrderBy.FullNameDescending:
+                            <th class="sorted-descending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th class="govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
+                            </th>
+                            break;
+                    }
+                    <th class="govuk-table__header">
+                        Email
+                    </th>
+                    @switch (@Model.OrderBy)
+                    {
+                        case FindMatchingUsers.OrderBy.OrganisationAscending:
+                            <th class="sorted-ascending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
+                            </th>
+                            break;
+
+                        case FindMatchingUsers.OrderBy.OrganisationDescending:
+                            <th class="sorted-descending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th class="govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
+                            </th>
+                            break;
+                    }
+                    @switch (@Model.OrderBy)
+                    {
+                        case FindMatchingUsers.OrderBy.RoleAscending:
+                            <th class="sorted-ascending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
+                                <span class="govuk-visually-hidden">Sorted with the lowest rank role first.</span>
+                            </th>
+                            break;
+
+                        case FindMatchingUsers.OrderBy.RoleDescending:
+                            <th class="sorted-descending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
+                                <span class="govuk-visually-hidden">Sorted with the highest rank role first.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th class="govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
+                            </th>
+                            break;
+                    }
+                    @switch (@Model.OrderBy)
+                    {
+                        case FindMatchingUsers.OrderBy.StatusAscending:
+                            <th class="sorted-ascending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from A to Z.</span>
+                            </th>
+                            break;
+
+                        case FindMatchingUsers.OrderBy.StatusDescending:
+                            <th class="sorted-descending govuk-table__header">
+                                <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending })">Status</a>
+                                <span class="govuk-visually-hidden">Sorted alphabetically from Z to A.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th class="govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
+                            </th>
+                            break;
+                    }
+                    <th class="govuk-table__header" style="padding-right: 15px">Select</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <br />
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (UserSearchData user in Model.Users)
+                {
+                    var id = "selectUser" + user.OrganisationUserId;
 
-    if (@Model.Users.PageCount > 1)
-    {
-        <div class="pager govuk-body">
-            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o => o.Action("Index").RouteValues(new { orderBy = Model.OrderBy, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status }))
-        </div>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@user.FullName</td>
+                        <td class="govuk-table__cell break-word">@user.Email</td>
+                        <td class="govuk-table__cell">@user.OrganisationName</td>
+                        <td class="govuk-table__cell">@user.Role</td>
+                        <td class="govuk-table__cell">@user.Status</td>
+                        <td class="govuk-table__cell">
+                            <label class="govuk-visually-hidden" for="@id">Select</label>
+                            @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId, new { id = @id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
 
-        <p class="govuk-body">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
-    }
+        @if (@Model.Users.PageCount > 1)
+        {
+            <div class="pager govuk-body">
+                @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount).Options(o => o.Action("Index").RouteValues(new { orderBy = Model.OrderBy, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status }))
+            </div>
 
-    @(this.WeeeGds().Submit("Continue"))
+            <p class="govuk-body">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
+        }
 
-    <p>
-        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
-    </p>
+        @this.WeeeGds().Submit("Continue")
+
+        <p>
+            <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+        </p>
+    </fieldset>
 }
-

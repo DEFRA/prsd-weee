@@ -52,7 +52,7 @@
                 OrganisationId = r.Id,
                 Name = r.OrganisationName,
                 Address = addressMapper.Map(r.BusinessAddress),
-                PcsCount = schemes.Count(p => p.OrganisationId == r.Id),
+                PcsCount = schemes.Count(p => p.OrganisationId == r.Id && p.SchemeStatus != Domain.Scheme.SchemeStatus.Rejected),
                 AatfCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Aatf),
                 AeCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Ae)
             })

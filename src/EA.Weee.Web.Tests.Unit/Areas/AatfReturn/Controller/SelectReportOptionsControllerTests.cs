@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Web.Mvc;
     using Core.Scheme;
@@ -184,14 +185,12 @@
         [Fact]
         public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
+            var model = CreateSubmittedViewModel();
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             const string orgName = "orgName";
-            var model = new SelectReportOptionsViewModel()
-            {
-                OrganisationId = organisationId,
-                ReturnId = returnId
-            };
+            model.OrganisationId = organisationId;
+            model.ReturnId = returnId;
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -273,6 +272,24 @@
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteName.Should().Be(AatfRedirect.SelectReportOptionsNilRouteName);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenNonObligatedQuestionIsNotSelectedAndModelIsNotValid_DcfSelectedValueShouldBeRemovedFromModelState()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+
+            var model = CreateSubmittedViewModel();
+            model.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligated).Selected = false;
+
+            controller.ModelState.AddModelError("error", "error");
+            controller.ModelState.Add("DcfSelectedValue", new ModelState());
+            controller.ModelState.SetModelValue("DcfSelectedValue", new ValueProviderResult("Yes", string.Empty, CultureInfo.InvariantCulture));
+
+            await controller.Index(model);
+
+            controller.ModelState.Where(m => m.Key.Equals("DcfSelectedValue")).Should().BeNullOrEmpty();
         }
 
         private SelectReportOptionsViewModel CreateSubmittedViewModel()
