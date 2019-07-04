@@ -3,6 +3,7 @@
     using AutoFixture;
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
