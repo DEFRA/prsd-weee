@@ -4,6 +4,14 @@
     ViewBag.Title = "Choose your organisation";
 }
 
+@section scripts{
+    <script>
+        $('#organisationSearchResultsTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+
 @if (Model.Results.Count > 0)
 {
     <header class="hgroup">
@@ -40,8 +48,10 @@
                 @foreach (var org in Model.Results)
                 {
                     {
+                        var id = "selectOrg" + org.OrganisationId;
+
                         <tr>
-                            <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="@org.OrganisationId">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
+                            <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
                             <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
                             <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
                             <td class="govuk-table__cell" style="text-align:right;">@org.PcsCount</td>
@@ -89,12 +99,3 @@ else
     </p>
 }
 
-
-
-@section scripts{
-    <script type="text/javascript">
-        $('#organisations tr').click(function () {
-            $(this).find('td input[type=radio]').prop('checked', true);
-        })
-    </script>
-}
