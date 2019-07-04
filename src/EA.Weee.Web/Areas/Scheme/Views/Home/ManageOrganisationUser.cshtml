@@ -12,7 +12,7 @@
     </header>
 
     @using (Html.BeginForm(actionName: "ManageOrganisationUser", controllerName: "Home", method: FormMethod.Post))
-    {  
+    {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
@@ -27,20 +27,20 @@
             <table class="govuk-table">
                 <caption class="govuk-table__caption"><span class="hidden-for-screen-reader">User Details</span></caption>
                 <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name</th>
-                    <th class="govuk-table__header" scope="col">Email</th>
-                    <th class="govuk-table__header" scope="col">Current status</th>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Name</th>
+                        <th class="govuk-table__header" scope="col">Email</th>
+                        <th class="govuk-table__header" scope="col">Current status</th>
+                    </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-table__header">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</td>
-                    <td class="govuk-table__cell">
-                        <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
-                    </td>
-                    <td class="govuk-table__cell"><span style="font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-table__header">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</td>
+                        <td class="govuk-table__cell">
+                            <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
+                        </td>
+                        <td class="govuk-table__cell"><span style="font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -53,6 +53,16 @@
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
+
+        using (this.WeeeGds().ProgressiveDisclosure("What do these statuses mean?"))
+        {
+            <p>
+                Setting a user to 'active' will grant them access to all features and data available within the WEEE Online service for your organisation.
+            </p>
+            <p>
+                Setting the user to 'rejected' will remove their access to this organisation within the WEEE Online service.
+            </p>
+        }
 
         <p>
             <button class="govuk-button" type="submit">Continue</button>

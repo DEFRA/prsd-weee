@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Admin.AatfReports;
 
     public interface IStoredProcedures
     {
@@ -35,5 +36,7 @@
             Guid? schemeId);
 
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
+
+        Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId);
     }
 }

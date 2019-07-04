@@ -107,7 +107,14 @@
                             @Html.DisplayNameFor(m => m.ApprovalDate)
                         </span>
                     </summary>
-                    @Html.Partial("_ApprovalDateProgressiveDisclosure")
+                    @if (Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf)
+                    {
+                        @Html.Partial("_AatfApprovalDateProgressiveDisclosure")
+                    }
+                    else
+                    {
+                        @Html.Partial("_AeApprovalDateProgressiveDisclosure")
+                    }
                 </details>
                 @Html.Gds().ValidationMessageFor(m => m.ApprovalDate)
                 @if (Model.ApprovalDate.HasValue)
