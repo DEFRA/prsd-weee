@@ -20,7 +20,7 @@
 
         public OperatorAddressData OperatorAddressData { get; set; }
 
-        [DisplayName("Is the operator address the same as the AATF/ATF address?")]
+        [DisplayName("Is the operator address the same as the AATF / ATF address?")]
         public bool IsOperatorTheSameAsAatf { get; set; }
     }
 }
