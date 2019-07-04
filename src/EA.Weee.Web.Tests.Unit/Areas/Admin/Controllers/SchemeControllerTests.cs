@@ -358,6 +358,7 @@
             var result = await controller.EditScheme(A.Dummy<Guid>(), model);
 
             A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
 
             // Assert
             var redirectResult = result as RedirectToRouteResult;
