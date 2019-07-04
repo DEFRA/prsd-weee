@@ -37,11 +37,10 @@
 
             var submissionHistoryItems = await getAatfSubmissionHistoryDataAccess.GetItemsAsync(message.AatfId);
 
-            return submissionHistoryItems
-                .OrderByDescending(s => s.ComplianceYear)
+            return submissionHistoryItems.Select(s => mapper.Map<AatfSubmissionHistory, AatfSubmissionHistoryData>(s)).OrderByDescending(s => s.ComplianceYear)
                 .ThenByDescending(s => s.Quarter)
                 .ThenByDescending(s => s.SubmittedDate)
-                .Select(s => mapper.Map<AatfSubmissionHistory, AatfSubmissionHistoryData>(s)).ToList();
+                .ToList();
         }
     }
 }
