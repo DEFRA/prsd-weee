@@ -15,10 +15,15 @@
     {
         public static Return CreateReturn(Organisation organisation, string createdById, FacilityType facilityType = null)
         {
+            if (organisation == null)
+            {
+                organisation = Organisation.CreateSoleTrader("Test Organisation");
+            }
             if (facilityType == null)
             {
                 facilityType = FacilityType.Aatf;
             }
+
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
