@@ -46,9 +46,9 @@
                         <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="@org.OrganisationId">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
                         <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
                         <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
-                        <td class="govuk-table__cell">@org.PcsCount</td>
-                        <td class="govuk-table__cell">@org.AatfCount</td>
-                        <td class="govuk-table__cell">@org.AeCount</td>
+                        <td class="govuk-table__cell" style="text-align:right;">@org.PcsCount</td>
+                        <td class="govuk-table__cell" style="text-align:right;">@org.AatfCount</td>
+                        <td class="govuk-table__cell" style="text-align:right; padding-right: 10px;">@org.AeCount</td>
                     </tr>
                         }
                     }
