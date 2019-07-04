@@ -94,7 +94,7 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p style="word-break: normal;">
+                            <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
@@ -185,7 +185,7 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p style="word-break: normal;">
+                            <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
@@ -227,7 +227,7 @@
                     else
                     {
                         <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                            <p style="word-break: normal;">
+                            <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
                         </div>
@@ -285,16 +285,18 @@
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                    <p>
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
                         {
-                            @Model.NonObligatedTonnageTotal
+                            <p>
+                                @Model.NonObligatedTonnageTotal
+                            </p>
                         }
                         else
                         {
-                            @:Not selected for reporting this quarter
+                            <p class="not-reported-option">
+                                Not selected for reporting this quarter
+                            </p>
                         }
-                    </p>
                 </div>
 
                 <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
@@ -320,16 +322,18 @@
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                    <p>
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                         {
-                            @Model.NonObligatedTonnageTotalDcf
+                            <p>
+                                @Model.NonObligatedTonnageTotalDcf
+                            </p>
                         }
                         else
                         {
-                            @:Not selected for reporting this quarter
+                            <p class="not-reported-option">
+                                Not selected for reporting this quarter
+                            </p>
                         }
-                    </p>
                 </div>
                 <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                     <p>
