@@ -462,5 +462,41 @@
             Assert.Contains(results,
                 r => r.AeCount == 2);
         }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithScheme_OneRejectedScheme_CountReturned()
+        {
+            DbContextHelper dbContextHelper = new DbContextHelper();
+
+            Guid organisationId = Guid.NewGuid();
+
+            Domain.Organisation.Organisation organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            List<Domain.Organisation.Organisation> organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            List<Domain.Scheme.Scheme> schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation),
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            schemes[0].SetStatus(Domain.Scheme.SchemeStatus.Rejected);
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.Contains(results,
+                r => r.PcsCount == 1);
+        }
     }
 }
