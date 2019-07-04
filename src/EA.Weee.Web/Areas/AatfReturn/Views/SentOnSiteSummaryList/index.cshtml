@@ -7,8 +7,8 @@
     ViewBag.Title = "Sent On WEEE - GOV.UK";
 }
 <section id="main-content">
-    <h1 class="govuk-heading-l" style="padding-top: 0px;">What other AATFs/ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
-    <p class="govuk-body">You can add multiple AATFs/ATFs</p>
+    <h1 class="govuk-heading-l" style="padding-top: 0px;">What other AATFs / ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
+    <p class="govuk-body">You can add multiple AATFs / ATFs</p>
     <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere</p>
     @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
     {
@@ -23,7 +23,7 @@
             <div class="govuk-table__head">
                 <div class="govuk-grid-row govuk-table__row govuk-table__header">
                     <div class="govuk-grid-column-one-quarter">
-                        AATF/ATF name and address
+                        AATF / ATF name and address
                     </div>
                     <div class="govuk-grid-column-one-quarter">
                         Operator name and address
@@ -72,12 +72,12 @@
         else
         {
             <div class="govuk-!-padding-bottom-8"></div>
-            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF/AE for treatment, enter the site details.</p>
+            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, enter the site details.</p>
         }
     </div>
         <div class="govuk-!-padding-bottom-2"></div>
         <p class="govuk-body" style="margin-bottom: 0px;">
-            @Html.RouteLink("Add another AATF/ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+            @Html.RouteLink("Add another AATF / ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
         </p>
         <div class="govuk-!-padding-bottom-8"></div>
 
