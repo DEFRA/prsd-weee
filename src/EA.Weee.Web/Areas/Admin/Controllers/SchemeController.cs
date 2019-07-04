@@ -245,6 +245,7 @@
                 result = await client.SendAsync(User.GetAccessToken(), request);
 
                 await cache.InvalidateSchemeCache(schemeId);
+                await cache.InvalidateOrganisationSearch();
             }
 
             switch (result.Result)
