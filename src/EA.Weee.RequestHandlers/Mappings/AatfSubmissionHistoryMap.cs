@@ -18,7 +18,7 @@
                 WeeeReceivedHouseHold = source.WeeeReceivedHouseHold,
                 WeeeReceivedNonHouseHold = source.WeeeReceivedNonHouseHold,
                 WeeeReusedHouseHold = source.WeeeReusedHouseHold,
-                WeeeReusedNonHouseHold = source.WeeeReusedHouseNonHold,
+                WeeeReusedNonHouseHold = source.WeeeReusedNonHouseHold,
                 WeeeSentOnHouseHold = source.WeeeSentOnHouseHold,
                 WeeeSentOnNonHouseHold = source.WeeeSentOnNonHouseHold,
                 SubmittedDate = source.SubmittedDate,
