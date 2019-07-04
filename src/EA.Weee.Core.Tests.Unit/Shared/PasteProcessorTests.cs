@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using AutoFixture;
     using Core.AatfReturn;
     using Core.Shared;
     using FakeItEasy;
@@ -10,10 +11,12 @@
 
     public class PasteProcessorTests
     {
+        private readonly Fixture fixture;
         private readonly PasteProcessor pasteProcessor;
 
         public PasteProcessorTests()
         {
+            fixture = new Fixture();
             pasteProcessor = new PasteProcessor();
         }
 
@@ -169,34 +172,76 @@
         [Fact]
         public void ParseObligatedPastedValues_GivenPastedDataButNoExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
         {
-            ObligatedPastedValues obligatedPastedValues = CreateObligatedPastedData();
+            var obligatedPastedValues = CreateObligatedPastedData(out var ignored);
 
-            var result = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, null);
+            var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, null);
 
-            for (var i = 0; i < result.Count; i++)
+            foreach (var result in results)
             {
-                result[i].B2B.Should().Be(i.ToString());
-                result[i].B2C.Should().Be((i + 1).ToString());
+                result.B2B.Should().Be(obligatedPastedValues.B2B.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
+                result.B2C.Should().Be(obligatedPastedValues.B2C.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
             }
         }
 
         [Fact]
         public void ParseObligatedPastedValues_GivenPastedDataAndExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulated()
         {
-            ObligatedPastedValues obligatedPastedValues = CreateObligatedPastedData();
-
-            var existingData = A.Fake<ObligatedCategoryValues>();
-
-            foreach (var item in existingData)
-            {
-                item.Id = Guid.NewGuid();
-            }
+            var obligatedPastedValues = CreateObligatedPastedData(out var existingData);
 
             var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
 
             foreach (var result in results)
             {
-                result.Id.Should().Be(existingData.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+                result.Id.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).Id);
+                result.B2B.Should().Be(obligatedPastedValues.B2B.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
+                result.B2C.Should().Be(obligatedPastedValues.B2C.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
+            }
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenPastedDataAndB2bColumnOnlyOfExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulatedAndB2cShouldBeKept()
+        {
+            var obligatedPastedValues = CreateObligatedPastedData(out var existingData, includeb2c: false);
+
+            var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
+
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).Id);
+                result.B2B.Should().Be(obligatedPastedValues.B2B.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
+                result.B2C.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).B2C);
+            }
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenPastedDataAndB2cColumnOnlyOfExistingData_ObligatedCategoryValuesShouldBeCorrectlyPopulatedAndB2bShouldBeKept()
+        {
+            var obligatedPastedValues = CreateObligatedPastedData(out var existingData, includeb2b: false);
+
+            var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
+
+            results.Select(r => r.B2B).Count().Should().Be(existingData.Select(e => e.B2B).Count());
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).Id);
+                result.B2B.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).B2B);
+                result.B2C.Should().Be(obligatedPastedValues.B2C.FirstOrDefault(s => s.CategoryId == result.CategoryId).Tonnage);
+            }
+        }
+
+        [Fact]
+        public void ParseObligatedPastedValues_GivenExistingDataButNoPastedData_NoChangesShouldBeMade()
+        {
+            var obligatedPastedValues = CreateObligatedPastedData(out var existingData, includeb2b: false, includeb2c: false);
+
+            var results = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);
+
+            results.Select(r => r.B2B).Count().Should().Be(existingData.Select(e => e.B2B).Count());
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).Id);
+                result.B2B.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).B2B);
+                result.B2C.Should().Be(existingData.FirstOrDefault(s => s.CategoryId == result.CategoryId).B2C);
             }
         }
 
@@ -233,25 +278,35 @@
             }
         }
 
-        private static ObligatedPastedValues CreateObligatedPastedData()
+        private ObligatedPastedValues CreateObligatedPastedData(out ObligatedCategoryValues existingData, bool includeb2b = true, bool includeb2c = true)
         {
-            var obligatedPastedValues = new ObligatedPastedValues();
             var pastedB2bValues = new PastedValues();
             var pastedB2cValues = new PastedValues();
+            existingData = new ObligatedCategoryValues();
 
             for (var i = 0; i < pastedB2bValues.Count; i++)
             {
-                pastedB2bValues[i].Tonnage = i.ToString();
+                if (includeb2b)
+                {
+                    pastedB2bValues[i].Tonnage = fixture.Create<int>().ToString();
+                }
+
+                if (includeb2c)
+                {
+                    pastedB2cValues[i].Tonnage = fixture.Create<int>().ToString();
+                }
+
+                var existing = existingData.FirstOrDefault(e => e.CategoryId == pastedB2bValues[i].CategoryId);
+                existing.Id = pastedB2bValues[i].Id;
+                existing.B2B = fixture.Create<int>().ToString();
+                existing.B2C = fixture.Create<int>().ToString();
             }
 
-            for (var i = 0; i < pastedB2cValues.Count; i++)
+            return new ObligatedPastedValues
             {
-                pastedB2cValues[i].Tonnage = (i + 1).ToString();
-            }
-
-            obligatedPastedValues.B2B = pastedB2bValues;
-            obligatedPastedValues.B2C = pastedB2cValues;
-            return obligatedPastedValues;
+                B2B = pastedB2bValues,
+                B2C = pastedB2cValues
+            };
         }
 
         private static PastedValues CreateNonObligatedPastedData()
