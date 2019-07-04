@@ -76,17 +76,29 @@
                 <div class="govuk-grid-column-one-half">
                     <strong>Received for treatment</strong>
                 </div>
+
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReceived.B2C
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReceived.B2B
-                        </p>
-                    </div>
+                    @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                    {
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReceived.B2C
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReceived.B2B
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                            <p class="not-reported-option-center">
+                                Not selected for reporting this quarter
+                            </p>
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -142,16 +154,27 @@
                     <strong>Sent to another AATF/ATF</strong>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeSentOn.B2C
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeSentOn.B2B
-                        </p>
-                    </div>
+                    @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+                    {
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeSentOn.B2C
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeSentOn.B2B
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                            <p class="not-reported-option-center">
+                                Not selected for reporting this quarter
+                            </p>
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -160,16 +183,27 @@
                     <strong>Reused as a whole appliance</strong>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReused.B2C
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReused.B2B
-                        </p>
-                    </div>
+                    @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
+                    {
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReused.B2C
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReused.B2B
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                            <p class="not-reported-option-center">
+                                Not selected for reporting this quarter
+                            </p>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="govuk-grid-row govuk-table__line"></div>
@@ -198,11 +232,20 @@
                 </p>
             </div>
             <div class="govuk-grid-column-one-third">
-                <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
-                    <p>
-                        @Model.NonObligatedTonnageTotal
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
+                {
+                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                        <p>
+                            @Model.NonObligatedTonnageTotal
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <p class="not-reported-option">
+                        Not selected for reporting this quarter
                     </p>
-                </div>
+                }
             </div>
         </div>
 
@@ -213,11 +256,21 @@
                 </p>
             </div>
             <div class="govuk-grid-column-one-third">
-                <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
-                    <p>
-                        @Model.NonObligatedTonnageTotalDcf
+
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                {
+                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                        <p>
+                            @Model.NonObligatedTonnageTotalDcf
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <p class="not-reported-option">
+                        Not selected for reporting this quarter
                     </p>
-                </div>
+                }
             </div>
         </div>
     </div>
