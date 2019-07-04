@@ -76,17 +76,29 @@
                 <div class="govuk-grid-column-one-half">
                     <strong>Received for treatment</strong>
                 </div>
+
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReceived.B2C
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        <p>
-                            @aatf.WeeeReceived.B2B
-                        </p>
-                    </div>
+                    @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                    {
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReceived.B2C
+                            </p>
+                        </div>
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            <p>
+                                @aatf.WeeeReceived.B2B
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                            <p class="not-reported-option-center">
+                                Not selected for reporting this quarter
+                            </p>
+                        </div>
+                    }
                 </div>
             </div>
 
