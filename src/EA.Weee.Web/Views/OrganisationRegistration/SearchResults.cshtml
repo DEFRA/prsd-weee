@@ -4,14 +4,6 @@
     ViewBag.Title = "Choose your organisation";
 }
 
-@section scripts{
-    <script>
-        $('#organisationSearchResultsTable tr').click(function () {
-            $(this).find('td input[type=radio]').prop('checked', true);
-        })
-    </script>
-}
-
 @if (Model.Results.Count > 0)
 {
     <header class="hgroup">
@@ -95,7 +87,13 @@ else
     </p>
     <p>
         @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
-
     </p>
 }
 
+@section scripts{
+    <script type="text/javascript">
+        $('#organisationSearchResultsTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
