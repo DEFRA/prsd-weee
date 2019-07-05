@@ -42,7 +42,7 @@
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReceivedNonHouseHold.Should().BeNull();
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReusedHouseHold.Should().BeNull();
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReusedNonHouseHold.Should().BeNull();
-                results.First(r => r.ReturnId.Equals(@return1.Id)).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().FirstName);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).SubmittedDate.Date.Should().Be(@return1.SubmittedDate.Value.Date);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).ComplianceYear.Should().Be(@return1.Quarter.Year);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).Quarter.Should().Be((int)@return1.Quarter.Q);
@@ -52,7 +52,7 @@
                 results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReceivedNonHouseHold.Should().BeNull();
                 results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedHouseHold.Should().BeNull();
                 results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedNonHouseHold.Should().BeNull();
-                results.First(r => r.ReturnId.Equals(@return2.Id)).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().FirstName);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
                 results.First(r => r.ReturnId.Equals(@return2.Id)).SubmittedDate.Date.Should().Be(@return2.SubmittedDate.Value.Date);
                 results.First(r => r.ReturnId.Equals(@return2.Id)).ComplianceYear.Should().Be(@return2.Quarter.Year);
                 results.First(r => r.ReturnId.Equals(@return2.Id)).Quarter.Should().Be((int)@return2.Quarter.Q);
