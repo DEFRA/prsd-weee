@@ -107,7 +107,10 @@
                             }
                         </td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
+                            @if (item.ReturnsListDisplayOptions.DisplaySummary)
+                            {
+                                @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
+                            }
                         </td>
                     </tr>
                 }
