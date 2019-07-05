@@ -16,7 +16,7 @@
 
         public decimal? WeeeReusedHouseHold { get; set; }
 
-        public decimal? WeeeReusedHouseNonHold { get; set; }
+        public decimal? WeeeReusedNonHouseHold { get; set; }
 
         public decimal? WeeeSentOnHouseHold { get; set; }
 

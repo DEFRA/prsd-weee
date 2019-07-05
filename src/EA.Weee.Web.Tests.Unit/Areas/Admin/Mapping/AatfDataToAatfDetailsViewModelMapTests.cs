@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using AutoFixture;
     using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
@@ -257,6 +258,57 @@
             result.ContactAddressLong.Should().Be(contactAddress);
             result.SiteAddressLong.Should().Be(siteAddress);
             result.OrganisationAddress.Should().Be(model.OrganisationString);
+        }
+
+        [Fact]
+        public void Map_GivenNullSubmissionHistoryOnTransfer_SubmissionHistoryDataShouldBeNull()
+        {
+            var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>()
+                .Without(s => s.SubmissionHistory)
+                .Create();
+
+            var result = map.Map(source);
+
+            result.SubmissionHistoryData.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenSubmissionHistoryOnTransfer_SubmissionHistoryDataShouldBeMapped()
+        {
+            var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>().Create();
+
+            var result = map.Map(source);
+
+            foreach (var aatfSubmissionHistoryData in source.SubmissionHistory)
+            {
+                A.CallTo(() => aatfSubmissionHistoryMap.Map(aatfSubmissionHistoryData)).MustHaveHappenedOnceExactly();
+            }
+        }
+
+        [Fact]
+        public void Map_GivenSubmissionHistoryOnTransfer_MappedSubmissionHistoryDataShouldBeReturned()
+        {
+            var aatSubmissionHistoryData = new List<AatfSubmissionHistoryData>()
+            {
+                fixture.Create<AatfSubmissionHistoryData>(),
+                fixture.Create<AatfSubmissionHistoryData>()
+            };
+
+            var aatSubmissionHistoryViewModel = new List<AatfSubmissionHistoryViewModel>()
+            {
+                fixture.Create<AatfSubmissionHistoryViewModel>(),
+                fixture.Create<AatfSubmissionHistoryViewModel>()
+            };
+
+            A.CallTo(() => aatfSubmissionHistoryMap.Map(aatSubmissionHistoryData.ElementAt(0))).Returns(aatSubmissionHistoryViewModel.ElementAt(0));
+            A.CallTo(() => aatfSubmissionHistoryMap.Map(aatSubmissionHistoryData.ElementAt(1))).Returns(aatSubmissionHistoryViewModel.ElementAt(1));
+
+            var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>().Create();
+
+            var result = map.Map(source);
+
+            result.SubmissionHistoryData.ElementAt(0).Should().Equals(aatSubmissionHistoryViewModel.ElementAt(0));
+            result.SubmissionHistoryData.ElementAt(1).Should().Equals(aatSubmissionHistoryViewModel.ElementAt(1));
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
