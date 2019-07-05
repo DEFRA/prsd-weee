@@ -25,6 +25,13 @@
             return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId", aatfIdParameter).ToListAsync();
         }
 
+        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId)
+        {
+            var aatfIdParameter = new SqlParameter("@AeId", aatfId);
+
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId", aatfIdParameter).ToListAsync();
+        }
+
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
             int complianceYear)
         {
