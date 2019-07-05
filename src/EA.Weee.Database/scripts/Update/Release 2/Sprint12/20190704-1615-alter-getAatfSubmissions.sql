@@ -1,5 +1,4 @@
-﻿USE [EA.Weee]
-GO
+﻿
 /****** Object:  StoredProcedure [AATF].[getAatfSubmissions]    Script Date: 04/07/2019 16:14:38 ******/
 SET ANSI_NULLS ON
 GO
