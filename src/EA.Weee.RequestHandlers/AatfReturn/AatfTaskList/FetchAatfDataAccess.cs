@@ -27,7 +27,7 @@
             var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
 
             return await context.Aatfs.Where(a => a.Organisation.Id == @return.Organisation.Id 
-                                                  && a.FacilityType.Value == FacilityType.Aatf.Value
+                                                  && a.FacilityType.Value == @return.FacilityType.Value
                                                   && a.ComplianceYear == @return.Quarter.Year
                                                   && a.ApprovalDate.HasValue
                                                   && a.ApprovalDate.Value < quarterWindow.StartDate.Date).Select(a => a).ToListAsync();

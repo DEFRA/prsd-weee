@@ -38,5 +38,7 @@
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
 
         Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId);
+
+        Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId);
     }
 }
