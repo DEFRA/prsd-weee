@@ -18,7 +18,7 @@
                 options.DisplayEdit = true;
             }
 
-            options.DisplaySummary = true;
+            options.DisplaySummary = source == ReturnStatus.Submitted;
 
             return options;
         }
