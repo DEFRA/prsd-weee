@@ -241,18 +241,24 @@
             <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return">
                 Check return
             </button>
+
             <p>
-                @Html.NavigationRouteLink("Change what you want to report on", "Change reporting options", AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId })
+                @(this.WeeeGds().ActionLinkWithEventTracking("Change what you want to report on",
+                Url.RouteUrl(AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId }),
+                "AATF return",
+                "Change report options",
+                "Change report options"
+                ))
             </p>
         }
 
-        <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
-            <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                <span class="govuk-details__summary-text">
-                    Some of my AATFs are missing
-                </span>
-            </summary>
-            @Html.Partial("_ContactProgressiveDisclosure")
-        </details>
+        <div>
+            @this.WeeeGds().CreateProgressiveDisclosure(" Some of my AATFs are missing",
+           @Html.Partial("_ContactProgressiveDisclosure").ToString(),
+           "Hidden content",
+           "Progressive disclosure",
+           "Some of my AATFs are missing")
+        </div>
+
         <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
     </section>
