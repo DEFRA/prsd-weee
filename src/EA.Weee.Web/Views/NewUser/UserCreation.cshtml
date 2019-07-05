@@ -74,7 +74,11 @@
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
 
-                @RenderPage("~/Views/Shared/_PrivacyPolicy.cshtml")
+                @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
+                   @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                   "Policies",
+                   "Privacy",
+                   string.Empty)
 
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
