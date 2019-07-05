@@ -21,7 +21,7 @@
             
             displayOptions.DisplayContinue.Should().BeTrue();
             displayOptions.DisplayEdit.Should().BeFalse();
-            displayOptions.DisplaySummary.Should().BeTrue();
+            displayOptions.DisplaySummary.Should().BeFalse();
         }
 
         [Fact]
