@@ -35,5 +35,7 @@
             Guid? schemeId);
 
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
+
+        Task<List<AatfAeReturnData>> SpgAatfAeReturnDataCsvData(int complianceYear, int quarter, int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea);
     }
 }
