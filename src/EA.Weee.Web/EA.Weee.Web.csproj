@@ -334,6 +334,7 @@
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Infrastructure\DisplayHelper.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
@@ -956,7 +957,6 @@
     <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
-    <Compile Include="RazorHelpers\WeeeGds.Button.cs" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\hide-classes-when-competent-authory-is-not-ea.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
