@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
+    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />
