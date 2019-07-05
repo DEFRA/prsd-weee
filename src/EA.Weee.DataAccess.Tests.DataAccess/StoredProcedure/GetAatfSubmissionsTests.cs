@@ -316,7 +316,7 @@
 
         private void AssertFixedPropertiesForReturn(List<AatfSubmissionHistory> results, DatabaseWrapper db, Return @return)
         {
-            results.ElementAt(0).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().FirstName);
+            results.ElementAt(0).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
             results.ElementAt(0).SubmittedDate.Date.Should().Be(@return.SubmittedDate.Value.Date);
             results.ElementAt(0).ComplianceYear.Should().Be(@return.Quarter.Year);
             results.ElementAt(0).Quarter.Should().Be((int)@return.Quarter.Q);
