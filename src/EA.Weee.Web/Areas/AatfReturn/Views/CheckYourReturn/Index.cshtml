@@ -103,7 +103,12 @@
                         <p>
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                             {
-                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " change received for treatment", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" });
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
+                                "AATF return",
+                                "Check return changes",
+                                "Check return changes"
+                                ))
                             }
                             else
                             {
@@ -155,7 +160,12 @@
                                         @pcsdata.Received.B2B
                                     </div>
                                     <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                                        @Html.NavigationRouteLink("Change", "Change Data for Scheme " + pcsdata.Scheme.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" })
+                                        @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                        Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
+                                        "AATF return",
+                                        "Check return changes",
+                                        "Check return changes"
+                                        ))
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +205,12 @@
                         <p>
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
                             {
-                                @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " sent to another AATF / ATF", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" })
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                        Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" }),
+                                        "AATF return",
+                                        "Check return changes",
+                                        "Check return changes"
+                                        ))
                             }
                             else
                             {
@@ -238,11 +253,21 @@
                             {
                                 if (Equals(aatf.WeeeReused.B2B, "-") && Equals(aatf.WeeeReused.B2C, "-"))
                                 {
-                                    @Html.NavigationRouteLink("Change", aatf.Aatf.Name + " Reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReused" })
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                        Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, action = "Index", controller = "ObligatedReused" }),
+                                        "AATF return",
+                                        "Check return changes",
+                                        "Check return changes"
+                                        ))
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("Change", @aatf.Aatf.Name + " Change reused as a whole appliance", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" })
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                        Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = aatf.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }),
+                                        "AATF return",
+                                        "Check return changes",
+                                        "Check return changes"
+                                        ))
                                 }
                             }
                             else
@@ -285,25 +310,30 @@
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                        @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
-                        {
-                            <p>
-                                @Model.NonObligatedTonnageTotal
-                            </p>
-                        }
-                        else
-                        {
-                            <p class="not-reported-option">
-                                Not selected for reporting this quarter
-                            </p>
-                        }
+                    @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
+                    {
+                        <p>
+                            @Model.NonObligatedTonnageTotal
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="not-reported-option">
+                            Not selected for reporting this quarter
+                        </p>
+                    }
                 </div>
 
                 <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                     <p>
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
                         {
-                            @Html.NavigationRouteLink("Change", "Change non obligated", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false })
+                            @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                       Url.RouteUrl(AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }),
+                                       "AATF return",
+                                       "Check return changes",
+                                       "Check return changes"
+                                       ))
                         }
                         else
                         {
@@ -322,24 +352,29 @@
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
-                        @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
-                        {
-                            <p>
-                                @Model.NonObligatedTonnageTotalDcf
-                            </p>
-                        }
-                        else
-                        {
-                            <p class="not-reported-option">
-                                Not selected for reporting this quarter
-                            </p>
-                        }
+                    @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                    {
+                        <p>
+                            @Model.NonObligatedTonnageTotalDcf
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="not-reported-option">
+                            Not selected for reporting this quarter
+                        </p>
+                    }
                 </div>
                 <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                     <p>
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                         {
-                            @Html.NavigationRouteLink("Change", "Change non obligated DCF", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true })
+                            @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                       Url.RouteUrl(AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }),
+                                       "AATF return",
+                                       "Check return changes",
+                                       "Check return changes"
+                                       ))
                         }
                         else
                         {
@@ -363,9 +398,9 @@
                     @Html.HiddenFor(m => m.ReturnId)
                     @Html.HiddenFor(m => m.OrganisationId)
 
-                    <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Submit</button>
-                    </div>
+                <div class="govuk-form-group">
+                    @this.WeeeGds().CreateButtonWithEventTracking("Submit", "AATF return", "Submit AATF return", "Submit AATF return")
+                </div>
                 }
 
             </div>
