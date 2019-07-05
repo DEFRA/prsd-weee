@@ -1,6 +1,8 @@
 ﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
 @model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
 @{
     ViewBag.Title = "Manage AATF returns - GOV.UK";
@@ -27,6 +29,19 @@
                         <button class="govuk-button" type="submit">Start a new return for @Model.Quarter.ToDisplayString() @Model.ComplianceYear</button>
                     </div>
                 }
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.ComplianceYear)
+                @Html.HiddenFor(m => m.Quarter)
+
+                @this.WeeeGds().ActionLinkWithEventTracking("Start a new return for " + @Model.Quarter.ToDisplayString() + @Model.ComplianceYear,
+                  Url.RouteUrl(AatfRedirect.ReturnsRouteName, Model),
+         "AATF return",
+         "Start AATF return",
+         "Start AATF return",
+         new Dictionary<string, object> { { "class", "govuk-button" } });
+
 
                 <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
                     <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
