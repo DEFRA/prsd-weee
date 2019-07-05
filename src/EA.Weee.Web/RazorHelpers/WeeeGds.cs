@@ -19,6 +19,11 @@
             gdsHelper = new Gds<TModel>(webViewPage.Html);
         }
 
+        public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
+        {
+            return new ProgressiveDisclosure<TModel>(this, linkText);
+        }
+
         public TableBuilder<TModel, TDataset> TableBuilder<TDataset>(IEnumerable<TDataset> dataset, string caption, object htmlAttributes = null)
         {
             return new TableBuilder<TModel, TDataset>(this, dataset, caption, htmlAttributes);
