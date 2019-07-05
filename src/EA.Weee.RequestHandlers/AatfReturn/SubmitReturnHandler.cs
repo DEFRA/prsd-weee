@@ -51,15 +51,12 @@
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             @return.UpdateSubmitted(userContext.UserId.ToString(), message.NilReturn);
+            
+            var aatfs = await fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return);
 
-            if (@return.FacilityType.Equals(FacilityType.Aatf))
-            {
-                var aatfs = await fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return);
+            var returnAatfs = aatfs.Select(a => new ReturnAatf(a, @return));
 
-                var returnAatfs = aatfs.Select(a => new ReturnAatf(a, @return));
-
-                await genericDataAccess.AddMany<ReturnAatf>(returnAatfs);
-            }
+            await genericDataAccess.AddMany<ReturnAatf>(returnAatfs);
 
             await weeeContext.SaveChangesAsync();
 
