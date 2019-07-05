@@ -426,6 +426,7 @@
                 using (var client = apiClient())
                 {
                     await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Rejected));
+                    await cache.InvalidateOrganisationSearch();
                 }
             }
 
@@ -460,6 +461,7 @@
                 using (var client = apiClient())
                 {
                     await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Withdrawn));
+                    await cache.InvalidateOrganisationSearch();
                 }
             }
 
