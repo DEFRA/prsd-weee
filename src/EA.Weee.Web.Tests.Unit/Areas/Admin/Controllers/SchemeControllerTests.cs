@@ -465,6 +465,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+
             Assert.Equal(SchemeStatus.Rejected, status);
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -524,6 +527,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+
             Assert.Equal(SchemeStatus.Withdrawn, status);
             Assert.IsType<RedirectToRouteResult>(result);
 
