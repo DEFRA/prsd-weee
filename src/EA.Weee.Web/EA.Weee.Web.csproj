@@ -956,6 +956,7 @@
     <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
+    <Compile Include="RazorHelpers\WeeeGds.Button.cs" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\hide-classes-when-competent-authory-is-not-ea.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

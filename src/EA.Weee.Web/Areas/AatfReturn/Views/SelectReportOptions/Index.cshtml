@@ -109,9 +109,14 @@
         @Html.HiddenFor(m => m.DcfSelectedValue)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
-        <p>
-            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId })
-        </p>
+<p>
+    @(this.WeeeGds().ActionLinkWithEventTracking("I don't have any data to report for this quarter",
+    Url.RouteUrl(AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }),
+    "AATF return",
+    "Start AATF nil return",
+    "Start AATF nil return"
+    ))
+</p>
         <button type="submit" class="govuk-button">
             Continue
         </button>

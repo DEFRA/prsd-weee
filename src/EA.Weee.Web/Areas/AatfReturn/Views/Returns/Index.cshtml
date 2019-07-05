@@ -1,8 +1,6 @@
 ﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Areas.AatfReturn.Controllers
 @model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
 @{
     ViewBag.Title = "Manage AATF returns - GOV.UK";
@@ -26,35 +24,17 @@
                     @Html.HiddenFor(m => m.Quarter)
 
                     <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Start a new return for @Model.Quarter.ToDisplayString() @Model.ComplianceYear</button>
+                        @this.WeeeGds().CreateButtonWithEventTracking("Start a new return for " + @Model.Quarter.ToDisplayString() + " " + @Model.ComplianceYear, "AATF return", "Start AATF return", "Start AATF return")
                     </div>
                 }
 
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.OrganisationId)
-                @Html.HiddenFor(m => m.ComplianceYear)
-                @Html.HiddenFor(m => m.Quarter)
-
-                @this.WeeeGds().ActionLinkWithEventTracking("Start a new return for " + @Model.Quarter.ToDisplayString() + @Model.ComplianceYear,
-                  Url.RouteUrl(AatfRedirect.ReturnsRouteName, Model),
-         "AATF return",
-         "Start AATF return",
-         "Start AATF return",
-         new Dictionary<string, object> { { "class", "govuk-button" } });
-
-
-                <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
-                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                        <span class="govuk-details__summary-text">
-                            I need to submit a return for a different quarter
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
-                        <div class="govuk-body govuk-!-font-size-16">
-                            If you want to start a different return other than the one available, contact your environmental regulator
-                        </div>
-                    </div>
-                </details>
+                <div>
+                    @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
+                   "If you want to start a different return other than the one available, contact your environmental regulator",
+                   "Hidden content",
+                   "Progressive disclosure",
+                   "I need to submit a return for a different quarter (AATF)")
+                </div>
             </div>
         </div>
     }
