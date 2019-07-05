@@ -15,16 +15,26 @@
     {
         public static Return CreateReturn(Organisation organisation, string createdById, FacilityType facilityType = null)
         {
+            if (organisation == null)
+            {
+                organisation = Organisation.CreateSoleTrader("Test Organisation");
+            }
             if (facilityType == null)
             {
                 facilityType = FacilityType.Aatf;
             }
+
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
         public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation)
         {
             return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+        }
+
+        public static Aatf CreateAe(DatabaseWrapper database, Organisation organisation)
+        {
+            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
         public static Scheme CreateScheme(Organisation organisation)

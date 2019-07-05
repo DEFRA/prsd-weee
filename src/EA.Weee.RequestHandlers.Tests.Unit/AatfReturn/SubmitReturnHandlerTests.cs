@@ -161,24 +161,6 @@
                 .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenReturnIsAe_AatfsRecordsShouldNotBeAddedAgainstReturn()
-        {
-            var message = new SubmitReturn(Guid.NewGuid(), false);
-            var @return = A.Fake<Return>();
-            var userId = Guid.NewGuid();
-
-            A.CallTo(() => @return.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Created);
-            A.CallTo(() => @return.FacilityType).Returns(Domain.AatfReturn.FacilityType.Ae);
-            A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).Returns(@return);
-            A.CallTo(() => userContext.UserId).Returns(userId);
-
-            await handler.HandleAsync(message);
-
-            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(A<Return>._)).MustNotHaveHappened();
-            A.CallTo(() => genericDataAccess.AddMany<Aatf>(A<IEnumerable<Aatf>>._)).MustNotHaveHappened();
-        }
-
         public Return GetReturn()
         {
             return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", FacilityType.Aatf);
