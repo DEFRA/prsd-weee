@@ -273,18 +273,18 @@
                 var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
 
                 results.Count.Should().Be(2);
-                results.ElementAt(0).WeeeSentOnHouseHold.Should().Be(1);
-                results.ElementAt(0).WeeeSentOnNonHouseHold.Should().Be(2);
-                results.ElementAt(0).WeeeReceivedHouseHold.Should().Be(3);
-                results.ElementAt(0).WeeeReceivedNonHouseHold.Should().Be(4);
-                results.ElementAt(0).WeeeReusedHouseHold.Should().Be(5);
-                results.ElementAt(0).WeeeReusedNonHouseHold.Should().Be(6);
-                results.ElementAt(1).WeeeSentOnHouseHold.Should().Be(7);
-                results.ElementAt(1).WeeeSentOnNonHouseHold.Should().Be(8);
-                results.ElementAt(1).WeeeReceivedHouseHold.Should().Be(9);
-                results.ElementAt(1).WeeeReceivedNonHouseHold.Should().Be(10);
-                results.ElementAt(1).WeeeReusedHouseHold.Should().Be(11);
-                results.ElementAt(1).WeeeReusedNonHouseHold.Should().Be(12);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnHouseHold.Should().Be(1);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnNonHouseHold.Should().Be(2);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReceivedHouseHold.Should().Be(3);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReceivedNonHouseHold.Should().Be(4);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReusedHouseHold.Should().Be(5);
+                results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeReusedNonHouseHold.Should().Be(6);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeSentOnHouseHold.Should().Be(7);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeSentOnNonHouseHold.Should().Be(8);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReceivedHouseHold.Should().Be(9);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReceivedNonHouseHold.Should().Be(10);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedHouseHold.Should().Be(11);
+                results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedNonHouseHold.Should().Be(12);
             }
         }
 
