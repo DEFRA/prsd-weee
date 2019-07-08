@@ -11,7 +11,11 @@
             @Html.Gds().ValidationMessageFor(m => m.Name)
             @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
-
+        <div id="operatorButton" style="display: none">
+            <button type="submit" name="noJavascriptCopy" class="govuk-button" id="site-details" value="true">
+                The operator address is the same as the AATF / ATF address
+            </button>
+        </div>
         <div class="govuk-form-group" id="operatorCheckBox">
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
