@@ -45,7 +45,17 @@
                             <li>
                                 @if (Model.ShowLinkToSelectOrganisation)
                                 {
-                                    @:<a href="@Url.Action("Index", "Organisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+ 
+                                    <div>
+                                        @this.WeeeGds().ActionLinkWithEventTracking("Organisation",
+                                            null,
+                                            Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index()),
+                                                "Navigation",
+                                                "Organisation",
+                                                "Organisation")
+
+                                        : @Model.Breadcrumb.ExternalOrganisation
+                                    </div>
                                 }
                                 else
                                 {
@@ -58,11 +68,12 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                                Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                                                    "Navigation",
-                                                                    "External activity",
-                                                                    null,
-                                                                   null)):
+                                    null,
+                                    Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                        "Navigation",
+                                        "External activity",
+                                        null,
+                                        null)):
                                 @Model.Breadcrumb.ExternalActivity
                             </li>
                         }
@@ -71,11 +82,12 @@
                         {
                             <li>
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                                Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                                                "Navigation",
-                                                                "Internal activity",
-                                                                null,
-                                                               null)):
+                                null,
+                                Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                "Navigation",
+                                "Internal activity",
+                                null,
+                                null)):
                                 @Model.Breadcrumb.InternalActivity
                             </li>
                         }
@@ -164,7 +176,7 @@
 @if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
 {
     <div id="schemeBanner">
-        <div class="govuk-grid-row">           
+        <div class="govuk-grid-row">
             @if (Model.Breadcrumb.QuarterDisplayInfo != null && !(String.IsNullOrEmpty(Model.Breadcrumb.QuarterDisplayInfo)))
             {
                 <div class="govuk-grid-column-one-third">
@@ -177,6 +189,6 @@
                     <strong>Reporting on: </strong>@Html.Raw(Model.Breadcrumb.AatfDisplayInfo)
                 </div>
             }
-        </div>        
+        </div>
     </div>
 }
