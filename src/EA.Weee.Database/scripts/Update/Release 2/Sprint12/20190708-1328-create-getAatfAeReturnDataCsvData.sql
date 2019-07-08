@@ -1,8 +1,15 @@
+/****** Object:  StoredProcedure [AATF].[getAatfAeReturnDataCsvData]    Script Date: 08/07/2019 10:37:07 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 -- Description:	This stored procedure is used to provide the data for the admin report of aatf/ae
 --				that have/haven't submitted a data return within
 --				the limits of the specified parameters.
 -- =============================================
-CREATE PROCEDURE [AATF].[spgAatfAeReturnDataCsvData]
+CREATE PROCEDURE [AATF].[getAatfAeReturnDataCsvData]
 	@ComplianceYear INT,
 	@Quarter INT,
 	@FacilityType INT,
@@ -12,6 +19,7 @@ CREATE PROCEDURE [AATF].[spgAatfAeReturnDataCsvData]
 	@PanArea UNIQUEIDENTIFIER
 AS
 BEGIN
+
 
 SET NOCOUNT ON;
 
@@ -140,7 +148,50 @@ INSERT INTO @RETURN
 		WHERE X.RowNumber = 1
 		AND (@ReturnStatus IS NULL OR X.ReturnStatus = COALESCE(@ReturnStatus, X.ReturnStatus))
 
-	SELECT DISTINCT 			
+
+--Due to aatf/ae approval date updates check if returns are missed 
+
+INSERT INTO @AATF
+		SELECT a.id, a.Name, a.ApprovalNumber,
+		CASE WHEN o.Name IS NULL THEN o.TradingName
+			ELSE o.Name END, ca.Abbreviation, ca.Id
+		FROM 
+			(SELECT ra.AatfId FROM [AATF].[Return] r 
+				JOIN [AATF].[ReturnAatf] ra ON 
+				ra.[ReturnId] = r.Id
+						WHERE r.ComplianceYear = @ComplianceYear
+						AND R.[Quarter] = @Quarter
+				AND r.id NOT IN (select ReturnId from @RETURN) 
+			) X
+			JOIN AATF.AATF a 
+			ON a.id= X.AatfId
+				JOIN Organisation.Organisation o
+			ON a.OrganisationId  = o.Id
+				JOIN Lookup.CompetentAuthority ca
+			ON a.CompetentAuthorityId = ca.Id
+				WHERE A.FacilityType = @FacilityType
+				AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
+				AND (@Area IS NULL OR a.LocalAreaId = COALESCE(@Area, a.LocalAreaId))
+				AND (@PanArea IS NULL OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId))
+
+INSERT INTO @RETURN	
+	SELECT X.* FROM
+		(SELECT ra.AatfId, r.Id,r.[ReturnStatus], r.[CreatedDate], r.[SubmittedDate], r.[SubmittedById] FROM [AATF].[Return] r 
+		JOIN [AATF].[ReturnAatf] ra ON 
+		ra.[ReturnId] = r.Id
+				WHERE r.ComplianceYear = @ComplianceYear
+				AND R.[Quarter] = @Quarter
+		AND r.id NOT IN (select ReturnId from @RETURN) 
+		) X
+		JOIN AATF.AATF a
+		ON a.id= X.AatfId
+		WHERE A.FacilityType = @FacilityType
+		AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
+		AND (@Area IS NULL OR a.LocalAreaId = COALESCE(@Area, a.LocalAreaId))
+		AND (@PanArea IS NULL OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId))
+
+	SELECT DISTINCT 
+		a.AatfId,			
 		a.Name,
 		a.ApprovalNumber,		
 		a.OrganisationName,
@@ -160,4 +211,7 @@ INSERT INTO @RETURN
 	 ORDER BY A.Name
 
 END
+
 GO
+
+

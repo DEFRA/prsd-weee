@@ -426,7 +426,7 @@
                     .ToListAsync();
         }
 
-        public async Task<List<AatfAeReturnData>> SpgAatfAeReturnDataCsvData(int complianceYear, int quarter,
+        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
            int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
         {
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -439,7 +439,7 @@
 
             return await context.Database
                 .SqlQuery<AatfAeReturnData>(
-                    "[AATF].[spgAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
+                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
                     complianceYearParameter,                  
                     quarterParameter,
                     facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)

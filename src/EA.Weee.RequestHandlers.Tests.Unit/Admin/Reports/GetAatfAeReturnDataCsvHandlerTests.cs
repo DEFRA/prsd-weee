@@ -56,7 +56,7 @@
         }
 
         [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_NoQuater_ReturnsFileContent()
+        public async Task GetAatfAeReturnDataCsvHandler_NoQuarter_ReturnsFileContent()
         {
             // Arrange
             var complianceYear = 2019;

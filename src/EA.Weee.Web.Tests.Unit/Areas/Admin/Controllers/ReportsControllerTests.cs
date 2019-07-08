@@ -166,6 +166,27 @@
             Assert.Equal(expectedAction, redirectResult.RouteValues["action"]);
         }
 
+        [Fact]
+        public void GetChooseReport_Always_ReturnsCorrectList()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = controller.ChooseReport();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "choosereport");
+
+            ChooseReportViewModel viewModel = viewResult.Model as ChooseReportViewModel;
+            viewModel.PossibleValues.ElementAt(8).Contains(Reports.AatfAeReturnData);
+        }
+
         /// <summary>
         /// This test ensures that the POST "ChooseReport" action will throw a
         /// NotSupportedException when the selected value is not one of the

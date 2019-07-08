@@ -33,7 +33,7 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.SpgAatfAeReturnDataCsvData(
+            var items = await context.StoredProcedures.GetAatfAeReturnDataCsvData(
                        request.ComplianceYear, request.Quarter, (int)request.FacilityType, 
                        request.ReturnStatus, request.AuthorityId, request.Area, request.PanArea);
 
