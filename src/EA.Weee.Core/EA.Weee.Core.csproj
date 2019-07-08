@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
+    <Compile Include="Helpers\QuarterHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
     <Compile Include="AatfReturn\AatfSize.cs" />
