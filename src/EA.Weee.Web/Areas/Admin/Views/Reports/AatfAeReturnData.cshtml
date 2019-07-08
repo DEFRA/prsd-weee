@@ -1,0 +1,97 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfAeReturnDataViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Download summary AATF / AE returns to date - GOV.UK";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download of summary AATF / AE returns to date</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>This report includes all AATFs / AEs that are expected to provide data for the selected year and quarter (based on their approval date), regardless of the status of the AATF / AE. It does not include details of any resubmitted returns</p>
+        <p>Filter the report to download entries that match your criteria</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Quarter)">
+            @Html.Gds().LabelFor(m => m.Quarter)
+            @Html.Gds().ValidationMessageFor(m => m.Quarter)
+            @Html.Gds().DropDownListFor(m => m.Quarter, Model.Quarters, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedFacilityType)">
+            @Html.Gds().LabelFor(m => m.SelectedFacilityType)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedFacilityType)
+            @Html.Gds().DropDownListFor(m => m.SelectedFacilityType, Model.FacilityTypes, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSubmissionStatus)">
+            @Html.Gds().LabelFor(m => m.SelectedSubmissionStatus)
+            @Html.Gds().DropDownListFor(m => m.SelectedSubmissionStatus, Model.SubmissionStatus, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+            @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group competent-authority-hidden">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                @Html.Gds().LabelFor(m => m.PanAreaId)
+                @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+            </div>
+        </div>
+
+        <div class="govuk-form-group competent-authority-hidden">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
+                @Html.Gds().LabelFor(m => m.LocalAreaId)
+                @Html.Gds().DropDownListFor(m => m.LocalAreaId, Model.LocalAreaList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+            </div>
+        </div>
+
+        <p>
+            If there is a large amount of data for your selected criteria, it may take a while to download your results.
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                                                           "Report download", "Summary of AATF / AE returns to date", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport")
+    </p>
+}
+@section scripts {
+    @Scripts.Render("~/bundles/hide-classes-when-competent-authory-is-not-ea")
+
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadAatfAeDataCsv", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              quarter = Model.Quarter,
+                              facilityType = Model.SelectedFacilityType,
+                              submissionStatus = Model.SelectedSubmissionStatus,
+                              authority = Model.CompetentAuthorityId,
+                              pat = Model.PanAreaId,
+                              area = Model.LocalAreaId
+                          }))";
+        </script>
+    }
+}
