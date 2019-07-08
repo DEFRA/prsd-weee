@@ -61,10 +61,10 @@
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                         <strong>B2C (tonnes)</strong>
                     </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                         <strong>B2B (tonnes)</strong>
                     </div>
                 </div>
@@ -80,12 +80,12 @@
                 <div class="govuk-grid-column-one-half">
                     @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                     {
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeReceived.B2C
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeReceived.B2B
                             </p>
@@ -93,7 +93,7 @@
                     }
                     else
                     {
-                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                        <div class="weee-tonnage-right-aligned-display">
                             <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
@@ -156,12 +156,12 @@
                 <div class="govuk-grid-column-one-half">
                     @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
                     {
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeSentOn.B2C
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeSentOn.B2B
                             </p>
@@ -169,7 +169,7 @@
                     }
                     else
                     {
-                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                        <div class="weee-tonnage-right-aligned-display">
                             <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
@@ -185,12 +185,12 @@
                 <div class="govuk-grid-column-one-half">
                     @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
                     {
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeReused.B2C
                             </p>
                         </div>
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
                             <p>
                                 @aatf.WeeeReused.B2B
                             </p>
@@ -198,7 +198,7 @@
                     }
                     else
                     {
-                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display">
+                        <div class="weee-tonnage-right-aligned-display">
                             <p class="not-reported-option-center">
                                 Not selected for reporting this quarter
                             </p>
@@ -218,7 +218,7 @@
     <div class="govuk-table govuk-grid-column-full">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">&nbsp;</div>
-            <div class="govuk-grid-column-one-third">
+            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                 <p>
                     <strong>Total (tonnes)</strong>
                 </p>
@@ -234,7 +234,7 @@
             <div class="govuk-grid-column-one-third">
                 @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
                 {
-                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                    <div class="weee-tonnage-right-aligned-display">
                         <p>
                             @Model.NonObligatedTonnageTotal
                         </p>
@@ -259,7 +259,7 @@
 
                 @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                 {
-                    <div class="govuk-grid-column-one-half weee-tonnage-right-aligned-display">
+                    <div class="weee-tonnage-right-aligned-display">
                         <p>
                             @Model.NonObligatedTonnageTotalDcf
                         </p>
@@ -275,11 +275,8 @@
         </div>
     </div>
 
-    <div class="govuk-!-padding-bottom-6"></div>
-
-    <div class="govuk-grid-row">
-
-    </div>
+    <div class="govuk-!-padding-bottom-6" />
+    <div class="govuk-grid-row" />
     <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
 </section>
 
