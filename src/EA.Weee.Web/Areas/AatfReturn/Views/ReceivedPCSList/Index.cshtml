@@ -57,7 +57,7 @@
                         @item.Tonnages.B2B
                     </div>
                     <div class="govuk-grid-column-one-third" style="text-align:right">
-                        <span class="govuk-visually-hidden">Add data for scheme @item.SchemeName </span>@Html.RouteLink("Add / edit data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                        <span class="govuk-visually-hidden">Add data for scheme @item.SchemeName </span>@Html.RouteLink("add / edit data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
                     </div>
                 </div>
             </div>
