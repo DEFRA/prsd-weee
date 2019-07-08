@@ -38,7 +38,8 @@
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
 
         Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId);
-        Task<List<AatfAeReturnData>> SpgAatfAeReturnDataCsvData(int complianceYear, int quarter, int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea);
+
+        Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter, int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea);
 
         Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId);
     }
