@@ -260,6 +260,7 @@
     <Content Include="scripts\Update\Release 2\Sprint12\20190701-1300-create-fetchAatfSubmissions-storedprocedure.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190708-0943-alter-getAatfSubmissions.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190704-1615-alter-getAatfSubmissions.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190708-1328-create-getAatfAeReturnDataCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
