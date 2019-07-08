@@ -50,6 +50,7 @@
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
                     @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use",
+                          null,
                           Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
                           "Policies",
                           "Terms and conditions",
