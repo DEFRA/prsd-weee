@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// This class maps to the results of [AATF].[spgAatfAeReturnDataCsvData]
+    /// This class maps to the results of [AATF].[getAatfAeReturnDataCsvData]
     /// </summary>
     public class AatfAeReturnData
     {
