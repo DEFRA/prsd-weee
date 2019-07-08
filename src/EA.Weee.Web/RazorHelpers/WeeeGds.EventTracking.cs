@@ -25,12 +25,13 @@
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText,
-               string url,
-               string eventCategory,
-               string eventAction,
-               string eventLabel = null,
-               IDictionary<string, object> htmlAttributes = null,
-               bool newTab = false)
+            string explanationText,
+            string url,
+            string eventCategory,
+            string eventAction,
+            string eventLabel = null,
+            IDictionary<string, object> htmlAttributes = null,
+            bool newTab = false)
         {
             StringBuilder attributes = new StringBuilder();
             string additionalOnclickContent = string.Empty;
@@ -62,7 +63,7 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            string link = string.Format(@"<a href=""{0}"" {1}><span class=""hidden-for-screen-reader"">This link opens in a new browser window</span>{2}</a>", url, attributes.ToString(), linkText);
+            string link = string.Format(@"<a href=""{0}"" {1}><span class=""hidden-for-screen-reader"">{2}</span>{3}</a>", url, attributes.ToString(), explanationText, linkText);
 
             return new MvcHtmlString(link);
         }
