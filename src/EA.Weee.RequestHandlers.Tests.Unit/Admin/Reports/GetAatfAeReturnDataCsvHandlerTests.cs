@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.DataAccess.StoredProcedure;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.Reports;
@@ -125,6 +127,52 @@
 
             // Assert
             Assert.NotEmpty(data.FileContent);
+        }
+
+        [Fact]
+        public async Task GetAatfAeReturnDataCSVHandler_Returns_MatchingFileContent()
+        {
+            var complianceYear = 2019;
+            int quarter = 1;
+            FacilityType facilityType = FacilityType.Aatf;
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var storedProcedures = A.Fake<IStoredProcedures>();
+           
+            A.CallTo(() => context.StoredProcedures)
+                .Returns(storedProcedures);
+
+            var csvData1 = new AatfAeReturnData
+            {
+                Name = "aatf1", ApprovalNumber = "WEE/EE1234RR/ATF", OrganisationName = "Test Org"
+            };
+
+            var csvData2 = new AatfAeReturnData
+            {
+                Name = "aatf12",
+                ApprovalNumber = "WEE/EE1234RR/ATF",
+                OrganisationName = "Test Org"
+            };
+
+            var csvData3 = new AatfAeReturnData
+            {
+                Name = "aatf3",
+                ApprovalNumber = "WEE/EE1234RR/ATF",
+                OrganisationName = "Test Org"
+            };
+
+            A.CallTo(() => storedProcedures
+            .GetAatfAeReturnDataCsvData(A<int>._, A<int>._, A<int>._, null, null, null, null))
+            .Returns(new List<AatfAeReturnData> { csvData1, csvData2, csvData3 });
+
+            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null);
+
+            // Act
+            var data = await handler.HandleAsync(request);
+            data.FileContent.Contains("aatf1,WEE/EE1234RR/ATF,Test Org,,,,,");
+            data.FileContent.Contains("aatf12,WEE/EE1234RR/ATF,Test Org,,,,,");
+            data.FileContent.Contains("aatf3,WEE/EE1234RR/ATF,Test Org,,,,,");
         }
     }
 }
