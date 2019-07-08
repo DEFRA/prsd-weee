@@ -38,9 +38,7 @@
                 If you have completed all your activities you can
 
                 @Html.AntiForgeryToken()
-                <button type="submit" class="link-submit">
-                    sign out
-                </button>
+                @this.WeeeGds().CreateLinkButtonWithEventTracking("Sign out", "AATF return", "Sign out", "Sign out")
                 or proceed to perform more activities
             </p>
         }
@@ -51,8 +49,9 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
-        <button type="submit" class="govuk-button">
-            Perform another activity
-        </button>
+
+        <div class="govuk-form-group">
+            @this.WeeeGds().CreateButtonWithEventTracking("Perform another activity", "AATF return", "Perform another activity", "Perform another activity")
+        </div>
     }
 </section>

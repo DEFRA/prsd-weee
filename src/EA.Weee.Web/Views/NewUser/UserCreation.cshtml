@@ -51,12 +51,13 @@
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
                     @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use",
-                                  Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
-                                  "Policies",
-                                  "Terms and conditions",
-                                  null,
-                                  null,
-                                  true))
+                          null,
+                          Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                          "Policies",
+                          "Terms and conditions",
+                          null,
+                          null,
+                          true))
                 </p>
 
                 <div class="govuk-checkboxes">
@@ -75,7 +76,11 @@
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
 
-                @RenderPage("~/Views/Shared/_PrivacyPolicy.cshtml")
+                @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
+                   @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                   "Policies",
+                   "Privacy",
+                   string.Empty)
 
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
