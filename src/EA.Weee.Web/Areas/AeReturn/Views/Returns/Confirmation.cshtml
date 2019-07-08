@@ -1,43 +1,58 @@
 ﻿@using System.Web.Mvc.Html
+@using EA.Weee.Web.Controllers
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Returns.SubmittedReturnViewModel
 @{
     ViewBag.Title = "Submitted Return - GOV.UK";
 }
 
-    <section id="main-content">
-        <div class="govuk-!-padding-bottom-5"></div>
-        <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
-            <h1 class="govuk-panel__title" style="font-size: 2.5rem;">
-                You have successfully submitted your AE return for @Model.Period
-            </h1>
-        </div>
-        <div class="govuk-!-padding-bottom-5"></div>
-        <div class="govuk-!-width-two-thirds">
-            <p class="govuk-body">Your AE quarterly return has been submitted successfully to your environmental regulator</p>
-            <div class="govuk-!-padding-bottom-2"></div>
-
-            @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
-            {
-                <p class="govuk-body">
-                    If you have completed all your activities you can
-
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="link-submit">
-                        sign out
-                    </button>
-                    or proceed to perform more activities
-                </p>
-            }
-
-        </div>
-
-        @using (Html.BeginForm(AeRedirect.Confirmation(Model.OrganisationId)))
+<section id="main-content">
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
+        <h1 class="govuk-panel__title" style="font-size: 2.5rem;">
+            You have successfully submitted your AE return for @Model.Period
+        </h1>
+    </div>
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-!-width-two-thirds">
+        <p class="govuk-body">You can view a summary of your submission or make a resubmission from @Html.NavigationRouteLink("Manage AE returns", "Manage AE returns", AeRedirect.ReturnsRouteName, new { controller = "Returns", action = "Index", organisationId = Model.OrganisationId })</p>
+        <h2 class="govuk-heading-m">What happens next</h2>
+        <p class="govuk-body">
+            Your return has been submitted to your environmental regulator. You will be contacted if there are any queries.
+        </p>
+        <p class="govuk-body">
+            @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
+                Url.UrlFor<NewUserController>(c => c.Feedback()),
+                "Feedback",
+                "Banner",
+                "Feedback link",
+                null,
+                true
+            ))
+        </p>
+        @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
         {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.OrganisationId)
-            <button type="submit" class="govuk-button">
-                Perform another activity
-            </button>
+            <p class="govuk-body">
+                If you have completed all your activities you can
+
+                @Html.AntiForgeryToken()
+                <button type="submit" class="link-submit">
+                    sign out
+                </button>
+                or proceed to perform more activities
+            </p>
         }
-    </section>
+
+    </div>
+
+    @using (Html.BeginForm(AeRedirect.Confirmation(Model.OrganisationId)))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrganisationId)
+        <button type="submit" class="govuk-button">
+            Perform another activity
+        </button>
+    }
+</section>
