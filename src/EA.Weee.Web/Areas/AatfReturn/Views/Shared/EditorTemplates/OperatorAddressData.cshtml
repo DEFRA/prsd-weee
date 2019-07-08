@@ -12,6 +12,24 @@
             @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
+        <div class="govuk-form-group" id="operatorCheckBox">
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    @if (Model.IsOperatorTheSameAsAatf)
+                    {
+
+                        <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" checked />
+                    }
+                    else
+                    {
+
+                        <input name="IsOperatorTheSameAsAATF" class="govuk-checkboxes__input" id="IsOperatorTheSameAsAATF" onclick="IsOperatorSameAddress()" type="checkbox" value="true" />
+                    }
+                    <label class="govuk-label govuk-checkboxes__label" for="IsOperatorTheSameAsAATF" style="padding-top: 7px;">@Html.DisplayNameFor(m => m.IsOperatorTheSameAsAatf)</label> <br />
+                </div>
+            </div>
+        </div>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address1)">
             @Html.Gds().LabelFor(m => m.Address1)
             @Html.Gds().ValidationMessageFor(m => m.Address1)
