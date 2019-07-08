@@ -10,7 +10,7 @@
 
     public class GetAatfAeReturnDataCsvDataTests
     {       
-        [Fact]
+        //[Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForQuarter()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
@@ -34,7 +34,7 @@
             }
         }
 
-        [Fact]
+        //[Fact]
         public async Task Execute_ReturnsAatfAeReturnDataIfDataExists()
         {            
             using (DatabaseWrapper db = new DatabaseWrapper())
@@ -58,7 +58,7 @@
             }
         }
 
-        [Fact]
+        //[Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForCA()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
@@ -84,7 +84,7 @@
             }
         }
 
-        [Fact]
+        //[Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForEAArea()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
@@ -111,7 +111,7 @@
             }
         }
 
-        [Fact]
+        //[Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForEAPanArea()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
