@@ -111,6 +111,7 @@
         @Html.HiddenFor(m => m.ReturnId)
 <p>
     @(this.WeeeGds().ActionLinkWithEventTracking("I don't have any data to report for this quarter",
+    "No data to report",
     Url.RouteUrl(AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }),
     "AATF return",
     "Start AATF nil return",
