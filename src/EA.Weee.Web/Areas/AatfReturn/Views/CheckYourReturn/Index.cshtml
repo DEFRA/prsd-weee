@@ -104,6 +104,7 @@
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                             {
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                @aatf.Aatf.Name + " change received for treatment",
                                 Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @aatf.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
                                 "AATF return",
                                 "Check return changes",
