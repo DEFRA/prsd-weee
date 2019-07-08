@@ -47,12 +47,13 @@
 
     </div>
 
-    @using (Html.BeginForm(AeRedirect.Confirmation(Model.OrganisationId)))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.OrganisationId)
-        <button type="submit" class="govuk-button">
-            Perform another activity
-        </button>
-    }
-</section>
+        @using (Html.BeginForm(AeRedirect.Confirmation(Model.OrganisationId)))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.OrganisationId)
+
+            <div class="govuk-form-group">
+                @this.WeeeGds().CreateButtonWithEventTracking("Perform another activity", "AATF return", "Perform another activity", "Perform another activity")
+            </div>
+        }
+    </section>
