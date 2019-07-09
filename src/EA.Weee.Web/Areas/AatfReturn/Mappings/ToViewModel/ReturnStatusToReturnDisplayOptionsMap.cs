@@ -10,9 +10,9 @@
         {
             var options = new ReturnsListDisplayOptions();
 
-            if (source.status == ReturnStatus.Created && QuarterHelper.IsOpenForReporting(source.quarterWindow))
+            if (source.status == ReturnStatus.Created)
             {
-                options.DisplayContinue = true;
+                options.DisplayContinue = QuarterHelper.IsOpenForReporting(source.quarterWindow);
             }
             else
             {
