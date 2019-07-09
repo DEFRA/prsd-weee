@@ -56,7 +56,7 @@
             var displayOptions = mapper.Map((ReturnStatus.Submitted, new QuarterWindow(new DateTime(2000, 01, 01), new DateTime(2000, 03, 31))));
 
             displayOptions.DisplayContinue.Should().BeFalse();
-            displayOptions.DisplayEdit.Should().BeTrue();
+            displayOptions.DisplayEdit.Should().BeFalse();
             displayOptions.DisplaySummary.Should().BeTrue();
         }
     }
