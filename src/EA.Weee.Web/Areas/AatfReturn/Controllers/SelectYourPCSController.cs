@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Scheme;
@@ -54,6 +55,11 @@
                 };
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                if (!QuarterHelper.IsOpenForReporting(@return.QuarterWindow))
+                {
+                    return RedirectToAction("QuarterClosed", "Errors", new { area = string.Empty });
+                }
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
 
