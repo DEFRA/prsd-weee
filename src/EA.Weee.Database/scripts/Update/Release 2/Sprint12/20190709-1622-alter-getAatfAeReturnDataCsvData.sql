@@ -1,15 +1,6 @@
-USE [EA.Weee]
-GO
-
-/****** Object:  StoredProcedure [AATF].[getAatfAeReturnDataCsvData]    Script Date: 09/07/2019 16:17:22 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
+-- Description:	This stored procedure is used to provide the data for the admin report of aatf/ae
 --				that have/haven't submitted a data return within
---				the limits of the specified parameters.
+--				the limits of the specified parameters. The first submitted return should be returned.
 -- =============================================
 alter PROCEDURE [AATF].[getAatfAeReturnDataCsvData]
 	@ComplianceYear INT,
