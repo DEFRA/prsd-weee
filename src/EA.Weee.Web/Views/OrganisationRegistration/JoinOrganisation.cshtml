@@ -21,13 +21,13 @@
 
         if (!Model.AnyActiveUsers)
         {
-            <p>We will send an access request to your environmental regulator.</p>
+            <p>We will send an access request to your environmental regulator</p>
         }
         else
         {
-            <p>We will send an access request to your organisation's administrator.</p>
+            <p>We will send an access request to the existing users of this organisation</p>
         }
-        <p>You will not be able to perform activities on behalf of this organisation until your request is authorised.</p>
+        <p>You will not be able to perform activities on behalf of this organisation until your request is authorised</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
             @this.WeeeGds().RadioButtonsFor(
