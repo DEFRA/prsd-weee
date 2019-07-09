@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -56,6 +57,11 @@
                     ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion()),
                     ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false))
                 });
+
+                if (!QuarterHelper.IsOpenForReporting(viewModel.ReturnData.QuarterWindow))
+                {
+                    return RedirectToAction("QuarterClosed", "Errors", new { area = string.Empty });
+                }
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(viewModel.ReturnData.Quarter, viewModel.ReturnData.QuarterWindow));
 

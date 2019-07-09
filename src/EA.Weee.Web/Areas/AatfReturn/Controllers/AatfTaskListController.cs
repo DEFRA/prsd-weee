@@ -3,9 +3,11 @@
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Controllers;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -36,6 +38,11 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                if (!QuarterHelper.IsOpenForReporting(@return.QuarterWindow))
+                {
+                    return RedirectToAction("QuarterClosed", "Errors", new { area = string.Empty });
+                }
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
                 viewModel.OrganisationId = @return.OrganisationData.Id;
