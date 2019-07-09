@@ -35,7 +35,7 @@
 
             var items = await context.StoredProcedures.GetAatfAeReturnDataCsvData(
                        request.ComplianceYear, request.Quarter, (int)request.FacilityType, 
-                       request.ReturnStatus, request.AuthorityId, request.Area, request.PanArea);
+                       request.ReturnStatus, request.AuthorityId, request.LocalArea, request.PanArea);
 
             CsvWriter<AatfAeReturnData> csvWriter = csvWriterFactory.Create<AatfAeReturnData>();
             csvWriter.DefineColumn(@"Name of AATF / AE", i => i.Name);
