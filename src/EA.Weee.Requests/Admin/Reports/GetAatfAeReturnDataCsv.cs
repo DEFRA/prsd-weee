@@ -17,18 +17,18 @@
 
         public Guid? PanArea { get; private set; }
 
-        public Guid? Area { get; private set; }
+        public Guid? LocalArea { get; private set; }
 
         public GetAatfAeReturnDataCsv(int complianceYear,
-          int quarter, FacilityType facilityType, int? returnStatus, Guid? authority, Guid? panArea, Guid? area)
+          int quarter, FacilityType facilityType, int? returnStatus, Guid? authorityId, Guid? panArea, Guid? localArea)
         {
             ComplianceYear = complianceYear;
             Quarter = quarter;
             FacilityType = facilityType;
             ReturnStatus = returnStatus;
-            AuthorityId = authority;
+            AuthorityId = authorityId;
             PanArea = panArea;
-            Area = area;
+            LocalArea = localArea;
         }
     }
 }
