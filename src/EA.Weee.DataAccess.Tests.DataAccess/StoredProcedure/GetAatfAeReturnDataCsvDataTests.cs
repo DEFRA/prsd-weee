@@ -7,24 +7,25 @@
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using Xunit;
+    using Contact = Domain.Organisation.Contact;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class GetAatfAeReturnDataCsvDataTests
     {       
         [Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForQuarter()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
-                var organisation = helper.CreateOrganisation();
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
                 db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
                 db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2019"), db.WeeeContext.AatfContacts.First().Id, 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 2, "EA");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2019"), 1, "EA");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
 
-                await db.Model.SaveChangesAsync();
+                await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetAatfAeReturnDataCsvData(2019, 4,
                         1, null, null, null, null);
@@ -37,18 +38,14 @@
         [Fact]
         public async Task Execute_ReturnsAatfAeReturnDataIfDataExists()
         {            
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
-                var organisation = helper.CreateOrganisation();
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
-                db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
-                db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 2, "EA");
-            
-                await db.Model.SaveChangesAsync();
+                await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetAatfAeReturnDataCsvData(2019, 4,
                         1, null, null, null, null);
@@ -61,20 +58,16 @@
         [Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForCA()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                ModelHelper helper = new ModelHelper(db.Model);
-                var organisation = helper.CreateOrganisation();
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
-                db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
-                db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 3, "NRW");
+                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 4, "NRW");
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 2, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 3, "NRW");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), db.WeeeContext.AatfContacts.First().Id, 4, "NRW");
-
-                await db.Model.SaveChangesAsync();
+                await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetAatfAeReturnDataCsvData(2019, 4,
                         1, null, db.WeeeContext.UKCompetentAuthorities.Where(x => x.Abbreviation == "EA").First().Id, null, null);
@@ -87,7 +80,7 @@
         [Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForEAArea()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
                 db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
@@ -114,7 +107,7 @@
         [Fact]
         public async Task Execute_ReturnsAatfAeReturnDataForEAPanArea()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
                 db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
@@ -138,24 +131,13 @@
             }
         }
 
-        public void CreateAatf(DatabaseWrapper database, Organisation organisation, DateTime approvalDate, Guid contactId, int count, string cA)
+        public void CreateAatf(DatabaseWrapper database, Organisation organisation, DateTime approvalDate, int count, string cA)
         {
-           var aatf = new AATF
-            {
-               Id = Guid.NewGuid(),
-               Name = "aatfname" + count,
-               CompetentAuthorityId = database.WeeeContext.UKCompetentAuthorities.Where(x => x.Abbreviation == cA).First().Id,
-               ApprovalNumber = "number",
-               Status = 1,
-               Organisation = organisation,
-               SiteAddressId = database.WeeeContext.AatfAddress.First().Id,
-               Size = 2,
-               ApprovalDate = approvalDate,
-               ContactId = contactId,
-               FacilityType = 1
-            };
-            
-            database.Model.AATFs.Add(aatf);            
+            var aatfContact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First());
+            var aatfAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
+            var aatf = new Aatf("aatfname" + count, database.WeeeContext.UKCompetentAuthorities.First(c => c.Abbreviation == cA), "number", AatfStatus.Approved, organisation, aatfAddress, AatfSize.Large, approvalDate, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+            database.WeeeContext.Aatfs.Add(aatf);
         }
     }    
 }
