@@ -94,24 +94,6 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenClosedQuarter_RedirectedToErrorPage()
-        {
-            var returnId = Guid.NewGuid();
-            var organisationId = Guid.NewGuid();
-            var viewModel = CreateInitialViewModel();
-            A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
-
-            SystemTime.Freeze(new DateTime(2019, 01, 01));
-            var result = await controller.Index(organisationId, returnId);
-            SystemTime.Unfreeze();
-
-            result.Should().BeOfType<RedirectToRouteResult>();
-            var redirectResult = result as RedirectToRouteResult;
-            redirectResult.RouteValues["controller"].Should().Be("Errors");
-            redirectResult.RouteValues["action"].Should().Be("QuarterClosed");
-        }
-
-        [Fact]
         public async void IndexPost_OnSubmitWithPcsOptionSelectedAndNoPreviousPcsSelection_PageRedirectsToPcsSelect()
         {
             var httpContext = new HttpContextMocker();

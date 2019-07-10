@@ -111,27 +111,5 @@
 
             result.Model.Should().BeEquivalentTo(model);
         }
-
-        [Fact]
-        public async void IndexGet_GivenClosedQuarter_RedirectedToErrorPage()
-        {
-            var model = A.Fake<ReturnViewModel>();
-            var @return = fixture.Build<ReturnData>()
-                .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31)))
-                .Create();
-
-            A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-
-            SystemTime.Freeze(new DateTime(2019, 01, 01));
-            var result = await controller.Index(A.Dummy<Guid>());
-            SystemTime.Unfreeze();
-
-            result.Should().BeOfType<RedirectToRouteResult>();
-            var redirectResult = result as RedirectToRouteResult;
-            redirectResult.RouteValues["controller"].Should().Be("Errors");
-            redirectResult.RouteValues["action"].Should().Be("QuarterClosed");
-        }
     }
 }

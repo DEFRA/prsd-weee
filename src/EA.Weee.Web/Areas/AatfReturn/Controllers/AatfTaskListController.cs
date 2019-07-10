@@ -39,11 +39,6 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                if (!QuarterHelper.IsOpenForReporting(@return.QuarterWindow))
-                {
-                    return RedirectToAction("QuarterClosed", "Errors", new { area = string.Empty });
-                }
-
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
                 viewModel.OrganisationId = @return.OrganisationData.Id;
                 viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(@return.OrganisationData.Id))).OrganisationName;

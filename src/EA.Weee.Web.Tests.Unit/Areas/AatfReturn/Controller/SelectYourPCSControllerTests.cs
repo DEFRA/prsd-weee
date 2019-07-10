@@ -86,30 +86,6 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenClosedQuarter_RedirectedToErrorPage()
-        {
-            var returnId = Guid.NewGuid();
-            var organisationId = Guid.NewGuid();
-            var @return = A.Fake<ReturnData>();
-
-            var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
-            @return.Quarter = quarterData;
-            @return.QuarterWindow = quarterWindow;
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
-
-            SystemTime.Freeze(new DateTime(2019, 01, 01));
-            var result = await controller.Index(organisationId, returnId);
-            SystemTime.Unfreeze();
-
-            result.Should().BeOfType<RedirectToRouteResult>();
-            var redirectResult = result as RedirectToRouteResult;
-            redirectResult.RouteValues["controller"].Should().Be("Errors");
-            redirectResult.RouteValues["action"].Should().Be("QuarterClosed");
-        }
-
-        [Fact]
         public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
         {
             var returnId = Guid.NewGuid();

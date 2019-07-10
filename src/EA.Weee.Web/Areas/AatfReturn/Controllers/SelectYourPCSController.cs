@@ -56,11 +56,6 @@
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                if (!QuarterHelper.IsOpenForReporting(@return.QuarterWindow))
-                {
-                    return RedirectToAction("QuarterClosed", "Errors", new { area = string.Empty });
-                }
-
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
 
                 TempData["currentQuarter"] = @return.Quarter;
