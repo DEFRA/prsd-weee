@@ -37,6 +37,11 @@
                        request.ComplianceYear, request.Quarter, (int)request.FacilityType, 
                        request.ReturnStatus, request.AuthorityId, request.LocalArea, request.PanArea);
 
+            foreach (var item in items)
+            {
+                 item.AatfDataUrl = string.Format(@" =HYPERLINK(""""{0}{1}#data"""", """"View AATF data"""")", request.AatfDataUrl, item.AatfId);
+            }
+
             CsvWriter<AatfAeReturnData> csvWriter = csvWriterFactory.Create<AatfAeReturnData>();
             csvWriter.DefineColumn(@"Name of AATF / AE", i => i.Name);
             csvWriter.DefineColumn(@"Approval number", i => i.ApprovalNumber);
@@ -46,7 +51,11 @@
             csvWriter.DefineColumn(@"Date submitted", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Appropriate authority", i => i.CompetentAuthorityAbbr);
+            csvWriter.DefineColumn(@" ", i => i.AatfDataUrl);
             var fileContent = csvWriter.Write(items);
+
+            //Trim the space before equals in  =Hyperlink
+            fileContent = fileContent.Replace(" =HYPERLINK", "=HYPERLINK");
 
             var fileName = string.Format("{0}_AATF_AE_RETURN_{1:ddMMyyyy_HHmm}.csv",
                 request.ComplianceYear,
