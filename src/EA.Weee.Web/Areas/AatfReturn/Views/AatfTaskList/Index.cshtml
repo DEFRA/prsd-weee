@@ -35,7 +35,7 @@
         {
             <h2 class="govuk-heading-m">Obligated WEEE</h2>
             <div class="govuk-table govuk-grid-column-full">
-                @for (var count = 0; count < Model.AatfsData.Count();  count++)
+                @for (var count = 0; count < Model.AatfsData.Count(); count++)
                 {
                     var item = Model.AatfsData.ElementAt(count);
 
@@ -44,7 +44,7 @@
                         <div class="govuk-!-padding-top-6"></div>
                     }
                     <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds">
+                        <div class="govuk-grid-column-full">
                             <p>
                                 <strong>@item.Aatf.Name (@item.Aatf.ApprovalNumber) Status: @item.Aatf.AatfStatus</strong>
                             </p>
@@ -163,13 +163,14 @@
                         </div>
                     }
                 }
+                <div class="govuk-!-padding-bottom-6"></div>
             </div>
                 }
            
 
         @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
         {
-            <div class="govuk-!-padding-top-6"></div>
+            <div class="govuk-!-padding-top-8"></div>
             <h2 class="govuk-heading-m">Non Obligated WEEE</h2>
             <div class="govuk-table govuk-grid-column-full">
                 <div class="govuk-grid-row govuk-table__cell--thick">
