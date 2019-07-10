@@ -956,6 +956,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_SummaryPartial.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeReturnData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
