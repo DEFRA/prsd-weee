@@ -28,7 +28,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -48,7 +48,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -68,7 +68,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 0, FacilityType.Aatf, null, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, 0, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
@@ -88,7 +88,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
@@ -120,7 +120,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, returnStatus, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, returnStatus, null, null, null, string.Empty);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
@@ -166,7 +166,7 @@
             .Returns(new List<AatfAeReturnData> { csvData1, csvData2, csvData3 });
 
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null, string.Empty);
 
             // Act
             var data = await handler.HandleAsync(request);
