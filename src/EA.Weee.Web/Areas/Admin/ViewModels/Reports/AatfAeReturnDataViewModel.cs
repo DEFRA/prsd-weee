@@ -52,7 +52,7 @@
         }
 
         [Display(Name = "Appropriate authority")]
-        public string CompetentAuthorityId { get; set; }
+        public Guid? CompetentAuthorityId { get; set; }
 
         public IEnumerable<SelectListItem> CompetentAuthoritiesList { get; set; }
 
