@@ -1105,3 +1105,16 @@ details summary::-ms-details-marker {
     text-align: center;
     font-size: 1rem;
 }
+
+.summary-paragraph {
+    margin-bottom: 0;
+}
+
+.summary-paragraph-align-right{
+    text-align: right;
+}
+
+.summary-row {
+    height: 40px;
+    padding-bottom: 0;
+}
