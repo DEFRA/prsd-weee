@@ -474,11 +474,11 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
-          int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? area)
+          int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
         {
             CSVFileData fileData;
 
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, area);
+            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea);
             using (IWeeeClient client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
