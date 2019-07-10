@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoFixture;
     using EA.Weee.Core.Search;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -18,10 +19,12 @@
 
     public class FetchOrganisationSearchResultsForCacheDataAccessTests
     {
+        private readonly Fixture fixture;
         private readonly WeeeContext context;
 
         public FetchOrganisationSearchResultsForCacheDataAccessTests()
         {
+            fixture = new Fixture();
             context = A.Fake<WeeeContext>();
         }
 
@@ -275,22 +278,19 @@
             }
         }
 
-        /// <summary>
-        /// Ensures that search results representing organisations which are partnerships will use
-        /// the 'TradingName' column from the database as the organisation name.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task FetchCompleteOrganisations_OrganisationHasNoScheme_OrganisationReturned()
+        public async Task FetchCompleteOrganisations_OrganisationHasNoScheme_OrganisationNotReturned()
         {
-            using (DatabaseWrapper database = new DatabaseWrapper())
+            using (var database = new DatabaseWrapper())
             {
                 // Arrange
-                Organisation organisation = new Organisation();
-                organisation.Id = new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4");
-                organisation.TradingName = "Trading Name";
-                organisation.OrganisationType = EA.Weee.Domain.Organisation.OrganisationType.Partnership.Value;
-                organisation.OrganisationStatus = EA.Weee.Domain.Organisation.OrganisationStatus.Complete.Value;
+                var organisationGuid = fixture.Create<Guid>();
+                var organisation = new Organisation
+                {
+                    Id = organisationGuid,
+                    OrganisationType = Domain.Organisation.OrganisationType.Partnership.Value,
+                    OrganisationStatus = Domain.Organisation.OrganisationStatus.Complete.Value
+                };
 
                 database.Model.Organisations.Add(organisation);
                 database.Model.SaveChanges();
@@ -298,19 +298,48 @@
                 var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                var results = await dataAccess.FetchCompleteOrganisations();
 
                 // Assert
-                Assert.Contains(results,
-                    r => r.OrganisationId == new Guid("6BD77BBD-0BD8-4BAB-AA9F-A3E657D1CBB4") && r.Name == "Trading Name");
+                Assert.DoesNotContain(results, r => r.OrganisationId == organisationGuid);
             }
         }
 
-        /// <summary>
-        /// Ensures that search results representing organisations which are partnerships will use
-        /// the 'TradingName' column from the database as the organisation name.
-        /// </summary>
-        /// <returns></returns>
+        [Fact]
+        public async Task FetchCompleteOrganisations_OrganisationHasRejectedSchemeWithNoAatfsOrAes_OrganisationNotReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var organisationGuid = fixture.Create<Guid>();
+                var organisation = new Organisation
+                {
+                    Id = organisationGuid,
+                    OrganisationType = Domain.Organisation.OrganisationType.Partnership.Value,
+                    OrganisationStatus = Domain.Organisation.OrganisationStatus.Complete.Value
+                };
+                database.Model.Organisations.Add(organisation);
+
+                var scheme = new Scheme
+                {
+                    Id = fixture.Create<Guid>(),
+                    Organisation = organisation,
+                    SchemeStatus = (int)Core.Shared.SchemeStatus.Rejected
+                };
+                database.Model.Schemes.Add(scheme);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+
+                // Act
+                var results = await dataAccess.FetchCompleteOrganisations();
+
+                // Assert
+                Assert.DoesNotContain(results, r => r.OrganisationId == organisationGuid);
+            }
+        }
+
         [Fact]
         public async Task FetchOrganisations_OrganisationReturnedWithAddress()
         {
@@ -328,6 +357,15 @@
                 organisation.Address = helper.CreateOrganisationAddress();
 
                 database.Model.Organisations.Add(organisation);
+
+                var scheme = new Scheme
+                {
+                    Id = new Guid("CFD9B56F-6C3C-4E49-825C-A125ACFFEC3B"),
+                    Organisation = organisation,
+                    SchemeStatus = (int)Core.Shared.SchemeStatus.Approved
+                };
+                database.Model.Schemes.Add(scheme);
+
                 database.Model.SaveChanges();
 
                 var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
@@ -344,6 +382,115 @@
                     && r.Address.CountyOrRegion == organisation.Address.CountyOrRegion
                     && r.Address.Postcode == organisation.Address.Postcode);
             }
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithPcs_NoAatfs_OrganisationReturned()
+        {
+            var dbContextHelper = new DbContextHelper();
+
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            var aatfs = new List<Aatf>();
+
+            var schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.NotEmpty(results);
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithRejectedPcs_NoAatfs_OrganisationNotReturned()
+        {
+            var dbContextHelper = new DbContextHelper();
+
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            var aatfs = new List<Aatf>();
+
+            var scheme = new Domain.Scheme.Scheme(organisation);
+            scheme.SetStatus(Domain.Scheme.SchemeStatus.Rejected);
+            var schemes = new List<Domain.Scheme.Scheme>()
+            {
+                scheme
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationWithRejectedPcs_OneAatf_OrganisationReturned()
+        {
+            var dbContextHelper = new DbContextHelper();
+
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            var aatfs = new List<Aatf>()
+            {
+                new Aatf("one", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Dummy<AatfAddress>(), AatfSize.Large, DateTime.Now, A.Dummy<AatfContact>(), FacilityType.Aatf, 2019, A.Dummy<LocalArea>(), A.Dummy<PanArea>())
+            };
+
+            var scheme = new Domain.Scheme.Scheme(organisation);
+            scheme.SetStatus(Domain.Scheme.SchemeStatus.Rejected);
+            var schemes = new List<Domain.Scheme.Scheme>()
+            {
+                scheme
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            Assert.NotEmpty(results);
         }
 
         [Fact]
