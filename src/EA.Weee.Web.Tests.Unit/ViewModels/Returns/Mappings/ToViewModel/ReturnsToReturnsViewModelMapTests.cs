@@ -6,6 +6,7 @@
     using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Organisations;
+    using EA.Prsd.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -230,6 +231,78 @@
 
             result.Returns.First(r => r.ReturnViewModel.ReturnId.Equals(idToFind)).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
             result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit.Equals(false)).Should().Be(2);
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnQuarter_NoOpenWindow_ErrorMessageShouldSayClosed()
+        {
+            var returnData = A.CollectionOfFake<ReturnData>(3).ToList();
+
+            SystemTime.Freeze(new DateTime(2019, 3, 17));
+
+            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+
+            SystemTime.Unfreeze();
+
+            Assert.Equal("The 2018 compliance period has closed. You can start submitting your 2019 Q1 returns on 1st April.", result.ErrorMessageForNotAllowingCreateReturn);
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnQuarter_OpenQuarters_ErrorMessageSaysWhenNextQuarterAvailable()
+        {
+            List<Quarter> openQuarters = new List<Quarter>()
+            {
+                new Quarter(2019, QuarterType.Q1),
+                new Quarter(2019, QuarterType.Q2)
+            };
+
+            QuarterWindow nextQuater = new QuarterWindow(new DateTime(2019, 10, 01), new DateTime(2020, 03, 16));
+
+            List<ReturnData> returnData = new List<ReturnData>()
+            {
+                new ReturnData()
+                {
+                    Quarter = openQuarters[1]
+                }
+            };
+
+            SystemTime.Freeze(new DateTime(2019, 07, 11));
+
+            var result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+
+            SystemTime.Unfreeze();
+
+            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on {0}.", nextQuater.StartDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnQuarter_OpenQuarters_LatestOpenIsQ4_ErrorMessageSaysWhenNextQuarterAvailableIsQ1()
+        {
+            List<Quarter> openQuarters = new List<Quarter>()
+            {
+                new Quarter(2019, QuarterType.Q1),
+                new Quarter(2019, QuarterType.Q2),
+                new Quarter(2019, QuarterType.Q3),
+                new Quarter(2020, QuarterType.Q4)
+            };
+
+            QuarterWindow nextQuater = new QuarterWindow(new DateTime(2020, 01, 01), new DateTime(2020, 03, 16));
+
+            List<ReturnData> returnData = new List<ReturnData>()
+            {
+                new ReturnData()
+                {
+                    Quarter = openQuarters[1]
+                }
+            };
+
+            SystemTime.Freeze(new DateTime(2020, 01, 01));
+
+            var result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+
+            SystemTime.Unfreeze();
+
+            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2020 Q1 returns on {0}.", nextQuater.StartDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
         }
     }
 }

@@ -48,7 +48,7 @@
 
             var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility);
 
-            var openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(DateTime.Now);
+            var openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
 
             var returnsData = new List<ReturnData>();
 
@@ -64,11 +64,18 @@
                 returnOpenQuarters.Add(new Core.DataReturns.Quarter(q.StartDate.Year, (Core.DataReturns.QuarterType)q.QuarterType));
             }
 
-            var latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
+            Core.AatfReturn.QuarterWindow nextQuarter = null;
 
-            var nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
+            if (openQuarters.Count > 0)
+            {
+                var latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
 
-            return new ReturnsData(returnsData, quarter, returnOpenQuarters, new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate));
+                var nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
+
+                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate);
+            }
+
+            return new ReturnsData(returnsData, quarter, returnOpenQuarters, nextQuarter);
         }
     }
 }
