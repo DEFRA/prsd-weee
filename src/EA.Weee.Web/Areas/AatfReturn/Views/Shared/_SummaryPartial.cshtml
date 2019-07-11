@@ -7,7 +7,7 @@
     var isCheckReturn = (bool)ViewData["displayEdit"];
     var dataColumnWidth = isCheckReturn ? "govuk-grid-column-one-third" : "govuk-grid-column-one-half";
     var nonReportingColumnCssClass = isCheckReturn ? "govuk-grid-column-two-thirds" : "";
-    var nonObligatedColumnDataCss = isCheckReturn ? "govuk-grid-column-two-thirds" : "govuk-grid-column-one-half";
+    var nonObligatedColumnDataCss = isCheckReturn ? "govuk-grid-column-two-thirds" : "govuk-grid-column-full";
     var alignCss = isCheckReturn ? "" : "weee-tonnage-right-aligned-display";
 }
 
@@ -106,7 +106,7 @@
                     }
                     else
                     {
-                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display">
+                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
                             <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
                                 Not selected for reporting this quarter
                             </p>
@@ -195,7 +195,7 @@
                     </details>
                 }
             </div>
-            <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
                 <div class="govuk-grid-column-one-half">
                     <p class="summary-paragraph">
                         Sent to another AATF / ATF
@@ -217,7 +217,7 @@
                     }
                     else
                     {
-                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display">
+                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
                             <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
                                 Not selected for reporting this quarter
                             </p>
@@ -247,7 +247,7 @@
                     }
                 </div>
             </div>
-            <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
                 <div class="govuk-grid-column-one-half">
                     <p class="summary-paragraph">
                         Reused as a whole appliance
@@ -269,7 +269,7 @@
                     }
                     else
                     {
-                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display">
+                        <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
                             <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
                                 Not selected for reporting this quarter
                             </p>
@@ -346,20 +346,17 @@
                 }
             </div>
         </div>
-        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
             <div class="govuk-grid-column-one-half">
                 <p class="summary-paragraph">
                     Received
                 </p>
             </div>
             <div class="govuk-grid-column-one-half">
-                @if (!isCheckReturn)
-                {
-                    <div class="govuk-grid-column-one-half">
-                        &nbsp;
-                    </div>
+                @{
+                    var nonObligatedReceivedColumnCss = Model.ReportOnDisplayOptions.DisplayNonObligated ? "" : "not-reported-column";
                 }
-                <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word">
+                <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word @nonObligatedReceivedColumnCss">
 
                     @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
                     {
@@ -397,20 +394,17 @@
                 }
             </div>
         </div>
-        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
             <div class="govuk-grid-column-one-half">
                 <p class="summary-paragraph">
                     Retained by a DCF
                 </p>
             </div>
             <div class="govuk-grid-column-one-half">
-                @if (!isCheckReturn)
-                {
-                    <div class="govuk-grid-column-one-half">
-                        &nbsp;
-                    </div>
+                @{
+                    var nonObligatedDcfColumnCss = Model.ReportOnDisplayOptions.DisplayNonObligatedDcf ? "" : "not-reported-column";
                 }
-                <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word">
+                <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word @nonObligatedDcfColumnCss">
                     @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                     {
                         <p class="summary-paragraph summary-paragraph-align-right">

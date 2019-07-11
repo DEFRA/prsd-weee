@@ -19,7 +19,7 @@
     </header>
     <p>Check and review your AATF return before you proceed to submit</p>
 
-    @Html.Partial("_SummaryPartial", Model, new ViewDataDictionary(){ new KeyValuePair<string, object>("displayEdit", true)})
+    @Html.Partial("_SummaryPartial", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayEdit", true) })
 
     <div class="govuk-!-padding-bottom-6"></div>
 
@@ -60,3 +60,4 @@
         });
     </script>
 }
+<link href="~/Content/Site.css" rel="stylesheet" />

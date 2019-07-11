@@ -1107,7 +1107,7 @@ details summary::-ms-details-marker {
 }
 
 .summary-paragraph {
-    margin-bottom: 0;
+     margin-bottom: 5px;
 }
 
 .summary-paragraph-align-right{
@@ -1115,6 +1115,10 @@ details summary::-ms-details-marker {
 }
 
 .summary-row {
-    height: 40px;
+    height: 45px;
     padding-bottom: 0;
+}
+
+.not-reported-column {
+    padding-right: 0;
 }
