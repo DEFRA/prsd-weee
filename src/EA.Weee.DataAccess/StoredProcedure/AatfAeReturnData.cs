@@ -19,5 +19,7 @@
         public DateTime? SubmittedDate { get; set; }
         public string SubmittedBy { get; set; }
         public string CompetentAuthorityAbbr { get; set; }
+        public Guid AatfId { get; set; }
+        public string AatfDataUrl { get; set; }
     }
 }
