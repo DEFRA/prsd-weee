@@ -24,6 +24,7 @@
         </p>
         <p class="govuk-body">
             @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
+                        null,
                         Url.UrlFor<NewUserController>(c => c.Feedback()),
                         "Feedback",
                         "Banner",
@@ -31,6 +32,7 @@
                         null,
                         true
                     ))
+            (takes 30 seconds)
         </p>
         @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
         {
