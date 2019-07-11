@@ -75,7 +75,7 @@
         {
             if (!WindowHelper.IsThereAnOpenWindow())
             {
-               return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", DateTime.Now.AddYears(-1).Year, DateTime.Now.Year);
+               return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", SystemTime.Now.AddYears(-1).Year, SystemTime.Now.Year);
             }
             else
             {
@@ -84,13 +84,12 @@
                     if (source.ReturnsList.Count(p => p.Quarter == q) > 0)
                     {
                         QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
-                        //int complianceYear = nextQuarter == QuarterType.Q1 ? DateTime.Now.Year : DateTime.Now.AddYears(-1).Year;
 
-                        return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", DateTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
+                        return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
                     }
                 }
             }
-            return "a";
+            return string.Empty;
         }
 
         private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)
