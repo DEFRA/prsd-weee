@@ -1,25 +1,20 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using Core.AatfReturn;
+    using Core.DataReturns;
     using Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using AutoFixture;
-    using Core.DataReturns;
-    using DataAccess.DataAccess;
-    using Domain;
-    using Prsd.Core;
-    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
-    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetReturnsHandlerTests
     {
@@ -27,19 +22,22 @@
         private readonly IGetPopulatedReturn populatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IReturnFactory returnFactory;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public GetReturnsHandlerTests()
         {
             populatedReturn = A.Fake<IGetPopulatedReturn>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
             returnFactory = A.Fake<IReturnFactory>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
                 .AllowOrganisationAccess().Build(),
                 populatedReturn,
                 returnDataAccess,
-                returnFactory);
+                returnFactory,
+                quarterWindowFactory);
         }
 
         [Fact]
@@ -50,7 +48,8 @@
             handler = new GetReturnsHandler(authorization,
                 A.Dummy<IGetPopulatedReturn>(),
                 A.Dummy<IReturnDataAccess>(),
-                A.Dummy<IReturnFactory>());
+                A.Dummy<IReturnFactory>(),
+                A.Dummy<IQuarterWindowFactory>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 
@@ -138,6 +137,12 @@
         {
             var organisationId = Guid.NewGuid();
             var returns = A.CollectionOfFake<Return>(2);
+            List<Domain.DataReturns.QuarterWindow> openQuarters = new List<Domain.DataReturns.QuarterWindow>()
+            {
+                new Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(3), Domain.DataReturns.QuarterType.Q1)
+            };
+
+            Domain.DataReturns.QuarterWindow nextQuarter = new Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(3), Domain.DataReturns.QuarterType.Q1);
 
             foreach (var @return in returns)
             {
@@ -153,6 +158,9 @@
             A.CallTo(() => returns.ElementAt(2).Id).Returns(Guid.NewGuid());
 
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).Returns(returns);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(DateTime.Now)).Returns(openQuarters);
+            A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(Domain.DataReturns.QuarterType.Q1, 2019)).Returns(nextQuarter);
 
             var result = await handler.HandleAsync(new GetReturns(organisationId, facilityType));
 
