@@ -1847,7 +1847,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/"))));
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")))).MustHaveHappened();
 
             FileResult fileResult = result as FileResult;
             Assert.NotNull(fileResult);
