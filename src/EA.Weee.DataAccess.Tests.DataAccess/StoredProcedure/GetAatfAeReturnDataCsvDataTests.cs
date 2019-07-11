@@ -22,16 +22,19 @@
                 db.WeeeContext.AatfContacts.Add(ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()));
                 db.WeeeContext.AatfAddress.Add(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db));
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2019"), 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
+                var aatf1 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2019"), 1, "EA");
+                var aatf2 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
 
+                db.WeeeContext.Aatfs.Add(aatf1);
+                db.WeeeContext.Aatfs.Add(aatf1);
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetAatfAeReturnDataCsvData(2019, 4,
                         1, null, null, null, null);
 
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                results.Where(x => x.AatfId == aatf1.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf2.Id).Count().Equals(1);
             }
         }
 
@@ -42,8 +45,8 @@
             {
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
+               var aatf1 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
+               var aatf2 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
 
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -51,7 +54,8 @@
                         1, null, null, null, null);
 
                 Assert.NotNull(results);
-                Assert.Equal(2, results.Count);
+                results.Where(x => x.AatfId == aatf1.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf2.Id).Count().Equals(1);
             }
         }
 
@@ -62,10 +66,10 @@
             {
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
 
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 3, "NRW");
-                CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 4, "NRW");
+                var aatf1 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 1, "EA");
+                var aatf2 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 2, "EA");
+                var aatf3 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 3, "NRW");
+                var aatf4 = CreateAatf(db, organisation, Convert.ToDateTime("01/02/2020"), 4, "NRW");
 
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -73,7 +77,10 @@
                         1, null, db.WeeeContext.UKCompetentAuthorities.Where(x => x.Abbreviation == "EA").First().Id, null, null);
 
                 Assert.NotNull(results);
-                Assert.Equal(2, results.Count);
+                results.Where(x => x.AatfId == aatf1.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf2.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf3.Id).Count().Equals(0);
+                results.Where(x => x.AatfId == aatf4.Id).Count().Equals(0);
             }
         }
 
@@ -100,7 +107,8 @@
                         1, null, db.WeeeContext.UKCompetentAuthorities.Where(x => x.Abbreviation == "EA").First().Id, db.WeeeContext.LocalAreas.Where(x => x.Name == "Wessex (WSX)").First().Id, null);
 
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                results.Where(x => x.AatfId == aatf1.Id).Count().Equals(0);
+                results.Where(x => x.AatfId == aatf3.Id).Count().Equals(1);
             }
         }
 
@@ -127,17 +135,19 @@
                         1, null, db.WeeeContext.UKCompetentAuthorities.Where(x => x.Abbreviation == "EA").First().Id, null, db.WeeeContext.PanAreas.Where(x => x.Name == "North").First().Id);
 
                 Assert.NotNull(results);
-                Assert.Equal(2, results.Count);
+                results.Where(x => x.AatfId == aatf1.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf2.Id).Count().Equals(1);
+                results.Where(x => x.AatfId == aatf3.Id).Count().Equals(0);
             }
         }
 
-        public void CreateAatf(DatabaseWrapper database, Organisation organisation, DateTime approvalDate, int count, string cA)
+        public Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, DateTime approvalDate, int count, string cA)
         {
             var aatfContact = ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First());
             var aatfAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
             var aatf = new Aatf("aatfname" + count, database.WeeeContext.UKCompetentAuthorities.First(c => c.Abbreviation == cA), "number", AatfStatus.Approved, organisation, aatfAddress, AatfSize.Large, approvalDate, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
 
-            database.WeeeContext.Aatfs.Add(aatf);
+            return aatf;
         }
     }    
 }
