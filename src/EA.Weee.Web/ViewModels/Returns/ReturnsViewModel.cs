@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.DataReturns;
+    using EA.Weee.Core.Helpers;
 
     public class ReturnsViewModel
     {
@@ -21,6 +22,16 @@
         public ReturnsViewModel()
         {
             Returns = new List<ReturnsItemViewModel>();
+        }
+
+        public string GetErrorMessageForNotAllowingCreateReturn()
+        {
+            if (WindowHelper.IsWindowClosed())
+            {
+                return "Window closed";
+            }
+
+            return "";
         }
     }
 }
