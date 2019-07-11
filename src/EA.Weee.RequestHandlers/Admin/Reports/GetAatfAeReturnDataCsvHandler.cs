@@ -39,7 +39,7 @@
 
             foreach (var item in items)
             {
-                 item.AatfDataUrl = string.Format(@" =HYPERLINK(""""{0}{1}#data"""", """"View AATF data"""")", request.AatfDataUrl, item.AatfId);
+                 item.AatfDataUrl = string.Format(@" =HYPERLINK(""""{0}{1}#data"""", """"View AATF / AE data"""")", request.AatfDataUrl, item.AatfId);
             }
 
             CsvWriter<AatfAeReturnData> csvWriter = csvWriterFactory.Create<AatfAeReturnData>();

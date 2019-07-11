@@ -16,7 +16,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>This report includes all AATFs / AEs that are expected to provide data for the selected year and quarter (based on their approval date), regardless of the status of the AATF / AE. It does not include details of any resubmitted returns</p>
+        <p>This report includes all AATFs / AEs that are expected to provide data for the selected year and quarter (based on their approval date), regardless of the status of the AATF / AE. It does not include details of any resubmitted returns.</p>
         <p>Filter the report to download entries that match your criteria</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
@@ -66,7 +66,7 @@
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-                                                           "Report download", "Summary of AATF / AE returns to date", new Dictionary<string, object> { { "class", "button" } }))
+                                                                   "Report download", "Summary of AATF / AE returns to date", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -77,8 +77,31 @@
     </p>
 }
 @section scripts {
-    @Scripts.Render("~/bundles/hide-classes-when-competent-authory-is-not-ea")
+    <script type="text/javascript">
+        function competentAuthoritySelection() {
+            var competentAuthority = $("#CompetentAuthorityId option:selected").html();
 
+            if (competentAuthority === "EA") {
+                $(".competent-authority-hidden").css("display", "block");
+
+                $('a[href*="PanAreaId"]').parent().css("display", "");
+                $('a[href*="LocalAreaId"]').parent().css("display", "");
+            }
+            else {
+                $(".competent-authority-hidden").css("display", "none");
+                $(".competent-authority-hidden").find("select").val('');
+
+                $('a[href*="PanAreaId"]').parent().css("display", "none");
+                $('a[href*="LocalAreaId"]').parent().css("display", "none");
+            }
+        }
+        competentAuthoritySelection();
+
+        $("#CompetentAuthorityId").change(function () {
+            competentAuthoritySelection();
+        });
+
+    </script>
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
