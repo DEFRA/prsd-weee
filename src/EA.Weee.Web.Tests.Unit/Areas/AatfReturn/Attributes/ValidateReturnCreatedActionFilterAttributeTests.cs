@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using Core.AatfReturn;
+    using EA.Prsd.Core;
     using EA.Weee.Web.Infrastructure;
     using FakeItEasy;
     using FluentAssertions;
@@ -40,9 +41,11 @@
                 ReturnStatus = ReturnStatus.Submitted
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -52,6 +55,8 @@
                A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             var result = context.Result as RedirectToRouteResult;
 
@@ -70,9 +75,11 @@
                 ReturnStatus = ReturnStatus.Created
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -82,6 +89,8 @@
                 A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             context.Result.Should().BeNull();
         }
@@ -95,6 +104,8 @@
                 ReturnStatus = ReturnStatus.Created
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
             var returnData = new ReturnData()
             {
                 QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31))
@@ -107,6 +118,8 @@
                 A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             RedirectResult result = context.Result as RedirectResult;
 
@@ -122,9 +135,11 @@
                 ReturnStatus = ReturnStatus.Created
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -134,6 +149,8 @@
                 A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             context.Result.Should().BeNull();
         }
