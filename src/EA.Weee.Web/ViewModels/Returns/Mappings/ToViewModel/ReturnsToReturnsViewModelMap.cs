@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Prsd.Core;
     using WebGrease.Css.Extensions;
 
     public class ReturnsToReturnsViewModelMap : IMap<ReturnsData, ReturnsViewModel>
@@ -61,8 +63,46 @@
                 model.ComplianceYear = source.ReturnQuarter.Year;
                 model.Quarter = source.ReturnQuarter.Q;
             }
+            else
+            {
+                model.ErrorMessageForNotAllowingCreateReturn = WorkOutErrorMessageForNotAllowingCreateReturn(source);
+            }
 
             return model;
+        }
+
+        private string WorkOutErrorMessageForNotAllowingCreateReturn(ReturnsData source)
+        {
+            if (!WindowHelper.IsThereAnOpenWindow())
+            {
+               return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", DateTime.Now.AddYears(-1).Year, DateTime.Now.Year);
+            }
+            else
+            {
+                foreach (Quarter q in source.OpenQuarters)
+                {
+                    if (source.ReturnsList.Count(p => p.Quarter == q) > 0)
+                    {
+                        QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
+                        //int complianceYear = nextQuarter == QuarterType.Q1 ? DateTime.Now.Year : DateTime.Now.AddYears(-1).Year;
+
+                        return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", DateTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
+                    }
+                }
+            }
+            return "a";
+        }
+
+        private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)
+        {
+            QuarterType latestOpen = openQuarters.OrderByDescending(p => p.Q).First().Q;
+
+            if ((int)latestOpen == 4)
+            {
+                return QuarterType.Q1;
+            }
+
+            return (QuarterType)((int)latestOpen + 1);
         }
     }
 }

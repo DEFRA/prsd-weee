@@ -5,12 +5,12 @@
 
     public static class WindowHelper
     {
-        public static bool IsWindowClosed()
-        {
+        public static bool IsThereAnOpenWindow()
+        { 
             DateTime closedPeriodStart = new DateTime(SystemTime.UtcNow.Year, 03, 17);
             DateTime closedPeriodEnd = new DateTime(SystemTime.UtcNow.Year, 04, 01);
 
-            return SystemTime.UtcNow >= closedPeriodStart && SystemTime.UtcNow < closedPeriodEnd;
+            return !(SystemTime.UtcNow >= closedPeriodStart && SystemTime.UtcNow < closedPeriodEnd);
         }
     }
 }
