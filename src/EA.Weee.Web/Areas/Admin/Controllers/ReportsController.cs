@@ -477,8 +477,8 @@
           int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
         {
             CSVFileData fileData;
-
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea);
+            string aatfDataUrl = (HttpContext.Request != null && HttpContext.Request.Url != null) ? string.Concat(HttpContext.Request.Url.Scheme, "://", HttpContext.Request.Url.Authority, "/admin/aatf/details/") : string.Empty;
+            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
             using (IWeeeClient client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
