@@ -1176,6 +1176,7 @@
     <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
     <Content Include="Views\Shared\_WeeeFooter.cshtml" />
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
+    <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
