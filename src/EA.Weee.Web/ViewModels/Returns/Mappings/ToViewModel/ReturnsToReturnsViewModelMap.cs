@@ -37,7 +37,7 @@
 
             var groupedEdits = model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit)
                 .OrderByDescending(r => Convert.ToDateTime(r.ReturnViewModel.CreatedDate))
-                .GroupBy(r => new {r.ReturnViewModel.Year, r.ReturnViewModel.Quarter});
+                .GroupBy(r => new { r.ReturnViewModel.Year, r.ReturnViewModel.Quarter });
 
             foreach (var groupedEdit in groupedEdits)
             {
@@ -75,21 +75,18 @@
         {
             if (!WindowHelper.IsThereAnOpenWindow())
             {
-               return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", SystemTime.Now.AddYears(-1).Year, SystemTime.Now.Year);
+                return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", SystemTime.Now.AddYears(-1).Year, SystemTime.Now.Year);
             }
-            else
+            foreach (Quarter q in source.OpenQuarters)
             {
-                foreach (Quarter q in source.OpenQuarters)
+                if (source.ReturnsList.Count(p => p.Quarter == q) > 0)
                 {
-                    if (source.ReturnsList.Count(p => p.Quarter == q) > 0)
-                    {
-                        QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
+                    QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
-                        return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
-                    }
+                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
                 }
             }
-            return string.Empty;
+            return "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
         }
 
         private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)

@@ -240,7 +240,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 3, 17));
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
 
             SystemTime.Unfreeze();
 
@@ -268,7 +268,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 07, 11));
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
 
             SystemTime.Unfreeze();
 
@@ -298,11 +298,24 @@
 
             SystemTime.Freeze(new DateTime(2020, 01, 01));
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
 
             SystemTime.Unfreeze();
 
             Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2020 Q1 returns on {0}.", nextQuater.StartDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnQuarter_NoReturns_ErrorMessageDisplayedIsNotExpectedToSubmitReturn()
+        {
+            List<ReturnData> returnData = new List<ReturnData>();
+            List<Quarter> openQuarters = new List<Quarter>();
+
+            QuarterWindow nextQuater = new QuarterWindow(new DateTime(2020, 01, 01), new DateTime(2020, 03, 16));
+
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+
+            Assert.Equal("You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.", result.ErrorMessageForNotAllowingCreateReturn);
         }
     }
 }
