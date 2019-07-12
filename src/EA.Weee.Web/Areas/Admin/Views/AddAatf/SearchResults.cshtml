@@ -6,79 +6,95 @@
     ViewBag.Title = "Choose an organisation";
 }
 
-@section main_content
+@if (Model.Results.Count > 0)
 {
-    @if (Model.Results.Count > 0)
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Search results
+        </h1>
+        <h2 class="govuk-heading-s">We found results for ‘@Model.SearchTerm’</h2>
+    </header>
+
+    using (Html.BeginForm())
     {
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">
-                Search results
-            </h1>
-            <h2 class="govuk-heading-s">We found results for ‘@Model.SearchTerm’</h2>
-        </header>
-
-        using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            @Html.Gds().ValidationSummary()
-            @Html.HiddenFor(m => m.FacilityType)
-
-            <p class="govuk-body">If the organisation is not listed, this may be because:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>you mistyped the organisation’s name</li>
-                <li>the organisation has not yet been created in our service</li>
-                <li>you entered something other than the organisation name</li>
-            </ul>
-
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
-                @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
-                @this.WeeeGds().RadioButtonsFor(
-                    m => m.SelectedOrganisationId,
-                    Model.Results,
-                    r => r.OrganisationId,
-                    r => r.NameWithAddress,
-                    RadioButtonLegend.VisuallyHidden,
-                    RadioButtonLayout.Stacked)
-            </div>
-
-            @(this.WeeeGds().Submit("Continue"))
-        }
-
-        <p>
-            @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, null)
-        </p>
-        <p>
-            @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = Model.SearchTerm, facilityType = Model.FacilityType }, null)
-        </p>
-    }
-    else
-    {
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">
-                No results found
-            </h1>
-            <h2 class="govuk-heading-s">We found no results for ‘@Model.SearchTerm’</h2>
-        </header>
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.FacilityType)
 
         <p class="govuk-body">If the organisation is not listed, this may be because:</p>
-
         <ul class="govuk-list govuk-list--bullet">
             <li>you mistyped the organisation’s name</li>
             <li>the organisation has not yet been created in our service</li>
             <li>you entered something other than the organisation name</li>
         </ul>
-        <p>
-            @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, new { @class = "govuk-button" })
-        </p>
-        <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm, Model.FacilityType)))">Create a new organisation</a>
-        </p>
+
+        <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" style="width:5%" scope="col">Select</th>
+                    <th class="govuk-table__header" style="width:40%" scope="col">Name</th>
+                    <th class="govuk-table__header" style="width:40%" scope="col">Address</th>
+                    <th class="govuk-table__header" style="width:5%" scope="col">PCS</th>
+                    <th class="govuk-table__header" style="width:5%" scope="col">AATF</th>
+                    <th class="govuk-table__header" style=" width: 5%; padding-right: 20px;" scope="col">AE</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var org in Model.Results)
+                {
+                    {
+                        var id = "selectOrg" + org.OrganisationId;
+
+                        <tr>
+                            <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
+                            <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
+                            <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
+                            <td class="govuk-table__cell" style="text-align:right;">@org.PcsCount</td>
+                            <td class="govuk-table__cell" style="text-align:right;">@org.AatfCount</td>
+                            <td class="govuk-table__cell" style="text-align:right; padding-right: 10px;">@org.AeCount</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @(this.WeeeGds().Submit("Continue"))
     }
+
+    <p>
+        @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, null)
+    </p>
+    <p>
+        @Html.ActionLink("Create a new organisation", "Type", "AddAatf", new { searchedText = Model.SearchTerm, facilityType = Model.FacilityType }, null)
+    </p>
+}
+else
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            No results found
+        </h1>
+        <h2 class="govuk-heading-s">We found no results for ‘@Model.SearchTerm’</h2>
+    </header>
+
+    <p class="govuk-body">If the organisation is not listed, this may be because:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>you mistyped the organisation’s name</li>
+        <li>the organisation has not yet been created in our service</li>
+        <li>you entered something other than the organisation name</li>
+    </ul>
+    <p>
+        @Html.ActionLink("Start another search", "Search", "AddAatf", new { facilityType = Model.FacilityType }, new { @class = "govuk-button" })
+    </p>
+    <p>
+        <a href="@(Url.UrlFor<AddAatfController>(u => u.Type(Model.SearchTerm, Model.FacilityType)))">Create a new organisation</a>
+    </p>
 }
 
 @section scripts{
     <script type="text/javascript">
-        $('#organisations tr').click(function () {
+        $('#organisationSearchResultsTable tr').click(function () {
             $(this).find('td input[type=radio]').prop('checked', true);
         })
     </script>

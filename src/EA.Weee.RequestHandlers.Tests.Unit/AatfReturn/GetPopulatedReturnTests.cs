@@ -299,5 +299,15 @@
 
             result.Should().Be(returnData);
         }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnNotFound_ArgumentExceptionExpected()
+        {
+            A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns((Return)null);
+
+            var exception = await Xunit.Record.ExceptionAsync(() => populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>()));
+
+            exception.Should().BeOfType<ArgumentException>();
+        }
     }
 }
