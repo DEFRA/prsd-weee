@@ -279,7 +279,7 @@
         }
 
         [Fact]
-        public async Task FetchCompleteOrganisations_OrganisationHasNoScheme_OrganisationNotReturned()
+        public async Task FetchCompleteOrganisations_OrganisationHasNoRelatedEntities_OrganisationNotReturned()
         {
             using (var database = new DatabaseWrapper())
             {
