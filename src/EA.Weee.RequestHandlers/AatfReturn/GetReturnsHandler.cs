@@ -28,8 +28,8 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public GetReturnsHandler(IWeeeAuthorization authorization,
-            IGetPopulatedReturn getPopulatedReturn, 
-            IReturnDataAccess returnDataAccess, 
+            IGetPopulatedReturn getPopulatedReturn,
+            IReturnDataAccess returnDataAccess,
             IReturnFactory returnFactory,
             IQuarterWindowFactory quarterWindowFactory)
         {
@@ -48,7 +48,7 @@
 
             var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility);
 
-            var openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
+            List<Domain.DataReturns.QuarterWindow> openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
 
             var returnsData = new List<ReturnData>();
 
@@ -68,9 +68,9 @@
 
             if (openQuarters.Count > 0)
             {
-                var latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
+                Domain.DataReturns.QuarterWindow latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
 
-                var nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
+                Domain.DataReturns.QuarterWindow nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
 
                 nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate);
             }
