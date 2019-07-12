@@ -29,21 +29,29 @@
                         </div>
                     }
 
-                    <div>
-                        @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
-                       "If you want to start a different return other than the one available, contact your environmental regulator",
-                       "Hidden content",
-                       "Progressive disclosure",
-                       "I need to submit a return for a different quarter (AATF)")
-                    </div>
+                    <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
+                        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
+                            <span class="govuk-details__summary-text">
+                                I need to submit a return for a different quarter
+                            </span>
+                        </summary>
+                        <div>
+                            @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
+                                "If you want to start a different return other than the one available, contact your environmental regulator",
+                                "Hidden content",
+                                "Progressive disclosure",
+                                "I need to submit a return for a different quarter (AATF)")
+                        </div>
+                    </details>
                 </div>
             </div>
         }
         else
         {
-            <p>You can't start a new return at the moment. If you think this is incorrect, contact your environmental regulator.</p>
+            <p>
+               @Model.ErrorMessageForNotAllowingCreateReturn
+            </p>
         }
-
         @if (Model.Returns.Count > 0)
         {
             <table class="govuk-table prsd-table-collapse">

@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Prsd.Core;
     using WebGrease.Css.Extensions;
 
     public class ReturnsToReturnsViewModelMap : IMap<ReturnsData, ReturnsViewModel>
@@ -35,7 +37,7 @@
 
             var groupedEdits = model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit)
                 .OrderByDescending(r => Convert.ToDateTime(r.ReturnViewModel.CreatedDate))
-                .GroupBy(r => new {r.ReturnViewModel.Year, r.ReturnViewModel.Quarter});
+                .GroupBy(r => new { r.ReturnViewModel.Year, r.ReturnViewModel.Quarter });
 
             foreach (var groupedEdit in groupedEdits)
             {
@@ -61,8 +63,42 @@
                 model.ComplianceYear = source.ReturnQuarter.Year;
                 model.Quarter = source.ReturnQuarter.Q;
             }
+            else
+            {
+                model.ErrorMessageForNotAllowingCreateReturn = WorkOutErrorMessageForNotAllowingCreateReturn(source);
+            }
 
             return model;
+        }
+
+        private string WorkOutErrorMessageForNotAllowingCreateReturn(ReturnsData source)
+        {
+            if (!WindowHelper.IsThereAnOpenWindow())
+            {
+                return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", SystemTime.Now.AddYears(-1).Year, SystemTime.Now.Year);
+            }
+            foreach (Quarter q in source.OpenQuarters)
+            {
+                if (source.ReturnsList.Count(p => p.Quarter == q) > 0)
+                {
+                    QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
+
+                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
+                }
+            }
+            return "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
+        }
+
+        private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)
+        {
+            QuarterType latestOpen = openQuarters.OrderByDescending(p => p.Q).First().Q;
+
+            if ((int)latestOpen == 4)
+            {
+                return QuarterType.Q1;
+            }
+
+            return (QuarterType)((int)latestOpen + 1);
         }
     }
 }
