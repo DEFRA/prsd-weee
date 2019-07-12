@@ -1107,16 +1107,18 @@ details summary::-ms-details-marker {
 }
 
 .summary-paragraph {
-     margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
-.summary-paragraph-align-right{
+.summary-paragraph-align-right {
     text-align: right;
 }
 
 .summary-row {
-    height: 45px;
-    padding-bottom: 0;
+}
+
+.tasklist-row {
+    padding-bottom: 0 !important;
 }
 
 .not-reported-column {
