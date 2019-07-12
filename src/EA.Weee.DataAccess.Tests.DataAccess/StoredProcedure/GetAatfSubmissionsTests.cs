@@ -33,6 +33,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeReceived.Add(weeeReceived);
                 db.WeeeContext.WeeeReceivedAmount.AddRange(weeeReceivedAmounts);
 
@@ -90,6 +91,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeReceived.Add(weeeReceived);
                 db.WeeeContext.WeeeReceivedAmount.AddRange(weeeReceivedAmounts);
 
@@ -120,6 +122,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeReused.Add(weeeReused);
                 db.WeeeContext.WeeeReusedAmount.AddRange(weeeReusedAmounts);
 
@@ -150,6 +153,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeReused.Add(weeeReused);
                 db.WeeeContext.WeeeReusedAmount.AddRange(weeeReusedAmounts);
 
@@ -180,6 +184,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeSentOn.Add(weeeSentOn);
                 db.WeeeContext.WeeeSentOnAmount.AddRange(weeeSentOnAmounts);
 
@@ -210,6 +215,7 @@
                 };
 
                 db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.WeeeSentOn.Add(weeeSentOn);
                 db.WeeeContext.WeeeSentOnAmount.AddRange(weeeSentOnAmounts);
 
@@ -255,6 +261,8 @@
 
                 db.WeeeContext.Returns.Add(@return1);
                 db.WeeeContext.Returns.Add(@return2);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return1));
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return2));
                 db.WeeeContext.WeeeSentOn.Add(weeeSentOn1);
                 db.WeeeContext.WeeeSentOn.Add(weeeSentOn2);
                 db.WeeeContext.WeeeSentOnAmount.Add(weeeSentOnAmount1);
