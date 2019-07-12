@@ -90,6 +90,7 @@
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
     <Compile Include="Admin\AddAatf.cs" />
+    <Compile Include="Admin\CheckApprovalNumberIsUnique.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
