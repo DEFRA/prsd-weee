@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
+    using EA.Prsd.Core;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -61,14 +62,6 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
-        {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
-
-            result.ViewName.Should().Be("Index");
-        }
-
-        [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
@@ -83,7 +76,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
             await controller.Index(organisationId, returnId);
+            SystemTime.Unfreeze();
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
 
