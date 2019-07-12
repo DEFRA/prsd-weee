@@ -82,28 +82,31 @@
             switch (model.SelectedValue)
             {
                 case Reports.ProducerDetails:
-                    return RedirectToAction("ProducerDetails");
+                    return RedirectToAction(nameof(ProducerDetails));
 
                 case Reports.ProducerPublicRegister:
-                    return RedirectToAction("ProducerPublicRegister");
+                    return RedirectToAction(nameof(ProducerPublicRegister));
 
                 case Reports.UkWeeeData:
-                    return RedirectToAction("UkWeeeData");
+                    return RedirectToAction(nameof(UkWeeeData));
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction(nameof(UkWeeeDataAtAatfs));
 
                 case Reports.ProducerEeeData:
-                    return RedirectToAction("ProducerEeeData");
+                    return RedirectToAction(nameof(ProducerEeeData));
 
                 case Reports.SchemeWeeeData:
-                    return RedirectToAction("SchemeWeeeData");
+                    return RedirectToAction(nameof(SchemeWeeeData));
 
                 case Reports.UkEeeData:
-                    return RedirectToAction("UkEeeData");
+                    return RedirectToAction(nameof(UkEeeData));
 
                 case Reports.SchemeObligationData:
-                    return RedirectToAction("SchemeObligationData");
+                    return RedirectToAction(nameof(SchemeObligationData));
 
                 case Reports.MissingProducerData:
-                    return RedirectToAction("MissingProducerData");
+                    return RedirectToAction(nameof(MissingProducerData));
 
                 default:
                     throw new NotSupportedException();
@@ -325,6 +328,45 @@
             GetUkWeeeCsv request = new GetUkWeeeCsv(complianceYear);
             using (var client = apiClient())
             {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UkWeeeDataAtAatfs()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new ProducersDataViewModel();
+            await PopulateFilters(model, false);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UkWeeeDataAtAatfs(ProducersDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model, false);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkWeeeDataAtAatfsCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            var request = new GetUkWeeeAtAatfsCsv(complianceYear);
+            using (var client = apiClient())
+            {
+                // TODO: Implement GetUkWeeeAtAatfsCsv handler
                 file = await client.SendAsync(User.GetAccessToken(), request);
             }
 
