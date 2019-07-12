@@ -37,5 +37,10 @@
         {
             return await context.ReturnAatfs.Where(r => r.Return.Id.Equals(returnId)).Select(r => r.Aatf).ToListAsync();
         }
+
+        public async Task<Aatf> FetchByApprovalNumber(string approvalNumber)
+        {
+            return await context.Aatfs.FirstOrDefaultAsync(p => p.ApprovalNumber == approvalNumber);
+        }
     }
 }
