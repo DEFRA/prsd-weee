@@ -108,6 +108,7 @@
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
+    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
