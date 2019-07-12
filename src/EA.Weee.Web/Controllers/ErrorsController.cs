@@ -33,6 +33,12 @@
         }
 
         [HttpGet]
+        public ActionResult QuarterClosed()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ErrorRedirect()
         {
             var authState = await weeeAuthorization.GetAuthorizationState();
