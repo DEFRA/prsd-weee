@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using AutoFixture;
     using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
@@ -23,10 +24,17 @@
 
     public class ReportsControllerTests
     {
+        private readonly Fixture fixture;
+
+        public ReportsControllerTests()
+        {
+            fixture = new Fixture();
+        }
+
         /// <summary>
         /// These tests ensure that the GET "Index" action prevents users who are inactive, pending or rejected
         /// from accessing the index action by redirecting them to the "InternalUserAuthorizationRequired"
-        /// action of the account controller.
+        /// action of tyhe account controller.
         /// </summary>
         /// <param name="userStatus"></param>
         /// <returns></returns>
@@ -101,7 +109,7 @@
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "choosereport");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ChooseReportViewModel viewModel = viewResult.Model as ChooseReportViewModel;
             Assert.NotNull(viewModel);
@@ -128,7 +136,7 @@
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "choosereport");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
         }
 
         /// <summary>
@@ -224,7 +232,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "producerdetails");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ReportsFilterViewModel model = viewResult.Model as ReportsFilterViewModel;
             Assert.NotNull(model);
@@ -325,7 +333,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "producerdetails");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ReportsFilterViewModel model = viewResult.Model as ReportsFilterViewModel;
             Assert.NotNull(model);
@@ -744,7 +752,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -835,7 +843,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -1011,7 +1019,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UkWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -1092,7 +1100,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UkWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -1236,6 +1244,256 @@
         }
 
         /// <summary>
+        /// This test ensures that the GET "UKWeeeDataAtAatfs" action calls the API to retrieve
+        /// the list of compliance years and returns the "UKWeeeDataAtAatfs" view with 
+        /// a ProducerDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUkWeeeDataAtAatfs_Always_ReturnsUKWeeeDataAtAatfsProducerDataViewModel()
+        {
+            // Arrange
+            var years = new List<int>() { 2001, 2002 };
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetDataReturnsActiveComplianceYears>.Ignored)).Returns(years);
+
+            var controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            var result = await controller.UkWeeeDataAtAatfs();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
+
+            var model = viewResult.Model as ProducersDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "UKWeeeDataAtAatfs" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUkWeeeDataAtAatfs_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            var controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            var result = await controller.UkWeeeDataAtAatfs();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "UKWeeeDataAtAatfs" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUkWeeeDataAtAatfs_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            var breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            var controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            var result = await controller.UkWeeeDataAtAatfs();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UkWeeeDataAtAatfs" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "UkWeeeDataAtAatfs"
+        /// view with a ProducerDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUkWeeeDataAtAatfs_WithInvalidViewModel_ReturnsUkWeeeDataAtAatfsProducerDataViewModel()
+        {
+            // Arrange
+            var years = new List<int>() { 2001, 2002 };
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetDataReturnsActiveComplianceYears>.Ignored)).Returns(years);
+
+            var controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            var viewModel = new ProducersDataViewModel();
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.UkWeeeDataAtAatfs(viewModel);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
+
+            var model = viewResult.Model as ProducersDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UkWeeeDataAtAatfs" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUkWeeeDataAtAatfs_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            var controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            var viewModel = new ProducersDataViewModel();
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.UkWeeeDataAtAatfs(viewModel);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UkWeeeDataAtAatfs" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUkWeeeDataAtAatfs_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            var controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            var viewModel = new ProducersDataViewModel();
+
+            // Act
+            var result = await controller.UkWeeeDataAtAatfs(viewModel);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UkWeeeDataAtAatfs" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUkWeeeDataAtAatfs_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            var breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            var controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            var result = await controller.UkWeeeDataAtAatfs(A.Dummy<ProducersDataViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadUkWeeeDataAtAatfsCsv" action will
+        /// call the API to generate a CSV file which is returned with the correct file name.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadUkWeeeDataAtAatfsCsv_Always_CallsApiAndReturnsFileResultWithCorrectFileName()
+        {
+            // Arrange
+            var filename = fixture.Create<string>();
+            var file = new FileInfo(filename, new byte[] { 1, 2, 3 });
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUkWeeeAtAatfsCsv>.Ignored))
+                .WhenArgumentsMatch(a => a.Get<GetUkWeeeAtAatfsCsv>("request").ComplianceYear == 2015)
+                .Returns(file);
+
+            var controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            var viewModel = new ProducersDataViewModel();
+
+            // Act
+            var result = await controller.DownloadUkWeeeDataAtAatfsCsv(2015);
+
+            // Assert
+            var fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal(filename, fileResult.FileDownloadName);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadUkWeeeDataAtAatfsCsv" action will
+        /// call the API to generate a CSV file which is returned with a content
+        /// type of "text/csv"
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadUkWeeeDataAtAatfsCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextCsv()
+        {
+            // Arrange
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<GetUkWeeeCsv>.Ignored))
+                .WhenArgumentsMatch(a => a.Get<int>("complianceYear") == 2015)
+                .Returns(A.Dummy<FileInfo>());
+
+            var controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            var viewModel = new ProducersDataViewModel();
+
+            // Act
+            var result = await controller.DownloadUkWeeeDataAtAatfsCsv(2015);
+
+            // Assert
+            var fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("text/csv", fileResult.ContentType);
+        }
+
+        /// <summary>
         /// This test ensures that the GET "SchemeObligationData" action returns the
         /// "SchemeObligationData" view with a ComplianceYearReportViewModel that has be populated
         /// with a list of years.
@@ -1256,7 +1514,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
+            Assert.Equal("SchemeObligationData", viewResult.ViewName);
 
             SchemeObligationDataViewModel model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
@@ -1332,7 +1590,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "SchemeObligationData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             SchemeObligationDataViewModel model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
@@ -1439,7 +1697,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "MissingProducerData");
+            Assert.Equal("MissingProducerData", viewResult.ViewName);
 
             MissingProducerDataViewModel model = viewResult.Model as MissingProducerDataViewModel;
             Assert.NotNull(model);
@@ -1528,7 +1786,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "MissingProducerData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
             MissingProducerDataViewModel model = viewResult.Model as MissingProducerDataViewModel;
             Assert.NotNull(model);

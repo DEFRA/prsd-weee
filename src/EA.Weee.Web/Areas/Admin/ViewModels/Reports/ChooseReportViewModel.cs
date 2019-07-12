@@ -13,6 +13,7 @@
                 Reports.SchemeWeeeData,
                 Reports.UkEeeData,
                 Reports.UkWeeeData,
+                Reports.UkWeeeDataAtAatfs,
                 Reports.ProducerPublicRegister,
                 Reports.SchemeObligationData,
                 Reports.MissingProducerData
