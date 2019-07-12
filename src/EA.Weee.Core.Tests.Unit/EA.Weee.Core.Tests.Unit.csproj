@@ -123,6 +123,7 @@
     <Compile Include="AatfReturn\AatfSchemeDataTests.cs" />
     <Compile Include="AatfReturn\AatfObligatedDataTests.cs" />
     <Compile Include="AatfReturn\WeeObligatedTests.cs" />
+    <Compile Include="Helpers\QuarterHelperTests.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
