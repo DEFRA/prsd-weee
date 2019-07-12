@@ -166,6 +166,51 @@
             }
         }
 
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumber_ReturnedShouldBeAatf()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                string approvalNumber = "test";
+
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019, approvalNumber);
+
+                await genericDataAccess.Add(aatf);
+
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber);
+
+                Assert.NotNull(result);
+                Assert.Equal(approvalNumber, result.ApprovalNumber);
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumberThatDoesntExist_ReturnedShouldNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                string approvalNumber = "test";
+
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await genericDataAccess.Add(aatf);
+
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber);
+
+                Assert.Null(result);
+            }
+        }
+
         private async Task CreateWeeeReceived(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
         {
             var scheme = new EA.Weee.Domain.Scheme.Scheme(aatf.Organisation);
@@ -192,7 +237,7 @@
             await genericDataAccess.Add<Domain.AatfReturn.WeeeReused>(reused);
         }
 
-        private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year)
+        private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year, string approvalNumber = null)
         {
             var country = database.WeeeContext.Countries.First();
             var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
@@ -200,9 +245,14 @@
             var organisation = Organisation.CreatePartnership("Dummy");
             var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
 
+            if (approvalNumber == null)
+            {
+                approvalNumber = "12345678";
+            }
+
             return new Aatf("name",
                 competentAuthority,
-                "12345678",
+                approvalNumber,
                 AatfStatus.Approved,
                 organisation,
                 AddressHelper.GetAatfAddress(database),
