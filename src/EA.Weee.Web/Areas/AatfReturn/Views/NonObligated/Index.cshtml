@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
     ViewBag.Title = "Non-obligated WEEE - GOV.UK";
@@ -19,7 +20,7 @@
                 if (Model.Dcf == true)
                 {
                     <h1 class="govuk-heading-l">Non-obligated WEEE retained by a DCF</h1>
-                    <p class="govuk-body">This is how much of the total non-obligated WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment</p>
+                    <p class="govuk-body">This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep under regulation 53 and has sent to you for treatment</p>
                 }
                 else
                 {
@@ -43,7 +44,14 @@
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, dcf = Model.Dcf, action = "Index", controller = "NonObligatedValuesCopyPaste" }, null)
+
+                @(this.WeeeGds().ActionLinkWithEventTracking("Use copy and paste to populate the table",
+                "Use copy and paste to populate the table",
+                Url.RouteUrl(AatfRedirect.Default, new { returnId = Model.ReturnId, dcf = Model.Dcf, action = "Index", controller = "NonObligatedValuesCopyPaste" }),
+                "AATF return",
+                "Use copy paste",
+                "Use copy paste"
+                ))
             </div>
         </div>
 

@@ -38,10 +38,11 @@
         @Html.ActionLink("Create a user account", "Create", "Account")
     </p>
     <p>
-        @(this.WeeeGds().ActionLinkWithEventTracking("Reset password", 
+        @(this.WeeeGds().ActionLinkWithEventTracking("Reset password",
+            "Reset password",
             Url.UrlFor<AccountController>(c => c.ResetPasswordRequest()),
-            "User account", 
-            "Reset password", 
+            "User account",
+            "Reset password",
             "Internal"
             ))
     </p>

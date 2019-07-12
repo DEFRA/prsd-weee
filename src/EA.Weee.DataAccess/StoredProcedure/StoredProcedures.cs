@@ -425,5 +425,25 @@
                     "[PCS].[spgSubmissionChangesCsvData] @MemberUploadId", memberUploadIdParameter)
                     .ToListAsync();
         }
+
+        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
+           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
+            SqlParameter facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
+            SqlParameter returnStatusParameter = new SqlParameter("@ReturnStatus", (object)returnStatus ?? DBNull.Value);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<AatfAeReturnData>(
+                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
+                    complianceYearParameter,                  
+                    quarterParameter,
+                    facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)
+                .ToListAsync();
+        }
     }
 }

@@ -10,5 +10,6 @@
         public const string UkEeeData = "UK EEE data";
         public const string UkWeeeData = "UK WEEE data";
         public const string MissingProducerData = "Missing producer data";
+        public const string AatfAeReturnData = "Summary of AATF / AE returns to date";
     }
 }
