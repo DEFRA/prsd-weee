@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;

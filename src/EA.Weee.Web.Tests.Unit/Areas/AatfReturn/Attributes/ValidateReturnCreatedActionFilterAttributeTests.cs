@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using Core.AatfReturn;
+    using EA.Prsd.Core;
     using EA.Weee.Web.Infrastructure;
     using FakeItEasy;
     using FluentAssertions;
@@ -34,38 +35,122 @@
         [Fact]
         public async void OnActionExecuting_GivenReturnStatusIsNotCreated_ShouldBeRedirectedToTaskList()
         {
-            var returnData = new ReturnStatusData()
+            var returnStatusData = new ReturnStatusData()
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnStatus = ReturnStatus.Submitted
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+            };
+
             A.CallTo(() => client.SendAsync(A<string>._,
-                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
+                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnStatusData);
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+               A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             var result = context.Result as RedirectToRouteResult;
 
             result.RouteName.Should().Be(AatfRedirect.ReturnsRouteName);
             result.RouteValues["controller"].Should().Be("Returns");
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["organisationId"].Should().Be(returnData.OrganisationId);
+            result.RouteValues["organisationId"].Should().Be(returnStatusData.OrganisationId);
         }
 
         [Fact]
         public async void OnActionExecuting_GivenReturnStatusIsCreated_ContextResultShouldBeNull()
         {
-            var returnData = new ReturnStatusData()
+            var returnStatusData = new ReturnStatusData()
             {
                 OrganisationId = Guid.NewGuid(),
                 ReturnStatus = ReturnStatus.Created
             };
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+            };
+
             A.CallTo(() => client.SendAsync(A<string>._,
-                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
+                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnStatusData);
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
 
             await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
+
+            context.Result.Should().BeNull();
+        }
+
+        [Fact]
+        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuaterWindowForReturnIsClosed_ContextResultReturnsErrorPage()
+        {
+            var returnStatusData = new ReturnStatusData()
+            {
+                OrganisationId = Guid.NewGuid(),
+                ReturnStatus = ReturnStatus.Created
+            };
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31))
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnStatusData);
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
+
+            await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
+
+            RedirectResult result = context.Result as RedirectResult;
+
+            Assert.Equal("~/errors/QuarterClosed", result.Url);
+        }
+
+        [Fact]
+        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuaterWindowForReturnIsOpen_ContextResultShouldBeNull()
+        {
+            var returnStatusData = new ReturnStatusData()
+            {
+                OrganisationId = Guid.NewGuid(),
+                ReturnStatus = ReturnStatus.Created
+            };
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+
+            var returnData = new ReturnData()
+            {
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturnStatus>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnStatusData);
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetReturn>.That.Matches(r => r.ReturnId.Equals((Guid)context.RouteData.Values["returnId"])))).Returns(returnData);
+
+            await attribute.OnAuthorizationAsync(context, (Guid)context.RouteData.Values["returnId"]);
+
+            SystemTime.Unfreeze();
 
             context.Result.Should().BeNull();
         }
