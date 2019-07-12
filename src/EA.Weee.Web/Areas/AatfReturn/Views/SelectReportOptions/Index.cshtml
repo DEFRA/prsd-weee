@@ -75,7 +75,7 @@
                                     @Model.ReportOnQuestions[i].Description?
                                 </h3>
                                 <p class="govuk-body govuk-!-font-size-16">
-                                    This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment
+                                    This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep under regulation 53 and has sent to you for treatment
                                 </p>
                                 <div class="govuk-form-group" id="WeeeReusedOptions">
                                     <fieldset class="govuk-fieldset inline">
@@ -109,9 +109,15 @@
         @Html.HiddenFor(m => m.DcfSelectedValue)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
-        <p>
-            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId })
-        </p>
+<p>
+    @(this.WeeeGds().ActionLinkWithEventTracking("I don't have any data to report for this quarter",
+    "No data to report",
+    Url.RouteUrl(AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }),
+    "AATF return",
+    "Start AATF nil return",
+    "Start AATF nil return"
+    ))
+</p>
         <button type="submit" class="govuk-button">
             Continue
         </button>
