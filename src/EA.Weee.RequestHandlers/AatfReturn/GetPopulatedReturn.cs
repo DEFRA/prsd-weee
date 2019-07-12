@@ -54,6 +54,11 @@
 
             var @return = await returnDataAccess.GetById(returnId);
 
+            if (@return == null)
+            {
+                throw new ArgumentException($"No return found for return id {returnId}");
+            }
+
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             var annualQuarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);

@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="ConstraintTests.cs" />
     <Compile Include="StoredProcedure\GetAeSubmissionsTests.cs" />
+    <Compile Include="StoredProcedure\GetAatfAeReturnDataCsvDataTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthorityTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataByOrganisationIdAndComplianceYearTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -13,6 +13,7 @@
         <h1 class="govuk-heading-l">Create your user account</h1>
     </header>
     <p>If you have already set up an account, you don’t need to create a new one. Use the link at the bottom of the page to sign in to your account.</p>
+    <p>Your user account will allow you to perform all activities that you need to do (including PCS, AATF or AE as appropriate). It will also allow you to access multiple organisations if you need to.</p>
 
     @using (Html.BeginForm("UserCreation", "NewUser"))
     {
@@ -50,6 +51,7 @@
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
                     @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use",
+                          null,
                           Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
                           "Policies",
                           "Terms and conditions",
@@ -74,13 +76,17 @@
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
 
-                @RenderPage("~/Views/Shared/_PrivacyPolicy.cshtml")
+                @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
+                   @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                   "Policies",
+                   "Privacy",
+                   string.Empty)
 
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                         <input name="PrivacyPolicy" class="govuk-checkboxes__input" id="PrivacyPolicy" type="checkbox" value="true">
                         <label class="govuk-label govuk-checkboxes__label" for="PrivacyPolicy">
-                            Accept privacy notice
+                            Confirm you have read our privacy policy
                         </label>
                         <input name="PrivacyPolicy" type="hidden" value="false">
                     </div>

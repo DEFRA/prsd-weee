@@ -8,19 +8,21 @@
     {
         <li class="govuk-footer__inline-list-item">
             @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
-                  Url.UrlFor<NewUserController>
-                      (c => c.TermsAndConditions()),
-                  "Policies",
-                  "Terms and conditions", "", new Dictionary<string, object>
-                  { { "class", "govuk-footer__link" } }, true
-                  ))
+            null,
+            Url.UrlFor<NewUserController>
+                (c => c.TermsAndConditions()),
+            "Policies",
+            "Terms and conditions", "", new Dictionary<string, object>
+            { { "class", "govuk-footer__link" } }, true
+            ))
         </li>
         <li class="govuk-footer__inline-list-item">
             @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
-                  Url.UrlFor<NewUserController>
-                      (c => c.Privacy()),
-                  "Policies",
-                  "Privacy", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true))
+            null,
+            Url.UrlFor<NewUserController>
+                (c => c.Privacy()),
+            "Policies",
+            "Privacy", "", new Dictionary<string, object> { { "class", "govuk-footer__link" } }, true))
         </li>
     }
     <li class="govuk-footer__inline-list-item">
