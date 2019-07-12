@@ -2,16 +2,15 @@
 {
     using System;
     using System.Web.Mvc;
+    using AutoFixture;
     using Core.DataReturns;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns;
@@ -22,6 +21,7 @@
 
     public class AatfTaskListControllerTests
     {
+        private readonly Fixture fixture;
         private readonly IWeeeClient weeeClient;
         private readonly AatfTaskListController controller;
         private readonly BreadcrumbService breadcrumb;
@@ -29,6 +29,7 @@
 
         public AatfTaskListControllerTests()
         {
+            fixture = new Fixture();
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
@@ -50,10 +51,15 @@
         [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
-            var @return = A.Fake<ReturnData>();
-            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31)))
+                .Create();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
             await controller.Index(A.Dummy<Guid>());
+            SystemTime.Unfreeze();
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
@@ -71,22 +77,18 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
-        {
-            var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
-
-            result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
         public async void IndexGet_GivenReturn_AatfTaskListViewModelShouldBeBuilt()
         {
-            var @return = A.Fake<ReturnData>();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31)))
+                .Create();
 
-            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
             await controller.Index(A.Dummy<Guid>());
+            SystemTime.Unfreeze();
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -95,12 +97,17 @@
         public async void IndexGet_GivenActionAndParameters_AatfTaskListViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
-            var @return = A.Fake<ReturnData>();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31)))
+                .Create();
 
-            A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
+            SystemTime.Unfreeze();
 
             result.Model.Should().BeEquivalentTo(model);
         }
