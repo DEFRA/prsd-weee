@@ -340,20 +340,20 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            var model = new ProducersDataViewModel();
-            await PopulateFilters(model, false);
+            var model = new UkWeeeDataAtAatfViewModel();
+            await PopulateFilters(model);
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkWeeeDataAtAatfs(ProducersDataViewModel model)
+        public async Task<ActionResult> UkWeeeDataAtAatfs(UkWeeeDataAtAatfViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model, false);
+            await PopulateFilters(model);
 
             return View(model);
         }
@@ -500,6 +500,12 @@
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
 
+            model.ComplianceYears = new SelectList(years);
+        }
+
+        private async Task PopulateFilters(UkWeeeDataAtAatfViewModel model)
+        {
+            var years = await FetchComplianceYearsForDataReturns();
             model.ComplianceYears = new SelectList(years);
         }
 
