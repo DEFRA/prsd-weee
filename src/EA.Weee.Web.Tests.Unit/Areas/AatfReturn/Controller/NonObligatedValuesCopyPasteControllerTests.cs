@@ -135,17 +135,17 @@
 
             var result = await controller.Index(A.Dummy<Guid>(), false) as ViewResult;
             var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
-            viewModel.Typeheading.Should().Be(typeheading);
+            viewModel.TypeHeading.Should().Be(typeheading);
         }
 
         [Fact]
         public async void SetsHeaderTitle_For_DcfObligatedCopyPaste()
         {
-            var typeheading = "Non-obligated WEEE retained by a DCF";
+            var typeheading = "Non-obligated WEEE kept / retained by a DCF";
 
             var result = await controller.Index(A.Dummy<Guid>(), true) as ViewResult;
             var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
-            viewModel.Typeheading.Should().Be(typeheading);
+            viewModel.TypeHeading.Should().Be(typeheading);
         }
 
         [Fact]
