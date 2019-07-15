@@ -321,9 +321,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
-
-                    await cache.InvalidateAatfCache(aatf.Organisation.Id);
+                    await cache.InvalidateAatfCache(existingAatf.Organisation.Id);
 
                     return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
                 }
