@@ -81,6 +81,9 @@
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />

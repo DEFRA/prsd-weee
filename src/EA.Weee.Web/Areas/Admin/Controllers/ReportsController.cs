@@ -505,7 +505,7 @@
 
         private async Task PopulateFilters(UkWeeeDataAtAatfViewModel model)
         {
-            var years = await FetchComplianceYearsForDataReturns();
+            var years = await FetchComplianceYearsForAatfReturns();
             model.ComplianceYears = new SelectList(years);
         }
 
@@ -559,6 +559,15 @@
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
             var request = new GetDataReturnsActiveComplianceYears();
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
+        }
+
+        private async Task<List<int>> FetchComplianceYearsForAatfReturns()
+        {
+            var request = new GetAatfReturnsActiveComplianceYears();
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
