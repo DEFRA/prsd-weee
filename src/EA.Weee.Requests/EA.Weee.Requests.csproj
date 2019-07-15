@@ -95,6 +95,7 @@
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatf.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
     <Compile Include="Admin\GetLocalAreas.cs" />

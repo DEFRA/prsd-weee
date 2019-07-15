@@ -1256,7 +1256,7 @@
             var years = new List<int>() { 2001, 2002 };
 
             var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetDataReturnsActiveComplianceYears>.Ignored)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
 
             var controller = new ReportsController(
                 () => weeeClient,
@@ -1270,7 +1270,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
-            var model = viewResult.Model as ProducersDataViewModel;
+            var model = viewResult.Model as UkWeeeDataAtAatfViewModel;
             Assert.NotNull(model);
             Assert.Collection(model.ComplianceYears,
                 y1 => Assert.Equal("2001", y1.Text),
@@ -1334,13 +1334,13 @@
             var years = new List<int>() { 2001, 2002 };
 
             var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetDataReturnsActiveComplianceYears>.Ignored)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
 
             var controller = new ReportsController(
                 () => weeeClient,
                 A.Dummy<BreadcrumbService>());
 
-            var viewModel = new ProducersDataViewModel();
+            var viewModel = new UkWeeeDataAtAatfViewModel();
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
@@ -1351,7 +1351,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
-            var model = viewResult.Model as ProducersDataViewModel;
+            var model = viewResult.Model as UkWeeeDataAtAatfViewModel;
             Assert.NotNull(model);
             Assert.Collection(model.ComplianceYears,
                 y1 => Assert.Equal("2001", y1.Text),
@@ -1371,7 +1371,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            var viewModel = new ProducersDataViewModel();
+            var viewModel = new UkWeeeDataAtAatfViewModel();
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
@@ -1396,7 +1396,7 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            var viewModel = new ProducersDataViewModel();
+            var viewModel = new UkWeeeDataAtAatfViewModel();
 
             // Act
             var result = await controller.UkWeeeDataAtAatfs(viewModel);
@@ -1423,7 +1423,7 @@
                 breadcrumb);
 
             // Act
-            var result = await controller.UkWeeeDataAtAatfs(A.Dummy<ProducersDataViewModel>());
+            var result = await controller.UkWeeeDataAtAatfs(A.Dummy<UkWeeeDataAtAatfViewModel>());
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
