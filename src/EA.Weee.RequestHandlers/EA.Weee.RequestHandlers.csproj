@@ -78,6 +78,7 @@
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\CheckApprovalNumberIsUniqueHandler.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
