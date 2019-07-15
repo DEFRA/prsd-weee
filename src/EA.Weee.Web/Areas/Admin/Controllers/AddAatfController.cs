@@ -40,7 +40,7 @@
             ISearcher<OrganisationSearchResult> organisationSearcher,
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
-            IWeeeCache cache, 
+            IWeeeCache cache,
             ConfigurationService configurationService)
         {
             this.organisationSearcher = organisationSearcher;
@@ -394,6 +394,14 @@
 
             using (var client = apiClient())
             {
+                bool doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+
+                if (doesApprovalNumberExist)
+                {
+                    ModelState.AddModelError("ApprovalNumber", "Approval number already used");
+                    return View(nameof(Add), viewModel);
+                }
+
                 var request = new AddAatf()
                 {
                     Aatf = CreateFacilityData(viewModel),
@@ -426,7 +434,8 @@
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault(),
                 viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
-                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId)) {FacilityType = viewModel.FacilityType};
+                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId))
+            { FacilityType = viewModel.FacilityType };
 
             return data;
         }
