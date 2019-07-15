@@ -65,14 +65,20 @@
 
 		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete</p>
 
-		@Html.Partial("_PrivacyPolicy");
+	    
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+	    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
+                @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                "Policies",
+                "Privacy",
+                string.Empty)
+
             <fieldset class="govuk-fieldset">
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item" style="padding-left: 0px;">
-                        @Html.Gds().CheckBoxFrontEndFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "govuk-checkboxes__input" })
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.PrivacyPolicy, new {@id = "PrivacyPolicy", @class = "govuk-checkboxes__input"})
                     </div>
                 </div>
             </fieldset>
