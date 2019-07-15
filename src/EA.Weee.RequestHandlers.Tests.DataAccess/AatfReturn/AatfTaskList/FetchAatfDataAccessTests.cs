@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -166,9 +167,22 @@
             }
         }
 
-        [Fact]
-        public async Task FetchAatfByApprovalNumber_GivenApprovalNumber_ReturnedShouldBeAatf()
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumber_ReturnedShouldBeAatf(Core.AatfReturn.FacilityType type)
         {
+            FacilityType facilityType;
+
+            if (type == Core.AatfReturn.FacilityType.Aatf)
+            {
+                facilityType = FacilityType.Aatf;
+            }
+            else
+            {
+                facilityType = FacilityType.Ae;
+            }
+
             using (var database = new DatabaseWrapper())
             {
                 ModelHelper helper = new ModelHelper(database.Model);
@@ -178,7 +192,7 @@
 
                 string approvalNumber = "test";
 
-                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019, approvalNumber);
+                Aatf aatf = await CreateAatf(database, facilityType, DateTime.Now, 2019, approvalNumber);
 
                 await genericDataAccess.Add(aatf);
 
@@ -186,6 +200,7 @@
 
                 Assert.NotNull(result);
                 Assert.Equal(approvalNumber, result.ApprovalNumber);
+                Assert.Equal(facilityType, result.FacilityType);
             }
         }
 
