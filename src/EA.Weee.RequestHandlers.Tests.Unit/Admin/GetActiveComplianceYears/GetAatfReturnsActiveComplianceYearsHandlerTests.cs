@@ -8,43 +8,39 @@
     using Requests.Admin.GetActiveComplianceYears;
     using Xunit;
 
-    public class GetDataReturnsActiveComplianceYearsHandlerTests
+    public class GetAatfReturnsActiveComplianceYearsHandlerTests
     {
-        private readonly IGetDataReturnsActiveComplianceYearsDataAccess dataAccess;
+        private readonly IGetAatfReturnsActiveComplianceYearsDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
 
-        public GetDataReturnsActiveComplianceYearsHandlerTests()
+        public GetAatfReturnsActiveComplianceYearsHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            dataAccess = A.Fake<IGetDataReturnsActiveComplianceYearsDataAccess>();
+            dataAccess = A.Fake<IGetAatfReturnsActiveComplianceYearsDataAccess>();
         }
 
         [Fact]
         public async Task HandleAsync_UserIsNotAuthorized_ThrowsSecurityException_AndDoesNotUseDataAccess()
         {
-            A.CallTo(() => authorization.EnsureCanAccessInternalArea())
-                .Throws<SecurityException>();
+            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).Throws<SecurityException>();
 
-            await
-                Assert.ThrowsAsync<SecurityException>(
-                    () => Handler().HandleAsync(A.Dummy<GetDataReturnsActiveComplianceYears>()));
+            await Assert.ThrowsAsync<SecurityException>(() => Handler().HandleAsync(A.Dummy<GetAatfReturnsActiveComplianceYears>()));
 
-            A.CallTo(() => dataAccess.Get())
-                .MustNotHaveHappened();
+            A.CallTo(() => dataAccess.Get()).MustNotHaveHappened();
         }
 
         [Fact]
         public async Task HandleAsync_UserIsAuthorized_UsesDataAccess()
         {
-            await Handler().HandleAsync(A.Dummy<GetDataReturnsActiveComplianceYears>());
+            await Handler().HandleAsync(A.Dummy<GetAatfReturnsActiveComplianceYears>());
 
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
             A.CallTo(() => dataAccess.Get()).MustHaveHappenedOnceExactly();
         }
 
-        private GetDataReturnsActiveComplianceYearsHandler Handler()
+        private GetAatfReturnsActiveComplianceYearsHandler Handler()
         {
-            return new GetDataReturnsActiveComplianceYearsHandler(authorization, dataAccess);
+            return new GetAatfReturnsActiveComplianceYearsHandler(authorization, dataAccess);
         }
     }
 }
