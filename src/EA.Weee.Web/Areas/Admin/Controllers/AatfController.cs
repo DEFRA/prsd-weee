@@ -254,7 +254,7 @@
                     CanDeleteFlags = canDelete,
                     AatfName = aatfData.Name,
                     OrganisationName = await cache.FetchOrganisationName(organisationId)
-            };
+                };
 
                 return View(viewModel);
             }
@@ -300,9 +300,18 @@
             PreventSiteAddressNameValidationErrors();
             SetBreadcrumb(viewModel.FacilityType, null);
 
-            if (ModelState.IsValid)
+            using (var client = apiClient())
             {
-                using (var client = apiClient())
+                bool doesApprovalNumberExist = false;
+
+                var existingAatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
+
+                if (existingAatf.ApprovalNumber != viewModel.ApprovalNumber)
+                {
+                    doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+                }
+
+                if (ModelState.IsValid && !doesApprovalNumberExist)
                 {
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                     viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
@@ -315,18 +324,15 @@
                     var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
 
                     await cache.InvalidateAatfCache(aatf.Organisation.Id);
+
+                    return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
                 }
 
-                return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
-            }
+                if (!viewModel.ModelValidated)
+                {
+                    ModelState.RunCustomValidation(viewModel);
+                }
 
-            if (!viewModel.ModelValidated)
-            {
-                ModelState.RunCustomValidation(viewModel);
-            }
-
-            using (var client = apiClient())
-            {
                 var accessToken = User.GetAccessToken();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
@@ -334,10 +340,15 @@
                 viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
                 viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
                 viewModel.SiteAddressData.Countries = await client.SendAsync(accessToken, new GetCountries(false));
-            }
 
-            ModelState.ApplyCustomValidationSummaryOrdering(FacilityViewModelBase.ValidationMessageDisplayOrder);
-            return View(nameof(ManageAatfDetails), viewModel);
+                ModelState.ApplyCustomValidationSummaryOrdering(FacilityViewModelBase.ValidationMessageDisplayOrder);
+
+                if (doesApprovalNumberExist)
+                {
+                    ModelState.AddModelError("ApprovalNumber", "Approval number already used");
+                }
+                return View(nameof(ManageAatfDetails), viewModel);
+            }
         }
 
         public virtual string GenerateSharedAddress(Core.Shared.AddressData address)
