@@ -48,6 +48,7 @@
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
             <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">Terms and conditions</legend>
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
                     @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use",
@@ -74,13 +75,14 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">Privacy policy</legend>
                 @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
 
                 @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
-                   @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
-                   "Policies",
-                   "Privacy",
-                   string.Empty)
+                    @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                    "Policies",
+                    "Privacy",
+                    string.Empty)
 
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
