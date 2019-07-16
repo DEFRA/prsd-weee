@@ -46,7 +46,7 @@
                         var id = "selectOrg" + org.OrganisationId;
 
                         <tr>
-                            <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
+                            <td class="govuk-table__cell"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @id })</td>
                             <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
                             <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
                             <td class="govuk-table__cell" style="text-align:right;">@org.PcsCount</td>
