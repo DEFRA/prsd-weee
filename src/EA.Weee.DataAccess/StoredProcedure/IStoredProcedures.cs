@@ -26,6 +26,8 @@
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
+        Task<List<UkNonObligatedWeeeReceivedData>> SpgUKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
+
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
         Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear);

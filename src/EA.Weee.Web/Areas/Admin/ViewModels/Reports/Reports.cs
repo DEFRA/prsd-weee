@@ -9,6 +9,7 @@
         public const string SchemeWeeeData = "PCS WEEE data";
         public const string UkEeeData = "UK EEE data";
         public const string UkWeeeData = "UK WEEE data";
+        public const string UkNonObligatedWeeeData = "UK non-obligated WEEE received at AATFs";
         public const string MissingProducerData = "Missing producer data";
         public const string AatfAeReturnData = "Summary of AATF / AE returns to date";
     }

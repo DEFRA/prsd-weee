@@ -741,6 +741,111 @@
             Assert.Equal("text/csv", fileResult.ContentType);
         }
 
+        [Fact]
+        public async void Get_UkNonObligatedWeeeReceived_ShouldReturnsUkNonObligatedWeeeReceivedView()
+        {
+            IWeeeClient client = A.Fake<IWeeeClient>();
+            ReportsController controller = new ReportsController(
+                () => client,
+                A.Dummy<BreadcrumbService>());
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .Returns(new List<int> { 2015, 2016 });
+
+            ActionResult result = await controller.UkNonObligatedWeeeReceived();
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("UkNonObligatedWeeeReceived", viewResult.ViewName);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetUkNonObligatedWeeeReceived_Always_SetsTriggerDownloadToFalse()
+        {
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            ActionResult result = await controller.UkNonObligatedWeeeReceived();
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async void Post_UkNonObligatedWeeeReceived_ModelIsInvalid_ShouldRedirectViewWithError()
+        {
+            IWeeeClient client = A.Fake<IWeeeClient>();
+            ReportsController controller = new ReportsController(
+                () => client,
+                A.Dummy<BreadcrumbService>());
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            ActionResult result = await controller.UkNonObligatedWeeeReceived(new UkNonObligatedWeeeReceivedViewModel());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async Task PostUkNonObligatedWeeeReceived_ModelIsInvalid_SetsTriggerDownloadToFalse()
+        {
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            UkNonObligatedWeeeReceivedViewModel viewModel = new UkNonObligatedWeeeReceivedViewModel();
+
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.UkNonObligatedWeeeReceived(viewModel);
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostUkNonObligatedWeeeReceived_ValidModel_SetsTriggerDownloadToTrue()
+        {
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            UkNonObligatedWeeeReceivedViewModel viewModel = new UkNonObligatedWeeeReceivedViewModel();
+
+            ActionResult result = await controller.UkNonObligatedWeeeReceived(viewModel);
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+        
+        [Fact]
+        public async Task GetDownloadUkNonObligatedWeeeReceivedCsv_ReturnsFileResultWithContentTypeOfTextCsv()
+        {
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkNonObligatedWeeeReceivedDataCsv>._)).Returns(new CSVFileData
+            {
+                FileContent = "UK non-obligated WEEE REPORT",
+                FileName = "test.csv"
+            });
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            ActionResult result = await controller.DownloadUkNonObligatedWeeeReceivedCsv(2015);
+
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+            Assert.Equal("text/csv", fileResult.ContentType);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkNonObligatedWeeeReceivedDataCsv>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         /// <summary>
         /// This test ensures that the GET "SchemeWeeeData" action calls the API to retrieve
         /// the list of compliance years and returns the "SchemeWeeeData" view with 
