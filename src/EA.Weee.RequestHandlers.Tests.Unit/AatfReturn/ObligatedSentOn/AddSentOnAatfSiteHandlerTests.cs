@@ -22,9 +22,7 @@
 
     public class AddSentOnAatfSiteHandlerTests
     {
-        private readonly WeeeContext context;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IWeeeAuthorization authorization;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
@@ -32,14 +30,13 @@
 
         public AddSentOnAatfSiteHandlerTests()
         {
-            context = A.Fake<WeeeContext>();
             returnDataAccess = A.Fake<IReturnDataAccess>();
-            authorization = A.Fake<IWeeeAuthorization>();
+            var authorization = A.Fake<IWeeeAuthorization>();
             sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
-            handler = new AddSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
+            handler = new AddSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
         }
 
         [Fact]
@@ -47,7 +44,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddSentOnAatfSiteHandler(context, authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
+            var handler = new AddSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess, returnDataAccess, organisationDetailsDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddSentOnAatfSite>());
 
@@ -59,8 +56,10 @@
         {
             var siteRequest = AddSentOnAatfSiteRequest();
             var country = new Country(A.Dummy<Guid>(), A.Dummy<string>());
+            var countryOP = new Country(A.Dummy<Guid>(), A.Dummy<string>());
 
             A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(siteRequest.SiteAddressData.CountryId)).Returns(country);
+            A.CallTo(() => organisationDetailsDataAccess.FetchCountryAsync(siteRequest.OperatorAddressData.CountryId)).Returns(countryOP);
 
             await handler.HandleAsync(siteRequest);
 
@@ -69,7 +68,13 @@
             && w.SiteAddress.CountyOrRegion.Equals(siteRequest.SiteAddressData.CountyOrRegion)
             && w.SiteAddress.Postcode.Equals(siteRequest.SiteAddressData.Postcode)
             && w.SiteAddress.TownOrCity.Equals(siteRequest.SiteAddressData.TownOrCity)
-            && w.SiteAddress.Country.Equals(country)))).MustHaveHappened(Repeated.Exactly.Once);
+            && w.SiteAddress.Country.Equals(country)
+            && w.OperatorAddress.Name.Equals(siteRequest.OperatorAddressData.Name)
+            && w.OperatorAddress.Address2.Equals(siteRequest.OperatorAddressData.Address2)
+            && w.OperatorAddress.CountyOrRegion.Equals(siteRequest.OperatorAddressData.CountyOrRegion)
+            && w.OperatorAddress.Postcode.Equals(siteRequest.OperatorAddressData.Postcode)
+            && w.OperatorAddress.TownOrCity.Equals(siteRequest.OperatorAddressData.TownOrCity)
+            && w.OperatorAddress.Country.Equals(countryOP)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private AddSentOnAatfSite AddSentOnAatfSiteRequest()
@@ -88,6 +93,16 @@
                     Name = "name",
                     Postcode = "postcode",
                     TownOrCity = "town"
+                },
+                OperatorAddressData = new OperatorAddressData()
+                {
+                    CountryId = Guid.NewGuid(),
+                    Address1 = "address1OP",
+                    Address2 = "address2OP",
+                    CountyOrRegion = "countyOP",
+                    Name = "nameOP",
+                    Postcode = "postcodeOP",
+                    TownOrCity = "townOP"
                 }
             };
             return siteRequest;

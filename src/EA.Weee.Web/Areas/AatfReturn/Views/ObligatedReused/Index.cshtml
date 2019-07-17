@@ -1,17 +1,15 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Reused WEEE";
+    ViewBag.Title = "Reused WEEE - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">
-                @Model.AatfName
-            </h1>
             <h2 class="govuk-heading-l">
                 WEEE that has been reused as a whole appliance
             </h2>
@@ -31,7 +29,13 @@
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
-                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, schemeId = Guid.Empty, obligatedType = ObligatedType.Reused, action = "Index", controller = "ObligatedValuesCopyPaste" }, null)
+                @(this.WeeeGds().ActionLinkWithEventTracking("Use copy and paste to populate the table",
+                "Use copy and paste to populate the table",
+                Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, schemeId = Guid.Empty, obligatedType = ObligatedType.Reused, action = "Index", controller = "ObligatedValuesCopyPaste" }),
+                "AATF return",
+                "Use copy paste",
+                "Use copy paste"
+                ))
             </div>
         </div>
 
@@ -52,4 +56,14 @@
         TonnageTotals('B2C');
         TonnageTotals('B2B');
     </script>
+    <p>
+        @if (Model.Edit)
+        {
+            @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSiteSummaryList", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+        }
+        else
+        {
+            @Html.RouteLink("Back", AatfRedirect.Default, new { returnId = Model.ReturnId, controller = "AatfTaskList" }, new { @class = "govuk-back-link" })
+        }
+    </p>
 </section>

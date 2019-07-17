@@ -1,68 +1,76 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
+﻿@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPcsListViewModel
 @{
-    ViewBag.Title = "Received PCS List";
+    ViewBag.Title = "Received PCS List - GOV.UK";
 }
 
-<section id="main-content">
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">
-                WEEE received for treatment at @Model.AatfName
-            </h1>
-        </div>
-    </header>
-    <div class="govuk-!-padding-bottom-3"></div>
-
-    <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-        <div class="govuk-table__head">
-            <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                <div class="govuk-grid-column-one-quarter">
-                    PCS name
-                </div>
-                <div class="govuk-grid-column-one-quarter">
-                    Approval number
-                </div>
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third" style="text-align:right">
-                        B2C (tonnes)
-                    </div>
-                    <div class="govuk-grid-column-one-third" style="text-align:right">
-                        B2B (tonnes)
-                    </div>
-                    <div class="govuk-grid-column-one-third">&nbsp;</div>
-                </div>
+    <section id="main-content">
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">
+                    WEEE received for treatment at @Model.AatfName
+                </h1>
             </div>
-        </div>
+        </header>
+        <div class="govuk-!-padding-bottom-3"></div>
 
-        @foreach (var item in Model.SchemeList)
-        {
-            <div class="govuk-grid-row govuk-table__cell">
-                <div class="govuk-grid-column-one-quarter">
-                    @item.SchemeName
-                </div>
-                <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                    @item.ApprovalNumber
-                </div>
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        @item.Tonnages.B2C
+        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+            <div class="govuk-table__head">
+                <div class="govuk-grid-row govuk-table__row govuk-table__header">
+                    <div class="govuk-grid-column-one-quarter">
+                        PCS name
                     </div>
-                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
-                        @item.Tonnages.B2B
+                    <div class="govuk-grid-column-one-quarter">
+                        Approval number
                     </div>
-                    <div class="govuk-grid-column-one-third" style="text-align:right">
-                        <span class="govuk-visually-hidden">Add data for scheme @item.SchemeName </span>@Html.RouteLink("Add data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-third" style="text-align:right">
+                            B2C (tonnes)
+                        </div>
+                        <div class="govuk-grid-column-one-third" style="text-align:right">
+                            B2B (tonnes)
+                        </div>
+                        <div class="govuk-grid-column-one-third">&nbsp;</div>
                     </div>
                 </div>
             </div>
+
+            @foreach (var item in Model.SchemeList)
+            {
+                <div class="govuk-grid-row govuk-table__cell">
+                    <div class="govuk-grid-column-one-quarter">
+                        @item.SchemeName
+                    </div>
+                    <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                        @item.ApprovalNumber
+                    </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            @item.Tonnages.B2C
+                        </div>
+                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                            @item.Tonnages.B2B
+                        </div>
+                        <div class="govuk-grid-column-one-third" style="text-align:right">
+                            <span class="govuk-visually-hidden">Add data for scheme @item.SchemeName </span>@Html.RouteLink("add / edit data", AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class=" govuk-!-font-size-19">
+            <p>
+                @Html.NavigationRouteLink("Change your PCS selection", null, AatfRedirect.SelectPcsRouteName, new { organisationId = @Model.OrganisationId, returnId = Model.ReturnId, reselect = true })
+            </p>
+        </div>
+
+        @{
+            Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
         }
-    </div>
-
-    @{
-        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-    }
-
-</section>
+    </section>

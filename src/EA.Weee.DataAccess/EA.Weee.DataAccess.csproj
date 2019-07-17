@@ -87,6 +87,7 @@
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
     <Compile Include="Mappings\AatfContactMapping.cs" />
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
+    <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\AatfReturnReportOnMapping.cs" />
     <Compile Include="Mappings\AatfSiteAddressMapping.cs" />
     <Compile Include="Mappings\AatfSizeMapping.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Mappings\PanAreaMapping.cs" />
     <Compile Include="Mappings\LocalAreaMapping.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMapping.cs" />
+    <Compile Include="Mappings\ReturnAatfMapping.cs" />
     <Compile Include="Mappings\ReturnMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\AatfStatusMapping.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Mappings\ReturnStatusMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
+    <Compile Include="StoredProcedure\AatfAeReturnData.cs" />
     <Compile Include="StoredProcedure\DataReturnSummaryCsvData.cs" />
     <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />

@@ -7,6 +7,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Weee.Core.User;
     using OrganisationStatus = Domain.Organisation.OrganisationStatus;
 
     public class FindMatchingUsersDataAccess : IFindMatchingUsersDataAccess
@@ -18,13 +19,16 @@
             this.context = context;
         }
 
-        public async Task<UserSearchData[]> GetCompetentAuthorityUsers()
+        public async Task<UserSearchData[]> GetCompetentAuthorityUsers(UserFilter filter)
         {
             var competentAuthorityUsers = await(
                     from u in context.Users
                     join cu in context.CompetentAuthorityUsers on u.Id equals cu.UserId into caUsers
                     from caUser in caUsers
                     join ca in context.UKCompetentAuthorities on caUser.CompetentAuthorityId equals ca.Id
+                    where (filter.Status == null || filter.Status == (UserStatus)caUser.UserStatus.Value)
+                    && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || ca.Abbreviation.ToLower().Contains(filter.OrganisationName.ToLower()))
+                    && (filter.Name == null || filter.Name.Trim() == string.Empty || (u.FirstName + " " + u.Surname).ToLower().Contains(filter.Name.ToLower()))
                     select new UserSearchData
                     {
                         Email = u.Email,
@@ -41,7 +45,7 @@
             return competentAuthorityUsers;
         }
 
-        public async Task<UserSearchData[]> GetOrganisationUsers()
+        public async Task<UserSearchData[]> GetOrganisationUsers(UserFilter filter)
         {
             var result = await(
                     from u in context.Users
@@ -49,6 +53,10 @@
                     from orgUser in idOrgUsers
                     join org in context.Organisations on orgUser.OrganisationId equals org.Id
                     where org.OrganisationStatus.Value == OrganisationStatus.Complete.Value
+                    && (filter.Status == null || filter.Status == (UserStatus)orgUser.UserStatus.Value)
+                    && ((org.Name != null && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || org.Name.ToLower().Contains(filter.OrganisationName.ToLower())))
+                        || (org.Name == null && org.TradingName != null && (filter.OrganisationName == null || filter.OrganisationName.Trim() == string.Empty || org.TradingName.ToLower().Contains(filter.OrganisationName.ToLower()))))
+                    && (filter.Name == null || filter.Name.Trim() == string.Empty || (u.FirstName + " " + u.Surname).ToLower().Contains(filter.Name.ToLower()))
                     select new UserSearchData
                     {
                         Email = u.Email,

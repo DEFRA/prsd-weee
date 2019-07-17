@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Attributes;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -28,7 +29,6 @@
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
-        private readonly string dcfConfirm = "Yes";
 
         public SelectReportOptionsController(
             Func<IWeeeClient> apiClient,
@@ -54,10 +54,13 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     ReportOnQuestions = await client.SendAsync(User.GetAccessToken(), new GetReportOnQuestion()),
-                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId))
+                    ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false))
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(viewModel.ReturnData.Quarter, viewModel.ReturnData.QuarterWindow));
+
+                TempData["currentQuarter"] = viewModel.ReturnData.Quarter;
+                TempData["currentQuarterWindow"] = viewModel.ReturnData.QuarterWindow;
 
                 return View("Index", viewModel);
             }
@@ -67,94 +70,66 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectReportOptionsViewModel viewModel)
         {
-            SetSelected(viewModel);
-
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId));
-                    if (CheckHasDeselectedOptions(viewModel))
+                    viewModel.ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId, false));
+
+                    if (viewModel.DeSelectedOptions.Any())
                     {
                         if (!viewModel.HasSelectedOptions)
                         {
                             return AatfRedirect.SelectReportOptionsNil(viewModel.OrganisationId, viewModel.ReturnId);
                         }
+
                         TempData["viewModel"] = viewModel;
+
                         return AatfRedirect.SelectReportOptionDeselect(viewModel.OrganisationId, viewModel.ReturnId);
                     }
-                    if (viewModel.HasSelectedOptions)
-                    {
-                        var request = requestCreator.ViewModelToRequest(viewModel);
+                    
+                    var request = requestCreator.ViewModelToRequest(viewModel);
 
-                        await client.SendAsync(User.GetAccessToken(), request);
-                    }
-                    else
-                    {
-                        return AatfRedirect.SelectReportOptionsNil(viewModel.OrganisationId, viewModel.ReturnId);
-                    }
-                }
+                    await client.SendAsync(User.GetAccessToken(), request);
 
-                if (viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected
-                    && !viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).Contains((int)ReportOnQuestionEnum.WeeeReceived))
-                {
-                    return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                    if (IfNotPreviouslySelectedPcs(viewModel))
+                    {
+                        return AatfRedirect.SelectPcs(viewModel.OrganisationId, viewModel.ReturnId);
+                    }
                 }
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
             }
+            else
+            {
+                RemoveDcfSelectedValueModelState(viewModel);
+            }
 
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
         }
 
-        private void SetSelected(SelectReportOptionsViewModel viewModel)
+        private void RemoveDcfSelectedValueModelState(SelectReportOptionsViewModel viewModel)
         {
-            if (viewModel.HasSelectedOptions)
+            if (!viewModel.NonObligatedQuestionSelected)
             {
-                foreach (var option in viewModel.SelectedOptions)
-                {
-                    viewModel.ReportOnQuestions.First(r => r.Id == option).Selected = true;
-                }
-
-                if (viewModel.DcfSelectedValue == dcfConfirm)
-                {
-                    var dcfId = (int)ReportOnQuestionEnum.NonObligatedDcf;
-                    viewModel.ReportOnQuestions.First(r => r.Id == dcfId).Selected = true;
-                    viewModel.SelectedOptions.Add(dcfId);
-                }
+                ModelState.Remove("DcfSelectedValue");
             }
         }
 
-        private bool CheckHasDeselectedOptions(SelectReportOptionsViewModel viewModel)
+        private static bool IfNotPreviouslySelectedPcs(SelectReportOptionsViewModel viewModel)
         {
-            var oldReturnOptions = viewModel.ReturnData.ReturnReportOns.Select(r => r.ReportOnQuestionId).ToList();
-            if (oldReturnOptions.Count != 0)
-            {
-                var deselectedOptions = !viewModel.HasSelectedOptions ? oldReturnOptions : oldReturnOptions.Where(s => viewModel.SelectedOptions.All(s2 => s2 != s)).ToList();
-                if (deselectedOptions.Count != 0)
-                {
-                    foreach (var option in deselectedOptions)
-                    {
-                        viewModel.ReportOnQuestions.First(r => r.Id == option).Deselected = true;
-                        if (option == (int)ReportOnQuestionEnum.NonObligated)
-                        {
-                            viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligatedDcf).Deselected = true;
-                        }
-                    }
-
-                    return true;
-                }
-            }
-            return false;
+            return viewModel.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.WeeeReceived).Selected
+                   && !viewModel.ReturnData.SchemeDataItems.Any();
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            breadcrumb.QuarterDisplayInfo = quarter;
         }
     }
 }

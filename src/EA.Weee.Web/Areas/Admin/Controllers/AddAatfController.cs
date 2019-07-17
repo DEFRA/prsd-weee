@@ -33,19 +33,22 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
-        private const int maximumSearchResults = 5;
         private readonly BreadcrumbService breadcrumb;
+        private readonly int maximumSearchResults;
 
         public AddAatfController(
             ISearcher<OrganisationSearchResult> organisationSearcher,
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
-            IWeeeCache cache)
+            IWeeeCache cache, 
+            ConfigurationService configurationService)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+
+            maximumSearchResults = configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults;
         }
 
         [HttpGet]

@@ -27,15 +27,17 @@
         private readonly DomainScheme scheme;
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
+        private readonly IMap<AatfStatus, Core.AatfReturn.AatfStatus> statusMapper;
         private readonly Organisation organisation;
 
         public ReturnMapTests()
         {
             mapper = A.Fake<IMapper>();
             organisationMapper = A.Fake<IMap<Organisation, OrganisationData>>();
+            statusMapper = A.Fake<IMap<AatfStatus, Core.AatfReturn.AatfStatus>>();
 
-            map = new ReturnMap(mapper, organisationMapper);
-            
+            map = new ReturnMap(mapper, organisationMapper, statusMapper);
+
             aatf = A.Fake<DomainAatf>();
             scheme = A.Fake<DomainScheme>();
             organisation = Organisation.CreatePartnership("trading name");
@@ -139,7 +141,7 @@
         {
             var @return = GetReturn();
 
-            var weeeReceived = ReturnWeeeReceived(scheme, aatf, @return.Id);
+            var weeeReceived = ReturnWeeeReceived(scheme, aatf, @return);
 
             var obligated = new List<WeeeReceivedAmount>()
             {
@@ -166,7 +168,7 @@
         {
             var @return = GetReturn();
 
-            var weeeReused = ReturnWeeeReused(aatf, @return.Id);
+            var weeeReused = ReturnWeeeReused(aatf, @return);
 
             var obligated = new List<WeeeReusedAmount>()
             {
@@ -222,6 +224,11 @@
                 new Aatf("Aatf2", A.Fake<UKCompetentAuthority>(), "1234", AatfStatus.Approved, organisation, A.Fake<AatfAddress>(), A.Fake<AatfSize>(), DateTime.Now, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>()),
             };
 
+            foreach (Aatf aatf in aatfs)
+            {
+                A.CallTo(() => statusMapper.Map(aatf.AatfStatus)).Returns(Core.AatfReturn.AatfStatus.Approved);
+            }
+
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
                 A.Fake<List<WeeeReusedAmount>>(), organisation, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
@@ -231,8 +238,8 @@
 
             var zeroGuid = new Guid();
 
-            result.Aatfs.Count(a => a.Name == "Aatf1" && a.Id == zeroGuid).Should().Be(1);
-            result.Aatfs.Count(a => a.Name == "Aatf2" && a.Id == zeroGuid).Should().Be(1);
+            result.Aatfs.Count(a => a.Name == "Aatf1" && a.Id == zeroGuid && a.AatfStatus.Value == AatfStatus.Approved.Value).Should().Be(1);
+            result.Aatfs.Count(a => a.Name == "Aatf2" && a.Id == zeroGuid && a.AatfStatus.Value == AatfStatus.Approved.Value).Should().Be(1);
             result.Aatfs.Count().Should().Be(2);
         }
 
@@ -298,7 +305,7 @@
             var returnStatusMap = new ReturnStatusMap();
 
             @return.ReturnStatus = ReturnStatus.Submitted;
-            
+
             A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(GetQuarterWindow());
             A.CallTo(() => @returnQuarterWindow.Return).Returns(@return);
             A.CallTo(() => mapper.Map<Core.AatfReturn.ReturnStatus>(@return.ReturnStatus)).Returns(Core.AatfReturn.ReturnStatus.Created);
@@ -364,16 +371,16 @@
             return @return;
         }
 
-        public WeeeReceived ReturnWeeeReceived(DomainScheme scheme, DomainAatf aatf, Guid returnId)
+        public WeeeReceived ReturnWeeeReceived(DomainScheme scheme, DomainAatf aatf, Return @return)
         {
-            var weeeReceived = new WeeeReceived(scheme, aatf, returnId);
+            var weeeReceived = new WeeeReceived(scheme, aatf, @return);
 
             return weeeReceived;
         }
 
-        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Guid returnId)
+        public WeeeReused ReturnWeeeReused(DomainAatf aatf, Return @return)
         {
-            var weeeReused = new WeeeReused(aatf, returnId);
+            var weeeReused = new WeeeReused(aatf, @return);
 
             return weeeReused;
         }
@@ -396,8 +403,8 @@
 
         public ReturnQuarterWindow GetReturnQuarterWindow()
         {
-           return new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null);
+            return new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
+                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null);
         }
     }
 }

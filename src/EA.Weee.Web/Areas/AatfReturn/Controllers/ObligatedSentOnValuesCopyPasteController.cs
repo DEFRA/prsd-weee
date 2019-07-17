@@ -33,7 +33,7 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                ReturnData returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                ReturnData returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
                 ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
@@ -42,7 +42,7 @@
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
                 };
-                await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
+                await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(returnData.Quarter, returnData.QuarterWindow));
                 return View(viewModel);
             }
         }
@@ -65,11 +65,14 @@
             return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.SiteName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId));
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }

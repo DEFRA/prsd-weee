@@ -15,23 +15,22 @@
     public class SelectReportOptionsViewModelValidatorTests
     {
         private SelectReportOptionsViewModelValidator validator;
-        private const int DcfQuestionId = 2;
 
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueNotSelected_ViewModelErrorPropertyShouldBeTrue()
         {
-            var model = GenerateViewModel();
+            var model = GenerateInvalidNonObligated();
 
             validator = new SelectReportOptionsViewModelValidator();
             var validationResult = validator.Validate(model);
 
-            model.ReportOnQuestions.First(r => r.Id == DcfQuestionId).HasError.Should().BeTrue();
+            model.ReportOnQuestions.First(r => r.Id == (int)ReportOnQuestionEnum.NonObligatedDcf).HasError.Should().BeTrue();
         }
 
         [Fact]
         public void RuleFor_NonObligatedSelectedAndNullDcfValueSelected_ErrorShouldOccur()
         {
-            var model = GenerateViewModel();
+            var model = GenerateInvalidNonObligated();
 
             validator = new SelectReportOptionsViewModelValidator();
             var validationResult = validator.Validate(model);
@@ -43,7 +42,7 @@
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueIsYes_ErrorShouldNotOccur()
         {
-            var model = GenerateViewModel();
+            var model = GenerateInvalidNonObligated();
 
             model.DcfSelectedValue = "Yes";
 
@@ -55,9 +54,9 @@
         }
 
         [Fact]
-        public void RuleFor_NonObligatedSelectedAndDcfValueIsNo_ErrorShouldNotOccur()
+        public void RuleFor_GivenSelectedValueAndNonObligatedSelectedAndDcfValueIsNo_ErrorShouldNotOccur()
         {
-            var model = GenerateViewModel();
+            var model = GenerateInvalidNonObligated();
 
             model.DcfSelectedValue = "No";
 
@@ -70,7 +69,7 @@
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueIsYes_ErrorShouldBeValid()
         {
-            var model = GenerateViewModel();
+            var model = GenerateInvalidNonObligated();
 
             validator = new SelectReportOptionsViewModelValidator();
             var validationResult = validator.Validate(model);
@@ -78,18 +77,43 @@
             validationResult.Errors.Should().Contain(v =>
                 v.ErrorMessage.Equals("You must tell us whether any of the non-obligated WEEE was retained by a DCF"));
             validationResult.Errors.Should().Contain(v =>
-                v.PropertyName.Equals("Option-1"));
+                v.PropertyName.Equals("Option-4"));
         }
 
-        private SelectReportOptionsViewModel GenerateViewModel()
+        [Fact]
+        public void RuleFor_GivenNoSelectedItems_ErrorShouldBeValid()
         {
-            var nonObligatedQuestion = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
-            var dcfQuestion = new ReportOnQuestion(DcfQuestionId, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>());
+            var question = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>());
 
             var model = new SelectReportOptionsViewModel()
             {
-                ReportOnQuestions = new List<ReportOnQuestion>() { nonObligatedQuestion, dcfQuestion },
-                SelectedOptions = new List<int>() { nonObligatedQuestion.Id }
+                ReportOnQuestions = new List<ReportOnQuestion>() { question },
+            };
+
+            validator = new SelectReportOptionsViewModelValidator();
+            var validationResult = validator.Validate(model);
+
+            validationResult.Errors.Should().Contain(v =>
+                v.ErrorMessage.Equals("You must select at least one reporting option, unless you have no data to report"));
+            validationResult.Errors.Should().Contain(v =>
+                v.PropertyName.Equals("hasSelectedOptions"));
+        }
+
+        private SelectReportOptionsViewModel GenerateInvalidNonObligated()
+        {
+            var nonObligatedQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligated, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>())
+            {
+                Selected = true
+            };
+            var nonObligatedDcfQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligatedDcf, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
+            var selectedQuestion = new ReportOnQuestion(2, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>())
+            {
+                Selected = true
+            };
+
+            var model = new SelectReportOptionsViewModel()
+            {
+                ReportOnQuestions = new List<ReportOnQuestion>() { nonObligatedQuestion, selectedQuestion, nonObligatedDcfQuestion },
             };
             return model;
         }

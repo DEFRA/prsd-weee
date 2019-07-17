@@ -95,7 +95,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.WeeeSelectedValue == YesNoEnum.Yes)
+            if (viewModel.WeeeSelectedValue == YesNoEnum.No)
             {
                 return AeRedirect.ReturnsList(organisationId);
             }
@@ -108,7 +108,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AeReturn);
 
@@ -133,7 +133,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AeReturn);
 

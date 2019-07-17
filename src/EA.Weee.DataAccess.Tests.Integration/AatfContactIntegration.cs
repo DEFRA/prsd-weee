@@ -35,7 +35,7 @@
 
                 var dataAccess = new AatfDataAccess(context);
 
-                var aatfId = await CreateContact(context, aatfAddress);
+                var aatfId = await CreateContact(database, aatfAddress);
 
                 var oldContact = context.Aatfs.First(a => a.Id == aatfId).Contact;
 
@@ -49,19 +49,19 @@
             }
         }
 
-        private async Task<Guid> CreateContact(WeeeContext context, AatfContact aatfAddress)
+        private async Task<Guid> CreateContact(DatabaseWrapper database, AatfContact aatfAddress)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
 
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.AatfContacts.Add(aatfAddress);
-            context.Aatfs.Add(aatf);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.AatfContacts.Add(aatfAddress);
+            database.WeeeContext.Aatfs.Add(aatf);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             return (aatf.Id);
         }

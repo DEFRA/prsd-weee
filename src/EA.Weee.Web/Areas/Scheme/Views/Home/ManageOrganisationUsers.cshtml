@@ -11,10 +11,10 @@
         <h1 class="govuk-heading-l">Which user would you like to manage?</h1>
     </header>
 
-   @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
     {
-       @Html.Gds().ValidationSummary()
-       @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.AntiForgeryToken()
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
             @this.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
@@ -28,6 +28,6 @@
         @(this.WeeeGds().Submit("Continue"))
     }
     <div>
-         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </div>
 }

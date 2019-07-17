@@ -7,6 +7,7 @@
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -40,7 +41,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var model = mapper.Map(new ReturnToObligatedViewModelMapTransfer()
                 {
@@ -52,8 +53,9 @@
                     PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
 
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
-
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                TempData["currentQuarter"] = @return.Quarter;
+                TempData["currentQuarterWindow"] = @return.QuarterWindow;
                 return View(model);
             }
         }
@@ -74,16 +76,19 @@
                 }
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }

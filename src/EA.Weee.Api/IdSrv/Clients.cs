@@ -30,7 +30,7 @@
                     {
                         new Secret(config.ApiSecret.Sha256())
                     },
-                    AccessTokenLifetime = 3600, // 1 hour
+                    AccessTokenLifetime = 10805, // 3 hour,
                     AllowAccessToAllScopes = true
                 }
             };

@@ -25,6 +25,13 @@
                 .SingleOrDefaultAsync();   
         }
 
+        public async Task<Organisation> FetchOrganisation(Guid orgId)
+        {
+            return await context.Organisations
+                .Where(o => o.Id == orgId)
+                .SingleOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId)
         {
             return await context.OrganisationUsers

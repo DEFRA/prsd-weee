@@ -79,6 +79,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
+    <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
     <Compile Include="AatfReturn\AatfSize.cs" />
     <Compile Include="AatfReturn\AatfStatus.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="AatfReturn\Scheme.cs" />
     <Compile Include="AatfReturn\WeeeSentOnData.cs" />
     <Compile Include="AatfReturn\WeeeSentOnSummaryListData.cs" />
+    <Compile Include="Admin\CanAatfBeDeletedFlags.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\LocalAreaData.cs" />
     <Compile Include="Admin\ProducerContactDetails.cs" />

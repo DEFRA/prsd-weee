@@ -1048,10 +1048,16 @@ details summary::-ms-details-marker {
     left: -9999px !important;
 }
 
-.aatf-filter {
+.filter {
     @include govuk-responsive-padding(4);
     border: 5px solid #fff;
     background-color: govuk-colour('grey-3');
+
+    .govuk-table__row:not(:first-of-type) {
+        .govuk-label {
+            padding-top: govuk-spacing(4);
+        }
+    }
 
     .govuk-label {
         font-weight: $govuk-font-weight-bold;
@@ -1087,4 +1093,34 @@ details summary::-ms-details-marker {
 
 .aatf-details-associated-table-header-title {
     border-bottom: 0px;
+}
+
+.not-reported-option {
+    word-break: normal;
+    font-size: 1rem;
+}
+
+.not-reported-option-center {
+    word-break: normal;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.summary-paragraph {
+    margin-bottom: 5px;
+}
+
+.summary-paragraph-align-right {
+    text-align: right;
+}
+
+.summary-row {
+}
+
+.tasklist-row {
+    padding-bottom: 0 !important;
+}
+
+.not-reported-column {
+    padding-right: 0;
 }

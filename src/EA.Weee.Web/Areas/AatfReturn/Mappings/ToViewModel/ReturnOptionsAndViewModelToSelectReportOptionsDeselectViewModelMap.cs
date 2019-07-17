@@ -19,7 +19,6 @@
                 ReturnId = source.ReturnId,
                 OrganisationId = source.OrganisationId,
                 ReportOnQuestions = source.ReportOnQuestions,
-                SelectedOptions = source.SelectedOptions,
                 DcfSelectedValue = source.DcfSelectedValue
             };
 
