@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain;
     using Domain.Organisation;
     using EA.Weee.Domain.User;
 
@@ -19,5 +20,7 @@
         Task<User> FetchUser(string userId);
 
         Task<Organisation> FetchOrganisation(Guid orgId);
+
+        Task<IEnumerable<UKCompetentAuthority>> FetchCompetentAuthorities();
     }
 }
