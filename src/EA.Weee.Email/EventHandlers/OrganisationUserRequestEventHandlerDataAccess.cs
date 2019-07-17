@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Organisation;
     using Domain.User;
 
@@ -40,6 +41,11 @@
                 .Distinct()
                 .OrderBy(u => u.User.Email)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<UKCompetentAuthority>> FetchCompetentAuthorities()
+        {
+            return await context.UKCompetentAuthorities.ToListAsync();
         }
     }
 }
