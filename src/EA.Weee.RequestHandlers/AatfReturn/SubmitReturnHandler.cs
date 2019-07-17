@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using AatfTaskList;
     using DataAccess;
     using Domain.AatfReturn;
     using Prsd.Core.Domain;
@@ -15,16 +17,19 @@
         private readonly IUserContext userContext;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly IFetchAatfDataAccess fetchAatfDataAccess;
 
         public SubmitReturnHandler(IWeeeAuthorization authorization, 
             IUserContext userContext, 
             IGenericDataAccess genericDataAccess, 
-            WeeeContext weeeContext)
+            WeeeContext weeeContext, 
+            IFetchAatfDataAccess fetchAatfDataAccess)
         {
             this.authorization = authorization;
             this.userContext = userContext;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.fetchAatfDataAccess = fetchAatfDataAccess;
         }
 
         public async Task<bool> HandleAsync(SubmitReturn message)
@@ -46,6 +51,12 @@
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
             @return.UpdateSubmitted(userContext.UserId.ToString(), message.NilReturn);
+            
+            var aatfs = await fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return);
+
+            var returnAatfs = aatfs.Select(a => new ReturnAatf(a, @return));
+
+            await genericDataAccess.AddMany<ReturnAatf>(returnAatfs);
 
             await weeeContext.SaveChangesAsync();
 

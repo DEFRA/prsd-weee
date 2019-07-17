@@ -22,7 +22,7 @@
                 <p id="all-apply-hint">
                     Select all that apply
                 </p>
-                <div class="govuk-checkboxes">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedOptions)">
                     @for (var i = 0; i < Model.ReportOnQuestions.Count; i++)
                     {
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].AlternativeDescription)
@@ -30,14 +30,16 @@
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Question)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].ParentId)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Id)
-                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Selected)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].OriginalSelected)
+                        @Html.HiddenFor(m => m.HasSelectedOptions)
+
                         if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
                         {
                             <div class="govuk-checkboxes__item">
                                 @{
                                     var selectedOption = @Model.ReportOnQuestions[i].Selected ? "checked" : "";
                                 }
-                                <input type="checkbox" name="SelectedOptions" value="@Model.ReportOnQuestions[i].Id" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption/>
+                                <input type="checkbox" name="ReportOnQuestions[@i].Selected" value="true" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption />
                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
                                     @Model.ReportOnQuestions[i].Description
 
@@ -73,7 +75,7 @@
                                     @Model.ReportOnQuestions[i].Description?
                                 </h3>
                                 <p class="govuk-body govuk-!-font-size-16">
-                                    This is WEEE that a local authority who is a DCF operator has been allowed to keep under regulation 53 and has sent to you for treatment
+                                    This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep / retain under regulation 53 and has sent to you for treatment
                                 </p>
                                 <div class="govuk-form-group" id="WeeeReusedOptions">
                                     <fieldset class="govuk-fieldset inline">
@@ -107,13 +109,20 @@
         @Html.HiddenFor(m => m.DcfSelectedValue)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
-        <p>
-            @Html.NavigationRouteLink("I don't have any data to report for this quarter", "No data to report", AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId })
-        </p>
+<p>
+    @(this.WeeeGds().ActionLinkWithEventTracking("I don't have any data to report for this quarter",
+    "No data to report",
+    Url.RouteUrl(AatfRedirect.SelectReportOptionsNilRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }),
+    "AATF return",
+    "Start AATF nil return",
+    "Start AATF nil return"
+    ))
+</p>
         <button type="submit" class="govuk-button">
             Continue
         </button>
     }
+    <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
 </section>
 
 @section scripts{

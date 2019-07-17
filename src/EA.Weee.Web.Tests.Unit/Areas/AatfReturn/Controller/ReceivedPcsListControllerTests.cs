@@ -7,6 +7,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
@@ -58,17 +59,37 @@
             var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var aatfInfo = A.Fake<AatfData>();
+            var aatfId = Guid.NewGuid();
+
+            const string reportingQuarter = "2019 Q1 Jan - Mar";
+            const string reportingPeriod = "Test (WEE/QW1234RE/ATF)";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+            const string aatfName = "Test";
+            aatfInfo.ApprovalNumber = "WEE/QW1234RE/ATF";
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>._)).Returns(schemeData);
             A.CallTo(() => organisationData.Id).Returns(organisationId);
             A.CallTo(() => schemeData.OrganisationData).Returns(organisationData);
             A.CallTo(() => schemeData.SchemeDataItems).Returns(A.Fake<List<SchemeData>>());
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
+            A.CallTo(() => aatfInfo.Name).Returns(aatfName);
+
+            await controller.Index(A.Dummy<Guid>(), aatfId);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
+
+            Assert.Contains(reportingQuarter, breadcrumb.QuarterDisplayInfo);
+            Assert.Contains(reportingPeriod, breadcrumb.AatfDisplayInfo);
         }
 
         [Fact]

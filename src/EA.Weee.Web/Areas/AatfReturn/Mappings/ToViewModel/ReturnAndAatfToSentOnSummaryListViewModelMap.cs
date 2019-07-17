@@ -10,17 +10,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
+    using Core.Shared;
+    using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
     public class ReturnAndAatfToSentOnSummaryListViewModelMap : IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel>
     {
-        private readonly IWeeeCache cache;
         private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnAndAatfToSentOnSummaryListViewModelMap(
-            IWeeeCache cache,
             ITonnageUtilities tonnageUtilities)
         {
-            this.cache = cache;
             this.tonnageUtilities = tonnageUtilities;
         }
 

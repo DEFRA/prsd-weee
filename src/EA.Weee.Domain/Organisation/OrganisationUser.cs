@@ -9,7 +9,7 @@
     {
         public string UserId { get; private set; }
 
-        public Guid OrganisationId { get; private set; }
+        public virtual Guid OrganisationId { get; private set; }
 
         public UserStatus UserStatus { get; private set; }
 

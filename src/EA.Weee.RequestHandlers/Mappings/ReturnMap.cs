@@ -19,11 +19,13 @@
     {
         private readonly IMapper mapper;
         private readonly IMap<Organisation, OrganisationData> organisationMapper;
+        private readonly IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> statusMapper;
 
-        public ReturnMap(IMapper mapper, IMap<Organisation, OrganisationData> organisationMapper)
+        public ReturnMap(IMapper mapper, IMap<Organisation, OrganisationData> organisationMapper, IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus> statusMapper)
         {
             this.mapper = mapper;
             this.organisationMapper = organisationMapper;
+            this.statusMapper = statusMapper;
         }
 
         public ReturnData Map(ReturnQuarterWindow source)
@@ -52,7 +54,7 @@
 
                 foreach (var sourceAatf in source.Aatfs)
                 {
-                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber, sourceAatf.ComplianceYear));
+                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber, sourceAatf.ComplianceYear, null, statusMapper.Map(sourceAatf.AatfStatus)));
                 }
 
                 returnData.Aatfs = aatfReturnList;

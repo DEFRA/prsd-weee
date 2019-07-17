@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
     using System;
+    using System.Linq;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
@@ -12,9 +13,9 @@
             {
                 ReturnId = viewModel.ReturnId,
                 SelectedOptions = viewModel.SelectedOptions,
-                DeselectedOptions = viewModel.DeselectedOptions,
+                DeselectedOptions = viewModel.DeSelectedOptions,
                 Options = viewModel.ReportOnQuestions,
-                DcfSelectedValue = viewModel.DcfSelectedValue,
+                DcfSelectedValue = viewModel.DcfQuestionSelected,
             };
 
             return reportOptions;

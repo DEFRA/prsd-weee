@@ -17,9 +17,17 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.OrganisationName)
+        @Html.HiddenFor(m => m.AnyActiveUsers)
 
-    <p>We will send an access request to the relevant administrator.</p>
-        <p>You will not be able to perform activities on behalf of this organisation until your request is authorised.</p>
+        if (!Model.AnyActiveUsers)
+        {
+            <p>We will send an access request to your environmental regulator</p>
+        }
+        else
+        {
+            <p>We will send an access request to the existing users of this organisation</p>
+        }
+        <p>You will not be able to perform activities on behalf of this organisation until your request is authorised</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
             @this.WeeeGds().RadioButtonsFor(

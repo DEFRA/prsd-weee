@@ -147,8 +147,8 @@
         }
 
         [Theory]
-        [InlineData(YesNoEnum.Yes, "Index")]
-        [InlineData(YesNoEnum.No, "NilReturn")]
+        [InlineData(YesNoEnum.No, "Index")]
+        [InlineData(YesNoEnum.Yes, "NilReturn")]
         public async void PostExportedWholeWeee_SelectedValueGiven_CorrectRedirectHappens(YesNoEnum selectedValue, string action)
         {
             var viewModel = new ExportedWholeWeeeViewModel()
@@ -163,11 +163,11 @@
             result.RouteValues["controller"].Should().Be("Returns");    
             result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
 
-            if (selectedValue == YesNoEnum.Yes)
+            if (selectedValue == YesNoEnum.No)
             {
                 result.RouteValues["organisationId"].Should().Be(organisationId);
             }
-            if (selectedValue == YesNoEnum.No)
+            if (selectedValue == YesNoEnum.Yes)
             {
                 result.RouteValues["returnId"].Should().Be(viewModel.ReturnId);
             }

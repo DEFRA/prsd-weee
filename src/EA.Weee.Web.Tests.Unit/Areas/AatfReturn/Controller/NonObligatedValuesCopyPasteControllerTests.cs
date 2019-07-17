@@ -4,9 +4,8 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -25,16 +24,14 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IWeeeClient weeeClient;
-        private readonly IPasteProcessor pasteProcessor;
 
         public NonObligatedValuesCopyPasteControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             weeeClient = weeeClient = A.Fake<IWeeeClient>();
-            pasteProcessor = A.Fake<IPasteProcessor>();
 
-            controller = new NonObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache, pasteProcessor);
+            controller = new NonObligatedValuesCopyPasteController(() => weeeClient, breadcrumb, cache);
         }
 
         [Fact]
@@ -87,6 +84,12 @@
             var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
 
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
             A.CallTo(() => organisationData.Id).Returns(organisationId);
             A.CallTo(() => @return.OrganisationData).Returns(organisationData);
@@ -97,6 +100,8 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
+
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
 
         [Fact]
@@ -130,17 +135,17 @@
 
             var result = await controller.Index(A.Dummy<Guid>(), false) as ViewResult;
             var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
-            viewModel.Typeheading.Should().Be(typeheading);
+            viewModel.TypeHeading.Should().Be(typeheading);
         }
 
         [Fact]
         public async void SetsHeaderTitle_For_DcfObligatedCopyPaste()
         {
-            var typeheading = "Non-obligated WEEE retained by a DCF";
+            var typeheading = "Non-obligated WEEE kept / retained by a DCF";
 
             var result = await controller.Index(A.Dummy<Guid>(), true) as ViewResult;
             var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
-            viewModel.Typeheading.Should().Be(typeheading);
+            viewModel.TypeHeading.Should().Be(typeheading);
         }
 
         [Fact]

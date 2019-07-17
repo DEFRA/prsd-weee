@@ -28,11 +28,11 @@
                 var weeeSentOnDataAccess = new WeeeSentOnDataAccess(database.WeeeContext);
 
                 var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
-                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
+                var operatorAddress = AddressHelper.GetAatfAddress(database);
                 var countrySite = await context.Countries.SingleAsync(c => c.Name == "France");
-                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+                var siteAddress = AddressHelper.GetAatfAddress(database);
 
-                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(context, weeeSentOnDataAccess, operatorAddress, siteAddress, database);
+                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(weeeSentOnDataAccess, operatorAddress, siteAddress, database);
                 var weeeSentOnAmountList = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn);
 
                 context.AatfAddress.Should().Contain(weeeSentOn.SiteAddress);
@@ -72,18 +72,18 @@
                 var countryOperator = await context.Countries.SingleAsync(c => c.Name == "France");
                 var countrySite = await context.Countries.SingleAsync(c => c.Name == "France");
 
-                var operatorAddress = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
-                var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+                var operatorAddress = AddressHelper.GetAatfAddress(database);
+                var siteAddress = AddressHelper.GetAatfAddress(database);
 
-                var operatorAddress2 = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
-                var siteAddress2 = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+                var operatorAddress2 = AddressHelper.GetAatfAddress(database);
+                var siteAddress2 = AddressHelper.GetAatfAddress(database);
 
-                var operatorAddress3 = new AatfAddress("Operator", "OpAddress1", "OpAddress2", "OpTown", "OpCounty", "PO12ST56", countryOperator);
-                var siteAddress3 = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", countrySite);
+                var operatorAddress3 = AddressHelper.GetAatfAddress(database);
+                var siteAddress3 = AddressHelper.GetAatfAddress(database);
 
-                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(context, weeeSentOnDataAccess, operatorAddress, siteAddress, database);
-                var weeeSentOn2 = await CreateWeeeSentOnOperatorInContext(context, weeeSentOnDataAccess, operatorAddress2, siteAddress2, database);
-                var weeeSentOn3 = await CreateWeeeSentOnOperatorInContext(context, weeeSentOnDataAccess, operatorAddress3, siteAddress3, database);
+                var weeeSentOn = await CreateWeeeSentOnOperatorInContext(weeeSentOnDataAccess, operatorAddress, siteAddress, database);
+                var weeeSentOn2 = await CreateWeeeSentOnOperatorInContext(weeeSentOnDataAccess, operatorAddress2, siteAddress2, database);
+                var weeeSentOn3 = await CreateWeeeSentOnOperatorInContext(weeeSentOnDataAccess, operatorAddress3, siteAddress3, database);
 
                 var weeeSentOnAmountList = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn);
                 var weeeSentOnAmountList2 = await AppendWeeeSentOnAmountToWeeeSentOn(context, weeeSentOn2);
@@ -124,20 +124,19 @@
             }
         }
 
-        private async Task<WeeeSentOn> CreateWeeeSentOnOperatorInContext(WeeeContext context,
-            WeeeSentOnDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress, DatabaseWrapper database)
+        private async Task<WeeeSentOn> CreateWeeeSentOnOperatorInContext(WeeeSentOnDataAccess dataAccess, AatfAddress operatorAddress, AatfAddress siteAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(context, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
-            context.Organisations.Add(organisation);
-            context.Schemes.Add(scheme);
-            context.Aatfs.Add(aatf);
-            context.Returns.Add(@return);
+            database.WeeeContext.Organisations.Add(organisation);
+            database.WeeeContext.Schemes.Add(scheme);
+            database.WeeeContext.Aatfs.Add(aatf);
+            database.WeeeContext.Returns.Add(@return);
 
-            await context.SaveChangesAsync();
+            await database.WeeeContext.SaveChangesAsync();
 
             var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 

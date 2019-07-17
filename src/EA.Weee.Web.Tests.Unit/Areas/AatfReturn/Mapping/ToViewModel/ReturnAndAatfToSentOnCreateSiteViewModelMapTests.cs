@@ -10,15 +10,20 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using AutoFixture.Dsl;
+    using Core.DataReturns;
     using Xunit;
 
     public class ReturnAndAatfToSentOnCreateSiteViewModelMapTests
     {
         private readonly ReturnAndAatfToSentOnCreateSiteViewModelMap map;
+        private readonly Fixture fixture;
 
         public ReturnAndAatfToSentOnCreateSiteViewModelMapTests()
         {
-            map = new ReturnAndAatfToSentOnCreateSiteViewModelMap(A.Fake<IWeeeCache>());
+            fixture = new Fixture();
+            map = new ReturnAndAatfToSentOnCreateSiteViewModelMap();
         }
 
         [Fact]
@@ -30,63 +35,87 @@
         }
 
         [Fact]
-        public void Map_GivenNullSiteAddress_SiteAddressShouldNotBeNullAndContainCountryData()
+        public void Map_GivenReturn_DefaultPropertiesShouldBeMapped()
         {
-            var orgId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            
-            var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
-            {
-                ReturnId = returnId,
-                AatfId = aatfId,
-                OrganisationId = orgId,
-                CountryData = A.Fake<IList<Core.Shared.CountryData>>()
-            };
+            var source = CreateDefaultTransferObject().Without(s => s.WeeeSentOnData).Create();
 
-            var siteAddressToCheckAgainst = new AatfAddressData()
-            {
-                Countries = transfer.CountryData
-            };
+            var result = map.Map(source);
 
-            var result = map.Map(transfer);
-
-            result.SiteAddressData.Should().BeEquivalentTo(siteAddressToCheckAgainst);
-            result.SiteAddressData.Countries.Should().BeEquivalentTo(transfer.CountryData);
+            result.AatfId.Should().Be(source.AatfId);
+            result.ReturnId.Should().Be(source.Return.Id);
+            result.OrganisationId.Should().Be(source.Return.OrganisationData.Id);
         }
 
         [Fact]
-        public void Map_GivenValidSource_PropertiesShouldBeMapped()
+        public void Map_GivenNullWeeeSentOn_SiteAddressShouldNotBeNullAndContainCountryData()
         {
-            var orgId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var siteAddressData = new AatfAddressData()
-            {
-                Name = "Name",
-                Address1 = "Address",
-                Address2 = "Address2",
-                TownOrCity = "Town",
-                CountyOrRegion = "County",
-                Postcode = "Post",
-                CountryName = "CountryName",
-                CountryId = Guid.NewGuid()
-            };
-            var transfer = new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
-            {
-                ReturnId = returnId,
-                AatfId = aatfId,
-                OrganisationId = orgId,
-                CountryData = A.Fake<IList<Core.Shared.CountryData>>(),
-                SiteAddressData = siteAddressData
-            };
+            var source = CreateDefaultTransferObject().Without(s => s.WeeeSentOnData).Create();
+            
+            var result = map.Map(source);
 
-            var result = map.Map(transfer);
+            result.SiteAddressData.Should().NotBeNull();
+            result.SiteAddressData.Countries.Should().BeEquivalentTo(source.CountryData);
+            result.SiteAddressData.Id.Should().Be(Guid.Empty);
+        }
 
-            result.OrganisationId.Should().Be(orgId);
-            result.ReturnId.Should().Be(returnId);
-            result.AatfId.Should().Be(aatfId);
-            result.SiteAddressData.Should().BeEquivalentTo(siteAddressData);
+        [Fact]
+        public void Map_GivenNullWeeeSentOn_OperatorAddressShouldNotBeNullAndContainCountryData()
+        {
+            var source = CreateDefaultTransferObject().Without(s => s.WeeeSentOnData).Create();
+
+            var result = map.Map(source);
+
+            result.OperatorAddressData.Should().NotBeNull();
+            result.OperatorAddressData.Countries.Should().BeEquivalentTo(source.CountryData);
+            result.OperatorAddressData.Id.Should().Be(Guid.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOn_OperatorAddressShouldBeMapped()
+        {
+            var source = CreateDefaultTransferObject().Create();
+
+            var result = map.Map(source);
+
+            result.OperatorAddressData.Id.Should().Be(source.WeeeSentOnData.OperatorAddressId);
+            result.OperatorAddressData.Name.Should().Be(source.WeeeSentOnData.OperatorAddress.Name);
+            result.OperatorAddressData.Address1.Should().Be(source.WeeeSentOnData.OperatorAddress.Address1);
+            result.OperatorAddressData.Address2.Should().Be(source.WeeeSentOnData.OperatorAddress.Address2);
+            result.OperatorAddressData.TownOrCity.Should().Be(source.WeeeSentOnData.OperatorAddress.TownOrCity);
+            result.OperatorAddressData.CountyOrRegion.Should().Be(source.WeeeSentOnData.OperatorAddress.CountyOrRegion);
+            result.OperatorAddressData.Postcode.Should().Be(source.WeeeSentOnData.OperatorAddress.Postcode);
+            result.OperatorAddressData.CountryId.Should().Be(source.WeeeSentOnData.OperatorAddress.CountryId);
+            result.OperatorAddressData.CountryName.Should().Be(source.WeeeSentOnData.OperatorAddress.CountryName);
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOn_SiteAddressShouldBeMapped()
+        {
+            var source = CreateDefaultTransferObject().Create();
+
+            var result = map.Map(source);
+
+            result.SiteAddressData.Id.Should().Be(source.WeeeSentOnData.SiteAddressId);
+            result.SiteAddressData.Name.Should().Be(source.WeeeSentOnData.SiteAddress.Name);
+            result.SiteAddressData.Address1.Should().Be(source.WeeeSentOnData.SiteAddress.Address1);
+            result.SiteAddressData.Address2.Should().Be(source.WeeeSentOnData.SiteAddress.Address2);
+            result.SiteAddressData.TownOrCity.Should().Be(source.WeeeSentOnData.SiteAddress.TownOrCity);
+            result.SiteAddressData.CountyOrRegion.Should().Be(source.WeeeSentOnData.SiteAddress.CountyOrRegion);
+            result.SiteAddressData.Postcode.Should().Be(source.WeeeSentOnData.SiteAddress.Postcode);
+            result.SiteAddressData.CountryId.Should().Be(source.WeeeSentOnData.SiteAddress.CountryId);
+            result.SiteAddressData.CountryName.Should().Be(source.WeeeSentOnData.SiteAddress.CountryName);
+        }
+
+        private IPostprocessComposer<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer> CreateDefaultTransferObject()
+        {
+            var returnData = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
+                .Create();
+
+            var source = fixture.Build<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>()
+                .With(r => r.Return, returnData);
+
+            return source;
         }
     }
 }

@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnRemoveSiteViewModel
 @{
-    ViewBag.Title = "Confirm removal of AATF/ATF - GOV.UK";
+    ViewBag.Title = "Confirm removal of AATF / ATF - GOV.UK";
 }
 <section id="main-content">
     @using (Html.BeginForm("Index", "SentOnRemoveSite", FormMethod.Post))
@@ -13,12 +13,12 @@
         @Html.HiddenFor(m => m.ReturnId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.OrganisationId)
-        <h1 class="govuk-heading-l">Are you sure you want to remove this AATF/ATF from your list?</h1>
+        <h1 class="govuk-heading-l">Are you sure you want to remove this AATF / ATF from your list?</h1>
         <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
             <div class="govuk-table__head">
                 <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
                     <div class="govuk-grid-column-one-half">
-                        AATF/ATF name and address
+                        AATF / ATF name and address
                     </div>
                     <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
                         @Html.HiddenFor(model => model.SiteAddress)
@@ -60,16 +60,19 @@
             </div>
         </div>
         <div class="govuk-form-group" style="padding-bottom: 10px">
-            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-            <p class="important">
-                Removing this AATF/ATF will delete all tonnage data associated with it
+            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left; margin-right: 10px;" height="42" width="42">
+            <p>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Removing this AATF / ATF will delete all tonnage data associated with it
+                </strong>
             </p>
             <div class="govuk-!-padding-bottom-5"></div>
             <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedValue,
                     Model.PossibleValues,
-                    "Confirm if you want to remove this AATF/ATF from your list",
+                    "Confirm if you want to remove this AATF / ATF from your list",
                     RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Inline)
             </div>

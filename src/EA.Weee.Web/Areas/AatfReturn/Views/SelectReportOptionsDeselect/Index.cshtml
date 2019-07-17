@@ -18,7 +18,7 @@
         </p>
     </div>
     <div class="govuk-!-padding-bottom-5"></div>
-    @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.Deselected == true))
+    @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
     {
         <p class="govuk-body">
             @if (deselectedOption.AlternativeDescription != null)
@@ -44,7 +44,7 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="WeeeRemoveOptions">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
-                Model.PossibleValues,
+                Model.DcfPossibleValues,
                 "Confirm if this you want to remove these reporting options",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Inline)

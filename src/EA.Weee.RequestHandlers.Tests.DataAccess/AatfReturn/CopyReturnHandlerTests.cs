@@ -17,6 +17,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.Factories;
     using Requests.AatfReturn;
     using Weee.DataAccess;
     using Weee.Tests.Core;
@@ -47,8 +48,15 @@
         private DatabaseWrapper database;
         private Return @return;
         private Return copiedReturn;
-        private Country country;
         private Organisation organisation;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+
+        public CopyReturnHandlerTests()
+        {
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(new EA.Weee.Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MinValue, QuarterType.Q1));
+        }
 
         [Fact]
         public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
@@ -57,7 +65,8 @@
 
             handler = new CopyReturnHandler(authorization,
                 A.Dummy<WeeeContext>(),
-                A.Dummy<IUserContext>());
+                A.Dummy<IUserContext>(),
+                quarterWindowFactory);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CopyReturn>());
 
@@ -78,7 +87,8 @@
 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    A.Dummy<IUserContext>());
+                    A.Dummy<IUserContext>(),
+                    quarterWindowFactory);
 
                 Func<Task> action = async () => await handler.HandleAsync(new CopyReturn(@return.Id));
 
@@ -98,7 +108,8 @@
 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    A.Dummy<IUserContext>());
+                    A.Dummy<IUserContext>(),
+                    quarterWindowFactory);
 
                 Func<Task> assertAction = async () => await handler.HandleAsync(new CopyReturn(Guid.NewGuid()));
 
@@ -202,6 +213,180 @@
             }
 
             await ActionAndAssert(Action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReceivedWithAatfApprovalDateOnWindowDate_CopiedReturnShouldNotContainWeeeReceivedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReceivedAmounts).ToList();
+
+                var originalWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReceivedAmounts)
+                    .ToList();
+
+                copiedWeeeReceived.Count.Should().Be(0);
+                originalWeeeReceived.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReceivedWithAatfApprovalDateAfterWindowDate_CopiedReturnShouldNotContainWeeeReceivedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReceivedAmounts).ToList();
+
+                var originalWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReceivedAmounts)
+                    .ToList();
+
+                copiedWeeeReceived.Count.Should().Be(0);
+                originalWeeeReceived.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date.AddDays(-1));
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReceivedWithAatfApprovalDateIsNull_CopiedReturnShouldNotContainWeeeReceivedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReceivedAmounts).ToList();
+
+                var originalWeeeReceived = database.WeeeContext.WeeeReceived.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReceivedAmounts)
+                    .ToList();
+
+                copiedWeeeReceived.Count.Should().Be(0);
+                originalWeeeReceived.Should().HaveCountGreaterThan(0);
+            }
+
+            await ActionAndAssertApprovalDate(Action, null, DateTime.Now);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeSentOnWithAatfApprovalDateOnWindowDate_CopiedReturnShouldNotContainWeeeSentOnValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeSentOnAmounts).ToList();
+
+                var originalWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeSentOnAmounts)
+                    .ToList();
+
+                copiedWeeeSentOn.Count.Should().Be(0);
+                originalWeeeSentOn.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeSentOnWithAatfApprovalDateAfterWindowDate_CopiedReturnShouldNotContainWeeeSentOnValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeSentOnAmounts).ToList();
+
+                var originalWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeSentOnAmounts)
+                    .ToList();
+
+                copiedWeeeSentOn.Count.Should().Be(0);
+                originalWeeeSentOn.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date.AddDays(-1));
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeSentOnWithAatfApprovalDateIsNull_CopiedReturnShouldNotContainWeeeSentOnValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeSentOnAmounts).ToList();
+
+                var originalWeeeSentOn = database.WeeeContext.WeeeSentOn.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeSentOnAmounts)
+                    .ToList();
+
+                copiedWeeeSentOn.Count.Should().Be(0);
+                originalWeeeSentOn.Should().HaveCountGreaterThan(0);
+            }
+
+            await ActionAndAssertApprovalDate(Action, null, DateTime.Now);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReusedWithAatfApprovalDateOnWindowDate_CopiedReturnShouldNotContainWeeeReusedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReusedAmounts).ToList();
+
+                var originalWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReusedAmounts)
+                    .ToList();
+
+                copiedWeeeReused.Count.Should().Be(0);
+                originalWeeeReused.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReusedOnWithAatfApprovalDateAfterWindowDate_CopiedReturnShouldNotContainWeeeReusedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReusedAmounts).ToList();
+
+                var originalWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReusedAmounts)
+                    .ToList();
+
+                copiedWeeeReused.Count.Should().Be(0);
+                originalWeeeReused.Should().HaveCountGreaterThan(0);
+            }
+
+            var date = DateTime.Now;
+
+            await ActionAndAssertApprovalDate(Action, date, date.AddDays(-1));
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnWeeeReusedOnWithAatfApprovalDateIsNull_CopiedReturnShouldNotContainWeeeReusedValues()
+        {
+            void Action(Guid id)
+            {
+                var copiedWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == copiedReturn.Id)
+                    .Include(w => w.WeeeReusedAmounts).ToList();
+
+                var originalWeeeReused = database.WeeeContext.WeeeReused.Where(r => r.ReturnId == @return.Id).Include(w => w.WeeeReusedAmounts)
+                    .ToList();
+
+                copiedWeeeReused.Count.Should().Be(0);
+                originalWeeeReused.Should().HaveCountGreaterThan(0);
+            }
+
+            await ActionAndAssertApprovalDate(Action, null, DateTime.Now);
         }
 
         [Fact]
@@ -351,7 +536,7 @@
 
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(database.Model.AspNetUsers.First().Id));
 
-                await CreateReturnToCopy();
+                await CreateReturnToCopy(DateTime.Now);
                 
                 var message = new CopyReturn(@return.Id);
 
@@ -359,7 +544,8 @@
                 
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
-                    userContext);
+                    userContext,
+                    quarterWindowFactory);
                 
                 var result = await handler.HandleAsync(message);
 
@@ -370,11 +556,40 @@
             }
         }
 
-        private async Task CreateReturnToCopy()
+        private async Task ActionAndAssertApprovalDate(Action<Guid> action, DateTime? approvalDate, DateTime windowStartDate)
         {
-            country = await database.WeeeContext.Countries.FirstAsync();
-            await database.WeeeContext.UKCompetentAuthorities.FirstAsync(c => c.Name == "Environment Agency");
+            using (database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var userContext = A.Fake<IUserContext>();
 
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(database.Model.AspNetUsers.First().Id));
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
+                    .Returns(new Domain.DataReturns.QuarterWindow(windowStartDate, windowStartDate.AddDays(1), QuarterType.Q1));
+
+                await CreateReturnToCopy(approvalDate);
+
+                var message = new CopyReturn(@return.Id);
+
+                var authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+                handler = new CopyReturnHandler(authorization,
+                    database.WeeeContext,
+                    userContext,
+                    quarterWindowFactory);
+
+                var result = await handler.HandleAsync(message);
+
+                @return = database.WeeeContext.Returns.AsNoTracking().First(r => r.Id == message.ReturnId);
+                copiedReturn = database.WeeeContext.Returns.First(r => r.Id == result);
+
+                action(result);
+            }
+        }
+
+        private async Task CreateReturnToCopy(DateTime? approvalDate = null)
+        {
             organisation = Organisation.CreateSoleTrader("Test Organisation");
             var quarter = new Quarter(2019, QuarterType.Q1);
 
@@ -390,27 +605,27 @@
 
             await AddNonObligated();
 
-            await AddWeeeReceived();
+            await AddWeeeReceived(approvalDate);
 
-            await AddWeeSentOn();
+            await AddWeeSentOn(approvalDate);
 
-            await AddWeeeReused();
+            await AddWeeeReused(approvalDate);
         }
 
-        private async Task AddWeeeReused()
+        private async Task AddWeeeReused(DateTime? approvalDate = null)
         {
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
-
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+            aatf.UpdateDetails(aatf.Name, aatf.CompetentAuthority, aatf.ApprovalNumber, aatf.AatfStatus, aatf.Organisation, aatf.Size, approvalDate, aatf.LocalArea, aatf.PanArea);
             var weeeReused = new List<WeeeReused>()
             {
-                new WeeeReused(aatf, @return.Id),
-                new WeeeReused(aatf, @return.Id)
+                new WeeeReused(aatf, @return),
+                new WeeeReused(aatf, @return)
             };
 
             var weeeReusedSites = new List<WeeeReusedSite>()
             {
-                new WeeeReusedSite(weeeReused.ElementAt(0), AatfSiteAddress()),
-                new WeeeReusedSite(weeeReused.ElementAt(1), AatfSiteAddress())
+                new WeeeReusedSite(weeeReused.ElementAt(0), AddressHelper.GetAatfAddress(database)),
+                new WeeeReusedSite(weeeReused.ElementAt(1), AddressHelper.GetAatfAddress(database))
             };
 
             var weeeReusedAmounts = new List<WeeeReusedAmount>()
@@ -428,14 +643,15 @@
             await database.WeeeContext.SaveChangesAsync();
         }
 
-        private async Task AddWeeSentOn()
+        private async Task AddWeeSentOn(DateTime? approvalDate = null)
         {
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+            aatf.UpdateDetails(aatf.Name, aatf.CompetentAuthority, aatf.ApprovalNumber, aatf.AatfStatus, aatf.Organisation, aatf.Size, approvalDate, aatf.LocalArea, aatf.PanArea);
 
             var weeeSentOn = new List<WeeeSentOn>()
             {
-                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), aatf, @return),
-                new WeeeSentOn(AatfSiteAddress(), AatfSiteAddress(), aatf, @return)
+                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), aatf, @return),
+                new WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database), aatf, @return)
             };
 
             var weeSentOnAmounts = new List<WeeeSentOnAmount>()
@@ -452,14 +668,15 @@
             await database.WeeeContext.SaveChangesAsync();
         }
 
-        private async Task AddWeeeReceived()
+        private async Task AddWeeeReceived(DateTime? approvalDate = null)
         {
-            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database.WeeeContext, organisation);
+            var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+            aatf.UpdateDetails(aatf.Name, aatf.CompetentAuthority, aatf.ApprovalNumber, aatf.AatfStatus, aatf.Organisation, aatf.Size, approvalDate, aatf.LocalArea, aatf.PanArea);
 
             var weeReceived = new List<WeeeReceived>()
             {
-                new WeeeReceived(new Scheme(organisation), aatf, @return.Id),
-                new WeeeReceived(new Scheme(organisation), aatf, @return.Id)
+                new WeeeReceived(new Scheme(organisation), aatf, @return),
+                new WeeeReceived(new Scheme(organisation), aatf, @return)
             };
 
             var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
@@ -474,11 +691,6 @@
             database.WeeeContext.WeeeReceived.AddRange(weeReceived);
 
             await database.WeeeContext.SaveChangesAsync();
-        }
-
-        private AatfAddress AatfSiteAddress()
-        {
-            return new AatfAddress("name", "address1", "address2", "town", "county", "postcode", country);
         }
 
         private async Task AddNonObligated()

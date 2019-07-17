@@ -34,7 +34,7 @@
 
             return schemes.Where(s => (s.SchemeStatus == SchemeStatus.Approved) || (s.SchemeStatus == SchemeStatus.Withdrawn))
                 .Select(s => schemeMap.Map(s))
-                .OrderBy(sd => sd.Name)
+                .OrderBy(sd => sd.SchemeName)
                 .ToList();
         }
     }

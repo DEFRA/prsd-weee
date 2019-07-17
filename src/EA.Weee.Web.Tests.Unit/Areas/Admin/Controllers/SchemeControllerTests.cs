@@ -358,6 +358,7 @@
             var result = await controller.EditScheme(A.Dummy<Guid>(), model);
 
             A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
 
             // Assert
             var redirectResult = result as RedirectToRouteResult;
@@ -464,6 +465,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+
             Assert.Equal(SchemeStatus.Rejected, status);
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -523,6 +527,9 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+
             Assert.Equal(SchemeStatus.Withdrawn, status);
             Assert.IsType<RedirectToRouteResult>(result);
 

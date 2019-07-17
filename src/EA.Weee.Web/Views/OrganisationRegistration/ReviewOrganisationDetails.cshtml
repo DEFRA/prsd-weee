@@ -263,13 +263,18 @@
 
         <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
 
-        @Html.Partial("_PrivacyPolicy");
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            @this.WeeeGds().CreateProgressiveDisclosure("Privacy policy",
+                @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml").ToString(),
+                "Policies",
+                "Privacy",
+                string.Empty)
+
             <fieldset class="govuk-fieldset">
                 <div class="govuk-checkboxes">
                     @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
                     <div class="govuk-checkboxes__item">
-                        <input id="PrivacyPolicy" class="govuk-checkboxes__input" name="PrivacyPolicy" type="checkbox" value="true" />
+                        <input id="PrivacyPolicy" class="govuk-checkboxes__input" name="PrivacyPolicy" type="checkbox" value="true"/>
                         <label class="govuk-label govuk-checkboxes__label">
                             Confirm you have read our privacy policy
                         </label>

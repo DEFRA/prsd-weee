@@ -67,12 +67,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
-    <Compile Include="AatfReturn\AatfTaskList\IFetchAatfByOrganisationIdDataAccess.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\IFetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
+    <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
+    <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
+    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />
@@ -199,7 +208,11 @@
     <Compile Include="Admin\Reports\GetUkWeeeCsv\IGetUkWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Admin\SendTestEmailHandler.cs" />
+    <Compile Include="Mappings\AatfSubmissionHistoryMap.cs" />
     <Compile Include="Mappings\LocalAreaMap.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\GetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\DataAccess\IGetActiveOrganisationUsersDataAccess.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\GetActiveOrganisationUsersHandler.cs" />
     <Compile Include="Shared\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />

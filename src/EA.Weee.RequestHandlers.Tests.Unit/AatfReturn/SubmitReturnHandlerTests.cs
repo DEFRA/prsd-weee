@@ -1,16 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentAssertions.Common;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.AatfTaskList;
     using Requests.AatfReturn;
     using Weee.Tests.Core;
     using Xunit;
@@ -22,19 +27,25 @@
         private readonly WeeeContext weeeContext;
         private readonly IUserContext userContext;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IFetchAatfDataAccess fetchAatfDataAccess;
+        private readonly Fixture fixture;
 
         public SubmitReturnHandlerTests()
         {
             userContext = A.Fake<IUserContext>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            fetchAatfDataAccess = A.Fake<IFetchAatfDataAccess>();
+
+            fixture = new Fixture();
 
             handler = new SubmitReturnHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
                 .AllowOrganisationAccess().Build(),
                 userContext,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                fetchAatfDataAccess);
         }
 
         [Fact]
@@ -45,7 +56,8 @@
             handler = new SubmitReturnHandler(authorization,
                 userContext,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                fetchAatfDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<SubmitReturn>());
 
@@ -62,7 +74,8 @@
             handler = new SubmitReturnHandler(authorization,
                 userContext,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                fetchAatfDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<SubmitReturn>());
 
@@ -112,7 +125,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenReturnThatsAlreadySubmitted_StatusUpadateMustNotHaveHappened()
+        public async Task HandleAsync_GivenReturnThatIsAlreadySubmitted_StatusUpdateMustNotHaveHappened()
         {
             var message = new SubmitReturn(Guid.NewGuid());
             var @return = A.Dummy<Return>();
@@ -129,9 +142,28 @@
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustNotHaveHappened();
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenReturnIsAatf_AatfsRecordsShouldBeAddedAgainstReturn()
+        {
+            var message = new SubmitReturn(Guid.NewGuid(), false);
+            var @return = GetReturn();
+            @return.ReturnStatus = ReturnStatus.Created;
+            var userId = Guid.NewGuid();
+            var aatfs = new List<Aatf>() { fixture.Build<Aatf>().Create() };
+
+            A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).Returns(@return);
+            A.CallTo(() => userContext.UserId).Returns(userId);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).Returns(aatfs);
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => genericDataAccess.AddMany<ReturnAatf>(A<IEnumerable<ReturnAatf>>.That.Matches(a => a.ElementAt(0).Return.Equals(@return) && a.ElementAt(0).Aatf.Equals(aatfs.ElementAt(0))))).MustHaveHappened()
+                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+        }
+
         public Return GetReturn()
         {
-            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", A.Fake<Domain.AatfReturn.FacilityType>());
+            return new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "me", FacilityType.Aatf);
         }
     }
 }

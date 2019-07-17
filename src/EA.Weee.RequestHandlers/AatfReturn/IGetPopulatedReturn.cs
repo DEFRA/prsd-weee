@@ -7,6 +7,6 @@
 
     public interface IGetPopulatedReturn
     {
-        Task<ReturnData> GetReturnData(Guid returnId);
+        Task<ReturnData> GetReturnData(Guid returnId, bool forSummary);
     }
 }
