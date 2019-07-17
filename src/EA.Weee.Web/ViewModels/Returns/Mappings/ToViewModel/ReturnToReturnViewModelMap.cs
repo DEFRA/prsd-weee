@@ -50,7 +50,7 @@
             {
                 NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
-                NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalNonObligated(totalNonObligatedTonnage, totalNonObligatedTonnageDcf)),
+                NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source))
             };
         }
@@ -123,61 +123,15 @@
             }
         }
 
-        private decimal? TotalNonObligated(decimal? totalNonObligatedTonnage, decimal? totalNonObligatedTonnageDcf)
-        {
-            if (totalNonObligatedTonnage.HasValue && totalNonObligatedTonnageDcf.HasValue)
-            {
-                return totalNonObligatedTonnage.Value + totalNonObligatedTonnageDcf.Value;
-            }
-
-            if (totalNonObligatedTonnageDcf.HasValue)
-            {
-                return totalNonObligatedTonnageDcf.Value;
-            }
-
-            return totalNonObligatedTonnage;
-        }
-
         private decimal? TotalObligated(ReturnData returnData)
         {
-            decimal? reusedTotal = null;
-            decimal? receivedTotal = null;
-            decimal? sentOnTotal = null;
             decimal? total = null;
 
-            if (returnData.ObligatedWeeeReusedData.Any(o => o.Total.HasValue))
-            {
-                reusedTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeReusedData.Sum(o => o.Total));
-            }
             if (returnData.ObligatedWeeeReceivedData.Any(o => o.Total.HasValue))
             {
-                receivedTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeReceivedData.Sum(o => o.Total));
-            }
-            if (returnData.ObligatedWeeeSentOnData.Any(o => o.Total.HasValue))
-            {
-                sentOnTotal = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeSentOnData.Sum(o => o.Total));
+                total = tonnageUtilities.InitialiseTotalDecimal(returnData.ObligatedWeeeReceivedData.Sum(o => o.Total));
             }
 
-            if (reusedTotal.HasValue)
-            {
-                total = reusedTotal.Value;
-            }
-            if (receivedTotal.HasValue)
-            {
-                if (!total.HasValue)
-                {
-                    total = 0;
-                }
-                total += receivedTotal.Value;
-            }
-            if (sentOnTotal.HasValue)
-            {
-                if (!total.HasValue)
-                {
-                    total = 0;
-                }
-                total += sentOnTotal.Value;
-            }
             return total;
         }
     }
