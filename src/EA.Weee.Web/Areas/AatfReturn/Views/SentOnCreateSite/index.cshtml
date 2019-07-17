@@ -4,27 +4,48 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnCreateSiteViewModel
 @{
-    ViewBag.Title = "Sent On WEEE";
+    ViewBag.Title = "Sent On WEEE - GOV.UK";
 }
 
-<section id="main-content">
-    <h1 class="govuk-heading-l">Which AATF/ATF was the WEEE sent to for treatment?</h1>
+    <section id="main-content">
+        <h1 class="govuk-heading-l">WEEE sent to another AATF / ATF for treatment</h1>
+        <h2 class="govuk-heading-m">Which AATF / ATF was the WEEE sent to for treatment?</h2>
 
-    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.ReturnId)
-        @Html.HiddenFor(m => m.AatfId)
-        @Html.HiddenFor(m => m.WeeeSentOnId)
-        @Html.EditorFor(m => m.SiteAddressData)
-        @Html.HiddenFor(m => m.SiteAddressId)
+        @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.ReturnId)
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.HiddenFor(m => m.WeeeSentOnId)
+            @Html.EditorFor(m => m.SiteAddressData)
+            @Html.HiddenFor(m => m.SiteAddressData.CountryName)
 
-        <div class="govuk-!-padding-bottom-3"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details">
-            Save and continue
-        </button>
+            <div class="govuk-!-padding-bottom-6" style="border-bottom: 1px solid #bfc1c3;"></div>
+            <div class="govuk-!-padding-bottom-6"></div>
+            <h2 class="govuk-heading-m">Who operates the site where the WEEE was sent to for treatment?</h2>
 
-    }
-</section>
+            @Html.EditorFor(m => m.OperatorAddressData)
+
+            <div class="govuk-!-padding-bottom-3"></div>
+
+            @(this.WeeeGds().Submit("Save and continue"))
+        }
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    </section>
+
+@Scripts.Render("~/bundles/sent-on-operator-address")
+@section scripts {
+    <noscript>
+        <style type="text/css">
+            #operatorCheckBox {
+                display: none;
+            }
+
+            #operatorButton {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+}

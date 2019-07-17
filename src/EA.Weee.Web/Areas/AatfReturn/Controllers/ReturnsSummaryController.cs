@@ -35,7 +35,12 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, true));
+
+                if (!@return.SubmittedDate.HasValue)
+                {
+                    return RedirectToAction("Index", "Returns", new { organisationId = @return.OrganisationData.Id });
+                }
 
                 var viewModel = mapper.Map<ReturnViewModel>(@return);
 

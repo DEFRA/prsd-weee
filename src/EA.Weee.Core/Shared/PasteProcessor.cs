@@ -53,10 +53,19 @@
         {
             var categoryValues = (existingData != null) ? existingData : new ObligatedCategoryValues();
 
+            var b2bValuesProvided = obligatedPastedValues.B2B.Any(v => !string.IsNullOrWhiteSpace(v.Tonnage));
+            var b2cValuesProvided = obligatedPastedValues.B2C.Any(v => !string.IsNullOrWhiteSpace(v.Tonnage));
             foreach (var category in categoryValues)
             {
-                category.B2B = obligatedPastedValues.B2B.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
-                category.B2C = obligatedPastedValues.B2C.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+                if (b2bValuesProvided)
+                {
+                    category.B2B = obligatedPastedValues.B2B.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+                }
+
+                if (b2cValuesProvided)
+                {
+                    category.B2C = obligatedPastedValues.B2C.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+                }
             }
 
             return categoryValues;

@@ -1,25 +1,22 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
@@ -60,8 +57,20 @@
             var siteId = Guid.NewGuid();
             const string orgName = "orgName";
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var aatfInfo = A.Fake<AatfData>();
+            var aatfId = Guid.NewGuid();
+
+            const string reportingQuarter = "2019 Q1 Jan - Mar";
+            const string reportingPeriod = "Test (WEE/QW1234RE/ATF)";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+            const string aatfName = "Test";
+            aatfInfo.ApprovalNumber = "WEE/QW1234RE/ATF";
+
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -73,11 +82,18 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfSite>.Ignored)).Returns(addressTonnage);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
-            await controller.Index(organisationId, A.Dummy<Guid>(), A.Dummy<Guid>(), siteId);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
+            A.CallTo(() => aatfInfo.Name).Returns(aatfName);
+
+            await controller.Index(organisationId, A.Dummy<Guid>(), aatfId, siteId);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
+
+            Assert.Contains(reportingQuarter, breadcrumb.QuarterDisplayInfo);
+            Assert.Contains(reportingPeriod, breadcrumb.AatfDisplayInfo);
         }
 
         [Fact]
@@ -122,8 +138,7 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -150,8 +165,7 @@
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST");
-            siteAddressData.Id = siteId;
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()

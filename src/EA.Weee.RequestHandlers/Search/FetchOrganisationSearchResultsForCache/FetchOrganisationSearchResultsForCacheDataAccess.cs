@@ -8,6 +8,7 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Scheme;
 
@@ -44,11 +45,16 @@
                 }
             }
 
+            var aatfs = await context.Aatfs.ToListAsync();
+
             return organisations.Select(r => new OrganisationSearchResult()
             {
                 OrganisationId = r.Id,
                 Name = r.OrganisationName,
-                Address = addressMapper.Map(r.BusinessAddress)
+                Address = addressMapper.Map(r.BusinessAddress),
+                PcsCount = schemes.Count(p => p.OrganisationId == r.Id && p.SchemeStatus != Domain.Scheme.SchemeStatus.Rejected),
+                AatfCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Aatf),
+                AeCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Ae)
             })
                 .OrderBy(r => r.Name)
                 .ToList();

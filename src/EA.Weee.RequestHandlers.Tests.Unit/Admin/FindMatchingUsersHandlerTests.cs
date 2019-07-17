@@ -5,7 +5,9 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Core.Admin;
+    using EA.Weee.Core.User;
     using FakeItEasy;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
@@ -15,6 +17,13 @@
 
     public class FindMatchingUsersHandlerTests
     {
+        private Fixture fixture;
+
+        public FindMatchingUsersHandlerTests()
+        {
+            fixture = new Fixture();
+        }
+
         /// <summary>
         /// This test ensures that a non-internal user cannot execute requests to find matching users.
         /// </summary>
@@ -26,14 +35,15 @@
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
-            A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(new UserSearchData[5]);
-            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(new UserSearchData[5]);
+            var filter = fixture.Create<UserFilter>();
+            A.CallTo(() => dataAccess.GetOrganisationUsers(filter)).Returns(new UserSearchData[5]);
+            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers(filter)).Returns(new UserSearchData[5]);
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
             
-            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending, filter);
 
             // Act
             Func<Task<UserSearchDataResult>> action = () => handler.HandleAsync(request);
@@ -50,7 +60,8 @@
         public async void FindMatchingUsersHandler_WithInternalUser_DoesntThrowException()
         {
             // Arrage
-            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            var filter = fixture.Create<UserFilter>();
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess(filter);
 
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
@@ -58,7 +69,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending, filter);
 
             // Act
             await handler.HandleAsync(request);
@@ -74,14 +85,14 @@
         public async void FindMatchingUsersHandler_RequestingSpecificPage_ReturnsCorrectNumberOfResults()
         {
             // Arrage
-
-            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            var filter = fixture.Create<UserFilter>();
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess(filter);
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
             // Page 2, where each page has 3 results.
-            FindMatchingUsers request = new FindMatchingUsers(2, 3, FindMatchingUsers.OrderBy.FullNameAscending); 
+            FindMatchingUsers request = new FindMatchingUsers(2, 3, FindMatchingUsers.OrderBy.FullNameAscending, filter); 
 
             // Act
             var response = await handler.HandleAsync(request);
@@ -102,12 +113,13 @@
         public async void FindMatchingUsersHandler_WithFullNameAscendingOrdering_ReturnsResultsSortedByFullName()
         {
             // Arrage
-            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            var filter = fixture.Create<UserFilter>();
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess(filter);
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.FullNameAscending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.FullNameAscending, filter);
 
             // Act
             var response = await handler.HandleAsync(request);
@@ -128,12 +140,13 @@
         public async void HandleAsync_WithOrderByRoleDescending_ReturnsSortedResults()
         {
             // Arrage
-            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            var filter = fixture.Create<UserFilter>();
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess(filter);
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleDescending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleDescending, filter);
 
             // Act
             UserSearchDataResult response = await handler.HandleAsync(request);
@@ -165,12 +178,13 @@
         public async void HandleAsync_WithOrderByRoleAscending_ReturnsSortedResults()
         {
             // Arrage
-            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            var filter = fixture.Create<UserFilter>();
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess(filter);
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleAscending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleAscending, filter);
 
             // Act
             UserSearchDataResult response = await handler.HandleAsync(request);
@@ -196,7 +210,7 @@
         /// Creates a fake data access that returns 5 organisation users and 5 competent authority users.
         /// </summary>
         /// <returns></returns>
-        private IFindMatchingUsersDataAccess CreateFakeDataAccess()
+        private IFindMatchingUsersDataAccess CreateFakeDataAccess(UserFilter filter)
         {
             IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
 
@@ -209,7 +223,7 @@
                     new UserSearchData() { Id = "User 5", FirstName = "HBN", LastName = "UTL", Role = "N/A" },
                 };
 
-            A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(organisationUsers.ToArray());
+            A.CallTo(() => dataAccess.GetOrganisationUsers(filter)).Returns(organisationUsers.ToArray());
 
             List<UserSearchData> competentAuthorityUsers = new List<UserSearchData>()
                 {
@@ -220,7 +234,7 @@
                     new UserSearchData() { Id = "User 10", FirstName = "YGR", LastName = "FTW", Role = "Standard" },
                 };
 
-            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(competentAuthorityUsers.ToArray());
+            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers(filter)).Returns(competentAuthorityUsers.ToArray());
 
             return dataAccess;
         }

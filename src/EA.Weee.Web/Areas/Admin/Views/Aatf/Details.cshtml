@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.Areas.Admin.Controllers
+﻿@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Core.Organisations
@@ -47,6 +48,12 @@
         <div class="govuk-table__header--large">
             @Model.FacilityType.ToDisplayString() details
         </div>
+        @if (Model.CanEdit)
+        {
+            <div style="float:right" hidden="hidden">
+                <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
+            </div>
+        }
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
@@ -75,21 +82,21 @@
                 </tr>
                 @if (Model.HasPatArea)
                 {
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">WROS pan area team</th>
-                    <td class="govuk-table__cell">
-                        @Model.PanArea.Name <br />
-                    </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">WROS pan area team</th>
+                        <td class="govuk-table__cell">
+                            @Model.PanArea.Name <br />
+                        </td>
+                    </tr>
                 }
                 @if (Model.HasLocalArea)
                 {
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">EA area</th>
-                    <td class="govuk-table__cell">
-                        @Model.LocalArea.Name <br />
-                    </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">EA area</th>
+                        <td class="govuk-table__cell">
+                            @Model.LocalArea.Name <br />
+                        </td>
+                    </tr>
                 }
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Status</th>
@@ -111,30 +118,88 @@
         </table>
         @if (Model.CanEdit)
         {
-        <p>
-            <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
-        </p>
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
+            </p>
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
         <div class="govuk-table__header--large">
-            Data
+            @Model.FacilityType.ToDisplayString() data returns
         </div>
-        <table class="govuk-table">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-!-width-one-half">&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td>
-                        <h2 class="govuk-table__header">
-                            AATF data returns
-                        </h2>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        @if (Model.HasSubmissionData)
+        {
+            if (Model.FacilityType.Equals(FacilityType.Aatf))
+            {
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Year</th>
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
+                            <th class="govuk-table__header" style="text-align: right" scope="col">B2C total obligated (tonnes)</th>
+                            <th class="govuk-table__header" style="text-align: right" scope="col">B2B total obligated (tonnes)</th>
+                            <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
+                            <th class="govuk-table__header" scope="col">Submitted by</th>
+                            <th class="govuk-table__header" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+
+                        @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
+                        {
+                            var item = Model.SubmissionHistoryData[returnCount];
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" style="text-align: left">@item.ComplianceYear</td>
+                                <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
+                                <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedTotal</td>
+                                <td class="govuk-table__cell break-word" style="text-align: right">@item.NonObligatedTotal</td>
+                                <td class="govuk-table__cell">@item.SubmittedDate</td>
+                                <td class="govuk-table__cell">@item.SubmittedBy</td>
+                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a> </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Year</th>
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
+                            <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
+                            <th class="govuk-table__header" scope="col">Submitted by</th>
+                            <th class="govuk-table__header" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+
+                        @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
+                        {
+                            var item = Model.SubmissionHistoryData[returnCount];
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" style="text-align: left">@item.ComplianceYear</td>
+                                <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
+                                <td class="govuk-table__cell">@item.SubmittedDate</td>
+                                <td class="govuk-table__cell">@item.SubmittedBy</td>
+                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a> </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+        else
+        {
+            <p>No @Model.FacilityType.ToDisplayString() submission history </p>
+        }
+
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
         <div class="govuk-table__header--large">
@@ -151,15 +216,15 @@
                     <td class="govuk-table__cell">
                         @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                         {
-                        @:Sole trader or individual
+                            @:Sole trader or individual
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
                         {
-                        @:Partnership
+                            @:Partnership
                         }
                         else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                         {
-                        @:Registered company
+                            @:Registered company
                         }
                     </td>
                 </tr>
@@ -226,75 +291,75 @@
                                         }
                                     }
 
-                                @if (Model.AssociatedAes.Any())
-                                {
-                                if (Model.AssociatedAatfs.Any())
-                                {
-                                <tr class="govuk-table__row">
-                                    <td>
-                                        <br />
-                                    </td>
-                                </tr>
-                                }
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">AE</td>
-                                </tr>
-                                foreach (var ae in Model.AssociatedAes)
-                                {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                        @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
-                                    </td>
-                                </tr>
-                                }
-                                }
+                                    @if (Model.AssociatedAes.Any())
+                                    {
+                                        if (Model.AssociatedAatfs.Any())
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td>
+                                                    <br />
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell aatf-details-associated-table-cell-title">AE</td>
+                                        </tr>
+                                        foreach (var ae in Model.AssociatedAes)
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
 
-                                @if (Model.AssociatedSchemes.Any())
-                                {
-                                if (Model.AssociatedAes.Any() || Model.AssociatedAatfs.Any())
-                                {
-                                <tr class="govuk-table__row">
-                                    <td>
-                                        <br />
-                                    </td>
-                                </tr>
-                                }
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell-title">PCS</td>
-                                </tr>
-                                foreach (var scheme in Model.AssociatedSchemes)
-                                {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                        @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, new { })
-                                    </td>
-                                </tr>
-                                }
-                                }
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+                                    @if (Model.AssociatedSchemes.Any())
+                                    {
+                                        if (Model.AssociatedAes.Any() || Model.AssociatedAatfs.Any())
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td>
+                                                    <br />
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell aatf-details-associated-table-cell-title">PCS</td>
+                                        </tr>
+                                        foreach (var scheme in Model.AssociatedSchemes)
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
+                                                    @Html.ActionLink(scheme.Name, "Overview", "Scheme", new { schemeId = scheme.Id }, null)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
 
         @if (Model.CanEdit)
         {
-    <p>
-        @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
-        {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-        }
-        else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-        {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-        }
-        else
-        {
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-        }
-    </p>
+            <p>
+                @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+                else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+                else
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+            </p>
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
@@ -334,9 +399,9 @@
 
         @if (Model.CanEdit)
         {
-        <p>
-            <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
-        </p>
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
+            </p>
         }
     </section>
     <div>&nbsp;</div>

@@ -2,7 +2,7 @@
 @using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Sent On WEEE";
+    ViewBag.Title = "Sent On WEEE - GOV.UK";
 }
 
 <section id="main-content">
@@ -52,4 +52,5 @@
         TonnageTotals('B2C');
         TonnageTotals('B2B');
     </script>
+    @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "SentOnCreateSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId }, new { @class = "govuk-back-link" })
 </section>

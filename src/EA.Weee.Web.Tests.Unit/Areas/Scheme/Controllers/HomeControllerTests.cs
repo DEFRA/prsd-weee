@@ -405,13 +405,33 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
                 .Returns(new List<OrganisationUserData>
                 {
-                    new OrganisationUserData(),
+                    new OrganisationUserData
+                    {
+                        UserId = Guid.NewGuid().ToString(),
+                        UserStatus = UserStatus.Active,
+                        User = new UserData()
+                    },
                 });
 
             var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUsers");
+        }
+
+        [Fact]
+        public async void GetManageOrganisationUsers_NoUsers_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData(),
+                });
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -536,7 +556,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ViewRegisteredOfficeDetails
+                SelectedValue = PcsAction.ViewOrganisationDetails
             });
 
             Assert.IsType<RedirectToRouteResult>(result);

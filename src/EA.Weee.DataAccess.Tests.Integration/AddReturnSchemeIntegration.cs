@@ -2,17 +2,13 @@
 {
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Domain.User;
     using Xunit;
     using Organisation = Domain.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -50,7 +46,7 @@
 
                 var returnScheme = new ReturnScheme(scheme, @return);
 
-                await dataAccess.Submit(returnScheme);
+                await dataAccess.Submit(new List<ReturnScheme> { returnScheme });
 
                 var returnSchemeReturned = context.ReturnScheme.First(o => o.Id == returnScheme.Id);
                 returnSchemeReturned.Should().NotBeNull();

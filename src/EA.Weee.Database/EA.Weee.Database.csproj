@@ -53,6 +53,7 @@
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\0008-InsertLocalAreaData.sql" />
     <Content Include="scripts\Everytime\0009-InsertPanAreaData.sql" />
+    <Content Include="scripts\Everytime\0010-InsertReportOnQuestionData.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
@@ -254,6 +255,16 @@
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-0938-add-localarea.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1344-create-pan-area-table.sql" />
     <Content Include="scripts\Update\Release 2\Sprint11\20191306-1420-add-aatf-area-columns.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint11\20192606-0917-create-ReturnAatfSummary.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190701-1300-create-getAeSubmissions-storedprocedure.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190701-1300-create-fetchAatfSubmissions-storedprocedure.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190708-0943-alter-getAatfSubmissions.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190704-1615-alter-getAatfSubmissions.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190708-1328-create-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190709-1622-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190709-2201-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190711-1027-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint12\20190711-1517-alter-getAatfAeReturnDataCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

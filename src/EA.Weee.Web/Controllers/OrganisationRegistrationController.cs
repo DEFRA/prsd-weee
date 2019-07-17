@@ -15,6 +15,7 @@
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Services;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -28,12 +29,16 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
-        private const int maximumSearchResults = 5;
+        private readonly int maximumSearchResults;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISearcher<OrganisationSearchResult> organisationSearcher)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, 
+            ISearcher<OrganisationSearchResult> organisationSearcher,
+            ConfigurationService configurationService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+
+            maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
 
         [HttpGet]
@@ -75,9 +80,10 @@
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm)
         {
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+            SearchResultsViewModel viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm, Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+            };
 
             return View(viewModel);
         }
@@ -425,11 +431,15 @@
                 }
                 else
                 {
+                    var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
-                        OrganisationName = organisationData.DisplayName
+                        OrganisationName = organisationData.DisplayName,
+                        AnyActiveUsers = activeUsers.Any()
                     };
+
                     return View(model);
                 }
             }
@@ -453,10 +463,7 @@
             {
                 try
                 {
-                    await
-                        client.SendAsync(
-                            User.GetAccessToken(),
-                            new JoinOrganisation(viewModel.OrganisationId));
+                    await client.SendAsync(User.GetAccessToken(), new JoinOrganisation(viewModel.OrganisationId));
                 }
                 catch (ApiException ex)
                 {
@@ -468,12 +475,12 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = viewModel.AnyActiveUsers });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId, bool activeUsers)
         {
             using (var client = apiClient())
             {
@@ -483,7 +490,8 @@
 
                 var model = new JoinOrganisationConfirmationViewModel()
                 {
-                    OrganisationName = organisationData.DisplayName
+                    OrganisationName = organisationData.DisplayName,
+                    AnyActiveUsers = activeUsers
                 };
 
                 return View(model);

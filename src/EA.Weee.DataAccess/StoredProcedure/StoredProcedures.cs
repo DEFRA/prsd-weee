@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
+    using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -13,6 +16,20 @@
         public StoredProcedures(WeeeContext context)
         {
             this.context = context;
+        }
+
+        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId)
+        {
+            var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId", aatfIdParameter).ToListAsync();
+        }
+
+        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId)
+        {
+            var aatfIdParameter = new SqlParameter("@AeId", aatfId);
+
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId", aatfIdParameter).ToListAsync();
         }
 
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
@@ -407,6 +424,26 @@
                 .SqlQuery<SubmissionChangesCsvData>(
                     "[PCS].[spgSubmissionChangesCsvData] @MemberUploadId", memberUploadIdParameter)
                     .ToListAsync();
+        }
+
+        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
+           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
+            SqlParameter facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
+            SqlParameter returnStatusParameter = new SqlParameter("@ReturnStatus", (object)returnStatus ?? DBNull.Value);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<AatfAeReturnData>(
+                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
+                    complianceYearParameter,                  
+                    quarterParameter,
+                    facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)
+                .ToListAsync();
         }
     }
 }

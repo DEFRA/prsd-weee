@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
@@ -91,5 +92,20 @@
         public bool HasPatArea => PanArea != null;
 
         public bool HasLocalArea => LocalArea != null;
+
+        public List<AatfSubmissionHistoryViewModel> SubmissionHistoryData { get; set; }
+
+        public bool HasSubmissionData
+        {
+            get
+            {
+                if (SubmissionHistoryData != null && SubmissionHistoryData.Any())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

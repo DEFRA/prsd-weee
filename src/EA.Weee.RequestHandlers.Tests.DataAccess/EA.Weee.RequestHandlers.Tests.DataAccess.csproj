@@ -40,8 +40,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.8.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.4.8.0\lib\net452\AutoFixture.dll</HintPath>
+    <Reference Include="AutoFixture, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.4.10.0\lib\net452\AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoFixture.AutoFakeItEasy, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoFakeItEasy.4.10.0\lib\net452\AutoFixture.AutoFakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
@@ -102,11 +105,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AatfReturn\AatfTaskList\FetchAatfByOrganisationIdDataAccessTests.cs" />
+    <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccessTests.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReusedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedReceivedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CopyReturnHandlerTests.cs" />
+    <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
     <Compile Include="Factories\ReturnFactoryDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetAatfsDataAccessTests.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccessTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccessTests.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers\GetActiveOrganisationUsersDataAccessTests.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />

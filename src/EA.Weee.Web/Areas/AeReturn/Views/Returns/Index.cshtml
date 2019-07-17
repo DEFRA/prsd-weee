@@ -24,22 +24,17 @@
                     @Html.HiddenFor(m => m.Quarter)
 
                     <div class="govuk-form-group">
-                        <button class="govuk-button" type="submit">Start a new return for @Model.Quarter.ToDisplayString() @Model.ComplianceYear</button>
+                        @this.WeeeGds().CreateButtonWithEventTracking("Start a new return for " + @Model.Quarter.ToDisplayString() + " " + @Model.ComplianceYear, "AE return", "Start AE return", "Start AE return")
                     </div>
                 }
 
-                <details class="govuk-details govuk-!-font-size-16" role="group" aria-live="polite">
-                    <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                        <span class="govuk-details__summary-text">
-                            I need to submit a return for a different quarter
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text" id="details-content" aria-hidden="true">
-                        <div class="govuk-body govuk-!-font-size-16">
-                            If you want to start a different return other than the one available, contact your environmental regulator
-                        </div>
-                    </div>
-                </details>
+                <div>
+                    @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
+                   "If you want to start a different return other than the one available, contact your environmental regulator",
+                   "Hidden content",
+                   "Progressive disclosure",
+                   "I need to submit a return for a different quarter (AE)")
+                </div>
             </div>
         </div>
     }
@@ -55,6 +50,7 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
                 </tr>
@@ -70,6 +66,7 @@
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                             @{
@@ -106,26 +103,18 @@
             }
 
             td:nth-of-type(3):before {
-                content: "Total obligated (tonnes)";
-            }
-
-            td:nth-of-type(4):before {
-                content: "Total non-obligated (tonnes)";
-            }
-
-            td:nth-of-type(5):before {
                 content: "Created by";
             }
 
-            td:nth-of-type(6):before {
+            td:nth-of-type(4):before {
                 content: "Submitted date (GMT)";
             }
 
-            td:nth-of-type(7):before {
+            td:nth-of-type(5):before {
                 content: "Submitted by";
             }
 
-            td:nth-of-type(8):before {
+            td:nth-of-type(6):before {
                 content: "Status";
             }
         }

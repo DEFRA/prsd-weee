@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -55,7 +56,12 @@
                     WeeeSentOn = weeeSentOn
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+
+                TempData["currentQuarter"] = @return.Quarter;
+                TempData["currentQuarterWindow"] = @return.QuarterWindow;
 
                 return View(viewModel);
             }
@@ -76,15 +82,18 @@
                     return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
                 }
             }
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
             return View(viewModel);
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }

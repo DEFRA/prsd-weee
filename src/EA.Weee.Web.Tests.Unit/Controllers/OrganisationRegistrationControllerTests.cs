@@ -10,6 +10,8 @@
     using Core.Shared;
     using EA.Weee.Core.Search;
     using FakeItEasy;
+    using FluentAssertions;
+    using Services;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
     using Web.ViewModels.OrganisationRegistration.Details;
@@ -20,11 +22,16 @@
 
     public class OrganisationRegistrationControllerTests
     {
-        private Fixture fixture;
+        private readonly ConfigurationService configurationService;
+        private readonly Fixture fixture;
 
         public OrganisationRegistrationControllerTests()
         {
             fixture = new Fixture();
+
+            configurationService = A.Fake<ConfigurationService>();
+
+            A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
 
         [Fact]
@@ -39,7 +46,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -70,7 +78,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.RegisteredOfficeAddress(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -96,7 +105,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressViewModel();
             controller.ModelState.AddModelError("Key", "Error"); // To make the model state invalid
@@ -120,7 +130,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressViewModel();
 
@@ -141,7 +152,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressViewModel();
 
@@ -167,7 +179,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.OrganisationAddress(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -191,7 +204,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.OrganisationAddress(new AddressViewModel());
@@ -214,7 +228,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -234,7 +249,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var organisationId = Guid.NewGuid();
             var contactId = Guid.NewGuid();
@@ -273,7 +289,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var organisationId = Guid.NewGuid();
             var addressId = Guid.NewGuid();
@@ -302,7 +319,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressPrepopulateViewModel { SelectedValue = "Yes", AddressId = Guid.NewGuid() };
 
@@ -324,7 +342,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressPrepopulateViewModel { SelectedValue = "Yes", AddressId = Guid.NewGuid() };
 
@@ -346,7 +365,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new AddressPrepopulateViewModel {SelectedValue = "No"};
 
@@ -371,7 +391,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             Func<Task<ActionResult>> action = async () => await controller.Type(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -394,7 +415,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.Type(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -416,7 +438,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new OrganisationTypeViewModel {SelectedValue = selection, OrganisationId = null};
 
@@ -452,7 +475,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new OrganisationTypeViewModel(
                 type,
@@ -476,7 +500,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.SoleTraderDetails();
@@ -500,7 +525,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             Func<Task<ActionResult>> action = async () => await controller.SoleTraderDetails(A.Dummy<Guid>());
@@ -530,7 +556,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.SoleTraderDetails(orgData.Id);
@@ -554,7 +581,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.SoleTraderDetails(searchedText: search);
@@ -579,7 +607,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             Func<Task<ActionResult>> action = async () => await controller.RegisteredCompanyDetails(A.Dummy<Guid>());
@@ -597,7 +626,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.RegisteredCompanyDetails();
@@ -632,7 +662,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.RegisteredCompanyDetails(orgData.Id);
@@ -656,7 +687,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             controller.ModelState.AddModelError("Key", "Error");
 
@@ -690,16 +722,51 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
-            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id);
+            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
 
             // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
             Assert.IsType<JoinOrganisationConfirmationViewModel>(model);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetJoinOrganisationConfirmation_GivenActiveUsers_ActiveUsersIsSetInViewModel(bool activeUsers)
+        {
+            // Arrange
+            var orgData = new PublicOrganisationData
+            {
+                Id = Guid.NewGuid(),
+                DisplayName = "Test"
+            };
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(orgData);
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationConfirmationViewModel viewModel = model as JoinOrganisationConfirmationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(activeUsers);
         }
 
         [Fact]
@@ -714,7 +781,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -724,6 +792,69 @@
 
             Assert.NotNull(model);
             Assert.IsType<JoinOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public async Task GetJoinOrganisation_GivenActiveUsers_ReturnsViewWithActiveUsersSet()
+        {
+            // Arrange
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(new PublicOrganisationData());
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            var activeUsers = new List<OrganisationUserData>()
+            {
+                A.Fake<OrganisationUserData>()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationViewModel viewModel = model as JoinOrganisationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task GetJoinOrganisation_GivenNoActiveUsers_ReturnsViewWithActiveUsersSet()
+        {
+            // Arrange
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(new PublicOrganisationData());
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            var activeUsers = new List<OrganisationUserData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            JoinOrganisationViewModel viewModel = model as JoinOrganisationViewModel;
+
+            viewModel.AnyActiveUsers.Should().Be(false);
         }
 
         [Fact]
@@ -756,7 +887,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -784,7 +916,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new JoinOrganisationViewModel {SelectedValue = "No"};
 
@@ -809,7 +942,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new JoinOrganisationViewModel {SelectedValue = "Yes - join xyz"};
 
@@ -834,7 +968,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.Search();
@@ -862,7 +997,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.Search();
@@ -883,7 +1019,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             controller.ModelState.AddModelError("Key", "Error");
 
@@ -907,7 +1044,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteRegistration>._))
                 .Returns(Guid.NewGuid());
@@ -933,7 +1071,8 @@
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var model = new OrganisationSummaryViewModel() { AddressId = Guid.NewGuid(), ContactId = Guid.NewGuid(), OrganisationData = new OrganisationData() { Contact = new ContactData() { Id = Guid.NewGuid() }, OrganisationAddress = new AddressData() { Id = Guid.NewGuid() } } };
 
@@ -953,7 +1092,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.Search();
@@ -974,7 +1114,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -998,7 +1139,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var viewModel = new SearchViewModel {SearchTerm = "testSearchTerm", SelectedOrganisationId = null};
 
@@ -1022,7 +1164,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var viewModel = new SearchViewModel
             {
@@ -1061,7 +1204,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -1099,7 +1243,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var viewModel = new SearchResultsViewModel {SearchTerm = "testSearchTerm"};
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -1129,7 +1274,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -1156,7 +1302,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = controller.CreateGuidance("test");
@@ -1174,7 +1321,8 @@
 
             var controller = new OrganisationRegistrationController(
                 weeeClient,
-                organisationSearcher);
+                organisationSearcher,
+                configurationService);
 
             // Act
             var result = controller.Confirmation("test");

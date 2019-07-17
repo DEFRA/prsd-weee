@@ -41,8 +41,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.8.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.4.8.0\lib\net452\AutoFixture.dll</HintPath>
+    <Reference Include="AutoFixture, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.4.10.0\lib\net452\AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoFixture.AutoFakeItEasy, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoFakeItEasy.4.10.0\lib\net452\AutoFixture.AutoFakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
@@ -98,6 +101,13 @@
   <ItemGroup>
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
+    <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccessTests.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandlerTests.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandlerTests.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandlerTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
@@ -216,6 +226,7 @@
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetContactHandlerTests.cs" />
     <Compile Include="Organisations\GetAddressHandlerTests.cs" />

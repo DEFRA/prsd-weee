@@ -44,7 +44,7 @@
 
         public async Task<IList<Return>> GetByComplianceYearAndQuarter(Return @return)
         {
-            return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Organisation.Id == @return.Organisation.Id).ToListAsync();
+            return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Organisation.Id == @return.Organisation.Id && r.FacilityType.Value == @return.FacilityType.Value).ToListAsync();
         }
     }
 }

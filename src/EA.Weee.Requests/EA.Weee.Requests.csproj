@@ -49,6 +49,7 @@
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
+    <Compile Include="AatfReturn\GetAatfByOrganisationFacilityType.cs" />
     <Compile Include="AatfReturn\GetReportOnQuestion.cs" />
     <Compile Include="AatfReturn\CopyReturn.cs" />
     <Compile Include="AatfReturn\GetReturnStatus.cs" />
@@ -85,10 +86,14 @@
     <Compile Include="AatfReturn\Obligated\RemoveAatfSite.cs" />
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
+    <Compile Include="AatfReturn\RemoveReturnScheme.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
+    <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
     <Compile Include="Admin\AddAatf.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
+    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteAatf.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
@@ -100,6 +105,7 @@
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
+    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsv.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
@@ -126,6 +132,7 @@
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Admin\GetAatfsByOrganisationId.cs" />
+    <Compile Include="Organisations\GetActiveOrganisationUsers.cs" />
     <Compile Include="Organisations\GetContact.cs" />
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />

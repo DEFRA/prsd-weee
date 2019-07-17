@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteCreateSiteViewModel
 @{
-    ViewBag.Title = "Reused WEEE";
+    ViewBag.Title = "Reused WEEE - GOV.UK";
 }
 
 <section id="main-content">
@@ -24,5 +24,13 @@
         <button type="submit" name="save" class="govuk-button" id="site-details">
             Save and continue
         </button>
+    }
+    @if (Model.HasSites)
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSiteSummaryList", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+    }
+    else
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "ReusedOffSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
     }
 </section>
