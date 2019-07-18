@@ -244,14 +244,13 @@
                     complianceYearParameter).ToListAsync();
         }
 
-        public Task<List<UkNonObligatedWeeeReceivedData>> SpgUKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
+        public async Task<List<UkNonObligatedWeeeReceivedData>> UKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            throw new NotImplementedException();
             // Put the correct stored procedure name here
-            /*return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[Producer].[SpgUKEEEDataByComplianceYear] @ComplianceYear",
-                complianceYearParameter).ToListAsync();*/
+            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[UkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
+                complianceYearParameter).ToListAsync();
         }
 
         public async Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn)
