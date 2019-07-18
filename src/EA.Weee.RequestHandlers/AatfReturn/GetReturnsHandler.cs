@@ -13,6 +13,7 @@
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,16 +25,19 @@
         private readonly IGetPopulatedReturn getPopulatedReturn;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IReturnFactory returnFactory;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public GetReturnsHandler(IWeeeAuthorization authorization,
-            IGetPopulatedReturn getPopulatedReturn, 
-            IReturnDataAccess returnDataAccess, 
-            IReturnFactory returnFactory)
+            IGetPopulatedReturn getPopulatedReturn,
+            IReturnDataAccess returnDataAccess,
+            IReturnFactory returnFactory,
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.authorization = authorization;
             this.getPopulatedReturn = getPopulatedReturn;
             this.returnDataAccess = returnDataAccess;
             this.returnFactory = returnFactory;
+            this.quarterWindowFactory = quarterWindowFactory;
         }
 
         public async Task<ReturnsData> HandleAsync(GetReturns message)
@@ -44,6 +48,8 @@
 
             var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility);
 
+            List<Domain.DataReturns.QuarterWindow> openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
+
             var returnsData = new List<ReturnData>();
 
             foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
@@ -51,7 +57,25 @@
                 returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
             }
 
-            return new ReturnsData(returnsData, quarter);
+            List<Core.DataReturns.Quarter> returnOpenQuarters = new List<Core.DataReturns.Quarter>();
+
+            foreach (var q in openQuarters)
+            {
+                returnOpenQuarters.Add(new Core.DataReturns.Quarter(q.StartDate.Year, (Core.DataReturns.QuarterType)q.QuarterType));
+            }
+
+            Core.AatfReturn.QuarterWindow nextQuarter = null;
+
+            if (openQuarters.Count > 0)
+            {
+                Domain.DataReturns.QuarterWindow latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
+
+                Domain.DataReturns.QuarterWindow nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
+
+                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate);
+            }
+
+            return new ReturnsData(returnsData, quarter, returnOpenQuarters, nextQuarter);
         }
     }
 }

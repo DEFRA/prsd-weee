@@ -54,7 +54,7 @@
 
                 foreach (var sourceAatf in source.Aatfs)
                 {
-                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber, sourceAatf.ComplianceYear, null, statusMapper.Map(sourceAatf.AatfStatus)));
+                    aatfReturnList.Add(new Aatf(sourceAatf.Id, sourceAatf.Name, sourceAatf.ApprovalNumber, sourceAatf.ComplianceYear, null, statusMapper.Map(sourceAatf.AatfStatus), approvalDate: sourceAatf.ApprovalDate.GetValueOrDefault()));
                 }
 
                 returnData.Aatfs = aatfReturnList;
