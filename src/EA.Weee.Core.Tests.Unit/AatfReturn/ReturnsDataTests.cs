@@ -27,7 +27,8 @@
             {
                 returnQuarter
             };
-            QuarterWindow nextQuarter = new QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(2));
+
+            QuarterWindow nextQuarter = new QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(2), (int)QuarterType.Q1);
 
             var returnsData = new ReturnsData(returnsList, returnQuarter, openQuarters, nextQuarter);
 

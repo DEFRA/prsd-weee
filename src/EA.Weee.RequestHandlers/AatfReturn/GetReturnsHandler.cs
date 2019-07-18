@@ -18,6 +18,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using FacilityType = Core.AatfReturn.FacilityType;
+    using QuarterType = Core.DataReturns.QuarterType;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, ReturnsData>
     {
@@ -48,16 +49,16 @@
 
             var quarter = await returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility);
 
-            List<Domain.DataReturns.QuarterWindow> openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
+            var openQuarters = await quarterWindowFactory.GetQuarterWindowsForDate(SystemTime.UtcNow);
 
             var returnsData = new List<ReturnData>();
 
             foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
             {
-                returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
+               returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
             }
 
-            List<Core.DataReturns.Quarter> returnOpenQuarters = new List<Core.DataReturns.Quarter>();
+            var returnOpenQuarters = new List<Core.DataReturns.Quarter>();
 
             foreach (var q in openQuarters)
             {
@@ -68,11 +69,11 @@
 
             if (openQuarters.Count > 0)
             {
-                Domain.DataReturns.QuarterWindow latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
+                var latestOpenQuarter = openQuarters.OrderByDescending(p => p.QuarterType).FirstOrDefault();
 
-                Domain.DataReturns.QuarterWindow nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
+                var nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
 
-                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate);
+                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate, (int)nextWindow.QuarterType);
             }
 
             return new ReturnsData(returnsData, quarter, returnOpenQuarters, nextQuarter);

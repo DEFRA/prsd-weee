@@ -2,6 +2,7 @@
 {
     using System;
     using Core.AatfReturn;
+    using Core.DataReturns;
     using EA.Prsd.Core;
     using EA.Weee.Web.ViewModels.Returns;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -50,7 +51,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31));
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1);
             var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
 
             SystemTime.Freeze(new DateTime(2019, 04, 01));
@@ -64,7 +65,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31));
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1);
             var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
             var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);

@@ -10,6 +10,7 @@
     using System;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Core.DataReturns;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
     using Xunit;
@@ -45,7 +46,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -79,7 +80,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -108,7 +109,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31), (int)QuarterType.Q1)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -139,7 +140,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
