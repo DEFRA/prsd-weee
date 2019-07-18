@@ -34,6 +34,16 @@
 
            var dlist = await context.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
 
+            //Remove the Id columns
+            if (dlist != null)
+            {
+                dlist.Columns.Remove("AatfId");
+                dlist.Columns.Remove("ReturnId");
+                dlist.Columns.Remove("Q");
+                dlist.Columns.Remove("CategoryId");
+                dlist.Columns.Remove("TonnageType");
+            }
+
             string fileContent = DataTableCsvHelper.DataTableToCSV(dlist);
 
             var fileName = string.Format("{0}_AA_Obligated_{1:ddMMyyyy_HHmm}.csv",

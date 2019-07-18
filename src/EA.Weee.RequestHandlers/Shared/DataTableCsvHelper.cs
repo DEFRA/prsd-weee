@@ -49,7 +49,7 @@
             }
             else
             {
-                result = value.ToString();
+                result = value.Equals("0.000") ? string.Empty : value.ToString();
             }
 
             if (excelSanitizer.IsThreat(result))
