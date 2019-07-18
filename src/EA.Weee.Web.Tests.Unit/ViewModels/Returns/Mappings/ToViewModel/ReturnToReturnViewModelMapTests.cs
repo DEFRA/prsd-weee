@@ -342,11 +342,11 @@
 
             var result = map.Map(returnData);
 
-            result.NonObligatedTotal.Should().Be("1.000");
+            result.NonObligatedTotal.Should().Be("-");
         }
 
         [Fact]
-        public void Map_GivenNonDcfAndDcfNonObligated_NonObligatedTotalShouldBeCorrect()
+        public void Map_GivenNonDcfAndDcfNonObligated_NonObligatedTotalShouldBeCorrectExcludesDcf()
         {
             mapperTestNonObligatedData.Add(new NonObligatedData(1, 1m, true, Guid.NewGuid()));
             mapperTestNonObligatedData.Add(new NonObligatedData(1, 2m, false, Guid.NewGuid()));
@@ -365,7 +365,7 @@
 
             var result = map.Map(returnData);
 
-            result.NonObligatedTotal.Should().Be("3.000");
+            result.NonObligatedTotal.Should().Be("2.000");
         }
 
         [Fact]
@@ -411,7 +411,7 @@
         }
 
         [Fact]
-        public void Map_GivenReuseData_ObligatedTotalIsCorrect()
+        public void Map_GivenReuseData_ObligatedTotalIsEmpty()
         {
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -431,7 +431,7 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("3.000");
+            result.ObligatedTotal.Should().Be("-");
         }
 
         [Fact]
@@ -459,7 +459,7 @@
         }
 
         [Fact]
-        public void Map_GivenSentOnData_ObligatedTotalIsCorrect()
+        public void Map_GivenSentOnData_ObligatedTotalIsBlank()
         {
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -479,11 +479,11 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("3.000");
+            result.ObligatedTotal.Should().Be("-");
         }
 
         [Fact]
-        public void Map_GivenSentOnEmptyReceivedAndReUsedData_ObligatedTotalIsCorrect()
+        public void Map_GivenSentOnEmptyReceivedAndReUsedData_ObligatedTotalIsBlank()
         {
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -504,7 +504,7 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("10.000");
+            result.ObligatedTotal.Should().Be("-");
         }
 
         [Fact]
@@ -529,11 +529,11 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("14.000");
+            result.ObligatedTotal.Should().Be("11.000");
         }
 
         [Fact]
-        public void Map_GivenEmptySentOnReceivedAndReUsedData_ObligatedTotalIsCorrect()
+        public void Map_GivenEmptySentOnReceivedAndReUsedData_ObligatedTotalEmpty()
         {
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -554,7 +554,7 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("18.000");
+            result.ObligatedTotal.Should().Be("11.000");
         }
 
         [Fact]
@@ -580,7 +580,7 @@
 
             var result = map.Map(returnData);
 
-            result.ObligatedTotal.Should().Be("21.000");
+            result.ObligatedTotal.Should().Be("11.000");
         }
 
         private void ReturnViewModelMapCommonAsserts(ReturnViewModel result)
