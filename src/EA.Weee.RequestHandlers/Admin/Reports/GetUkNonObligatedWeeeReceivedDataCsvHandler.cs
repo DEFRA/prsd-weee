@@ -33,7 +33,7 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.SpgUKUkNonObligatedWeeeReceivedByComplianceYear(
+            var items = await context.StoredProcedures.UKUkNonObligatedWeeeReceivedByComplianceYear(
                        request.ComplianceYear);
 
             CsvWriter<UkNonObligatedWeeeReceivedData> csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();

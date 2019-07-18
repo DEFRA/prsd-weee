@@ -749,7 +749,7 @@
                 () => client,
                 A.Dummy<BreadcrumbService>());
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
 
             ActionResult result = await controller.UkNonObligatedWeeeReceived();
@@ -757,7 +757,7 @@
             var viewResult = ((ViewResult)result);
             Assert.Equal("UkNonObligatedWeeeReceived", viewResult.ViewName);
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._))
                 .MustHaveHappened();
         }
 
