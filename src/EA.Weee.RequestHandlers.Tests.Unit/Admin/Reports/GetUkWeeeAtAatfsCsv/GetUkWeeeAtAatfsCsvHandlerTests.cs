@@ -67,7 +67,7 @@
             SystemTime.Unfreeze();
 
             // Assert
-            Assert.Equal("2016_UK_WEEE_received_report_31122016_2359.csv", result.FileName);
+            Assert.Equal("UK WEEE received report 2016.csv", result.FileName);
         }
 
         [Fact]
