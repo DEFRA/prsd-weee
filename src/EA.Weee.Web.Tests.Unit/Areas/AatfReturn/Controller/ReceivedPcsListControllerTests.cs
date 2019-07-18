@@ -61,7 +61,7 @@
 
             var @return = A.Fake<ReturnData>();
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)Core.DataReturns.QuarterType.Q1);
             var aatfInfo = A.Fake<AatfData>();
             var aatfId = Guid.NewGuid();
 

@@ -19,7 +19,7 @@
 
         public static string FormatQuarter(Quarter quarter, QuarterWindow quarterWindow)
         {
-            return quarter != null & quarterWindow != null ? $"{string.Concat(quarter.Year, " ", quarter.Q)} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}" : string.Empty;
+            return quarter != null & quarterWindow != null ? $"{string.Concat(quarter.Year, " ", quarter.Q)} {quarterWindow.WindowOpenDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)}" : string.Empty;
         }
     }
 }

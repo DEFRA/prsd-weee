@@ -38,7 +38,7 @@
         private readonly IFetchAatfDataAccess fetchAatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
-
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         public GetPopulatedReturnTests()
         {
             returnDataAccess = A.Fake<IReturnDataAccess>();
@@ -49,6 +49,7 @@
             fetchAatfDataAccess = A.Fake<IFetchAatfDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             populatedReturn = new GetPopulatedReturn(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -60,7 +61,8 @@
                 fetchObligatedWeeeDataAccess,
                 fetchAatfDataAccess,
                 returnSchemeDataAccess,
-                genericDataAccess);
+                genericDataAccess,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -76,7 +78,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                systemDataDataAccess);
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
@@ -97,7 +100,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                systemDataDataAccess);
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 

@@ -30,7 +30,7 @@
         {
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2020, 1, 1))
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2020, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
             };
 
             Action action = () =>
@@ -90,7 +90,7 @@
             model.Quarter.Should().Be(returnData.Quarter.Q.ToString());
             model.Period.Should()
                 .Be(
-                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
+                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.WindowOpenDate.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
         }
 
         [Fact]
@@ -152,7 +152,7 @@
 
         private QuarterWindow GetQuarterWindow()
         {
-            return new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 2));
+            return new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 2), (int)QuarterType.Q1);
         }
     }
 }

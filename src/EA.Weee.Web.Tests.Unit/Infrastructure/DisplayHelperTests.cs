@@ -12,7 +12,7 @@
         public void FormatQuarter_BasedOnParamaters()
         {
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)QuarterType.Q1);
 
             var value = DisplayHelper.FormatQuarter(quarterData, quarterWindow);
 

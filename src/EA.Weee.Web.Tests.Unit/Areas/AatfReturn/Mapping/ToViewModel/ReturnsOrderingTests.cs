@@ -26,15 +26,15 @@
             {
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2018, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2018, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 }
             };
 
@@ -52,19 +52,19 @@
             {
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q2), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q2), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q3), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q3), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 }
             };
 
@@ -84,22 +84,22 @@
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2017),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2019),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2018),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2020),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1))
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
                 }
             };
 

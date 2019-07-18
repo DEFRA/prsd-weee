@@ -113,7 +113,7 @@
         [Fact]
         public async void IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
         {
-            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
 
             await controller.Index(model);
 
@@ -124,7 +124,7 @@
         [Fact]
         public async void IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
         {
-            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(),  Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(),  Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
