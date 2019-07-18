@@ -16,7 +16,7 @@
 
         public virtual string Quarter => quarter.Q.ToString();
 
-        public virtual string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {Year}";
+        public virtual string Period => $"{Quarter} {QuarterWindow.WindowOpenDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)} {Year}";
 
         public virtual Guid ReturnId { get; set; }
 

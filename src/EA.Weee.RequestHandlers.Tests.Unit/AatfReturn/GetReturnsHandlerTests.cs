@@ -221,8 +221,8 @@
 
             SystemTime.Unfreeze();
 
-            result.NextWindow.StartDate.Should().Be(nextWindow.StartDate);
-            result.NextWindow.EndDate.Should().Be(nextWindow.EndDate);
+            result.NextWindow.WindowOpenDate.Should().Be(nextWindow.StartDate);
+            result.NextWindow.QuarterEnd.Should().Be(nextWindow.EndDate);
             A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(openWindows[0].QuarterType, date.Year)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }

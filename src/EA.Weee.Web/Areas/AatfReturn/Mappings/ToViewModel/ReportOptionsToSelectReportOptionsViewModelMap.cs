@@ -21,8 +21,8 @@
                 source.ReturnData,
                 source.ReturnData.Quarter.Year)
             {
-                QuarterWindowEndDate = source.ReturnData.QuarterWindow.EndDate,
-                QuarterWindowStartDate = source.ReturnData.QuarterWindow.StartDate,
+                QuarterWindowEndDate = source.ReturnData.QuarterWindow.QuarterEnd,
+                QuarterWindowStartDate = source.ReturnData.QuarterWindow.WindowOpenDate,
                 Quarter = source.ReturnData.Quarter.Q.ToString()
             };
 

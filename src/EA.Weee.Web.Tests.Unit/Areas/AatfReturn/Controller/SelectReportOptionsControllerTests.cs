@@ -313,7 +313,7 @@
             {
                 OrganisationId = A.Dummy<Guid>(),
                 ReturnId = A.Dummy<Guid>(),
-                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31)) }
+                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31), (int)Core.DataReturns.QuarterType.Q1) }
             };
 
             return model;

@@ -5,17 +5,46 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using DataReturns;
 
     public class QuarterWindow
     {
-        public DateTime StartDate { get; private set; }
+        public DateTime WindowOpenDate { get; private set; }
 
-        public DateTime EndDate { get; private set; }
+        public DateTime QuarterEnd { get; private set; }
 
-        public QuarterWindow(DateTime startDate, DateTime endDate)
+        public DateTime QuarterStart { get; private set; }
+
+        public DateTime WindowClosedDate { get; private set; }
+
+        public int QuarterType { get; private set; }
+
+        public QuarterWindow(DateTime windowOpenDate, DateTime windowClosedDate, int quarterType)
         {
-            StartDate = startDate;
-            EndDate = endDate;
+            QuarterType = quarterType;
+
+            int startMonth;
+            if (QuarterType == 4)
+            {
+                startMonth = 10;
+            }
+            else
+            {
+                startMonth = windowOpenDate.Month - 3;
+            }
+
+            QuarterStart = new DateTime(windowOpenDate.Year, startMonth, 1);
+            QuarterEnd = windowOpenDate.AddDays(-1);
+           
+            WindowOpenDate = windowOpenDate;
+            WindowClosedDate = windowClosedDate;
+        }
+
+        public bool IsOpen(DateTime date)
+        {
+            //return ReportingStart.ToUniversalTime() <= date.ToUniversalTime() && ReportingEnd.ToUniversalTime() <= date.ToUniversalTime();
+
+            return date >= WindowOpenDate && date <= WindowClosedDate;
         }
     }
 }

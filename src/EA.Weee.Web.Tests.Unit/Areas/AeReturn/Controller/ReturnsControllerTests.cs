@@ -263,7 +263,7 @@
         [Fact]
         public async void PostNilResult_GivenReturnId_RedirectsToConfirmationScreen()
         {
-            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
 
             var result = await controller.NilReturnConfirm(model) as RedirectToRouteResult;
 
@@ -276,7 +276,7 @@
         [Fact]
         public async void PostNilResult_SubmitReturnShouldBeCalled()
         {
-            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
 
             await controller.NilReturnConfirm(model);
 

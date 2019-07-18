@@ -83,7 +83,7 @@
                 {
                     QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
-                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.StartDate.ToShortDateString());
+                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.WindowOpenDate.ToShortDateString());
                 }
             }
             return "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";

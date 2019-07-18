@@ -28,7 +28,7 @@
 
                 var @return = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturn(returnId, false));
 
-                if (!QuarterHelper.IsOpenForReporting(@return.QuarterWindow))
+                if (!@return.QuarterWindow.IsOpen(@return.SystemDateTime))
                 {
                     filterContext.Result = new RedirectResult("~/errors/QuarterClosed");
                 }
