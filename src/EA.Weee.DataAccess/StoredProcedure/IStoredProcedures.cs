@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Threading.Tasks;
     using Domain.Admin.AatfReports;
 
@@ -42,5 +43,7 @@
         Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter, int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea);
 
         Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId);
+
+        Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType);
     }
 }

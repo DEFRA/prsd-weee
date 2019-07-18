@@ -110,6 +110,9 @@
                 case Reports.AatfAeReturnData:
                     return RedirectToAction("AatfAeReturnData");
 
+                case Reports.AatfObligatedData:
+                    return RedirectToAction(nameof(AatfObligatedData));
+
                 default:
                     throw new NotSupportedException();
             }
@@ -488,6 +491,46 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> AatfObligatedData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            AatfObligatedDataViewModel model = new AatfObligatedDataViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfObligatedData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfObligatedData(AatfObligatedDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfObligatedDataCsv(int complianceYear, int columnType,
+           string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+        {
+            CSVFileData fileData;
+
+            GetAllAatfObligatedDataCsv request = new GetAllAatfObligatedDataCsv(complianceYear, columnType, obligationType, aatfName, authorityId, panArea);
+            using (IWeeeClient client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
@@ -548,6 +591,17 @@
             {
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name"); 
                 model.LocalAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetLocalAreas()), "Id", "Name");
+            }
+        }
+
+        private async Task PopulateFilters(AatfObligatedDataViewModel model)
+        {
+            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
+            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
+            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
+            using (var client = apiClient())
+            {
+                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
 
