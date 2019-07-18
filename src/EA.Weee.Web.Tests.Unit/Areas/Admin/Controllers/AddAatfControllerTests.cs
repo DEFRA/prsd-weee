@@ -306,6 +306,40 @@
         }
 
         [Fact]
+        public async Task AddAatfPost_ApprovalNumberExists_ReturnsViewWithViewModelAndErrorMessage()
+        {
+            AddAatfViewModel viewModel = CreateAddAatfViewModel();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+
+            ViewResult result = await controller.AddAatf(viewModel) as ViewResult;
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == "Approval number already used");
+            Assert.NotNull(error);
+        }
+
+        [Fact]
+        public async Task AddAePost_ApprovalNumberExists_ReturnsViewWithViewModelAndErrorMessage()
+        {
+            AddAeViewModel viewModel = CreateAddAeViewModel();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+
+            ViewResult result = await controller.AddAe(viewModel) as ViewResult;
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == "Approval number already used");
+            Assert.NotNull(error);
+        }
+
+        [Fact]
         public async Task AddAatfPost_ValidViewModel_CacheShouldBeInvalidated()
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()

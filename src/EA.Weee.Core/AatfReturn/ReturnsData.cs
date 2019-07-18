@@ -10,13 +10,20 @@
 
         public Quarter ReturnQuarter { get; private set; }
 
+        public List<Quarter> OpenQuarters { get; private set; }
+        public QuarterWindow NextWindow { get; private set; }
+
         public ReturnsData(List<ReturnData> returnsList,
-            Quarter returnQuarter)
+            Quarter returnQuarter,
+            List<Quarter> openQuarters,
+            QuarterWindow nextWindow)
         {
             Guard.ArgumentNotNull(() => returnsList, returnsList);
 
             ReturnsList = returnsList;
             ReturnQuarter = returnQuarter;
+            OpenQuarters = openQuarters;
+            NextWindow = nextWindow;
         }
     }
 }

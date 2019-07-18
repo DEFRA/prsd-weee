@@ -217,30 +217,5 @@
 
             A.CallTo(() => requestCreator.ViewModelToRequest(model)).MustHaveHappened(Repeated.Exactly.Once);
         }
-        /*
-        [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
-        public async void IndexPost_GivenValidViewModel_IsOperatorTheSameAsAATFShouldBeSet(string operatorBool)
-        {
-            var form = new FormCollection();
-            var boolConversion = Convert.ToBoolean(operatorBool);
-            var model = new SentOnCreateSiteViewModel
-            {
-                OrganisationId = Guid.NewGuid(),
-                AatfId = Guid.NewGuid(),
-                WeeeSentOnId = Guid.NewGuid(),
-                ReturnId = Guid.NewGuid(),
-                OperatorAddressData = new OperatorAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST"),
-                SiteAddressData = new AatfAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST")
-            };
-
-            form.Add("IsOperatorTheSameAsAATF", operatorBool);
-
-            await controller.Index(model, form);
-
-            A.CallTo(() => requestCreator.ViewModelToRequest(A<SentOnCreateSiteViewModel>.That.Matches(m => m.IsOperatorTheSameAsAatf == boolConversion))).MustHaveHappened(Repeated.Exactly.Once);
-        }
-        */
     }
 }

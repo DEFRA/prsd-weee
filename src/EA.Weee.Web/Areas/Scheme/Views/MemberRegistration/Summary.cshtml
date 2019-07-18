@@ -25,6 +25,7 @@
                     var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
                     <li>
                         @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
+                            null,
                             Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, complianceYear)),
                                 "Downloads",
                                 "Overview of current members",

@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain;
     using Xunit;
 
     public class OrganisationUserRequestEventHandlerTests
@@ -31,13 +32,22 @@
         {
             var request = new OrganisationUserRequestEvent(Guid.NewGuid(), Guid.NewGuid());
 
+            var organisation = Organisation.CreateRegisteredCompany("company", "12345678");
             var activeUsersFalse = new List<OrganisationUser>();
+            var competentAuthorities = new List<UKCompetentAuthority>()
+            {
+                new UKCompetentAuthority(Guid.NewGuid(), "name", "abb", A.Fake<Country>(), "email1", null),
+                new UKCompetentAuthority(Guid.NewGuid(), "name", "abb", A.Fake<Country>(), "email2", null)
+            };
 
+            A.CallTo(() => dataAccess.FetchCompetentAuthorities()).Returns(competentAuthorities);
             A.CallTo(() => dataAccess.FetchActiveOrganisationUsers(request.OrganisationId)).Returns(activeUsersFalse);
+            A.CallTo(() => dataAccess.FetchOrganisation(A<Guid>._)).Returns(organisation);
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => emailService.SendOrganisationUserRequestToEA(A<string>._, A<string>._, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email1", organisation.Name, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email2", organisation.Name, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

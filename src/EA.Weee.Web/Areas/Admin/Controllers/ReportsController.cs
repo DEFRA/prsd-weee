@@ -11,8 +11,10 @@
     using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Core.AatfReturn;
     using Infrastructure;
     using Prsd.Core;
+    using Prsd.Core.Helpers;
     using Services;
     using ViewModels.Home;
     using ViewModels.Reports;
@@ -22,7 +24,7 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
     using GetSchemes = Weee.Requests.Admin.GetSchemes;
-    
+
     public class ReportsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -107,6 +109,9 @@
 
                 case Reports.MissingProducerData:
                     return RedirectToAction(nameof(MissingProducerData));
+
+                case Reports.AatfAeReturnData:
+                    return RedirectToAction("AatfAeReturnData");
 
                 default:
                     throw new NotSupportedException();
@@ -485,6 +490,53 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> AatfAeReturnData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            AatfAeReturnDataViewModel model = new AatfAeReturnDataViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfAeReturnData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfAeReturnData(AatfAeReturnDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
+          int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
+        {
+            CSVFileData fileData;
+            var aatfDataUrl = AatfDataUrl();
+
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
+
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
+        private string AatfDataUrl()
+        {
+            return HttpContext.Request.Url != null ? Flurl.Url.Combine(HttpContext.Request.Url.AbsoluteUri, "/admin/aatf/details/") : string.Empty;
+        }
+
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
@@ -539,6 +591,30 @@
 
             List<SchemeData> schemes = await FetchSchemes();
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");
+        }
+
+        private async Task PopulateFilters(AatfAeReturnDataViewModel model)
+        {
+            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
+            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
+            using (var client = apiClient())
+            {
+                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name"); 
+                model.LocalAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetLocalAreas()), "Id", "Name");
+            }
+        }
+
+        /// <summary>
+        /// Return all years from 2019 to the current year in descending order
+        /// </summary>
+        /// <returns>descending list of aatf/ae compliance years</returns>
+        private List<int> FetchAllAATFComplianceYears()
+        {
+            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
+                .OrderByDescending(year => year)
+                .ToList();
         }
 
         /// <summary>

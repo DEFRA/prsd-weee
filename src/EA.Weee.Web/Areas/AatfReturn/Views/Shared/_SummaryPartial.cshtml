@@ -1,0 +1,444 @@
+﻿@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
+
+@{
+    var hideOpenClass = Model.AnyAatfSchemes ? "" : "hide";
+    var isCheckReturn = (bool)ViewData["displayEdit"];
+    var dataColumnWidth = isCheckReturn ? "govuk-grid-column-one-third" : "govuk-grid-column-one-half";
+    var nonReportingColumnCssClass = isCheckReturn ? "govuk-grid-column-two-thirds" : "";
+    var nonObligatedColumnDataCss = isCheckReturn ? "govuk-grid-column-two-thirds" : "govuk-grid-column-full";
+    var alignCss = isCheckReturn ? "" : "weee-tonnage-right-aligned-display";
+}
+
+<div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+            <p><strong>Compliance year</strong></p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            @Model.Year
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+            <p><strong>Reporting period</strong></p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            @Model.Period
+        </div>
+    </div>
+</div>
+
+<h2 class="govuk-heading-m">Obligated WEEE</h2>
+<div class="govuk-!-padding-bottom-4"></div>
+<div class="govuk-table govuk-grid-column-full">
+    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+        <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
+    </span>
+</div>
+
+<div class="govuk-!-padding-bottom-6"></div>
+<div class="govuk-table govuk-grid-column-full">
+    @for (var count = 0; count < Model.AatfsData.Count(); count++)
+    {
+        var item = Model.AatfsData.ElementAt(count);
+
+        if (count != 0)
+        {
+            <div class="govuk-!-padding-top-8"></div>
+        }
+        else
+        {
+            <div class="govuk-!-padding-top-4"></div>
+        }
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <p>
+                    <strong>@item.Aatf.Name (@item.Aatf.ApprovalNumber) Status: @item.Aatf.AatfStatus</strong>
+                </p>
+            </div>
+        </div>
+        <div class="govuk-grid-row govuk-table__cell--thick">
+            <div class="govuk-grid-column-one-half">
+                &nbsp;
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="@dataColumnWidth @alignCss">
+                    <p class="summary-paragraph">
+                        <b>B2C (tonnes)</b>
+                    </p>
+                </div>
+                <div class="@dataColumnWidth @alignCss">
+                    <p class="summary-paragraph">
+                        <b>B2B (tonnes)</b>
+                    </p>
+                </div>
+                @if (isCheckReturn)
+                {
+                    <div class="govuk-grid-column-one-third">
+                        &nbsp;
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
+            <div class="govuk-grid-column-one-half">
+                <p class="summary-paragraph">
+                    Received on behalf of PCS(s)
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                {
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display break-word">
+                        <p class="summary-paragraph">
+                            @item.WeeeReceived.B2C
+                        </p>
+                    </div>
+
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display break-word">
+                        <p class="summary-paragraph">
+                            @item.WeeeReceived.B2B
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
+                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
+                            Not selected for reporting this quarter
+                        </p>
+                    </div>
+                }
+
+                @if (isCheckReturn)
+                {
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                            {
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                      @item.Aatf.Name + " change received for treatment",
+                                      Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
+                                      "AATF return",
+                                      "Check return changes",
+                                      "Check return changes"
+                                      ))
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Report data", "Report data received on behalf of PCS", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            }
+                        </p>
+                    </div>
+                }
+
+            </div>
+            @if (item.SchemeData.Count > 0)
+            {
+                <details class="govuk-details collapsible-font-size" style="margin-left: 15px;" aria-live="polite" role="group">
+                    <summary id="details-@item.Aatf.Id" class="govuk-details__summary" aria-controls="details-content" aria-expanded="false">
+                        <span class="govuk-details__summary-text">
+                            Breakdown by PCS
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text" aria-hidden="true">
+                        <div class="govuk-grid-row govuk-body collapsible-font-size">
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-grid-column-two-thirds">
+                                    <strong>PCS name</strong>
+                                </div>
+
+                                <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                    <strong>Approval number</strong>
+                                </div>
+
+                            </div>
+                        </div>
+                        @foreach (var pcsdata in item.SchemeData)
+                        {
+                            <div class="govuk-grid-row govuk-body govuk-body collapsible-font-size">
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        @pcsdata.Scheme.SchemeName
+                                    </div>
+
+                                    <div class="govuk-grid-column-one-third collapsible-padding-right">
+                                        @pcsdata.ApprovalName
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-half">
+                                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2C
+                                    </div>
+                                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                                        @pcsdata.Received.B2B
+                                    </div>
+                                    @if (isCheckReturn)
+                                    {
+                                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                                            @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                                  "Change Data for Scheme " + pcsdata.Scheme.SchemeName,
+                                                  Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
+                                                  "AATF return",
+                                                  "Check return changes",
+                                                  "Check return changes"
+                                                  ))
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </details>
+            }
+        </div>
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+            <div class="govuk-grid-column-one-half">
+                <p class="summary-paragraph">
+                    Sent to another AATF / ATF
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+                {
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @item.WeeeSentOn.B2C
+                        </p>
+                    </div>
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @item.WeeeSentOn.B2B
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
+                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
+                            Not selected for reporting this quarter
+                        </p>
+                    </div>
+                }
+
+                @if (isCheckReturn)
+                {
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+                            {
+                                @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                      @item.Aatf.Name + " sent to another AATF / ATF",
+                                      Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" }),
+                                      "AATF return",
+                                      "Check return changes",
+                                      "Check return changes"
+                                      ))
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            }
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+            <div class="govuk-grid-column-one-half">
+                <p class="summary-paragraph">
+                    Reused as a whole appliance
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
+                {
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @item.WeeeReused.B2C
+                        </p>
+                    </div>
+                    <div class="@dataColumnWidth weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @item.WeeeReused.B2B
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="@nonReportingColumnCssClass weee-tonnage-right-aligned-display not-reported-column">
+                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
+                            Not selected for reporting this quarter
+                        </p>
+                    </div>
+                }
+                @if (isCheckReturn)
+                {
+                    <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        <p class="summary-paragraph">
+                            @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
+                            {
+                                if (Equals(item.WeeeReused.B2B, "-") && Equals(item.WeeeReused.B2C, "-"))
+                                {
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                          item.Aatf.Name + " Reused as a whole appliance",
+                                          Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReused" }),
+                                          "AATF return",
+                                          "Check return changes",
+                                          "Check return changes"
+                                          ))
+                                }
+                                else
+                                {
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                          item.Aatf.Name + " Change reused as a whole appliance",
+                                          Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }),
+                                          "AATF return",
+                                          "Check return changes",
+                                          "Check return changes"
+                                          ))
+                                }
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            }
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <div class="govuk-!-padding-bottom-6"></div>
+</div>
+
+<h2 class="govuk-heading-m">Non-obligated WEEE</h2>
+<div class="govuk-table govuk-grid-column-full">
+    <div class="govuk-grid-row govuk-table__cell--thick">
+        <div class="govuk-grid-column-one-half">
+            &nbsp;
+        </div>
+        <div class="govuk-grid-column-one-half">
+            @if (isCheckReturn)
+            {
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="summary-paragraph summary-paragraph-align-right">
+                        <b>Total (tonnes)</b>
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    &nbsp;
+                </div>
+            }
+            else
+            {
+                <div class="govuk-grid-column-one-half">
+                    &nbsp;
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <p class="summary-paragraph summary-paragraph-align-right">
+                        <b>Total (tonnes)</b>
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+        <div class="govuk-grid-column-one-half">
+            <p class="summary-paragraph">
+                Received
+            </p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            @{
+                var nonObligatedReceivedColumnCss = Model.ReportOnDisplayOptions.DisplayNonObligated ? "" : "not-reported-column";
+            }
+            <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word @nonObligatedReceivedColumnCss">
+
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
+                {
+                    <p class="summary-paragraph summary-paragraph-align-right">
+                        @Model.NonObligatedTonnageTotal
+                    </p>
+                }
+                else
+                {
+                    <p class="not-reported-option summary-paragraph summary-paragraph-align-right">
+                        Not selected for reporting this quarter
+                    </p>
+                }
+            </div>
+            @if (isCheckReturn)
+            {
+                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                    <p class="summary-paragraph">
+                        @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
+                        {
+                            @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                  "Change non obligated",
+                                  Url.RouteUrl(AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }),
+                                  "AATF return",
+                                  "Check return changes",
+                                  "Check return changes"
+                                  ))
+                        }
+                        else
+                        {
+                            @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                        }
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+        <div class="govuk-grid-column-one-half">
+            <p class="summary-paragraph">
+                Kept / retained by a DCF
+            </p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            @{
+                var nonObligatedDcfColumnCss = Model.ReportOnDisplayOptions.DisplayNonObligatedDcf ? "" : "not-reported-column";
+            }
+            <div class="@nonObligatedColumnDataCss weee-tonnage-right-aligned-display break-word @nonObligatedDcfColumnCss">
+                @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                {
+                    <p class="summary-paragraph summary-paragraph-align-right">
+                        @Model.NonObligatedTonnageTotalDcf
+                    </p>
+                }
+                else
+                {
+                    <p class="not-reported-option summary-paragraph summary-paragraph-align-right">
+                        Not selected for reporting this quarter
+                    </p>
+                }
+            </div>
+            @if (isCheckReturn)
+            {
+                <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                    <p class="summary-paragraph">
+                        @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
+                        {
+                            @(this.WeeeGds().ActionLinkWithEventTracking("Change",
+                                  "Change non obligated DCF",
+                                  Url.RouteUrl(AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }),
+                                  "AATF return",
+                                  "Check return changes",
+                                  "Check return changes"
+                                  ))
+                        }
+                        else
+                        {
+                            @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                        }
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

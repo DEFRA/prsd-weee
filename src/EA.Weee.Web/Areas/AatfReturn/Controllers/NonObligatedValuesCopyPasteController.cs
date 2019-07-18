@@ -35,15 +35,16 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                var typeHeading = dcf == false ? "Non-obligated WEEE" : "Non-obligated WEEE retained by a DCF";
+                var typeHeading = dcf == false ? "Non-obligated WEEE" : "Non-obligated WEEE kept / retained by a DCF";
 
                 var viewModel = new NonObligatedValuesCopyPasteViewModel()
                 {
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
                     Dcf = dcf,
-                    Typeheading = typeHeading
+                    TypeHeading = typeHeading
                 };
+
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
