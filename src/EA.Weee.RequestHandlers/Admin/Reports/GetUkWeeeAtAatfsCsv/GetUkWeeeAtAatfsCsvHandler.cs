@@ -44,7 +44,7 @@
 
             var data = Encoding.UTF8.GetBytes(content);
 
-            var fileName = string.Format("{0}_UK_WEEE_received_report_{1:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("UK WEEE received report {0}.csv",
                 message.ComplianceYear,
                 SystemTime.UtcNow);
 
