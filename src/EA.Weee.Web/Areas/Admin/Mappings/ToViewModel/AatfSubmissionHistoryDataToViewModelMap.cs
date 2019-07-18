@@ -29,8 +29,8 @@
                 Quarter = source.Quarter,
                 SubmittedDate = source.SubmittedDate.ToString("dd/MM/yyyy HH:mm:ss"),
                 SubmittedBy = source.SubmittedBy,
-                ObligatedTotal = tonnageUtilities.SumTotals(new List<decimal?>() { source.WeeeReceivedHouseHold, source.WeeeReusedHouseHold, source.WeeeSentOnHouseHold }),
-                NonObligatedTotal = tonnageUtilities.SumTotals(new List<decimal?>() { source.WeeeReceivedNonHouseHold, source.WeeeReusedNonHouseHold, source.WeeeSentOnNonHouseHold })
+                ObligatedHouseHoldTotal = tonnageUtilities.SumTotals(new List<decimal?>() { source.WeeeReceivedHouseHold }),
+                ObligatedNonHouseHoldTotal = tonnageUtilities.SumTotals(new List<decimal?>() { source.WeeeReceivedNonHouseHold })
             };
         }
     }
