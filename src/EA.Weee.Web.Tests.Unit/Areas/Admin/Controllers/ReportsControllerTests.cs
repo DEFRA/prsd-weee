@@ -1844,9 +1844,6 @@
                 FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(), 
                 A.Dummy<Guid?>());
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")))).MustHaveHappened();
 
             FileResult fileResult = result as FileResult;
@@ -1857,8 +1854,8 @@
         [Fact]
         public async void PostAatfAeReturnData_OnDownload_SetsURLWithVirtualDirectory()
         {
-            IWeeeClient apiClient = A.Fake<IWeeeClient>();
-            ReportsController controller = new ReportsController(
+            var apiClient = A.Fake<IWeeeClient>();
+            var controller = new ReportsController(
                 () => apiClient,
                 A.Dummy<BreadcrumbService>());
 
@@ -1866,24 +1863,21 @@
             httpContext.AttachToController(controller);
             var httpRequest = A.Fake<HttpRequestBase>();
 
-            CSVFileData file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
+            var file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
 
-            Uri uri = new Uri("https://localhost:44300/weeerelease");
+            var uri = new Uri("https://localhost:44300/weeerelease");
             A.CallTo(() => controller.HttpContext.Request).Returns(httpRequest);
             A.CallTo(() => controller.HttpContext.Request.Url).Returns(uri);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
-            ActionResult result = await controller.DownloadAatfAeDataCsv(2019, 1,
+            var result = await controller.DownloadAatfAeDataCsv(2019, 1,
                 FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
                 A.Dummy<Guid?>());
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/weeerelease/admin/aatf/details/")))).MustHaveHappened();
 
-            FileResult fileResult = result as FileResult;
+            var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
             Assert.Equal("text/csv", fileResult.ContentType);
         }

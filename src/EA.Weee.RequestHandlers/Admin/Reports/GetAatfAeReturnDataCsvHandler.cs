@@ -27,9 +27,10 @@
         public async Task<CSVFileData> HandleAsync(GetAatfAeReturnDataCsv request)
         {
             authorization.EnsureCanAccessInternalArea();
+
             if (request.ComplianceYear == 0)
             {
-                string message = string.Format("Compliance year cannot be \"{0}\".", request.ComplianceYear);
+                var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
 
@@ -39,16 +40,16 @@
 
             foreach (var item in items)
             {
-                 item.AatfDataUrl = string.Format(@" =HYPERLINK(""""{0}{1}#data"""", """"View AATF / AE data"""")", request.AatfDataUrl, item.AatfId);
+                 item.AatfDataUrl = $@" =HYPERLINK(""""{request.AatfDataUrl}{item.AatfId}#data"""", """"View AATF / AE data"""")";
             }
 
-            CsvWriter<AatfAeReturnData> csvWriter = csvWriterFactory.Create<AatfAeReturnData>();
+            var csvWriter = csvWriterFactory.Create<AatfAeReturnData>();
             csvWriter.DefineColumn(@"Name of AATF / AE", i => i.Name);
             csvWriter.DefineColumn(@"Approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Organisation name", i => i.OrganisationName);
             csvWriter.DefineColumn(@"Submission status", i => i.ReturnStatus);
-            csvWriter.DefineColumn(@"Date created", i => i.CreatedDate);
-            csvWriter.DefineColumn(@"Date submitted", i => i.SubmittedDate);
+            csvWriter.DefineColumn(@"Date created (GMT)", i => i.CreatedDate);
+            csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Appropriate authority", i => i.CompetentAuthorityAbbr);
             csvWriter.DefineColumn(@" ", i => i.AatfDataUrl);

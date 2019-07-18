@@ -477,15 +477,22 @@
           int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
         {
             CSVFileData fileData;
-            string aatfDataUrl = (HttpContext.Request != null && HttpContext.Request.Url != null) ? string.Concat(HttpContext.Request.Url, "admin/aatf/details/") : string.Empty;
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
-            using (IWeeeClient client = apiClient())
+            var aatfDataUrl = AatfDataUrl();
+
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
+
+            using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
+        private string AatfDataUrl()
+        {
+            return HttpContext.Request.Url != null ? Flurl.Url.Combine(HttpContext.Request.Url.AbsoluteUri, "/admin/aatf/details/") : string.Empty;
         }
 
         private async Task PopulateFilters(ReportsFilterViewModel model)
