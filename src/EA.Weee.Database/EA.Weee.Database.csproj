@@ -265,6 +265,7 @@
     <Content Include="scripts\Update\Release 2\Sprint12\20190709-2201-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1027-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1517-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint13\20190717-1314-create-nonObligatedWeeeStoredProcedure.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
