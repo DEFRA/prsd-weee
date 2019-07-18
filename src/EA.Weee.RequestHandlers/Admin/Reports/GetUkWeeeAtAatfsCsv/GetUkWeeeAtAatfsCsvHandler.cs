@@ -36,7 +36,7 @@
 
             var returns = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(message.ComplianceYear);
 
-            var csvResults = CreateResults(returns);
+            var csvResults = CreateResults(returns, message.ComplianceYear.ToString());
 
             var csvWriter = CreateWriter();
 
@@ -67,7 +67,7 @@
             return csvWriter;
         }
 
-        public IEnumerable<CsvResult> CreateResults(IEnumerable<PartialAatfReturn> returns)
+        public IEnumerable<CsvResult> CreateResults(IEnumerable<PartialAatfReturn> returns, string year)
         {
             foreach (QuarterType quarter in Enum.GetValues(typeof(QuarterType)))
             {
@@ -97,7 +97,7 @@
                 GetTotals(returns.SelectMany(q => q.ObligatedWeeeSentOnData), category, out var b2cForAatf, out var b2bForAatf);
 
                 yield return new CsvResult(
-                    returns.First().Quarter.Year.ToString(),
+                    year,
                     category,
                     b2cForTreatment,
                     b2cForReuse,
