@@ -90,6 +90,7 @@
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
     <Compile Include="Admin\AddAatf.cs" />
+    <Compile Include="Admin\CheckApprovalNumberIsUnique.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
+    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsv.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
