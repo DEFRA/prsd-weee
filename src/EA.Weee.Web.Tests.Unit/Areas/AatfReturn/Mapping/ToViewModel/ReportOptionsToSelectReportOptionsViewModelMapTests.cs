@@ -9,6 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReportOptionsToSelectReportOptionsViewModelMapTests
@@ -52,7 +53,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -72,7 +73,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -95,7 +96,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 4; i++)
             {

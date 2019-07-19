@@ -8,7 +8,7 @@
     {
         public static QuarterWindow GetDefaultQuarterWindow()
         {
-            return new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), QuarterType.Q1);
+            return new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 16), QuarterType.Q1);
         }
 
         public static QuarterWindow GetQuarterFourWindow(int year)
