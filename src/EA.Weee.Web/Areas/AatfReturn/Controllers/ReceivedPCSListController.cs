@@ -53,7 +53,7 @@
                     SchemeDataItems = schemeList.SchemeDataItems.ToList()
                 });
 
-                await SetBreadcrumb(schemeList.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                await SetBreadcrumb(schemeList.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }

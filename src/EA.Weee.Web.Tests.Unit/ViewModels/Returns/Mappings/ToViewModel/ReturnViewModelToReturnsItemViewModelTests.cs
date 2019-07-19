@@ -2,12 +2,14 @@
 {
     using System;
     using Core.AatfReturn;
+    using Core.DataReturns;
     using EA.Prsd.Core;
     using EA.Weee.Web.ViewModels.Returns;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnViewModelToReturnsItemViewModelTests
@@ -50,29 +52,26 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31));
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now};
 
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var result = mapper.Map(returnViewModel);
-            SystemTime.Unfreeze();
+            var result = mapper.Map(returnData);
 
-            var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31));
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
-            var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
+
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).Returns(returnsListDisplayOptions);
 
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var result = mapper.Map(returnViewModel);
-            SystemTime.Unfreeze();
+            var result = mapper.Map(returnData);
 
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
             result.ReturnsListDisplayOptions.Should().Be(returnsListDisplayOptions);
