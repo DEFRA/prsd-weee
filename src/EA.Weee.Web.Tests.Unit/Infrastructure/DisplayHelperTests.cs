@@ -15,7 +15,7 @@
             var quarterData = new Quarter(2019, QuarterType.Q1);
             var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
-            var value = DisplayHelper.FormatQuarter(quarterData, quarterWindow);
+            var value = DisplayHelper.YearQuarterPeriodFormat(quarterData, quarterWindow);
 
             Assert.Equal("2019 Q1 Jan - Mar", value);
         }
@@ -23,7 +23,7 @@
         [Fact]
         public void FormatQuarter_ReturnsEmptyString()
         {
-            var value = DisplayHelper.FormatQuarter(null, null);
+            var value = DisplayHelper.YearQuarterPeriodFormat(null, null);
 
             Assert.Equal(string.Empty, value);
         }

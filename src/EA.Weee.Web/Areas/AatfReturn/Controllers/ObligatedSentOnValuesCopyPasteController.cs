@@ -42,7 +42,7 @@
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
                 };
-                await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(returnData.Quarter, returnData.QuarterWindow));
+                await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(returnData.Quarter, returnData.QuarterWindow));
                 return View(viewModel);
             }
         }

@@ -58,7 +58,7 @@
                     ReturnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false))
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(viewModel.ReturnData.Quarter, viewModel.ReturnData.QuarterWindow));
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(viewModel.ReturnData.Quarter, viewModel.ReturnData.QuarterWindow));
 
                 TempData["currentQuarter"] = viewModel.ReturnData.Quarter;
                 TempData["currentQuarterWindow"] = viewModel.ReturnData.QuarterWindow;
@@ -106,7 +106,7 @@
                 RemoveDcfSelectedValueModelState(viewModel);
             }
 
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             return View(viewModel);
         }
