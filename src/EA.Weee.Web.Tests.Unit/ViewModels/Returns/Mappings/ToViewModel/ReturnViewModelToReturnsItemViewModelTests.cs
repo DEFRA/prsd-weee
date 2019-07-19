@@ -9,6 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnViewModelToReturnsItemViewModelTests
@@ -51,7 +52,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
 
             SystemTime.Freeze(new DateTime(2019, 04, 01));
@@ -65,7 +66,7 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
             var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);

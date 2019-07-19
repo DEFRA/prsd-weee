@@ -5,6 +5,7 @@
     using Core.DataReturns;
     using FluentAssertions;
     using Web.ViewModels.Returns;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class SubmittedReturnViewModelTests
@@ -14,7 +15,7 @@
         {
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2020, 1, 1), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             Action action = () =>

@@ -17,14 +17,12 @@
 
         public DateTime WindowClosedDate { get; private set; }
 
-        public int QuarterType { get; private set; }
+        public QuarterType QuarterType { get; private set; }
 
-        public QuarterWindow(DateTime windowOpenDate, DateTime windowClosedDate, int quarterType)
+        public QuarterWindow(DateTime windowOpenDate, DateTime windowClosedDate, QuarterType quarterType)
         {
-            QuarterType = quarterType;
-
             int startMonth;
-            if (QuarterType == 4)
+            if (quarterType == QuarterType.Q4)
             {
                 startMonth = 10;
             }
@@ -38,6 +36,8 @@
            
             WindowOpenDate = windowOpenDate;
             WindowClosedDate = windowClosedDate;
+
+            QuarterType = quarterType;
         }
 
         public bool IsOpen(DateTime date)

@@ -24,6 +24,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class SelectReportOptionsControllerTests
@@ -80,7 +81,7 @@
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
-            const string reportingPeriod = "2019 Q1 Apr - Mar";
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
             var viewModel = CreateInitialViewModel();
             A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
 
@@ -313,7 +314,7 @@
             {
                 OrganisationId = A.Dummy<Guid>(),
                 ReturnId = A.Dummy<Guid>(),
-                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 4, 1), new DateTime(2020, 3, 31), (int)Core.DataReturns.QuarterType.Q1), SystemDateTime = DateTime.Now }
+                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() }
             };
 
             return model;
