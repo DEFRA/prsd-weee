@@ -15,7 +15,7 @@
     public class ReportOptionsToSelectReportOptionsViewModelMapTests
     {
         private readonly ReportOptionsToSelectReportOptionsViewModelMap map;
-        private static string dcfNoValue = "No";
+        private const string DcfNoValue = "No";
 
         public ReportOptionsToSelectReportOptionsViewModelMapTests()
         {
@@ -117,7 +117,7 @@
             result.ReportOnQuestions.ElementAt(2).Selected.Should().Be(true);
             result.ReportOnQuestions.ElementAt(3).Id.Should().Be(4);
             result.ReportOnQuestions.ElementAt(3).Selected.Should().Be(true);
-            result.DcfSelectedValue = dcfNoValue;
+            result.DcfSelectedValue = DcfNoValue;
         }
 
         private static void AssertValues(SelectReportOptionsViewModel result, bool selected)

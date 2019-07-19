@@ -20,9 +20,7 @@
         [Fact]
         public void Map_GivenReturnStatusIsCreated_QuarterOpen_DisplayOptionsShouldBeSet()
         {
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
-            SystemTime.Unfreeze();
+            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 04, 01)));
             
             displayOptions.DisplayContinue.Should().BeTrue();
             displayOptions.DisplayEdit.Should().BeFalse();
@@ -32,7 +30,7 @@
         [Fact]
         public void Map_GivenReturnStatusIsCreated_QuarterClosed_DisplayOptionsShouldBeSet()
         {
-            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 3, 1)));
 
             displayOptions.DisplayContinue.Should().BeFalse();
             displayOptions.DisplayEdit.Should().BeFalse();
@@ -42,9 +40,7 @@
         [Fact]
         public void Constructor_GivenReturnStatusIsSubmitted_QuarterOpen_DisplayOptionsShouldBeSet()
         {
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
-            SystemTime.Unfreeze();
+            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 04, 01)));
 
             displayOptions.DisplayContinue.Should().BeFalse();
             displayOptions.DisplayEdit.Should().BeTrue();
@@ -54,7 +50,7 @@
         [Fact]
         public void Constructor_GivenReturnStatusIsSubmitted_QuarterClosed_DisplayOptionsShouldBeSet()
         {
-            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 3, 1)));
 
             displayOptions.DisplayContinue.Should().BeFalse();
             displayOptions.DisplayEdit.Should().BeFalse();
