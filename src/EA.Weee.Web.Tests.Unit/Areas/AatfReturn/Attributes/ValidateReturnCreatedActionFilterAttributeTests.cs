@@ -46,7 +46,8 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
+                SystemDateTime = SystemTime.Now
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -80,7 +81,8 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
+                SystemDateTime = SystemTime.Now
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -109,7 +111,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = new QuarterWindow(new DateTime(2018, 04, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -136,11 +138,12 @@
                 ReturnStatus = ReturnStatus.Created
             };
 
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
+            SystemTime.Freeze(new DateTime(2020, 03, 22));
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
+                SystemDateTime = SystemTime.Now
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,

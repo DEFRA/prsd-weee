@@ -53,7 +53,7 @@
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1))
                 .Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
@@ -81,7 +81,7 @@
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 04, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
                 .Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
@@ -99,7 +99,7 @@
             var model = A.Fake<ReturnViewModel>();
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 04, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
                 .Create();
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);

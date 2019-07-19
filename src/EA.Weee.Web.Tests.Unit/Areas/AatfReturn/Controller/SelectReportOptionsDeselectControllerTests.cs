@@ -75,8 +75,8 @@
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)Core.DataReturns.QuarterType.Q1);
-            const string reportingPeriod = "2019 Q1 Jan - Mar";
+            var quarterWindow = new QuarterWindow(new DateTime(2019, 4, 1), new DateTime(2020, 3, 30), (int)Core.DataReturns.QuarterType.Q1);
+            const string reportingPeriod = "2019 Q1 Apr - Mar";
             var @return = A.Fake<ReturnData>();
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;

@@ -56,7 +56,7 @@
         public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).With(r => r.SystemDateTime, DateTime.Now).Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(returnId);
@@ -68,7 +68,7 @@
         [Fact]
         public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeBuilt()
         {
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).With(r => r.SystemDateTime, DateTime.Now).Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>());
@@ -106,7 +106,7 @@
         public async void IndexGet_GivenReturnWithoutSubmittedDate_ShouldBeRedirectedToSummaryScreen()
         {
             var model = A.Fake<ReturnViewModel>();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Without(r => r.SubmittedDate).Create();
+            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).With(r => r.SystemDateTime, DateTime.Now).Without(r => r.SubmittedDate).Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
