@@ -19,15 +19,13 @@
         {
             using (var client = Client())
             {
-                var @returnStatus = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
-
-                if (@returnStatus.ReturnStatus != ReturnStatus.Created)
-                {
-                    filterContext.Result = AatfRedirect.ReturnsList(@returnStatus.OrganisationId);
-                }
-
                 var @return = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturn(returnId, false));
 
+                if (@return.ReturnStatus != ReturnStatus.Created)
+                {
+                    filterContext.Result = AatfRedirect.ReturnsList(@return.OrganisationId);
+                }
+                
                 if (!@return.QuarterWindow.IsOpen(@return.SystemDateTime))
                 {
                     filterContext.Result = new RedirectResult("~/errors/QuarterClosed");
