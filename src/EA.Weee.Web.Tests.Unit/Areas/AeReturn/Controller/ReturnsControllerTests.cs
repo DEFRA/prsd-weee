@@ -19,6 +19,7 @@
     using Core.DataReturns;
     using Core.Organisations;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -79,7 +80,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returnsData);
 
@@ -263,7 +264,7 @@
         [Fact]
         public async void PostNilResult_GivenReturnId_RedirectsToConfirmationScreen()
         {
-            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
             var result = await controller.NilReturnConfirm(model) as RedirectToRouteResult;
 
@@ -276,7 +277,7 @@
         [Fact]
         public async void PostNilResult_SubmitReturnShouldBeCalled()
         {
-            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today) });
+            var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
             await controller.NilReturnConfirm(model);
 

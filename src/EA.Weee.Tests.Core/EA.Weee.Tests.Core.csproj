@@ -305,6 +305,7 @@
     <Compile Include="OrganisationHelper.cs" />
     <Compile Include="OrganisationUserHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuarterWindowTestHelper.cs" />
     <Compile Include="TestDbAsyncEnumerable.cs" />
     <Compile Include="TestDbAsyncEnumerator.cs" />
     <Compile Include="TestDbAsyncQueryProvider.cs" />
