@@ -57,6 +57,6 @@
             ReturnReportOns = new List<ReturnReportOn>();
         }
 
-        public DateTime SystemDateTime { get; set; }
+        public virtual DateTime SystemDateTime { get; set; }
     }
 }
