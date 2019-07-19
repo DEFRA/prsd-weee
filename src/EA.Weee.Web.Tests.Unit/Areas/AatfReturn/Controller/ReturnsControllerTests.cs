@@ -17,6 +17,7 @@
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Weee.Requests.AatfReturn;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnsControllerTests
@@ -77,7 +78,7 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
