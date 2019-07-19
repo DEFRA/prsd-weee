@@ -4,6 +4,7 @@
     using Core.DataReturns;
     using Domain.AatfReturn;
     using EA.Prsd.Core;
+    using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
@@ -24,6 +25,7 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IReturnFactory returnFactory;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetReturnsHandlerTests()
         {
@@ -31,6 +33,7 @@
             returnDataAccess = A.Fake<IReturnDataAccess>();
             returnFactory = A.Fake<IReturnFactory>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -38,7 +41,8 @@
                 populatedReturn,
                 returnDataAccess,
                 returnFactory,
-                quarterWindowFactory);
+                quarterWindowFactory,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -50,7 +54,8 @@
                 A.Dummy<IGetPopulatedReturn>(),
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IReturnFactory>(),
-                A.Dummy<IQuarterWindowFactory>());
+                A.Dummy<IQuarterWindowFactory>(),
+                A.Dummy<ISystemDataDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 

@@ -73,9 +73,9 @@
 
         private string WorkOutErrorMessageForNotAllowingCreateReturn(ReturnsData source)
         {
-            if (!WindowHelper.IsThereAnOpenWindow())
+            if (!WindowHelper.IsThereAnOpenWindow(source.CurrentDate))
             {
-                return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", SystemTime.Now.AddYears(-1).Year, SystemTime.Now.Year);
+                return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", source.CurrentDate.AddYears(-1).Year, source.CurrentDate.Year);
             }
             foreach (Quarter q in source.OpenQuarters)
             {
@@ -83,7 +83,7 @@
                 {
                     QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
-                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", SystemTime.Now.Year, nextQuarter, source.NextWindow.WindowOpenDate.ToShortDateString());
+                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", source.CurrentDate.Year, nextQuarter, source.NextWindow.WindowOpenDate.ToShortDateString());
                 }
             }
             return "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";

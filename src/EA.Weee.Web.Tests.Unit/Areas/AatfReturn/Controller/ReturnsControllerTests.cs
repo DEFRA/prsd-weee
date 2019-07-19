@@ -77,7 +77,8 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
-            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), 1);
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), window, DateTime.Now);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
 
