@@ -492,7 +492,14 @@
 
         private string AatfDataUrl()
         {
-            return HttpContext.Request.Url != null ? Flurl.Url.Combine(HttpContext.Request.Url.AbsoluteUri, "/admin/aatf/details/") : string.Empty;
+            if (HttpContext.Request.Url != null)
+            {
+               var url = Flurl.Url.Combine(HttpContext.Request.Url.Authority, HttpContext.Request.ApplicationPath, "/admin/aatf/details/");
+
+               return $"{HttpContext.Request.Url.Scheme}://{url}";
+            }
+
+            return string.Empty;
         }
 
         private async Task PopulateFilters(ReportsFilterViewModel model)
