@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using DataReturns;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -13,7 +14,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnsList_ArgumentNullExceptionExpected()
         {
-            var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow()));
 
             exception.Should().BeOfType<ArgumentNullException>();
         }
@@ -41,7 +42,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnQuarter_ReturnQuarterPropertiesShouldBeNull()
         {
-            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null, A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow());
 
             returnsData.ReturnQuarter.Should().BeNull();
         }
