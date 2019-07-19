@@ -91,7 +91,7 @@
             model.Quarter.Should().Be(returnData.Quarter.Q.ToString());
             model.Period.Should()
                 .Be(
-                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.WindowOpenDate.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
+                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.QuarterStart.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
         }
 
         [Fact]
