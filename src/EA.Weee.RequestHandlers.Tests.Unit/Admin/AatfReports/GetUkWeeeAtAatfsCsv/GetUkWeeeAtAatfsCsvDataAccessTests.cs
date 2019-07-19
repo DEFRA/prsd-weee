@@ -11,6 +11,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
@@ -209,18 +210,25 @@
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2b2, sentOnB2c2);
         }
 
-        [Fact]
-        public async Task FetchPartialAatfReturnsForComplianceYearAsync_DoesNotIncludePreviousVersions()
+        [Theory]
+        [InlineData(QuarterType.Q1)]
+        [InlineData(QuarterType.Q2)]
+        [InlineData(QuarterType.Q3)]
+        [InlineData(QuarterType.Q4)]
+        public async Task FetchPartialAatfReturnsForComplianceYearAsync_DoesNotIncludePreviousVersions(QuarterType quarter)
         {
             // Arrange
             var year = 1900 + fixture.Create<int>();
             var previousId = fixture.Create<Guid>();
             var id = fixture.Create<Guid>();
+            var organisationId = fixture.Create<Guid>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
 
             var returns = new List<Return>
             {
-                CreateReturn(previousId, year, QuarterType.Q1),
-                CreateReturn(id, year, QuarterType.Q1, previousId)
+                CreateReturn(previousId, year, quarter, organisation, new DateTime(year, 01, 01)),
+                CreateReturn(id, year, quarter, organisation, new DateTime(year, 01, 02))
             };
             var returnsDbSet = helper.GetAsyncEnabledDbSet(returns);
             A.CallTo(() => context.Returns).Returns(returnsDbSet);
@@ -282,14 +290,20 @@
             Assert.False(results.Any());
         }
 
-        private Return CreateReturn(Guid id, int year, QuarterType quarter, Guid? previousId = null)
+        private Return CreateReturn(Guid id, int year, QuarterType quarter, Organisation organisation = null, DateTime? submittedDate = null)
         {
             var @return = A.Fake<Return>();
             A.CallTo(() => @return.Id).Returns(id);
             A.CallTo(() => @return.Quarter).Returns(new Quarter(year, quarter));
-            A.CallTo(() => @return.ParentId).Returns(null);
-            A.CallTo(() => @return.SubmittedDate).Returns(fixture.Create<DateTime>());
-            A.CallTo(() => @return.ParentId).Returns(previousId);
+            A.CallTo(() => @return.SubmittedDate).Returns(submittedDate ?? fixture.Create<DateTime>());
+
+            if (organisation == null)
+            {
+                organisation = A.Fake<Organisation>();
+                A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
+            }
+
+            A.CallTo(() => @return.Organisation).Returns(organisation);
 
             return @return;
         }
