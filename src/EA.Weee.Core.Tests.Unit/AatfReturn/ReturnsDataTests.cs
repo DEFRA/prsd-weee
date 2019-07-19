@@ -13,7 +13,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnsList_ArgumentNullExceptionExpected()
         {
-            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), 3);
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), QuarterType.Q1);
 
             var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), window, DateTime.Now));
 
@@ -43,7 +43,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnQuarter_ReturnQuarterPropertiesShouldBeNull()
         {
-            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), 3);
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), QuarterType.Q1);
 
             var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null, A.Fake<List<Quarter>>(), window, DateTime.Now);
 

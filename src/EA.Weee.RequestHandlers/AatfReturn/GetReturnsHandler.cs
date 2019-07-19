@@ -48,7 +48,7 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var currentDate = SystemTime.Now;
+            var currentDate = SystemTime.UtcNow;
             var systemSettings = await systemDataDataAccess.Get();
 
             if (systemSettings.UseFixedCurrentDate)

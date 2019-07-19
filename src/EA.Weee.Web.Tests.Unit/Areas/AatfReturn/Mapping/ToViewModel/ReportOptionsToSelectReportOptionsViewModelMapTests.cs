@@ -53,7 +53,7 @@
             var @return = A.Fake<ReturnData>();
             @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), 1);
+            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
 
             for (var i = 0; i < 5; i++)
             {
@@ -74,7 +74,7 @@
             var @return = A.Fake<ReturnData>();
             @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), 1);
+            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
 
             for (var i = 0; i < 5; i++)
             {
@@ -98,7 +98,7 @@
             var @return = A.Fake<ReturnData>();
             @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), 1);
+            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
 
             for (var i = 0; i < 4; i++)
             {
