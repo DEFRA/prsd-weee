@@ -20,6 +20,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ObligatedSentOnControllerTests
@@ -87,7 +88,7 @@
 
             var @return = A.Fake<ReturnData>();
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)Core.DataReturns.QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var aatfInfo = A.Fake<AatfData>();
             var aatfId = Guid.NewGuid();
 
@@ -181,8 +182,7 @@
 
             ObligatedCategoryValue obligatedCategoryValue = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
 
-            TempDataDictionary tempdata = new TempDataDictionary();
-            tempdata.Add("pastedValues", obligatedCategoryValue);
+            TempDataDictionary tempdata = new TempDataDictionary {{"pastedValues", obligatedCategoryValue}};
 
             controller.TempData = tempdata;
 

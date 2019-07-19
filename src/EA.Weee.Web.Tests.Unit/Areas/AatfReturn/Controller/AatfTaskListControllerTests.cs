@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class AatfTaskListControllerTests
@@ -53,7 +54,7 @@
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
                 .Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
@@ -67,7 +68,7 @@
         [Fact]
         public async void IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
         {
-            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
@@ -81,7 +82,7 @@
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
                 .Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
@@ -99,7 +100,7 @@
             var model = A.Fake<ReturnViewModel>();
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
-                .With(r => r.QuarterWindow, new QuarterWindow(new DateTime(DateTime.Now.Year, 01, 01), new DateTime(DateTime.Now.Year, 03, 31), (int)QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
                 .Create();
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);

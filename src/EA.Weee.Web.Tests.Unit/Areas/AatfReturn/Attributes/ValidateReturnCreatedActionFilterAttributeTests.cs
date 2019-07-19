@@ -13,6 +13,7 @@
     using Core.DataReturns;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ValidateReturnCreatedActionFilterAttributeTests
@@ -46,7 +47,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -80,7 +81,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -109,7 +110,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2018, 01, 01), new DateTime(2018, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -140,7 +141,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,

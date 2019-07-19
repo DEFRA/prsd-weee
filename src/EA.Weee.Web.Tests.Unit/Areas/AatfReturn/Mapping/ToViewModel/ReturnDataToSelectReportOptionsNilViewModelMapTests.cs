@@ -6,6 +6,7 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnDataToSelectReportOptionsNilViewModelMapTests
@@ -38,7 +39,7 @@
         {
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31), (int)Core.DataReturns.QuarterType.Q1);
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var transfer = new ReturnDataToSelectReportOptionsNilViewModelMapTransfer()
                 {OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReturnData = @return};
 

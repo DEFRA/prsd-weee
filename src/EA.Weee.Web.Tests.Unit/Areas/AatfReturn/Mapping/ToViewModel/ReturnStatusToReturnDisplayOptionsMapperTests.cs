@@ -5,6 +5,7 @@
     using EA.Prsd.Core;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnStatusToReturnDisplayOptionsMapperTests
@@ -20,7 +21,7 @@
         public void Map_GivenReturnStatusIsCreated_QuarterOpen_DisplayOptionsShouldBeSet()
         {
             SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var displayOptions = mapper.Map((ReturnStatus.Created, new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)Core.DataReturns.QuarterType.Q1), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
             SystemTime.Unfreeze();
             
             displayOptions.DisplayContinue.Should().BeTrue();
@@ -31,7 +32,7 @@
         [Fact]
         public void Map_GivenReturnStatusIsCreated_QuarterClosed_DisplayOptionsShouldBeSet()
         {
-            var displayOptions = mapper.Map((ReturnStatus.Created, new QuarterWindow(new DateTime(2000, 01, 01), new DateTime(2000, 03, 31), (int)Core.DataReturns.QuarterType.Q1), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
 
             displayOptions.DisplayContinue.Should().BeFalse();
             displayOptions.DisplayEdit.Should().BeFalse();
@@ -42,7 +43,7 @@
         public void Constructor_GivenReturnStatusIsSubmitted_QuarterOpen_DisplayOptionsShouldBeSet()
         {
             SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var displayOptions = mapper.Map((ReturnStatus.Submitted, new QuarterWindow(new DateTime(2019, 01, 01), new DateTime(2019, 03, 31), (int)Core.DataReturns.QuarterType.Q1), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
             SystemTime.Unfreeze();
 
             displayOptions.DisplayContinue.Should().BeFalse();
@@ -53,7 +54,7 @@
         [Fact]
         public void Constructor_GivenReturnStatusIsSubmitted_QuarterClosed_DisplayOptionsShouldBeSet()
         {
-            var displayOptions = mapper.Map((ReturnStatus.Submitted, new QuarterWindow(new DateTime(2000, 01, 01), new DateTime(2000, 03, 31), (int)Core.DataReturns.QuarterType.Q1), DateTime.Now));
+            var displayOptions = mapper.Map((ReturnStatus.Submitted, QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
 
             displayOptions.DisplayContinue.Should().BeFalse();
             displayOptions.DisplayEdit.Should().BeFalse();
