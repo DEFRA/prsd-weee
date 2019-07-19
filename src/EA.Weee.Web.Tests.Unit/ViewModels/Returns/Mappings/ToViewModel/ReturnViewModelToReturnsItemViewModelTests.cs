@@ -53,13 +53,11 @@
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
             var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now};
 
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var result = mapper.Map(returnViewModel);
-            SystemTime.Unfreeze();
+            var result = mapper.Map(returnData);
 
-            var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -73,9 +71,7 @@
 
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).Returns(returnsListDisplayOptions);
 
-            SystemTime.Freeze(new DateTime(2019, 04, 01));
             var result = mapper.Map(returnData);
-            SystemTime.Unfreeze();
 
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
             result.ReturnsListDisplayOptions.Should().Be(returnsListDisplayOptions);

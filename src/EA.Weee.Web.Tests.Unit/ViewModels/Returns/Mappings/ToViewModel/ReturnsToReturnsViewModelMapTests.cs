@@ -239,11 +239,7 @@
         {
             var returnData = A.CollectionOfFake<ReturnData>(3).ToList();
 
-            SystemTime.Freeze(new DateTime(2019, 3, 17));
-
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now));
-
-            SystemTime.Unfreeze();
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 3, 17)));
 
             Assert.Equal("The 2018 compliance period has closed. You can start submitting your 2019 Q1 returns on 1st April.", result.ErrorMessageForNotAllowingCreateReturn);
         }
@@ -273,7 +269,7 @@
 
             SystemTime.Unfreeze();
 
-            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on {0}.", nextQuarter.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+            Assert.Equal($"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on {nextQuarter.WindowOpenDate.ToShortDateString()}.", result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
@@ -287,7 +283,7 @@
                 new Quarter(2019, QuarterType.Q4)
             };
 
-            QuarterWindow nextQuarter = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            QuarterWindow nextQuarter = QuarterWindowTestHelper.GetQuarterOneWindow(2020);
 
             List<ReturnData> returnData = new List<ReturnData>()
             {
@@ -299,11 +295,12 @@
 
             SystemTime.Freeze(new DateTime(2019, 01, 01));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter, new DateTime(2019, 01, 01)));
 
             SystemTime.Unfreeze();
 
-            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2020 Q1 returns on {0}.", nextQuarter.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+            Assert.Equal(
+                $"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q1 returns on {nextQuarter.WindowOpenDate.ToShortDateString()}.", result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
