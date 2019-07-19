@@ -342,6 +342,7 @@
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
     <Compile Include="Infrastructure\DisplayHelper.cs" />
+    <Compile Include="RazorHelpers\AttributesHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
