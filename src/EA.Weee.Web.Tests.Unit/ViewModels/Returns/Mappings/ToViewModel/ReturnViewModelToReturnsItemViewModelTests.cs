@@ -67,13 +67,14 @@
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
             var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow };
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
-            var expectedTuple = (returnViewModel.ReturnStatus, quarterWindow);
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
+
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).Returns(returnsListDisplayOptions);
 
             SystemTime.Freeze(new DateTime(2019, 04, 01));
-            var result = mapper.Map(returnViewModel);
+            var result = mapper.Map(returnData);
             SystemTime.Unfreeze();
 
             A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);

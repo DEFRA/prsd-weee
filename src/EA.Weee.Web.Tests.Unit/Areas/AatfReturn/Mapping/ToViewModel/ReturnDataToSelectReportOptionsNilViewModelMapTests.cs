@@ -40,8 +40,7 @@
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
             @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
-            var transfer = new ReturnDataToSelectReportOptionsNilViewModelMapTransfer()
-                {OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReturnData = @return};
+            var transfer = new ReturnDataToSelectReportOptionsNilViewModelMapTransfer() {OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReturnData = @return};
 
             var result = map.Map(transfer);
 
