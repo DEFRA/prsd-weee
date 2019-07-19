@@ -24,14 +24,15 @@
         /// </summary>
         public async Task<IEnumerable<PartialAatfReturn>> FetchPartialAatfReturnsForComplianceYearAsync(int complianceYear)
         {
-            var parentIds = await context.Returns
-                .Where(r => r.Quarter.Year == complianceYear)
-                .Where(r => r.ParentId.HasValue)
-                .Select(r => r.ParentId.Value).ToListAsync();
             var returns = await context.Returns
-                .Where(r => !parentIds.Contains(r.Id))
                 .Where(r => r.Quarter.Year == complianceYear)
-                .Where(r => r.SubmittedDate.HasValue).ToListAsync();
+                .Where(r => r.SubmittedDate.HasValue)
+                .GroupBy(r => r.Organisation.Id)
+                .SelectMany(orgGroup =>
+                    orgGroup.GroupBy(r => r.Quarter.Q)
+                    .Select(quarterGroup => quarterGroup.OrderByDescending(r => r.SubmittedDate.Value)
+                    .FirstOrDefault()))
+                .ToListAsync();
 
             var partialReturns = new List<PartialAatfReturn>();
 
