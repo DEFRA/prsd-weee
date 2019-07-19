@@ -84,7 +84,7 @@
 
                 var nextWindow = await quarterWindowFactory.GetNextQuarterWindow(latestOpenQuarter.QuarterType, latestOpenQuarter.StartDate.Year);
 
-                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate, (int)nextWindow.QuarterType);
+                nextQuarter = new Core.AatfReturn.QuarterWindow(nextWindow.StartDate, nextWindow.EndDate, (QuarterType)nextWindow.QuarterType);
             }
 
             return new ReturnsData(returnsData, quarter, returnOpenQuarters, nextQuarter, currentDate);

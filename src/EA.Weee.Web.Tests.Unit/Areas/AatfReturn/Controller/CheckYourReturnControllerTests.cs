@@ -17,6 +17,7 @@
     using System.Web.Mvc;
     using Core.DataReturns;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class CheckYourReturnControllerTests
@@ -113,7 +114,7 @@
         [Fact]
         public async void IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
         {
-            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
             await controller.Index(model);
 
@@ -124,7 +125,7 @@
         [Fact]
         public async void IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
         {
-            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(),  Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(DateTime.Today, DateTime.Today, (int)QuarterType.Q1) });
+            var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(),  Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 
