@@ -32,7 +32,7 @@
         public string OrganisationName { get; set; }
 
         [Display(Name = "Reporting period")]
-        public override string Period => $"{Quarter} {QuarterWindow.WindowOpenDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)}";
+        public override string Period => $"{Quarter} {QuarterWindow.QuarterStart.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)}";
 
         [Display(Name = "Compliance year")]
         public override string Year { get; }
