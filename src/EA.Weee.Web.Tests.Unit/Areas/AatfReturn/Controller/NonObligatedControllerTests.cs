@@ -21,6 +21,7 @@
     using Web.Areas.AatfReturn.Requests;
     using Web.Areas.AatfReturn.ViewModels;
     using Weee.Requests.AatfReturn.NonObligated;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class NonObligatedControllerTests
@@ -89,7 +90,7 @@
             const string orgName = "orgName";
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)Core.DataReturns.QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             const string reportingPeriod = "2019 Q1 Jan - Mar";
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;
