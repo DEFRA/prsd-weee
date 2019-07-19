@@ -54,7 +54,8 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            var source = new ReturnQuarterWindow(GetReturn(), window,
                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>(), A.Dummy<DateTime>());
 
             var result = map.Map(source);
@@ -75,7 +76,7 @@
 
             var result = map.Map(source);
 
-            result.QuarterWindow.QuarterEnd.Should().Be(endTime);
+            result.QuarterWindow.WindowClosedDate.Should().Be(endTime);
             result.QuarterWindow.WindowOpenDate.Should().Be(startTime);
         }
 
@@ -379,11 +380,18 @@
         [Fact]
         public void Map_GivenSystemDateTime_SystemDateTimePropertyShouldBeMapped()
         {
-            var date = new DateTime(2019, 1, 1);
+            var date = new DateTime(2019, 4, 1);
 
             var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
-            
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            Return ret = A.Fake<Return>();
+
+            Quarter q = new Quarter(2018, QuarterType.Q1);
+            A.CallTo(() => ret.Quarter).Returns(q);
+
             A.CallTo(() => @returnQuarterWindow.SystemDateTime).Returns(date);
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(window);
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(ret);
 
             var result = map.Map(@returnQuarterWindow);
 

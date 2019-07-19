@@ -181,8 +181,10 @@
 
             List<Domain.DataReturns.QuarterWindow> openWindows = new List<Domain.DataReturns.QuarterWindow>()
             {
-                new Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(3), Domain.DataReturns.QuarterType.Q1)
+                new Domain.DataReturns.QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2019, 06, 01), Domain.DataReturns.QuarterType.Q1)
             };
+
+            Domain.DataReturns.QuarterWindow nextWindow = new Domain.DataReturns.QuarterWindow(new DateTime(2019, 06, 01), new DateTime(2019, 09, 01), Domain.DataReturns.QuarterType.Q2);
 
             A.CallTo(() => returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility)).Returns(returnQuarter);
 
@@ -190,6 +192,7 @@
             SystemTime.Freeze(date);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(date)).Returns(openWindows);
+            A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(Domain.DataReturns.QuarterType.Q1, 2019)).Returns(nextWindow);
 
             var result = await handler.HandleAsync(message);
 
@@ -227,7 +230,7 @@
             SystemTime.Unfreeze();
 
             result.NextWindow.WindowOpenDate.Should().Be(nextWindow.StartDate);
-            result.NextWindow.QuarterEnd.Should().Be(nextWindow.EndDate);
+            result.NextWindow.WindowClosedDate.Should().Be(nextWindow.EndDate);
             A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(openWindows[0].QuarterType, date.Year)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
