@@ -42,8 +42,6 @@
 
         public bool IsOpen(DateTime date)
         {
-            //return ReportingStart.ToUniversalTime() <= date.ToUniversalTime() && ReportingEnd.ToUniversalTime() <= date.ToUniversalTime();
-
             return date >= WindowOpenDate && date <= WindowClosedDate;
         }
     }
