@@ -77,6 +77,7 @@
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\IGetUkWeeeAtAatfsCsvDataAccess.cs" />
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandler.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
@@ -86,11 +87,10 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\PartialAatfReturn.cs" />
-    <Compile Include="Admin\Reports\ReportHelper.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccess.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandler.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\IGetUkWeeeAtAatfsCsvDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\PartialAatfReturn.cs" />
+    <Compile Include="Admin\Helpers\ReportHelper.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />

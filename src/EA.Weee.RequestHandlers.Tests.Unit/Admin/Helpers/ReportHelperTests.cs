@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Helpers
 {
     using EA.Weee.Domain.Lookup;
-    using RequestHandlers.Admin.Reports;
+    using EA.Weee.RequestHandlers.Admin.Helpers;
     using Xunit;
 
     public class ReportHelperTests

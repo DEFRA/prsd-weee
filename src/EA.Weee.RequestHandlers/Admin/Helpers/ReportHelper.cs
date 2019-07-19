@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Admin.Helpers
 {
     using System.Collections.Generic;
     using EA.Weee.Core.Helpers;

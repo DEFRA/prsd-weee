@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports.GetUkWeeeAtAatfsCsv
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,12 @@
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
-    using EA.Weee.RequestHandlers.Admin.Reports.GetUkWeeeAtAatfsCsv;
+    using EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Xunit;
-    using DomainObligationType = Domain.Obligation.ObligationType;
 
     public class GetUkWeeeAtAatfsCsvHandlerTests
     {

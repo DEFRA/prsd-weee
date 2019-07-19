@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports.GetUKWeeeCsv
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.RequestHandlers.Admin.Reports.GetUkWeeeAtAatfsCsv;
+    using EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Xunit;
@@ -248,7 +248,7 @@
             };
             var sentOnDbSet = helper.GetAsyncEnabledDbSet(sentOn);
             A.CallTo(() => context.WeeeSentOn).Returns(sentOnDbSet);
-            
+
             // Act
             var results = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(year);
 
