@@ -45,7 +45,11 @@
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;

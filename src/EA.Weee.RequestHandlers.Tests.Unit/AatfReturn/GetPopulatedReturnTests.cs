@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
+    using Domain;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
@@ -13,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.CheckYourReturn;
@@ -292,6 +294,48 @@
                                                                                 && c.ReturnSchemes.Equals(returnSchemes)
                                                                                 && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task GetReturnData_GivenReturnShouldUseSystemTime_MapperShouldBeCalledWithCorrectTime()
+        {
+            var systemDate = new DateTime(2019, 1, 2);
+            SystemTime.Freeze(systemDate);
+            var expectedDate = new DateTime(2019, 1, 1);
+
+            var systemData = A.Fake<SystemData>();
+            systemData.UpdateFixedCurrentDate(expectedDate);
+            systemData.ToggleFixedCurrentDateUsage(true);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
+
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(systemDate)))).MustNotHaveHappened();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task GetReturnData_GivenReturnShouldNotUseSystemTime_MapperShouldBeCalledWithCorrectTime()
+        {
+            var expectedDate = new DateTime(2019, 1, 2);
+            SystemTime.Freeze(expectedDate);
+
+            var systemData = A.Fake<SystemData>();
+            systemData.ToggleFixedCurrentDateUsage(false);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
+
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+                .MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
         [Fact]
         public async Task GetReturnData_GivenReturn_MappedObjectShouldBeReturned()
         {

@@ -22,16 +22,19 @@
         public QuarterWindow(DateTime windowOpenDate, DateTime windowClosedDate, QuarterType quarterType)
         {
             int startMonth;
+            int startYear;
             if (quarterType == QuarterType.Q4)
             {
                 startMonth = 10;
+                startYear = windowOpenDate.Year - 1;
             }
             else
             {
                 startMonth = windowOpenDate.Month - 3;
+                startYear = windowOpenDate.Year;
             }
 
-            QuarterStart = new DateTime(windowOpenDate.Year, startMonth, 1);
+            QuarterStart = new DateTime(startYear, startMonth, 1);
             QuarterEnd = windowOpenDate.AddDays(-1);
            
             WindowOpenDate = windowOpenDate;
@@ -42,9 +45,7 @@
 
         public bool IsOpen(DateTime date)
         {
-            //return ReportingStart.ToUniversalTime() <= date.ToUniversalTime() && ReportingEnd.ToUniversalTime() <= date.ToUniversalTime();
-
-            return date >= WindowOpenDate && date <= WindowClosedDate;
+            return date.ToUniversalTime() >= WindowOpenDate.ToUniversalTime() && date.ToUniversalTime() <= WindowClosedDate.ToUniversalTime();
         }
     }
 }
