@@ -47,7 +47,8 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow(),
+                SystemDateTime = new DateTime(2019, 04, 01)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -81,7 +82,8 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow(),
+                SystemDateTime = new DateTime(2019, 04, 01)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -98,7 +100,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuaterWindowForReturnIsClosed_ContextResultReturnsErrorPage()
+        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsClosed_ContextResultReturnsErrorPage()
         {
             var returnStatusData = new ReturnStatusData()
             {
@@ -129,7 +131,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuaterWindowForReturnIsOpen_ContextResultShouldBeNull()
+        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsOpen_ContextResultShouldBeNull()
         {
             var returnStatusData = new ReturnStatusData()
             {
@@ -141,7 +143,8 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow(),
+                SystemDateTime = new DateTime(2019, 04, 01)
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,

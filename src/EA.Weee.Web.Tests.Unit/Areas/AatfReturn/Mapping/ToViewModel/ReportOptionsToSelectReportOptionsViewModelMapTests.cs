@@ -9,6 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReportOptionsToSelectReportOptionsViewModelMapTests
@@ -51,9 +52,8 @@
             var questions = new List<ReportOnQuestion>();
 
             var @return = A.Fake<ReturnData>();
-            @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -72,9 +72,8 @@
             var returnReportOns = new List<ReturnReportOn>();
 
             var @return = A.Fake<ReturnData>();
-            @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -96,9 +95,8 @@
             var returnReportOns = new List<ReturnReportOn>();
 
             var @return = A.Fake<ReturnData>();
-            @return.SystemDateTime = DateTime.Now;
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 4; i++)
             {

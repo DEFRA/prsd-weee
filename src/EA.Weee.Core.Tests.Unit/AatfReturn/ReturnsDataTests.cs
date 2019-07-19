@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using DataReturns;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -13,9 +14,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnsList_ArgumentNullExceptionExpected()
         {
-            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), QuarterType.Q1);
-
-            var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), window, DateTime.Now));
+            var exception = Record.Exception(() => new ReturnsData(null, new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow()));
 
             exception.Should().BeOfType<ArgumentNullException>();
         }
@@ -32,7 +31,7 @@
 
             QuarterWindow nextQuarter = new QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(2), QuarterType.Q1);
 
-            var returnsData = new ReturnsData(returnsList, returnQuarter, openQuarters, nextQuarter, DateTime.Now);
+            var returnsData = new ReturnsData(returnsList, returnQuarter, openQuarters, nextQuarter);
 
             returnsData.ReturnsList.Should().BeEquivalentTo(returnsList);
             returnsData.ReturnQuarter.Should().Be(returnQuarter);
@@ -43,9 +42,7 @@
         [Fact]
         public void ReturnsData_GivenNullReturnQuarter_ReturnQuarterPropertiesShouldBeNull()
         {
-            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(2), QuarterType.Q1);
-
-            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null, A.Fake<List<Quarter>>(), window, DateTime.Now);
+            var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), null, A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow());
 
             returnsData.ReturnQuarter.Should().BeNull();
         }
