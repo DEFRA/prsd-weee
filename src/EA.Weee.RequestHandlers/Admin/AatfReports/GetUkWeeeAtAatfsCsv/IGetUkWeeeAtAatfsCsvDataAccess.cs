@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUkWeeeAtAatfsCsv
+﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

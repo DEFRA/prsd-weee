@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUkWeeeAtAatfsCsv
+﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +10,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
+    using EA.Weee.RequestHandlers.Admin.Helpers;
     using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Security;

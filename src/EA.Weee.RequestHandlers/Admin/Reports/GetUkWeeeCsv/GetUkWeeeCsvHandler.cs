@@ -9,6 +9,7 @@
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using EA.Weee.RequestHandlers.Admin.Helpers;
     using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Security;
