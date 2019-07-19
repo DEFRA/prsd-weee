@@ -33,7 +33,8 @@
 
         public virtual DateTime SystemDateTime { get; private set; }
 
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow,
+        public ReturnQuarterWindow(Return @return, 
+            QuarterWindow quarterWindow,
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,
             List<WeeeReceivedAmount> obligatedReceivedList,
             List<WeeeReusedAmount> obligatedReusedList,
