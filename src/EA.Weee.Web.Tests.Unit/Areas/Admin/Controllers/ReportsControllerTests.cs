@@ -1868,6 +1868,7 @@
             var uri = new Uri("https://localhost:44300/weeerelease");
             A.CallTo(() => controller.HttpContext.Request).Returns(httpRequest);
             A.CallTo(() => controller.HttpContext.Request.Url).Returns(uri);
+            A.CallTo(() => controller.HttpContext.Request.ApplicationPath).Returns("weeerelease");
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
