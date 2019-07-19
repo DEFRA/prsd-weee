@@ -8,6 +8,7 @@
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnsOrderingTests
@@ -26,15 +27,15 @@
             {
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2018, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2018, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 }
             };
 
@@ -52,19 +53,19 @@
             {
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q2), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q2), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q3), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q3), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 }
             };
 
@@ -84,22 +85,22 @@
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2017),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2019),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2018),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
                     CreatedDate = new DateTime(2020),
-                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)Core.DataReturns.QuarterType.Q1)
+                    Quarter = new Quarter(2020, QuarterType.Q4), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 }
             };
 

@@ -12,6 +12,7 @@
     using Prsd.Core.Mapper;
     using Web.ViewModels.Returns;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnsToReturnsViewModelMapTests
@@ -47,12 +48,12 @@
             {
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)QuarterType.Q1)
+                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
                 },
                 new ReturnData()
                 {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 1), (int)QuarterType.Q1)
-                }
+                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
+        }
             };
 
             var returnsData = new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
@@ -256,8 +257,7 @@
                 new Quarter(2019, QuarterType.Q2)
             };
 
-            QuarterWindow nextQuater =
-                new QuarterWindow(new DateTime(2019, 10, 01), new DateTime(2020, 03, 16), (int)Core.DataReturns.QuarterType.Q4);
+            QuarterWindow nextQuarter = QuarterWindowTestHelper.GetQuarterFourWindow(2019);
 
             List<ReturnData> returnData = new List<ReturnData>()
             {
@@ -269,11 +269,11 @@
 
             SystemTime.Freeze(new DateTime(2019, 07, 11));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
 
             SystemTime.Unfreeze();
 
-            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on {0}.", nextQuater.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on {0}.", nextQuarter.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
@@ -281,14 +281,13 @@
         {
             List<Quarter> openQuarters = new List<Quarter>()
             {
-                new Quarter(2019, QuarterType.Q1),
-                new Quarter(2019, QuarterType.Q2),
-                new Quarter(2019, QuarterType.Q3),
-                new Quarter(2020, QuarterType.Q4)
+                new Quarter(2018, QuarterType.Q1),
+                new Quarter(2018, QuarterType.Q2),
+                new Quarter(2018, QuarterType.Q3),
+                new Quarter(2019, QuarterType.Q4)
             };
 
-            QuarterWindow nextQuater =
-                new QuarterWindow(new DateTime(2020, 01, 01), new DateTime(2020, 03, 16), (int)Core.DataReturns.QuarterType.Q1);
+            QuarterWindow nextQuarter = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             List<ReturnData> returnData = new List<ReturnData>()
             {
@@ -298,13 +297,13 @@
                 }
             };
 
-            SystemTime.Freeze(new DateTime(2020, 01, 01));
+            SystemTime.Freeze(new DateTime(2019, 01, 01));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
 
             SystemTime.Unfreeze();
 
-            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2020 Q1 returns on {0}.", nextQuater.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
+            Assert.Equal(string.Format("Returns have been started or submitted for all open quarters. You can start submitting your 2020 Q1 returns on {0}.", nextQuarter.WindowOpenDate.ToShortDateString()), result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
@@ -313,9 +312,9 @@
             List<ReturnData> returnData = new List<ReturnData>();
             List<Quarter> openQuarters = new List<Quarter>();
 
-            QuarterWindow nextQuater = new QuarterWindow(new DateTime(2020, 01, 01), new DateTime(2020, 03, 16), (int)QuarterType.Q1);
+            QuarterWindow nextQuarter = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuater));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
 
             Assert.Equal("You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.", result.ErrorMessageForNotAllowingCreateReturn);
         }
