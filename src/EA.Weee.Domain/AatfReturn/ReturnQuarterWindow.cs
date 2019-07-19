@@ -31,7 +31,7 @@
 
         public List<ReturnReportOn> ReturnReportOns { get; private set; }
 
-        public DateTime SystemDateTime { get; private set; }
+        public virtual DateTime SystemDateTime { get; private set; }
 
         public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow,
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,

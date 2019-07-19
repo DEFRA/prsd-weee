@@ -56,7 +56,7 @@
         }
             };
 
-            var returnsData = new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now);
 
             A.CallTo(() => ordering.Order(returnsData.ReturnsList)).Returns(returnsData.ReturnsList.AsEnumerable());
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
@@ -90,7 +90,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now));
 
             result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit).Should().Be(0);
         }
@@ -112,7 +112,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now));
 
             result.Returns.ElementAt(0).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
@@ -150,7 +150,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now));
 
             result.Returns.ElementAt(1).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
         }
@@ -166,7 +166,7 @@
         [Fact]
         public void Map_GivenNullReturnQuarter_DisplayCreateButtonShouldBeFalse()
         {
-            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now);
 
             var result = returnsMap.Map(returnsData);
 
@@ -176,7 +176,7 @@
         [Fact]
         public void Map_GivenReturnQuarter_DisplayCreateButtonShouldBeTrue()
         {
-            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now);
 
             var result = returnsMap.Map(returnsData);
 
@@ -190,7 +190,7 @@
         [InlineData(QuarterType.Q4)]
         public void Map_GivenReturnQuarter_ComplianceReturnPropertiesShouldBeSet(QuarterType quarter)
         {
-            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, quarter), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>());
+            var returnsData = new ReturnsData(A.CollectionOfFake<ReturnData>(1).ToList(), new Quarter(2019, quarter), A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now);
 
             var result = returnsMap.Map(returnsData);
 
@@ -228,7 +228,7 @@
             A.CallTo(() => ordering.Order(A<List<ReturnData>>._)).Returns(returnData);
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
 
-            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            var result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now));
 
             result.Returns.First(r => r.ReturnViewModel.ReturnId.Equals(idToFind)).ReturnsListDisplayOptions.DisplayEdit.Should().BeTrue();
             result.Returns.Count(r => r.ReturnsListDisplayOptions.DisplayEdit.Equals(false)).Should().Be(2);
@@ -241,7 +241,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 3, 17));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>()));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), A.Fake<QuarterWindow>(), DateTime.Now));
 
             SystemTime.Unfreeze();
 
@@ -269,7 +269,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 07, 11));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now));
 
             SystemTime.Unfreeze();
 
@@ -299,7 +299,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 01, 01));
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now));
 
             SystemTime.Unfreeze();
 
@@ -314,7 +314,7 @@
 
             QuarterWindow nextQuarter = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
-            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter));
+            ReturnsViewModel result = returnsMap.Map(new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now));
 
             Assert.Equal("You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.", result.ErrorMessageForNotAllowingCreateReturn);
         }
