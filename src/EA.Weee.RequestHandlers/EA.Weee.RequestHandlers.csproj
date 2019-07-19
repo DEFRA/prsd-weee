@@ -84,7 +84,7 @@
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
-    <Compile Include="Admin\Reports\GetAllAatfObligatedDataCsvHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandler.cs" />
     <Compile Include="Factories\IReturnFactory.cs" />
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />

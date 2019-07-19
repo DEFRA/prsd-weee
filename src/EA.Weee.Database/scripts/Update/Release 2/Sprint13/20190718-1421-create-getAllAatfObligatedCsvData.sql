@@ -1,6 +1,6 @@
 -- Description:	This stored procedure is used to provide the data for the admin report of obligatde data
 --				that have/haven't submitted a data return within
---				the limits of the specified parameters.
+--				the limits of the specified parameters.Get the latest submitted return
 
 -- =============================================
 CREATE PROCEDURE [AATF].[getAllAatfObligatedCsvData]
@@ -76,15 +76,24 @@ DECLARE @DynamicPivotQuery AS NVARCHAR(MAX)
 DECLARE @ColumnNames nvarchar(MAX)
 DECLARE @ColumnName nvarchar(25)
 
---Get all the submitted returns for the compliance year
+--Get the latest submitted returns for the compliance year
 INSERT INTO @SUBMITTEDRETURN
+SELECT X.AatfId, X.ReturnId, X.ComplianceYear, X.[Quarter], X.CreatedDate, X.SubmittedDate,
+	   X.SubmittedBy, X.Name, X.ApprovalNumber,X.OrgName,
+	    X.Abbreviation, X.PName, X.LaName FROM
+(
 SELECT ra.AatfId, ra.ReturnId, r.ComplianceYear, r.[Quarter], r.CreatedDate, r.SubmittedDate,
-	   CONCAT (u.FirstName, ' ', u.Surname), a.Name, a.ApprovalNumber, CASE 
+	   CONCAT (u.FirstName, ' ', u.Surname) as SubmittedBy, a.Name, a.ApprovalNumber, CASE 
 		WHEN o.Name IS NULL
 			THEN o.TradingName
 		ELSE o.Name
-		END, ca.Abbreviation, pa.Name, la.Name
-FROM [AATF].[ReturnAatf] ra
+		END as OrgName, ca.Abbreviation, pa.Name as PName, la.Name as LaName,ROW_NUMBER() OVER
+						(
+							PARTITION BY ra.AatfId, r.[Quarter]
+							ORDER BY r.[Quarter],r.SubmittedDate desc
+						) AS RowNumber
+FROM
+ [AATF].[ReturnAatf] ra
 INNER JOIN [AATF].[Return] r ON r.Id = ra.ReturnId
 INNER JOIN AATF.AATF a ON a.Id = ra.AatfId  AND a.FacilityType = r.FacilityType
 INNER JOIN Organisation.Organisation o ON a.OrganisationId = o.Id
@@ -104,6 +113,8 @@ WHERE r.ComplianceYear = @ComplianceYear
 		@AatfName IS NULL
 		OR a.Name LIKE '%' + COALESCE(@AatfName, a.Name) + '%'
 		)
+) X
+WHERE X.RowNumber = 1
 
 --Total Sent to another AATF / ATF (t)
 
@@ -205,6 +216,14 @@ FROM (
 
 -------------End of Total Obligated data by AATF-----------------------------
 
+
+DECLARE @COUNT INT
+
+SELECT @COUNT = COUNT(*) FROM #TotalReceivedByScheme
+
+IF @COUNT > 0
+BEGIN
+
 ------------- Obligated data by schemes
 IF @ColumnType = 1
 	BEGIN
@@ -285,14 +304,53 @@ FROM
 		AND x.Q = a.[Quarter]
 		AND x.CategoryId = a.CategoryId
 		AND x.TonnageType = a.TonnageType
-WHERE (@ObligationType IS NULL OR a.Obligation = @ObligationType)
+WHERE (@ObligationType IS NULL OR a.Obligation like '%' + COALESCE(@ObligationType, a.Obligation) + '%')
 ORDER BY a.CompetentAuthorityAbbr, a.[Quarter], a.SubmittedDate, a.TonnageType, a.CategoryId
 
-DROP Table #TotalReceivedByScheme
+
 DROP Table #temp
 END
+ELSE
+	BEGIN
+
+		SELECT 
+		 a.CompetentAuthorityAbbr AS 'Appropriate authority'
+		,a.PanArea AS 'WROS pan area team'
+		,a.LocalArea AS 'EA Area'
+		,@ComplianceYear AS 'Year'
+		,a.[Quarter] AS 'Quarter'
+		,a.SubmittedBy AS 'Submitted by'
+		,a.SubmittedDate AS 'Date submitted (GMT)'
+		,a.OrganisationName AS 'Organisation name'
+		,a.Name AS 'Name of AATF'
+		,a.ApprovalNumber AS 'Approval number'
+		,CONCAT(c.Id, '.', c.Name) AS Category
+		,a.Obligation
+		,a.TotalSent AS 'Total sent to another AATF / ATF (t)'
+		,a.TotalReused AS 'Reused as a whole appliance (t)'
+		,a.TotalReceived AS 'Total received on behalf of PCS(s) (t)'
+		FROM
+			(
+			SELECT
+			 o.AatfId, r.CompetentAuthorityAbbr, r.PanArea,  r.[Quarter], r.SubmittedBy, r.SubmittedDate,r.LocalArea,
+			 r.OrganisationName, r.Name, r.ApprovalNumber, o.CategoryId, o.returnId,o.TonnageType,
+			 CASE WHEN o.TonnageType = 'HouseholdTonnage' THEN 'B2C'
+			 ELSE 'B2B' END AS Obligation,
+			 o.TotalSent, o.TotalReused, o.TotalReceived
+			FROM @ObligatedData o		
+			LEFT JOIN @SUBMITTEDRETURN r ON r.AatfId = o.AatfId
+				AND R.[Quarter] = o.[Quarter]
+				AND R.ReturnId = o.ReturnId
+			) a
+			INNER JOIN [Lookup].WeeeCategory c ON a.CategoryId = c.Id
+		WHERE (@ObligationType IS NULL OR a.Obligation like '%' + COALESCE(@ObligationType, a.Obligation) + '%')
+		ORDER BY a.CompetentAuthorityAbbr, a.[Quarter], a.SubmittedDate, a.TonnageType, a.CategoryId
+	END
+
+DROP Table #TotalReceivedByScheme
 
 
+END
 
 
 GO
