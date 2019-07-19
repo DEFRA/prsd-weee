@@ -13,6 +13,7 @@
     using Core.DataReturns;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ValidateReturnCreatedActionFilterAttributeTests
@@ -46,8 +47,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
-                SystemDateTime = SystemTime.Now
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -81,8 +81,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
-                SystemDateTime = SystemTime.Now
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -111,7 +110,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2018, 04, 01), new DateTime(2019, 03, 31), (int)QuarterType.Q1)
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -138,12 +137,11 @@
                 ReturnStatus = ReturnStatus.Created
             };
 
-            SystemTime.Freeze(new DateTime(2020, 03, 22));
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2020, 03, 31), (int)QuarterType.Q1),
-                SystemDateTime = SystemTime.Now
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             A.CallTo(() => client.SendAsync(A<string>._,

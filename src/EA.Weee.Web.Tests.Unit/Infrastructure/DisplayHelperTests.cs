@@ -4,15 +4,16 @@
     using Core.DataReturns;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Infrastructure;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class DisplayHelperTests
     {
         [Fact]
-        public void FormatQuarter_BasedOnParamaters()
+        public void FormatQuarter_BasedOnParameters()
         {
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30), (int)QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             var value = DisplayHelper.FormatQuarter(quarterData, quarterWindow);
 

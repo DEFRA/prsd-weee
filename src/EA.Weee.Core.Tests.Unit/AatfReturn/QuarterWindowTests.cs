@@ -28,7 +28,7 @@
         [InlineData(Q4, 31, 12, QuarterType.Q1)]
         public void IsOpenForReporting_DayBeforeReportingWindowOpens_ReturnsFalse(DateTime quarterStart, int currentDay, int currentMonth, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
             var date = new DateTime(2018, currentMonth, currentDay);
 
             var result = quarter.IsOpen(date);
@@ -43,7 +43,7 @@
         [InlineData(Q4, 01, 2019, QuarterType.Q1)]
         public void IsOpenForReporting_DayReportingWindowOpens_ReturnsTrue(DateTime quarterStart, int currentMonth, int currentYear, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
 
             var date = new DateTime(currentYear, currentMonth, 01);
 
@@ -59,7 +59,7 @@
         [InlineData(Q4, 01, 2019, QuarterType.Q1)]
         public void IsOpenForReporting_DayAfterReportingWindowOpens_ReturnsTrue(DateTime quarterStart, int currentMonth, int currentYear, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
 
             var date = new DateTime(currentYear, currentMonth, 02);
 
@@ -75,7 +75,7 @@
         [InlineData(Q4, QuarterType.Q1)]
         public void IsOpenForReporting_DayBeforeReportingWindowCloses_ReturnsTrue(DateTime quarterStart, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
 
             var date = new DateTime(2019, 03, 15);
 
@@ -91,7 +91,7 @@
         [InlineData(Q4, QuarterType.Q1)]
         public void IsOpenForReporting_DayReportingWindowCloses_ReturnsTrue(DateTime quarterStart, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
 
             var date = new DateTime(2019, 03, 16);
 
@@ -107,7 +107,7 @@
         [InlineData(Q4, QuarterType.Q1)]
         public void IsOpenForReporting_DayAfterReportingWindowCloses_ReturnsFalse(DateTime quarterStart, QuarterType quarterType)
         {
-            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), (int)quarterType);
+            var quarter = new QuarterWindow(quarterStart, fixture.Create<DateTime>(), quarterType);
 
             var date = new DateTime(2019, 03, 17);
 
