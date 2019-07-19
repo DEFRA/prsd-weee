@@ -110,9 +110,9 @@
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandlerTests.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />
-    <Compile Include="Admin\Reports\ReportHelperTests.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />
+    <Compile Include="Admin\Helpers\ReportHelperTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
