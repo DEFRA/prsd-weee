@@ -45,7 +45,7 @@
                     TypeHeading = typeHeading
                 };
 
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }

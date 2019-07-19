@@ -56,7 +56,7 @@
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
                 TempData["currentQuarter"] = @return.Quarter;
                 TempData["currentQuarterWindow"] = @return.QuarterWindow;
@@ -69,7 +69,7 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel, bool reselect = false)
         {
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
             if (ModelState.IsValid)
             {
@@ -109,7 +109,7 @@
                     SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
                 };
 
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
 
                 return View(nameof(Index), viewModel);
             }
