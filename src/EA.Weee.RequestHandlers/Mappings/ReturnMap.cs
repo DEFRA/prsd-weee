@@ -36,7 +36,7 @@
             {
                 Id = source.Return.Id,
                 Quarter = new Quarter(source.Return.Quarter.Year, (QuarterType)source.Return.Quarter.Q),
-                QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate),
+                QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate, (QuarterType)source.QuarterWindow.QuarterType),
                 OrganisationData = organisationMapper.Map(source.Organisation),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(),
                 CreatedBy = source.Return.CreatedBy.FullName,
@@ -45,7 +45,8 @@
                 SubmittedDate = source.Return.SubmittedDate,
                 ReturnReportOns = source.ReturnReportOns.Select(r => new ReturnReportOn(r.ReportOnQuestionId, r.ReturnId)).ToList(),
                 ReturnStatus = mapper.Map<ReturnStatus>(source.Return.ReturnStatus),
-                NilReturn = source.Return.NilReturn
+                NilReturn = source.Return.NilReturn,
+                SystemDateTime = source.SystemDateTime
             };
 
             if (source.Aatfs != null)
