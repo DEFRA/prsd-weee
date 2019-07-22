@@ -29,20 +29,12 @@
                         </div>
                     }
 
-                    <details class="govuk-details govuk-!-font-size-16" aria-live="polite" role="group">
-                        <summary class="govuk-details__summary" role="button" aria-controls="details-content" aria-expanded="false">
-                            <span class="govuk-details__summary-text">
-                                I need to submit a return for a different quarter
-                            </span>
-                        </summary>
-                        <div>
-                            @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
-                                "If you want to start a different return other than the one available, contact your environmental regulator",
-                                "Hidden content",
-                                "Progressive disclosure",
-                                "I need to submit a return for a different quarter (AATF)")
-                        </div>
-                    </details>
+                    @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
+                        "If you want to start a different return other than the one available, contact your environmental regulator",
+                        "Hidden content",
+                        "Progressive disclosure",
+                        "I need to submit a return for a different quarter (AATF)",
+                        new { style = "font-size: 16px !important;" })
                 </div>
             </div>
         }

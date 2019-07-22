@@ -26,7 +26,7 @@
             var model = new ReturnsItemViewModel()
             {
                 ReturnViewModel = returnMap.Map(source),
-                ReturnsListDisplayOptions = mapper.Map<ReturnsListDisplayOptions>((source.ReturnStatus, source.QuarterWindow)),
+                ReturnsListDisplayOptions = mapper.Map<ReturnsListDisplayOptions>((source.ReturnStatus, source.QuarterWindow, source.SystemDateTime)),
                 ReturnsListRedirectOptions = returnListRedirectMap.Map(source)
             };
 

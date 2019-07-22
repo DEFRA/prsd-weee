@@ -13,6 +13,7 @@
     using AutoFixture;
     using AutoFixture.Dsl;
     using Core.DataReturns;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnAndAatfToSentOnCreateSiteViewModelMapTests
@@ -110,6 +111,7 @@
         {
             var returnData = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
                 .Create();
 
             var source = fixture.Build<ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer>()

@@ -54,8 +54,9 @@
         [Fact]
         public void Map_GivenSource_QuarterPropertiesShouldBeMapped()
         {
-            var source = new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
+            QuarterWindow window = new QuarterWindow(new DateTime(2019, 4, 1), new DateTime(2020, 3, 16), QuarterType.Q1);
+            var source = new ReturnQuarterWindow(GetReturn(), window,
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>(), A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -64,19 +65,16 @@
         }
 
         [Fact]
-        public void Map_GivenSource_QuarterWindowPropertiesShouldBeMapped()
+        public void Map_GivenSource_GivenQuarterWindow_QuarterWindowShouldNotBeNull()
         {
-            var startTime = DateTime.Now;
-            var endTime = DateTime.Now.AddDays(1);
-            var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime, QuarterType.Q1);
+            var quarterWindow = new EA.Weee.Domain.DataReturns.QuarterWindow(new DateTime(2019, 4, 1), new DateTime(2020, 3, 16), QuarterType.Q1);
 
             var source = new ReturnQuarterWindow(GetReturn(), quarterWindow,
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>(), A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
-            result.QuarterWindow.EndDate.Should().Be(endTime);
-            result.QuarterWindow.StartDate.Should().Be(startTime);
+            result.QuarterWindow.Should().NotBeNull();
         }
 
         [Fact]
@@ -87,7 +85,8 @@
                 A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), organisation,
                 A.Fake<List<WeeeSentOnAmount>>(),
                 A.Fake<List<ReturnScheme>>(),
-                A.Fake<List<ReturnReportOn>>());
+                A.Fake<List<ReturnReportOn>>(),
+                A.Dummy<DateTime>());
 
             var organisationData = new OrganisationData() { Name = "name", Id = Guid.NewGuid() };
 
@@ -105,7 +104,7 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<DomainAatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(),
-                organisation, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
+                organisation, obligatedWeeeSentOn, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>(), A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -127,7 +126,7 @@
             };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), null, nonObligated,
-                null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>());
+                null, null, null, null, A.Fake<List<ReturnScheme>>(), A.Fake<List<ReturnReportOn>>(), A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -154,7 +153,8 @@
                 A.Fake<List<WeeeReusedAmount>>(), organisation,
                 A.Fake<List<WeeeSentOnAmount>>(),
                 A.Fake<List<ReturnScheme>>(),
-                A.Fake<List<ReturnReportOn>>());
+                A.Fake<List<ReturnReportOn>>(),
+                A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -179,7 +179,8 @@
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
                 obligated, organisation, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
-                A.Fake<List<ReturnReportOn>>());
+                A.Fake<List<ReturnReportOn>>(),
+                A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -204,7 +205,8 @@
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(), A.Fake<List<Aatf>>(), A.Fake<List<NonObligatedWeee>>(),
                 A.Fake<List<WeeeReceivedAmount>>(), A.Fake<List<WeeeReusedAmount>>(), organisation, obligated, A.Fake<List<ReturnScheme>>(),
-                A.Fake<List<ReturnReportOn>>());
+                A.Fake<List<ReturnReportOn>>(),
+                A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -232,7 +234,8 @@
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
                 aatfs, A.Fake<List<NonObligatedWeee>>(), A.Fake<List<WeeeReceivedAmount>>(),
                 A.Fake<List<WeeeReusedAmount>>(), organisation, A.Fake<List<WeeeSentOnAmount>>(), A.Fake<List<ReturnScheme>>(),
-                A.Fake<List<ReturnReportOn>>());
+                A.Fake<List<ReturnReportOn>>(),
+                A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -250,7 +253,7 @@
             var returnReportOnList = new List<ReturnReportOn> { new ReturnReportOn(@return.Id, 1), new ReturnReportOn(@return.Id, 3) };
 
             var source = new ReturnQuarterWindow(GetReturn(), GetQuarterWindow(),
-                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), returnReportOnList);
+                null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), returnReportOnList, A.Dummy<DateTime>());
 
             var result = map.Map(source);
 
@@ -371,6 +374,27 @@
             return @return;
         }
 
+        [Fact]
+        public void Map_GivenSystemDateTime_SystemDateTimePropertyShouldBeMapped()
+        {
+            var date = new DateTime(2019, 4, 1);
+
+            var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
+            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            Return ret = A.Fake<Return>();
+
+            Quarter q = new Quarter(2018, QuarterType.Q1);
+            A.CallTo(() => ret.Quarter).Returns(q);
+
+            A.CallTo(() => @returnQuarterWindow.SystemDateTime).Returns(date);
+            A.CallTo(() => @returnQuarterWindow.QuarterWindow).Returns(window);
+            A.CallTo(() => @returnQuarterWindow.Return).Returns(ret);
+
+            var result = map.Map(@returnQuarterWindow);
+
+            result.SystemDateTime.Should().Be(date);
+        }
+
         public WeeeReceived ReturnWeeeReceived(DomainScheme scheme, DomainAatf aatf, Return @return)
         {
             var weeeReceived = new WeeeReceived(scheme, aatf, @return);
@@ -404,7 +428,7 @@
         public ReturnQuarterWindow GetReturnQuarterWindow()
         {
             return new ReturnQuarterWindow(GetReturn(), A.Fake<Domain.DataReturns.QuarterWindow>(),
-                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null);
+                 null, null, null, null, null, null, A.Fake<List<ReturnScheme>>(), null, A.Dummy<DateTime>());
         }
     }
 }
