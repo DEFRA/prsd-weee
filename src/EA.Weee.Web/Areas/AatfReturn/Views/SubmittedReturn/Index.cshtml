@@ -24,10 +24,10 @@
         </p>
         <p class="govuk-body">
             @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
-                        null,
+                        "What did you think of this service?",
                         Url.UrlFor<NewUserController>(c => c.Feedback()),
                         "Feedback",
-                        "Banner",
+                        "AATF return",
                         "Feedback link",
                         null,
                         true
@@ -40,7 +40,7 @@
                 If you have completed all your activities you can
 
                 @Html.AntiForgeryToken()
-                @this.WeeeGds().CreateLinkButtonWithEventTracking("sign out", "AATF return", "sign out", "Sign out")
+                @this.WeeeGds().CreateLinkButtonWithEventTracking("sign out", "AATF return", "Sign out", "Sign out")
                 or proceed to perform more activities
             </p>
         }
