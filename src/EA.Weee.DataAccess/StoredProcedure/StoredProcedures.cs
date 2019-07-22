@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
     using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
@@ -444,6 +443,32 @@
                     quarterParameter,
                     facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)
                 .ToListAsync();
+        }
+
+        public async Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            SqlParameter columnTypeParameter = new SqlParameter("@ColumnType", columnType);
+
+            var table = new DataTable();
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea, @ColumnType";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(aatfNameParameter);
+                cmd.Parameters.Add(obligationTypeParameter);
+                cmd.Parameters.Add(authorityParameter);
+                cmd.Parameters.Add(panAreaParameter);
+                cmd.Parameters.Add(columnTypeParameter);
+                await cmd.Connection.OpenAsync();
+                table.Load(await cmd.ExecuteReaderAsync());
+            }
+            return table;
         }
     }
 }

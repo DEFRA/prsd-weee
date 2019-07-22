@@ -54,6 +54,7 @@
     <Content Include="scripts\Everytime\0008-InsertLocalAreaData.sql" />
     <Content Include="scripts\Everytime\0009-InsertPanAreaData.sql" />
     <Content Include="scripts\Everytime\0010-InsertReportOnQuestionData.sql" />
+    <Content Include="scripts\Everytime\0011-InsertWeeeCategory.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
@@ -265,6 +266,8 @@
     <Content Include="scripts\Update\Release 2\Sprint12\20190709-2201-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1027-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1517-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint13\20190718-0954-create-lookup-weeecategory.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint13\20190718-1421-create-getAllAatfObligatedCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
