@@ -338,6 +338,7 @@
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkWeeeDataAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\AatfAeReturnDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
@@ -970,6 +971,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\_SummaryPartial.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeReturnData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfObligatedData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\UkNonObligatedWeeeReceived.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
