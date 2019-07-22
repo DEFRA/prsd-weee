@@ -28,6 +28,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Infrastructure;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
 
@@ -318,7 +319,7 @@
 
             IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
 
-            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == "Approval number already used");
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
             Assert.NotNull(error);
         }
 
@@ -335,7 +336,7 @@
 
             IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
 
-            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == "Approval number already used");
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
             Assert.NotNull(error);
         }
 
