@@ -12,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using Prsd.Core;

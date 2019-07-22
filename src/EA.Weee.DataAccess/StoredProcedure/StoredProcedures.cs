@@ -246,7 +246,7 @@
 
         public async Task<List<UkNonObligatedWeeeReceivedData>> UKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
         {
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[UkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
                 complianceYearParameter).ToListAsync();
