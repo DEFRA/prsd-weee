@@ -24,7 +24,7 @@
             <li>your organisation has not yet been created in our service</li>
             <li>you entered something other than the organisation name</li>
         </ul>
-
+       
         <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -42,19 +42,19 @@
                     {
                         var id = "selectOrg" + org.OrganisationId;
 
-                        <tr>
-                            <td class="govuk-table__cell" style="text-align:center;"><label class="govuk-visually-hidden" for="id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @org.OrganisationId })</td>
-                            <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
-                            <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
-                            <td class="govuk-table__cell" style="text-align:center;">@org.PcsCount</td>
-                            <td class="govuk-table__cell" style="text-align:center;">@org.AatfCount</td>
-                            <td class="govuk-table__cell" style="text-align:center; padding-right: 10px;">@org.AeCount</td>
-                        </tr>
+                <tr>
+                    <td class="govuk-table__cell" style="text-align:center;"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @id })</td>
+                    <td style="word-break:break-word" class="govuk-table__cell">@org.Name</td>
+                    <td style="word-break:break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
+                    <td class="govuk-table__cell" style="text-align:center;">@org.PcsCount</td>
+                    <td class="govuk-table__cell" style="text-align:center;">@org.AatfCount</td>
+                    <td class="govuk-table__cell" style="text-align:center; padding-right: 10px;">@org.AeCount</td>
+                </tr>
                     }
                 }
             </tbody>
         </table>
-
+       
         @(this.WeeeGds().Submit("Continue"))
     }
 

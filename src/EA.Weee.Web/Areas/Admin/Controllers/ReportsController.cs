@@ -12,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.Admin.Aatf;
     using Infrastructure;
     using Prsd.Core;
     using Prsd.Core.Helpers;
@@ -115,6 +116,9 @@
 
                 case Reports.AatfObligatedData:
                     return RedirectToAction(nameof(AatfObligatedData));
+
+                case Reports.UkNonObligatedWeeeData:
+                    return RedirectToAction(nameof(UkNonObligatedWeeeReceived));
 
                 default:
                     throw new NotSupportedException();
@@ -418,6 +422,42 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> UkNonObligatedWeeeReceived()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            UkNonObligatedWeeeReceivedViewModel model = new UkNonObligatedWeeeReceivedViewModel();
+            await PopulateFilters(model);
+
+            return View("UkNonObligatedWeeeReceived", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UkNonObligatedWeeeReceived(UkNonObligatedWeeeReceivedViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkNonObligatedWeeeReceivedCsv(int complianceYear)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                CSVFileData ukNonObligatedWeeeReceivedCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear));
+                byte[] data = new UTF8Encoding().GetBytes(ukNonObligatedWeeeReceivedCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukNonObligatedWeeeReceivedCsvData.FileName));
+            }
+        }
+
+        [HttpGet]
         public ActionResult SchemeObligationData()
         {
             SetBreadcrumb();
@@ -617,6 +657,12 @@
             model.ComplianceYears = new SelectList(years);
         }
 
+        private async Task PopulateFilters(UkNonObligatedWeeeReceivedViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForAatfReturns();
+            model.ComplianceYears = new SelectList(years);
+        }
+        
         private void PopulateFilters(SchemeObligationDataViewModel model)
         {
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());

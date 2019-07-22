@@ -38,6 +38,13 @@
             </div>
         </div>
     }
+    else
+    {
+        <p>
+            @Model.ErrorMessageForNotAllowingCreateReturn
+        </p>
+    }
+
     @if (Model.Returns.Count > 0)
     {
 
