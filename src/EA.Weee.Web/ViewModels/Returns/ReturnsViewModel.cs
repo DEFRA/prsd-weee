@@ -27,5 +27,7 @@
         }
 
         public string ErrorMessageForNotAllowingCreateReturn { get; set; }
+
+        public bool NotStartedAnySubmissionsYet { get; set; }
     }
 }
