@@ -96,6 +96,7 @@
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeleted.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatf.cs" />
     <Compile Include="Admin\GetAatfs.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
     <Compile Include="Admin\GetLocalAreas.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
+    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv.cs" />
     <Compile Include="Admin\Reports\GetUkWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
