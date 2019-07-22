@@ -4,6 +4,7 @@
     using Core.DataReturns;
     using Domain.AatfReturn;
     using EA.Prsd.Core;
+    using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
@@ -24,6 +25,7 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IReturnFactory returnFactory;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetReturnsHandlerTests()
         {
@@ -31,6 +33,7 @@
             returnDataAccess = A.Fake<IReturnDataAccess>();
             returnFactory = A.Fake<IReturnFactory>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             handler = new GetReturnsHandler(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -38,7 +41,8 @@
                 populatedReturn,
                 returnDataAccess,
                 returnFactory,
-                quarterWindowFactory);
+                quarterWindowFactory,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -50,7 +54,8 @@
                 A.Dummy<IGetPopulatedReturn>(),
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IReturnFactory>(),
-                A.Dummy<IQuarterWindowFactory>());
+                A.Dummy<IQuarterWindowFactory>(),
+                A.Dummy<ISystemDataDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetReturns>());
 
@@ -176,8 +181,10 @@
 
             List<Domain.DataReturns.QuarterWindow> openWindows = new List<Domain.DataReturns.QuarterWindow>()
             {
-                new Domain.DataReturns.QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(3), Domain.DataReturns.QuarterType.Q1)
+                new Domain.DataReturns.QuarterWindow(new DateTime(2019, 04, 01), new DateTime(2019, 06, 01), Domain.DataReturns.QuarterType.Q1)
             };
+
+            Domain.DataReturns.QuarterWindow nextWindow = new Domain.DataReturns.QuarterWindow(new DateTime(2019, 06, 01), new DateTime(2019, 09, 01), Domain.DataReturns.QuarterType.Q2);
 
             A.CallTo(() => returnFactory.GetReturnQuarter(message.OrganisationId, message.Facility)).Returns(returnQuarter);
 
@@ -185,6 +192,7 @@
             SystemTime.Freeze(date);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(date)).Returns(openWindows);
+            A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(Domain.DataReturns.QuarterType.Q1, 2019)).Returns(nextWindow);
 
             var result = await handler.HandleAsync(message);
 
@@ -221,8 +229,8 @@
 
             SystemTime.Unfreeze();
 
-            result.NextWindow.StartDate.Should().Be(nextWindow.StartDate);
-            result.NextWindow.EndDate.Should().Be(nextWindow.EndDate);
+            result.NextWindow.WindowOpenDate.Should().Be(nextWindow.StartDate);
+            result.NextWindow.WindowClosedDate.Should().Be(nextWindow.EndDate);
             A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(openWindows[0].QuarterType, date.Year)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
