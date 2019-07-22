@@ -32,7 +32,7 @@
             }
         }
 
-        [Required]
+        [Required(ErrorMessage = "Enter AATF or AE")]
         [Display(Name = "AATF or AE")]
         public string SelectedFacilityType { get; set; }
 

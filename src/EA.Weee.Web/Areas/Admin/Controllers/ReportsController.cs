@@ -85,34 +85,40 @@
             switch (model.SelectedValue)
             {
                 case Reports.ProducerDetails:
-                    return RedirectToAction("ProducerDetails");
+                    return RedirectToAction(nameof(ProducerDetails));
 
                 case Reports.ProducerPublicRegister:
-                    return RedirectToAction("ProducerPublicRegister");
+                    return RedirectToAction(nameof(ProducerPublicRegister));
 
                 case Reports.UkWeeeData:
-                    return RedirectToAction("UkWeeeData");
+                    return RedirectToAction(nameof(UkWeeeData));
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction(nameof(UkWeeeDataAtAatfs));
 
                 case Reports.ProducerEeeData:
-                    return RedirectToAction("ProducerEeeData");
+                    return RedirectToAction(nameof(ProducerEeeData));
 
                 case Reports.SchemeWeeeData:
-                    return RedirectToAction("SchemeWeeeData");
+                    return RedirectToAction(nameof(SchemeWeeeData));
 
                 case Reports.UkEeeData:
-                    return RedirectToAction("UkEeeData");
+                    return RedirectToAction(nameof(UkEeeData));
 
                 case Reports.SchemeObligationData:
-                    return RedirectToAction("SchemeObligationData");
+                    return RedirectToAction(nameof(SchemeObligationData));
 
                 case Reports.MissingProducerData:
-                    return RedirectToAction("MissingProducerData");
+                    return RedirectToAction(nameof(MissingProducerData));
 
                 case Reports.AatfAeReturnData:
                     return RedirectToAction("AatfAeReturnData");
 
+                case Reports.AatfObligatedData:
+                    return RedirectToAction(nameof(AatfObligatedData));
+
                 case Reports.UkNonObligatedWeeeData:
-                    return RedirectToAction("UkNonObligatedWeeeReceived");
+                    return RedirectToAction(nameof(UkNonObligatedWeeeReceived));
 
                 default:
                     throw new NotSupportedException();
@@ -341,6 +347,45 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> UkWeeeDataAtAatfs()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new UkWeeeDataAtAatfViewModel();
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UkWeeeDataAtAatfs(UkWeeeDataAtAatfViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkWeeeDataAtAatfsCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            var request = new GetUkWeeeAtAatfsCsv(complianceYear);
+            using (var client = apiClient())
+            {
+                // TODO: Implement GetUkWeeeAtAatfsCsv handler
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
@@ -517,8 +562,62 @@
           int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
         {
             CSVFileData fileData;
-            string aatfDataUrl = (HttpContext.Request != null && HttpContext.Request.Url != null) ? string.Concat(HttpContext.Request.Url.Scheme, "://", HttpContext.Request.Url.Authority, "/admin/aatf/details/") : string.Empty;
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
+            var aatfDataUrl = AatfDataUrl();
+
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
+
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
+        private string AatfDataUrl()
+        {
+            if (HttpContext.Request.Url != null)
+            {
+               var url = Flurl.Url.Combine(HttpContext.Request.Url.Authority, HttpContext.Request.ApplicationPath, "/admin/aatf/details/");
+
+               return $"{HttpContext.Request.Url.Scheme}://{url}";
+            }
+
+            return string.Empty;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> AatfObligatedData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            AatfObligatedDataViewModel model = new AatfObligatedDataViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfObligatedData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfObligatedData(AatfObligatedDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfObligatedDataCsv(int complianceYear, int columnType,
+           string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+        {
+            CSVFileData fileData;
+
+            GetAllAatfObligatedDataCsv request = new GetAllAatfObligatedDataCsv(complianceYear, columnType, obligationType, aatfName, authorityId, panArea);
             using (IWeeeClient client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
@@ -543,6 +642,12 @@
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
 
+            model.ComplianceYears = new SelectList(years);
+        }
+
+        private async Task PopulateFilters(UkWeeeDataAtAatfViewModel model)
+        {
+            var years = await FetchComplianceYearsForAatfReturns();
             model.ComplianceYears = new SelectList(years);
         }
 
@@ -594,6 +699,17 @@
             {
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name"); 
                 model.LocalAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetLocalAreas()), "Id", "Name");
+            }
+        }
+
+        private async Task PopulateFilters(AatfObligatedDataViewModel model)
+        {
+            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
+            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
+            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
+            using (var client = apiClient())
+            {
+                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
 

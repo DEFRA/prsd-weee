@@ -239,6 +239,8 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnDataToSelectReportOptionsNilViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnStatusToReturnDisplayOptionsMapperTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnsOrderingTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfAeReturnDataViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />

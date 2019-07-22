@@ -33,7 +33,11 @@
             if (!activeUsers)
             {
                 var organisation = await dataAccess.FetchOrganisation(@event.OrganisationId);
-                await emailService.SendOrganisationUserRequestToEA(sender.Email, organisation.OrganisationName, sender.FullName);
+
+                foreach (var ukCompetentAuthority in await dataAccess.FetchCompetentAuthorities())
+                {
+                    await emailService.SendOrganisationUserRequestToEA(ukCompetentAuthority.Email, organisation.OrganisationName, sender.FullName);
+                }
             }
         }
     }
