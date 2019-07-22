@@ -338,11 +338,13 @@
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\UkWeeeDataAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\AatfAeReturnDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
     <Compile Include="Infrastructure\DisplayHelper.cs" />
+    <Compile Include="RazorHelpers\AttributesHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
@@ -967,6 +969,7 @@
     <Content Include="Areas\Admin\Views\Reports\UkWeeeDataAtAatfs.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_SummaryPartial.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeReturnData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\AatfObligatedData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

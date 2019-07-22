@@ -12,5 +12,6 @@
         public const string UkWeeeDataAtAatfs = "UK WEEE received at AATFs";
         public const string MissingProducerData = "Missing producer data";
         public const string AatfAeReturnData = "Summary of AATF / AE returns to date";
+        public const string AatfObligatedData = "AATF obligated data";
     }
 }

@@ -23,6 +23,7 @@
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class SentOnCreateSiteControllerTests
@@ -66,7 +67,7 @@
             const string orgName = "orgName";
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var aatfInfo = A.Fake<AatfData>();
             var aatfId = Guid.NewGuid();
 

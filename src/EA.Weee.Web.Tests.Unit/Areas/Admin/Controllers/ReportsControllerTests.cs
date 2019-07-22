@@ -158,6 +158,7 @@
         [InlineData(Reports.UkEeeData, "UkEeeData")]
         [InlineData(Reports.SchemeObligationData, "SchemeObligationData")]
         [InlineData(Reports.AatfAeReturnData, "AatfAeReturnData")]
+        [InlineData(Reports.AatfObligatedData, "AatfObligatedData")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
         {
             // Arrange
@@ -2125,6 +2126,7 @@
             var uri = new Uri("https://localhost:44300/weeerelease");
             A.CallTo(() => controller.HttpContext.Request).Returns(httpRequest);
             A.CallTo(() => controller.HttpContext.Request.Url).Returns(uri);
+            A.CallTo(() => controller.HttpContext.Request.ApplicationPath).Returns("weeerelease");
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
@@ -2137,6 +2139,187 @@
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
             Assert.Equal("text/csv", fileResult.ContentType);
+        }
+
+        [Fact]
+        public async Task GetAatfObligatedData_Always_ReturnsAatfObligatedDataViewModel()
+        {
+            Fixture fixture = new Fixture();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            IList<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.AatfObligatedData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfObligatedData");
+
+            AatfObligatedDataViewModel model = viewResult.Model as AatfObligatedDataViewModel;
+            Assert.NotNull(model);
+
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2019", y1.Text));
+
+            Assert.Collection(model.ObligationTypes,
+                s1 => Assert.Equal("B2B", s1.Text),
+                s2 => Assert.Equal("B2C", s2.Text));
+
+            Assert.Collection(model.SchemeColumnPossibleValues,
+               s1 => Assert.Equal("PCS names", s1.Text),
+               s2 => Assert.Equal("Approval numbers", s2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "AatfObligatedData" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAatfObligatedData_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.AatfObligatedData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "AatfObligatedData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAatfObligatedData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.AatfObligatedData();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfObligatedData" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "AatfObligatedData"
+        /// view with a AatfObligatedDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfObligatedData_WithInvalidViewModel_ReturnsAatfObligatedDataViewModel()
+        {
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfObligatedData(new AatfObligatedDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfObligatedData");
+
+            AatfObligatedDataViewModel model = viewResult.Model as AatfObligatedDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2019", y1.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfObligatedData" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfObligatedData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfObligatedData(new AatfObligatedDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfObligatedData" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfObligatedData_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.AatfObligatedData(new AatfObligatedDataViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfObligatedData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfObligatedData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            await controller.AatfObligatedData(A.Dummy<AatfObligatedDataViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
     }
 }
