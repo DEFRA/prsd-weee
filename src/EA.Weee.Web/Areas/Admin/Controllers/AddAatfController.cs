@@ -394,11 +394,11 @@
 
             using (var client = apiClient())
             {
-                bool doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+                var doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
 
                 if (doesApprovalNumberExist)
                 {
-                    ModelState.AddModelError("ApprovalNumber", "Approval number already used");
+                    ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                     return View(nameof(Add), viewModel);
                 }
 
