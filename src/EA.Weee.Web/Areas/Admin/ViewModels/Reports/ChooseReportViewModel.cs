@@ -16,7 +16,8 @@
                 Reports.ProducerPublicRegister,
                 Reports.SchemeObligationData,
                 Reports.MissingProducerData,
-                Reports.AatfAeReturnData
+                Reports.AatfAeReturnData,
+                Reports.AatfObligatedData
             })
         {
         }
