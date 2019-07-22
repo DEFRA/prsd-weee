@@ -267,6 +267,7 @@
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1027-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint12\20190711-1517-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint13\20190718-0954-create-lookup-weeecategory.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint13\20190722-1500-alter-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint13\20190718-1421-create-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint13\20190717-1314-create-nonObligatedWeeeStoredProcedure.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
