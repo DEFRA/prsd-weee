@@ -24,10 +24,10 @@
         </p>
         <p class="govuk-body">
             @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
-                null,
+                  "What did you think of this service?",
                 Url.UrlFor<NewUserController>(c => c.Feedback()),
                 "Feedback",
-                "Banner",
+                "AE return",
                 "Feedback link",
                 null,
                 true
@@ -36,15 +36,13 @@
         </p>
         @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
         {
-            <p class="govuk-body">
-                If you have completed all your activities you can
+    <p class="govuk-body">
+        If you have completed all your activities you can
 
-                @Html.AntiForgeryToken()
-                <button type="submit" class="link-submit">
-                    sign out
-                </button>
-                or proceed to perform more activities
-            </p>
+        @Html.AntiForgeryToken()
+        @this.WeeeGds().CreateLinkButtonWithEventTracking("sign out", "AE return", "Sign out", "Sign out")
+        or proceed to perform more activities
+    </p>
         }
 
     </div>
