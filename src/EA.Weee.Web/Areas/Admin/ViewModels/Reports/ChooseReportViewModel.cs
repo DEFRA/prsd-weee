@@ -14,6 +14,7 @@
                 Reports.UkEeeData,
                 Reports.UkWeeeData,
                 Reports.UkWeeeDataAtAatfs,
+                Reports.UkNonObligatedWeeeData,
                 Reports.ProducerPublicRegister,
                 Reports.SchemeObligationData,
                 Reports.MissingProducerData,
