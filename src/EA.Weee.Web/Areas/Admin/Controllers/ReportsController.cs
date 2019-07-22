@@ -84,28 +84,31 @@
             switch (model.SelectedValue)
             {
                 case Reports.ProducerDetails:
-                    return RedirectToAction("ProducerDetails");
+                    return RedirectToAction(nameof(ProducerDetails));
 
                 case Reports.ProducerPublicRegister:
-                    return RedirectToAction("ProducerPublicRegister");
+                    return RedirectToAction(nameof(ProducerPublicRegister));
 
                 case Reports.UkWeeeData:
-                    return RedirectToAction("UkWeeeData");
+                    return RedirectToAction(nameof(UkWeeeData));
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction(nameof(UkWeeeDataAtAatfs));
 
                 case Reports.ProducerEeeData:
-                    return RedirectToAction("ProducerEeeData");
+                    return RedirectToAction(nameof(ProducerEeeData));
 
                 case Reports.SchemeWeeeData:
-                    return RedirectToAction("SchemeWeeeData");
+                    return RedirectToAction(nameof(SchemeWeeeData));
 
                 case Reports.UkEeeData:
-                    return RedirectToAction("UkEeeData");
+                    return RedirectToAction(nameof(UkEeeData));
 
                 case Reports.SchemeObligationData:
-                    return RedirectToAction("SchemeObligationData");
+                    return RedirectToAction(nameof(SchemeObligationData));
 
                 case Reports.MissingProducerData:
-                    return RedirectToAction("MissingProducerData");
+                    return RedirectToAction(nameof(MissingProducerData));
 
                 case Reports.AatfAeReturnData:
                     return RedirectToAction("AatfAeReturnData");
@@ -340,6 +343,45 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> UkWeeeDataAtAatfs()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new UkWeeeDataAtAatfViewModel();
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UkWeeeDataAtAatfs(UkWeeeDataAtAatfViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkWeeeDataAtAatfsCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            var request = new GetUkWeeeAtAatfsCsv(complianceYear);
+            using (var client = apiClient())
+            {
+                // TODO: Implement GetUkWeeeAtAatfsCsv handler
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
@@ -563,6 +605,12 @@
             model.ComplianceYears = new SelectList(years);
         }
 
+        private async Task PopulateFilters(UkWeeeDataAtAatfViewModel model)
+        {
+            var years = await FetchComplianceYearsForAatfReturns();
+            model.ComplianceYears = new SelectList(years);
+        }
+
         private async Task PopulateFilters(UkEeeDataViewModel model)
         {
             List<int> years = await FetchComplianceYearsForDataReturns();
@@ -648,6 +696,15 @@
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
             var request = new GetDataReturnsActiveComplianceYears();
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
+        }
+
+        private async Task<List<int>> FetchComplianceYearsForAatfReturns()
+        {
+            var request = new GetAatfReturnsActiveComplianceYears();
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
