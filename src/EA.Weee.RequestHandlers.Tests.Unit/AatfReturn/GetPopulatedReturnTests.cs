@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
+    using Domain;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
@@ -13,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.CheckYourReturn;
@@ -38,7 +40,7 @@
         private readonly IFetchAatfDataAccess fetchAatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
-
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         public GetPopulatedReturnTests()
         {
             returnDataAccess = A.Fake<IReturnDataAccess>();
@@ -49,6 +51,7 @@
             fetchAatfDataAccess = A.Fake<IFetchAatfDataAccess>();
             returnSchemeDataAccess = A.Fake<IReturnSchemeDataAccess>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             populatedReturn = new GetPopulatedReturn(new AuthorizationBuilder()
                 .AllowExternalAreaAccess()
@@ -60,7 +63,8 @@
                 fetchObligatedWeeeDataAccess,
                 fetchAatfDataAccess,
                 returnSchemeDataAccess,
-                genericDataAccess);
+                genericDataAccess,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -76,7 +80,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                systemDataDataAccess);
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
@@ -97,7 +102,8 @@
                 A.Dummy<IFetchObligatedWeeeForReturnDataAccess>(),
                 A.Dummy<IFetchAatfDataAccess>(),
                 A.Dummy<IReturnSchemeDataAccess>(),
-                A.Dummy<IGenericDataAccess>());
+                A.Dummy<IGenericDataAccess>(),
+                systemDataDataAccess);
 
             Func<Task> action = async () => await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
@@ -122,7 +128,7 @@
 
             var result = await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -231,7 +237,7 @@
             var aatfs = new List<Aatf>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
@@ -267,7 +273,7 @@
             var aatfs = new List<Aatf>();
 
             A.CallTo(() => returnDataAccess.GetById(A<Guid>._)).Returns(@return);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>._)).Returns(quarterWindow);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._)).Returns(quarterWindow);
             A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(A<Guid>._)).Returns(nonObligatedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(A<Guid>._)).Returns(obligatedReceivedValues);
             A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(A<Guid>._)).Returns(obligatedReusedValues);
@@ -288,6 +294,48 @@
                                                                                 && c.ReturnSchemes.Equals(returnSchemes)
                                                                                 && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Fact]
+        public async Task GetReturnData_GivenReturnShouldUseSystemTime_MapperShouldBeCalledWithCorrectTime()
+        {
+            var systemDate = new DateTime(2019, 1, 2);
+            SystemTime.Freeze(systemDate);
+            var expectedDate = new DateTime(2019, 1, 1);
+
+            var systemData = A.Fake<SystemData>();
+            systemData.UpdateFixedCurrentDate(expectedDate);
+            systemData.ToggleFixedCurrentDateUsage(true);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
+
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(systemDate)))).MustNotHaveHappened();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task GetReturnData_GivenReturnShouldNotUseSystemTime_MapperShouldBeCalledWithCorrectTime()
+        {
+            var expectedDate = new DateTime(2019, 1, 2);
+            SystemTime.Freeze(expectedDate);
+
+            var systemData = A.Fake<SystemData>();
+            systemData.ToggleFixedCurrentDateUsage(false);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
+
+            await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
+
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+                .MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
         [Fact]
         public async Task GetReturnData_GivenReturn_MappedObjectShouldBeReturned()
         {

@@ -6,6 +6,7 @@
     using Core.DataReturns;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnViewModelBaseTests
@@ -30,7 +31,7 @@
         {
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2020, 1, 1))
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
             };
 
             Action action = () =>
@@ -90,7 +91,7 @@
             model.Quarter.Should().Be(returnData.Quarter.Q.ToString());
             model.Period.Should()
                 .Be(
-                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
+                    $"{returnData.Quarter.Q.ToString()} {returnData.QuarterWindow.QuarterStart.ToString("MMM", CultureInfo.CurrentCulture)} - {returnData.QuarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)} {returnData.Quarter.Year}");
         }
 
         [Fact]
@@ -152,7 +153,7 @@
 
         private QuarterWindow GetQuarterWindow()
         {
-            return new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 1, 2));
+            return QuarterWindowTestHelper.GetDefaultQuarterWindow();
         }
     }
 }

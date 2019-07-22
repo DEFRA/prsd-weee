@@ -71,11 +71,11 @@
                             var noSelectedOption = @Model.DcfSelectedValue == "No" ? "checked" : "";
 
                             <div id="dcfSection" class="dcf-section @errorClass">
-                                <h3 class="govuk-heading-m govuk-!-font-size-24" style="font-weight: normal;">
+                                <h2 class="govuk-heading-m govuk-!-font-size-24 govuk-!-font-weight-regular">
                                     @Model.ReportOnQuestions[i].Description?
-                                </h3>
+                                </h2>
                                 <p class="govuk-body govuk-!-font-size-16">
-                                    This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep under regulation 53 and has sent to you for treatment
+                                    This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep / retain under regulation 53 and has sent to you for treatment
                                 </p>
                                 <div class="govuk-form-group" id="WeeeReusedOptions">
                                     <fieldset class="govuk-fieldset inline">
