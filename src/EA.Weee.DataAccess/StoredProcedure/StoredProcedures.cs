@@ -248,7 +248,6 @@
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            // Put the correct stored procedure name here
             return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[UkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
                 complianceYearParameter).ToListAsync();
         }
