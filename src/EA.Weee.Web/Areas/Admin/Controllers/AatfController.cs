@@ -343,7 +343,7 @@
 
                 if (doesApprovalNumberExist)
                 {
-                    ModelState.AddModelError("ApprovalNumber", "Approval number already used");
+                    ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                 }
                 return View(nameof(ManageAatfDetails), viewModel);
             }

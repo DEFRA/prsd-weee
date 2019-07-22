@@ -110,6 +110,7 @@
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandlerTests.cs" />
+    <Compile Include="Admin\AatfReports\GetUkNonObligatedWeeeReceivedDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />

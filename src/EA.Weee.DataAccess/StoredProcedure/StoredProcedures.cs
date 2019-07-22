@@ -243,6 +243,14 @@
                     complianceYearParameter).ToListAsync();
         }
 
+        public async Task<List<UkNonObligatedWeeeReceivedData>> UKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[UkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
+                complianceYearParameter).ToListAsync();
+        }
+
         public async Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn)
         {
             ProducerEeeHistoryCsvData result = new ProducerEeeHistoryCsvData();
