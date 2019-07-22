@@ -5,15 +5,17 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using Assert = Xunit.Assert;
     using Return = Domain.AatfReturn.Return;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
 
     public class GetAllAatfObligatedCsvDataTests
     {
-        [Fact]
+        [Ignore]
         public async Task Execute_GivenWeeeReceivedData_ReturnsWeeeReceivedAatfDataShouldBeCorrect()
         {
             using (var db = new DatabaseWrapper())
