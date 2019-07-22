@@ -21,6 +21,8 @@
                 "SiteAddressData.CountryId",
                 "ApprovalNumber",
                 "CompetentAuthorityId",
+                "PanAreaId",
+                "LocalAreaId",
                 "StatusValue",
                 "SizeValue",
                 "ApprovalDate",
