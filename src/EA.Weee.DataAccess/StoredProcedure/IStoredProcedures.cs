@@ -45,5 +45,7 @@
         Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId);
 
         Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType);
+
+        Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId);
     }
 }
