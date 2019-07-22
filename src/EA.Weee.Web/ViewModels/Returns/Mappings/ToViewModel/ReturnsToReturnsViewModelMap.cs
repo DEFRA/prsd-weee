@@ -15,6 +15,8 @@
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
 
+        private readonly string notExpectedError = "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
+
         public ReturnsToReturnsViewModelMap(IReturnsOrdering ordering, IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap)
         {
             this.ordering = ordering;
@@ -66,6 +68,15 @@
             else
             {
                 model.ErrorMessageForNotAllowingCreateReturn = WorkOutErrorMessageForNotAllowingCreateReturn(source);
+
+                if (model.ErrorMessageForNotAllowingCreateReturn == this.notExpectedError)
+                {
+                    model.NotStartedAnySubmissionsYet = false;
+                }
+                else
+                {
+                    model.NotStartedAnySubmissionsYet = true;
+                }
             }
 
             return model;
@@ -86,7 +97,7 @@
                     return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", source.CurrentDate.Year, nextQuarter, source.NextWindow.WindowOpenDate.ToShortDateString());
                 }
             }
-            return "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
+            return notExpectedError;
         }
 
         private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)
