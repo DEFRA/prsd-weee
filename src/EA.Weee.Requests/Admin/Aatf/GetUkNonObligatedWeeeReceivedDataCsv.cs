@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Admin.Reports
+﻿namespace EA.Weee.Requests.Admin.Aatf
 {
     using Core.Admin;
     using Prsd.Core.Mediator;
