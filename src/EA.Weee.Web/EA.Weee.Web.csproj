@@ -336,6 +336,7 @@
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\UkWeeeDataAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
@@ -965,6 +966,7 @@
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\UkWeeeDataAtAatfs.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_SummaryPartial.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeReturnData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfObligatedData.cshtml" />

@@ -9,6 +9,7 @@
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using EA.Weee.RequestHandlers.Admin.Helpers;
     using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Security;
@@ -18,24 +19,6 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGetUkWeeeCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
-
-        private readonly Dictionary<WeeeCategory, string> categoryDisplayNames = new Dictionary<WeeeCategory, string>()
-        {
-            { WeeeCategory.LargeHouseholdAppliances, "1. Large Household Appliances" },
-            { WeeeCategory.SmallHouseholdAppliances, "2. Small Household Appliances" },
-            { WeeeCategory.ITAndTelecommsEquipment, "3. IT and Telecomms Equipment" },
-            { WeeeCategory.ConsumerEquipment, "4. Consumer Equipment" },
-            { WeeeCategory.LightingEquipment, "5. Lighting Equipment" },
-            { WeeeCategory.ElectricalAndElectronicTools, "6. Electrical and Electronic Tools" },
-            { WeeeCategory.ToysLeisureAndSports, "7. Toys Leisure and Sports" },
-            { WeeeCategory.MedicalDevices, "8. Medical Devices" },
-            { WeeeCategory.MonitoringAndControlInstruments, "9. Monitoring and Control Instruments" },
-            { WeeeCategory.AutomaticDispensers, "10. Automatic Dispensers" },
-            { WeeeCategory.DisplayEquipment, "11. Display Equipment" },
-            { WeeeCategory.CoolingApplicancesContainingRefrigerants, "12. Cooling Appliances Containing Refrigerants" },
-            { WeeeCategory.GasDischargeLampsAndLedLightSources, "13. Gas Discharge Lamps and LED Light Sources" },
-            { WeeeCategory.PhotovoltaicPanels, "14. Photovoltaic Panels" },
-        };
 
         public GetUkWeeeCsvHandler(
             IWeeeAuthorization authorization,
@@ -72,7 +55,7 @@
         {
             CsvWriter<CsvResult> csvWriter = csvWriterFactory.Create<CsvResult>();
 
-            csvWriter.DefineColumn("Category", x => categoryDisplayNames[x.Category]);
+            csvWriter.DefineColumn("Category", x => ReportHelper.CategoryDisplayNames[x.Category]);
             csvWriter.DefineColumn("Obligation type", x => x.ObligationType);
             csvWriter.DefineColumn("Total WEEE from DCF (t)", x => x.DcfTotal);
             csvWriter.DefineColumn("Q1 WEEE from DCF (t)", x => x.DcfQ1);
