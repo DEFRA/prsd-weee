@@ -15,74 +15,8 @@
 
         public string SubmittedDate { get; set; }
 
-        public string ObligatedTotal { get; set; }
+        public string ObligatedHouseHoldTotal { get; set; }
 
-        public string NonObligatedTotal { get; set; }
-
-        //public string ObligatedTotal
-        //{
-        //    get
-        //    {
-        //        decimal? total = null;
-
-        //        if (WeeeReceivedHouseHold.HasValue)
-        //        {
-        //            total = 0 + WeeeReceivedHouseHold.Value;
-        //        }
-
-        //        if (WeeeReusedHouseHold.HasValue)
-        //        {
-        //            total = InitialiseTotal(total);
-        //            if (WeeeReusedHouseHold != null)
-        //            {
-        //                total += WeeeReusedHouseHold.Value;
-        //            }
-        //        }
-
-        //        if (WeeeSentOnHouseHold.HasValue)
-        //        {
-        //            total = InitialiseTotal(total);
-        //            if (WeeeSentOnHouseHold != null)
-        //            {
-        //                total += WeeeSentOnHouseHold.Value;
-        //            }
-        //        }
-
-        //        return tonnageUtilities.CheckIfTonnageIsNull(total);
-        //    }
-        //}
-
-        //public string NonObligatedTotal
-        //{
-        //    get
-        //    {
-        //        decimal? total = null;
-
-        //        if (WeeeReceivedNonHouseHold.HasValue)
-        //        {
-        //            total = 0 + WeeeReceivedNonHouseHold.Value;
-        //        }
-
-        //        if (WeeeReusedNonHouseHold.HasValue)
-        //        {
-        //            total = InitialiseTotal(total);
-        //            if (WeeeReusedNonHouseHold != null)
-        //            {
-        //                total += WeeeReusedNonHouseHold.Value;
-        //            }
-        //        }
-
-        //        if (WeeeSentOnNonHouseHold.HasValue)
-        //        {
-        //            total = InitialiseTotal(total);
-        //            if (WeeeSentOnNonHouseHold != null)
-        //            {
-        //                total += WeeeSentOnNonHouseHold.Value;
-        //            }
-        //        }
-
-        //        return tonnageUtilities.CheckIfTonnageIsNull(total);
-        //    }
-        //}
+        public string ObligatedNonHouseHoldTotal { get; set; }
     }
 }
