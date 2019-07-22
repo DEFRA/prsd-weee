@@ -12,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.Admin.Aatf;
     using Infrastructure;
     using Prsd.Core;
     using Prsd.Core.Helpers;
