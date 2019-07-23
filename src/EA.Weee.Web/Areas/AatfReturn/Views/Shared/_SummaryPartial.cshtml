@@ -120,7 +120,7 @@
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                             {
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                      @item.Aatf.Name + " change received for treatment",
+                                      "change received for treatment relating to " + @item.Aatf.Name,
                                       Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
                                       "AATF return",
                                       "Check return changes",
@@ -129,7 +129,7 @@
                             }
                             else
                             {
-                                @Html.NavigationRouteLink("Report data", "Report data received on behalf of PCS", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                                @Html.NavigationRouteLink("Report data", "report on received on behalf of PCS for " + @item.Aatf.Name, AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
                             }
                         </p>
                     </div>
@@ -180,7 +180,7 @@
                                     {
                                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                                             @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                  "Change Data for Scheme " + pcsdata.Scheme.SchemeName,
+                                                  "change received for treatment relating to scheme " + pcsdata.Scheme.SchemeName,
                                                   Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
                                                   "AATF return",
                                                   "Check return changes",
@@ -231,7 +231,7 @@
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
                             {
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                      @item.Aatf.Name + " sent to another AATF / ATF",
+                                      "change sent to another AATF / ATF data relating to " + @item.Aatf.Name,
                                       Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" }),
                                       "AATF return",
                                       "Check return changes",
@@ -240,7 +240,7 @@
                             }
                             else
                             {
-                                @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                                @Html.NavigationRouteLink("Report data", "report on sent to another AATF / ATF for " + @item.Aatf.Name, AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
                             }
                         </p>
                     </div>
@@ -281,10 +281,12 @@
                         <p class="summary-paragraph">
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
                             {
+                                var message = "change reused as a whole appliance relating to " + item.Aatf.Name;
+
                                 if (Equals(item.WeeeReused.B2B, "-") && Equals(item.WeeeReused.B2C, "-"))
                                 {
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                          item.Aatf.Name + " Reused as a whole appliance",
+                                           @message,
                                           Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReused" }),
                                           "AATF return",
                                           "Check return changes",
@@ -294,7 +296,7 @@
                                 else
                                 {
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                          item.Aatf.Name + " Change reused as a whole appliance",
+                                          @message,
                                           Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }),
                                           "AATF return",
                                           "Check return changes",
@@ -304,7 +306,7 @@
                             }
                             else
                             {
-                                @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                                @Html.NavigationRouteLink("Report data", "report on reused as a whole appliance for " + item.Aatf.Name, AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
                             }
                         </p>
                     </div>
@@ -387,7 +389,7 @@
                         }
                         else
                         {
-                            @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            @Html.NavigationRouteLink("Report data", "report on no obligated data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
                         }
                     </p>
                 </div>
@@ -434,7 +436,7 @@
                         }
                         else
                         {
-                            @Html.NavigationRouteLink("Report data", "Report data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
+                            @Html.NavigationRouteLink("Report data", "report on non obligated DCF data", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = Model.ReturnId, organisationId = Model.OrganisationId }, null)
                         }
                     </p>
                 </div>
