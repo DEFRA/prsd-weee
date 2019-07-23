@@ -158,7 +158,7 @@
                                 <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedNonHouseHoldTotal</td>
                                 <td class="govuk-table__cell">@item.SubmittedDate</td>
                                 <td class="govuk-table__cell">@item.SubmittedBy</td>
-                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a> </td>
+                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AatfController>(u => u.Download(item.ReturnId, item.ComplianceYear, (int)item.Quarter, Model.Id)))">Download</a> </td>
                             </tr>
                         }
                     </tbody>
@@ -188,7 +188,6 @@
                                 <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
                                 <td class="govuk-table__cell">@item.SubmittedDate</td>
                                 <td class="govuk-table__cell">@item.SubmittedBy</td>
-                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AdminHoldingController>(u => u.Index()))">Download</a> </td>
                             </tr>
                         }
                     </tbody>
