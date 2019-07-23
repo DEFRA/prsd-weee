@@ -40,36 +40,35 @@
                 panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
             }
 
-            var dlist = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
+            var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
  
             //Remove the Id columns
-            if (dlist != null)
+            if (obligatedData != null)
             {
-                if (dlist.Columns.Contains("AatfId"))
+                if (obligatedData.Columns.Contains("AatfId"))
                 {
-                    dlist.Columns.Remove("AatfId");
+                    obligatedData.Columns.Remove("AatfId");
                 }
-                if (dlist.Columns.Contains("ReturnId"))
+                if (obligatedData.Columns.Contains("ReturnId"))
                 {
-                    dlist.Columns.Remove("ReturnId");
+                    obligatedData.Columns.Remove("ReturnId");
                 }
-                if (dlist.Columns.Contains("Q"))
+                if (obligatedData.Columns.Contains("Q"))
                 {
-                    dlist.Columns.Remove("Q");
+                    obligatedData.Columns.Remove("Q");
                 }
-                if (dlist.Columns.Contains("CategoryId"))
+                if (obligatedData.Columns.Contains("CategoryId"))
                 {
-                    dlist.Columns.Remove("CategoryId");
+                    obligatedData.Columns.Remove("CategoryId");
                 }
-                if (dlist.Columns.Contains("TonnageType"))
+                if (obligatedData.Columns.Contains("TonnageType"))
                 {
-                    dlist.Columns.Remove("TonnageType");
+                    obligatedData.Columns.Remove("TonnageType");
                 }
             }
 
-           var fileName = string.Format("{0}_AA_{1:ddMMyyyy_HHmm}",
-                request.ComplianceYear,
-                DateTime.UtcNow);
+           var fileName = string.Format("{0}_AA",
+                request.ComplianceYear);
             if (request.PanArea != null)
             {
                 fileName += "_" + panArea.Name;
@@ -83,9 +82,10 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += ".csv";
+            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
+                                DateTime.UtcNow);           
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(dlist);
+            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
 
             return new CSVFileData
             {

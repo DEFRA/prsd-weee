@@ -2,12 +2,12 @@
 @using EA.Weee.Core.DataStandards
 @model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfObligatedDataViewModel
 @{
-    ViewBag.Title = "Download AATF obligated data - GOV.UK";
+    ViewBag.Title = "Download AATF obligated WEEE data - GOV.UK";
 }
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Download AATF obligated data</h1>
+        <h1 class="govuk-heading-l">Download AATF obligated WEEE data</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -60,7 +60,7 @@
             If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
         </p>
 
-        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports", "Report download", "AATF obligated data", new Dictionary<string, object> { { "class", "button" } }))
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports", "Report download", "AATF obligated WEEE data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -102,7 +102,7 @@
                               columnType = Model.SelectedColumn,
                               obligationType = Model.SelectedObligationType,
                               aatfName = Model.AATFName,
-                              authority = Model.CompetentAuthorityId,
+                              authorityId = Model.CompetentAuthorityId,
                               panArea = Model.PanAreaId
                           }))";
         </script>
