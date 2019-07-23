@@ -105,7 +105,7 @@
             };
 
             A.CallTo(() => storedProcedures
-            .UKUkNonObligatedWeeeReceivedByComplianceYear(A<int>._))
+            .UkNonObligatedWeeeReceivedByComplianceYear(A<int>._))
             .Returns(new List<UkNonObligatedWeeeReceivedData> { csvData1, csvData2, csvData3 });
 
             GetUkNonObligatedWeeeReceivedDataCsvHandler handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());

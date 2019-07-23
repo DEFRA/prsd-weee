@@ -378,7 +378,6 @@
             var request = new GetUkWeeeAtAatfsCsv(complianceYear);
             using (var client = apiClient())
             {
-                // TODO: Implement GetUkWeeeAtAatfsCsv handler
                 file = await client.SendAsync(User.GetAccessToken(), request);
             }
 
